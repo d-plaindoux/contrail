@@ -21,7 +21,8 @@ package org.wolfgang.common.message;
 import java.text.MessageFormat;
 
 /**
- * <code>Message</code>
+ * <code>Message</code> is a basic a capsule for message fomatting and
+ * generation
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -36,10 +37,10 @@ public final class Message {
 	/**
 	 * Constructor
 	 * 
-	 * @param message The unformatted message
+	 * @param message
+	 *            The unformatted message
 	 */
 	public Message(String message) {
-		super();
 		this.message = message;
 	}
 
@@ -47,7 +48,8 @@ public final class Message {
 	 * Method called whether a message must be performed with specifics
 	 * arguments
 	 * 
-	 * @param arguments Message arguments
+	 * @param arguments
+	 *            Message arguments
 	 * @return a string
 	 */
 	public String format(Object... arguments) {
