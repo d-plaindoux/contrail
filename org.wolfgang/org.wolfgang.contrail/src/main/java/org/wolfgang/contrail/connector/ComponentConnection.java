@@ -1,0 +1,65 @@
+/*
+ * Copyright (C)2012 D. Plaindoux.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+package org.wolfgang.contrail.connector;
+
+import java.util.List;
+
+import org.wolfgang.contrail.component.UpStreamDestinationComponent;
+import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.environment.EnvironmentId;
+import org.wolfgang.contrail.exception.ComponentNotYetConnected;
+
+/**
+ * The <code>ComponentConnection</code> defines basic behaviors
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public interface ComponentConnection<E> {
+
+	/**
+	 * List all environments related to this component connection
+	 * 
+	 * @return
+	 */
+	List<EnvironmentId> getEnvironmentIds();
+
+	/**
+	 * Method providing the source
+	 * 
+	 * @return the upstream source
+	 */
+	UpStreamSourceComponent<E> getUpStreamSourceComponent();
+
+	/**
+	 * Method providing the destination
+	 * 
+	 * @return the upstream destination
+	 */
+	UpStreamDestinationComponent<E> getUpStreamDestinationComponent();
+
+	/**
+	 * Method called whether the connection must be disposed.
+	 * 
+	 * @throws ComponentNotYetConnected
+	 *             thrown if the connection is already disposed
+	 */
+	void dispose() throws ComponentNotYetConnected;
+
+}

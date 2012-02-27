@@ -29,8 +29,17 @@ import java.util.UUID;
  */
 public class EnvironmentIdmpl implements EnvironmentId {
 
+	/**
+	 * The internal identifier
+	 */
 	private final UUID uuid;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param uuid
+	 *            The internal identifier
+	 */
 	public EnvironmentIdmpl(UUID uuid) {
 		this.uuid = uuid;
 	}
@@ -45,12 +54,13 @@ public class EnvironmentIdmpl implements EnvironmentId {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof EnvironmentIdmpl)) {
 			return false;
 		}
 		EnvironmentIdmpl other = (EnvironmentIdmpl) obj;
