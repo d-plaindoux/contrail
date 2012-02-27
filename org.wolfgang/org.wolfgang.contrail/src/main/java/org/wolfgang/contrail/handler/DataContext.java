@@ -21,7 +21,7 @@ package org.wolfgang.contrail.handler;
 
 
 /**
- * <code>ComponentContext</code> was the context setup when a data is handled.
+ * <code>DataContext</code> was the context setup when a data is handled.
  * Such context refers a unique identifier w
  * 
  * @author Didier Plaindoux

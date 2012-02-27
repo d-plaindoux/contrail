@@ -1,5 +1,5 @@
 /*
- * WolfGang Copyright (C)2012 D. Plaindoux.
+ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -18,14 +18,9 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import java.util.List;
-
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
+import org.wolfgang.contrail.component.impl.AbstractUpStreamDestinationComponent;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.DataContext;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
@@ -35,52 +30,15 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArrayDestinationComponent implements UpStreamDestinationComponent<byte[]>, UpStreamDataHandler<byte[]> {
-
-	private DownStreamDataHandler<byte[]> downStreamDataHandler;
+public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationComponent<byte[]> implements
+		UpStreamDataHandler<byte[]> {
 
 	/**
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
 		super();
-	}
-
-	/*
-	 * @see org.wolfgang.contrail.component.UpStreamSourceComponent#
-	 * getDownStreamDataChannel()
-	 */
-	@Override
-	public UpStreamDataHandler<byte[]> getUpStreamDataHandler() {
-		return this;
-	}
-
-	/*
-	 * @see
-	 * org.wolfgang.contrail.component.UpStreamSourceComponent#connect(org.wolfgang
-	 * .contrail.component.UpStreamDestinationComponent)
-	 */
-	@Override
-	public void connect(UpStreamSourceComponent<byte[]> handler) throws ComponentAlreadyConnected {
-		if (this.downStreamDataHandler == null) {
-			this.downStreamDataHandler = handler.getDownStreamDataHandler();
-		} else {
-			throw new ComponentAlreadyConnected();
-		}
-	}
-
-	/*
-	 * @see
-	 * org.wolfgang.contrail.component.UpStreamSourceComponent#disconnect(org
-	 * .wolfgang.contrail.component.UpStreamDestinationComponent)
-	 */
-	@Override
-	public void disconnect(UpStreamSourceComponent<byte[]> handler) throws ComponentNotYetConnected {
-		if (this.downStreamDataHandler == null) {
-			throw new ComponentNotYetConnected();
-		} else {
-			this.downStreamDataHandler = null;
-		}
+		this.setUpStreamDataHandler(this);
 	}
 
 	// DownStreamDataHandler implementation
@@ -93,24 +51,18 @@ public class ByteArrayDestinationComponent implements UpStreamDestinationCompone
 	@Override
 	public void handleData(DataContext context, byte[] data) throws HandleDataException {
 		// Send the received byte array to the down stream data handler (Loop)
-		if (downStreamDataHandler == null) {
-			throw new HandleDataException("downStreamHandler");
-		} else {
-			this.downStreamDataHandler.handleData(context, data);
+		try {
+			this.getDowntreamDataHandler().handleData(context, data);
+		} catch (ComponentNotYetConnected e) {
+			throw new HandleDataException();
 		}
 	}
 
-	/*
-	 * @see org.wolfgang.contrail.handler.DataHandler#handleClose()
-	 */
 	@Override
 	public void handleClose() {
 		// Nothing
 	}
 
-	/*
-	 * @see org.wolfgang.contrail.handler.DataHandler#handleLost()
-	 */
 	@Override
 	public void handleLost() {
 		// Nothing

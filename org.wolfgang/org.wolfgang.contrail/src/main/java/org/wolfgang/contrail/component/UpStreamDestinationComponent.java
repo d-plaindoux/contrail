@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import javax.print.attribute.standard.Destination;
-
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
