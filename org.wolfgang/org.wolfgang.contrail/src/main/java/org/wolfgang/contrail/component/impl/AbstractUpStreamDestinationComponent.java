@@ -23,7 +23,6 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>UpStreamSourceComponent</code> is capable to send event in the

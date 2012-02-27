@@ -33,12 +33,41 @@ import org.wolfgang.contrail.handler.HandleDataException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<byte[]> implements DownStreamDataHandler<byte[]> {
+public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<byte[]> {
+
+	/**
+	 * <code>LocalDownStreamDataHandler</code> is the internal implementation of
+	 * the down stream handler.
+	 * 
+	 * @author Didier Plaindoux
+	 * @verision 1.0
+	 */
+	public class LocalDownStreamDataHandler implements DownStreamDataHandler<byte[]> {
+		@Override
+		public void handleData(DataContext context, byte[] data) throws HandleDataException {
+			try {
+				outputStream.write(data);
+			} catch (IOException e) {
+				throw new HandleDataException(e);
+			}
+		}
+
+		@Override
+		public void handleClose() {
+			// Nothing
+		}
+
+		@Override
+		public void handleLost() {
+			// Nothing
+		}
+	}
 
 	/**
 	 * Output stream receiving outgoing data
 	 */
 	private final OutputStream outputStream;
+	private final DownStreamDataHandler<byte[]> downStreamDataHandler;
 
 	/**
 	 * Constructor
@@ -46,32 +75,12 @@ public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<by
 	public ByteArraySourceComponent(OutputStream outputStream) {
 		super();
 		this.outputStream = outputStream;
+		this.downStreamDataHandler = new LocalDownStreamDataHandler();
 	}
 
 	@Override
 	public DownStreamDataHandler<byte[]> getDownStreamDataHandler() {
-		return this;
-	}
-
-	// DownStreamDataHandler implementation
-
-	@Override
-	public void handleData(DataContext context, byte[] data) throws HandleDataException {
-		try {
-			this.outputStream.write(data);
-		} catch (IOException e) {
-			throw new HandleDataException(e);
-		}
-	}
-
-	@Override
-	public void handleClose() {
-		// Nothing
-	}
-
-	@Override
-	public void handleLost() {
-		// Nothing
+		return this.downStreamDataHandler;
 	}
 
 	/**
@@ -82,7 +91,6 @@ public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<by
 	 * @throws HandleDataException
 	 *             thrown if the data handling fails
 	 */
-
 	public void emitData(byte[] bytes) throws HandleDataException {
 		try {
 			this.getUpStreamDataHandler().handleData(null, bytes);

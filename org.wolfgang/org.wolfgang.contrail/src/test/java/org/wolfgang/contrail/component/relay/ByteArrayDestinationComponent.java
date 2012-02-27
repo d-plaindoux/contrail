@@ -30,38 +30,53 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationComponent<byte[]> implements
-		UpStreamDataHandler<byte[]> {
+public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationComponent<byte[]> {
+
+	/**
+	 * <code>LocalUpStreamDataHandler</code> is the internal implementation
+	 * required for the up stream data handler
+	 * 
+	 * @author Didier Plaindoux
+	 * @verision 1.0
+	 */
+	private final class LocalUpStreamDataHandler implements UpStreamDataHandler<byte[]> {
+		@Override
+		public void handleData(DataContext context, byte[] data) throws HandleDataException {
+			// Send the received byte array to the down stream data handler
+			// (Loop)
+			try {
+				getDowntreamDataHandler().handleData(context, data);
+			} catch (ComponentNotYetConnected e) {
+				throw new HandleDataException();
+			}
+		}
+
+		@Override
+		public void handleClose() {
+			// Nothing
+		}
+
+		@Override
+		public void handleLost() {
+			// Nothing
+		}
+	}
+
+	/**
+	 * The up stream data handler
+	 */
+	private final UpStreamDataHandler<byte[]> upStreamDataHandler;
 
 	/**
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
 		super();
+		this.upStreamDataHandler = new LocalUpStreamDataHandler();
 	}
 
 	@Override
 	public UpStreamDataHandler<byte[]> getUpStreamDataHandler() {
-		return this;
-	}
-
-	@Override
-	public void handleData(DataContext context, byte[] data) throws HandleDataException {
-		// Send the received byte array to the down stream data handler (Loop)
-		try {
-			this.getDowntreamDataHandler().handleData(context, data);
-		} catch (ComponentNotYetConnected e) {
-			throw new HandleDataException();
-		}
-	}
-
-	@Override
-	public void handleClose() {
-		// Nothing
-	}
-
-	@Override
-	public void handleLost() {
-		// Nothing
+		return this.upStreamDataHandler;
 	}
 }
