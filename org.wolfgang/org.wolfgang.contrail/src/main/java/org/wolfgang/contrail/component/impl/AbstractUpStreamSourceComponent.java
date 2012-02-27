@@ -22,7 +22,6 @@ import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -38,11 +37,6 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
 public abstract class AbstractUpStreamSourceComponent<E> implements UpStreamSourceComponent<E> {
 
 	/**
-	 * Embedded down stream data handler. Never null.
-	 */
-	private DownStreamDataHandler<E> downStreamDataHandler;
-
-	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
 	private UpStreamDestinationComponent<E> upStreamDestinationComponent;
@@ -54,21 +48,6 @@ public abstract class AbstractUpStreamSourceComponent<E> implements UpStreamSour
 	 */
 	protected AbstractUpStreamSourceComponent() {
 		// Nothing
-	}
-
-	/**
-	 * Setup the embedded down stream data handler
-	 * 
-	 * @param downStreamDataHandler
-	 *            The down stream data handler
-	 */
-	public void setDownStreamDataHandler(DownStreamDataHandler<E> downStreamDataHandler) {
-		this.downStreamDataHandler = downStreamDataHandler;
-	}
-
-	@Override
-	public DownStreamDataHandler<E> getDownStreamDataHandler() {
-		return this.downStreamDataHandler;
 	}
 
 	/**

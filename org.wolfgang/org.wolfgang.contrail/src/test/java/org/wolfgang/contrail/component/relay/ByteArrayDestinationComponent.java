@@ -38,16 +38,13 @@ public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationCo
 	 */
 	public ByteArrayDestinationComponent() {
 		super();
-		this.setUpStreamDataHandler(this);
 	}
 
-	// DownStreamDataHandler implementation
+	@Override
+	public UpStreamDataHandler<byte[]> getUpStreamDataHandler() {
+		return this;
+	}
 
-	/*
-	 * @see
-	 * org.wolfgang.contrail.handler.DataHandler#handleData(org.wolfgang.contrail
-	 * .data.DataContext, java.lang.Object)
-	 */
 	@Override
 	public void handleData(DataContext context, byte[] data) throws HandleDataException {
 		// Send the received byte array to the down stream data handler (Loop)

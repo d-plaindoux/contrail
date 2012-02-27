@@ -46,7 +46,6 @@ public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<by
 	public ByteArraySourceComponent(OutputStream outputStream) {
 		super();
 		this.outputStream = outputStream;
-		this.setDownStreamDataHandler(this);
 	}
 
 	@Override

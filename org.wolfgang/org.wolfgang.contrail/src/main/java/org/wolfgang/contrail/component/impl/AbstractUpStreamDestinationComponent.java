@@ -38,11 +38,6 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
 public abstract class AbstractUpStreamDestinationComponent<E> implements UpStreamDestinationComponent<E> {
 
 	/**
-	 * Embedded up stream data handler. Never null.
-	 */
-	private UpStreamDataHandler<E> upStreamDataHandler;
-
-	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
 	private UpStreamSourceComponent<E> upStreamSourceComponent;
@@ -54,21 +49,6 @@ public abstract class AbstractUpStreamDestinationComponent<E> implements UpStrea
 	 */
 	protected AbstractUpStreamDestinationComponent() {
 		// Nothing
-	}
-
-	/**
-	 * Setup the embedded down stream data handler
-	 * 
-	 * @param downStreamDataHandler
-	 *            The down stream data handler
-	 */
-	public void setUpStreamDataHandler(UpStreamDataHandler<E> upStreamDataHandler) {
-		this.upStreamDataHandler = upStreamDataHandler;
-	}
-
-	@Override
-	public UpStreamDataHandler<E> getUpStreamDataHandler() {
-		return this.upStreamDataHandler;
 	}
 
 	/**
