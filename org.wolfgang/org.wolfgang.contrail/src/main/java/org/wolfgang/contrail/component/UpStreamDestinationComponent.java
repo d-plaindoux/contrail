@@ -20,7 +20,6 @@ package org.wolfgang.contrail.component;
 
 import javax.print.attribute.standard.Destination;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -35,7 +34,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamDestinationComponent<E> extends EnvironmentHandler {
+public interface UpStreamDestinationComponent<E> {
 
 	/**
 	 * Method called when the corresponding upstream data handler shall be

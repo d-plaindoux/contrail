@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
 
 /**
  * The <code>DemultiplexerComponent</code> is capable to manage event from a
@@ -31,7 +30,7 @@ import org.wolfgang.contrail.environment.EnvironmentHandler;
  * @version 1.0
  */
 public interface MutipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>,
-		UpStreamSourceComponent<D>, EnvironmentHandler {
+		UpStreamSourceComponent<D> {
 
 	/**
 	 * Method called whether an upstream destination handler shall be connected

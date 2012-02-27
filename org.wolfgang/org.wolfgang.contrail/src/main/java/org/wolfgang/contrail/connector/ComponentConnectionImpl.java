@@ -18,11 +18,8 @@
 
 package org.wolfgang.contrail.connector;
 
-import java.util.List;
-
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.environment.EnvironmentId;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 
@@ -74,11 +71,6 @@ public class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 
 			throw e;
 		}
-	}
-
-	@Override
-	public List<EnvironmentId> getEnvironmentIds() {
-		return null;
 	}
 
 	@Override

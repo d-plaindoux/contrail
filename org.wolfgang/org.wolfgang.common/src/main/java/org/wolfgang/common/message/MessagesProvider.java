@@ -18,7 +18,6 @@
 
 package org.wolfgang.common.message;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -44,9 +43,12 @@ public final class MessagesProvider {
 	/**
 	 * Static method providing a message
 	 * 
-	 * @param category The message type
-	 * @param key The message identifier
-	 * @param parameters Parameters used to format the message
+	 * @param category
+	 *            The message type
+	 * @param key
+	 *            The message identifier
+	 * @param parameters
+	 *            Parameters used to format the message
 	 * @return a message formatter
 	 */
 	public static Message get(String category, String key) {
@@ -79,11 +81,10 @@ public final class MessagesProvider {
 	 * Method called whether a property file referencing a resource bundle must
 	 * be load
 	 * 
-	 * @param propertyFile The property file name
-	 * @throws IOException Thrown if the file does not exist or cannot be
-	 *             accessible
+	 * @param propertyFile
+	 *            The property file name
 	 */
-	private void loadMessages(String category) throws MissingResourceException {
+	private void loadMessages(String category) {
 		if (!this.resourceBundles.containsKey(category)) {
 			this.resourceBundles.put(category, ResourceBundle.getBundle(category));
 		}
@@ -93,9 +94,12 @@ public final class MessagesProvider {
 	 * 
 	 * Method called whether a message must be performed.
 	 * 
-	 * @param category The message category
-	 * @param key The message key
-	 * @param parameters The parameters to be used for by the message formatter
+	 * @param category
+	 *            The message category
+	 * @param key
+	 *            The message key
+	 * @param parameters
+	 *            The parameters to be used for by the message formatter
 	 * @return a string
 	 */
 	private Message message(String category, String key) {
@@ -107,7 +111,7 @@ public final class MessagesProvider {
 				return new Message("message not found in [" + category + "] for [" + key + "]");
 			}
 		} else {
-			return new Message("messages not found for [" + category + "]");
+			return new Message("message bundle not found for [" + category + "]");
 		}
 	}
 }

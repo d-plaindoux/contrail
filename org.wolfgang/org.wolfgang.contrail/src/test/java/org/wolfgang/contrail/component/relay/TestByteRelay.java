@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.connector.impl.ComponentInterconnectionImpl;
+import org.wolfgang.contrail.connector.ComponentConnectionImpl;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.HandleDataException;
@@ -43,7 +43,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentInterconnectionImpl<byte[]> interconnection = new ComponentInterconnectionImpl<byte[]>(
+			final ComponentConnectionImpl<byte[]> interconnection = new ComponentConnectionImpl<byte[]>(
 					source, destination);
 
 			source.emitData("Hello,".getBytes());

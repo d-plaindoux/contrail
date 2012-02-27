@@ -62,28 +62,6 @@ public class Pair<First, Second> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		} else if (obj == null) {
-			return false;
-		} else if (getClass() != obj.getClass()) {
-			return false;
-		} else {
-			Pair other = (Pair) obj;
-			if (first == null) {
-				return other.first == null;
-			} else if (!first.equals(other.first)) {
-				return false;
-			} if (second == null) {
-				return other.second == null;
-			} else {
-				return second.equals(other.second);
-			}
-		}
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -93,7 +71,31 @@ public class Pair<First, Second> {
 	}
 
 	@Override
-	public String toString() {
-		return "(" + first + "*" + second + ")";
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Pair)) {
+			return false;
+		}
+		Pair other = (Pair) obj;
+		if (first == null) {
+			if (other.first != null) {
+				return false;
+			}
+		} else if (!first.equals(other.first)) {
+			return false;
+		}
+		if (second == null) {
+			if (other.second != null) {
+				return false;
+			}
+		} else if (!second.equals(other.second)) {
+			return false;
+		}
+		return true;
 	}
 }

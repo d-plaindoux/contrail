@@ -20,14 +20,12 @@ package org.wolfgang.contrail.component.relay;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
-import org.wolfgang.contrail.component.ComponentContext;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.environment.EnvironmentId;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
+import org.wolfgang.contrail.handler.DataContext;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -40,7 +38,14 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  */
 public class ByteArraySourceComponent implements UpStreamSourceComponent<byte[]>, DownStreamDataHandler<byte[]> {
 
+	/**
+	 * 
+	 */
 	private final OutputStream outputStream;
+	
+	/**
+	 * 
+	 */
 	private UpStreamDataHandler<byte[]> upStreamDataHandler;
 
 	/**
@@ -96,7 +101,7 @@ public class ByteArraySourceComponent implements UpStreamSourceComponent<byte[]>
 	 * .data.DataContext, java.lang.Object)
 	 */
 	@Override
-	public void handleData(ComponentContext context, byte[] data) throws HandleDataException {
+	public void handleData(DataContext context, byte[] data) throws HandleDataException {
 		try {
 			this.outputStream.write(data);
 		} catch (IOException e) {
@@ -134,11 +139,4 @@ public class ByteArraySourceComponent implements UpStreamSourceComponent<byte[]>
 			this.upStreamDataHandler.handleData(null, bytes);
 		}
 	}
-
-	@Override
-	public List<EnvironmentId> getEnvironmentId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

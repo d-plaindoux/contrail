@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
 
 /**
  * The <code>MultiplexerComponent</code> is capable to managing multiple sources
@@ -31,7 +30,7 @@ import org.wolfgang.contrail.environment.EnvironmentHandler;
  * @version 1.0
  */
 public interface MultipleUpStreamDestinationComponent<S, D> extends UpStreamSourceComponent<D>,
-		UpStreamDestinationComponent<S>, EnvironmentHandler {
+		UpStreamDestinationComponent<S> {
 
 	/**
 	 * Method called whether an upstream destination handler shall be connected

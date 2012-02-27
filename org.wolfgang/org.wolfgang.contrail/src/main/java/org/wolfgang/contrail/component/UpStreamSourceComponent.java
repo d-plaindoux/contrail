@@ -20,7 +20,6 @@ package org.wolfgang.contrail.component;
 
 import javax.print.attribute.standard.Destination;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -35,7 +34,7 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamSourceComponent<E> extends EnvironmentHandler {
+public interface UpStreamSourceComponent<E> {
 
 	/**
 	 * Provides the data channel used for down stream communication facility

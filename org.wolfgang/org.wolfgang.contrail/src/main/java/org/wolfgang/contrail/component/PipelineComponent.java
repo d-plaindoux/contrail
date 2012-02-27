@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
 
 /**
  * The <code>PipelineComponent</code> is capable to connect a source handler and
@@ -33,8 +32,7 @@ import org.wolfgang.contrail.environment.EnvironmentHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D>,
-		EnvironmentHandler {
+public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
 
 	// No specific behaviors
 

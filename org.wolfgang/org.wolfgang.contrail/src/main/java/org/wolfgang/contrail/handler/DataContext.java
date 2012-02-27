@@ -16,9 +16,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.handler;
 
-import org.wolfgang.contrail.environment.EnvironmentId;
 
 
 /**
@@ -28,11 +27,8 @@ import org.wolfgang.contrail.environment.EnvironmentId;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentContext {
+public interface DataContext {
 
-	/**
-	 * @return the communication identifier which must be unique in a runtime.
-	 */
-	EnvironmentId getCommunicationId();
+	// Nothing for the moment
 
 }

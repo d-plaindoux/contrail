@@ -18,11 +18,8 @@
 
 package org.wolfgang.contrail.connector;
 
-import java.util.List;
-
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.environment.EnvironmentId;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 
 /**
@@ -32,13 +29,6 @@ import org.wolfgang.contrail.exception.ComponentNotYetConnected;
  * @version 1.0
  */
 public interface ComponentConnection<E> {
-
-	/**
-	 * List all environments related to this component connection
-	 * 
-	 * @return
-	 */
-	List<EnvironmentId> getEnvironmentIds();
 
 	/**
 	 * Method providing the source

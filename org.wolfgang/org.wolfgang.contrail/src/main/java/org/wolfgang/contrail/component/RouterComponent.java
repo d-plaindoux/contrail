@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.environment.EnvironmentHandler;
-
 /**
  * The <code>RouterComponent</code> is capable to manage multiple source and
  * destination channel depending on the event nature.
@@ -27,8 +25,7 @@ import org.wolfgang.contrail.environment.EnvironmentHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RouterComponent<S, D> extends MultipleUpStreamDestinationComponent<S, D>,
-		MutipleUpStreamSourceComponent<S, D>, EnvironmentHandler {
+public interface RouterComponent<S, D> extends MultipleUpStreamDestinationComponent<S, D>, MutipleUpStreamSourceComponent<S, D> {
 
 	// No specific behaviors
 

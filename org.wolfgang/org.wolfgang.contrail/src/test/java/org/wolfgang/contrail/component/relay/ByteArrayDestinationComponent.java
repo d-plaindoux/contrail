@@ -20,12 +20,11 @@ package org.wolfgang.contrail.component.relay;
 
 import java.util.List;
 
-import org.wolfgang.contrail.component.ComponentContext;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.environment.EnvironmentId;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
+import org.wolfgang.contrail.handler.DataContext;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -92,7 +91,7 @@ public class ByteArrayDestinationComponent implements UpStreamDestinationCompone
 	 * .data.DataContext, java.lang.Object)
 	 */
 	@Override
-	public void handleData(ComponentContext context, byte[] data) throws HandleDataException {
+	public void handleData(DataContext context, byte[] data) throws HandleDataException {
 		// Send the received byte array to the down stream data handler (Loop)
 		if (downStreamDataHandler == null) {
 			throw new HandleDataException("downStreamHandler");
@@ -116,10 +115,4 @@ public class ByteArrayDestinationComponent implements UpStreamDestinationCompone
 	public void handleLost() {
 		// Nothing
 	}
-
-	@Override
-	public List<EnvironmentId> getEnvironmentId() {
-		return null; // TODO ...
-	}
-
 }

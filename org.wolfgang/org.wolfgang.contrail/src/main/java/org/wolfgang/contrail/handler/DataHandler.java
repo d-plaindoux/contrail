@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.handler;
 
-import org.wolfgang.contrail.component.ComponentContext;
 
 /**
  * The <code>DataHandler</code> provides basic mechanisms required when messages
@@ -36,7 +35,7 @@ interface DataHandler<D> {
 	 * @param context The data context
 	 * @param data The data
 	 */
-	void handleData(ComponentContext context, D data) throws HandleDataException;
+	void handleData(DataContext context, D data) throws HandleDataException;
 
 	/**
 	 * Method called when the channel is closed

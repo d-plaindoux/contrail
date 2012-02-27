@@ -30,10 +30,9 @@ public class TestPair extends TestCase {
 
 	public void testPair01() {
 		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
-		assertEquals("(1*a)", pair1.toString());
 		assertEquals(pair1, pair1);
 		assertEquals(new Integer(1), pair1.getFirst());
-		assertEquals("a", pair1.getSecond());		
+		assertEquals("a", pair1.getSecond());
 		assertFalse(pair1.equals(null));
 		assertFalse(pair1.equals("a"));
 
