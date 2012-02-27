@@ -25,6 +25,13 @@ package org.wolfgang.common.utils;
  * @author Didier Plaindoux
  */
 public final class Coercion {
+	
+	/**
+	 * Constructor
+	 */
+	private Coercion() {
+		// Prevent useless creation
+	}
 
 	/**
 	 * Method called whether a given object coercion must be checked
@@ -46,7 +53,7 @@ public final class Coercion {
 	 * @return the object with the required type
 	 * @throws ClassCastException thrown if the object can not be coerced
 	 */
-	public static <T> T coerce(Object object, Class<T> type) throws ClassCastException {
+	public static <T> T coerce(Object object, Class<T> type) {
 		assert object != null && type != null;
 		return type.cast(object);
 	}

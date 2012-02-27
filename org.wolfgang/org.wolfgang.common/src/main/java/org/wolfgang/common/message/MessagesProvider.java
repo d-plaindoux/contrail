@@ -19,10 +19,9 @@
 package org.wolfgang.common.message;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +56,7 @@ public final class MessagesProvider {
 
 		try {
 			sharedInstance.loadMessages(category);
-		} catch (IOException e) {
+		} catch (MissingResourceException e) {
 			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage());
 		}
 
@@ -84,13 +83,14 @@ public final class MessagesProvider {
 	 * @throws IOException Thrown if the file does not exist or cannot be
 	 *             accessible
 	 */
-	private void loadMessages(String category) throws IOException {
+	private void loadMessages(String category) throws MissingResourceException {
 		if (!this.resourceBundles.containsKey(category)) {
 			this.resourceBundles.put(category, ResourceBundle.getBundle(category));
 		}
 	}
 
 	/**
+	 * 
 	 * Method called whether a message must be performed.
 	 * 
 	 * @param category The message category
@@ -101,12 +101,10 @@ public final class MessagesProvider {
 	private Message message(String category, String key) {
 		final ResourceBundle resourceBundle = resourceBundles.get(category);
 		if (resourceBundle != null) {
-			final String message = resourceBundle.getString(key);
-			if (message != null) {
-				return new Message(message);
-			} else {
-				return new Message("message not found in [" + category + "] for [" + key + "] in locale ["
-						+ Locale.getDefault().getLanguage() + "]");
+			try {
+				return new Message(resourceBundle.getString(key));
+			} catch (MissingResourceException e) {
+				return new Message("message not found in [" + category + "] for [" + key + "]");
 			}
 		} else {
 			return new Message("messages not found for [" + category + "]");

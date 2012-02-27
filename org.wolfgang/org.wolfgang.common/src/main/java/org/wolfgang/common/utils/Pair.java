@@ -62,26 +62,33 @@ public class Pair<First, Second> {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		if (!(o instanceof Pair))
+		} else if (obj == null) {
 			return false;
-
-		Pair pair = (Pair) o;
-
-		if (first != null ? !first.equals(pair.first) : pair.first != null)
+		} else if (getClass() != obj.getClass()) {
 			return false;
-		if (second != null ? !second.equals(pair.second) : pair.second != null)
-			return false;
-
-		return true;
+		} else {
+			Pair other = (Pair) obj;
+			if (first == null) {
+				return other.first == null;
+			} else if (!first.equals(other.first)) {
+				return false;
+			} if (second == null) {
+				return other.second == null;
+			} else {
+				return second.equals(other.second);
+			}
+		}
 	}
 
 	@Override
 	public int hashCode() {
-		int result = first != null ? first.hashCode() : 0;
-		result = 31 * result + (second != null ? second.hashCode() : 0);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((first == null) ? 0 : first.hashCode());
+		result = prime * result + ((second == null) ? 0 : second.hashCode());
 		return result;
 	}
 

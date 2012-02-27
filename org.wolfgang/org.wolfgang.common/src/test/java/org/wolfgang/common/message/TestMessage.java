@@ -18,8 +18,6 @@
 
 package org.wolfgang.common.message;
 
-import java.text.MessageFormat;
-
 import junit.framework.TestCase;
 
 /**
@@ -29,23 +27,53 @@ import junit.framework.TestCase;
  * 
  */
 public class TestMessage extends TestCase {
-	
-    public void testMessage01() throws Exception {
-        try {
-            String message = MessagesProvider.get("org/wolfgang/common/message/test", "test.message").format();
-            assertEquals("This is a test message", message);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-	
-    public void testMessage02() throws Exception {
-        try {
-            String message = MessagesProvider.get("org/wolfgang/common/message/test", "test.message.with.args").format("'Hello, World!'");
-            assertEquals("This is a 'Hello, World!'", message);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-	
+
+	public void testMessage01() throws Exception {
+		try {
+			String message = MessagesProvider.get(
+					"org/wolfgang/common/message/test", "test.message")
+					.format();
+			assertEquals("This is a test message", message);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testMessage02() throws Exception {
+		try {
+			String message = MessagesProvider.get(
+					"org/wolfgang/common/message/test",
+					"test.message.with.args").format("'Hello, World!'");
+			assertEquals("This is a 'Hello, World!'", message);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testMessage03() throws Exception {
+		try {
+			String message = MessagesProvider.get(
+					"org/wolfgang/common/message/undef",
+					"test.message.undefined").format("'Hello, World!'");
+			assertEquals(
+					"messages not found for [org/wolfgang/common/message/undef]",
+					message);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testMessage04() throws Exception {
+		try {
+			String message = MessagesProvider.get(
+					"org/wolfgang/common/message/test",
+					"test.message.undefined").format("'Hello, World!'");
+			assertEquals(
+					"message not found in [org/wolfgang/common/message/test] for [test.message.undefined]",
+					message);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

@@ -29,7 +29,19 @@ import java.util.UUID;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class UUIDUtils {
+public final class UUIDUtils {
+	
+	private static final int BYTE_SIZE = 8;
+	private static final int BYTE_MASK = 0xFF;
+	
+
+
+	/**
+	 * Constructor
+	 */
+	private UUIDUtils() {
+		// Prevent useless creation
+	}
 
 	/**
 	 * Method used when an UUID must be generated using a string representation.
@@ -41,7 +53,7 @@ public class UUIDUtils {
 	 * @throws RuntimeException
 	 *             thrown if the MD5 digest algorithm is no available
 	 */
-	public static UUID digestBased(String text) throws RuntimeException {
+	public static UUID digestBased(String text) {
 		assert text != null;
 
 		try {
@@ -55,14 +67,14 @@ public class UUIDUtils {
 			long mostSigBits = 0L;
 			long leastSigBits = 0L;
 
-			for (int i = 0; i < 8; i++) {
-				mostSigBits = (mostSigBits << 8) | (digest[i] & 0xFF);
-				leastSigBits = (leastSigBits << 8) | (digest[i + 8] & 0xFF);
+			for (int i = 0; i < BYTE_SIZE; i++) {
+				mostSigBits = (mostSigBits << BYTE_SIZE) | (digest[i] & BYTE_MASK);
+				leastSigBits = (leastSigBits << BYTE_SIZE) | (digest[i + BYTE_SIZE] & BYTE_MASK);
 			}
 
 			return new UUID(mostSigBits, leastSigBits);
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new IllegalAccessError(e.getMessage());
 		}
 	}
 }
