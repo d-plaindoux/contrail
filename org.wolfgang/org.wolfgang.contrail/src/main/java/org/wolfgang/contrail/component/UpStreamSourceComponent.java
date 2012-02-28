@@ -37,25 +37,25 @@ public interface UpStreamSourceComponent<E> {
 	/**
 	 * Provides the data channel used for down stream communication facility
 	 * 
-	 * @return a DownStreamDataChannel (never <code>null</code>)
+	 * @return a down stream data channel (never <code>null</code>)
 	 */
 	DownStreamDataHandler<E> getDownStreamDataHandler();
 
 	/**
-	 * Method called whether a {@link UpStreamDestinationComponent} shall be
+	 * Method called when the parametric upstream source component shall be
 	 * connected to the current component.
 	 * 
 	 * @param handler
-	 *            The {@link Destination} component
+	 *            The destination component
 	 */
 	void connect(UpStreamDestinationComponent<E> handler) throws ComponentAlreadyConnected;
 
 	/**
-	 * Method called whether a {@link UpStreamDestinationComponent} shall be
+	 * Method called when the connected upstream source component shall be
 	 * disconnected from the current component.
 	 * 
 	 * @param handler
-	 *            The {@link Destination} component
+	 *            The destination component
 	 */
 	void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotYetConnected;
 

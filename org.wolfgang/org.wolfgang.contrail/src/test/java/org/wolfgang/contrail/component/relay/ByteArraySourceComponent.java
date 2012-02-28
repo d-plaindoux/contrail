@@ -23,12 +23,11 @@ import java.io.OutputStream;
 
 import org.wolfgang.contrail.component.impl.AbstractUpStreamSourceComponent;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.handler.DataContext;
+import org.wolfgang.contrail.exception.HandleDataException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.HandleDataException;
 
 /**
- * <code>BytesSourceComponent</code>
+ * <code>ByteArraySourceComponent</code> is a simple upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -44,7 +43,7 @@ public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<by
 	 */
 	public class LocalDownStreamDataHandler implements DownStreamDataHandler<byte[]> {
 		@Override
-		public void handleData(DataContext context, byte[] data) throws HandleDataException {
+		public void handleData(byte[] data) throws HandleDataException {
 			try {
 				outputStream.write(data);
 			} catch (IOException e) {
@@ -93,7 +92,7 @@ public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<by
 	 */
 	public void emitData(byte[] bytes) throws HandleDataException {
 		try {
-			this.getUpStreamDataHandler().handleData(null, bytes);
+			this.getUpStreamDataHandler().handleData(bytes);
 		} catch (ComponentNotYetConnected e) {
 			throw new HandleDataException();
 		}

@@ -16,19 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.handler;
-
-
+package org.wolfgang.contrail.exception;
 
 /**
- * <code>DataContext</code> was the context setup when a data is handled.
- * Such context refers a unique identifier w
+ * <code>HandleDataException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataContext {
+public class HandleDataException extends Exception {
 
-	// Nothing for the moment
+	private static final long serialVersionUID = -2525135136709063308L;
+
+	/**
+	 * Constructor
+	 */
+	public HandleDataException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public HandleDataException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public HandleDataException(Throwable arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public HandleDataException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
 
 }

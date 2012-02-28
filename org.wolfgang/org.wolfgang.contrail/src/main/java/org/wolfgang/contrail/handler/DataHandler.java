@@ -18,11 +18,13 @@
 
 package org.wolfgang.contrail.handler;
 
+import org.wolfgang.contrail.exception.HandleDataException;
 
 /**
  * The <code>DataHandler</code> provides basic mechanisms required when messages
- * shall be send or receive. This data type is not provided as-is but was mainly
- * used as a basis for upstream and downstream data channels.
+ * shall be managed. This data type is not provided as-is but was mainly used as
+ * a basis for upstream and downstream data channels which are public version of
+ * this data handler.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -32,10 +34,12 @@ interface DataHandler<D> {
 	/**
 	 * Method called whether a data has to be managed
 	 * 
-	 * @param context The data context
-	 * @param data The data
+	 * @param context
+	 *            The data context
+	 * @param data
+	 *            The data
 	 */
-	void handleData(DataContext context, D data) throws HandleDataException;
+	void handleData(D data) throws HandleDataException;
 
 	/**
 	 * Method called when the channel is closed

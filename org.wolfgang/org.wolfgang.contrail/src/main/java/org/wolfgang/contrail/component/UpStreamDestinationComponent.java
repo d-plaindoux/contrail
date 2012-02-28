@@ -43,20 +43,20 @@ public interface UpStreamDestinationComponent<E> {
 	UpStreamDataHandler<E> getUpStreamDataHandler();
 
 	/**
-	 * Method called whether a {@link UpStreamSourceComponent} shall be
+	 * Method called when the parametric upstream source component shall be
 	 * connected to the current component.
 	 * 
 	 * @param handler
-	 *            The {@link Destination} component
+	 *            The source component
 	 */
 	void connect(UpStreamSourceComponent<E> handler) throws ComponentAlreadyConnected;
 
 	/**
-	 * Method called whether a {@link UpStreamSourceComponent} shall be
+	 * Method called when the connected upstream source component shall be
 	 * disconnected from the current component.
 	 * 
 	 * @param handler
-	 *            The {@link Destination} component
+	 *            The source component
 	 */
 	void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotYetConnected;
 }

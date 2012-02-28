@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import org.wolfgang.contrail.connector.ComponentConnectionImpl;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.exception.HandleDataException;
 
 /**
  * <code>TestByteRelay</code>
@@ -36,15 +36,13 @@ import org.wolfgang.contrail.handler.HandleDataException;
  */
 public class TestByteRelay extends TestCase {
 
-	public void testNominal() throws ComponentAlreadyConnected, HandleDataException, IOException,
-			ComponentNotYetConnected {
+	public void testNominal() throws ComponentAlreadyConnected, HandleDataException, IOException, ComponentNotYetConnected {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentConnectionImpl<byte[]> interconnection = new ComponentConnectionImpl<byte[]>(
-					source, destination);
+			final ComponentConnectionImpl<byte[]> interconnection = new ComponentConnectionImpl<byte[]>(source, destination);
 
 			source.emitData("Hello,".getBytes());
 			source.emitData(" World!".getBytes());
@@ -79,12 +77,12 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 
-			destination.handleData(null, "Hello,".getBytes());
+			destination.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (HandleDataException e) {
 			// OK
 		}
 	}
-		
+
 }

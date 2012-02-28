@@ -20,8 +20,7 @@ package org.wolfgang.contrail.component.relay;
 
 import org.wolfgang.contrail.component.impl.AbstractUpStreamDestinationComponent;
 import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.handler.DataContext;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.exception.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -41,11 +40,11 @@ public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationCo
 	 */
 	private final class LocalUpStreamDataHandler implements UpStreamDataHandler<byte[]> {
 		@Override
-		public void handleData(DataContext context, byte[] data) throws HandleDataException {
+		public void handleData(byte[] data) throws HandleDataException {
 			// Send the received byte array to the down stream data handler
 			// (Loop)
 			try {
-				getDowntreamDataHandler().handleData(context, data);
+				getDowntreamDataHandler().handleData(data);
 			} catch (ComponentNotYetConnected e) {
 				throw new HandleDataException();
 			}
