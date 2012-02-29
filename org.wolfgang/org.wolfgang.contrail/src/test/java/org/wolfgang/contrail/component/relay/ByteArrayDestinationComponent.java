@@ -18,15 +18,13 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.DataReceiverFactory;
+import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
 import org.wolfgang.contrail.handler.HandleDataException;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>BytesSourceComponent</code>
+ * <code>ByteArrayDestinationComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -37,13 +35,13 @@ public class ByteArrayDestinationComponent extends TerminalUpStreamDestinationCo
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
-		super(new DataReceiverFactory<byte[], TerminalUpStreamDestinationComponent<byte[]>>() {
+		super(new TerminalDataReceiverFactory<byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(final TerminalUpStreamDestinationComponent<byte[]> terminal) {
 				return new DataReceiver<byte[]>() {
 					@Override
 					public void receiveData(byte[] data) throws HandleDataException {
-						terminal.getDataEmitter().sendData(data);
+						terminal.getDataSender().sendData(data);
 					}
 				};
 			}

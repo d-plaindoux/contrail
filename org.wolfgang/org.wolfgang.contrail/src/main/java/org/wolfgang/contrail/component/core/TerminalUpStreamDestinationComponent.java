@@ -64,7 +64,7 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	 * 
 	 * @param upStreamDataHandler
 	 */
-	protected TerminalUpStreamDestinationComponent(final DataReceiverFactory<E,TerminalUpStreamDestinationComponent<E>> receiverFactory) {
+	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> receiverFactory) {
 		this.dataEmitter = new DataSender<E>() {
 			@Override
 			public void sendData(E data) throws HandleDataException {
@@ -144,7 +144,7 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	 * @throws HandleDataException
 	 *             thrown is the data can not be handled correctly
 	 */
-	public DataSender<E> getDataEmitter() {
+	public DataSender<E> getDataSender() {
 		return this.dataEmitter;
 	}
 }

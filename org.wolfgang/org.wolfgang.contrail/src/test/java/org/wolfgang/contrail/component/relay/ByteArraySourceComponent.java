@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.DataReceiverFactory;
+import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
 import org.wolfgang.contrail.handler.HandleDataException;
 
@@ -38,7 +38,7 @@ public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byt
 	 * Constructor
 	 */
 	public ByteArraySourceComponent(final OutputStream outputStream) {
-		super(new DataReceiverFactory<byte[], InitialUpStreamSourceComponent<byte[]>>() {
+		super(new InitialDataReceiverFactory<byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(InitialUpStreamSourceComponent<byte[]> initial) {
 				return new DataReceiver<byte[]>() {

@@ -45,8 +45,8 @@ public class TestByteRelay extends TestCase {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentConnectionImpl<byte[]> interconnection = new ComponentConnectionImpl<byte[]>(source, destination);
 
-			source.getDataEmitter().sendData("Hello,".getBytes());
-			source.getDataEmitter().sendData(" World!".getBytes());
+			source.getDataSender().sendData("Hello,".getBytes());
+			source.getDataSender().sendData(" World!".getBytes());
 
 			interconnection.dispose();
 		} finally {
@@ -63,7 +63,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 
-			source.getDataEmitter().sendData("Hello,".getBytes());
+			source.getDataSender().sendData("Hello,".getBytes());
 
 			fail();
 		} catch (HandleDataException e) {

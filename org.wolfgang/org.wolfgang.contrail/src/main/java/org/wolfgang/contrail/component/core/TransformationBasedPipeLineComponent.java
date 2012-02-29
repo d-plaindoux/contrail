@@ -65,7 +65,7 @@ public class TransformationBasedPipeLineComponent<S, D> implements PipelineCompo
 	 * 
 	 * @param upStreamDataHandler
 	 */
-	protected TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer, final DataTransformation<D, S> downstreamXducer) {
+	public TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer, final DataTransformation<D, S> downstreamXducer) {
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
 			@Override
 			public void handleData(S data) throws HandleDataException {

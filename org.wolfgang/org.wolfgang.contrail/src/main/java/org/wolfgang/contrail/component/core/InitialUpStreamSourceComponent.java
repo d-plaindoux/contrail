@@ -60,7 +60,7 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 	 * 
 	 * @param downStreamDataHandler
 	 */
-	protected InitialUpStreamSourceComponent(final DataReceiverFactory<E,InitialUpStreamSourceComponent<E>> dataFactory) {
+	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
 		this.dataEmitter = new DataSender<E>() {
 			@Override
 			public void sendData(E data) throws HandleDataException {
@@ -73,7 +73,7 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 		};
 
 		final DataReceiver<E> receiver = dataFactory.create(this);
-		
+
 		this.downStreamDataHandler = new DownStreamDataHandler<E>() {
 			@Override
 			public void handleData(E data) throws HandleDataException {
@@ -140,7 +140,7 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 	 * @throws HandleDataException
 	 *             thrown is the data can not be handled correctly
 	 */
-	public DataSender<E> getDataEmitter() {
+	public DataSender<E> getDataSender() {
 		return this.dataEmitter;
 	}
 }

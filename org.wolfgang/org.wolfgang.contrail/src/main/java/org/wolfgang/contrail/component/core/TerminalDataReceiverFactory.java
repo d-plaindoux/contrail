@@ -18,24 +18,15 @@
 
 package org.wolfgang.contrail.component.core;
 
-import org.wolfgang.contrail.handler.HandleDataException;
-
 /**
- * <code>DataReceiverFactory</code> is capable to build data receiver.
+ * <code>TerminalDataReceiverFactory</code> is a data receiver builder dedicated
+ * to terminal upstream destination component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataReceiverFactory<E, C> {
+public interface TerminalDataReceiverFactory<E> extends DataReceiverFactory<E, TerminalUpStreamDestinationComponent<E>> {
 
-	/**
-	 * Method called whether a data receiver shall be built
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws HandleDataException
-	 *             thrown is the data can not be handled correctly
-	 */
-	DataReceiver<E> create(C component);
+	// Nothing
 
 }
