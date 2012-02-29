@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.impl;
 
+import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
@@ -29,7 +30,10 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>AbstractPipeLineComponent</code>
+ * <code>AbstractPipeLineComponent</code> is an implementation which requires
+ * pipeline transducers for the transformations performed each time an upstream
+ * or downstrem data go through the pipeline.
+ * 
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -74,14 +78,12 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 
 			@Override
 			public void handleClose() {
-				// TODO Auto-generated method stub
-
+				// TODO
 			}
 
 			@Override
 			public void handleLost() {
-				// TODO Auto-generated method stub
-
+				// TODO
 			}
 		};
 
@@ -97,15 +99,14 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 
 			@Override
 			public void handleClose() {
-				upStreamDestinationComponent.getUpStreamDataHandler().handleClose();
+				// TODO
 			}
 
 			@Override
 			public void handleLost() {
-				upStreamDestinationComponent.getUpStreamDataHandler().handleLost();
+				// TODO
 			}
 		};
-
 	}
 
 	@Override
@@ -113,8 +114,8 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
-			throw new ComponentAlreadyConnected(MessagesProvider.get("org.wolfgang.contrail.message", "already.connected")
-					.format());
+			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
+			throw new ComponentAlreadyConnected(message.format());
 		}
 	}
 
@@ -123,8 +124,8 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 		if (this.upStreamSourceComponent != null) {
 			this.upStreamSourceComponent = null;
 		} else {
-			throw new ComponentNotYetConnected(MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected")
-					.format());
+			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
+			throw new ComponentNotYetConnected(message.format());
 		}
 	}
 
@@ -133,8 +134,8 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
-			throw new ComponentAlreadyConnected(MessagesProvider.get("org.wolfgang.contrail.message", "already.connected")
-					.format());
+			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
+			throw new ComponentAlreadyConnected(message.format());
 		}
 	}
 
@@ -143,8 +144,8 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 		if (this.upStreamDestinationComponent != null) {
 			this.upStreamDestinationComponent = null;
 		} else {
-			throw new ComponentNotYetConnected(MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected")
-					.format());
+			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
+			throw new ComponentNotYetConnected(message.format());
 		}
 	}
 
@@ -155,8 +156,7 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 
 	@Override
 	public DownStreamDataHandler<D> getDownStreamDataHandler() {
-		// TODO Auto-generated method stub
-		return null;
+		return downStreamDataHandler;
 	}
 
 }
