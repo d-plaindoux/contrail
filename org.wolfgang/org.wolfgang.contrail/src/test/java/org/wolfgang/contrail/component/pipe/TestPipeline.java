@@ -20,18 +20,15 @@ package org.wolfgang.contrail.component.pipe;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.TestCase;
+
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
-import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
-import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
 import org.wolfgang.contrail.component.core.TransformationBasedPipeLineComponent;
 import org.wolfgang.contrail.connector.ComponentConnectionImpl;
 import org.wolfgang.contrail.handler.HandleDataException;
-
-import junit.framework.TestCase;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -41,77 +38,33 @@ import junit.framework.TestCase;
  */
 public class TestPipeline extends TestCase {
 
-	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException, HandleDataException {
+	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			HandleDataException {
 		final TransformationBasedPipeLineComponent<String, Integer> pipeline = new TransformationBasedPipeLineComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new InitialUpStreamSourceComponent<String>(
-				new InitialDataReceiverFactory<String>() {
-					@Override
-					public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws HandleDataException {
-								stringReference.set(data);
-							}
-						};
-					}
-				});
-
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new TerminalUpStreamDestinationComponent<Integer>(
-				new TerminalDataReceiverFactory<Integer>() {
-					@Override
-					public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
-						return new DataReceiver<Integer>() {
-							@Override
-							public void receiveData(Integer data) throws HandleDataException {
-								terminal.getDataSender().sendData(data * 10);
-							}
-						};
-					}
-				});
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
 		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
 
 		initial.getDataSender().sendData("3");
-		assertEquals("30", stringReference.get());
+		assertEquals("9", stringReference.get());
 
 		initialConnection.dispose();
 		terminalConnection.dispose();
 	}
 
-	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException, HandleDataException {
+	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			HandleDataException {
 		final TransformationBasedPipeLineComponent<String, Integer> pipeline = new TransformationBasedPipeLineComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new InitialUpStreamSourceComponent<String>(
-				new InitialDataReceiverFactory<String>() {
-					@Override
-					public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws HandleDataException {
-								stringReference.set(data);
-							}
-						};
-					}
-				});
-
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new TerminalUpStreamDestinationComponent<Integer>(
-				new TerminalDataReceiverFactory<Integer>() {
-					@Override
-					public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
-						return new DataReceiver<Integer>() {
-							@Override
-							public void receiveData(Integer data) throws HandleDataException {
-								terminal.getDataSender().sendData(data * 10);
-							}
-						};
-					}
-				});
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
 		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
@@ -128,31 +81,8 @@ public class TestPipeline extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new InitialUpStreamSourceComponent<String>(
-				new InitialDataReceiverFactory<String>() {
-					@Override
-					public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws HandleDataException {
-								stringReference.set(data);
-							}
-						};
-					}
-				});
-
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new TerminalUpStreamDestinationComponent<Integer>(
-				new TerminalDataReceiverFactory<Integer>() {
-					@Override
-					public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
-						return new DataReceiver<Integer>() {
-							@Override
-							public void receiveData(Integer data) throws HandleDataException {
-								terminal.getDataSender().sendData(data * 10);
-							}
-						};
-					}
-				});
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
 		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
