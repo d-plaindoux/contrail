@@ -23,10 +23,10 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.connector.ComponentConnectionImpl;
-import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.exception.HandleDataException;
+import org.wolfgang.contrail.handler.HandleDataException;
 
 /**
  * <code>TestByteRelay</code>
@@ -36,7 +36,8 @@ import org.wolfgang.contrail.exception.HandleDataException;
  */
 public class TestByteRelay extends TestCase {
 
-	public void testNominal() throws ComponentAlreadyConnected, HandleDataException, IOException, ComponentNotYetConnected {
+	public void testNominal() throws ComponentAlreadyConnectedException, HandleDataException, IOException,
+			ComponentNotYetConnectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -44,8 +45,8 @@ public class TestByteRelay extends TestCase {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentConnectionImpl<byte[]> interconnection = new ComponentConnectionImpl<byte[]>(source, destination);
 
-			source.emitData("Hello,".getBytes());
-			source.emitData(" World!".getBytes());
+			source.getDataEmitter().sendData("Hello,".getBytes());
+			source.getDataEmitter().sendData(" World!".getBytes());
 
 			interconnection.dispose();
 		} finally {
@@ -62,7 +63,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 
-			source.emitData("Hello,".getBytes());
+			source.getDataEmitter().sendData("Hello,".getBytes());
 
 			fail();
 		} catch (HandleDataException e) {
@@ -73,7 +74,6 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void testDestinationNotConnected() throws IOException {
-
 		try {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 

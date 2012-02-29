@@ -21,10 +21,10 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.wolfgang.contrail.component.impl.AbstractUpStreamSourceComponent;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.exception.HandleDataException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.component.core.DataReceiver;
+import org.wolfgang.contrail.component.core.DataReceiverFactory;
+import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.handler.HandleDataException;
 
 /**
  * <code>ByteArraySourceComponent</code> is a simple upstream source component.
@@ -32,69 +32,25 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArraySourceComponent extends AbstractUpStreamSourceComponent<byte[]> {
-
-	/**
-	 * <code>LocalDownStreamDataHandler</code> is the internal implementation of
-	 * the down stream handler.
-	 * 
-	 * @author Didier Plaindoux
-	 * @verision 1.0
-	 */
-	public class LocalDownStreamDataHandler implements DownStreamDataHandler<byte[]> {
-		@Override
-		public void handleData(byte[] data) throws HandleDataException {
-			try {
-				outputStream.write(data);
-			} catch (IOException e) {
-				throw new HandleDataException(e);
-			}
-		}
-
-		@Override
-		public void handleClose() {
-			// Nothing
-		}
-
-		@Override
-		public void handleLost() {
-			// Nothing
-		}
-	}
-
-	/**
-	 * Output stream receiving outgoing data
-	 */
-	private final OutputStream outputStream;
-	private final DownStreamDataHandler<byte[]> downStreamDataHandler;
+public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byte[]> {
 
 	/**
 	 * Constructor
 	 */
-	public ByteArraySourceComponent(OutputStream outputStream) {
-		super();
-		this.outputStream = outputStream;
-		this.downStreamDataHandler = new LocalDownStreamDataHandler();
-	}
-
-	@Override
-	public DownStreamDataHandler<byte[]> getDownStreamDataHandler() {
-		return this.downStreamDataHandler;
-	}
-
-	/**
-	 * Method called whether an external byte array is received
-	 * 
-	 * @param bytes
-	 *            The byte array
-	 * @throws HandleDataException
-	 *             thrown if the data handling fails
-	 */
-	public void emitData(byte[] bytes) throws HandleDataException {
-		try {
-			this.getUpStreamDataHandler().handleData(bytes);
-		} catch (ComponentNotYetConnected e) {
-			throw new HandleDataException();
-		}
+	public ByteArraySourceComponent(final OutputStream outputStream) {
+		super(new DataReceiverFactory<byte[], InitialUpStreamSourceComponent<byte[]>>() {
+			@Override
+			public DataReceiver<byte[]> create(InitialUpStreamSourceComponent<byte[]> initial) {
+				return new DataReceiver<byte[]>() {
+					public void receiveData(byte[] data) throws HandleDataException {
+						try {
+							outputStream.write(data);
+						} catch (IOException e) {
+							throw new HandleDataException(e);
+						}
+					}
+				};
+			}
+		});
 	}
 }

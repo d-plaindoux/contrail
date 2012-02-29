@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -49,7 +47,7 @@ public interface UpStreamDestinationComponent<E> {
 	 * @param handler
 	 *            The source component
 	 */
-	void connect(UpStreamSourceComponent<E> handler) throws ComponentAlreadyConnected;
+	void connect(UpStreamSourceComponent<E> handler) throws ComponentAlreadyConnectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -58,5 +56,5 @@ public interface UpStreamDestinationComponent<E> {
 	 * @param handler
 	 *            The source component
 	 */
-	void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotYetConnected;
+	void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotYetConnectedException;
 }

@@ -18,22 +18,49 @@
 
 package org.wolfgang.contrail.component;
 
-
 /**
- * The <code>PipelineComponent</code> is capable to connect a source handler and
- * a destination handler. In addition the data can be transformed from a type S
- * to a type D or vice-versa depending if components communicate using upstream
- * or downstream network.
- * <p>
- * The first type was the event type received from the upstream network -
- * denoted by the destination facet. The second type was the event type sent to
- * the upstream network - denoted by the source facet.
+ * <code>ComponentAlreadyConnected</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
+public class ComponentAlreadyConnectedException extends Exception {
 
-	// Nothing
-	
+	private static final long serialVersionUID = -636050790684085546L;
+
+	/**
+	 * Constructor
+	 */
+	public ComponentAlreadyConnectedException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public ComponentAlreadyConnectedException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ComponentAlreadyConnectedException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ComponentAlreadyConnectedException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

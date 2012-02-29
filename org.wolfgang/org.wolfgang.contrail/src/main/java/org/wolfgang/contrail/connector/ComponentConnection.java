@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.connector;
 
+import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 
 /**
  * The <code>ComponentConnection</code> defines basic behaviors
@@ -47,9 +47,9 @@ public interface ComponentConnection<E> {
 	/**
 	 * Method called whether the connection must be disposed.
 	 * 
-	 * @throws ComponentNotYetConnected
+	 * @throws ComponentNotYetConnectedException
 	 *             thrown if the connection is already disposed
 	 */
-	void dispose() throws ComponentNotYetConnected;
+	void dispose() throws ComponentNotYetConnectedException;
 
 }

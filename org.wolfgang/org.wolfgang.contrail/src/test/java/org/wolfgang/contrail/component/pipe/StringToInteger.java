@@ -18,7 +18,8 @@
 
 package org.wolfgang.contrail.component.pipe;
 
-import org.wolfgang.contrail.component.PipelineComponent.Transducer;
+import org.wolfgang.contrail.component.core.DataTransformation;
+import org.wolfgang.contrail.component.core.DataTransformationException;
 
 /**
  * <code>IntegerToString</code>
@@ -26,11 +27,15 @@ import org.wolfgang.contrail.component.PipelineComponent.Transducer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements Transducer<String, Integer> {
+public class StringToInteger implements DataTransformation<String, Integer> {
 
 	@Override
-	public Integer transform(String s) {
-		return Integer.parseInt(s);
+	public Integer transform(String s) throws DataTransformationException {
+		try {
+			return Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			throw new DataTransformationException(e);
+		}
 	}
 
 }

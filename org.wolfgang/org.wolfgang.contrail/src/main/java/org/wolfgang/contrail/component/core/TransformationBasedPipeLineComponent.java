@@ -16,17 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.impl;
+package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.exception.HandleDataException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -38,7 +38,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> {
+public class TransformationBasedPipeLineComponent<S, D> implements PipelineComponent<S, D> {
 
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
@@ -65,14 +65,18 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 	 * 
 	 * @param upStreamDataHandler
 	 */
-	protected AbstractPipeLineComponent(final Transducer<S, D> upstreamXducer, final Transducer<D, S> downstreamXducer) {
+	protected TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer, final DataTransformation<D, S> downstreamXducer) {
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
 			@Override
 			public void handleData(S data) throws HandleDataException {
 				if (upStreamDestinationComponent == null) {
 					throw new HandleDataException();
 				} else {
-					upStreamDestinationComponent.getUpStreamDataHandler().handleData(upstreamXducer.transform(data));
+					try {
+						upStreamDestinationComponent.getUpStreamDataHandler().handleData(upstreamXducer.transform(data));
+					} catch (DataTransformationException e) {
+						throw new HandleDataException(e);
+					}
 				}
 			}
 
@@ -93,7 +97,11 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 				if (upStreamSourceComponent == null) {
 					throw new HandleDataException();
 				} else {
-					upStreamSourceComponent.getDownStreamDataHandler().handleData(downstreamXducer.transform(data));
+					try {
+						upStreamSourceComponent.getDownStreamDataHandler().handleData(downstreamXducer.transform(data));
+					} catch (DataTransformationException e) {
+						throw new HandleDataException(e);
+					}
 				}
 			}
 
@@ -110,42 +118,42 @@ public class AbstractPipeLineComponent<S, D> implements PipelineComponent<S, D> 
 	}
 
 	@Override
-	public void connect(UpStreamSourceComponent<S> handler) throws ComponentAlreadyConnected {
+	public void connect(UpStreamSourceComponent<S> handler) throws ComponentAlreadyConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentAlreadyConnected(message.format());
+			throw new ComponentAlreadyConnectedException(message.format());
 		}
 	}
 
 	@Override
-	public void disconnect(UpStreamSourceComponent<S> handler) throws ComponentNotYetConnected {
+	public void disconnect(UpStreamSourceComponent<S> handler) throws ComponentNotYetConnectedException {
 		if (this.upStreamSourceComponent != null) {
 			this.upStreamSourceComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotYetConnected(message.format());
+			throw new ComponentNotYetConnectedException(message.format());
 		}
 	}
 
 	@Override
-	public void connect(UpStreamDestinationComponent<D> handler) throws ComponentAlreadyConnected {
+	public void connect(UpStreamDestinationComponent<D> handler) throws ComponentAlreadyConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentAlreadyConnected(message.format());
+			throw new ComponentAlreadyConnectedException(message.format());
 		}
 	}
 
 	@Override
-	public void disconnect(UpStreamDestinationComponent<D> handler) throws ComponentNotYetConnected {
+	public void disconnect(UpStreamDestinationComponent<D> handler) throws ComponentNotYetConnectedException {
 		if (this.upStreamDestinationComponent != null) {
 			this.upStreamDestinationComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotYetConnected(message.format());
+			throw new ComponentNotYetConnectedException(message.format());
 		}
 	}
 

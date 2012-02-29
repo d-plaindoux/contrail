@@ -18,10 +18,10 @@
 
 package org.wolfgang.contrail.connector;
 
+import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
 
 /**
  * <code>ComponentConnectionImpl</code> is the main implementation of the
@@ -49,11 +49,11 @@ public class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 	 *            The source
 	 * @param destination
 	 *            The destination
-	 * @throws ComponentAlreadyConnected
+	 * @throws ComponentAlreadyConnectedException
 	 *             thrown if components are already connected
 	 */
 	public ComponentConnectionImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
-			throws ComponentAlreadyConnected {
+			throws ComponentAlreadyConnectedException {
 		super();
 		this.source = source;
 		this.destination = destination;
@@ -62,7 +62,7 @@ public class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 
 		try {
 			destination.connect(source);
-		} catch (ComponentAlreadyConnected e) {
+		} catch (ComponentAlreadyConnectedException e) {
 			try {
 				source.disconnect(destination);
 			} catch (Exception consume) {
@@ -84,7 +84,7 @@ public class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 	}
 
 	@Override
-	public void dispose() throws ComponentNotYetConnected {
+	public void dispose() throws ComponentNotYetConnectedException {
 		try {
 			this.source.disconnect(this.destination);
 		} finally {

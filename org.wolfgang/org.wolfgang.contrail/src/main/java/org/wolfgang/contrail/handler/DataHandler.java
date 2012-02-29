@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.handler;
 
-import org.wolfgang.contrail.exception.HandleDataException;
 
 /**
  * The <code>DataHandler</code> provides basic mechanisms required when messages

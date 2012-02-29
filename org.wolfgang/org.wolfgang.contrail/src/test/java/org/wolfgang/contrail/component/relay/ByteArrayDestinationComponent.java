@@ -18,9 +18,11 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import org.wolfgang.contrail.component.impl.AbstractUpStreamDestinationComponent;
-import org.wolfgang.contrail.exception.ComponentNotYetConnected;
-import org.wolfgang.contrail.exception.HandleDataException;
+import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
+import org.wolfgang.contrail.component.core.DataReceiver;
+import org.wolfgang.contrail.component.core.DataReceiverFactory;
+import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.handler.HandleDataException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -29,53 +31,22 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArrayDestinationComponent extends AbstractUpStreamDestinationComponent<byte[]> {
-
-	/**
-	 * <code>LocalUpStreamDataHandler</code> is the internal implementation
-	 * required for the up stream data handler
-	 * 
-	 * @author Didier Plaindoux
-	 * @verision 1.0
-	 */
-	private final class LocalUpStreamDataHandler implements UpStreamDataHandler<byte[]> {
-		@Override
-		public void handleData(byte[] data) throws HandleDataException {
-			// Send the received byte array to the down stream data handler
-			// (Loop)
-			try {
-				getDowntreamDataHandler().handleData(data);
-			} catch (ComponentNotYetConnected e) {
-				throw new HandleDataException();
-			}
-		}
-
-		@Override
-		public void handleClose() {
-			// Nothing
-		}
-
-		@Override
-		public void handleLost() {
-			// Nothing
-		}
-	}
-
-	/**
-	 * The up stream data handler
-	 */
-	private final UpStreamDataHandler<byte[]> upStreamDataHandler;
+public class ByteArrayDestinationComponent extends TerminalUpStreamDestinationComponent<byte[]> {
 
 	/**
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
-		super();
-		this.upStreamDataHandler = new LocalUpStreamDataHandler();
-	}
-
-	@Override
-	public UpStreamDataHandler<byte[]> getUpStreamDataHandler() {
-		return this.upStreamDataHandler;
+		super(new DataReceiverFactory<byte[], TerminalUpStreamDestinationComponent<byte[]>>() {
+			@Override
+			public DataReceiver<byte[]> create(final TerminalUpStreamDestinationComponent<byte[]> terminal) {
+				return new DataReceiver<byte[]>() {
+					@Override
+					public void receiveData(byte[] data) throws HandleDataException {
+						terminal.getDataEmitter().sendData(data);
+					}
+				};
+			}
+		});
 	}
 }

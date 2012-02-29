@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.pipe;
 
-import org.wolfgang.contrail.component.PipelineComponent.Transducer;
+import org.wolfgang.contrail.component.core.DataTransformation;
 
 /**
  * <code>IntegerToString</code>
@@ -26,7 +26,7 @@ import org.wolfgang.contrail.component.PipelineComponent.Transducer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements Transducer<Integer, String> {
+public class IntegerToString implements DataTransformation<Integer, String> {
 
 	@Override
 	public String transform(Integer s) {

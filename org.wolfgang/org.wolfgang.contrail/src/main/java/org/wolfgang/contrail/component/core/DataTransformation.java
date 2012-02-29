@@ -16,51 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.exception;
+package org.wolfgang.contrail.component.core;
 
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>DataTransducer</code> is able to transform any data from a given type
+ * to another one.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentAlreadyConnected extends Exception {
-
-	private static final long serialVersionUID = -636050790684085546L;
-
-	/**
-	 * Constructor
-	 */
-	public ComponentAlreadyConnected() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public ComponentAlreadyConnected(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ComponentAlreadyConnected(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ComponentAlreadyConnected(Throwable arg0) {
-		super(arg0);
-	}
-
+public interface DataTransformation<S, D> {
+	D transform(S s) throws DataTransformationException;
 }

@@ -16,22 +16,22 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.exception;
+package org.wolfgang.contrail.component.core;
 
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>DataTransformationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentNotYetConnected extends Exception {
+public class DataTransformationException extends Exception {
 
-	private static final long serialVersionUID = -4863662886063758972L;
+	private static final long serialVersionUID = 3615754764253846911L;
 
 	/**
 	 * Constructor
 	 */
-	public ComponentNotYetConnected() {
+	public DataTransformationException() {
 		super();
 	}
 
@@ -41,7 +41,7 @@ public class ComponentNotYetConnected extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public ComponentNotYetConnected(String arg0, Throwable arg1) {
+	public DataTransformationException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 	}
 
@@ -50,7 +50,7 @@ public class ComponentNotYetConnected extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ComponentNotYetConnected(String arg0) {
+	public DataTransformationException(String arg0) {
 		super(arg0);
 	}
 
@@ -59,7 +59,7 @@ public class ComponentNotYetConnected extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ComponentNotYetConnected(Throwable arg0) {
+	public DataTransformationException(Throwable arg0) {
 		super(arg0);
 	}
 

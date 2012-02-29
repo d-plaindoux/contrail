@@ -16,51 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.exception;
+package org.wolfgang.contrail.component.core;
+
+import org.wolfgang.contrail.handler.HandleDataException;
 
 /**
- * <code>HandleDataException</code>
+ * <code>DataSender</code> is capable to send data to the component stream.
+ * This is mainly linked to an initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class HandleDataException extends Exception {
-
-	private static final long serialVersionUID = -2525135136709063308L;
+public interface DataSender<E> {
 
 	/**
-	 * Constructor
-	 */
-	public HandleDataException() {
-		super();
-	}
-
-	/**
-	 * Constructor
+	 * Method called whether a data shall be performed
 	 * 
-	 * @param arg0
+	 * @param data
+	 *            The data to be performed
+	 * @throws HandleDataException
+	 *             thrown is the data can not be handled correctly
 	 */
-	public HandleDataException(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public HandleDataException(Throwable arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public HandleDataException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
+	void sendData(E data) throws HandleDataException;
 }

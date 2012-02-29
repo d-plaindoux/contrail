@@ -16,24 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.component.core;
 
+import org.wolfgang.contrail.handler.HandleDataException;
 
 /**
- * The <code>PipelineComponent</code> is capable to connect a source handler and
- * a destination handler. In addition the data can be transformed from a type S
- * to a type D or vice-versa depending if components communicate using upstream
- * or downstream network.
- * <p>
- * The first type was the event type received from the upstream network -
- * denoted by the destination facet. The second type was the event type sent to
- * the upstream network - denoted by the source facet.
+ * <code>DataReceiver</code> is capable to receive data from the component
+ * stream. This is mainly linked to an terminal upstream destination component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
+public interface DataReceiver<E> {
 
-	// Nothing
-	
+	/**
+	 * Method called whether a data shall be performed
+	 * 
+	 * @param data
+	 *            The data to be performed
+	 * @throws HandleDataException
+	 *             thrown is the data can not be handled correctly
+	 */
+	void receiveData(E data) throws HandleDataException;
 }
