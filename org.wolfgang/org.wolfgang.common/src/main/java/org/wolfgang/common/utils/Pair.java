@@ -81,7 +81,7 @@ public class Pair<First, Second> {
 		if (!(obj instanceof Pair)) {
 			return false;
 		}
-		Pair other = (Pair) obj;
+		Pair<?,?> other = (Pair<?,?>) obj;
 		if (first == null) {
 			if (other.first != null) {
 				return false;

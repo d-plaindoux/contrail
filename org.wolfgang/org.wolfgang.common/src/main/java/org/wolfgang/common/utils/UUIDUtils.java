@@ -24,17 +24,17 @@ import java.util.UUID;
 
 /**
  * 
- * <code>UUIDUtils</code>
+ * <code>UUIDUtils</code> provides basic function for uuid generation from a
+ * string using MD5 digest
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public final class UUIDUtils {
-	
+
 	private static final int BYTE_SIZE = 8;
 	private static final int BYTE_MASK = 0xFF;
-	
-
+	private static final int DIGEST_LEN = 16;
 
 	/**
 	 * Constructor
@@ -57,12 +57,13 @@ public final class UUIDUtils {
 		assert text != null;
 
 		try {
-			MessageDigest algo = MessageDigest.getInstance("MD5");
+			final MessageDigest algo = MessageDigest.getInstance("MD5");
 			algo.reset();
 			algo.update(text.getBytes());
-			byte[] digest = algo.digest();
 
-			assert digest.length == 16;
+			final byte[] digest = algo.digest();
+
+			assert digest.length == DIGEST_LEN;
 
 			long mostSigBits = 0L;
 			long leastSigBits = 0L;
@@ -74,7 +75,7 @@ public final class UUIDUtils {
 
 			return new UUID(mostSigBits, leastSigBits);
 		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalAccessError(e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 }

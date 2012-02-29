@@ -19,6 +19,7 @@
 package org.wolfgang.common.message;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.impl;
 
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.exception.ComponentAlreadyConnected;
@@ -59,7 +60,7 @@ public abstract class AbstractUpStreamDestinationComponent<E> implements UpStrea
 	 */
 	public DownStreamDataHandler<E> getDowntreamDataHandler() throws ComponentNotYetConnected {
 		if (this.upStreamSourceComponent == null) {
-			throw new ComponentNotYetConnected();
+			throw new ComponentNotYetConnected(MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected").format());
 		} else {
 			return upStreamSourceComponent.getDownStreamDataHandler();
 		}
@@ -70,7 +71,7 @@ public abstract class AbstractUpStreamDestinationComponent<E> implements UpStrea
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
-			throw new ComponentAlreadyConnected();
+			throw new ComponentAlreadyConnected(MessagesProvider.get("org.wolfgang.contrail.message", "already.connected").format());
 		}
 	}
 
@@ -79,7 +80,7 @@ public abstract class AbstractUpStreamDestinationComponent<E> implements UpStrea
 		if (this.upStreamSourceComponent != null) {
 			this.upStreamSourceComponent = null;
 		} else {
-			throw new ComponentNotYetConnected();
+			throw new ComponentNotYetConnected(MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected").format());
 		}
 	}
 

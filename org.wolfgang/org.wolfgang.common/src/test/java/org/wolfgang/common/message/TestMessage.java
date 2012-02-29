@@ -21,17 +21,18 @@ package org.wolfgang.common.message;
 import junit.framework.TestCase;
 
 /**
+ * <code>TestMessage</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
- * 
  */
 public class TestMessage extends TestCase {
 
 	public void testMessage01() throws Exception {
 		try {
-			final String message = MessagesProvider.get("org.wolfgang.common.message.test", "test.message").format();
-			assertEquals("This is a test message", message);
+			final Message message = MessagesProvider.get("org/wolfgang/common/message", "message");
+			final String text = message.format();
+			assertEquals("This is a test message", text);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -39,9 +40,9 @@ public class TestMessage extends TestCase {
 
 	public void testMessage02() throws Exception {
 		try {
-			final String message = MessagesProvider.get("org.wolfgang.common.message.test", "test.message.with.args").format(
-					"'Hello, World!'");
-			assertEquals("This is a 'Hello, World!'", message);
+			final Message message = MessagesProvider.get("org/wolfgang/common/message", "message.with.args");
+			final String text = message.format("'Hello, World!'");
+			assertEquals("This is a 'Hello, World!'", text);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -49,9 +50,9 @@ public class TestMessage extends TestCase {
 
 	public void testMessage03() throws Exception {
 		try {
-			final String message = MessagesProvider.get("org.wolfgang.common.message.undef", "test.message.undefined").format(
-					"'Hello, World!'");
-			assertEquals("message bundle not found for [org/wolfgang/common/message/undef]", message);
+			final Message message = MessagesProvider.get("org/wolfgang/common/undef", "message.undefined");
+			final String text = message.format("'Hello, World!'");
+			assertEquals("message bundle not found for [org/wolfgang/common/undef]", text);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -59,9 +60,9 @@ public class TestMessage extends TestCase {
 
 	public void testMessage04() throws Exception {
 		try {
-			final String message = MessagesProvider.get("org.wolfgang.common.message.test", "test.message.undefined").format(
-					"'Hello, World!'");
-			assertEquals("message not found in [org/wolfgang/common/message/test] for [test.message.undefined]", message);
+			final Message message = MessagesProvider.get("org/wolfgang/common/message", "message.undefined");
+			final String text = message.format("'Hello, World!'");
+			assertEquals("message not found in [org/wolfgang/common/message] for [message.undefined]", text);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
