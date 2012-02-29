@@ -34,6 +34,8 @@ package org.wolfgang.contrail.component;
  */
 public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
 
-	// No specific behaviors
+	public interface Transducer<S,D> {
+		D transform(S s);
+	}
 
 }

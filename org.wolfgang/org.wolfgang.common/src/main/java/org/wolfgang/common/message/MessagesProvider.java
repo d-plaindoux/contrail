@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class MessagesProvider {
+public final class MessagesProvider extends SecurityManager {
 
 	/**
 	 * Class attributes referencing the internal message provider instance. It's
@@ -58,7 +58,8 @@ public final class MessagesProvider {
 		}
 
 		try {
-			sharedInstance.loadMessages(category);
+			final ClassLoader classLoader = sharedInstance.getClassContext()[1].getClassLoader();
+			sharedInstance.loadMessages(classLoader, category);
 		} catch (MissingResourceException e) {
 			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage());
 		}
@@ -85,9 +86,9 @@ public final class MessagesProvider {
 	 * @param propertyFile
 	 *            The property file name
 	 */
-	private void loadMessages(String category) {
+	private void loadMessages(ClassLoader classLoader, String category) {
 		if (!this.resourceBundles.containsKey(category)) {
-			this.resourceBundles.put(category, ResourceBundle.getBundle(category));
+			this.resourceBundles.put(category, ResourceBundle.getBundle(category, Locale.getDefault(), classLoader));
 		}
 	}
 
