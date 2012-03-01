@@ -1,4 +1,5 @@
-/* Copyright (C)2012 D. Plaindoux.
+/*
+ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,9 +17,11 @@
  */
 
 /**
- * The message package provides utilities
+ * Package providing connection facilities which is used when network components
+ * should be established. For each connection a dedicated object exist and this
+ * object is able to dispose the embedded component connection. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.common.utils;
+package org.wolfgang.contrail.connector;

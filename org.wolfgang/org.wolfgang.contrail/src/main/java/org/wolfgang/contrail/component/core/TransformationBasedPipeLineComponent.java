@@ -26,7 +26,7 @@ import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -63,19 +63,23 @@ public class TransformationBasedPipeLineComponent<S, D> implements PipelineCompo
 	/**
 	 * Constructor
 	 * 
-	 * @param upStreamDataHandler
+	 * @param upstreamXducer
+	 *            The data transformation used for incoming data (upstream)
+	 * @param downstreamXducer
+	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer, final DataTransformation<D, S> downstreamXducer) {
+	public TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer,
+			final DataTransformation<D, S> downstreamXducer) {
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
 			@Override
-			public void handleData(S data) throws HandleDataException {
+			public void handleData(S data) throws DataHandlerException {
 				if (upStreamDestinationComponent == null) {
-					throw new HandleDataException();
+					throw new DataHandlerException();
 				} else {
 					try {
 						upStreamDestinationComponent.getUpStreamDataHandler().handleData(upstreamXducer.transform(data));
 					} catch (DataTransformationException e) {
-						throw new HandleDataException(e);
+						throw new DataHandlerException(e);
 					}
 				}
 			}
@@ -93,14 +97,14 @@ public class TransformationBasedPipeLineComponent<S, D> implements PipelineCompo
 
 		this.downStreamDataHandler = new DownStreamDataHandler<D>() {
 			@Override
-			public void handleData(D data) throws HandleDataException {
+			public void handleData(D data) throws DataHandlerException {
 				if (upStreamSourceComponent == null) {
-					throw new HandleDataException();
+					throw new DataHandlerException();
 				} else {
 					try {
 						upStreamSourceComponent.getDownStreamDataHandler().handleData(downstreamXducer.transform(data));
 					} catch (DataTransformationException e) {
-						throw new HandleDataException(e);
+						throw new DataHandlerException(e);
 					}
 				}
 			}

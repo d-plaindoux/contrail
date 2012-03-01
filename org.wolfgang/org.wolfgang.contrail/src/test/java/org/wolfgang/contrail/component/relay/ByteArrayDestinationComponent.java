@@ -21,7 +21,7 @@ package org.wolfgang.contrail.component.relay;
 import org.wolfgang.contrail.component.core.DataReceiver;
 import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>ByteArrayDestinationComponent</code>
@@ -40,7 +40,7 @@ public class ByteArrayDestinationComponent extends TerminalUpStreamDestinationCo
 			public DataReceiver<byte[]> create(final TerminalUpStreamDestinationComponent<byte[]> terminal) {
 				return new DataReceiver<byte[]>() {
 					@Override
-					public void receiveData(byte[] data) throws HandleDataException {
+					public void receiveData(byte[] data) throws DataHandlerException {
 						terminal.getDataSender().sendData(data);
 					}
 				};

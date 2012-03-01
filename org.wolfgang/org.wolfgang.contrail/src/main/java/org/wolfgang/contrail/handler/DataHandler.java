@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.handler;
 
-
 /**
  * The <code>DataHandler</code> provides basic mechanisms required when messages
  * shall be managed. This data type is not provided as-is but was mainly used as
@@ -33,12 +32,10 @@ interface DataHandler<D> {
 	/**
 	 * Method called whether a data has to be managed
 	 * 
-	 * @param context
-	 *            The data context
 	 * @param data
 	 *            The data
 	 */
-	void handleData(D data) throws HandleDataException;
+	void handleData(D data) throws DataHandlerException;
 
 	/**
 	 * Method called when the channel is closed

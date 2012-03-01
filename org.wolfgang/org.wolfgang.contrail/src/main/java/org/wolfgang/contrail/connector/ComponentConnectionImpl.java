@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentConnectionImpl<E> implements ComponentConnection<E> {
+class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 
 	/**
 	 * The upstream source used for the interconnection

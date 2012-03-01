@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import org.wolfgang.contrail.component.core.DataReceiver;
 import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>ByteArraySourceComponent</code> is a simple upstream source component.
@@ -42,11 +42,11 @@ public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byt
 			@Override
 			public DataReceiver<byte[]> create(InitialUpStreamSourceComponent<byte[]> initial) {
 				return new DataReceiver<byte[]>() {
-					public void receiveData(byte[] data) throws HandleDataException {
+					public void receiveData(byte[] data) throws DataHandlerException {
 						try {
 							outputStream.write(data);
 						} catch (IOException e) {
-							throw new HandleDataException(e);
+							throw new DataHandlerException(e);
 						}
 					}
 				};

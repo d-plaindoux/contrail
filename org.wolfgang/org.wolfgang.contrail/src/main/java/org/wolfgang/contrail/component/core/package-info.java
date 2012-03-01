@@ -16,51 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.handler;
-
 /**
- * <code>HandleDataException</code>
- * 
+ * Package providing generic component implementations. For this purpose an initial component
+ * and a terminal component in order to start and finish a given component connection. These 
+ * components therefore exhibits a given interface for the data  management 
+ * {@link org.wolfgang.contrail.component.core.DataSender} and requires a given a receiver factory
+ * for the construction of a {@link org.wolfgang.contrail.component.core.DataReceiver} which 
+ * is able to manage data managed by the network components.
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class HandleDataException extends Exception {
-
-	private static final long serialVersionUID = -2525135136709063308L;
-
-	/**
-	 * Constructor
-	 */
-	public HandleDataException() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public HandleDataException(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public HandleDataException(Throwable arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public HandleDataException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-}
+package org.wolfgang.contrail.component.core;

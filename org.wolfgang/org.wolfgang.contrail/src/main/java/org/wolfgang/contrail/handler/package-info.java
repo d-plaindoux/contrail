@@ -1,4 +1,5 @@
-/* Copyright (C)2012 D. Plaindoux.
+/*
+ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,9 +17,13 @@
  */
 
 /**
- * The message package provides utilities
+ * Basic specification for data handlers. Two major handler types are provided.
+ * First one { @link {@link org.wolfgang.contrail.handler.UpStreamDataHandler}
+ * is dedicated to incoming data management and another one 
+ * {@link org.wolfgang.contrail.handler.DownStreamDataHandler} is dedicated to
+ * outgoing data. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.common.utils;
+package org.wolfgang.contrail.handler;

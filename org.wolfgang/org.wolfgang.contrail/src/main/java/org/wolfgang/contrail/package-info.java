@@ -1,4 +1,5 @@
-/* Copyright (C)2012 D. Plaindoux.
+/*
+ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,9 +17,11 @@
  */
 
 /**
- * The message package provides utilities
- *
- * @author Didier Plaindoux
- * @version 1.0
+ * This package provides a complete library dedicated to component interaction
+ * based on data movement mechanism. Such data movement can be an upstream
+ * data movement when a given data came from a low level third party like network,
+ * file etc i.e. Incoming data. Such data movement can be a downstream data movement 
+ * when a given data came from an application .i.e. Outgoing data.
  */
-package org.wolfgang.common.utils;
+
+package org.wolfgang.contrail;

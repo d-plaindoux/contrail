@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.core;
 
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>DataSender</code> is capable to send data to the component stream.
@@ -34,8 +34,8 @@ public interface DataSender<E> {
 	 * 
 	 * @param data
 	 *            The data to be performed
-	 * @throws HandleDataException
+	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	void sendData(E data) throws HandleDataException;
+	void sendData(E data) throws DataHandlerException;
 }

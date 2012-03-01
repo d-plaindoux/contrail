@@ -21,10 +21,10 @@ package org.wolfgang.contrail.component.pipe;
 import org.wolfgang.contrail.component.core.DataReceiver;
 import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>ByteArrayDestinationComponent</code>
+ * <code>IntegerDestinationComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -40,7 +40,7 @@ public class IntegerDestinationComponent extends TerminalUpStreamDestinationComp
 			public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
 				return new DataReceiver<Integer>() {
 					@Override
-					public void receiveData(Integer data) throws HandleDataException {
+					public void receiveData(Integer data) throws DataHandlerException {
 						terminal.getDataSender().sendData(data * data);
 					}
 				};

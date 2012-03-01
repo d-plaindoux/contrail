@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.core;
 
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>DataReceiver</code> is capable to receive data from the component
@@ -34,8 +34,8 @@ public interface DataReceiver<E> {
 	 * 
 	 * @param data
 	 *            The data to be performed
-	 * @throws HandleDataException
+	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	void receiveData(E data) throws HandleDataException;
+	void receiveData(E data) throws DataHandlerException;
 }

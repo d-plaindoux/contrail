@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -62,25 +62,26 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	/**
 	 * Constructor
 	 * 
-	 * @param upStreamDataHandler
+	 * @param dataFactory
+	 *            The terminal data receiver factory
 	 */
-	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> receiverFactory) {
+	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
 		this.dataEmitter = new DataSender<E>() {
 			@Override
-			public void sendData(E data) throws HandleDataException {
+			public void sendData(E data) throws DataHandlerException {
 				try {
 					getDowntreamDataHandler().handleData(data);
 				} catch (ComponentNotYetConnectedException e) {
-					throw new HandleDataException(e);
+					throw new DataHandlerException(e);
 				}
 			}
 		};
 		
-		final DataReceiver<E> receiver = receiverFactory.create(this);
+		final DataReceiver<E> receiver = dataFactory.create(this);
 
 		this.upstreamDataHandler = new UpStreamDataHandler<E>() {
 			@Override
-			public void handleData(E data) throws HandleDataException {
+			public void handleData(E data) throws DataHandlerException {
 				receiver.receiveData(data);
 			}
 
@@ -141,7 +142,7 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	 * Method called whether the data injection mechanism is required
 	 * 
 	 * @return the data injection mechanism
-	 * @throws HandleDataException
+	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
 	public DataSender<E> getDataSender() {

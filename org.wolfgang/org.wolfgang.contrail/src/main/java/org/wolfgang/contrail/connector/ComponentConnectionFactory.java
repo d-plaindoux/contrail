@@ -1,4 +1,5 @@
-/* Copyright (C)2012 D. Plaindoux.
+/*
+ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -15,10 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.connector;
+
+import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.UpStreamDestinationComponent;
+import org.wolfgang.contrail.component.UpStreamSourceComponent;
+
 /**
- * The message package provides utilities
- *
+ * The <code>ComponentConnectionFactory</code> is used when component connection
+ * must be established
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.common.utils;
+public class ComponentConnectionFactory {
+	
+	public static final <E> ComponentConnection<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
+		return new ComponentConnectionImpl<E>(source, destination);
+	}
+
+}

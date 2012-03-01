@@ -18,17 +18,15 @@
 
 package org.wolfgang.contrail.component.pipe;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.core.DataReceiver;
 import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>ByteArraySourceComponent</code> is a simple upstream source component.
+ * <code>StringSourceComponent</code> is a simple upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -43,7 +41,7 @@ public class StringSourceComponent extends InitialUpStreamSourceComponent<String
 			@Override
 			public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
 				return new DataReceiver<String>() {
-					public void receiveData(String data) throws HandleDataException {
+					public void receiveData(String data) throws DataHandlerException {
 						reference.set(data);
 					}
 				};

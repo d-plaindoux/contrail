@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -58,16 +58,17 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 	/**
 	 * Constructor
 	 * 
-	 * @param downStreamDataHandler
+	 * @param dataFactory
+	 *            The initial data receiver factory
 	 */
 	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
 		this.dataEmitter = new DataSender<E>() {
 			@Override
-			public void sendData(E data) throws HandleDataException {
+			public void sendData(E data) throws DataHandlerException {
 				try {
 					getUpStreamDataHandler().handleData(data);
 				} catch (ComponentNotYetConnectedException e) {
-					throw new HandleDataException(e);
+					throw new DataHandlerException(e);
 				}
 			}
 		};
@@ -76,7 +77,7 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 
 		this.downStreamDataHandler = new DownStreamDataHandler<E>() {
 			@Override
-			public void handleData(E data) throws HandleDataException {
+			public void handleData(E data) throws DataHandlerException {
 				receiver.receiveData(data);
 			}
 
@@ -137,7 +138,7 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 	 * Method called whether the data injection mechanism is required
 	 * 
 	 * @return the data injection mechanism
-	 * @throws HandleDataException
+	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
 	public DataSender<E> getDataSender() {

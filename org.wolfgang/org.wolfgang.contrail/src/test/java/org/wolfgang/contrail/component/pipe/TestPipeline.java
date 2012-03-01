@@ -27,8 +27,9 @@ import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
 import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
 import org.wolfgang.contrail.component.core.TransformationBasedPipeLineComponent;
-import org.wolfgang.contrail.connector.ComponentConnectionImpl;
-import org.wolfgang.contrail.handler.HandleDataException;
+import org.wolfgang.contrail.connector.ComponentConnection;
+import org.wolfgang.contrail.connector.ComponentConnectionFactory;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -39,7 +40,7 @@ import org.wolfgang.contrail.handler.HandleDataException;
 public class TestPipeline extends TestCase {
 
 	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			HandleDataException {
+			DataHandlerException {
 		final TransformationBasedPipeLineComponent<String, Integer> pipeline = new TransformationBasedPipeLineComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -47,8 +48,8 @@ public class TestPipeline extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
-		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
+		final ComponentConnection<String> initialConnection = ComponentConnectionFactory.connect(initial, pipeline);
+		final ComponentConnection<Integer> terminalConnection = ComponentConnectionFactory.connect(pipeline, terminal);
 
 		initial.getDataSender().sendData("3");
 		assertEquals("9", stringReference.get());
@@ -58,7 +59,7 @@ public class TestPipeline extends TestCase {
 	}
 
 	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			HandleDataException {
+			DataHandlerException {
 		final TransformationBasedPipeLineComponent<String, Integer> pipeline = new TransformationBasedPipeLineComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -66,8 +67,8 @@ public class TestPipeline extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
-		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
+		final ComponentConnection<String> initialConnection = ComponentConnectionFactory.connect(initial, pipeline);
+		final ComponentConnection<Integer> terminalConnection = ComponentConnectionFactory.connect(pipeline, terminal);
 
 		initial.getDataSender().sendData("0");
 		assertEquals("0", stringReference.get());
@@ -76,7 +77,8 @@ public class TestPipeline extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException, HandleDataException {
+	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
 		final TransformationBasedPipeLineComponent<String, Integer> pipeline = new TransformationBasedPipeLineComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -84,13 +86,13 @@ public class TestPipeline extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentConnectionImpl<String> initialConnection = new ComponentConnectionImpl<String>(initial, pipeline);
-		final ComponentConnectionImpl<Integer> terminalConnection = new ComponentConnectionImpl<Integer>(pipeline, terminal);
+		final ComponentConnection<String> initialConnection = ComponentConnectionFactory.connect(initial, pipeline);
+		final ComponentConnection<Integer> terminalConnection = ComponentConnectionFactory.connect(pipeline, terminal);
 
 		try {
 			initial.getDataSender().sendData("NaN");
 			fail();
-		} catch (HandleDataException h) {
+		} catch (DataHandlerException h) {
 			assertTrue(h.getCause().getCause() instanceof NumberFormatException);
 		}
 
