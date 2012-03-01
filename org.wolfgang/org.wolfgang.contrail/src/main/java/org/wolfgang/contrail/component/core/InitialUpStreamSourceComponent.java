@@ -29,11 +29,8 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * The <code>UpStreamSourceComponent</code> is capable to send event in the
- * framework. Sending events consists in propagating events to upper components
- * via the upstream network. In parallel a source is capable to receive messages
- * sent by destination using the interconnected destination handler based on the
- * downstream network.
+ * The <code>InitialUpStreamSourceComponent</code> is capable to send event in
+ * the framework.
  * 
  * @author Didier Plaindoux
  * @version 1.0

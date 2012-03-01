@@ -16,32 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipe;
+package org.wolfgang.contrail.component.connection;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>IntegerDestinationComponent</code>
+ * <code>StringSourceComponent</code> is a simple upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerDestinationComponent extends TerminalUpStreamDestinationComponent<Integer> {
+public class StringSourceComponent extends InitialUpStreamSourceComponent<String> {
 
 	/**
 	 * Constructor
 	 */
-	public IntegerDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Integer>() {
+	public StringSourceComponent(final AtomicReference<String> reference) {
+		super(new InitialDataReceiverFactory<String>() {
 			@Override
-			public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
-				return new DataReceiver<Integer>() {
-					@Override
-					public void receiveData(Integer data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data * data);
+			public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
+				return new DataReceiver<String>() {
+					public void receiveData(String data) throws DataHandlerException {
+						reference.set(data);
 					}
 				};
 			}

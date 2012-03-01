@@ -16,24 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.connector;
 
+import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.UpStreamDestinationComponent;
+import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
 /**
- * The <code>PipelineComponent</code> is capable to connect a source handler and
- * a destination handler. In addition the data can be transformed from a type S
- * to a type D or vice-versa depending if components communicate using upstream
- * or downstream network.
- * <p>
- * The first type was the event type received from the upstream network -
- * denoted by the destination facet. The second type was the event type sent to
- * the upstream network - denoted by the source facet.
+ * The <code>ComponentsLinkFactory</code> is used when components link must be
+ * established.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface PipelineComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
+public class ComponentsLinkFactory {
 
-	// Nothing
-	
+	public static final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source,
+			UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
+		return new ComponentsLinkImpl<E>(source, destination);
+	}
+
 }

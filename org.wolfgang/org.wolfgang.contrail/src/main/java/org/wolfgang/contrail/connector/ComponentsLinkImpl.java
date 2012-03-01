@@ -24,13 +24,13 @@ import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
 /**
- * <code>ComponentConnectionImpl</code> is the main implementation of the
- * component source and destination connection.
+ * <code>ComponentsLinkImpl</code> is the main implementation of the component
+ * source and destination linkage.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class ComponentConnectionImpl<E> implements ComponentConnection<E> {
+class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 
 	/**
 	 * The upstream source used for the interconnection
@@ -52,7 +52,7 @@ class ComponentConnectionImpl<E> implements ComponentConnection<E> {
 	 * @throws ComponentAlreadyConnectedException
 	 *             thrown if components are already connected
 	 */
-	public ComponentConnectionImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
+	public ComponentsLinkImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
 			throws ComponentAlreadyConnectedException {
 		super();
 		this.source = source;

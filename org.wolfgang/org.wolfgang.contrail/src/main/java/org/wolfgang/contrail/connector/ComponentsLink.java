@@ -23,12 +23,13 @@ import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
 /**
- * The <code>ComponentConnection</code> defines basic behaviors
+ * The <code>ComponentsLink</code> defines basic behaviors related to link
+ * established between two components.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentConnection<E> {
+public interface ComponentsLink<E> {
 
 	/**
 	 * Method providing the source

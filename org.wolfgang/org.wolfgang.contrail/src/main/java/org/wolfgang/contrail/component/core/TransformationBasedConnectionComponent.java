@@ -22,7 +22,7 @@ import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
-import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.ConnectionComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -30,15 +30,15 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>AbstractPipeLineComponent</code> is an implementation which requires
- * pipeline transducers for the transformations performed each time an upstream
- * or downstrem data go through the pipeline.
+ * <code>TransformationBasedConnectionComponent</code> is an implementation
+ * which requires pipeline transducers for the transformations performed each
+ * time an upstream or downstrem data go through the pipeline.
  * 
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TransformationBasedPipeLineComponent<S, D> implements PipelineComponent<S, D> {
+public class TransformationBasedConnectionComponent<S, D> implements ConnectionComponent<S, D> {
 
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
@@ -68,7 +68,7 @@ public class TransformationBasedPipeLineComponent<S, D> implements PipelineCompo
 	 * @param downstreamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransformationBasedPipeLineComponent(final DataTransformation<S, D> upstreamXducer,
+	public TransformationBasedConnectionComponent(final DataTransformation<S, D> upstreamXducer,
 			final DataTransformation<D, S> downstreamXducer) {
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
 			@Override

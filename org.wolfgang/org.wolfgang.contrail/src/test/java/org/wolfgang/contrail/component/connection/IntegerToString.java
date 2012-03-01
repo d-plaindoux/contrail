@@ -16,10 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipe;
+package org.wolfgang.contrail.component.connection;
 
 import org.wolfgang.contrail.component.core.DataTransformation;
-import org.wolfgang.contrail.component.core.DataTransformationException;
 
 /**
  * <code>IntegerToString</code>
@@ -27,15 +26,11 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements DataTransformation<String, Integer> {
+public class IntegerToString implements DataTransformation<Integer, String> {
 
 	@Override
-	public Integer transform(String s) throws DataTransformationException {
-		try {
-			return Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			throw new DataTransformationException(e);
-		}
+	public String transform(Integer s) {
+		return String.valueOf(s);
 	}
 
 }
