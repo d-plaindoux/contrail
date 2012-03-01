@@ -26,5 +26,15 @@ package org.wolfgang.contrail.component.core;
  * @version 1.0
  */
 public interface DataTransformation<S, D> {
+
+	/**
+	 * Method called when a data must be transformed from a type S to a type D
+	 * 
+	 * @param s
+	 *            The data to be transformed
+	 * @return the transformation result
+	 * @throws DataTransformationException
+	 *             thrown if the transformation fails
+	 */
 	D transform(S s) throws DataTransformationException;
 }

@@ -31,6 +31,17 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
  */
 public class ComponentsLinkFactory {
 
+	/**
+	 * Function able to create a link between to given component.
+	 * 
+	 * @param source
+	 *            The link source
+	 * @param destination
+	 *            The link destination
+	 * @return a components link (never <code>null</code>)
+	 * @throws ComponentAlreadyConnectedException
+	 *             Thrown if one component is linked
+	 */
 	public static final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source,
 			UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
 		return new ComponentsLinkImpl<E>(source, destination);

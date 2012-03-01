@@ -30,6 +30,8 @@ import org.wolfgang.contrail.component.core.TransformationBasedConnectionCompone
 import org.wolfgang.contrail.connector.ComponentsLink;
 import org.wolfgang.contrail.connector.ComponentsLinkFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -41,15 +43,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> pipeline = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, pipeline);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(pipeline, terminal);
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
 
 		initial.getDataSender().sendData("3");
 		assertEquals("9", stringReference.get());
@@ -60,15 +62,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> pipeline = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, pipeline);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(pipeline, terminal);
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
 
 		initial.getDataSender().sendData("0");
 		assertEquals("0", stringReference.get());
@@ -77,17 +79,181 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testNominal03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> pipeline = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, pipeline);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(pipeline, terminal);
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		initial.closeUpStream();
+		terminal.getDataSender().sendData(9);
+		assertEquals("9", stringReference.get());
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			initial.closeUpStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (UpStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			connection.closeUpStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (UpStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			terminal.closeUpStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (UpStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed04() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			initial.closeDownStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (DownStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed05() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			connection.closeDownStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (DownStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testUpStreamClosed06() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+
+		try {
+			terminal.closeDownStream();
+			initial.getDataSender().sendData("0");
+			fail();
+		} catch (DownStreamDataHandlerClosedException h) {
+			// Ok
+		}
+
+		initialConnection.dispose();
+		terminalConnection.dispose();
+	}
+
+	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+			DataHandlerException {
+		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+				new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
 
 		try {
 			initial.getDataSender().sendData("NaN");

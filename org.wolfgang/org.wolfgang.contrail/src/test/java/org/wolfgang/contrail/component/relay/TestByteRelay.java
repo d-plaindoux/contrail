@@ -28,6 +28,8 @@ import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.connector.ComponentsLink;
 import org.wolfgang.contrail.connector.ComponentsLinkFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TestByteRelay</code>
@@ -37,7 +39,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestByteRelay extends TestCase {
 
-	public void testNominal() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+	public void testNominal01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
 			ComponentNotYetConnectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -55,7 +57,109 @@ public class TestByteRelay extends TestCase {
 		}
 
 		assertEquals("Hello, World!", new String(output.toByteArray()));
+	}
 
+	public void testNominal02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try {
+			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+			final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+			source.closeUpStream();
+			destination.getDataSender().sendData("Hello,".getBytes());
+			destination.getDataSender().sendData(" World!".getBytes());
+
+			interconnection.dispose();
+		} finally {
+			output.close();
+		}
+
+		assertEquals("Hello, World!", new String(output.toByteArray()));
+	}
+
+	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try {
+			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+			final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+			source.closeUpStream();
+			source.getDataSender().sendData("Hello,".getBytes());
+			
+			interconnection.dispose();
+
+			fail();
+		} catch (UpStreamDataHandlerClosedException e) {
+			// Ok
+		} finally {
+			output.close();
+		}
+	}
+
+	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try {
+			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+			ComponentsLinkFactory.connect(source, destination);
+
+			destination.closeUpStream();
+			source.getDataSender().sendData("Hello,".getBytes());
+
+			fail();
+		} catch (UpStreamDataHandlerClosedException e) {
+			// Ok
+		} finally {
+			output.close();
+		}
+	}
+
+	public void tesDownStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try {
+			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+			ComponentsLinkFactory.connect(source, destination);
+
+			source.closeDownStream();
+			source.getDataSender().sendData("Hello,".getBytes());
+
+			fail();
+		} catch (DownStreamDataHandlerClosedException e) {
+			// Ok
+		} finally {
+			output.close();
+		}
+	}
+
+	public void tesDownStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try {
+			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+			ComponentsLinkFactory.connect(source, destination);
+
+			destination.closeDownStream();
+			source.getDataSender().sendData("Hello,".getBytes());
+
+			fail();
+		} catch (DownStreamDataHandlerClosedException e) {
+			// Ok
+		} finally {
+			output.close();
+		}
 	}
 
 	public void testSourceNotConnected() throws IOException {
