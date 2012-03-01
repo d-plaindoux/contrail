@@ -18,32 +18,53 @@
 
 package org.wolfgang.contrail.component;
 
+import java.util.UUID;
+
 /**
- * <code>Component</code> is the main specification for component definition. It
- * provides close behaviors for upstream and downstream. Then when a component
- * has its upstream closed it's just a component is able to manager outgoing
- * data. When the downstream is closed then the component is able to manage
- * incoming data e.g. listener. In addition each component is provided with a
- * given identifier which is locally unique i.e. in the current context.
+ * <code>ComponentId</code> used to identify any component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Component {
+public class ComponentId {
+
+	private final UUID identifier;
 
 	/**
-	 * Method providing the component identifier
+	 * Constructor
 	 */
-	ComponentId getComponentId();
+	public ComponentId() {
+		super();
+		this.identifier = UUID.randomUUID();
+	}
 
-	/**
-	 * Method called whether the upstream must be closed
-	 */
-	void closeUpStream();
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
+		return result;
+	}
 
-	/**
-	 * Method called whether the downstream must be closed
-	 */
-	void closeDownStream();
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ComponentId)) {
+			return false;
+		}
+		ComponentId other = (ComponentId) obj;
+		if (identifier == null) {
+			if (other.identifier != null) {
+				return false;
+			}
+		} else if (!identifier.equals(other.identifier)) {
+			return false;
+		}
+		return true;
+	}
 }

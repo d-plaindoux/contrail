@@ -20,7 +20,9 @@ package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.component.AbstractComponent;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.ConnectionComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
@@ -40,7 +42,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TransformationBasedConnectionComponent<S, D> implements ConnectionComponent<S, D> {
+public class TransformationBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
 
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
@@ -72,6 +74,8 @@ public class TransformationBasedConnectionComponent<S, D> implements ConnectionC
 	 */
 	public TransformationBasedConnectionComponent(final DataTransformation<S, D> upstreamXducer,
 			final DataTransformation<D, S> downstreamXducer) {
+		super(new ComponentId());
+
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
 			private volatile boolean closed = false;
 

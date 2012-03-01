@@ -20,7 +20,9 @@ package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.component.AbstractComponent;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
@@ -36,7 +38,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinationComponent<E> {
+public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent implements UpStreamDestinationComponent<E> {
 
 	/**
 	 * Related down stream data handler after connection. Null otherwise
@@ -64,6 +66,8 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	 *            The terminal data receiver factory
 	 */
 	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
+		super(new ComponentId());
+
 		this.dataEmitter = new DataSender<E>() {
 			@Override
 			public void sendData(E data) throws DataHandlerException {

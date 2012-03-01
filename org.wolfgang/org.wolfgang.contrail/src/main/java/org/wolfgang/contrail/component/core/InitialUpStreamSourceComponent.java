@@ -20,7 +20,9 @@ package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.component.AbstractComponent;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
@@ -36,7 +38,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponent<E> {
+public class InitialUpStreamSourceComponent<E> extends AbstractComponent implements UpStreamSourceComponent<E> {
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
@@ -60,6 +62,8 @@ public class InitialUpStreamSourceComponent<E> implements UpStreamSourceComponen
 	 *            The initial data receiver factory
 	 */
 	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
+		super(new ComponentId());
+
 		this.dataEmitter = new DataSender<E>() {
 			@Override
 			public void sendData(E data) throws DataHandlerException {

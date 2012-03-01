@@ -19,31 +19,31 @@
 package org.wolfgang.contrail.component;
 
 /**
- * <code>Component</code> is the main specification for component definition. It
- * provides close behaviors for upstream and downstream. Then when a component
- * has its upstream closed it's just a component is able to manager outgoing
- * data. When the downstream is closed then the component is able to manage
- * incoming data e.g. listener. In addition each component is provided with a
- * given identifier which is locally unique i.e. in the current context.
+ * <code>AbstractComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Component {
+public abstract class AbstractComponent implements Component {
 
 	/**
-	 * Method providing the component identifier
+	 * The component identifier
 	 */
-	ComponentId getComponentId();
+	private final ComponentId componentId;
 
 	/**
-	 * Method called whether the upstream must be closed
+	 * Constructor
+	 * 
+	 * @param componentId
 	 */
-	void closeUpStream();
+	protected AbstractComponent(ComponentId componentId) {
+		super();
+		this.componentId = componentId;
+	}
 
-	/**
-	 * Method called whether the downstream must be closed
-	 */
-	void closeDownStream();
+	@Override
+	public ComponentId getComponentId() {
+		return this.componentId;
+	}
 
 }

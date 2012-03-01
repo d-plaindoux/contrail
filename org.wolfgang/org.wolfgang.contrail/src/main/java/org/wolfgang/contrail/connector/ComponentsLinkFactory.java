@@ -42,8 +42,7 @@ public class ComponentsLinkFactory {
 	 * @throws ComponentAlreadyConnectedException
 	 *             Thrown if one component is linked
 	 */
-	public static final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source,
-			UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
+	public static final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
 		return new ComponentsLinkImpl<E>(source, destination);
 	}
 
