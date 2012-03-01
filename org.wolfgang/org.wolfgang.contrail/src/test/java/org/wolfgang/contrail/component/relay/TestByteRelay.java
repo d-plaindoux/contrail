@@ -91,7 +91,7 @@ public class TestByteRelay extends TestCase {
 
 			source.closeUpStream();
 			source.getDataSender().sendData("Hello,".getBytes());
-			
+
 			interconnection.dispose();
 
 			fail();
@@ -190,4 +190,110 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
+	public void testAlreadyConnected01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
+
+		try {
+			ComponentsLinkFactory.connect(source1, destination);
+			fail();
+		} catch (ComponentAlreadyConnectedException e) {
+			// OK
+		}
+
+		interconnection.dispose();
+	}
+
+	public void testAlreadyConnected02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
+
+		try {
+			ComponentsLinkFactory.connect(source, destination1);
+			fail();
+		} catch (ComponentAlreadyConnectedException e) {
+			// OK
+		}
+
+		interconnection.dispose();
+	}
+
+	public void testNotConnected01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		interconnection.dispose();
+
+		try {
+			source.disconnect(destination);
+			fail();
+		} catch (ComponentNotYetConnectedException e) {
+			// OK
+		}
+	}
+
+	public void testNotConnected02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		interconnection.dispose();
+
+		try {
+			destination.disconnect(source);
+			fail();
+		} catch (ComponentNotYetConnectedException e) {
+			// OK
+		}
+
+	}
+
+	public void testNotConnected03() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+		try {
+			source.disconnect(destination1);
+			fail();
+		} catch (ComponentNotYetConnectedException e) {
+			// OK
+		}
+
+		interconnection.dispose();
+	}
+
+	public void testNotConnected04() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
+			ComponentNotYetConnectedException {
+
+		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
+		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
+		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+
+		try {
+			destination.disconnect(source1);
+			fail();
+		} catch (ComponentNotYetConnectedException e) {
+			// OK
+		}
+
+		interconnection.dispose();
+	}
 }

@@ -128,7 +128,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 
 	@Override
 	public void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotYetConnectedException {
-		if (this.upStreamDestinationComponent != null) {
+		if (this.upStreamDestinationComponent != null && this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");

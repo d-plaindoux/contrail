@@ -132,7 +132,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 
 	@Override
 	public void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotYetConnectedException {
-		if (this.upStreamSourceComponent != null) {
+		if (this.upStreamSourceComponent != null && this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
