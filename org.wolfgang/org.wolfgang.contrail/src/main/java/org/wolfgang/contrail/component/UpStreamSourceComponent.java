@@ -30,7 +30,7 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamSourceComponent<E> {
+public interface UpStreamSourceComponent<E> extends Component {
 
 	/**
 	 * Provides the data channel used for down stream communication facility

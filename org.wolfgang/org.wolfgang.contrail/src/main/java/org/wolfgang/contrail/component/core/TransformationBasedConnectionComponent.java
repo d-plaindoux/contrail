@@ -27,7 +27,9 @@ import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TransformationBasedConnectionComponent</code> is an implementation
@@ -71,9 +73,13 @@ public class TransformationBasedConnectionComponent<S, D> implements ConnectionC
 	public TransformationBasedConnectionComponent(final DataTransformation<S, D> upstreamXducer,
 			final DataTransformation<D, S> downstreamXducer) {
 		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
+			private volatile boolean closed = false;
+
 			@Override
 			public void handleData(S data) throws DataHandlerException {
-				if (upStreamDestinationComponent == null) {
+				if (closed) {
+					throw new UpStreamDataHandlerClosedException();
+				} else if (upStreamDestinationComponent == null) {
 					throw new DataHandlerException();
 				} else {
 					try {
@@ -86,19 +92,23 @@ public class TransformationBasedConnectionComponent<S, D> implements ConnectionC
 
 			@Override
 			public void handleClose() {
-				// TODO
+				this.closed = true;
 			}
 
 			@Override
 			public void handleLost() {
-				// TODO
+				this.closed = true;
 			}
 		};
 
 		this.downStreamDataHandler = new DownStreamDataHandler<D>() {
+			private volatile boolean closed = false;
+
 			@Override
 			public void handleData(D data) throws DataHandlerException {
-				if (upStreamSourceComponent == null) {
+				if (closed) {
+					throw new DownStreamDataHandlerClosedException();
+				} else if (upStreamSourceComponent == null) {
 					throw new DataHandlerException();
 				} else {
 					try {
@@ -111,12 +121,12 @@ public class TransformationBasedConnectionComponent<S, D> implements ConnectionC
 
 			@Override
 			public void handleClose() {
-				// TODO
+				this.closed = true;
 			}
 
 			@Override
 			public void handleLost() {
-				// TODO
+				this.closed = true;
 			}
 		};
 	}
@@ -171,4 +181,15 @@ public class TransformationBasedConnectionComponent<S, D> implements ConnectionC
 		return downStreamDataHandler;
 	}
 
+	@Override
+	public void closeUpStream() {
+		this.upStreamDataHandler.handleClose();
+		this.upStreamDestinationComponent.closeUpStream();
+	}
+
+	@Override
+	public void closeDownStream() {
+		this.downStreamDataHandler.handleClose();
+		this.upStreamSourceComponent.closeDownStream();
+	}
 }

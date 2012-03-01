@@ -27,6 +27,7 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * The <code>TerminalUpStreamDestinationComponent</code> is capable to receive
@@ -77,19 +78,25 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 		final DataReceiver<E> receiver = dataFactory.create(this);
 
 		this.upstreamDataHandler = new UpStreamDataHandler<E>() {
+			private volatile boolean closed = false;
+
 			@Override
 			public void handleData(E data) throws DataHandlerException {
-				receiver.receiveData(data);
+				if (closed) {
+					throw new UpStreamDataHandlerClosedException();
+				} else {
+					receiver.receiveData(data);
+				}
 			}
 
 			@Override
 			public void handleClose() {
-				// Nothing
+				this.closed = true;
 			}
 
 			@Override
 			public void handleLost() {
-				// Nothing
+				this.closed = true;
 			}
 		};
 	}
@@ -144,5 +151,15 @@ public class TerminalUpStreamDestinationComponent<E> implements UpStreamDestinat
 	 */
 	public DataSender<E> getDataSender() {
 		return this.dataEmitter;
+	}
+
+	@Override
+	public void closeUpStream() {
+		this.upstreamDataHandler.handleClose();
+	}
+
+	@Override
+	public void closeDownStream() {
+		this.upStreamSourceComponent.closeDownStream();
 	}
 }

@@ -30,7 +30,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamDestinationComponent<E> {
+public interface UpStreamDestinationComponent<E> extends Component {
 
 	/**
 	 * Method called when the corresponding upstream data handler shall be
