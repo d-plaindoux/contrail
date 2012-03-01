@@ -20,7 +20,6 @@ package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.contrail.component.AbstractComponent;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
@@ -35,8 +34,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TransformationBasedConnectionComponent</code> is an implementation
- * which requires pipeline transducers for the transformations performed each
- * time an upstream or downstrem data go through the pipeline.
+ * which requires data transformations performed each time an upstream or
+ * downstrem data go through the connection component.
  * 
  * 
  * @author Didier Plaindoux
