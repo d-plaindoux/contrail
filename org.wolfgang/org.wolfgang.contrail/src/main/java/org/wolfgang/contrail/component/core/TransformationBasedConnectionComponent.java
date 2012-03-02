@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.utils.Option;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
@@ -86,7 +87,15 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 					throw new DataHandlerException();
 				} else {
 					try {
-						upStreamDestinationComponent.getUpStreamDataHandler().handleData(upstreamXducer.transform(data));
+						final Option<D> transform = upstreamXducer.transform(data);
+						switch (transform.getKind()) {
+						case None:
+							/* Postponed */
+							break;
+						case Some:
+							upStreamDestinationComponent.getUpStreamDataHandler().handleData(transform.getValue());
+							break;
+						}
 					} catch (DataTransformationException e) {
 						throw new DataHandlerException(e);
 					}
@@ -115,7 +124,14 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 					throw new DataHandlerException();
 				} else {
 					try {
-						upStreamSourceComponent.getDownStreamDataHandler().handleData(downstreamXducer.transform(data));
+						final Option<S> transform = downstreamXducer.transform(data);
+						switch (transform.getKind()) {
+						case None:
+							break;
+						case Some:
+							upStreamSourceComponent.getDownStreamDataHandler().handleData(transform.getValue());
+							break;
+						}
 					} catch (DataTransformationException e) {
 						throw new DataHandlerException(e);
 					}
@@ -146,7 +162,8 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 
 	@Override
 	public void disconnect(UpStreamSourceComponent<S> handler) throws ComponentNotYetConnectedException {
-		if (this.upStreamSourceComponent != null  && this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
+		if (this.upStreamSourceComponent != null
+				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
@@ -166,7 +183,8 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 
 	@Override
 	public void disconnect(UpStreamDestinationComponent<D> handler) throws ComponentNotYetConnectedException {
-		if (this.upStreamDestinationComponent != null  && this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
+		if (this.upStreamDestinationComponent != null
+				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");

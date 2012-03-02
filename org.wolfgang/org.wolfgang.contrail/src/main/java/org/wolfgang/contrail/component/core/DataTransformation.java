@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.core;
 
+import org.wolfgang.common.utils.Option;
+
 /**
  * <code>DataTransducer</code> is able to transform any data from a given type
  * to another one.
@@ -36,5 +38,5 @@ public interface DataTransformation<S, D> {
 	 * @throws DataTransformationException
 	 *             thrown if the transformation fails
 	 */
-	D transform(S s) throws DataTransformationException;
+	Option<D> transform(S s) throws DataTransformationException;
 }

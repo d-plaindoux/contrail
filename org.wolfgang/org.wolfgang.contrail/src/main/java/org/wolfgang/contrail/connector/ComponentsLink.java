@@ -30,6 +30,13 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
  * @version 1.0
  */
 public interface ComponentsLink<E> {
+	
+	/**
+	 * 
+	 * @param component
+	 * @return
+	 */
+	// TODO ComponentsLink<E> insert(ConnectionComponent<E, E> component);
 
 	/**
 	 * Method providing the source

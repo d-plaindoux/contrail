@@ -16,22 +16,41 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
+package org.wolfgang.common.utils;
 
-import org.wolfgang.common.utils.Option;
-import org.wolfgang.contrail.component.core.DataTransformation;
+import junit.framework.TestCase;
 
 /**
- * <code>IntegerToString</code>
+ * <code>TestOption</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransformation<Integer, String> {
+public class TestOption extends TestCase {
 
-	@Override
-	public Option<String> transform(Integer s) {
-		return Option.some(String.valueOf(s));
+	public void testOption01() {
+		final Option<Integer> option = Option.none();
+		assertEquals(Option.Kind.None, option.getKind());
+	}
+
+	public void testOption02() {
+		final Option<Integer> option = Option.some(1);
+		assertEquals(Option.Kind.Some, option.getKind());
+	}
+
+	public void testOption03() {
+		final Option<Integer> option = Option.some(1);
+		assertEquals(new Integer(1), option.getValue());
+	}
+
+	public void testOption04() {
+		final Option<Integer> option = Option.none();
+		try {
+			option.getValue();
+			fail();
+		} catch (IllegalAccessError e) {
+			// OK
+		}
 	}
 
 }
