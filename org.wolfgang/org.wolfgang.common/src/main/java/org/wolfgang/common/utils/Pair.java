@@ -19,7 +19,8 @@
 package org.wolfgang.common.utils;
 
 /**
- * <code>Pair</code>
+ * The <code>Pair</code> data structure. Such pair provides two values on-demand
+ * and these values can be <code>null</code>.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -40,7 +41,9 @@ public class Pair<First, Second> {
 	 * Constructor
 	 * 
 	 * @param fst
+	 *            This first value
 	 * @param snd
+	 *            The second value
 	 */
 	public Pair(final First fst, final Second snd) {
 		this.first = fst;
@@ -48,19 +51,26 @@ public class Pair<First, Second> {
 	}
 
 	/**
-	 * @return the first
+	 * Method called whether the first pair value is required
+	 * 
+	 * @return the first value
 	 */
 	public First getFirst() {
 		return first;
 	}
 
 	/**
-	 * @return the second
+	 * Method called whether the second pair value is required
+	 * 
+	 * @return the second value
 	 */
 	public Second getSecond() {
 		return second;
 	}
 
+	/**
+	 * {@link Object#hashCode()}
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -70,6 +80,9 @@ public class Pair<First, Second> {
 		return result;
 	}
 
+	/**
+	 * {@link Object#equals(Object)}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -81,7 +94,7 @@ public class Pair<First, Second> {
 		if (!(obj instanceof Pair)) {
 			return false;
 		}
-		Pair<?,?> other = (Pair<?,?>) obj;
+		Pair<?, ?> other = (Pair<?, ?>) obj;
 		if (first == null) {
 			if (other.first != null) {
 				return false;

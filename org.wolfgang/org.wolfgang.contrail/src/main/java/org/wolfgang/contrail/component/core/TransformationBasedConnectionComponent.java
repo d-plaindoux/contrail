@@ -45,6 +45,138 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 public class TransformationBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
 
 	/**
+	 * The <code>TransformationBasedUpStreamDataHandler</code> is an
+	 * implementation performing data transformation on the fly each time a data
+	 * has to be managed.
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	class TransformationBasedUpStreamDataHandler implements UpStreamDataHandler<S> {
+
+		/**
+		 * Boolean used to store the handler status i.e. closed or not.
+		 */
+		private volatile boolean closed = false;
+
+		/**
+		 * The transformation process
+		 */
+		private final DataTransformation<S, D> streamXducer;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param upStreamSourceComponent
+		 *            The source receiving transformed data
+		 * @param streamXducer
+		 *            The data transformation process
+		 */
+		public TransformationBasedUpStreamDataHandler(DataTransformation<S, D> downstreamXducer) {
+			this.streamXducer = downstreamXducer;
+		}
+
+		@Override
+		public void handleData(S data) throws DataHandlerException {
+			if (closed) {
+				throw new UpStreamDataHandlerClosedException();
+			} else if (upStreamDestinationComponent == null) {
+				throw new DataHandlerException();
+			} else {
+				try {
+					final Option<D> transform = streamXducer.transform(data);
+					switch (transform.getKind()) {
+					case None:
+						break;
+					case Some:
+						upStreamDestinationComponent.getUpStreamDataHandler().handleData(transform.getValue());
+						break;
+					}
+				} catch (DataTransformationException e) {
+					throw new DataHandlerException(e);
+				}
+			}
+		}
+
+		@Override
+		public void handleClose() {
+			this.closed = true;
+		}
+
+		@Override
+		public void handleLost() {
+			this.closed = true;
+		}
+
+	}
+
+	/**
+	 * The <code>TransformationBasedDownStreamDataHandlle</code> is an
+	 * implementation performing data transformation on the fly each time a data
+	 * has to be managed.
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	private class TransformationBasedDownStreamDataHandler implements DownStreamDataHandler<D> {
+
+		/**
+		 * Boolean used to store the handler status i.e. closed or not.
+		 */
+		private volatile boolean closed = false;
+
+		/**
+		 * The transformation process
+		 */
+		private final DataTransformation<D, S> streamXducer;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param upStreamSourceComponent
+		 *            The source receiving transformed data
+		 * @param streamXducer
+		 *            The data transformation process
+		 */
+		public TransformationBasedDownStreamDataHandler(DataTransformation<D, S> downstreamXducer) {
+			this.streamXducer = downstreamXducer;
+		}
+
+		@Override
+		public void handleData(D data) throws DataHandlerException {
+			if (closed) {
+				throw new DownStreamDataHandlerClosedException();
+			} else if (upStreamSourceComponent == null) {
+				throw new DataHandlerException();
+			} else {
+				try {
+					final Option<S> transform = streamXducer.transform(data);
+					switch (transform.getKind()) {
+					case None:
+						break;
+					case Some:
+						upStreamSourceComponent.getDownStreamDataHandler().handleData(transform.getValue());
+						break;
+					}
+				} catch (DataTransformationException e) {
+					throw new DataHandlerException(e);
+				}
+			}
+		}
+
+		@Override
+		public void handleClose() {
+			this.closed = true;
+		}
+
+		@Override
+		public void handleLost() {
+			this.closed = true;
+		}
+
+	}
+
+	/**
 	 * Internal upstream handler performing a data transformation for S to D
 	 */
 	private final UpStreamDataHandler<S> upStreamDataHandler;
@@ -69,85 +201,15 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 	 * 
 	 * @param upstreamXducer
 	 *            The data transformation used for incoming data (upstream)
-	 * @param downstreamXducer
+	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
 	public TransformationBasedConnectionComponent(final DataTransformation<S, D> upstreamXducer,
 			final DataTransformation<D, S> downstreamXducer) {
 		super(new ComponentId());
 
-		this.upStreamDataHandler = new UpStreamDataHandler<S>() {
-			private volatile boolean closed = false;
-
-			@Override
-			public void handleData(S data) throws DataHandlerException {
-				if (closed) {
-					throw new UpStreamDataHandlerClosedException();
-				} else if (upStreamDestinationComponent == null) {
-					throw new DataHandlerException();
-				} else {
-					try {
-						final Option<D> transform = upstreamXducer.transform(data);
-						switch (transform.getKind()) {
-						case None:
-							/* Postponed */
-							break;
-						case Some:
-							upStreamDestinationComponent.getUpStreamDataHandler().handleData(transform.getValue());
-							break;
-						}
-					} catch (DataTransformationException e) {
-						throw new DataHandlerException(e);
-					}
-				}
-			}
-
-			@Override
-			public void handleClose() {
-				this.closed = true;
-			}
-
-			@Override
-			public void handleLost() {
-				this.closed = true;
-			}
-		};
-
-		this.downStreamDataHandler = new DownStreamDataHandler<D>() {
-			private volatile boolean closed = false;
-
-			@Override
-			public void handleData(D data) throws DataHandlerException {
-				if (closed) {
-					throw new DownStreamDataHandlerClosedException();
-				} else if (upStreamSourceComponent == null) {
-					throw new DataHandlerException();
-				} else {
-					try {
-						final Option<S> transform = downstreamXducer.transform(data);
-						switch (transform.getKind()) {
-						case None:
-							break;
-						case Some:
-							upStreamSourceComponent.getDownStreamDataHandler().handleData(transform.getValue());
-							break;
-						}
-					} catch (DataTransformationException e) {
-						throw new DataHandlerException(e);
-					}
-				}
-			}
-
-			@Override
-			public void handleClose() {
-				this.closed = true;
-			}
-
-			@Override
-			public void handleLost() {
-				this.closed = true;
-			}
-		};
+		this.upStreamDataHandler = new TransformationBasedUpStreamDataHandler(upstreamXducer);
+		this.downStreamDataHandler = new TransformationBasedDownStreamDataHandler(downstreamXducer);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ package org.wolfgang.contrail.handler;
  * this data handler.
  * 
  * @author Didier Plaindoux
- * @version 1.0
+ * @version 1.0@
  */
 interface DataHandler<D> {
 

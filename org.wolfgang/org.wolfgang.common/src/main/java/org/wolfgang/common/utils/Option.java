@@ -32,6 +32,7 @@ public abstract class Option<E> {
 	 * 
 	 * @author Didier Plaindoux
 	 * @version 1.0
+	 * @
 	 */
 	public enum Kind {
 		/**
@@ -56,7 +57,7 @@ public abstract class Option<E> {
 	}
 
 	/**
-	 * Main method used to create an option with a given value
+	 * Main method used to create an option with no value
 	 * 
 	 * @param value
 	 *            The value
@@ -67,11 +68,14 @@ public abstract class Option<E> {
 	}
 
 	/**
+	 * Provide the option kind
+	 * 
 	 * @return the option kind
 	 */
 	public abstract Kind getKind();
 
 	/**
+	 * Method providing 
 	 * @return the value if defined
 	 * @see Option#getKind()
 	 */

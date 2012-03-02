@@ -29,7 +29,14 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentsLinkFactory {
+public final class ComponentsLinkFactory {
+	
+	/**
+	 * Constructor
+	 */
+	private ComponentsLinkFactory(){
+		// Nothing
+	}
 
 	/**
 	 * Function able to create a link between to given component.
