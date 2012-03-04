@@ -60,7 +60,7 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 
 		source.connect(destination);
 
-		try {
+		try { 
 			destination.connect(source);
 		} catch (ComponentAlreadyConnectedException e) {
 			try {

@@ -18,7 +18,8 @@
 
 package org.wolfgang.contrail.component.core;
 
-import org.wolfgang.common.utils.Option;
+import java.util.List;
+
 
 /**
  * <code>DataTransducer</code> is able to transform any data from a given type
@@ -30,13 +31,13 @@ import org.wolfgang.common.utils.Option;
 public interface DataTransformation<S, D> {
 
 	/**
-	 * Method called when a data must be transformed from a type S to a type D
+	 * Method called when a data must be transformed from a type S to a set of type D
 	 * 
-	 * @param s
+	 * @param source
 	 *            The data to be transformed
-	 * @return the transformation result
+	 * @return the transformation results
 	 * @throws DataTransformationException
 	 *             thrown if the transformation fails
 	 */
-	Option<D> transform(S s) throws DataTransformationException;
+	List<D> transform(S source) throws DataTransformationException;
 }

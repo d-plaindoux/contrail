@@ -18,17 +18,18 @@
 
 package org.wolfgang.contrail.component.core;
 
+import java.util.List;
+
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.common.utils.Option;
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.ConnectionComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
@@ -84,13 +85,9 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 				throw new DataHandlerException();
 			} else {
 				try {
-					final Option<D> transform = streamXducer.transform(data);
-					switch (transform.getKind()) {
-					case None:
-						break;
-					case Some:
-						upStreamDestinationComponent.getUpStreamDataHandler().handleData(transform.getValue());
-						break;
+					final List<D> transform = streamXducer.transform(data);
+					for (D value : transform) {
+						upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransformationException e) {
 					throw new DataHandlerException(e);
@@ -150,13 +147,9 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 				throw new DataHandlerException();
 			} else {
 				try {
-					final Option<S> transform = streamXducer.transform(data);
-					switch (transform.getKind()) {
-					case None:
-						break;
-					case Some:
-						upStreamSourceComponent.getDownStreamDataHandler().handleData(transform.getValue());
-						break;
+					final List<S> transform = streamXducer.transform(data);
+					for (S value : transform) {
+						upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransformationException e) {
 					throw new DataHandlerException(e);

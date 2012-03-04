@@ -18,7 +18,9 @@
 
 package org.wolfgang.contrail.component.connection;
 
-import org.wolfgang.common.utils.Option;
+import java.util.Arrays;
+import java.util.List;
+
 import org.wolfgang.contrail.component.core.DataTransformation;
 import org.wolfgang.contrail.component.core.DataTransformationException;
 
@@ -31,9 +33,9 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
 public class StringToInteger implements DataTransformation<String, Integer> {
 
 	@Override
-	public Option<Integer> transform(String s) throws DataTransformationException {
+	public List<Integer> transform(String s) throws DataTransformationException {
 		try {
-			return Option.some(Integer.parseInt(s));
+			return Arrays.asList(Integer.parseInt(s));
 		} catch (NumberFormatException e) {
 			throw new DataTransformationException(e);
 		}

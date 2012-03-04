@@ -16,24 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
+package org.wolfgang.common.utils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
 
-import org.wolfgang.contrail.component.core.DataTransformation;
+import junit.framework.TestCase;
 
 /**
- * <code>IntegerToString</code>
+ * <code>TestMarshall</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransformation<Integer, String> {
+public class TestMarshall extends TestCase {
 
-	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
+	public void testInteger() {
+		assertEquals(12, Marshall.bytesToInt(Marshall.intToBytes(12)));
+	}
+
+	public void testObject() throws IOException, ClassNotFoundException {
+		assertEquals("Hello, World!", Marshall.bytesToObject(Marshall.objectToBytes("Hello, World!")));
 	}
 
 }
