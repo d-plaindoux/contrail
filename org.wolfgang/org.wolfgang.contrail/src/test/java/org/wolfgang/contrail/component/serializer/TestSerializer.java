@@ -16,35 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.utils;
+package org.wolfgang.contrail.component.serializer;
 
 import java.io.IOException;
+import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.contrail.component.core.DataTransformationException;
+
 /**
- * <code>TestMarshall</code>
+ * <code>TestSerializer</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestMarshall extends TestCase {
+public class TestSerializer extends TestCase {
 
-	public void testInteger() throws IOException {
-		assertEquals(12, Marshall.bytesToInt(Marshall.intToBytes(12)));
-	}
+	public void testDecoder() throws IOException, DataTransformationException {
+		final String source = "Hello, World!";
 
-	public void testIntegerFailure() {
-		try {
-			assertEquals(12,  Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
-			fail();
-		} catch (IOException e) {
-			// OK
-		}
-	}
+		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
+		final List<byte[]> bytes = encoder.transform(source);
+		assertEquals(1, bytes.size());
 
-	public void testObject() throws IOException, ClassNotFoundException {
-		assertEquals("Hello, World!", Marshall.bytesToObject(Marshall.objectToBytes("Hello, World!")));
+		final PayLoadBasedSerializer.Decoder decoder = new PayLoadBasedSerializer.Decoder();
+		final List<Object> transform = decoder.transform(bytes.get(0));
+		assertEquals(1, transform.size());
+
+		assertEquals(source, transform.get(0));
 	}
 
 }

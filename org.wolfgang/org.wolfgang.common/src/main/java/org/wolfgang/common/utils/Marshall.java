@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.wolfgang.common.message.MessagesProvider;
+
 /**
  * The <code>Marshall</code> module is in charge of object to/from bytes
  * transformations.
@@ -81,17 +83,13 @@ public final class Marshall {
 	 *             if the object is not consistent with existing classes
 	 */
 	public static <T> T bytesToObject(final byte[] bytes) throws IOException, ClassNotFoundException {
-		if (bytes == null) {
-			return null;
-		} else {
-			final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(bytes);
-			final ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);
-			try {
-				return (T) inputStream.readObject();
-			} finally {
-				arrayInputStream.close();
-				inputStream.close();
-			}
+		final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(bytes);
+		final ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);
+		try {
+			return (T) inputStream.readObject();
+		} finally {
+			arrayInputStream.close();
+			inputStream.close();
 		}
 	}
 
@@ -108,16 +106,22 @@ public final class Marshall {
 	}
 
 	/**
-	 * Method called to decode an integer 
-	 * @param inBuffer The encoded int
+	 * Method called to decode an integer
+	 * 
+	 * @param inBuffer
+	 *            The encoded int
+	 * @throws IOException
 	 * @returnt an integer
 	 */
-	public static int bytesToInt(byte[] inBuffer) {
-		assert inBuffer.length >= INT_LENGTH;
-		int value = 0;
-		for (int i = 0; i < INT_LENGTH; i++) {
-			value = (value << BYTES_1) + (inBuffer[i] & BYTE_MASK);
+	public static int bytesToInt(byte[] inBuffer) throws IOException {
+		if (inBuffer.length < INT_LENGTH) {
+			throw new IOException(MessagesProvider.get("org.wolfgang.common.message", "cannot.decode.int").format());
+		} else {
+			int value = 0;
+			for (int i = 0; i < INT_LENGTH; i++) {
+				value = (value << BYTES_1) + (inBuffer[i] & BYTE_MASK);
+			}
+			return value;
 		}
-		return value;
 	}
 }

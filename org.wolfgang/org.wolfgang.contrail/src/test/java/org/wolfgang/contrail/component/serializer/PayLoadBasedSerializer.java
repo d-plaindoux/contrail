@@ -65,7 +65,7 @@ public interface PayLoadBasedSerializer {
 				} else {
 					final byte[] array = Arrays.copyOfRange(buffer, INT_LEN, payLoad + INT_LEN);
 					buffer = Arrays.copyOfRange(buffer, payLoad + INT_LEN, buffer.length);
-					return Marshall.bytesToObject(array);
+					return Option.some(Marshall.bytesToObject(array));
 				}
 			}
 		}
@@ -104,8 +104,7 @@ public interface PayLoadBasedSerializer {
 		@Override
 		public List<byte[]> transform(Serializable source) throws DataTransformationException {
 			try {
-				final ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-				final ObjectOutputStream stream = new ObjectOutputStream(byteArray);
+				final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				try {
 					final byte[] bytes = Marshall.objectToBytes(source);
 					stream.write(Marshall.intToBytes(bytes.length));
@@ -113,7 +112,7 @@ public interface PayLoadBasedSerializer {
 				} finally {
 					stream.close();
 				}
-				return Arrays.asList(byteArray.toByteArray());
+				return Arrays.asList(stream.toByteArray());
 			} catch (Exception e) {
 				throw new DataTransformationException(e);
 			}

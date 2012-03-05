@@ -20,10 +20,10 @@ package org.wolfgang.contrail.component.core;
 
 import java.util.List;
 
-
 /**
- * <code>DataTransducer</code> is able to transform any data from a given type
- * to another one.
+ * <code>DataTransformation</code> is able to transform any data from a given
+ * type to another one. Such transformation can produces zero or n results
+ * depending on the transformation process.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -31,11 +31,14 @@ import java.util.List;
 public interface DataTransformation<S, D> {
 
 	/**
-	 * Method called when a data must be transformed from a type S to a set of type D
+	 * Method called when a data must be transformed from a type S to a type D.
+	 * Such transformation returns a list and the list order is used for the
+	 * data handling. Then next handling is done first for item 0 and then item
+	 * 1 etc.
 	 * 
 	 * @param source
 	 *            The data to be transformed
-	 * @return the transformation results
+	 * @return the transformation results (never <code>null</code>)
 	 * @throws DataTransformationException
 	 *             thrown if the transformation fails
 	 */
