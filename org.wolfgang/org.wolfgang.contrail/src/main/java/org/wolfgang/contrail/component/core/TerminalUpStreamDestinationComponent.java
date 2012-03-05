@@ -25,6 +25,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -157,12 +158,12 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	}
 
 	@Override
-	public void closeUpStream() {
+	public void closeUpStream() throws DataHandlerCloseException {
 		this.upstreamDataHandler.handleClose();
 	}
 
 	@Override
-	public void closeDownStream() {
+	public void closeDownStream() throws DataHandlerCloseException {
 		this.upStreamSourceComponent.closeDownStream();
 	}
 }

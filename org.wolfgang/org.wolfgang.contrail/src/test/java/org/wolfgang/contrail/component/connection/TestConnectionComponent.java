@@ -29,6 +29,7 @@ import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent
 import org.wolfgang.contrail.component.core.TransformationBasedConnectionComponent;
 import org.wolfgang.contrail.connector.ComponentsLink;
 import org.wolfgang.contrail.connector.ComponentsLinkFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
@@ -80,7 +81,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testNominal03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -100,7 +101,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -124,7 +125,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -148,7 +149,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -172,7 +173,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed04() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -196,7 +197,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed05() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
@@ -220,7 +221,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testUpStreamClosed06() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
-			DataHandlerException {
+			DataHandlerException, DataHandlerCloseException {
 		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 

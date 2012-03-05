@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component.serializer;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -33,7 +34,7 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
  */
 public class TestSerializer extends TestCase {
 
-	public void testDecoder() throws IOException, DataTransformationException {
+	public void testNominal() throws IOException, DataTransformationException {
 		final String source = "Hello, World!";
 
 		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
@@ -41,10 +42,31 @@ public class TestSerializer extends TestCase {
 		assertEquals(1, bytes.size());
 
 		final PayLoadBasedSerializer.Decoder decoder = new PayLoadBasedSerializer.Decoder();
-		final List<Object> transform = decoder.transform(bytes.get(0));
-		assertEquals(1, transform.size());
+		final List<Object> result = decoder.transform(bytes.get(0));
+		assertEquals(1, result.size());
 
-		assertEquals(source, transform.get(0));
+		assertEquals(source, result.get(0));
 	}
 
+	public void testNominalSplit() throws IOException, DataTransformationException {
+		final String source = "Hello, World!";
+
+		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
+		final List<byte[]> bytes = encoder.transform(source);
+		encoder.finish();
+		
+		assertEquals(1, bytes.size());
+		final byte[] intermediate = bytes.get(0);
+
+		final PayLoadBasedSerializer.Decoder decoder = new PayLoadBasedSerializer.Decoder();
+		final List<Object> fstResult = decoder.transform(Arrays.copyOfRange(intermediate, 0, intermediate.length / 2));
+		assertEquals(0, fstResult.size());
+
+		final List<Object> sndResult = decoder.transform(Arrays.copyOfRange(intermediate, intermediate.length / 2, intermediate.length));
+		assertEquals(1, sndResult.size());
+
+		assertEquals(source, sndResult.get(0));
+		
+		decoder.finish();
+	}
 }

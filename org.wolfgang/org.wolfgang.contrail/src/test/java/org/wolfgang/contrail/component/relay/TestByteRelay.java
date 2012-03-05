@@ -27,6 +27,7 @@ import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.connector.ComponentsLink;
 import org.wolfgang.contrail.connector.ComponentsLinkFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
@@ -60,7 +61,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void testNominal02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+			ComponentNotYetConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -81,7 +82,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+			ComponentNotYetConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -103,7 +104,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+			ComponentNotYetConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -123,7 +124,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void tesDownStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+			ComponentNotYetConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -143,7 +144,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	public void tesDownStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+			ComponentNotYetConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {

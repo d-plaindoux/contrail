@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component;
 
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
+
 /**
  * <code>Component</code> is the main specification for component definition. It
  * provides close behaviors for upstream and downstream. Then when a component
@@ -38,12 +40,20 @@ public interface Component {
 
 	/**
 	 * Method called whether the upstream must be closed
+	 * 
+	 * @throws DataHandlerCloseException
+	 *             thrown if an error occurs during the stream termination
+	 *             process
 	 */
-	void closeUpStream();
+	void closeUpStream() throws DataHandlerCloseException;
 
 	/**
 	 * Method called whether the downstream must be closed
+	 * 
+	 * @throws DataHandlerCloseException
+	 *             thrown if an error occurs during the stream termination
+	 *             process
 	 */
-	void closeDownStream();
+	void closeDownStream() throws DataHandlerCloseException;
 
 }

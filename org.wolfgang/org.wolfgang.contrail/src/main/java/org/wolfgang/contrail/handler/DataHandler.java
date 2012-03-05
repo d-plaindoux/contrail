@@ -39,12 +39,18 @@ interface DataHandler<D> {
 
 	/**
 	 * Method called when the channel is closed
+	 * 
+	 * @throws DataHandlerCloseException
+	 *             thrown if any error occurs when operation fails
 	 */
-	void handleClose();
+	void handleClose() throws DataHandlerCloseException;
 
 	/**
 	 * Method called when the channel is lost and therefore closed
+	 * 
+	 * @throws DataHandlerCloseException
+	 *             thrown if any error occurs when operation fails
 	 */
-	void handleLost();
+	void handleLost() throws DataHandlerCloseException;
 
 }

@@ -20,7 +20,6 @@ package org.wolfgang.contrail.component.serializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +90,15 @@ public interface PayLoadBasedSerializer {
 				throw new DataTransformationException(e);
 			}
 		}
+
+		@Override
+		public List<Object> finish() throws DataTransformationException {
+			if (buffer.length > 0) {
+				throw new DataTransformationException();
+			} else {
+				return Arrays.asList();
+			}
+		}
 	}
 
 	public class Encoder implements DataTransformation<Serializable, byte[]> {
@@ -116,6 +124,11 @@ public interface PayLoadBasedSerializer {
 			} catch (Exception e) {
 				throw new DataTransformationException(e);
 			}
+		}
+
+		@Override
+		public List<byte[]> finish() throws DataTransformationException {
+			return Arrays.asList();
 		}
 	}
 }

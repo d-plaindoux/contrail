@@ -16,29 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.contrail.component.core.DataTransformation;
-import org.wolfgang.contrail.component.core.DataTransformationException;
+package org.wolfgang.contrail.handler;
 
 /**
- * <code>IntegerToString</code>
+ * <code>DataHandlerCloseException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransformation<Integer, String> {
+public class DataHandlerCloseException extends Exception {
 
-	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
+	private static final long serialVersionUID = -114097230498401093L;
+
+	/**
+	 * Constructor
+	 */
+	public DataHandlerCloseException() {
+		super();
 	}
 
-	@Override
-	public List<String> finish() throws DataTransformationException {
-		return Arrays.asList();
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public DataHandlerCloseException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataHandlerCloseException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataHandlerCloseException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

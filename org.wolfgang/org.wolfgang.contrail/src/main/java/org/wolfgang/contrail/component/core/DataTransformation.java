@@ -43,4 +43,13 @@ public interface DataTransformation<S, D> {
 	 *             thrown if the transformation fails
 	 */
 	List<D> transform(S source) throws DataTransformationException;
+
+	/**
+	 * Method called when a transformation must be finished. This methods must
+	 * drain remaining inputs.
+	 * 
+	 * @return a list of results (never <code>null</code>)
+	 * @throws DataTransformationException
+	 */
+	List<D> finish() throws DataTransformationException;
 }

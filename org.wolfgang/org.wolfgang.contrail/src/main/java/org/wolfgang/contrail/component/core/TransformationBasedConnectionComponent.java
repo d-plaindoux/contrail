@@ -28,6 +28,7 @@ import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
 import org.wolfgang.contrail.component.ConnectionComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
@@ -96,8 +97,18 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 		}
 
 		@Override
-		public void handleClose() {
+		public void handleClose() throws DataHandlerCloseException {
 			this.closed = true;
+			try {
+				final List<D> transform = streamXducer.finish();
+				for (D value : transform) {
+					upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
+				}
+			} catch (DataTransformationException e) {
+				throw new DataHandlerCloseException(e);
+			} catch (DataHandlerException e) {
+				throw new DataHandlerCloseException(e);
+			}
 		}
 
 		@Override
@@ -158,8 +169,18 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 		}
 
 		@Override
-		public void handleClose() {
+		public void handleClose() throws DataHandlerCloseException {
 			this.closed = true;
+			try {
+				final List<S> transform = streamXducer.finish();
+				for (S value : transform) {
+					upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
+				}
+			} catch (DataTransformationException e) {
+				throw new DataHandlerCloseException(e);
+			} catch (DataHandlerException e) {
+				throw new DataHandlerCloseException(e);
+			}
 		}
 
 		@Override
@@ -258,14 +279,20 @@ public class TransformationBasedConnectionComponent<S, D> extends AbstractCompon
 	}
 
 	@Override
-	public void closeUpStream() {
-		this.upStreamDataHandler.handleClose();
-		this.upStreamDestinationComponent.closeUpStream();
+	public void closeUpStream() throws DataHandlerCloseException {
+		try {
+			this.upStreamDataHandler.handleClose();
+		} finally {
+			this.upStreamDestinationComponent.closeUpStream();
+		}
 	}
 
 	@Override
-	public void closeDownStream() {
-		this.downStreamDataHandler.handleClose();
-		this.upStreamSourceComponent.closeDownStream();
+	public void closeDownStream() throws DataHandlerCloseException {
+		try {
+			this.downStreamDataHandler.handleClose();
+		} finally {
+			this.upStreamSourceComponent.closeDownStream();
+		}
 	}
 }

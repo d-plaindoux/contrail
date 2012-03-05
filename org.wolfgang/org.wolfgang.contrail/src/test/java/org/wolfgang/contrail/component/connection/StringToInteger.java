@@ -41,4 +41,8 @@ public class StringToInteger implements DataTransformation<String, Integer> {
 		}
 	}
 
+	@Override
+	public List<Integer> finish() throws DataTransformationException {
+		return Arrays.asList();
+	}
 }
