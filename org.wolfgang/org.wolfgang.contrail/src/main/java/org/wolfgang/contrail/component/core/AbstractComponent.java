@@ -28,7 +28,7 @@ import org.wolfgang.contrail.component.ComponentId;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract class AbstractComponent implements Component {
+public abstract class AbstractComponent implements Component {
 
 	/**
 	 * The component identifier
@@ -41,9 +41,9 @@ abstract class AbstractComponent implements Component {
 	 * @param componentId
 	 *            The component identifier
 	 */
-	protected AbstractComponent(ComponentId componentId) {
+	protected AbstractComponent() {
 		super();
-		this.componentId = componentId;
+		this.componentId = new ComponentIdImpl();
 	}
 
 	@Override
