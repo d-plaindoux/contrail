@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import java.util.UUID;
 
 /**
  * <code>ComponentId</code> used to identify any component.
@@ -33,4 +32,5 @@ public interface ComponentId {
 
 	@Override
 	boolean equals(Object obj);
+	
 }

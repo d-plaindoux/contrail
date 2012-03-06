@@ -56,13 +56,20 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	private final DownStreamDataHandler<E> downStreamDataHandler;
 
 	/**
+	 * The source data type
+	 */
+	private final Class<E> type;
+
+	/**
 	 * Constructor
 	 * 
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
+	public InitialUpStreamSourceComponent(final Class<E> type, final InitialDataReceiverFactory<E> dataFactory) {
 		super();
+
+		this.type = type;
 
 		this.dataEmitter = new DataSender<E>() {
 			@Override
@@ -101,6 +108,11 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 		};
 	}
 
+	@Override
+	public Class<E> getUpStreamSourceType() {
+		return this.type;
+	}
+
 	/**
 	 * Provides the data channel used for up stream communication facility
 	 * 
@@ -129,7 +141,8 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 
 	@Override
 	public void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotYetConnectedException {
-		if (this.upStreamDestinationComponent != null && this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
+		if (this.upStreamDestinationComponent != null
+				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");

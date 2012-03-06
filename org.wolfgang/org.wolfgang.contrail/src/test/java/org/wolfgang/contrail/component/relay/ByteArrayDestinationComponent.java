@@ -35,7 +35,7 @@ public class ByteArrayDestinationComponent extends TerminalUpStreamDestinationCo
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
-		super(new TerminalDataReceiverFactory<byte[]>() {
+		super(byte[].class, new TerminalDataReceiverFactory<byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(final TerminalUpStreamDestinationComponent<byte[]> terminal) {
 				return new DataReceiver<byte[]>() {

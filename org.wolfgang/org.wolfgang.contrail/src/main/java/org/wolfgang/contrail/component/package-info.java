@@ -20,7 +20,7 @@
  * This package provides all components able to used when upstream/downstream 
  * cooperation based shall be done. For this purpose basic patterns has been
  * identifier and provided like the upstream source, the upstream destination,
- * the pipeline, the multiplexer, the demultiplexer and the router. 
+ * the pipeline, the multiplexer, the demultiplexer and the router.
  */
 
 package org.wolfgang.contrail.component;

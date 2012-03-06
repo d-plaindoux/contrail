@@ -35,7 +35,7 @@ public class IntegerDestinationComponent extends TerminalUpStreamDestinationComp
 	 * Constructor
 	 */
 	public IntegerDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Integer>() {
+		super(Integer.class, new TerminalDataReceiverFactory<Integer>() {
 			@Override
 			public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
 				return new DataReceiver<Integer>() {

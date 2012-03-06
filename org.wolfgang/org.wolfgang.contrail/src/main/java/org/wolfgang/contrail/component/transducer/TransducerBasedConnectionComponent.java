@@ -36,9 +36,9 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
- * <code>TransducerBasedConnectionComponent</code> is an implementation
- * which requires data transformations performed each time an upstream or
- * downstrem data go through the connection component.
+ * <code>TransducerBasedConnectionComponent</code> is an implementation which
+ * requires data transformations performed each time an upstream or downstrem
+ * data go through the connection component.
  * 
  * 
  * @author Didier Plaindoux
@@ -83,7 +83,9 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 			if (closed) {
 				throw new UpStreamDataHandlerClosedException();
 			} else if (upStreamDestinationComponent == null) {
-				throw new DataHandlerException();
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.upstream.unknown")
+						.format();
+				throw new DataHandlerException(message);
 			} else {
 				try {
 					final List<D> transform = streamXducer.transform(data);
@@ -91,7 +93,9 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 						upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransducerException e) {
-					throw new DataHandlerException(e);
+					final String message = MessagesProvider.get("org.wolfgang.contrail.message",
+							"transducer.transformation.error").format(e.getMessage());
+					throw new DataHandlerException(message, e);
 				}
 			}
 		}
@@ -105,9 +109,13 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 					upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				throw new DataHandlerCloseException(e);
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
+						.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
 			} catch (DataHandlerException e) {
-				throw new DataHandlerCloseException(e);
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
+						.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
 			}
 		}
 
@@ -155,7 +163,9 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 			if (closed) {
 				throw new DownStreamDataHandlerClosedException();
 			} else if (upStreamSourceComponent == null) {
-				throw new DataHandlerException();
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.upstream.unknown")
+						.format();
+				throw new DataHandlerException(message);
 			} else {
 				try {
 					final List<S> transform = streamXducer.transform(data);
@@ -163,7 +173,9 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 						upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransducerException e) {
-					throw new DataHandlerException(e);
+					final String message = MessagesProvider.get("org.wolfgang.contrail.message",
+							"transducer.transformation.error").format(e.getMessage());
+					throw new DataHandlerException(message, e);
 				}
 			}
 		}
@@ -177,9 +189,13 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 					upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				throw new DataHandlerCloseException(e);
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
+						.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
 			} catch (DataHandlerException e) {
-				throw new DataHandlerCloseException(e);
+				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
+						.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
 			}
 		}
 
@@ -210,6 +226,10 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 	 */
 	private UpStreamDestinationComponent<D> upStreamDestinationComponent;
 
+	private final Class<S> upStreamDestinationType;
+
+	private final Class<D> upStreamSourceType;
+
 	/**
 	 * Constructor
 	 * 
@@ -218,12 +238,24 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransducerBasedConnectionComponent(final DataTransducer<S, D> upstreamXducer,
-			final DataTransducer<D, S> downstreamXducer) {
+	public TransducerBasedConnectionComponent(Class<S> upStreamDestinationType, Class<D> upStreamSourceType,
+			final DataTransducer<S, D> upstreamXducer, final DataTransducer<D, S> downstreamXducer) {
 		super();
+		this.upStreamDestinationType = upStreamDestinationType;
+		this.upStreamSourceType = upStreamSourceType;
 
 		this.upStreamDataHandler = new TransformationBasedUpStreamDataHandler(upstreamXducer);
 		this.downStreamDataHandler = new TransformationBasedDownStreamDataHandler(downstreamXducer);
+	}
+
+	@Override
+	public Class<S> getUpStreamDestinationType() {
+		return this.upStreamDestinationType;
+	}
+
+	@Override
+	public Class<D> getUpStreamSourceType() {
+		return this.upStreamSourceType;
 	}
 
 	@Override

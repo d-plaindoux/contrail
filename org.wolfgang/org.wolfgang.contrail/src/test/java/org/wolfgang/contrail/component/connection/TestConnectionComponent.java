@@ -45,7 +45,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -64,7 +64,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -83,7 +83,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testNominal03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -103,7 +103,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -127,7 +127,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -151,7 +151,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -175,7 +175,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed04() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -199,7 +199,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed05() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
@@ -223,8 +223,9 @@ public class TestConnectionComponent extends TestCase {
 	public void testUpStreamClosed06() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
+		
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
@@ -247,7 +248,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
-				new StringToInteger(), new IntegerToString());
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);

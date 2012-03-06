@@ -56,6 +56,11 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	private final UpStreamDataHandler<E> upstreamDataHandler;
 
 	/**
+	 * The destination type
+	 */
+	private final Class<E> type;
+
+	/**
 	 * Data receiver
 	 */
 
@@ -65,8 +70,10 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	 * @param dataFactory
 	 *            The terminal data receiver factory
 	 */
-	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
+	public TerminalUpStreamDestinationComponent(final Class<E> type, final TerminalDataReceiverFactory<E> dataFactory) {
 		super();
+
+		this.type = type;
 
 		this.dataEmitter = new DataSender<E>() {
 			@Override
@@ -103,6 +110,11 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 				this.closed = true;
 			}
 		};
+	}
+
+	@Override
+	public Class<E> getUpStreamDestinationType() {
+		return this.type;
 	}
 
 	/**
