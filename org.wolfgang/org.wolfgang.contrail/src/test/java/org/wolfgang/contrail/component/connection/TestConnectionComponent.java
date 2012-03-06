@@ -24,9 +24,9 @@ import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
 import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
-import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
-import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
-import org.wolfgang.contrail.component.core.TransformationBasedConnectionComponent;
+import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.component.transducer.TransducerBasedConnectionComponent;
 import org.wolfgang.contrail.connector.ComponentsLink;
 import org.wolfgang.contrail.connector.ComponentsLinkFactory;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -44,7 +44,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -63,7 +63,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -82,7 +82,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -102,7 +102,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -126,7 +126,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -150,7 +150,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -174,7 +174,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed04() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -198,7 +198,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed05() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -222,7 +222,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed06() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException, DataHandlerCloseException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -246,7 +246,7 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
 			DataHandlerException {
-		final TransformationBasedConnectionComponent<String, Integer> connection = new TransformationBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();

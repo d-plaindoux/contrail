@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.component.connection;
 
-import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.core.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.component.frontier.DataReceiver;
+import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

@@ -20,9 +20,9 @@ package org.wolfgang.contrail.component.connection;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.wolfgang.contrail.component.core.DataReceiver;
-import org.wolfgang.contrail.component.core.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.core.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.component.frontier.DataReceiver;
+import org.wolfgang.contrail.component.frontier.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

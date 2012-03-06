@@ -27,8 +27,8 @@ import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.common.utils.Option;
-import org.wolfgang.contrail.component.core.DataTransformation;
-import org.wolfgang.contrail.component.core.DataTransformationException;
+import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
@@ -39,7 +39,14 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
  */
 public interface PayLoadBasedSerializer {
 
-	public class Decoder implements DataTransformation<byte[], Object> {
+	/**
+	 * <code>Decoder</code> is able to transform payload based array to objects.
+	 * 
+	 *
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	public class Decoder implements DataTransducer<byte[], Object> {
 		private static final int INT_LEN = 4;
 		private static final byte[] EMPTY_BUFFER = new byte[0];
 
@@ -70,7 +77,7 @@ public interface PayLoadBasedSerializer {
 		}
 
 		@Override
-		public List<Object> transform(byte[] source) throws DataTransformationException {
+		public List<Object> transform(byte[] source) throws DataTransducerException {
 			try {
 				// Catenate buffers ...
 				final byte[] newBuffer = new byte[buffer.length + source.length];
@@ -87,21 +94,28 @@ public interface PayLoadBasedSerializer {
 
 				return objects;
 			} catch (Exception e) {
-				throw new DataTransformationException(e);
+				throw new DataTransducerException(e);
 			}
 		}
 
 		@Override
-		public List<Object> finish() throws DataTransformationException {
+		public List<Object> finish() throws DataTransducerException {
 			if (buffer.length > 0) {
-				throw new DataTransformationException();
+				throw new DataTransducerException();
 			} else {
 				return Arrays.asList();
 			}
 		}
 	}
 
-	public class Encoder implements DataTransformation<Serializable, byte[]> {
+	/**
+	 * <code>Encoder</code> is capable to transform objects to byte array with a
+	 * prefix as a payload.
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	public class Encoder implements DataTransducer<Serializable, byte[]> {
 		/**
 		 * Constructor
 		 */
@@ -110,7 +124,7 @@ public interface PayLoadBasedSerializer {
 		}
 
 		@Override
-		public List<byte[]> transform(Serializable source) throws DataTransformationException {
+		public List<byte[]> transform(Serializable source) throws DataTransducerException {
 			try {
 				final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				try {
@@ -122,12 +136,12 @@ public interface PayLoadBasedSerializer {
 				}
 				return Arrays.asList(stream.toByteArray());
 			} catch (Exception e) {
-				throw new DataTransformationException(e);
+				throw new DataTransducerException(e);
 			}
 		}
 
 		@Override
-		public List<byte[]> finish() throws DataTransformationException {
+		public List<byte[]> finish() throws DataTransducerException {
 			return Arrays.asList();
 		}
 	}

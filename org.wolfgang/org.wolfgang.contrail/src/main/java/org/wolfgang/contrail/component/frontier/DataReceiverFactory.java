@@ -16,29 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
+package org.wolfgang.contrail.component.frontier;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>IntegerToString</code>
+ * <code>DataReceiverFactory</code> is capable to build data receiver.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransducer<Integer, String> {
+public interface DataReceiverFactory<E, C> {
 
-	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
-	}
+	/**
+	 * Method called whether a data receiver shall be built for a given
+	 * component
+	 * 
+	 * @param component
+	 *            The component used to build the data receiver
+	 * @throws DataHandlerException
+	 *             thrown is the data can not be handled correctly
+	 */
+	DataReceiver<E> create(C component);
 
-	@Override
-	public List<String> finish() throws DataTransducerException {
-		return Arrays.asList();
-	}
 }

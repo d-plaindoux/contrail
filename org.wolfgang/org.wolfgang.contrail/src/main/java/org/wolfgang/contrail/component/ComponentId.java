@@ -26,45 +26,11 @@ import java.util.UUID;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentId {
-
-	private final UUID identifier;
-
-	/**
-	 * Constructor
-	 */
-	public ComponentId() {
-		super();
-		this.identifier = UUID.randomUUID();
-	}
+public interface ComponentId {
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
-		return result;
-	}
+	int hashCode();
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof ComponentId)) {
-			return false;
-		}
-		ComponentId other = (ComponentId) obj;
-		if (identifier == null) {
-			if (other.identifier != null) {
-				return false;
-			}
-		} else if (!identifier.equals(other.identifier)) {
-			return false;
-		}
-		return true;
-	}
+	boolean equals(Object obj);
 }

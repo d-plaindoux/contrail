@@ -16,29 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
-
 /**
- * <code>IntegerToString</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
+ * This package is dedicated to transformation based component connection. Such
+ * component links to other components performing data transformation for both
+ * incoming and outgoing data. 
  */
-public class IntegerToString implements DataTransducer<Integer, String> {
 
-	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
-	}
+package org.wolfgang.contrail.component.transducer;
 
-	@Override
-	public List<String> finish() throws DataTransducerException {
-		return Arrays.asList();
-	}
-}

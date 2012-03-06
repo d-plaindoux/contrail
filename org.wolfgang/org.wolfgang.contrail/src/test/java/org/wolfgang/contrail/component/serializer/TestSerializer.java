@@ -24,7 +24,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.core.DataTransformationException;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
  * <code>TestSerializer</code>
@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
  */
 public class TestSerializer extends TestCase {
 
-	public void testNominal() throws IOException, DataTransformationException {
+	public void testNominal() throws IOException, DataTransducerException {
 		final String source = "Hello, World!";
 
 		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
@@ -48,7 +48,7 @@ public class TestSerializer extends TestCase {
 		assertEquals(source, result.get(0));
 	}
 
-	public void testNominalSplit() throws IOException, DataTransformationException {
+	public void testNominalSplit() throws IOException, DataTransducerException {
 		final String source = "Hello, World!";
 
 		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();

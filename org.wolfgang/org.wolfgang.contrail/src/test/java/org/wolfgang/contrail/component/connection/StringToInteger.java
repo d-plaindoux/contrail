@@ -21,8 +21,8 @@ package org.wolfgang.contrail.component.connection;
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.contrail.component.core.DataTransformation;
-import org.wolfgang.contrail.component.core.DataTransformationException;
+import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
  * <code>IntegerToString</code>
@@ -30,19 +30,19 @@ import org.wolfgang.contrail.component.core.DataTransformationException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements DataTransformation<String, Integer> {
+public class StringToInteger implements DataTransducer<String, Integer> {
 
 	@Override
-	public List<Integer> transform(String s) throws DataTransformationException {
+	public List<Integer> transform(String s) throws DataTransducerException {
 		try {
 			return Arrays.asList(Integer.parseInt(s));
 		} catch (NumberFormatException e) {
-			throw new DataTransformationException(e);
+			throw new DataTransducerException(e);
 		}
 	}
 
 	@Override
-	public List<Integer> finish() throws DataTransformationException {
+	public List<Integer> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

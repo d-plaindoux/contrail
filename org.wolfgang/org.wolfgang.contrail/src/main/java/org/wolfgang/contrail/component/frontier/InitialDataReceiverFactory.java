@@ -16,29 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+package org.wolfgang.contrail.component.frontier;
 
 /**
- * <code>IntegerToString</code>
+ * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
+ * to initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransducer<Integer, String> {
+public interface InitialDataReceiverFactory<E> extends DataReceiverFactory<E, InitialUpStreamSourceComponent<E>> {
 
-	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
-	}
+	// Nothing
 
-	@Override
-	public List<String> finish() throws DataTransducerException {
-		return Arrays.asList();
-	}
 }
