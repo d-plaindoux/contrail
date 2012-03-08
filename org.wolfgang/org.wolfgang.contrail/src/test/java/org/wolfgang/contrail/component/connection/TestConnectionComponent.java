@@ -22,17 +22,17 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
 import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationComponent;
 import org.wolfgang.contrail.component.transducer.TransducerBasedConnectionComponent;
-import org.wolfgang.contrail.connector.ComponentsLink;
-import org.wolfgang.contrail.connector.ComponentsLinkFactory;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
+import org.wolfgang.contrail.link.ComponentsLink;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -42,7 +42,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  */
 public class TestConnectionComponent extends TestCase {
 
-	public void testNominal01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testNominal01() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -51,8 +51,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.getDataSender().sendData("3");
 		assertEquals("9", stringReference.get());
@@ -61,7 +61,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testNominal02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testNominal02() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -70,8 +70,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.getDataSender().sendData("0");
 		assertEquals("0", stringReference.get());
@@ -80,7 +80,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testNominal03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testNominal03() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -89,8 +89,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.closeUpStream();
 		terminal.getDataSender().sendData(9);
@@ -100,7 +100,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed01() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -109,8 +109,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.closeUpStream();
@@ -124,7 +124,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed02() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -133,8 +133,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			connection.closeUpStream();
@@ -148,7 +148,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed03() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed03() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -157,8 +157,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			terminal.closeUpStream();
@@ -172,7 +172,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed04() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed04() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -181,8 +181,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.closeDownStream();
@@ -196,7 +196,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed05() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed05() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -205,8 +205,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			connection.closeDownStream();
@@ -220,7 +220,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testUpStreamClosed06() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testUpStreamClosed06() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException, DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -230,8 +230,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			terminal.closeDownStream();
@@ -245,7 +245,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testFailure() throws ComponentAlreadyConnectedException, ComponentNotYetConnectedException,
+	public void testFailure() throws ComponentConnectedException, ComponentNotConnectedException,
 			DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
@@ -254,8 +254,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = ComponentsLinkFactory.connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = ComponentsLinkFactory.connect(connection, terminal);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.getDataSender().sendData("NaN");

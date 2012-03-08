@@ -16,9 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.connector;
+package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
@@ -55,9 +55,9 @@ public interface ComponentsLink<E> {
 	/**
 	 * Method called whether the connection must be disposed.
 	 * 
-	 * @throws ComponentNotYetConnectedException
+	 * @throws ComponentNotConnectedException
 	 *             thrown if the connection is already disposed
 	 */
-	void dispose() throws ComponentNotYetConnectedException;
+	void dispose() throws ComponentNotConnectedException;
 
 }

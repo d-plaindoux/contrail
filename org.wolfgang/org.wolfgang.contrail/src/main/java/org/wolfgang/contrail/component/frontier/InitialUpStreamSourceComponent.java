@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.frontier;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
@@ -76,7 +76,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 			public void sendData(E data) throws DataHandlerException {
 				try {
 					getUpStreamDataHandler().handleData(data);
-				} catch (ComponentNotYetConnectedException e) {
+				} catch (ComponentNotConnectedException e) {
 					throw new DataHandlerException(e);
 				}
 			}
@@ -117,36 +117,36 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	 * Provides the data channel used for up stream communication facility
 	 * 
 	 * @return an UpStreamDataHandler (never <code>null</code>)
-	 * @throws ComponentNotYetConnectedException
+	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	private UpStreamDataHandler<E> getUpStreamDataHandler() throws ComponentNotYetConnectedException {
+	private UpStreamDataHandler<E> getUpStreamDataHandler() throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotYetConnectedException(message.format());
+			throw new ComponentNotConnectedException(message.format());
 		} else {
 			return upStreamDestinationComponent.getUpStreamDataHandler();
 		}
 	}
 
 	@Override
-	public void connect(UpStreamDestinationComponent<E> handler) throws ComponentAlreadyConnectedException {
+	public void connect(UpStreamDestinationComponent<E> handler) throws ComponentConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentAlreadyConnectedException(message.format());
+			throw new ComponentConnectedException(message.format());
 		}
 	}
 
 	@Override
-	public void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotYetConnectedException {
+	public void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent != null
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
 		} else {
 			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotYetConnectedException(message.format());
+			throw new ComponentNotConnectedException(message.format());
 		}
 	}
 

@@ -16,9 +16,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.connector;
+package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
@@ -29,12 +33,21 @@ import org.wolfgang.contrail.component.UpStreamSourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ComponentsLinkFactory {
-	
+public class ComponentsLinkManager {
+
+	/**
+	 * Created links
+	 */
+	private final List<ComponentsLink<?>> links;
+
+	{
+		links = new ArrayList<ComponentsLink<?>>();
+	}
+
 	/**
 	 * Constructor
 	 */
-	private ComponentsLinkFactory(){
+	public ComponentsLinkManager() {
 		// Nothing
 	}
 
@@ -46,11 +59,31 @@ public final class ComponentsLinkFactory {
 	 * @param destination
 	 *            The link destination
 	 * @return a components link (never <code>null</code>)
-	 * @throws ComponentAlreadyConnectedException
+	 * @throws ComponentConnectedException
 	 *             Thrown if one component is linked
 	 */
-	public static final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination) throws ComponentAlreadyConnectedException {
-		return new ComponentsLinkImpl<E>(source, destination);
+	public final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
+			throws ComponentConnectedException {
+		final ComponentsLinkImpl<E> link = new ComponentsLinkImpl<E>(source, destination) {
+
+			@Override
+			public void dispose() throws ComponentNotConnectedException {
+				try {
+					super.dispose();
+				} finally {
+					links.remove(this);
+				}
+			}
+
+		};
+
+		this.links.add(link);
+
+		return link;
+	}
+
+	public ComponentsLink<?>[] getEstablishedLinks() {
+		return links.toArray(new ComponentsLink[links.size()]);
 	}
 
 }

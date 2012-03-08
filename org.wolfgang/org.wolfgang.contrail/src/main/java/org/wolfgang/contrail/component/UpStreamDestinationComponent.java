@@ -54,7 +54,7 @@ public interface UpStreamDestinationComponent<E> extends Component {
 	 * @param handler
 	 *            The source component
 	 */
-	void connect(UpStreamSourceComponent<E> handler) throws ComponentAlreadyConnectedException;
+	void connect(UpStreamSourceComponent<E> handler) throws ComponentConnectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -63,5 +63,5 @@ public interface UpStreamDestinationComponent<E> extends Component {
 	 * @param handler
 	 *            The source component
 	 */
-	void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotYetConnectedException;
+	void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotConnectedException;
 }

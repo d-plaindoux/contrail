@@ -23,14 +23,14 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
-import org.wolfgang.contrail.connector.ComponentsLink;
-import org.wolfgang.contrail.connector.ComponentsLinkFactory;
+import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
+import org.wolfgang.contrail.link.ComponentsLink;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>TestByteRelay</code>
@@ -40,14 +40,14 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  */
 public class TestByteRelay extends TestCase {
 
-	public void testNominal01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testNominal01() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+			final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 			source.getDataSender().sendData("Hello,".getBytes());
 			source.getDataSender().sendData(" World!".getBytes());
@@ -60,14 +60,14 @@ public class TestByteRelay extends TestCase {
 		assertEquals("Hello, World!", new String(output.toByteArray()));
 	}
 
-	public void testNominal02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException, DataHandlerCloseException {
+	public void testNominal02() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+			final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 			source.closeUpStream();
 			destination.getDataSender().sendData("Hello,".getBytes());
@@ -81,14 +81,14 @@ public class TestByteRelay extends TestCase {
 		assertEquals("Hello, World!", new String(output.toByteArray()));
 	}
 
-	public void testUpStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException, DataHandlerCloseException {
+	public void testUpStreamClosed01() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+			final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 			source.closeUpStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -103,14 +103,14 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void testUpStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException, DataHandlerCloseException {
+	public void testUpStreamClosed02() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			ComponentsLinkFactory.connect(source, destination);
+			new ComponentsLinkManager().connect(source, destination);
 
 			destination.closeUpStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -123,14 +123,14 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void tesDownStreamClosed01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException, DataHandlerCloseException {
+	public void tesDownStreamClosed01() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			ComponentsLinkFactory.connect(source, destination);
+			new ComponentsLinkManager().connect(source, destination);
 
 			source.closeDownStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -143,14 +143,14 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void tesDownStreamClosed02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException, DataHandlerCloseException {
+	public void tesDownStreamClosed02() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			ComponentsLinkFactory.connect(source, destination);
+			new ComponentsLinkManager().connect(source, destination);
 
 			destination.closeDownStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -191,107 +191,107 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void testAlreadyConnected01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testAlreadyConnected01() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
 
 		try {
-			ComponentsLinkFactory.connect(source1, destination);
+			new ComponentsLinkManager().connect(source1, destination);
 			fail();
-		} catch (ComponentAlreadyConnectedException e) {
+		} catch (ComponentConnectedException e) {
 			// OK
 		}
 
 		interconnection.dispose();
 	}
 
-	public void testAlreadyConnected02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testAlreadyConnected02() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
 
 		try {
-			ComponentsLinkFactory.connect(source, destination1);
+			new ComponentsLinkManager().connect(source, destination1);
 			fail();
-		} catch (ComponentAlreadyConnectedException e) {
+		} catch (ComponentConnectedException e) {
 			// OK
 		}
 
 		interconnection.dispose();
 	}
 
-	public void testNotConnected01() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testNotConnected01() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 		interconnection.dispose();
 
 		try {
 			source.disconnect(destination);
 			fail();
-		} catch (ComponentNotYetConnectedException e) {
+		} catch (ComponentNotConnectedException e) {
 			// OK
 		}
 	}
 
-	public void testNotConnected02() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testNotConnected02() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 		interconnection.dispose();
 
 		try {
 			destination.disconnect(source);
 			fail();
-		} catch (ComponentNotYetConnectedException e) {
+		} catch (ComponentNotConnectedException e) {
 			// OK
 		}
 
 	}
 
-	public void testNotConnected03() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testNotConnected03() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 		try {
 			source.disconnect(destination1);
 			fail();
-		} catch (ComponentNotYetConnectedException e) {
+		} catch (ComponentNotConnectedException e) {
 			// OK
 		}
 
 		interconnection.dispose();
 	}
 
-	public void testNotConnected04() throws ComponentAlreadyConnectedException, DataHandlerException, IOException,
-			ComponentNotYetConnectedException {
+	public void testNotConnected04() throws ComponentConnectedException, DataHandlerException, IOException,
+			ComponentNotConnectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentsLink<byte[]> interconnection = ComponentsLinkFactory.connect(source, destination);
+		final ComponentsLink<byte[]> interconnection = new ComponentsLinkManager().connect(source, destination);
 
 		try {
 			destination.disconnect(source1);
 			fail();
-		} catch (ComponentNotYetConnectedException e) {
+		} catch (ComponentNotConnectedException e) {
 			// OK
 		}
 

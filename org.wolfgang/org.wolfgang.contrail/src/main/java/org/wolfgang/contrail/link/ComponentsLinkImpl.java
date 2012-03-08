@@ -16,10 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.connector;
+package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.ComponentAlreadyConnectedException;
-import org.wolfgang.contrail.component.ComponentNotYetConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
@@ -49,11 +49,11 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	 *            The source
 	 * @param destination
 	 *            The destination
-	 * @throws ComponentAlreadyConnectedException
+	 * @throws ComponentConnectedException
 	 *             thrown if components are already connected
 	 */
 	public ComponentsLinkImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
-			throws ComponentAlreadyConnectedException {
+			throws ComponentConnectedException {
 		super();
 		this.source = source;
 		this.destination = destination;
@@ -62,7 +62,7 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 
 		try { 
 			destination.connect(source);
-		} catch (ComponentAlreadyConnectedException e) {
+		} catch (ComponentConnectedException e) {
 			try {
 				source.disconnect(destination);
 			} catch (Exception consume) {
@@ -84,7 +84,7 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	}
 
 	@Override
-	public void dispose() throws ComponentNotYetConnectedException {
+	public void dispose() throws ComponentNotConnectedException {
 		try {
 			this.source.disconnect(this.destination);
 		} finally {

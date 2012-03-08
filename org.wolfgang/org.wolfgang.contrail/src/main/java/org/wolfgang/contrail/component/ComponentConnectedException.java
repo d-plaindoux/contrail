@@ -24,14 +24,14 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentNotYetConnectedException extends Exception {
+public class ComponentConnectedException extends Exception {
 
-	private static final long serialVersionUID = -4863662886063758972L;
+	private static final long serialVersionUID = -636050790684085546L;
 
 	/**
 	 * Constructor
 	 */
-	public ComponentNotYetConnectedException() {
+	public ComponentConnectedException() {
 		super();
 	}
 
@@ -41,7 +41,7 @@ public class ComponentNotYetConnectedException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public ComponentNotYetConnectedException(String arg0, Throwable arg1) {
+	public ComponentConnectedException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 	}
 
@@ -50,7 +50,7 @@ public class ComponentNotYetConnectedException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ComponentNotYetConnectedException(String arg0) {
+	public ComponentConnectedException(String arg0) {
 		super(arg0);
 	}
 
@@ -59,7 +59,7 @@ public class ComponentNotYetConnectedException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ComponentNotYetConnectedException(Throwable arg0) {
+	public ComponentConnectedException(Throwable arg0) {
 		super(arg0);
 	}
 

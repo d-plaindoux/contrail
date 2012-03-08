@@ -16,51 +16,34 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.link;
+
+import org.wolfgang.contrail.component.frontier.DataReceiver;
+import org.wolfgang.contrail.component.frontier.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>DummySourceComponent</code> is a simple upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentAlreadyConnectedException extends Exception {
-
-	private static final long serialVersionUID = -636050790684085546L;
+public class DummySourceComponent extends InitialUpStreamSourceComponent<Void> {
 
 	/**
 	 * Constructor
 	 */
-	public ComponentAlreadyConnectedException() {
-		super();
+	public DummySourceComponent() {
+		super(Void.class, new InitialDataReceiverFactory<Void>() {
+			@Override
+			public DataReceiver<Void> create(InitialUpStreamSourceComponent<Void> initial) {
+				return new DataReceiver<Void>() {
+					public void receiveData(Void data) throws DataHandlerException {
+						// Ignore data
+					}
+				};
+			}
+		});
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public ComponentAlreadyConnectedException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ComponentAlreadyConnectedException(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ComponentAlreadyConnectedException(Throwable arg0) {
-		super(arg0);
-	}
-
 }
