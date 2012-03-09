@@ -82,6 +82,11 @@ public class ComponentsLinkManager {
 		return link;
 	}
 
+	/**
+	 * Method called when all established links must be retrieved
+	 * 
+	 * @return an array of established links
+	 */
 	public ComponentsLink<?>[] getEstablishedLinks() {
 		return links.toArray(new ComponentsLink[links.size()]);
 	}

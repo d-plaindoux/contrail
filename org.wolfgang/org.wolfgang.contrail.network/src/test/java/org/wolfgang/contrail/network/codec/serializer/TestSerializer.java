@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.serializer;
+package org.wolfgang.contrail.network.codec.serializer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
@@ -37,11 +38,11 @@ public class TestSerializer extends TestCase {
 	public void testNominal() throws IOException, DataTransducerException {
 		final String source = "Hello, World!";
 
-		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
+		final Encoder encoder = new Encoder();
 		final List<byte[]> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
 
-		final PayLoadBasedSerializer.Decoder decoder = new PayLoadBasedSerializer.Decoder();
+		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
 		final List<Object> result = decoder.transform(bytes.get(0));
 		assertEquals(1, result.size());
 
@@ -51,14 +52,14 @@ public class TestSerializer extends TestCase {
 	public void testNominalSplit() throws IOException, DataTransducerException {
 		final String source = "Hello, World!";
 
-		final PayLoadBasedSerializer.Encoder encoder = new PayLoadBasedSerializer.Encoder();
+		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
 		final List<byte[]> bytes = encoder.transform(source);
 		encoder.finish();
 		
 		assertEquals(1, bytes.size());
 		final byte[] intermediate = bytes.get(0);
 
-		final PayLoadBasedSerializer.Decoder decoder = new PayLoadBasedSerializer.Decoder();
+		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
 		final List<Object> fstResult = decoder.transform(Arrays.copyOfRange(intermediate, 0, intermediate.length / 2));
 		assertEquals(0, fstResult.size());
 

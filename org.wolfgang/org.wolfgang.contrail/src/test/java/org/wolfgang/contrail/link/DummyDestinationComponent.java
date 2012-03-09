@@ -24,7 +24,7 @@ import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationCompo
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>ByteArrayDestinationComponent</code>
+ * <code>DummyDestinationComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
