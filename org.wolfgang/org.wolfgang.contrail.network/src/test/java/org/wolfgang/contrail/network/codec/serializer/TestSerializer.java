@@ -35,10 +35,10 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
  */
 public class TestSerializer extends TestCase {
 
-	public void testNominal() throws IOException, DataTransducerException {
+	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
-		final Encoder encoder = new Encoder();
+		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
 		final List<byte[]> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
 
@@ -49,13 +49,13 @@ public class TestSerializer extends TestCase {
 		assertEquals(source, result.get(0));
 	}
 
-	public void testNominalSplit() throws IOException, DataTransducerException {
+	public void testNominalSplit() throws DataTransducerException {
 		final String source = "Hello, World!";
 
 		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
 		final List<byte[]> bytes = encoder.transform(source);
 		encoder.finish();
-		
+
 		assertEquals(1, bytes.size());
 		final byte[] intermediate = bytes.get(0);
 
@@ -63,11 +63,34 @@ public class TestSerializer extends TestCase {
 		final List<Object> fstResult = decoder.transform(Arrays.copyOfRange(intermediate, 0, intermediate.length / 2));
 		assertEquals(0, fstResult.size());
 
-		final List<Object> sndResult = decoder.transform(Arrays.copyOfRange(intermediate, intermediate.length / 2, intermediate.length));
+		final List<Object> sndResult = decoder.transform(Arrays.copyOfRange(intermediate, intermediate.length / 2,
+				intermediate.length));
 		assertEquals(1, sndResult.size());
 
 		assertEquals(source, sndResult.get(0));
-		
+
 		decoder.finish();
+	}
+
+	public void testFailure01() {		
+		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
+		try {
+			encoder.transform(this);
+			fail();
+		} catch (DataTransducerException e) {
+			// OK
+		}
+	}
+
+	public void testFailure02() {
+		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
+
+		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
+		try {
+			decoder.transform(bytes);
+			fail();
+		} catch (DataTransducerException e) {
+			// OK
+		}
 	}
 }

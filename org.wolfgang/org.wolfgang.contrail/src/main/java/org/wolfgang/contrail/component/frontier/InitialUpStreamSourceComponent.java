@@ -28,7 +28,6 @@ import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -82,30 +81,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 			}
 		};
 
-		final DataReceiver<E> receiver = dataFactory.create(this);
-
-		this.downStreamDataHandler = new DownStreamDataHandler<E>() {
-			private volatile boolean closed = false;
-
-			@Override
-			public void handleData(E data) throws DataHandlerException {
-				if (closed) {
-					throw new DownStreamDataHandlerClosedException();
-				} else {
-					receiver.receiveData(data);
-				}
-			}
-
-			@Override
-			public void handleClose() {
-				this.closed = true;
-			}
-
-			@Override
-			public void handleLost() {
-				this.closed = true;
-			}
-		};
+		this.downStreamDataHandler = new DownStreamDataReceiverConnector<E>(dataFactory.create(this));
 	}
 
 	@Override

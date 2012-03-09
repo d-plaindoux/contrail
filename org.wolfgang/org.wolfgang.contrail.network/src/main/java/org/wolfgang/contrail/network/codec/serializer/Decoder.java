@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Decoder implements DataTransducer<byte[], Object> {
+class Decoder implements DataTransducer<byte[], Object> {
 
 	/**
 	 * Static definition for int len in byte stream representation (32 bits)
@@ -55,7 +55,7 @@ public class Decoder implements DataTransducer<byte[], Object> {
 	/**
 	 * Constructor
 	 */
-	public Decoder() {
+	Decoder() {
 		super();
 		this.buffer = EMPTY_BUFFER;
 	}

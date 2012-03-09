@@ -42,8 +42,7 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
  */
 public class TestConnectionComponent extends TestCase {
 
-	public void testNominal01() throws ComponentConnectedException, ComponentNotConnectedException,
-			DataHandlerException {
+	public void testNominal01() throws ComponentConnectedException, ComponentNotConnectedException, DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
@@ -61,8 +60,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testNominal02() throws ComponentConnectedException, ComponentNotConnectedException,
-			DataHandlerException {
+	public void testNominal02() throws ComponentConnectedException, ComponentNotConnectedException, DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
@@ -80,8 +78,8 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testNominal03() throws ComponentConnectedException, ComponentNotConnectedException,
-			DataHandlerException, DataHandlerCloseException {
+	public void testNominal03() throws ComponentConnectedException, ComponentNotConnectedException, DataHandlerException,
+			DataHandlerCloseException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
@@ -225,7 +223,6 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
-		
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
@@ -245,8 +242,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
-	public void testFailure() throws ComponentConnectedException, ComponentNotConnectedException,
-			DataHandlerException {
+	public void testFailure01() throws ComponentConnectedException, ComponentNotConnectedException, DataHandlerException {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				String.class, Integer.class, new StringToInteger(), new IntegerToString());
 
@@ -268,4 +264,60 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	public void testFailure02() {
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
+		try {
+			connection.getUpStreamDataHandler().handleData("123");
+			fail();
+		} catch (DataHandlerException e) {
+			// OK
+		}
+	}
+
+	public void testFailure03() {
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
+		try {
+			connection.getDownStreamDataHandler().handleData(123);
+			fail();
+		} catch (DataHandlerException e) {
+			// OK
+		}
+	}
+
+	public void testFailure04() throws ComponentConnectedException, ComponentNotConnectedException {
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
+
+		final AtomicReference<String> stringReference = new AtomicReference<String>();
+		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		
+		try {
+			initial.getDataSender().sendData("123");
+			fail();
+		} catch (DataHandlerException e) {
+			// OK
+		}
+		
+		initialConnection.dispose();
+	}
+
+	public void testFailure05() throws ComponentConnectedException, ComponentNotConnectedException {
+		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+				String.class, Integer.class, new StringToInteger(), new IntegerToString());
+
+		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		
+		try {
+			terminal.getDataSender().sendData(123);
+			fail();
+		} catch (DataHandlerException e) {
+			// OK
+		}
+		
+		terminalConnection.dispose();
+	}
 }

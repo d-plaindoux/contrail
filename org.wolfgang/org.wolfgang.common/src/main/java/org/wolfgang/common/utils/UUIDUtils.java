@@ -50,32 +50,28 @@ public final class UUIDUtils {
 	 * @param text
 	 *            The string using for the UUDI generation
 	 * @return a valid UUID
-	 * @throws RuntimeException
+	 * @throws NoSuchAlgorithmException
 	 *             thrown if the MD5 digest algorithm is no available
 	 */
-	public static UUID digestBased(String text) {
+	public static UUID digestBased(String text) throws NoSuchAlgorithmException {
 		assert text != null;
 
-		try {
-			final MessageDigest algo = MessageDigest.getInstance("MD5");
-			algo.reset();
-			algo.update(text.getBytes());
+		final MessageDigest algo = MessageDigest.getInstance("MD5");
+		algo.reset();
+		algo.update(text.getBytes());
 
-			final byte[] digest = algo.digest();
+		final byte[] digest = algo.digest();
 
-			assert digest.length == DIGEST_LEN;
+		assert digest.length == DIGEST_LEN;
 
-			long mostSigBits = 0L;
-			long leastSigBits = 0L;
+		long mostSigBits = 0L;
+		long leastSigBits = 0L;
 
-			for (int i = 0; i < BYTE_SIZE; i++) {
-				mostSigBits = (mostSigBits << BYTE_SIZE) | (digest[i] & BYTE_MASK);
-				leastSigBits = (leastSigBits << BYTE_SIZE) | (digest[i + BYTE_SIZE] & BYTE_MASK);
-			}
-
-			return new UUID(mostSigBits, leastSigBits);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+		for (int i = 0; i < BYTE_SIZE; i++) {
+			mostSigBits = (mostSigBits << BYTE_SIZE) | (digest[i] & BYTE_MASK);
+			leastSigBits = (leastSigBits << BYTE_SIZE) | (digest[i + BYTE_SIZE] & BYTE_MASK);
 		}
+
+		return new UUID(mostSigBits, leastSigBits);
 	}
 }

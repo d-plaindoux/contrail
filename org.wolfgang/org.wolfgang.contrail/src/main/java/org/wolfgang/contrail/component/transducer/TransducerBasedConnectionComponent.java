@@ -45,6 +45,35 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * @version 1.0
  */
 public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
+	
+	/**
+	 * Static message definition for unknown transformation
+	 */
+	private static final Message XDUCER_UNKNOWN;
+
+	/**
+	 * Static message definition for transformation error
+	 */
+	private static final Message XDUCER_ERROR;
+
+	/**
+	 * Static message definition for connected component
+	 */
+	private static final Message ALREADY_CONNECTED;
+
+	/**
+	 * Static message definition for not yet connected component
+	 */
+	private static final Message NOT_YET_CONNECTED;
+
+	static {
+		final String category = "org.wolfgang.contrail.message";
+		
+		XDUCER_UNKNOWN = MessagesProvider.get(category, "transducer.upstream.unknown");
+		XDUCER_ERROR = MessagesProvider.get(category, "transducer.transformation.error");
+		ALREADY_CONNECTED = MessagesProvider.get(category, "already.connected");
+		NOT_YET_CONNECTED = MessagesProvider.get(category, "not.yet.connected");
+	}
 
 	/**
 	 * The <code>TransformationBasedUpStreamDataHandler</code> is an
@@ -54,7 +83,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class TransformationBasedUpStreamDataHandler implements UpStreamDataHandler<S> {
+	class TransducerBasedUpStreamDataHandler implements UpStreamDataHandler<S> {
 
 		/**
 		 * Boolean used to store the handler status i.e. closed or not.
@@ -74,7 +103,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 		 * @param streamXducer
 		 *            The data transformation process
 		 */
-		public TransformationBasedUpStreamDataHandler(DataTransducer<S, D> downstreamXducer) {
+		public TransducerBasedUpStreamDataHandler(DataTransducer<S, D> downstreamXducer) {
 			this.streamXducer = downstreamXducer;
 		}
 
@@ -83,8 +112,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 			if (closed) {
 				throw new UpStreamDataHandlerClosedException();
 			} else if (upStreamDestinationComponent == null) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.upstream.unknown")
-						.format();
+				final String message = XDUCER_UNKNOWN.format();
 				throw new DataHandlerException(message);
 			} else {
 				try {
@@ -93,8 +121,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 						upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransducerException e) {
-					final String message = MessagesProvider.get("org.wolfgang.contrail.message",
-							"transducer.transformation.error").format(e.getMessage());
+					final String message = XDUCER_ERROR.format(e.getMessage());
 					throw new DataHandlerException(message, e);
 				}
 			}
@@ -109,12 +136,10 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 					upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
-						.format(e.getMessage());
+				final String message = XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerCloseException(message, e);
 			} catch (DataHandlerException e) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
-						.format(e.getMessage());
+				final String message = XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerCloseException(message, e);
 			}
 		}
@@ -163,8 +188,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 			if (closed) {
 				throw new DownStreamDataHandlerClosedException();
 			} else if (upStreamSourceComponent == null) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.upstream.unknown")
-						.format();
+				final String message = XDUCER_UNKNOWN.format();
 				throw new DataHandlerException(message);
 			} else {
 				try {
@@ -173,8 +197,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 						upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
 					}
 				} catch (DataTransducerException e) {
-					final String message = MessagesProvider.get("org.wolfgang.contrail.message",
-							"transducer.transformation.error").format(e.getMessage());
+					final String message = XDUCER_ERROR.format(e.getMessage());
 					throw new DataHandlerException(message, e);
 				}
 			}
@@ -189,12 +212,10 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 					upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
-						.format(e.getMessage());
+				final String message = XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerCloseException(message, e);
 			} catch (DataHandlerException e) {
-				final String message = MessagesProvider.get("org.wolfgang.contrail.message", "transducer.transformation.error")
-						.format(e.getMessage());
+				final String message = XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerCloseException(message, e);
 			}
 		}
@@ -226,8 +247,14 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 	 */
 	private UpStreamDestinationComponent<D> upStreamDestinationComponent;
 
+	/**
+	 * UpStream destination type
+	 */
 	private final Class<S> upStreamDestinationType;
 
+	/**
+	 * UpStream source type
+	 */
 	private final Class<D> upStreamSourceType;
 
 	/**
@@ -244,7 +271,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 		this.upStreamDestinationType = upStreamDestinationType;
 		this.upStreamSourceType = upStreamSourceType;
 
-		this.upStreamDataHandler = new TransformationBasedUpStreamDataHandler(upstreamXducer);
+		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler(upstreamXducer);
 		this.downStreamDataHandler = new TransformationBasedDownStreamDataHandler(downstreamXducer);
 	}
 
@@ -263,8 +290,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentConnectedException(message.format());
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
@@ -274,8 +300,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotConnectedException(message.format());
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 
@@ -284,8 +309,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentConnectedException(message.format());
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
@@ -295,8 +319,7 @@ public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent 
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotConnectedException(message.format());
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 

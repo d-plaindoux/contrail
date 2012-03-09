@@ -19,14 +19,10 @@
 package org.wolfgang.contrail.network.codec.serializer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
-import org.wolfgang.common.utils.Option;
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
@@ -37,12 +33,12 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Encoder implements DataTransducer<Object, byte[]> {
+class Encoder implements DataTransducer<Object, byte[]> {
 
 	/**
 	 * Constructor
 	 */
-	public Encoder() {
+	Encoder() {
 		super();
 	}
 

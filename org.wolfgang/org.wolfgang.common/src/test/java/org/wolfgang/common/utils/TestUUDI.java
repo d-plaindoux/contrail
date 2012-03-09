@@ -18,6 +18,7 @@
 
 package org.wolfgang.common.utils;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import junit.framework.TestCase;
@@ -30,7 +31,8 @@ import junit.framework.TestCase;
  */
 public class TestUUDI extends TestCase {
 
-	public void testUUDI01() {
+	public void testUUDI01() throws NoSuchAlgorithmException {
+		
 		final UUID uuid1 = UUIDUtils.digestBased("test");
 		final UUID uuid2 = UUIDUtils.digestBased("test");
 
