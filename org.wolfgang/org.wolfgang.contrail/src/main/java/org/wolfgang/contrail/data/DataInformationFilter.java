@@ -16,23 +16,25 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.data;
 
 /**
- * <code>DataReceiverFactory</code> is capable to build data receiver.
+ * The <code>DataInformationFilter</code> is the basic mechanism used for data
+ * information filtering mechanism. This is mainly used for (de)multiplexer and
+ * router components.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-interface DataReceiverFactory<E, C> {
+public interface DataInformationFilter {
 
 	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
+	 * Predicate called whether a given data information must be filtered.
 	 * 
-	 * @param component
-	 *            The component used to build the data receiver
+	 * @param information
+	 *            The information to be accepted or not
+	 * @return true if the filter accept the information; false otherwise
 	 */
-	DataReceiver<E> create(C component);
+	boolean accept(DataInformation information);
 
 }

@@ -16,23 +16,55 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.data;
 
 /**
- * <code>DataReceiverFactory</code> is capable to build data receiver.
+ * <code>DataInformationValueNotFoundException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-interface DataReceiverFactory<E, C> {
+public class DataInformationValueNotFoundException extends Exception {
 
 	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
-	 * 
-	 * @param component
-	 *            The component used to build the data receiver
+	 * The serialVersionUID attribute
 	 */
-	DataReceiver<E> create(C component);
+
+	private static final long serialVersionUID = 1774357091754199518L;
+
+	/**
+	 * Constructor
+	 */
+	public DataInformationValueNotFoundException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public DataInformationValueNotFoundException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataInformationValueNotFoundException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataInformationValueNotFoundException(Throwable arg0) {
+		super(arg0);
+	}
 
 }

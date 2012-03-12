@@ -16,23 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
-
 /**
- * <code>DataReceiverFactory</code> is capable to build data receiver.
- * 
- * @author Didier Plaindoux
- * @version 1.0
+ * This package provides mechanisms dedicated to data management. Such mechanisms
+ * are used to distinguish data from another one depending on its destination or 
+ * source for example.   
  */
-interface DataReceiverFactory<E, C> {
 
-	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
-	 * 
-	 * @param component
-	 *            The component used to build the data receiver
-	 */
-	DataReceiver<E> create(C component);
+package org.wolfgang.contrail.data;
 
-}

@@ -29,7 +29,7 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface MutipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>,
+public interface MultipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>,
 		UpStreamSourceComponent<D> {
 
 	/**

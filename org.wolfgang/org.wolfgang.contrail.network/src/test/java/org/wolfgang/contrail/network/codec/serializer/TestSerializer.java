@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.network.codec.serializer;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 

@@ -37,7 +37,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TransducerBasedConnectionComponent</code> is an implementation which
- * requires data transformations performed each time an upstream or downstrem
+ * requires data transformations performed each time an upstream or downstream
  * data go through the connection component.
  * 
  * 
