@@ -37,7 +37,7 @@ public class StringSourceComponent extends InitialUpStreamSourceComponent<String
 	 * Constructor
 	 */
 	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(String.class, new InitialDataReceiverFactory<String>() {
+		super(new InitialDataReceiverFactory<String>() {
 			@Override
 			public DataReceiver<String> create(InitialUpStreamSourceComponent<String> initial) {
 				return new DataReceiver<String>() {

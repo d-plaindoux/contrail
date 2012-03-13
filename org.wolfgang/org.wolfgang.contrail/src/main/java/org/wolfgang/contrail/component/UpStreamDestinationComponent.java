@@ -33,13 +33,6 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
 public interface UpStreamDestinationComponent<E> extends Component {
 
 	/**
-	 * Provide the main type of up stream source objects
-	 * 
-	 * @return a class (never <code>null</code>)
-	 */
-	Class<E> getUpStreamDestinationType();
-
-	/**
 	 * Method called when the corresponding upstream data handler shall be
 	 * retrieved.
 	 * 

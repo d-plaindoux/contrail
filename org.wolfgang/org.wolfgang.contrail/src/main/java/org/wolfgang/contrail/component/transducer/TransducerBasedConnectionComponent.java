@@ -235,16 +235,6 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	private UpStreamDestinationComponent<D> upStreamDestinationComponent;
 
 	/**
-	 * UpStream destination type
-	 */
-	private final Class<S> upStreamDestinationType;
-
-	/**
-	 * UpStream source type
-	 */
-	private final Class<D> upStreamSourceType;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param upstreamXducer
@@ -252,24 +242,10 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransducerBasedConnectionComponent(Class<S> upStreamDestinationType, Class<D> upStreamSourceType,
-			final DataTransducer<S, D> upstreamXducer, final DataTransducer<D, S> downstreamXducer) {
+	public TransducerBasedConnectionComponent(DataTransducer<S, D> upstreamXducer, DataTransducer<D, S> downstreamXducer) {
 		super();
-		this.upStreamDestinationType = upStreamDestinationType;
-		this.upStreamSourceType = upStreamSourceType;
-
 		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler(upstreamXducer);
 		this.downStreamDataHandler = new TransformationBasedDownStreamDataHandler(downstreamXducer);
-	}
-
-	@Override
-	public Class<S> getUpStreamDestinationType() {
-		return this.upStreamDestinationType;
-	}
-
-	@Override
-	public Class<D> getUpStreamSourceType() {
-		return this.upStreamSourceType;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byt
 	 * Constructor
 	 */
 	public ByteArraySourceComponent(final OutputStream outputStream) {
-		super(byte[].class, new InitialDataReceiverFactory<byte[]>() {
+		super(new InitialDataReceiverFactory<byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(InitialUpStreamSourceComponent<byte[]> initial) {
 				return new DataReceiver<byte[]>() {

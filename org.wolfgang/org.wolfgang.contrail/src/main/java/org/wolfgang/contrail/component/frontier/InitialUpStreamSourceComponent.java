@@ -53,20 +53,13 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	private final DownStreamDataHandler<E> downStreamDataHandler;
 
 	/**
-	 * The source data type
-	 */
-	private final Class<E> type;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialUpStreamSourceComponent(final Class<E> type, final InitialDataReceiverFactory<E> dataFactory) {
+	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
 		super();
-
-		this.type = type;
 
 		this.dataEmitter = new DataSender<E>() {
 			@Override
@@ -80,11 +73,6 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 		};
 
 		this.downStreamDataHandler = new DownStreamDataReceiverConnector<E>(dataFactory.create(this));
-	}
-
-	@Override
-	public Class<E> getUpStreamSourceType() {
-		return this.type;
 	}
 
 	/**

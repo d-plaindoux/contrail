@@ -33,13 +33,6 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 public interface UpStreamSourceComponent<E> extends Component {
 
 	/**
-	 * Provide the main type of up stream source objects
-	 * 
-	 * @return a class (never <code>null</code>)
-	 */
-	Class<E> getUpStreamSourceType();
-
-	/**
 	 * Provides the data channel used for down stream communication facility
 	 * 
 	 * @return a down stream data channel (never <code>null</code>)

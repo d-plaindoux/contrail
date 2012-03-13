@@ -35,7 +35,7 @@ public class DummyDestinationComponent extends TerminalUpStreamDestinationCompon
 	 * Constructor
 	 */
 	public DummyDestinationComponent() {
-		super(Void.class, new TerminalDataReceiverFactory<Void>() {
+		super(new TerminalDataReceiverFactory<Void>() {
 			@Override
 			public DataReceiver<Void> create(final TerminalUpStreamDestinationComponent<Void> terminal) {
 				return new DataReceiver<Void>() {

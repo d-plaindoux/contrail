@@ -35,7 +35,7 @@ public class DummySourceComponent extends InitialUpStreamSourceComponent<Void> {
 	 * Constructor
 	 */
 	public DummySourceComponent() {
-		super(Void.class, new InitialDataReceiverFactory<Void>() {
+		super(new InitialDataReceiverFactory<Void>() {
 			@Override
 			public DataReceiver<Void> create(InitialUpStreamSourceComponent<Void> initial) {
 				return new DataReceiver<Void>() {

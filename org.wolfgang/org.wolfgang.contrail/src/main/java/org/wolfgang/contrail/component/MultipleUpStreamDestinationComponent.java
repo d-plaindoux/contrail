@@ -30,24 +30,6 @@ package org.wolfgang.contrail.component;
  */
 public interface MultipleUpStreamDestinationComponent<S, D> extends UpStreamSourceComponent<D>, UpStreamDestinationComponent<S> {
 
-	/**
-	 * Method called whether an upstream destination handler shall be connected
-	 * to the current component. This method uses the method
-	 * {@link #connect(UpStreamSourceComponent)}
-	 * 
-	 * @param handler
-	 *            The handler to be added
-	 */
-	void add(UpStreamSourceComponent<S> handler);
-
-	/**
-	 * Method called whether an upstream destination handler shall be
-	 * disconnected to the current component. This method uses the method
-	 * {@link #disconnect(UpStreamSourceComponent)}
-	 * 
-	 * @param handler
-	 *            The handler to be removed
-	 */
-	void remove(UpStreamSourceComponent<S> handler);
+	// No specific behaviors
 
 }
