@@ -7,17 +7,18 @@ but also framework dedicated to components cooperation.
 Contrail Network
 ----------------
 
-In this approach  we call  network a  set of  connected component
-which cooperate in order to solve a given problem. Such problem can be
+In this approach  we call network a set  of connected components which
+cooperate in  order to solve a  given problem.  Such problem  can be a
 simple one  like data  transformation, interceptors, ciphered  data or
-complex service based solution.
+complex like service based layer..
 
-Each component provides an upstream/downstream data management and
-based  on  his  simple  design  patterns  are  provided  like: 
+For his  purpose each  component provides an  upstream/downstream data
+management. From  this simple  design component patterns  are provided
+like:
 
-* initial producer,  
-* terminal  consumer, 
-* one  to  one  connecter, 
-* multiplexer,
-* demultiplexer and 
-* router
+* initial producer providing a data injection mechanism,
+* terminal  consumer providing a data reception mechanism,
+* connector providing a component to component communication,
+* multiplexer providing a single source to multiple destination connection,
+* demultiplexer providing a multiple source to a single destination connection and 
+* router providing a multiple source to multiple destination connection.
