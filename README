@@ -1,1 +1,16 @@
-...
+<h1>Home</h1>
+
+The WolfGang project goals are  multiple covering low level java tools
+but also framework dedicated to components cooperation.
+
+<h2>Contrail Network</h2>
+
+<p>  In this approach  we call  network a  set of  connected component
+which cooperate in order to solve a given problem. Such problem can be
+simple one  like data  transformation, interceptors, ciphered  data or
+complex service based solution.  </p>
+
+<p> Each component provides an upstream/downstream data management and
+based  on  his  simple  design  patterns  are  provided  like  initial
+producer,  terminal  consumer,  one  to  one  connecter,  multiplexer,
+demultiplexer and finally router.  </p>
