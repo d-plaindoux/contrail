@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component.frontier;
 
-import org.wolfgang.common.message.Message;
-import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
@@ -102,8 +100,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	 */
 	protected DownStreamDataHandler<E> getDowntreamDataHandler() throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent == null) {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotConnectedException(message.format());
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
 			return upStreamSourceComponent.getDownStreamDataHandler();
 		}
@@ -114,8 +111,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "already.connected");
-			throw new ComponentConnectedException(message.format());
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
@@ -125,8 +121,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
 		} else {
-			final Message message = MessagesProvider.get("org.wolfgang.contrail.message", "not.yet.connected");
-			throw new ComponentNotConnectedException(message.format());
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 

@@ -28,7 +28,10 @@ import java.util.logging.Logger;
 
 /**
  * The <code>MessagesProvider</code> was the central class used for message
- * generation
+ * generation.
+ * <p>
+ * <b>Evolution</b> This should use a dependency injection mechanism
+ * </p>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -93,7 +96,6 @@ public final class MessagesProvider extends SecurityManager {
 	}
 
 	/**
-	 * 
 	 * Method called whether a message must be performed.
 	 * 
 	 * @param category

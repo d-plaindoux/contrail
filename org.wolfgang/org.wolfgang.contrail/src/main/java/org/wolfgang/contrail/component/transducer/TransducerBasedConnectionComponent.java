@@ -40,39 +40,26 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * requires data transformations performed each time an upstream or downstream
  * data go through the connection component.
  * 
- * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TransducerBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
-	
+public final class TransducerBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
+
 	/**
 	 * Static message definition for unknown transformation
 	 */
-	private static final Message XDUCER_UNKNOWN;
+	protected static final Message XDUCER_UNKNOWN;
 
 	/**
 	 * Static message definition for transformation error
 	 */
-	private static final Message XDUCER_ERROR;
-
-	/**
-	 * Static message definition for connected component
-	 */
-	private static final Message ALREADY_CONNECTED;
-
-	/**
-	 * Static message definition for not yet connected component
-	 */
-	private static final Message NOT_YET_CONNECTED;
+	protected static final Message XDUCER_ERROR;
 
 	static {
 		final String category = "org.wolfgang.contrail.message";
-		
+
 		XDUCER_UNKNOWN = MessagesProvider.get(category, "transducer.upstream.unknown");
 		XDUCER_ERROR = MessagesProvider.get(category, "transducer.transformation.error");
-		ALREADY_CONNECTED = MessagesProvider.get(category, "already.connected");
-		NOT_YET_CONNECTED = MessagesProvider.get(category, "not.yet.connected");
 	}
 
 	/**

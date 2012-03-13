@@ -18,34 +18,18 @@
 
 package org.wolfgang.contrail.component;
 
-
 /**
- * The <code>DemultiplexerComponent</code> is capable to manage event from a
- * given source and sending each message to a selected destination based on
- * criterion. In addition the data can be transformed from a type S to a type D
- * or vice-versa depending if components communicate using upstream or
+ * The <code>MultipleUpStreamSourceComponent</code> is capable to manage event
+ * from a given source and sending each message to a selected destination based
+ * on criterion. In addition the data can be transformed from a type S to a type
+ * D or vice-versa depending if components communicate using upstream or
  * downstream network.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface MultipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>,
-		UpStreamSourceComponent<D> {
+public interface MultipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
 
-	/**
-	 * Method called whether an upstream destination handler shall be connected
-	 * to the current component
-	 * 
-	 * @param handler The handler to be added
-	 */
-	void addConnection(UpStreamDestinationComponent<D> handler);
-
-	/**
-	 * Method called whether an upstream destination handler shall be
-	 * disconnected to the current component
-	 * 
-	 * @param handler The handler to be removed
-	 */
-	void removeConnection(UpStreamDestinationComponent<D> handler);
-
+	// No specific behaviors
+	
 }

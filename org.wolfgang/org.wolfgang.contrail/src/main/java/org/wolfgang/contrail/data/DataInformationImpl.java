@@ -46,7 +46,6 @@ class DataInformationImpl implements DataInformation {
 	 */
 	DataInformationImpl() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
