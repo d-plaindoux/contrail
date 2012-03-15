@@ -102,8 +102,7 @@ public class UpStreamMultiplexerComponent<D> extends AbstractComponent implement
 	}
 
 	@Override
-	public void connect(UpStreamSourceComponent<DataWithInformation<D>> handler) throws ComponentConnectedException,
-			ComponentConnectionRejectedException {
+	public void connect(UpStreamSourceComponent<DataWithInformation<D>> handler) throws ComponentConnectionRejectedException {
 		if (this.sourceComponents.containsKey(handler.getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		} else if (Coercion.canCoerce(handler, FilteringUpStreamSourceComponent.class)) {

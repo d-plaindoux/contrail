@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
@@ -55,7 +54,7 @@ public interface ComponentsLink<E> {
 	/**
 	 * Method called whether the connection must be disposed.
 	 * 
-	 * @throws ComponentNotConnectedException
+	 * @throws ComponentDisconnectionRejectedException
 	 *             thrown if the connection is already disposed
 	 */
 	void dispose() throws ComponentDisconnectionRejectedException;

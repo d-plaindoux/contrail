@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
@@ -65,7 +64,7 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 
 		try {
 			destination.connect(source);
-		} catch (ComponentConnectedException e) {
+		} catch (ComponentConnectionRejectedException e) {
 			try {
 				source.disconnect(destination);
 			} catch (Exception consume) {
