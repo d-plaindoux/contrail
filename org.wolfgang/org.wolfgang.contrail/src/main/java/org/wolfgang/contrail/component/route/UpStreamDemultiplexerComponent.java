@@ -33,6 +33,7 @@ import org.wolfgang.contrail.component.MultipleUpStreamSourceComponent;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -44,7 +45,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class UpStreamMultiplexerComponent<D> extends AbstractComponent implements
+public class UpStreamDemultiplexerComponent<D> extends AbstractComponent implements
 		MultipleUpStreamSourceComponent<DataWithInformation<D>, DataWithInformation<D>> {
 
 	/**
@@ -69,6 +70,11 @@ public class UpStreamMultiplexerComponent<D> extends AbstractComponent implement
 	private final UpStreamDataHandler<DataWithInformation<D>> upStreamDataHandler;
 
 	/**
+	 * The internal upstream data handler
+	 */
+	private final DownStreamDataHandler<DataWithInformation<D>> downStreamDataHandler;
+
+	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
 	private UpStreamDestinationComponent<DataWithInformation<D>> upStreamDestinationComponent;
@@ -80,9 +86,10 @@ public class UpStreamMultiplexerComponent<D> extends AbstractComponent implement
 	/**
 	 * Constructor
 	 */
-	public UpStreamMultiplexerComponent() {
+	public UpStreamDemultiplexerComponent() {
 		super();
-		this.upStreamDataHandler = null;
+		this.upStreamDataHandler = new DemultiplexerDataHandler<D>(this);
+		this.downStreamDataHandler = new DirectDownStreamDataHandler<DataWithInformation<D>>(this);
 	}
 
 	/**
@@ -135,7 +142,7 @@ public class UpStreamMultiplexerComponent<D> extends AbstractComponent implement
 
 	@Override
 	public DownStreamDataHandler<DataWithInformation<D>> getDownStreamDataHandler() {
-		return null;
+		return this.downStreamDataHandler;
 	}
 
 	@Override

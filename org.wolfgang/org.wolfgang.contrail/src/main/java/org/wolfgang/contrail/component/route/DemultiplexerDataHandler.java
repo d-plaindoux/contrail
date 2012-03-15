@@ -31,19 +31,19 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class MultiplexerDataHandler<D> implements UpStreamDataHandler<DataWithInformation<D>> {
+class DemultiplexerDataHandler<D> implements UpStreamDataHandler<DataWithInformation<D>> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final UpStreamMultiplexerComponent<D> upStreamMultiplexer;
+	private final UpStreamDemultiplexerComponent<D> upStreamMultiplexer;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamMultiplexer
 	 */
-	public MultiplexerDataHandler(UpStreamMultiplexerComponent<D> upStreamMultiplexer) {
+	public DemultiplexerDataHandler(UpStreamDemultiplexerComponent<D> upStreamMultiplexer) {
 		super();
 		this.upStreamMultiplexer = upStreamMultiplexer;
 	}
