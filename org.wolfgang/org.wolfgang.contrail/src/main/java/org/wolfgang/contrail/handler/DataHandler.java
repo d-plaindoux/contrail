@@ -28,7 +28,7 @@ package org.wolfgang.contrail.handler;
  * @version 1.0@
  */
 interface DataHandler<D> {
-
+		
 	/**
 	 * Method called whether a data has to be managed
 	 * 

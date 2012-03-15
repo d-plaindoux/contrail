@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
@@ -61,13 +63,15 @@ public class ComponentsLinkManager {
 	 * @return a components link (never <code>null</code>)
 	 * @throws ComponentConnectedException
 	 *             Thrown if one component is linked
+	 * @throws ComponentConnectionRejectedException
+	 *             Thrown if the connection cannot be performed
 	 */
 	public final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
-			throws ComponentConnectedException {
+			throws ComponentConnectionRejectedException {
 		final ComponentsLinkImpl<E> link = new ComponentsLinkImpl<E>(source, destination) {
 
 			@Override
-			public void dispose() throws ComponentNotConnectedException {
+			public void dispose() throws ComponentDisconnectionRejectedException {
 				try {
 					super.dispose();
 				} finally {

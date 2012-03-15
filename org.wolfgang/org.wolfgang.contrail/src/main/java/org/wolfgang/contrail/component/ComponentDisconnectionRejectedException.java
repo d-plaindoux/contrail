@@ -19,21 +19,24 @@
 package org.wolfgang.contrail.component;
 
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>ComponentConnectionRejectedException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentConnectedException extends ComponentConnectionRejectedException {
+public class ComponentDisconnectionRejectedException extends Exception {
 
-	private static final long serialVersionUID = -636050790684085546L;
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -1550559652160227718L;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param arg0
 	 */
-	public ComponentConnectedException(String arg0) {
+	public ComponentDisconnectionRejectedException(String arg0) {
 		super(arg0);
 	}
 }

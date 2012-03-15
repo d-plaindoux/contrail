@@ -20,8 +20,8 @@ package org.wolfgang.contrail.link;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.ComponentConnectedException;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 
 /**
  * <code>TestComponentLink</code>
@@ -35,7 +35,7 @@ public class TestComponentLink extends TestCase {
 		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
 		try {
 			linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
-		} catch (ComponentConnectedException e) {
+		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -46,10 +46,10 @@ public class TestComponentLink extends TestCase {
 			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
-			} catch (ComponentNotConnectedException e) {
+			} catch (ComponentDisconnectionRejectedException e) {
 				fail(e.getMessage());
 			}
-		} catch (ComponentConnectedException e) {
+		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -60,12 +60,12 @@ public class TestComponentLink extends TestCase {
 			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
-			} catch (ComponentNotConnectedException e) {
+			} catch (ComponentDisconnectionRejectedException e) {
 				fail(e.getMessage());
 			}
 			
 			assertEquals(0, linkManager.getEstablishedLinks().length);			
-		} catch (ComponentConnectedException e) {
+		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -76,15 +76,15 @@ public class TestComponentLink extends TestCase {
 			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
-			} catch (ComponentNotConnectedException e) {
+			} catch (ComponentDisconnectionRejectedException e) {
 				fail(e.getMessage());
 			}
 			try {
 				connect.dispose();
 				fail();
-			} catch (ComponentNotConnectedException e) {
+			} catch (ComponentDisconnectionRejectedException e) {
 			}
-		} catch (ComponentConnectedException e) {
+		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
 	}

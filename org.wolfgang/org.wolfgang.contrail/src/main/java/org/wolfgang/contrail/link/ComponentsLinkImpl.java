@@ -19,7 +19,8 @@
 package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 
@@ -51,16 +52,18 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	 *            The destination
 	 * @throws ComponentConnectedException
 	 *             thrown if components are already connected
+	 * @throws ComponentConnectionRejectedException
+	 *             thrown if the connection cannot be performed
 	 */
 	public ComponentsLinkImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
-			throws ComponentConnectedException {
+			throws ComponentConnectionRejectedException {
 		super();
 		this.source = source;
 		this.destination = destination;
 
 		source.connect(destination);
 
-		try { 
+		try {
 			destination.connect(source);
 		} catch (ComponentConnectedException e) {
 			try {
@@ -84,7 +87,7 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	}
 
 	@Override
-	public void dispose() throws ComponentNotConnectedException {
+	public void dispose() throws ComponentDisconnectionRejectedException {
 		try {
 			this.source.disconnect(this.destination);
 		} finally {

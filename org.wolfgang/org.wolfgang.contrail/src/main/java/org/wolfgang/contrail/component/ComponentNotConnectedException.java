@@ -24,26 +24,9 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentNotConnectedException extends Exception {
+public class ComponentNotConnectedException extends ComponentDisconnectionRejectedException {
 
 	private static final long serialVersionUID = -4863662886063758972L;
-
-	/**
-	 * Constructor
-	 */
-	public ComponentNotConnectedException() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public ComponentNotConnectedException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
 
 	/**
 	 * Constructor
@@ -53,14 +36,5 @@ public class ComponentNotConnectedException extends Exception {
 	public ComponentNotConnectedException(String arg0) {
 		super(arg0);
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ComponentNotConnectedException(Throwable arg0) {
-		super(arg0);
-	}
-
+	
 }

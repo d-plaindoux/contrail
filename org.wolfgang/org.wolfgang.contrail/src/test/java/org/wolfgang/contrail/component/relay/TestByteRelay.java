@@ -24,6 +24,8 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -40,8 +42,8 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
  */
 public class TestByteRelay extends TestCase {
 
-	public void testNominal01() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testNominal01() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -60,8 +62,8 @@ public class TestByteRelay extends TestCase {
 		assertEquals("Hello, World!", new String(output.toByteArray()));
 	}
 
-	public void testNominal02() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException, DataHandlerCloseException {
+	public void testNominal02() throws DataHandlerException, IOException,
+			DataHandlerCloseException, ComponentDisconnectionRejectedException, ComponentConnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -81,8 +83,8 @@ public class TestByteRelay extends TestCase {
 		assertEquals("Hello, World!", new String(output.toByteArray()));
 	}
 
-	public void testUpStreamClosed01() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException, DataHandlerCloseException {
+	public void testUpStreamClosed01() throws DataHandlerException, IOException,
+			DataHandlerCloseException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -103,8 +105,8 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void testUpStreamClosed02() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException, DataHandlerCloseException {
+	public void testUpStreamClosed02() throws DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -123,8 +125,8 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void tesDownStreamClosed01() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException, DataHandlerCloseException {
+	public void tesDownStreamClosed01() throws DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -143,8 +145,8 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void tesDownStreamClosed02() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException, DataHandlerCloseException {
+	public void tesDownStreamClosed02() throws DataHandlerException, IOException,
+			ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -191,8 +193,8 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void testAlreadyConnected01() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testAlreadyConnected01() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -210,8 +212,8 @@ public class TestByteRelay extends TestCase {
 		interconnection.dispose();
 	}
 
-	public void testAlreadyConnected02() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testAlreadyConnected02() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -229,8 +231,8 @@ public class TestByteRelay extends TestCase {
 		interconnection.dispose();
 	}
 
-	public void testNotConnected01() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testNotConnected01() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -245,8 +247,8 @@ public class TestByteRelay extends TestCase {
 		}
 	}
 
-	public void testNotConnected02() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testNotConnected02() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -262,8 +264,8 @@ public class TestByteRelay extends TestCase {
 
 	}
 
-	public void testNotConnected03() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testNotConnected03() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -280,8 +282,8 @@ public class TestByteRelay extends TestCase {
 		interconnection.dispose();
 	}
 
-	public void testNotConnected04() throws ComponentConnectedException, DataHandlerException, IOException,
-			ComponentNotConnectedException {
+	public void testNotConnected04() throws DataHandlerException, IOException,
+			ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);

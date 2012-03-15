@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.component;
 
 /**
- * The <code>MultipleUpStreamDestinationComponent</code> is capable to managing
+ * The <code>MultipleUpStreamDestinationComponent</code> is capable to manage
  * multiple sources producing the same kind of event and sending each message to
  * a given source. In addition the data can be transformed from a type S to a
  * type D or vice-versa depending if components communicate using upstream or

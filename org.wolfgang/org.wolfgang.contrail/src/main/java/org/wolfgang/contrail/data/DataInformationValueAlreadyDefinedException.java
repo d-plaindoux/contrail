@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.data;
 
 /**
- * <code>DataInformationValueAlreadyDefinedException</code> raise if an
- * information is set again.
+ * <code>DataInformationValueAlreadyDefinedException</code> raise if a given
+ * information is already set.
  * 
  * @author Didier Plaindoux
  * @version 1.0

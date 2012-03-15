@@ -21,9 +21,9 @@ package org.wolfgang.contrail.component.transducer;
 import java.util.List;
 
 /**
- * <code>DataTransducer</code> is able to transform any data from a given
- * type to another one. Such transformation can produces zero or n results
- * depending on the transformation process.
+ * A <code>DataTransducer</code> is able to transform any data from a given type
+ * to another one. Such transformation can produces zero or n results depending
+ * on the transformation process.
  * 
  * @author Didier Plaindoux
  * @version 1.0

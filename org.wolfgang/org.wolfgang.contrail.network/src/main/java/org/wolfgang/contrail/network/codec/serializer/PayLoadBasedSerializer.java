@@ -23,7 +23,7 @@ import org.wolfgang.contrail.component.transducer.DataTransducer;
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
  * bytes to java object and vice-versa based on pay load. This class provides
- * dedicate encoder and decoder for such serialization based codec;
+ * dedicate encoder and decoder for such serialization based codec
  * 
  * @author Didier Plaindoux
  * @version 1.0

@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.component.data;
 
+import junit.framework.TestCase;
+
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFactory;
 import org.wolfgang.contrail.data.DataInformationValueAlreadyDefinedException;
 import org.wolfgang.contrail.data.DataInformationValueNotFoundException;
 import org.wolfgang.contrail.data.DataInformationValueTypeException;
-
-import junit.framework.TestCase;
 
 /**
  * <code>TestDataInformation</code>

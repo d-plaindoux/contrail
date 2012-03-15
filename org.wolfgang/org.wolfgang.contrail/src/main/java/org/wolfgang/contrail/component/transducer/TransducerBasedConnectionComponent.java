@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component.transducer;
 
-import java.util.List;
-
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
@@ -29,11 +27,8 @@ import org.wolfgang.contrail.component.UpStreamDestinationComponent;
 import org.wolfgang.contrail.component.UpStreamSourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 
 /**
  * <code>TransducerBasedConnectionComponent</code> is an implementation which
@@ -60,158 +55,6 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 
 		XDUCER_UNKNOWN = MessagesProvider.get(category, "transducer.upstream.unknown");
 		XDUCER_ERROR = MessagesProvider.get(category, "transducer.transformation.error");
-	}
-
-	/**
-	 * The <code>TransformationBasedUpStreamDataHandler</code> is an
-	 * implementation performing data transformation on the fly each time a data
-	 * has to be managed.
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	class TransducerBasedUpStreamDataHandler implements UpStreamDataHandler<S> {
-
-		/**
-		 * Boolean used to store the handler status i.e. closed or not.
-		 */
-		private volatile boolean closed = false;
-
-		/**
-		 * The transformation process
-		 */
-		private final DataTransducer<S, D> streamXducer;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param upStreamSourceComponent
-		 *            The source receiving transformed data
-		 * @param streamXducer
-		 *            The data transformation process
-		 */
-		public TransducerBasedUpStreamDataHandler(DataTransducer<S, D> downstreamXducer) {
-			this.streamXducer = downstreamXducer;
-		}
-
-		@Override
-		public void handleData(S data) throws DataHandlerException {
-			if (closed) {
-				throw new UpStreamDataHandlerClosedException();
-			} else if (upStreamDestinationComponent == null) {
-				final String message = XDUCER_UNKNOWN.format();
-				throw new DataHandlerException(message);
-			} else {
-				try {
-					final List<D> transform = streamXducer.transform(data);
-					for (D value : transform) {
-						upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
-					}
-				} catch (DataTransducerException e) {
-					final String message = XDUCER_ERROR.format(e.getMessage());
-					throw new DataHandlerException(message, e);
-				}
-			}
-		}
-
-		@Override
-		public void handleClose() throws DataHandlerCloseException {
-			this.closed = true;
-			try {
-				final List<D> transform = streamXducer.finish();
-				for (D value : transform) {
-					upStreamDestinationComponent.getUpStreamDataHandler().handleData(value);
-				}
-			} catch (DataTransducerException e) {
-				final String message = XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
-			} catch (DataHandlerException e) {
-				final String message = XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
-			}
-		}
-
-		@Override
-		public void handleLost() {
-			this.closed = true;
-		}
-
-	}
-
-	/**
-	 * The <code>TransformationBasedDownStreamDataHandlle</code> is an
-	 * implementation performing data transformation on the fly each time a data
-	 * has to be managed.
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private class TransformationBasedDownStreamDataHandler implements DownStreamDataHandler<D> {
-
-		/**
-		 * Boolean used to store the handler status i.e. closed or not.
-		 */
-		private volatile boolean closed = false;
-
-		/**
-		 * The transformation process
-		 */
-		private final DataTransducer<D, S> streamXducer;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param upStreamSourceComponent
-		 *            The source receiving transformed data
-		 * @param streamXducer
-		 *            The data transformation process
-		 */
-		public TransformationBasedDownStreamDataHandler(DataTransducer<D, S> downstreamXducer) {
-			this.streamXducer = downstreamXducer;
-		}
-
-		@Override
-		public void handleData(D data) throws DataHandlerException {
-			if (closed) {
-				throw new DownStreamDataHandlerClosedException();
-			} else if (upStreamSourceComponent == null) {
-				final String message = XDUCER_UNKNOWN.format();
-				throw new DataHandlerException(message);
-			} else {
-				try {
-					final List<S> transform = streamXducer.transform(data);
-					for (S value : transform) {
-						upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
-					}
-				} catch (DataTransducerException e) {
-					final String message = XDUCER_ERROR.format(e.getMessage());
-					throw new DataHandlerException(message, e);
-				}
-			}
-		}
-
-		@Override
-		public void handleClose() throws DataHandlerCloseException {
-			this.closed = true;
-			try {
-				final List<S> transform = streamXducer.finish();
-				for (S value : transform) {
-					upStreamSourceComponent.getDownStreamDataHandler().handleData(value);
-				}
-			} catch (DataTransducerException e) {
-				final String message = XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
-			} catch (DataHandlerException e) {
-				final String message = XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
-			}
-		}
-
-		@Override
-		public void handleLost() {
-			this.closed = true;
-		}
-
 	}
 
 	/**
@@ -244,8 +87,26 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 */
 	public TransducerBasedConnectionComponent(DataTransducer<S, D> upstreamXducer, DataTransducer<D, S> downstreamXducer) {
 		super();
-		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler(upstreamXducer);
-		this.downStreamDataHandler = new TransformationBasedDownStreamDataHandler(downstreamXducer);
+		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler<S, D>(this, upstreamXducer);
+		this.downStreamDataHandler = new TransducerBasedDownStreamDataHandler<S, D>(this, downstreamXducer);
+	}
+
+	/**
+	 * Provides the embedded upstream source component (internal use only)
+	 * 
+	 * @return the current up stream source component
+	 */
+	UpStreamSourceComponent<S> getUpStreamSourceComponent() {
+		return this.upStreamSourceComponent;
+	}
+
+	/**
+	 * Provides the embedded upstream source component (internal use only)
+	 * 
+	 * @return the current up stream source component
+	 */
+	UpStreamDestinationComponent<D> getUpStreamDestinationComponent() {
+		return this.upStreamDestinationComponent;
 	}
 
 	@Override
