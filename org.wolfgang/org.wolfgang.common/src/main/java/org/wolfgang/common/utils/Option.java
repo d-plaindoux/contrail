@@ -31,8 +31,7 @@ public abstract class Option<E> {
 	 * <code>Kind</code> defines the kind of the option
 	 * 
 	 * @author Didier Plaindoux
-	 * @version 1.0
-	 * @
+	 * @version 1.0 @
 	 */
 	public enum Kind {
 		/**
@@ -75,7 +74,17 @@ public abstract class Option<E> {
 	public abstract Kind getKind();
 
 	/**
-	 * Method providing 
+	 * Predicate checking if it provide a value
+	 * 
+	 * @return true if a value is available; false otherwise
+	 */
+	public boolean haveSome() {
+		return this.getKind() == Kind.Some;
+	}
+
+	/**
+	 * Method providing
+	 * 
 	 * @return the value if defined
 	 * @see Option#getKind()
 	 */

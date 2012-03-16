@@ -31,7 +31,6 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
 /**
  * <code>Decoder</code> is able to transform payload based array to objects.
  * 
- * 
  * @author Didier Plaindoux
  * @version 1.0
  */
@@ -98,8 +97,7 @@ class Decoder implements DataTransducer<byte[], Object> {
 
 			// Try to decode objects
 			final List<Object> objects = new ArrayList<Object>();
-			Option<Object> option;
-			while ((option = getNext()).getKind() == Option.Kind.Some) {
+			for (Option<Object> option = getNext(); option.haveSome(); option = getNext()) {
 				objects.add(option.getValue());
 			}
 

@@ -19,7 +19,8 @@
 package org.wolfgang.contrail.data;
 
 /**
- * <code>DataWithInformation</code>
+ * <code>DataWithInformationImpl</code> is the basic implementation dedicated to
+ * the type {@link DataWithInformation}.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -29,7 +30,7 @@ class DataWithInformationImpl<D> implements DataWithInformation<D> {
 	/**
 	 * The data information
 	 */
-	private final DataInformation dataInformation;
+	private final DataInformation information;
 
 	/**
 	 * The data
@@ -42,10 +43,9 @@ class DataWithInformationImpl<D> implements DataWithInformation<D> {
 	 * @param dataInformation
 	 * @param data
 	 */
-
 	public DataWithInformationImpl(DataInformation dataInformation, D data) {
 		super();
-		this.dataInformation = dataInformation;
+		this.information = dataInformation;
 		this.data = data;
 	}
 
@@ -55,7 +55,7 @@ class DataWithInformationImpl<D> implements DataWithInformation<D> {
 	 * @return a data information (never <code>null</code>)
 	 */
 	public DataInformation getDataInformation() {
-		return this.dataInformation;
+		return this.information;
 	}
 
 	/**
