@@ -20,7 +20,7 @@ package org.wolfgang.contrail.component.connection;
 
 import org.wolfgang.contrail.component.frontier.DataReceiver;
 import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -29,7 +29,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerDestinationComponent extends TerminalUpStreamDestinationComponent<Integer> {
+public class IntegerDestinationComponent extends TerminalDestinationComponent<Integer> {
 
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ public class IntegerDestinationComponent extends TerminalUpStreamDestinationComp
 	public IntegerDestinationComponent() {
 		super(new TerminalDataReceiverFactory<Integer>() {
 			@Override
-			public DataReceiver<Integer> create(final TerminalUpStreamDestinationComponent<Integer> terminal) {
+			public DataReceiver<Integer> create(final TerminalDestinationComponent<Integer> terminal) {
 				return new DataReceiver<Integer>() {
 					@Override
 					public void receiveData(Integer data) throws DataHandlerException {

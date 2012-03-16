@@ -16,20 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.component.route;
+
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.data.DataInformationFilter;
+import org.wolfgang.contrail.data.DataWithInformation;
 
 /**
- * The <code>MultipleUpStreamSourceComponent</code> is capable to manage event
- * from a given source and sending each message to a selected destination based
- * on criterion. In addition the data can be transformed from a type S to a type
- * D or vice-versa depending if components communicate using upstream or
- * downstream network.
+ * A <code>FilteringUpStreamDestinationComponent</code> is an upstream
+ * destination component capable dedicated to data with information and capable
+ * to filter such data.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface MultipleUpStreamSourceComponent<S, D> extends UpStreamDestinationComponent<S>, UpStreamSourceComponent<D> {
+public interface FilteringDestinationComponent<E> extends DestinationComponent<DataWithInformation<E>> {
 
-	// No specific behaviors
-	
+	/**
+	 * Provides the filter associated to the source component
+	 * 
+	 * @return a data information filter (never <code>null</code>)
+	 */
+	DataInformationFilter getDataInformationFilter();
+
 }

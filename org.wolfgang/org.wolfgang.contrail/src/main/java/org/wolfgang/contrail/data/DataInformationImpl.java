@@ -60,6 +60,18 @@ class DataInformationImpl implements DataInformation {
 			return Coercion.coerce(object, requiredType);
 		}
 	}
+	
+	@Override
+	public <E> boolean hasValue(String key, Class<E> requiredType) {
+		try {
+			this.getValue(key, requiredType);
+			return true;
+		} catch (DataInformationValueNotFoundException e) {
+			return false;
+		} catch (DataInformationValueTypeException e) {
+			return false;
+		}
+	}
 
 	@Override
 	public <E> void setValue(String key, E value) throws DataInformationValueAlreadyDefinedException {

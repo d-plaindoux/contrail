@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.frontier;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -35,12 +35,12 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialUpStreamSourceComponent<E> extends AbstractComponent implements UpStreamSourceComponent<E> {
+public class InitialSourceComponent<E> extends AbstractComponent implements SourceComponent<E> {
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private UpStreamDestinationComponent<E> upStreamDestinationComponent;
+	private DestinationComponent<E> upStreamDestinationComponent;
 
 	/**
 	 * The data injection mechanism
@@ -58,7 +58,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialUpStreamSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
+	public InitialSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
 		super();
 
 		this.dataEmitter = new DataSender<E>() {
@@ -91,7 +91,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	}
 
 	@Override
-	public void connect(UpStreamDestinationComponent<E> handler) throws ComponentConnectedException {
+	public void connect(DestinationComponent<E> handler) throws ComponentConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
@@ -100,7 +100,7 @@ public class InitialUpStreamSourceComponent<E> extends AbstractComponent impleme
 	}
 
 	@Override
-	public void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<E> handler) throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent != null
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;

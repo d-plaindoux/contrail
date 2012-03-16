@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.core;
 
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -35,14 +35,14 @@ public class DirectUpStreamDataHandler<D> implements UpStreamDataHandler<D> {
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final UpStreamDestinationComponent<D> upStreamDestinationComponent;
+	private final DestinationComponent<D> upStreamDestinationComponent;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamMultiplexer
 	 */
-	public DirectUpStreamDataHandler(UpStreamDestinationComponent<D> upStreamDestinationComponent) {
+	public DirectUpStreamDataHandler(DestinationComponent<D> upStreamDestinationComponent) {
 		super();
 		this.upStreamDestinationComponent = upStreamDestinationComponent;
 	}

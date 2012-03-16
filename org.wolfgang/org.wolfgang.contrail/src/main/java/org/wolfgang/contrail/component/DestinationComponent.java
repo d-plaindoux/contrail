@@ -18,47 +18,47 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * The <code>UpStreamSourceComponent</code> is capable to send event in the
- * framework. Sending events consists in propagating events to upper components
- * via the upstream network. In parallel a source is capable to receive messages
- * sent by destination using the interconnected destination handler based on the
+ * The <code>UpStreamDestinationComponent</code> is capable to receive event
+ * from the framework. Receiving events consists in managing events from lower
+ * components via the upstream network. In parallel a destination is capable to
+ * respond sending messages to the interconnected source handler using the
  * downstream network.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamSourceComponent<E> extends Component {
+public interface DestinationComponent<E> extends Component {
 
 	/**
-	 * Provides the data channel used for down stream communication facility
+	 * Method called when the corresponding upstream data handler shall be
+	 * retrieved.
 	 * 
-	 * @return a down stream data channel (never <code>null</code>)
+	 * @return an upstream data handler
 	 */
-	DownStreamDataHandler<E> getDownStreamDataHandler();
+	UpStreamDataHandler<E> getUpStreamDataHandler();
 
 	/**
 	 * Method called when the parametric upstream source component shall be
 	 * connected to the current component.
 	 * 
 	 * @param handler
-	 *            The destination component
+	 *            The source component
 	 * @throws ComponentConnectionRejectedException
-	 *             is the connection cannot be performed
+	 *             if the connection cannot be performed
 	 */
-	void connect(UpStreamDestinationComponent<E> handler) throws ComponentConnectionRejectedException;
+	void connect(SourceComponent<E> handler) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
 	 * disconnected from the current component.
 	 * 
 	 * @param handler
-	 *            The destination component
-	 * @throws ComponentDisconnectionRejectedException
-	 *             is the disconnection cannot be performed
+	 *            The source component
+	 * @throws ComponentConnectionRejectedException
+	 *             if the disconnection cannot be performed
 	 */
-	void disconnect(UpStreamDestinationComponent<E> handler) throws ComponentDisconnectionRejectedException;
-
+	void disconnect(SourceComponent<E> handler) throws ComponentDisconnectionRejectedException;
 }

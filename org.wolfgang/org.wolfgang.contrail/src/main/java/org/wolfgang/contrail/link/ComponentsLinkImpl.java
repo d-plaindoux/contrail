@@ -20,8 +20,8 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 
 /**
  * <code>ComponentsLinkImpl</code> is the main implementation of the component
@@ -35,12 +35,12 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	/**
 	 * The upstream source used for the interconnection
 	 */
-	private final UpStreamSourceComponent<E> source;
+	private final SourceComponent<E> source;
 
 	/**
 	 * The upstream destination used for the interconnection
 	 */
-	private final UpStreamDestinationComponent<E> destination;
+	private final DestinationComponent<E> destination;
 
 	/**
 	 * Constructor
@@ -49,12 +49,10 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	 *            The source
 	 * @param destination
 	 *            The destination
-	 * @throws ComponentConnectedException
-	 *             thrown if components are already connected
 	 * @throws ComponentConnectionRejectedException
 	 *             thrown if the connection cannot be performed
 	 */
-	public ComponentsLinkImpl(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
+	public ComponentsLinkImpl(SourceComponent<E> source, DestinationComponent<E> destination)
 			throws ComponentConnectionRejectedException {
 		super();
 		this.source = source;
@@ -76,12 +74,12 @@ class ComponentsLinkImpl<E> implements ComponentsLink<E> {
 	}
 
 	@Override
-	public UpStreamSourceComponent<E> getUpStreamSourceComponent() {
+	public SourceComponent<E> getUpStreamSourceComponent() {
 		return this.source;
 	}
 
 	@Override
-	public UpStreamDestinationComponent<E> getUpStreamDestinationComponent() {
+	public DestinationComponent<E> getUpStreamDestinationComponent() {
 		return this.destination;
 	}
 

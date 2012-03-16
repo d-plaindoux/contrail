@@ -16,17 +16,55 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.data;
 
 /**
- * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
- * to initial upstream source component.
+ * <code>DataWithInformation</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface InitialDataReceiverFactory<E> extends DataReceiverFactory<E, InitialSourceComponent<E>> {
+class DataWithInformationImpl<D> implements DataWithInformation<D> {
 
-	// Nothing
+	/**
+	 * The data information
+	 */
+	private final DataInformation dataInformation;
+
+	/**
+	 * The data
+	 */
+	private final D data;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param dataInformation
+	 * @param data
+	 */
+
+	public DataWithInformationImpl(DataInformation dataInformation, D data) {
+		super();
+		this.dataInformation = dataInformation;
+		this.data = data;
+	}
+
+	/**
+	 * Provides the attached information
+	 * 
+	 * @return a data information (never <code>null</code>)
+	 */
+	public DataInformation getDataInformation() {
+		return this.dataInformation;
+	}
+
+	/**
+	 * Provides the basic data
+	 * 
+	 * @return a data
+	 */
+	public D getData() {
+		return this.data;
+	}
 
 }

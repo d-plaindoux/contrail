@@ -26,8 +26,8 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RouterComponent<S, D> extends MultipleUpStreamDestinationComponent<S, D>,
-		MultipleUpStreamSourceComponent<S, D> {
+public interface RouterComponent<S, D> extends MultipleDestinationComponent<S, D>,
+		MultipleSourceComponent<S, D> {
 
 	// No specific behaviors
 

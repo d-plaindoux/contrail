@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
-import org.wolfgang.contrail.component.frontier.TerminalUpStreamDestinationComponent;
+import org.wolfgang.contrail.component.frontier.InitialSourceComponent;
+import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
 import org.wolfgang.contrail.component.transducer.TransducerBasedConnectionComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -48,8 +48,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -67,8 +67,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -86,8 +86,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -106,8 +106,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -130,8 +130,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -154,8 +154,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -178,8 +178,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -202,8 +202,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -226,8 +226,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -250,8 +250,8 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
@@ -295,7 +295,7 @@ public class TestConnectionComponent extends TestCase {
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialUpStreamSourceComponent<String> initial = new StringSourceComponent(stringReference);
+		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
 		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 
 		try {
@@ -313,7 +313,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
 				new StringToInteger(), new IntegerToString());
 
-		final TerminalUpStreamDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
 		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {

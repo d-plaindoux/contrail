@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.frontier;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -35,12 +35,12 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent implements UpStreamDestinationComponent<E> {
+public class TerminalDestinationComponent<E> extends AbstractComponent implements DestinationComponent<E> {
 
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private UpStreamSourceComponent<E> upStreamSourceComponent;
+	private SourceComponent<E> upStreamSourceComponent;
 
 	/**
 	 * The data injection mechanism
@@ -62,7 +62,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	 * @param dataFactory
 	 *            The terminal data receiver factory
 	 */
-	public TerminalUpStreamDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
+	public TerminalDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
 		super();
 
 		this.dataEmitter = new DataSender<E>() {
@@ -95,7 +95,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	}
 
 	@Override
-	public void connect(UpStreamSourceComponent<E> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<E> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -104,7 +104,7 @@ public class TerminalUpStreamDestinationComponent<E> extends AbstractComponent i
 	}
 
 	@Override
-	public void disconnect(UpStreamSourceComponent<E> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<E> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;

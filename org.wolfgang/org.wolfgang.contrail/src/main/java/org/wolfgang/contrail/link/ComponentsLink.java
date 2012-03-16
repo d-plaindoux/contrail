@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 
 /**
  * The <code>ComponentsLink</code> defines basic behaviors related to link
@@ -42,14 +42,14 @@ public interface ComponentsLink<E> {
 	 * 
 	 * @return the upstream source
 	 */
-	UpStreamSourceComponent<E> getUpStreamSourceComponent();
+	SourceComponent<E> getUpStreamSourceComponent();
 
 	/**
 	 * Method providing the destination
 	 * 
 	 * @return the upstream destination
 	 */
-	UpStreamDestinationComponent<E> getUpStreamDestinationComponent();
+	DestinationComponent<E> getUpStreamDestinationComponent();
 
 	/**
 	 * Method called whether the connection must be disposed.

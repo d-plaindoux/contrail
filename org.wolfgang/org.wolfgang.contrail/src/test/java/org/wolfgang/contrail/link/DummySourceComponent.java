@@ -20,7 +20,7 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.frontier.DataReceiver;
 import org.wolfgang.contrail.component.frontier.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.component.frontier.InitialSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -29,7 +29,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialUpStreamSourceComponent<Void> {
+public class DummySourceComponent extends InitialSourceComponent<Void> {
 
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ public class DummySourceComponent extends InitialUpStreamSourceComponent<Void> {
 	public DummySourceComponent() {
 		super(new InitialDataReceiverFactory<Void>() {
 			@Override
-			public DataReceiver<Void> create(InitialUpStreamSourceComponent<Void> initial) {
+			public DataReceiver<Void> create(InitialSourceComponent<Void> initial) {
 				return new DataReceiver<Void>() {
 					public void receiveData(Void data) throws DataHandlerException {
 						// Ignore data

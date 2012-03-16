@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.data;
 
-
 /**
  * A <code>DataInformation</code> provides basic information used for filtering
  * mechanism.
@@ -44,6 +43,19 @@ public interface DataInformation {
 	 */
 	<E> E getValue(String key, Class<E> requiredType) throws DataInformationValueNotFoundException,
 			DataInformationValueTypeException;
+
+	/**
+	 * Method called whether a given information must be checked using a given
+	 * key with a required type.
+	 * 
+	 * @param key
+	 *            The information key
+	 * @param requiredType
+	 *            The required type
+	 * @return true if the value attached to the key with the required type
+	 *         exists
+	 */
+	<E> boolean hasValue(String key, Class<E> requiredType);
 
 	/**
 	 * Method called whether a given information must be stored using a given

@@ -36,23 +36,23 @@ class DemultiplexerDataHandler<D> implements UpStreamDataHandler<DataWithInforma
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final UpStreamDemultiplexerComponent<D> upStreamMultiplexer;
+	private final DeMultiplexerComponent<D> upStreamMultiplexer;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamMultiplexer
 	 */
-	public DemultiplexerDataHandler(UpStreamDemultiplexerComponent<D> upStreamMultiplexer) {
+	public DemultiplexerDataHandler(DeMultiplexerComponent<D> upStreamMultiplexer) {
 		super();
 		this.upStreamMultiplexer = upStreamMultiplexer;
 	}
 
 	@Override
 	public void handleData(DataWithInformation<D> data) throws DataHandlerException {
-		for (FilteringUpStreamSourceComponent<D> source : upStreamMultiplexer.getSourceComponents()) {
+		for (FilteringDestinationComponent<D> source : upStreamMultiplexer.getSourceComponents()) {
 			if (source.getDataInformationFilter().accept(data.getDataInformation())) {
-				source.getDownStreamDataHandler().handleData(data);
+				source.getUpStreamDataHandler().handleData(data);
 			}
 		}
 	}

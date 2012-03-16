@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 
 /**
  * The <code>ComponentsLinkFactory</code> is used when components link must be
@@ -62,7 +62,7 @@ public class ComponentsLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	public final <E> ComponentsLink<E> connect(UpStreamSourceComponent<E> source, UpStreamDestinationComponent<E> destination)
+	public final <E> ComponentsLink<E> connect(SourceComponent<E> source, DestinationComponent<E> destination)
 			throws ComponentConnectionRejectedException {
 		final ComponentsLinkImpl<E> link = new ComponentsLinkImpl<E>(source, destination) {
 

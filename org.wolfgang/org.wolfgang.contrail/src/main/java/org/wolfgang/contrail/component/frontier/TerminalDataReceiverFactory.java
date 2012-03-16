@@ -25,7 +25,7 @@ package org.wolfgang.contrail.component.frontier;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalDataReceiverFactory<E> extends DataReceiverFactory<E, TerminalUpStreamDestinationComponent<E>> {
+public interface TerminalDataReceiverFactory<E> extends DataReceiverFactory<E, TerminalDestinationComponent<E>> {
 
 	// Nothing
 

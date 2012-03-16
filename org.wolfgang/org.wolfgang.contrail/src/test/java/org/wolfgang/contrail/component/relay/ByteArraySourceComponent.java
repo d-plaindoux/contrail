@@ -23,7 +23,7 @@ import java.io.OutputStream;
 
 import org.wolfgang.contrail.component.frontier.DataReceiver;
 import org.wolfgang.contrail.component.frontier.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.InitialUpStreamSourceComponent;
+import org.wolfgang.contrail.component.frontier.InitialSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byte[]> {
+public class ByteArraySourceComponent extends InitialSourceComponent<byte[]> {
 
 	/**
 	 * Constructor
@@ -40,7 +40,7 @@ public class ByteArraySourceComponent extends InitialUpStreamSourceComponent<byt
 	public ByteArraySourceComponent(final OutputStream outputStream) {
 		super(new InitialDataReceiverFactory<byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(InitialUpStreamSourceComponent<byte[]> initial) {
+			public DataReceiver<byte[]> create(InitialSourceComponent<byte[]> initial) {
 				return new DataReceiver<byte[]>() {
 					public void receiveData(byte[] data) throws DataHandlerException {
 						try {

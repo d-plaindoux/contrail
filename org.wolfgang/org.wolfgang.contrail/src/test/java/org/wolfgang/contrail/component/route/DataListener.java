@@ -16,35 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.link;
+package org.wolfgang.contrail.component.route;
 
-import org.wolfgang.contrail.component.frontier.DataReceiver;
 import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.data.DataInformation;
+import org.wolfgang.contrail.data.DataInformationFilter;
+import org.wolfgang.contrail.data.DataWithInformation;
 
 /**
- * <code>DummyDestinationComponent</code>
+ * <code>DataListener</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummyDestinationComponent extends TerminalDestinationComponent<Void> {
+class DataListener extends TerminalDestinationComponent<DataWithInformation<String>> implements
+		FilteringDestinationComponent<String> {
 
-	/**
-	 * Constructor
-	 */
-	public DummyDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Void>() {
+	private final String queueName;
+
+	public DataListener(String queueName, TerminalDataReceiverFactory<DataWithInformation<String>> dataFactory) {
+		super(dataFactory);
+		this.queueName = queueName;
+	}
+
+	@Override
+	public DataInformationFilter getDataInformationFilter() {
+		return new DataInformationFilter() {
 			@Override
-			public DataReceiver<Void> create(final TerminalDestinationComponent<Void> terminal) {
-				return new DataReceiver<Void>() {
-					@Override
-					public void receiveData(Void data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data);
-					}
-				};
+			public boolean accept(DataInformation information) {
+				return information.hasValue(queueName, Object.class);
 			}
-		});
+		};
 	}
 }

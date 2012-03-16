@@ -23,8 +23,8 @@ import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.ConnectionComponent;
-import org.wolfgang.contrail.component.UpStreamDestinationComponent;
-import org.wolfgang.contrail.component.UpStreamSourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -70,12 +70,12 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private UpStreamSourceComponent<S> upStreamSourceComponent;
+	private SourceComponent<S> upStreamSourceComponent;
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private UpStreamDestinationComponent<D> upStreamDestinationComponent;
+	private DestinationComponent<D> upStreamDestinationComponent;
 
 	/**
 	 * Constructor
@@ -96,7 +96,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * 
 	 * @return the current up stream source component
 	 */
-	UpStreamSourceComponent<S> getUpStreamSourceComponent() {
+	SourceComponent<S> getUpStreamSourceComponent() {
 		return this.upStreamSourceComponent;
 	}
 
@@ -105,12 +105,12 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * 
 	 * @return the current up stream source component
 	 */
-	UpStreamDestinationComponent<D> getUpStreamDestinationComponent() {
+	DestinationComponent<D> getUpStreamDestinationComponent() {
 		return this.upStreamDestinationComponent;
 	}
 
 	@Override
-	public void connect(UpStreamSourceComponent<S> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<S> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -119,7 +119,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void disconnect(UpStreamSourceComponent<S> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<S> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
@@ -129,7 +129,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void connect(UpStreamDestinationComponent<D> handler) throws ComponentConnectedException {
+	public void connect(DestinationComponent<D> handler) throws ComponentConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
@@ -138,7 +138,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void disconnect(UpStreamDestinationComponent<D> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<D> handler) throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent != null
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;

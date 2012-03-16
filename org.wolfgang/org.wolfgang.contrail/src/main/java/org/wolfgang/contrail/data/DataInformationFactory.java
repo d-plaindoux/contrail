@@ -43,4 +43,15 @@ public final class DataInformationFactory {
 		return new DataInformationImpl();
 	}
 
+	/**
+	 * Create a fresh data with informations
+	 * 
+	 * @param dataInformation
+	 * @param data
+	 * @return a data with information
+	 */
+	public static <D> DataWithInformation<D> createDataWithInformation(DataInformation dataInformation, D data) {
+		return new DataWithInformationImpl<D>(dataInformation, data);
+	}
+
 }
