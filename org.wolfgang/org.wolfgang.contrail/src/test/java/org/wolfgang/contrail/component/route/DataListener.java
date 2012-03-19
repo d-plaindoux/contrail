@@ -30,12 +30,12 @@ import org.wolfgang.contrail.data.DataWithInformation;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class DataListener extends TerminalDestinationComponent<DataWithInformation<String>> implements
-		FilteringDestinationComponent<String> {
+class DataListener extends TerminalDestinationComponent<DataWithInformation<String>, Void> implements
+		FilteringDestinationComponent<String, Void> {
 
 	private final String queueName;
 
-	public DataListener(String queueName, TerminalDataReceiverFactory<DataWithInformation<String>> dataFactory) {
+	public DataListener(String queueName, TerminalDataReceiverFactory<DataWithInformation<String>, Void> dataFactory) {
 		super(dataFactory);
 		this.queueName = queueName;
 	}

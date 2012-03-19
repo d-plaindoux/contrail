@@ -29,15 +29,15 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialSourceComponent<Void> {
+public class DummySourceComponent extends InitialSourceComponent<Void, Void> {
 
 	/**
 	 * Constructor
 	 */
 	public DummySourceComponent() {
-		super(new InitialDataReceiverFactory<Void>() {
+		super(new InitialDataReceiverFactory<Void, Void>() {
 			@Override
-			public DataReceiver<Void> create(InitialSourceComponent<Void> initial) {
+			public DataReceiver<Void> create(InitialSourceComponent<Void, Void> initial) {
 				return new DataReceiver<Void>() {
 					public void receiveData(Void data) throws DataHandlerException {
 						// Ignore data

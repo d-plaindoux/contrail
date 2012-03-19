@@ -28,8 +28,8 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface MultipleSourceComponent<S, D> extends DestinationComponent<S>, SourceComponent<D> {
+public interface MultipleSourceComponent<U, D> extends DestinationComponent<U, D>, SourceComponent<U, D> {
 
 	// No specific behaviors
-	
+
 }

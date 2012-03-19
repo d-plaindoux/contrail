@@ -29,15 +29,15 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummyDestinationComponent extends TerminalDestinationComponent<Void> {
+public class DummyDestinationComponent extends TerminalDestinationComponent<Void,Void> {
 
 	/**
 	 * Constructor
 	 */
 	public DummyDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Void>() {
+		super(new TerminalDataReceiverFactory<Void, Void>() {
 			@Override
-			public DataReceiver<Void> create(final TerminalDestinationComponent<Void> terminal) {
+			public DataReceiver<Void> create(final TerminalDestinationComponent<Void, Void> terminal) {
 				return new DataReceiver<Void>() {
 					@Override
 					public void receiveData(Void data) throws DataHandlerException {

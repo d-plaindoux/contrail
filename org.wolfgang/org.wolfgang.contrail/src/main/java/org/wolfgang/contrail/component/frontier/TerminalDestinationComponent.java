@@ -35,22 +35,22 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalDestinationComponent<E> extends AbstractComponent implements DestinationComponent<E> {
+public class TerminalDestinationComponent<U,D> extends AbstractComponent implements DestinationComponent<U,D> {
 
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private SourceComponent<E> upStreamSourceComponent;
+	private SourceComponent<U,D> upStreamSourceComponent;
 
 	/**
 	 * The data injection mechanism
 	 */
-	private final DataSender<E> dataEmitter;
+	private final DataSender<D> dataEmitter;
 
 	/**
 	 * The internal down stream data handler
 	 */
-	private final UpStreamDataHandler<E> upstreamDataHandler;
+	private final UpStreamDataHandler<U> upstreamDataHandler;
 
 	/**
 	 * Data receiver
@@ -62,12 +62,12 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	 * @param dataFactory
 	 *            The terminal data receiver factory
 	 */
-	public TerminalDestinationComponent(final TerminalDataReceiverFactory<E> dataFactory) {
+	public TerminalDestinationComponent(final TerminalDataReceiverFactory<U,D> dataFactory) {
 		super();
 
-		this.dataEmitter = new DataSender<E>() {
+		this.dataEmitter = new DataSender<D>() {
 			@Override
-			public void sendData(E data) throws DataHandlerException {
+			public void sendData(D data) throws DataHandlerException {
 				try {
 					getDowntreamDataHandler().handleData(data);
 				} catch (ComponentNotConnectedException e) {
@@ -76,7 +76,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 			}
 		};
 
-		this.upstreamDataHandler = new UpStreamDataReceiverConnector<E>(dataFactory.create(this));
+		this.upstreamDataHandler = new UpStreamDataReceiverConnector<U>(dataFactory.create(this));
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	protected DownStreamDataHandler<E> getDowntreamDataHandler() throws ComponentNotConnectedException {
+	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -95,7 +95,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	}
 
 	@Override
-	public void connect(SourceComponent<E> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<U,D> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -104,7 +104,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	}
 
 	@Override
-	public void disconnect(SourceComponent<E> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<U,D> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
@@ -114,7 +114,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	}
 
 	@Override
-	public UpStreamDataHandler<E> getUpStreamDataHandler() {
+	public UpStreamDataHandler<U> getUpStreamDataHandler() {
 		return this.upstreamDataHandler;
 	}
 
@@ -125,7 +125,7 @@ public class TerminalDestinationComponent<E> extends AbstractComponent implement
 	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	public DataSender<E> getDataSender() {
+	public DataSender<D> getDataSender() {
 		return this.dataEmitter;
 	}
 

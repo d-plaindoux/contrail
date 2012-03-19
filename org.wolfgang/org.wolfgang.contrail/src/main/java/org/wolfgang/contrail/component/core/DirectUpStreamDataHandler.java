@@ -30,25 +30,25 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DirectUpStreamDataHandler<D> implements UpStreamDataHandler<D> {
+public class DirectUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final DestinationComponent<D> upStreamDestinationComponent;
+	private final DestinationComponent<U, ?> upStreamDestinationComponent;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamMultiplexer
 	 */
-	public DirectUpStreamDataHandler(DestinationComponent<D> upStreamDestinationComponent) {
+	public DirectUpStreamDataHandler(DestinationComponent<U, ?> upStreamDestinationComponent) {
 		super();
 		this.upStreamDestinationComponent = upStreamDestinationComponent;
 	}
 
 	@Override
-	public void handleData(D data) throws DataHandlerException {
+	public void handleData(U data) throws DataHandlerException {
 		this.upStreamDestinationComponent.getUpStreamDataHandler().handleData(data);
 	}
 

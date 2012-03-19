@@ -30,7 +30,7 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ConnectionComponent<S, D> extends DestinationComponent<S>, SourceComponent<D> {
+public interface ConnectionComponent<U1, D1, U2, D2> extends DestinationComponent<U1, D1>, SourceComponent<U2, D2> {
 
 	// Nothing
 

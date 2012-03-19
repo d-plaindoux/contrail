@@ -30,7 +30,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationComponent<E> extends Component {
+public interface DestinationComponent<U,D> extends Component {
 
 	/**
 	 * Method called when the corresponding upstream data handler shall be
@@ -38,7 +38,7 @@ public interface DestinationComponent<E> extends Component {
 	 * 
 	 * @return an upstream data handler
 	 */
-	UpStreamDataHandler<E> getUpStreamDataHandler();
+	UpStreamDataHandler<U> getUpStreamDataHandler();
 
 	/**
 	 * Method called when the parametric upstream source component shall be
@@ -49,7 +49,7 @@ public interface DestinationComponent<E> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the connection cannot be performed
 	 */
-	void connect(SourceComponent<E> handler) throws ComponentConnectionRejectedException;
+	void connect(SourceComponent<U,D> handler) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -60,5 +60,5 @@ public interface DestinationComponent<E> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the disconnection cannot be performed
 	 */
-	void disconnect(SourceComponent<E> handler) throws ComponentDisconnectionRejectedException;
+	void disconnect(SourceComponent<U,D> handler) throws ComponentDisconnectionRejectedException;
 }

@@ -38,7 +38,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class TransducerBasedConnectionComponent<S, D> extends AbstractComponent implements ConnectionComponent<S, D> {
+public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends AbstractComponent implements
+		ConnectionComponent<U1, D1, U2, D2> {
 
 	/**
 	 * Static message definition for unknown transformation
@@ -60,22 +61,22 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
 	 */
-	private final UpStreamDataHandler<S> upStreamDataHandler;
+	private final UpStreamDataHandler<U1> upStreamDataHandler;
 
 	/**
 	 * Internal upstream handler performing a data transformation for D to S
 	 */
-	private final DownStreamDataHandler<D> downStreamDataHandler;
+	private final DownStreamDataHandler<D2> downStreamDataHandler;
 
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private SourceComponent<S> upStreamSourceComponent;
+	private SourceComponent<U1, D1> upStreamSourceComponent;
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponent<D> upStreamDestinationComponent;
+	private DestinationComponent<U2, D2> upStreamDestinationComponent;
 
 	/**
 	 * Constructor
@@ -85,10 +86,10 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransducerBasedConnectionComponent(DataTransducer<S, D> upstreamXducer, DataTransducer<D, S> downstreamXducer) {
+	public TransducerBasedConnectionComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
-		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler<S, D>(this, upstreamXducer);
-		this.downStreamDataHandler = new TransducerBasedDownStreamDataHandler<S, D>(this, downstreamXducer);
+		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler<U1, U2>(this, upstreamXducer);
+		this.downStreamDataHandler = new TransducerBasedDownStreamDataHandler<D2, D1>(this, downstreamXducer);
 	}
 
 	/**
@@ -96,7 +97,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * 
 	 * @return the current up stream source component
 	 */
-	SourceComponent<S> getUpStreamSourceComponent() {
+	SourceComponent<U1, D1> getUpStreamSourceComponent() {
 		return this.upStreamSourceComponent;
 	}
 
@@ -105,12 +106,12 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	 * 
 	 * @return the current up stream source component
 	 */
-	DestinationComponent<D> getUpStreamDestinationComponent() {
+	DestinationComponent<U2, D2> getUpStreamDestinationComponent() {
 		return this.upStreamDestinationComponent;
 	}
 
 	@Override
-	public void connect(SourceComponent<S> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<U1, D1> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -119,7 +120,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void disconnect(SourceComponent<S> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<U1, D1> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
@@ -129,7 +130,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void connect(DestinationComponent<D> handler) throws ComponentConnectedException {
+	public void connect(DestinationComponent<U2, D2> handler) throws ComponentConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
@@ -138,7 +139,7 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<D> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<U2, D2> handler) throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent != null
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
@@ -148,12 +149,12 @@ public final class TransducerBasedConnectionComponent<S, D> extends AbstractComp
 	}
 
 	@Override
-	public UpStreamDataHandler<S> getUpStreamDataHandler() {
+	public UpStreamDataHandler<U1> getUpStreamDataHandler() {
 		return upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataHandler<D2> getDownStreamDataHandler() {
 		return downStreamDataHandler;
 	}
 

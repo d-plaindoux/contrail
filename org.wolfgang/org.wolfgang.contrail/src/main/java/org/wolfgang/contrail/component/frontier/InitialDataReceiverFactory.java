@@ -25,7 +25,7 @@ package org.wolfgang.contrail.component.frontier;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface InitialDataReceiverFactory<E> extends DataReceiverFactory<E, InitialSourceComponent<E>> {
+public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialSourceComponent<U, D>> {
 
 	// Nothing
 

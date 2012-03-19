@@ -38,10 +38,10 @@ public class ComponentsLinkManager {
 	/**
 	 * Created links
 	 */
-	private final List<ComponentsLink<?>> links;
+	private final List<ComponentsLink<?, ?>> links;
 
 	{
-		links = new ArrayList<ComponentsLink<?>>();
+		links = new ArrayList<ComponentsLink<?, ?>>();
 	}
 
 	/**
@@ -62,9 +62,9 @@ public class ComponentsLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	public final <E> ComponentsLink<E> connect(SourceComponent<E> source, DestinationComponent<E> destination)
+	public final <U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
 			throws ComponentConnectionRejectedException {
-		final ComponentsLinkImpl<E> link = new ComponentsLinkImpl<E>(source, destination) {
+		final ComponentsLinkImpl<U, D> link = new ComponentsLinkImpl<U, D>(source, destination) {
 
 			@Override
 			public void dispose() throws ComponentDisconnectionRejectedException {
@@ -87,7 +87,7 @@ public class ComponentsLinkManager {
 	 * 
 	 * @return an array of established links
 	 */
-	public ComponentsLink<?>[] getEstablishedLinks() {
+	public ComponentsLink<?, ?>[] getEstablishedLinks() {
 		return links.toArray(new ComponentsLink[links.size()]);
 	}
 

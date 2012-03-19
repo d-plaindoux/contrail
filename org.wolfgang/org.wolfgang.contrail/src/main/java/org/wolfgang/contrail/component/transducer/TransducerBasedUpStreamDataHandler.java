@@ -32,12 +32,12 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerBasedUpStreamDataHandler<S, D> implements UpStreamDataHandler<S> {
+class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 
 	/**
 	 * The component which is in charge of this data handler
 	 */
-	private final TransducerBasedConnectionComponent<S, D> component;
+	private final TransducerBasedConnectionComponent<U, ?, D, ?> component;
 
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
@@ -47,7 +47,7 @@ class TransducerBasedUpStreamDataHandler<S, D> implements UpStreamDataHandler<S>
 	/**
 	 * The transformation process
 	 */
-	private final DataTransducer<S, D> streamXducer;
+	private final DataTransducer<U, D> streamXducer;
 
 	/**
 	 * Constructor
@@ -57,14 +57,14 @@ class TransducerBasedUpStreamDataHandler<S, D> implements UpStreamDataHandler<S>
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerBasedUpStreamDataHandler(TransducerBasedConnectionComponent<S, D> component,
-			DataTransducer<S, D> downstreamXducer) {
+	public TransducerBasedUpStreamDataHandler(TransducerBasedConnectionComponent<U, ?, D, ?> component,
+			DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
 	}
 
 	@Override
-	public void handleData(S data) throws DataHandlerException {
+	public void handleData(U data) throws DataHandlerException {
 		if (closed) {
 			throw new UpStreamDataHandlerClosedException();
 		} else if (component.getUpStreamDestinationComponent() == null) {

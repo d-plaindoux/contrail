@@ -33,12 +33,12 @@ import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerBasedDownStreamDataHandler<S, D> implements DownStreamDataHandler<D> {
+class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> {
 
 	/**
-	 * The component which is in charge of this data handler 
+	 * The component which is in charge of this data handler
 	 */
-	private final TransducerBasedConnectionComponent<S, D> component;
+	private final TransducerBasedConnectionComponent<?, D, ?, U> component;
 
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
@@ -48,7 +48,7 @@ class TransducerBasedDownStreamDataHandler<S, D> implements DownStreamDataHandle
 	/**
 	 * The transformation process
 	 */
-	private final DataTransducer<D, S> streamXducer;
+	private final DataTransducer<U, D> streamXducer;
 
 	/**
 	 * Constructor
@@ -60,14 +60,14 @@ class TransducerBasedDownStreamDataHandler<S, D> implements DownStreamDataHandle
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerBasedDownStreamDataHandler(TransducerBasedConnectionComponent<S, D> component,
-			DataTransducer<D, S> downstreamXducer) {
+	public TransducerBasedDownStreamDataHandler(TransducerBasedConnectionComponent<?, D, ?, U> component,
+			DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
 	}
 
 	@Override
-	public void handleData(D data) throws DataHandlerException {
+	public void handleData(U data) throws DataHandlerException {
 		if (closed) {
 			throw new DownStreamDataHandlerClosedException();
 		} else if (this.component.getUpStreamSourceComponent() == null) {
@@ -75,8 +75,8 @@ class TransducerBasedDownStreamDataHandler<S, D> implements DownStreamDataHandle
 			throw new DataHandlerException(message);
 		} else {
 			try {
-				final List<S> transform = streamXducer.transform(data);
-				for (S value : transform) {
+				final List<D> transform = streamXducer.transform(data);
+				for (D value : transform) {
 					this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
@@ -90,8 +90,8 @@ class TransducerBasedDownStreamDataHandler<S, D> implements DownStreamDataHandle
 	public void handleClose() throws DataHandlerCloseException {
 		this.closed = true;
 		try {
-			final List<S> transform = streamXducer.finish();
-			for (S value : transform) {
+			final List<D> transform = streamXducer.finish();
+			for (D value : transform) {
 				this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
 			}
 		} catch (DataTransducerException e) {

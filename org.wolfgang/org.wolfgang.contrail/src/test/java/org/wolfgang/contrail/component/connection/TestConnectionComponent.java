@@ -44,15 +44,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal01() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.getDataSender().sendData("3");
 		assertEquals("9", stringReference.get());
@@ -63,15 +63,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal02() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.getDataSender().sendData("0");
 		assertEquals("0", stringReference.get());
@@ -82,15 +82,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testNominal03() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		initial.closeUpStream();
 		terminal.getDataSender().sendData(9);
@@ -102,15 +102,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed01() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.closeUpStream();
@@ -126,15 +126,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed02() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			connection.closeUpStream();
@@ -150,15 +150,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed03() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			terminal.closeUpStream();
@@ -174,15 +174,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed04() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.closeDownStream();
@@ -198,15 +198,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed05() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			connection.closeDownStream();
@@ -222,15 +222,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testUpStreamClosed06() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException, DataHandlerCloseException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			terminal.closeDownStream();
@@ -246,15 +246,15 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testFailure01() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			initial.getDataSender().sendData("NaN");
@@ -268,8 +268,9 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testFailure02() {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
+
 		try {
 			connection.getUpStreamDataHandler().handleData("123");
 			fail();
@@ -279,7 +280,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	public void testFailure03() {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 		try {
 			connection.getDownStreamDataHandler().handleData(123);
@@ -291,12 +292,14 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testFailure04() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialSourceComponent<String> initial = new StringSourceComponent(stringReference);
-		final ComponentsLink<String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final InitialSourceComponent<String,String> initial = new StringSourceComponent(stringReference);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<String,String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 
 		try {
 			initial.getDataSender().sendData("123");
@@ -310,11 +313,12 @@ public class TestConnectionComponent extends TestCase {
 
 	public void testFailure05() throws DataHandlerException, ComponentConnectionRejectedException,
 			ComponentDisconnectionRejectedException {
-		final TransducerBasedConnectionComponent<String, Integer> connection = new TransducerBasedConnectionComponent<String, Integer>(
+		final TransducerBasedConnectionComponent<String, String, Integer, Integer> connection = new TransducerBasedConnectionComponent<String, String, Integer, Integer>(
 				new StringToInteger(), new IntegerToString());
 
-		final TerminalDestinationComponent<Integer> terminal = new IntegerDestinationComponent();
-		final ComponentsLink<Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final TerminalDestinationComponent<Integer,Integer> terminal = new IntegerDestinationComponent();
+
+		final ComponentsLink<Integer,Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
 
 		try {
 			terminal.getDataSender().sendData(123);

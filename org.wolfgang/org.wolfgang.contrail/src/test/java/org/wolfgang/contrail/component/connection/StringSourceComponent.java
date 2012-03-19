@@ -31,15 +31,15 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringSourceComponent extends InitialSourceComponent<String> {
+public class StringSourceComponent extends InitialSourceComponent<String, String> {
 
 	/**
 	 * Constructor
 	 */
 	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(new InitialDataReceiverFactory<String>() {
+		super(new InitialDataReceiverFactory<String, String>() {
 			@Override
-			public DataReceiver<String> create(InitialSourceComponent<String> initial) {
+			public DataReceiver<String> create(InitialSourceComponent<String, String> initial) {
 				return new DataReceiver<String>() {
 					public void receiveData(String data) throws DataHandlerException {
 						reference.set(data);

@@ -28,7 +28,7 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface MultipleDestinationComponent<S, D> extends SourceComponent<D>, DestinationComponent<S> {
+public interface MultipleDestinationComponent<U, D> extends SourceComponent<U, D>, DestinationComponent<U, D> {
 
 	// No specific behaviors
 

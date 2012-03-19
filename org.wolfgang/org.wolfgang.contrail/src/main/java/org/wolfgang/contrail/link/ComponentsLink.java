@@ -29,7 +29,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentsLink<E> {
+public interface ComponentsLink<U,D> {
 
 	/**
 	 * @param component
@@ -42,14 +42,14 @@ public interface ComponentsLink<E> {
 	 * 
 	 * @return the upstream source
 	 */
-	SourceComponent<E> getUpStreamSourceComponent();
+	SourceComponent<U,D> getUpStreamSourceComponent();
 
 	/**
 	 * Method providing the destination
 	 * 
 	 * @return the upstream destination
 	 */
-	DestinationComponent<E> getUpStreamDestinationComponent();
+	DestinationComponent<U,D> getUpStreamDestinationComponent();
 
 	/**
 	 * Method called whether the connection must be disposed.

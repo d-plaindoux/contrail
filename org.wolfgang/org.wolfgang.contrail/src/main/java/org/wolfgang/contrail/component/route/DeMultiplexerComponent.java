@@ -45,8 +45,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DeMultiplexerComponent<D> extends AbstractComponent implements
-		MultipleDestinationComponent<DataWithInformation<D>, DataWithInformation<D>> {
+public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
+		MultipleDestinationComponent<DataWithInformation<U>, D> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -62,25 +62,25 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	/**
 	 * The set of connected filtering source component (can be empty)
 	 */
-	private final Map<ComponentId, FilteringDestinationComponent<D>> sourceComponents;
+	private final Map<ComponentId, FilteringDestinationComponent<U,D>> sourceComponents;
 
 	/**
 	 * The internal upstream data handler
 	 */
-	private final UpStreamDataHandler<DataWithInformation<D>> upStreamDataHandler;
+	private final UpStreamDataHandler<DataWithInformation<U>> upStreamDataHandler;
 
 	/**
 	 * The internal upstream data handler
 	 */
-	private final DownStreamDataHandler<DataWithInformation<D>> downStreamDataHandler;
+	private final DownStreamDataHandler<D> downStreamDataHandler;
 
 	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
-	private SourceComponent<DataWithInformation<D>> upStreamSourceComponent;
+	private SourceComponent<DataWithInformation<U>,D> upStreamSourceComponent;
 
 	{
-		this.sourceComponents = new HashMap<ComponentId, FilteringDestinationComponent<D>>();
+		this.sourceComponents = new HashMap<ComponentId, FilteringDestinationComponent<U,D>>();
 	}
 
 	/**
@@ -88,8 +88,8 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	 */
 	public DeMultiplexerComponent() {
 		super();
-		this.upStreamDataHandler = new DemultiplexerDataHandler<D>(this);
-		this.downStreamDataHandler = new DirectDownStreamDataHandler<DataWithInformation<D>>(this);
+		this.upStreamDataHandler = new DemultiplexerDataHandler<U>(this);
+		this.downStreamDataHandler = new DirectDownStreamDataHandler<D>(this);
 	}
 
 	/**
@@ -98,19 +98,19 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	 * @return an array of upstream source component
 	 */
 	@SuppressWarnings("unchecked")
-	FilteringDestinationComponent<D>[] getSourceComponents() {
-		final Collection<FilteringDestinationComponent<D>> values = sourceComponents.values();
+	FilteringDestinationComponent<U,D>[] getSourceComponents() {
+		final Collection<FilteringDestinationComponent<U,D>> values = sourceComponents.values();
 		return values.toArray(new FilteringDestinationComponent[values.size()]);
 	}
 
 	@Override
-	public UpStreamDataHandler<DataWithInformation<D>> getUpStreamDataHandler() {
+	public UpStreamDataHandler<DataWithInformation<U>> getUpStreamDataHandler() {
 		return this.upStreamDataHandler;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void connect(DestinationComponent<DataWithInformation<D>> handler)
+	public void connect(DestinationComponent<DataWithInformation<U>,D> handler)
 			throws ComponentConnectionRejectedException {
 		if (this.sourceComponents.containsKey(handler.getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
@@ -123,7 +123,7 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<DataWithInformation<D>> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<DataWithInformation<U>,D> handler) throws ComponentNotConnectedException {
 		if (this.sourceComponents.containsKey(handler.getComponentId())) {
 			this.sourceComponents.remove(handler.getComponentId());
 		} else {
@@ -133,7 +133,7 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (FilteringDestinationComponent<D> source : this.sourceComponents.values()) {
+		for (FilteringDestinationComponent<U,D> source : this.sourceComponents.values()) {
 			source.closeUpStream();
 		}
 	}
@@ -144,12 +144,12 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	}
 
 	@Override
-	public DownStreamDataHandler<DataWithInformation<D>> getDownStreamDataHandler() {
+	public DownStreamDataHandler<D> getDownStreamDataHandler() {
 		return this.downStreamDataHandler;
 	}
 
 	@Override
-	public void connect(SourceComponent<DataWithInformation<D>> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<DataWithInformation<U>,D> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -158,7 +158,7 @@ public class DeMultiplexerComponent<D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void disconnect(SourceComponent<DataWithInformation<D>> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<DataWithInformation<U>,D> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;

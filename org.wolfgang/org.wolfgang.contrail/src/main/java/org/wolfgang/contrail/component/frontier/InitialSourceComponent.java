@@ -35,22 +35,22 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialSourceComponent<E> extends AbstractComponent implements SourceComponent<E> {
+public class InitialSourceComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponent<E> upStreamDestinationComponent;
+	private DestinationComponent<U, D> upStreamDestinationComponent;
 
 	/**
 	 * The data injection mechanism
 	 */
-	private final DataSender<E> dataEmitter;
+	private final DataSender<U> dataEmitter;
 
 	/**
 	 * The internal down stream data handler
 	 */
-	private final DownStreamDataHandler<E> downStreamDataHandler;
+	private final DownStreamDataHandler<D> downStreamDataHandler;
 
 	/**
 	 * Constructor
@@ -58,12 +58,12 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialSourceComponent(final InitialDataReceiverFactory<E> dataFactory) {
+	public InitialSourceComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
 		super();
 
-		this.dataEmitter = new DataSender<E>() {
+		this.dataEmitter = new DataSender<U>() {
 			@Override
-			public void sendData(E data) throws DataHandlerException {
+			public void sendData(U data) throws DataHandlerException {
 				try {
 					getUpStreamDataHandler().handleData(data);
 				} catch (ComponentNotConnectedException e) {
@@ -72,7 +72,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 			}
 		};
 
-		this.downStreamDataHandler = new DownStreamDataReceiverConnector<E>(dataFactory.create(this));
+		this.downStreamDataHandler = new DownStreamDataReceiverConnector<D>(dataFactory.create(this));
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	private UpStreamDataHandler<E> getUpStreamDataHandler() throws ComponentNotConnectedException {
+	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -91,7 +91,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	}
 
 	@Override
-	public void connect(DestinationComponent<E> handler) throws ComponentConnectedException {
+	public void connect(DestinationComponent<U, D> handler) throws ComponentConnectedException {
 		if (this.upStreamDestinationComponent == null) {
 			this.upStreamDestinationComponent = handler;
 		} else {
@@ -100,7 +100,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<E> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<U, D> handler) throws ComponentNotConnectedException {
 		if (this.upStreamDestinationComponent != null
 				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamDestinationComponent = null;
@@ -110,7 +110,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	}
 
 	@Override
-	public DownStreamDataHandler<E> getDownStreamDataHandler() {
+	public DownStreamDataHandler<D> getDownStreamDataHandler() {
 		return this.downStreamDataHandler;
 	}
 
@@ -121,7 +121,7 @@ public class InitialSourceComponent<E> extends AbstractComponent implements Sour
 	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	public DataSender<E> getDataSender() {
+	public DataSender<U> getDataSender() {
 		return this.dataEmitter;
 	}
 

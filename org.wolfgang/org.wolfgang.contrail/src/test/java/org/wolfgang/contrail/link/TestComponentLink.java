@@ -43,7 +43,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink02() {
 		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
 		try {
-			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {
@@ -57,7 +57,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink03() {
 		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
 		try {
-			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {
@@ -73,7 +73,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink04() {
 		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
 		try {
-			final ComponentsLink<Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {

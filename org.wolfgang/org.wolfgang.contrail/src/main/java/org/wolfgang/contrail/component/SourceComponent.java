@@ -30,14 +30,14 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface SourceComponent<E> extends Component {
+public interface SourceComponent<U,D> extends Component {
 
 	/**
 	 * Provides the data channel used for down stream communication facility
 	 * 
 	 * @return a down stream data channel (never <code>null</code>)
 	 */
-	DownStreamDataHandler<E> getDownStreamDataHandler();
+	DownStreamDataHandler<D> getDownStreamDataHandler();
 
 	/**
 	 * Method called when the parametric upstream source component shall be
@@ -48,7 +48,7 @@ public interface SourceComponent<E> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             is the connection cannot be performed
 	 */
-	void connect(DestinationComponent<E> handler) throws ComponentConnectionRejectedException;
+	void connect(DestinationComponent<U,D> handler) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -59,6 +59,6 @@ public interface SourceComponent<E> extends Component {
 	 * @throws ComponentDisconnectionRejectedException
 	 *             is the disconnection cannot be performed
 	 */
-	void disconnect(DestinationComponent<E> handler) throws ComponentDisconnectionRejectedException;
+	void disconnect(DestinationComponent<U,D> handler) throws ComponentDisconnectionRejectedException;
 
 }

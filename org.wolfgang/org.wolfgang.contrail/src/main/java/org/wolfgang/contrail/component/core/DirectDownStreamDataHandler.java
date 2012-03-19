@@ -35,14 +35,14 @@ public class DirectDownStreamDataHandler<D> implements DownStreamDataHandler<D> 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final SourceComponent<D> upStreamSourceComponent;
+	private final SourceComponent<?, D> upStreamSourceComponent;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamMultiplexer
 	 */
-	public DirectDownStreamDataHandler(SourceComponent<D> upStreamSourceComponent) {
+	public DirectDownStreamDataHandler(SourceComponent<?, D> upStreamSourceComponent) {
 		super();
 		this.upStreamSourceComponent = upStreamSourceComponent;
 	}

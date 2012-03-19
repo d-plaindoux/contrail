@@ -30,7 +30,7 @@ import org.wolfgang.contrail.data.DataWithInformation;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface FilteringDestinationComponent<E> extends DestinationComponent<DataWithInformation<E>> {
+public interface FilteringDestinationComponent<U,D> extends DestinationComponent<DataWithInformation<U>,D> {
 
 	/**
 	 * Provides the filter associated to the source component

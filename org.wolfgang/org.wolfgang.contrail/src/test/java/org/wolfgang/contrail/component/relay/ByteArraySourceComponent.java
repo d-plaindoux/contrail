@@ -32,15 +32,15 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArraySourceComponent extends InitialSourceComponent<byte[]> {
+public class ByteArraySourceComponent extends InitialSourceComponent<byte[], byte[]> {
 
 	/**
 	 * Constructor
 	 */
 	public ByteArraySourceComponent(final OutputStream outputStream) {
-		super(new InitialDataReceiverFactory<byte[]>() {
+		super(new InitialDataReceiverFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(InitialSourceComponent<byte[]> initial) {
+			public DataReceiver<byte[]> create(InitialSourceComponent<byte[], byte[]> initial) {
 				return new DataReceiver<byte[]>() {
 					public void receiveData(byte[] data) throws DataHandlerException {
 						try {
