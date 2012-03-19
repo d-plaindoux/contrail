@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import org.wolfgang.contrail.component.frontier.DataReceiver;
-import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.TerminalDestinationComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

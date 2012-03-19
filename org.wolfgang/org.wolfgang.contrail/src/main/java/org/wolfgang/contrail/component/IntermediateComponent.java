@@ -16,16 +16,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.component;
 
 /**
- * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
- * to initial upstream source component.
+ * The <code>ConnectionComponent</code> is capable to connect a source handler
+ * and a destination handler. In addition the data can be transformed from a
+ * type S to a type D or vice-versa depending if components communicate using
+ * upstream or downstream network. The first type was the event type received
+ * from the upstream network - denoted by the destination facet. The second type
+ * was the event type sent to the upstream network - denoted by the source
+ * facet.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialSourceComponent<U, D>> {
+public interface IntermediateComponent<U1, D1, U2, D2> extends DestinationComponent<U1, D1>, SourceComponent<U2, D2> {
 
 	// Nothing
 

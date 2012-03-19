@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.route;
+package org.wolfgang.contrail.component.multiple;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>UpStreamMultiplexerComponent</code>
+ * <code>DeMultiplexerComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -88,7 +88,7 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	 */
 	public DeMultiplexerComponent() {
 		super();
-		this.upStreamDataHandler = new DemultiplexerDataHandler<U>(this);
+		this.upStreamDataHandler = new DeMultiplexerDataHandler<U>(this);
 		this.downStreamDataHandler = new DirectDownStreamDataHandler<D>(this);
 	}
 

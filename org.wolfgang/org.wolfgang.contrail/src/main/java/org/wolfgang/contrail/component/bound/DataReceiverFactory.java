@@ -16,16 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.component.bound;
+
 /**
- * Package providing generic component implementations for initial and terminal
- * components dedicated to frontier link management. External interaction is therefore 
- * done using {@link org.wolfgang.contrail.component.frontier.DataReceiver} and 
- * {@link org.wolfgang.contrail.component.frontier.DataSender} implementations. The 
- * initial is used as the first component able to receive and manage upstream
- * data i.e. from low level software layer and the terminal is dedicated to 
- * send data to the application layer.
- *
+ * <code>DataReceiverFactory</code> is capable to build data receiver.
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.frontier;
+interface DataReceiverFactory<E, C> {
+
+	/**
+	 * Method called whether a data receiver shall be built for a given
+	 * component
+	 * 
+	 * @param component
+	 *            The component used to build the data receiver
+	 */
+	DataReceiver<E> create(C component);
+
+}

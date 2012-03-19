@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.route;
+package org.wolfgang.contrail.component.multiple;
 
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -24,33 +24,33 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * A <code>Multiplexer</code> is able to manage information using filters owned
- * buy each filtered upstream sourc component linked to the mutiplexer
- * component.
+ * A <code>DeMultiplexerDataHandler</code> is able to manage information using
+ * filters owned buy each filtered upstream destination component linked to the
+ * multiplexer component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class DemultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInformation<U>> {
+class DeMultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInformation<U>> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final DeMultiplexerComponent<U,?> upStreamMultiplexer;
+	private final DeMultiplexerComponent<U, ?> upStreamDeMultiplexer;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param upStreamMultiplexer
+	 * @param upStreamDeMultiplexer
 	 */
-	public DemultiplexerDataHandler(DeMultiplexerComponent<U,?> upStreamMultiplexer) {
+	public DeMultiplexerDataHandler(DeMultiplexerComponent<U, ?> upStreamDeMultiplexer) {
 		super();
-		this.upStreamMultiplexer = upStreamMultiplexer;
+		this.upStreamDeMultiplexer = upStreamDeMultiplexer;
 	}
 
 	@Override
 	public void handleData(DataWithInformation<U> data) throws DataHandlerException {
-		for (FilteringDestinationComponent<U,?> source : upStreamMultiplexer.getSourceComponents()) {
+		for (FilteringDestinationComponent<U, ?> source : upStreamDeMultiplexer.getSourceComponents()) {
 			if (source.getDataInformationFilter().accept(data.getDataInformation())) {
 				source.getUpStreamDataHandler().handleData(data);
 			}

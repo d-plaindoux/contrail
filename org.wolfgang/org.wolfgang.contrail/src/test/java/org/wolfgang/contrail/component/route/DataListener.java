@@ -18,8 +18,9 @@
 
 package org.wolfgang.contrail.component.route;
 
-import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.TerminalDestinationComponent;
+import org.wolfgang.contrail.component.multiple.FilteringDestinationComponent;
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;

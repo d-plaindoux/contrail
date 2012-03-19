@@ -16,34 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.link;
+package org.wolfgang.contrail.component.Intermediate;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.InitialSourceComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
+import java.util.Arrays;
+import java.util.List;
+
+import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
- * <code>DummySourceComponent</code> is a simple upstream source component.
+ * <code>IntegerToString</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialSourceComponent<Void, Void> {
+public class IntegerToString implements DataTransducer<Integer, String> {
 
-	/**
-	 * Constructor
-	 */
-	public DummySourceComponent() {
-		super(new InitialDataReceiverFactory<Void, Void>() {
-			@Override
-			public DataReceiver<Void> create(InitialSourceComponent<Void, Void> initial) {
-				return new DataReceiver<Void>() {
-					public void receiveData(Void data) throws DataHandlerException {
-						// Ignore data
-					}
-				};
-			}
-		});
+	@Override
+	public List<String> transform(Integer s) {
+		return Arrays.asList(String.valueOf(s));
+	}
+
+	@Override
+	public List<String> finish() throws DataTransducerException {
+		return Arrays.asList();
 	}
 }

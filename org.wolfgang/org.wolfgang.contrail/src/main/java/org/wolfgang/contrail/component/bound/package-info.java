@@ -16,17 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
-
 /**
- * <code>TerminalDataReceiverFactory</code> is a data receiver builder dedicated
- * to terminal upstream destination component.
- * 
+ * Package providing generic component implementations for initial and terminal
+ * components dedicated to frontier link management. External interaction is therefore 
+ * done using {@link org.wolfgang.contrail.component.bound.DataReceiver} and 
+ * {@link org.wolfgang.contrail.component.bound.DataSender} implementations. The 
+ * initial is used as the first component able to receive and manage upstream
+ * data i.e. from low level software layer and the terminal is dedicated to 
+ * send data to the application layer.
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalDestinationComponent<U,S>> {
-
-	// Nothing
-
-}
+package org.wolfgang.contrail.component.bound;

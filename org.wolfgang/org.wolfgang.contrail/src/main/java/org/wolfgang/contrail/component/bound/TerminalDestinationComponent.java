@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.component.bound;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
@@ -29,50 +29,54 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * The <code>InitialUpStreamSourceComponent</code> is capable to send event in
- * the framework.
+ * The <code>TerminalUpStreamDestinationComponent</code> is capable to receive
+ * incoming events.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialSourceComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
+public class TerminalDestinationComponent<U,D> extends AbstractComponent implements DestinationComponent<U,D> {
 
 	/**
-	 * Related up stream data handler after connection. Null otherwise
+	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponent<U, D> upStreamDestinationComponent;
+	private SourceComponent<U,D> upStreamSourceComponent;
 
 	/**
 	 * The data injection mechanism
 	 */
-	private final DataSender<U> dataEmitter;
+	private final DataSender<D> dataEmitter;
 
 	/**
 	 * The internal down stream data handler
 	 */
-	private final DownStreamDataHandler<D> downStreamDataHandler;
+	private final UpStreamDataHandler<U> upstreamDataHandler;
+
+	/**
+	 * Data receiver
+	 */
 
 	/**
 	 * Constructor
 	 * 
 	 * @param dataFactory
-	 *            The initial data receiver factory
+	 *            The terminal data receiver factory
 	 */
-	public InitialSourceComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
+	public TerminalDestinationComponent(final TerminalDataReceiverFactory<U,D> dataFactory) {
 		super();
 
-		this.dataEmitter = new DataSender<U>() {
+		this.dataEmitter = new DataSender<D>() {
 			@Override
-			public void sendData(U data) throws DataHandlerException {
+			public void sendData(D data) throws DataHandlerException {
 				try {
-					getUpStreamDataHandler().handleData(data);
+					getDowntreamDataHandler().handleData(data);
 				} catch (ComponentNotConnectedException e) {
 					throw new DataHandlerException(e);
 				}
 			}
 		};
 
-		this.downStreamDataHandler = new DownStreamDataReceiverConnector<D>(dataFactory.create(this));
+		this.upstreamDataHandler = new UpStreamDataReceiverConnector<U>(dataFactory.create(this));
 	}
 
 	/**
@@ -82,36 +86,36 @@ public class InitialSourceComponent<U, D> extends AbstractComponent implements S
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponent == null) {
+	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
+		if (this.upStreamSourceComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamDestinationComponent.getUpStreamDataHandler();
+			return upStreamSourceComponent.getDownStreamDataHandler();
 		}
 	}
 
 	@Override
-	public void connect(DestinationComponent<U, D> handler) throws ComponentConnectedException {
-		if (this.upStreamDestinationComponent == null) {
-			this.upStreamDestinationComponent = handler;
+	public void connect(SourceComponent<U,D> handler) throws ComponentConnectedException {
+		if (this.upStreamSourceComponent == null) {
+			this.upStreamSourceComponent = handler;
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<U, D> handler) throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponent != null
-				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
-			this.upStreamDestinationComponent = null;
+	public void disconnect(SourceComponent<U,D> handler) throws ComponentNotConnectedException {
+		if (this.upStreamSourceComponent != null
+				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
+			this.upStreamSourceComponent = null;
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
-		return this.downStreamDataHandler;
+	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+		return this.upstreamDataHandler;
 	}
 
 	/**
@@ -121,17 +125,17 @@ public class InitialSourceComponent<U, D> extends AbstractComponent implements S
 	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	public DataSender<U> getDataSender() {
+	public DataSender<D> getDataSender() {
 		return this.dataEmitter;
 	}
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		this.upStreamDestinationComponent.closeUpStream();
+		this.upstreamDataHandler.handleClose();
 	}
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		this.downStreamDataHandler.handleClose();
+		this.upStreamSourceComponent.closeDownStream();
 	}
 }

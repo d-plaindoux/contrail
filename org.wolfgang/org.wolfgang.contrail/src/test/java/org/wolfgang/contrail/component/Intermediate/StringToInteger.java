@@ -16,27 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.route;
+package org.wolfgang.contrail.component.Intermediate;
 
-import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataWithInformation;
+import java.util.Arrays;
+import java.util.List;
+
+import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
- * A <code>FilteringUpStreamDestinationComponent</code> is an upstream
- * destination component capable dedicated to data with information and capable
- * to filter such data.
+ * <code>IntegerToString</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface FilteringDestinationComponent<U,D> extends DestinationComponent<DataWithInformation<U>,D> {
+public class StringToInteger implements DataTransducer<String, Integer> {
 
-	/**
-	 * Provides the filter associated to the source component
-	 * 
-	 * @return a data information filter (never <code>null</code>)
-	 */
-	DataInformationFilter getDataInformationFilter();
+	@Override
+	public List<Integer> transform(String s) throws DataTransducerException {
+		try {
+			return Arrays.asList(Integer.parseInt(s));
+		} catch (NumberFormatException e) {
+			throw new DataTransducerException(e);
+		}
+	}
 
+	@Override
+	public List<Integer> finish() throws DataTransducerException {
+		return Arrays.asList();
+	}
 }

@@ -21,11 +21,12 @@ package org.wolfgang.contrail.component.route;
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.frontier.DataReceiver;
-import org.wolfgang.contrail.component.frontier.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.InitialSourceComponent;
-import org.wolfgang.contrail.component.frontier.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.frontier.TerminalDestinationComponent;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.InitialSourceComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.TerminalDestinationComponent;
+import org.wolfgang.contrail.component.multiple.DeMultiplexerComponent;
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFactory;
 import org.wolfgang.contrail.data.DataInformationValueAlreadyDefinedException;

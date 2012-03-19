@@ -16,26 +16,36 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.frontier;
+package org.wolfgang.contrail.component.Intermediate;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.InitialSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>DataReceiver</code> is capable to receive data from the component
- * stream. This is mainly linked to an terminal upstream destination component.
+ * <code>StringSourceComponent</code> is a simple upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataReceiver<E> {
+public class StringSourceComponent extends InitialSourceComponent<String, String> {
 
 	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
+	 * Constructor
 	 */
-	void receiveData(E data) throws DataHandlerException;
+	public StringSourceComponent(final AtomicReference<String> reference) {
+		super(new InitialDataReceiverFactory<String, String>() {
+			@Override
+			public DataReceiver<String> create(InitialSourceComponent<String, String> initial) {
+				return new DataReceiver<String>() {
+					public void receiveData(String data) throws DataHandlerException {
+						reference.set(data);
+					}
+				};
+			}
+		});
+	}
 }

@@ -16,33 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.connection;
+package org.wolfgang.contrail.component.bound;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>IntegerToString</code>
+ * <code>DataSender</code> is capable to send data to the component stream.
+ * This is mainly linked to an initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements DataTransducer<String, Integer> {
+public interface DataSender<E> {
 
-	@Override
-	public List<Integer> transform(String s) throws DataTransducerException {
-		try {
-			return Arrays.asList(Integer.parseInt(s));
-		} catch (NumberFormatException e) {
-			throw new DataTransducerException(e);
-		}
-	}
-
-	@Override
-	public List<Integer> finish() throws DataTransducerException {
-		return Arrays.asList();
-	}
+	/**
+	 * Method called whether a data shall be performed
+	 * 
+	 * @param data
+	 *            The data to be performed
+	 * @throws DataHandlerException
+	 *             thrown is the data can not be handled correctly
+	 */
+	void sendData(E data) throws DataHandlerException;
 }

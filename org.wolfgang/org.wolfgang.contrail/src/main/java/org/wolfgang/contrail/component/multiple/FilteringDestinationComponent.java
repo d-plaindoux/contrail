@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2012 D. Plaindoux.
+SourceComponent<U, DataWithInformation<D>> * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,22 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.component.multiple;
+
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.data.DataInformationFilter;
+import org.wolfgang.contrail.data.DataWithInformation;
 
 /**
- * The <code>ConnectionComponent</code> is capable to connect a source handler
- * and a destination handler. In addition the data can be transformed from a
- * type S to a type D or vice-versa depending if components communicate using
- * upstream or downstream network. The first type was the event type received
- * from the upstream network - denoted by the destination facet. The second type
- * was the event type sent to the upstream network - denoted by the source
- * facet.
+ * A <code>FilteringDestinationComponent</code> is an upstream destination
+ * component capable dedicated to data with information and capable to filter
+ * such data.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ConnectionComponent<U1, D1, U2, D2> extends DestinationComponent<U1, D1>, SourceComponent<U2, D2> {
+public interface FilteringDestinationComponent<U, D> extends DestinationComponent<DataWithInformation<U>, D> {
 
-	// Nothing
+	/**
+	 * Provides the filter associated to the source component
+	 * 
+	 * @return a data information filter (never <code>null</code>)
+	 */
+	DataInformationFilter getDataInformationFilter();
 
 }

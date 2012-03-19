@@ -22,7 +22,7 @@ import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.ConnectionComponent;
+import org.wolfgang.contrail.component.IntermediateComponent;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @version 1.0
  */
 public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends AbstractComponent implements
-		ConnectionComponent<U1, D1, U2, D2> {
+		IntermediateComponent<U1, D1, U2, D2> {
 
 	/**
 	 * Static message definition for unknown transformation
