@@ -39,7 +39,8 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>DeMultiplexerComponent</code>
+ * The <code>DeMultiplexerComponent</code> is capable to manage multiple
+ * destination an a single source
  * 
  * @author Didier Plaindoux
  * @version 1.0
