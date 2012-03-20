@@ -18,14 +18,19 @@
 
 package org.wolfgang.contrail.component.multiple;
 
+import java.util.Map.Entry;
+
+import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 
 /**
- * A <code>MultiplexerDataHandler</code> is able to manage information using
- * filters owned buy each filtered upstream source component linked to the
+ * A <code>DeMultiplexerDataHandler</code> is able to manage information using
+ * filters owned buy each filtered upstream destination component linked to the
  * multiplexer component.
  * 
  * @author Didier Plaindoux
@@ -41,18 +46,22 @@ class MultiplexerDataHandler<D> implements DownStreamDataHandler<DataWithInforma
 	/**
 	 * Constructor
 	 * 
-	 * @param upStreamMultiplexer
+	 * @param upStreamDeMultiplexer
 	 */
-	public MultiplexerDataHandler(MultiplexerComponent<?, D> upStreamMultiplexer) {
+	public MultiplexerDataHandler(MultiplexerComponent<?, D> upStreamDeMultiplexer) {
 		super();
-		this.upStreamMultiplexer = upStreamMultiplexer;
+		this.upStreamMultiplexer = upStreamDeMultiplexer;
 	}
 
 	@Override
 	public void handleData(DataWithInformation<D> data) throws DataHandlerException {
-		for (FilteringSourceComponent<?, D> source : upStreamMultiplexer.getSourceComponents()) {
-			if (source.getDataInformationFilter().accept(data.getDataInformation())) {
-				source.getDownStreamDataHandler().handleData(data);
+		for (Entry<ComponentId, DataInformationFilter> entry : upStreamMultiplexer.getSourceFilters().entrySet()) {
+			if (entry.getValue().accept(data.getDataInformation())) {
+				try {
+					upStreamMultiplexer.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
+				} catch (ComponentNotConnectedException consume) {
+					// TODO
+				}
 			}
 		}
 	}

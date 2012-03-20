@@ -18,6 +18,11 @@
 
 package org.wolfgang.contrail.component.multiple;
 
+import java.util.Map.Entry;
+
+import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -50,9 +55,13 @@ class DeMultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInforma
 
 	@Override
 	public void handleData(DataWithInformation<U> data) throws DataHandlerException {
-		for (FilteringDestinationComponent<U, ?> source : upStreamDeMultiplexer.getSourceComponents()) {
-			if (source.getDataInformationFilter().accept(data.getDataInformation())) {
-				source.getUpStreamDataHandler().handleData(data);
+		for (Entry<ComponentId, DataInformationFilter> entry : upStreamDeMultiplexer.getDestinationFilters().entrySet()) {
+			if (entry.getValue().accept(data.getDataInformation())) {
+				try {
+					upStreamDeMultiplexer.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
+				} catch (ComponentNotConnectedException consume) {
+					// TODO
+				}
 			}
 		}
 	}

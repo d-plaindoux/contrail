@@ -25,7 +25,7 @@ package org.wolfgang.contrail.component.bound;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalDestinationComponent<U,S>> {
+public interface TerminalDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalComponent<U,S>> {
 
 	// Nothing
 

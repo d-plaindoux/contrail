@@ -20,7 +20,7 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.InitialSourceComponent;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -29,7 +29,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialSourceComponent<Void, Void> {
+public class DummySourceComponent extends InitialComponent<Void, Void> {
 
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ public class DummySourceComponent extends InitialSourceComponent<Void, Void> {
 	public DummySourceComponent() {
 		super(new InitialDataReceiverFactory<Void, Void>() {
 			@Override
-			public DataReceiver<Void> create(InitialSourceComponent<Void, Void> initial) {
+			public DataReceiver<Void> create(InitialComponent<Void, Void> initial) {
 				return new DataReceiver<Void>() {
 					public void receiveData(Void data) throws DataHandlerException {
 						// Ignore data

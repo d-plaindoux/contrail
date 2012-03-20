@@ -18,13 +18,11 @@
 
 package org.wolfgang.contrail.component.multiple;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
@@ -34,6 +32,7 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
+import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -45,7 +44,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
+public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 		MultipleDestinationComponent<DataWithInformation<U>, D> {
 
 	/**
@@ -60,9 +59,14 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	}
 
 	/**
-	 * The set of connected filtering source component (can be empty)
+	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, FilteringDestinationComponent<U,D>> sourceComponents;
+	private final Map<ComponentId, DataInformationFilter> destinationFilters;
+
+	/**
+	 * The set of connected filtering destination component (can be empty)
+	 */
+	private final Map<ComponentId, DestinationComponent<DataWithInformation<U>, D>> destinationComponents;
 
 	/**
 	 * The internal upstream data handler
@@ -77,10 +81,11 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
-	private SourceComponent<DataWithInformation<U>,D> upStreamSourceComponent;
+	private SourceComponent<DataWithInformation<U>, D> upStreamSourceComponent;
 
 	{
-		this.sourceComponents = new HashMap<ComponentId, FilteringDestinationComponent<U,D>>();
+		this.destinationFilters = new HashMap<ComponentId, DataInformationFilter>();
+		this.destinationComponents = new HashMap<ComponentId, DestinationComponent<DataWithInformation<U>, D>>();
 	}
 
 	/**
@@ -93,14 +98,30 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	}
 
 	/**
-	 * Provide an array of connected upstream source components
+	 * Provide the existing filters
 	 * 
-	 * @return an array of upstream source component
+	 * @return a map of filters
 	 */
-	@SuppressWarnings("unchecked")
-	FilteringDestinationComponent<U,D>[] getSourceComponents() {
-		final Collection<FilteringDestinationComponent<U,D>> values = sourceComponents.values();
-		return values.toArray(new FilteringDestinationComponent[values.size()]);
+	Map<ComponentId, DataInformationFilter> getDestinationFilters() {
+		return destinationFilters;
+	}
+
+	/**
+	 * Provide a component using it's identifier
+	 * 
+	 * @return an destination component
+	 * @throws ComponentNotConnectedException
+	 */
+	DestinationComponent<DataWithInformation<U>, D> getDestinationComponent(ComponentId componentId)
+			throws ComponentNotConnectedException {
+		final DestinationComponent<DataWithInformation<U>, D> destinationComponent = this.destinationComponents
+				.get(componentId);
+
+		if (destinationComponent == null) {
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
+		} else {
+			return destinationComponent;
+		}
 	}
 
 	@Override
@@ -109,23 +130,41 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void connect(DestinationComponent<DataWithInformation<U>,D> handler)
-			throws ComponentConnectionRejectedException {
-		if (this.sourceComponents.containsKey(handler.getComponentId())) {
+	public void connect(DestinationComponent<DataWithInformation<U>, D> handler) throws ComponentConnectionRejectedException {
+		assert handler != null;
+
+		if (this.destinationComponents.containsKey(handler.getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
-		} else if (Coercion.canCoerce(handler, FilteringDestinationComponent.class)) {
-			this.sourceComponents.put(handler.getComponentId(),
-					Coercion.coerce(handler, FilteringDestinationComponent.class));
 		} else {
-			throw new ComponentConnectionRejectedException(FILTERING_SOURCE_REQUIRED.format(handler.getClass().getSimpleName()));
+			this.destinationComponents.put(handler.getComponentId(), handler);
+		}
+	}
+
+	/**
+	 * Method used to add a filter to a given destination. All destination
+	 * without any filter are unreachable. A filter must be added if destination
+	 * component must be used when data are managed.
+	 * 
+	 * @param componentId
+	 *            The component identifier
+	 * @param filter
+	 *            The filter (can be <code>null</code>)
+	 */
+	public void filter(ComponentId componentId, DataInformationFilter filter) {
+		assert componentId != null;
+
+		if (filter == null) {
+			this.destinationFilters.remove(componentId);
+		} else {
+			this.destinationFilters.put(componentId, filter);
 		}
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<DataWithInformation<U>,D> handler) throws ComponentNotConnectedException {
-		if (this.sourceComponents.containsKey(handler.getComponentId())) {
-			this.sourceComponents.remove(handler.getComponentId());
+	public void disconnect(DestinationComponent<DataWithInformation<U>, D> handler) throws ComponentNotConnectedException {
+		if (this.destinationComponents.containsKey(handler.getComponentId())) {
+			this.destinationComponents.remove(handler.getComponentId());
+			this.destinationFilters.remove(handler.getComponentId());
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -133,7 +172,7 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (FilteringDestinationComponent<U,D> source : this.sourceComponents.values()) {
+		for (DestinationComponent<DataWithInformation<U>, D> source : this.destinationComponents.values()) {
 			source.closeUpStream();
 		}
 	}
@@ -149,7 +188,7 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void connect(SourceComponent<DataWithInformation<U>,D> handler) throws ComponentConnectedException {
+	public void connect(SourceComponent<DataWithInformation<U>, D> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -158,7 +197,7 @@ public class DeMultiplexerComponent<U,D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void disconnect(SourceComponent<DataWithInformation<U>,D> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<DataWithInformation<U>, D> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;

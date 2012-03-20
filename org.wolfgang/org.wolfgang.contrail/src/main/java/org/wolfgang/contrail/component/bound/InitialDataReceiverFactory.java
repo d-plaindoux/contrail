@@ -25,7 +25,7 @@ package org.wolfgang.contrail.component.bound;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialSourceComponent<U, D>> {
+public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialComponent<U, D>> {
 
 	// Nothing
 

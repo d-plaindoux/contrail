@@ -18,35 +18,33 @@
 
 package org.wolfgang.contrail.component.multiple;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.MultipleDestinationComponent;
+import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectUpStreamDataHandler;
+import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>UpStreamMultiplexerComponent</code>
+ * <code>DeMultiplexerComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class MultiplexerComponent<U, D> extends AbstractComponent implements
-		MultipleDestinationComponent<U, DataWithInformation<D>> {
+public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, DataWithInformation<D>> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -60,9 +58,14 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	}
 
 	/**
-	 * The set of connected filtering source component (can be empty)
+	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, FilteringSourceComponent<U, D>> sourceComponents;
+	private final Map<ComponentId, DataInformationFilter> sourceFilters;
+
+	/**
+	 * The set of connected filtering destination component (can be empty)
+	 */
+	private final Map<ComponentId, SourceComponent<U, DataWithInformation<D>>> sourceComponents;
 
 	/**
 	 * The internal upstream data handler
@@ -77,10 +80,11 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
-	private SourceComponent<U, DataWithInformation<D>> upStreamSourceComponent;
+	private DestinationComponent<U,DataWithInformation<D>> upStreamSourceComponent;
 
 	{
-		this.sourceComponents = new HashMap<ComponentId, FilteringSourceComponent<U, D>>();
+		this.sourceFilters = new HashMap<ComponentId, DataInformationFilter>();
+		this.sourceComponents = new HashMap<ComponentId, SourceComponent<U, DataWithInformation<D>>>();
 	}
 
 	/**
@@ -93,14 +97,29 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	}
 
 	/**
-	 * Provide an array of connected upstream source components
+	 * Provide the existing filters
 	 * 
-	 * @return an array of upstream source component
+	 * @return a map of filters
 	 */
-	@SuppressWarnings("unchecked")
-	FilteringSourceComponent<U, D>[] getSourceComponents() {
-		final Collection<FilteringSourceComponent<U, D>> values = sourceComponents.values();
-		return values.toArray(new FilteringSourceComponent[values.size()]);
+	Map<ComponentId, DataInformationFilter> getSourceFilters() {
+		return sourceFilters;
+	}
+
+	/**
+	 * Provide a component using it's identifier
+	 * 
+	 * @return an destination component
+	 * @throws ComponentNotConnectedException
+	 */
+	SourceComponent<U, DataWithInformation<D>> getSourceComponent(ComponentId componentId)
+			throws ComponentNotConnectedException {
+		final SourceComponent<U, DataWithInformation<D>> destinationComponent = this.sourceComponents.get(componentId);
+
+		if (destinationComponent == null) {
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
+		} else {
+			return destinationComponent;
+		}
 	}
 
 	@Override
@@ -109,21 +128,41 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void connect(DestinationComponent<U, DataWithInformation<D>> handler) throws ComponentConnectionRejectedException {
+	public void connect(SourceComponent<U, DataWithInformation<D>> handler) throws ComponentConnectionRejectedException {
+		assert handler != null;
+
 		if (this.sourceComponents.containsKey(handler.getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
-		} else if (Coercion.canCoerce(handler, FilteringSourceComponent.class)) {
-			this.sourceComponents.put(handler.getComponentId(), Coercion.coerce(handler, FilteringSourceComponent.class));
 		} else {
-			throw new ComponentConnectionRejectedException(FILTERING_SOURCE_REQUIRED.format(handler.getClass().getSimpleName()));
+			this.sourceComponents.put(handler.getComponentId(), handler);
+		}
+	}
+
+	/**
+	 * Method used to add a filter to a given destination. All destination
+	 * without any filter are unreachable. A filter must be added if destination
+	 * component must be used when data are managed.
+	 * 
+	 * @param componentId
+	 *            The component identifier
+	 * @param filter
+	 *            The filter (can be <code>null</code>)
+	 */
+	public void filter(ComponentId componentId, DataInformationFilter filter) {
+		assert componentId != null;
+
+		if (filter == null) {
+			this.sourceFilters.remove(componentId);
+		} else {
+			this.sourceFilters.put(componentId, filter);
 		}
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<U, DataWithInformation<D>> handler) throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<U, DataWithInformation<D>> handler) throws ComponentNotConnectedException {
 		if (this.sourceComponents.containsKey(handler.getComponentId())) {
 			this.sourceComponents.remove(handler.getComponentId());
+			this.sourceFilters.remove(handler.getComponentId());
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -131,7 +170,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (FilteringSourceComponent<U, D> source : this.sourceComponents.values()) {
+		for (SourceComponent<U, DataWithInformation<D>> source : this.sourceComponents.values()) {
 			source.closeUpStream();
 		}
 	}
@@ -147,7 +186,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void connect(SourceComponent<U, DataWithInformation<D>> handler) throws ComponentConnectedException {
+	public void connect(DestinationComponent<U, DataWithInformation<D>> handler) throws ComponentConnectedException {
 		if (this.upStreamSourceComponent == null) {
 			this.upStreamSourceComponent = handler;
 		} else {
@@ -156,7 +195,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void disconnect(SourceComponent<U, DataWithInformation<D>> handler) throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<U, DataWithInformation<D>> handler) throws ComponentNotConnectedException {
 		if (this.upStreamSourceComponent != null
 				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
 			this.upStreamSourceComponent = null;
