@@ -149,11 +149,14 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 	 *            The component identifier
 	 * @param filter
 	 *            The filter (can be <code>null</code>)
+	 * @throws ComponentConnectedException
 	 */
-	public void filter(ComponentId componentId, DataInformationFilter filter) {
+	public void filter(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 
-		if (filter == null) {
+		if (!this.destinationComponents.containsKey(componentId)) {
+			throw new ComponentConnectedException(NOT_YET_CONNECTED.format());
+		} else if (filter == null) {
 			this.destinationFilters.remove(componentId);
 		} else {
 			this.destinationFilters.put(componentId, filter);

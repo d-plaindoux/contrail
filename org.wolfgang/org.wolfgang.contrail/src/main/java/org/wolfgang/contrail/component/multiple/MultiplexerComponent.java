@@ -39,7 +39,8 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>DeMultiplexerComponent</code>
+ * The <code>MultiplexerComponent</code> is capable to manage multiple source an
+ * a single destination
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -80,7 +81,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
-	private DestinationComponent<U,DataWithInformation<D>> upStreamSourceComponent;
+	private DestinationComponent<U, DataWithInformation<D>> upStreamSourceComponent;
 
 	{
 		this.sourceFilters = new HashMap<ComponentId, DataInformationFilter>();
@@ -147,11 +148,14 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	 *            The component identifier
 	 * @param filter
 	 *            The filter (can be <code>null</code>)
+	 * @throws ComponentConnectedException
 	 */
-	public void filter(ComponentId componentId, DataInformationFilter filter) {
+	public void filter(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 
-		if (filter == null) {
+		if (!this.sourceComponents.containsKey(componentId)) {
+			throw new ComponentConnectedException(NOT_YET_CONNECTED.format());
+		} else if (filter == null) {
 			this.sourceFilters.remove(componentId);
 		} else {
 			this.sourceFilters.put(componentId, filter);
