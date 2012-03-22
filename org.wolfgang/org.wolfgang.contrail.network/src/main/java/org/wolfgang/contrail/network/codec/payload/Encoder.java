@@ -16,8 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.codec.serializer;
+package org.wolfgang.contrail.network.codec.payload;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -25,15 +26,15 @@ import java.util.List;
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
-import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Encoder</code> is capable to transform objects to byte array.
+ * <code>Encoder</code> is capable to transform a byte array to another one with
+ * a prefix as a payload.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Object, Bytes> {
+class Encoder implements DataTransducer<Bytes, byte[]> {
 
 	/**
 	 * Constructor
@@ -43,16 +44,24 @@ class Encoder implements DataTransducer<Object, Bytes> {
 	}
 
 	@Override
-	public List<Bytes> transform(Object source) throws DataTransducerException {
+	public List<byte[]> transform(Bytes source) throws DataTransducerException {
 		try {
-			return Arrays.asList(new Bytes(Marshall.objectToBytes(source)));
+			final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			try {
+				final byte[] bytes = source.getContent();
+				stream.write(Marshall.intToBytes(bytes.length));
+				stream.write(bytes);
+			} finally {
+				stream.close();
+			}
+			return Arrays.asList(stream.toByteArray());
 		} catch (IOException e) {
 			throw new DataTransducerException(e);
 		}
 	}
 
 	@Override
-	public List<Bytes> finish() throws DataTransducerException {
+	public List<byte[]> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

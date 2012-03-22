@@ -18,41 +18,42 @@
 
 package org.wolfgang.contrail.network.codec.serializer;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Encoder</code> is capable to transform objects to byte array.
+ * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
+ * bytes to java object and vice-versa based on pay load. This class provides
+ * dedicate encoder and decoder for such serialization based codec
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Object, Bytes> {
+public final class SerializationTransducerFactory {
 
 	/**
 	 * Constructor
 	 */
-	Encoder() {
-		super();
+	private SerializationTransducerFactory() {
+		// Prevent useless object creation
 	}
 
-	@Override
-	public List<Bytes> transform(Object source) throws DataTransducerException {
-		try {
-			return Arrays.asList(new Bytes(Marshall.objectToBytes(source)));
-		} catch (IOException e) {
-			throw new DataTransducerException(e);
-		}
+	/**
+	 * Method providing payload based serialization decoder
+	 * 
+	 * @return a byte array to object data transformation
+	 */
+	public static DataTransducer<Bytes, Object> getDecoder() {
+		return new Decoder();
 	}
 
-	@Override
-	public List<Bytes> finish() throws DataTransducerException {
-		return Arrays.asList();
+	/**
+	 * Method providing payload based serialization encoder
+	 * 
+	 * @return a object to byte array data transformation
+	 */
+
+	public static DataTransducer<Object, Bytes> getEncoder() {
+		return new Encoder();
 	}
 }

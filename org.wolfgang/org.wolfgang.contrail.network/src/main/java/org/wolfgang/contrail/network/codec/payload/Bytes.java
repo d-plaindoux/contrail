@@ -16,43 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.codec.serializer;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.wolfgang.common.utils.Marshall;
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
-import org.wolfgang.contrail.network.codec.payload.Bytes;
+package org.wolfgang.contrail.network.codec.payload;
 
 /**
- * <code>Encoder</code> is capable to transform objects to byte array.
+ * <code>Bytes</code> contains a consistent byte array in term of coding and
+ * decoding
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Object, Bytes> {
+public final class Bytes {
+
+	/**
+	 * The content
+	 */
+	private final byte[] content;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param content
 	 */
-	Encoder() {
+	public Bytes(byte[] content) {
 		super();
+		this.content = content;
 	}
 
-	@Override
-	public List<Bytes> transform(Object source) throws DataTransducerException {
-		try {
-			return Arrays.asList(new Bytes(Marshall.objectToBytes(source)));
-		} catch (IOException e) {
-			throw new DataTransducerException(e);
-		}
-	}
-
-	@Override
-	public List<Bytes> finish() throws DataTransducerException {
-		return Arrays.asList();
+	/**
+	 * Provides the byte array
+	 * 
+	 * @return a byte array
+	 */
+	public byte[] getContent() {
+		return content;
 	}
 }

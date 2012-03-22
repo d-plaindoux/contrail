@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.network.codec.serializer;
 
-import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
  * <code>TestSerializer</code>
@@ -37,42 +37,19 @@ public class TestSerializer extends TestCase {
 	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
-		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
-		final List<byte[]> bytes = encoder.transform(source);
+		final DataTransducer<Object, Bytes> encoder = SerializationTransducerFactory.getEncoder();
+		final List<Bytes> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
 
-		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
+		final DataTransducer<Bytes, Object> decoder = SerializationTransducerFactory.getDecoder();
 		final List<Object> result = decoder.transform(bytes.get(0));
 		assertEquals(1, result.size());
 
 		assertEquals(source, result.get(0));
 	}
 
-	public void testNominalSplit() throws DataTransducerException {
-		final String source = "Hello, World!";
-
-		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
-		final List<byte[]> bytes = encoder.transform(source);
-		encoder.finish();
-
-		assertEquals(1, bytes.size());
-		final byte[] intermediate = bytes.get(0);
-
-		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
-		final List<Object> fstResult = decoder.transform(Arrays.copyOfRange(intermediate, 0, intermediate.length / 2));
-		assertEquals(0, fstResult.size());
-
-		final List<Object> sndResult = decoder.transform(Arrays.copyOfRange(intermediate, intermediate.length / 2,
-				intermediate.length));
-		assertEquals(1, sndResult.size());
-
-		assertEquals(source, sndResult.get(0));
-
-		decoder.finish();
-	}
-
-	public void testFailure01() {		
-		final DataTransducer<Object, byte[]> encoder = PayLoadBasedSerializer.getEncoder();
+	public void testFailure01() {
+		final DataTransducer<Object, Bytes> encoder = SerializationTransducerFactory.getEncoder();
 		try {
 			encoder.transform(this);
 			fail();
@@ -84,9 +61,9 @@ public class TestSerializer extends TestCase {
 	public void testFailure02() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 
-		final DataTransducer<byte[], Object> decoder = PayLoadBasedSerializer.getDecoder();
+		final DataTransducer<Bytes, Object> decoder = SerializationTransducerFactory.getDecoder();
 		try {
-			decoder.transform(bytes);
+			decoder.transform(new Bytes(bytes));
 			fail();
 		} catch (DataTransducerException e) {
 			// OK
