@@ -33,8 +33,8 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Decoder</code> is able to transform a byte stream to a payload based
- * array.
+ * <code>Decoder</code> is able to transform a byte stream to an object using
+ * JAXB mechanisms
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -53,7 +53,7 @@ class Decoder implements DataTransducer<Bytes, Object> {
 	 */
 	public Decoder(Class<?>[] types) {
 		super();
-		this.types = types;
+		this.types = types.clone();
 	}
 
 	@Override

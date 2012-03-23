@@ -46,7 +46,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @version 1.0
  */
 public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
-		MultipleDestinationComponent<DataWithInformation<U>, D> {
+		MultipleDestinationComponent<DataWithInformation<U>, D>, FilteredDestinationComponentSet<U> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -98,22 +98,13 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 		this.downStreamDataHandler = new DirectDownStreamDataHandler<D>(this);
 	}
 
-	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
-	 */
-	Map<ComponentId, DataInformationFilter> getDestinationFilters() {
+	@Override
+	public Map<ComponentId, DataInformationFilter> getDestinationFilters() {
 		return destinationFilters;
 	}
 
-	/**
-	 * Provide a component using it's identifier
-	 * 
-	 * @return an destination component
-	 * @throws ComponentNotConnectedException
-	 */
-	DestinationComponent<DataWithInformation<U>, D> getDestinationComponent(ComponentId componentId)
+	@Override
+	public DestinationComponent<DataWithInformation<U>, D> getDestinationComponent(ComponentId componentId)
 			throws ComponentNotConnectedException {
 		final DestinationComponent<DataWithInformation<U>, D> destinationComponent = this.destinationComponents
 				.get(componentId);
@@ -141,18 +132,8 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 		}
 	}
 
-	/**
-	 * Method used to add a filter to a given destination. All destination
-	 * without any filter are unreachable. A filter must be added if destination
-	 * component must be used when data are managed.
-	 * 
-	 * @param componentId
-	 *            The component identifier
-	 * @param filter
-	 *            The filter (can be <code>null</code>)
-	 * @throws ComponentConnectedException
-	 */
-	public void filter(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
+	@Override
+	public void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 
 		if (!this.destinationComponents.containsKey(componentId)) {

@@ -41,28 +41,35 @@ class DeMultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInforma
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final DeMultiplexerComponent<U, ?> upStreamDeMultiplexer;
+	private final FilteredDestinationComponentSet<U> filteredDestinationComponentSet;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public DeMultiplexerDataHandler(DeMultiplexerComponent<U, ?> upStreamDeMultiplexer) {
+	public DeMultiplexerDataHandler(FilteredDestinationComponentSet<U> filteredDestinationComponentSet) {
 		super();
-		this.upStreamDeMultiplexer = upStreamDeMultiplexer;
+		this.filteredDestinationComponentSet = filteredDestinationComponentSet;
 	}
 
 	@Override
 	public void handleData(DataWithInformation<U> data) throws DataHandlerException {
-		for (Entry<ComponentId, DataInformationFilter> entry : upStreamDeMultiplexer.getDestinationFilters().entrySet()) {
+		boolean notHandled = true;
+		
+		for (Entry<ComponentId, DataInformationFilter> entry : filteredDestinationComponentSet.getDestinationFilters().entrySet()) {
 			if (entry.getValue().accept(data.getDataInformation())) {
 				try {
-					upStreamDeMultiplexer.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
+					filteredDestinationComponentSet.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
+					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// TODO
 				}
 			}
+		}
+		
+		if (notHandled) {
+			throw new DataHandlerException();
 		}
 	}
 
@@ -77,5 +84,4 @@ class DeMultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInforma
 		// TODO Auto-generated method stub
 
 	}
-
 }

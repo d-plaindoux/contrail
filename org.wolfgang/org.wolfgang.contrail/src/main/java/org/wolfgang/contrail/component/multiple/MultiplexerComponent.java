@@ -45,7 +45,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, DataWithInformation<D>> {
+public class MultiplexerComponent<U, D> extends AbstractComponent implements
+		MultipleSourceComponent<U, DataWithInformation<D>>, FilteredSourceComponentSet<D> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -97,22 +98,13 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 		this.downStreamDataHandler = new MultiplexerDataHandler<D>(this);
 	}
 
-	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
-	 */
-	Map<ComponentId, DataInformationFilter> getSourceFilters() {
+	@Override
+	public Map<ComponentId, DataInformationFilter> getSourceFilters() {
 		return sourceFilters;
 	}
 
-	/**
-	 * Provide a component using it's identifier
-	 * 
-	 * @return an destination component
-	 * @throws ComponentNotConnectedException
-	 */
-	SourceComponent<U, DataWithInformation<D>> getSourceComponent(ComponentId componentId)
+	@Override
+	public SourceComponent<U, DataWithInformation<D>> getSourceComponent(ComponentId componentId)
 			throws ComponentNotConnectedException {
 		final SourceComponent<U, DataWithInformation<D>> destinationComponent = this.sourceComponents.get(componentId);
 
@@ -139,18 +131,8 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 		}
 	}
 
-	/**
-	 * Method used to add a filter to a given destination. All destination
-	 * without any filter are unreachable. A filter must be added if destination
-	 * component must be used when data are managed.
-	 * 
-	 * @param componentId
-	 *            The component identifier
-	 * @param filter
-	 *            The filter (can be <code>null</code>)
-	 * @throws ComponentConnectedException
-	 */
-	public void filter(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
+	@Override
+	public void filterSource(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 
 		if (!this.sourceComponents.containsKey(componentId)) {

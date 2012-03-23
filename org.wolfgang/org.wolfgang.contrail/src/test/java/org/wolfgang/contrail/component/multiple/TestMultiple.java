@@ -25,8 +25,8 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.data.DataInformation;
@@ -98,14 +98,14 @@ public class TestMultiple extends TestCase {
 			manager.connect(deMultiplexer, listener1);
 			manager.connect(deMultiplexer, listener2);
 
-			deMultiplexer.filter(listener1.getComponentId(), new DataInformationFilter() {
+			deMultiplexer.filterDestination(listener1.getComponentId(), new DataInformationFilter() {
 				@Override
 				public boolean accept(DataInformation information) {
 					return information.hasValue("queue1", Object.class);
 				}
 			});
 
-			deMultiplexer.filter(listener2.getComponentId(), new DataInformationFilter() {
+			deMultiplexer.filterDestination(listener2.getComponentId(), new DataInformationFilter() {
 				@Override
 				public boolean accept(DataInformation information) {
 					return information.hasValue("queue2" + "", Object.class);
@@ -316,14 +316,14 @@ public class TestMultiple extends TestCase {
 			manager.connect(listener1, multiplexer);
 			manager.connect(listener2, multiplexer);
 
-			multiplexer.filter(listener1.getComponentId(), new DataInformationFilter() {
+			multiplexer.filterSource(listener1.getComponentId(), new DataInformationFilter() {
 				@Override
 				public boolean accept(DataInformation information) {
 					return information.hasValue("queue1", Object.class);
 				}
 			});
 
-			multiplexer.filter(listener2.getComponentId(), new DataInformationFilter() {
+			multiplexer.filterSource(listener2.getComponentId(), new DataInformationFilter() {
 				@Override
 				public boolean accept(DataInformation information) {
 					return information.hasValue("queue2" + "", Object.class);
@@ -398,7 +398,6 @@ public class TestMultiple extends TestCase {
 			// OK
 		}
 	}
-
 
 	public void testMultiplexer03b() {
 		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(

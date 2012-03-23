@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Encoder</code> is capable to transform an object to a bytes using JAXB
+ * <code>Encoder</code> is capable to transform an object to a byte array using JAXB
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -49,7 +49,7 @@ class Encoder implements DataTransducer<Object, Bytes> {
 	 */
 	Encoder(Class<?>[] types) {
 		super();
-		this.types = types;
+		this.types = types.clone();
 	}
 
 	@Override

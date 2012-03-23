@@ -41,28 +41,35 @@ class MultiplexerDataHandler<D> implements DownStreamDataHandler<DataWithInforma
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final MultiplexerComponent<?, D> upStreamMultiplexer;
+	private final FilteredSourceComponentSet<D> filteredSourceComponentSet;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public MultiplexerDataHandler(MultiplexerComponent<?, D> upStreamDeMultiplexer) {
+	public MultiplexerDataHandler(FilteredSourceComponentSet<D> filteredSourceComponentSet) {
 		super();
-		this.upStreamMultiplexer = upStreamDeMultiplexer;
+		this.filteredSourceComponentSet = filteredSourceComponentSet;
 	}
 
 	@Override
 	public void handleData(DataWithInformation<D> data) throws DataHandlerException {
-		for (Entry<ComponentId, DataInformationFilter> entry : upStreamMultiplexer.getSourceFilters().entrySet()) {
+		boolean notHandled = true;
+
+		for (Entry<ComponentId, DataInformationFilter> entry : filteredSourceComponentSet.getSourceFilters().entrySet()) {
 			if (entry.getValue().accept(data.getDataInformation())) {
 				try {
-					upStreamMultiplexer.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
+					filteredSourceComponentSet.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
+					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// TODO
 				}
 			}
+		}
+
+		if (notHandled) {
+			throw new DataHandlerException();
 		}
 	}
 
