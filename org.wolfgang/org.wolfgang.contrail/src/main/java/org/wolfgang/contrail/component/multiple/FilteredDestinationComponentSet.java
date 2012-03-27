@@ -36,19 +36,6 @@ import org.wolfgang.contrail.data.DataWithInformation;
 public interface FilteredDestinationComponentSet<U> {
 
 	/**
-	 * Method used to add a filter to a given destination. All destination
-	 * without any filter are unreachable. A filter must be added if destination
-	 * component must be used when data are managed.
-	 * 
-	 * @param componentId
-	 *            The component identifier
-	 * @param filter
-	 *            The filter (can be <code>null</code>)
-	 * @throws ComponentConnectedException
-	 */
-	// TODO [REMOVE] -- void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException;
-
-	/**
 	 * Provide the existing filters
 	 * 
 	 * @return a map of filters
@@ -62,4 +49,5 @@ public interface FilteredDestinationComponentSet<U> {
 	 * @throws ComponentNotConnectedException
 	 */
 	DestinationComponent<DataWithInformation<U>, ?> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException;
+	
 }

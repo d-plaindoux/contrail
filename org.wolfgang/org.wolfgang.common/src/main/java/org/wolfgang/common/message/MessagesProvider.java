@@ -55,7 +55,7 @@ public final class MessagesProvider extends SecurityManager {
 	 *            Parameters used to format the message
 	 * @return a message formatter
 	 */
-	public static Message get(String category, String key) {
+	public static synchronized Message get(String category, String key) {
 		if (sharedInstance == null) {
 			sharedInstance = new MessagesProvider();
 		}

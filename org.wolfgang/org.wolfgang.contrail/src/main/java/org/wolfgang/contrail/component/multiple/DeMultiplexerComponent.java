@@ -133,7 +133,17 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 		}
 	}
 
-	// REMOVED @Override
+	/**
+	 * Method used to add a filter to a given destination. All destination
+	 * without any filter are unreachable. A filter must be added if destination
+	 * component must be used when data are managed.
+	 * 
+	 * @param componentId
+	 *            The component identifier
+	 * @param filter
+	 *            The filter (can be <code>null</code>)
+	 * @throws ComponentConnectedException
+	 */
 	public void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 

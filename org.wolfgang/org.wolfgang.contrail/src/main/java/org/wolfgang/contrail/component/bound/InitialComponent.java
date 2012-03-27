@@ -73,6 +73,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 		};
 
 		this.downStreamDataHandler = new DownStreamDataReceiverConnector<D>(dataFactory.create(this));
+		this.upStreamDestinationComponent = null;
 	}
 
 	/**

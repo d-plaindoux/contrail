@@ -77,6 +77,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 		};
 
 		this.upstreamDataHandler = new UpStreamDataReceiverConnector<U>(dataFactory.create(this));
+		this.upStreamSourceComponent = null;
 	}
 
 	/**

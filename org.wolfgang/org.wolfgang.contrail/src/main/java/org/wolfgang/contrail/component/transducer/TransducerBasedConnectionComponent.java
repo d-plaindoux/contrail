@@ -44,12 +44,12 @@ public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends Ab
 	/**
 	 * Static message definition for unknown transformation
 	 */
-	protected static final Message XDUCER_UNKNOWN;
+	static final Message XDUCER_UNKNOWN;
 
 	/**
 	 * Static message definition for transformation error
 	 */
-	protected static final Message XDUCER_ERROR;
+	static final Message XDUCER_ERROR;
 
 	static {
 		final String category = "org.wolfgang.contrail.message";
@@ -90,6 +90,8 @@ public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends Ab
 		super();
 		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler<U1, U2>(this, upstreamXducer);
 		this.downStreamDataHandler = new TransducerBasedDownStreamDataHandler<D2, D1>(this, downstreamXducer);
+		this.upStreamSourceComponent = null;
+		this.upStreamDestinationComponent = null;
 	}
 
 	/**

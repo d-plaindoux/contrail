@@ -42,7 +42,7 @@ class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U>
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
 	 */
-	private volatile boolean closed = false;
+	private boolean closed = false;
 
 	/**
 	 * The transformation process

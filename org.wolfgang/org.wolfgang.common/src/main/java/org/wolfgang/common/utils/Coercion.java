@@ -25,7 +25,7 @@ package org.wolfgang.common.utils;
  * @author Didier Plaindoux
  */
 public final class Coercion {
-	
+
 	/**
 	 * Constructor
 	 */
@@ -36,22 +36,26 @@ public final class Coercion {
 	/**
 	 * Method called whether a given object coercion must be checked
 	 * 
-	 * @param object The object
-	 * @param type The required type
+	 * @param object
+	 *            The object
+	 * @param type
+	 *            The required type
 	 * @return true if the object can be coerced to the given type
 	 */
 	public static boolean canCoerce(Object object, Class<?> type) {
-		assert object != null && type != null;
-		return object != null && type.isAssignableFrom(object.getClass());
+		return object != null && type != null && type.isAssignableFrom(object.getClass());
 	}
 
 	/**
 	 * Method called whether a given object coercion must be done
 	 * 
-	 * @param object The object
-	 * @param type The required type
+	 * @param object
+	 *            The object
+	 * @param type
+	 *            The required type
 	 * @return the object with the required type
-	 * @throws ClassCastException thrown if the object can not be coerced
+	 * @throws ClassCastException
+	 *             thrown if the object can not be coerced
 	 */
 	public static <T> T coerce(Object object, Class<T> type) {
 		assert object != null && type != null;

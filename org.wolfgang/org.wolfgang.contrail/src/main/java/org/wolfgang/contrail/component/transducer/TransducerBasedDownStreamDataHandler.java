@@ -43,7 +43,7 @@ class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandle
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
 	 */
-	private volatile boolean closed = false;
+	private boolean closed = false;
 
 	/**
 	 * The transformation process
