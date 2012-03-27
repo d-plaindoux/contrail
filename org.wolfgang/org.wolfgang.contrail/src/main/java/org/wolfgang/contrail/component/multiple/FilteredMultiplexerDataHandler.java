@@ -41,14 +41,14 @@ public class FilteredMultiplexerDataHandler<D> implements DownStreamDataHandler<
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final FilteredSourceComponentSet<D> filteredSourceComponentSet;
+	private final FilteredSourceComponents<D> filteredSourceComponentSet;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public FilteredMultiplexerDataHandler(FilteredSourceComponentSet<D> filteredSourceComponentSet) {
+	public FilteredMultiplexerDataHandler(FilteredSourceComponents<D> filteredSourceComponentSet) {
 		super();
 		this.filteredSourceComponentSet = filteredSourceComponentSet;
 	}

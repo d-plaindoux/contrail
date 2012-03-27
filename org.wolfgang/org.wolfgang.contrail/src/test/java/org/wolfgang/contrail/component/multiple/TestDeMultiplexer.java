@@ -91,7 +91,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -150,7 +150,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -185,7 +185,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -220,7 +220,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -254,7 +254,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -290,7 +290,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
 			public UpStreamDataHandler<DataWithInformation<String>> create(
-					FilteredDestinationComponentSet<String> filteredDestination) {
+					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};

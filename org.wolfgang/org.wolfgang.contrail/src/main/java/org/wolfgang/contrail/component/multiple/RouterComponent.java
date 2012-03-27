@@ -42,8 +42,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @version 1.0
  */
 public class RouterComponent<U, D> extends AbstractComponent implements
-		MultipleDestinationComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredDestinationComponentSet<U>,
-		MultipleSourceComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredSourceComponentSet<D> {
+		MultipleDestinationComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredDestinationComponents<U>,
+		MultipleSourceComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredSourceComponents<D> {
 
 	/**
 	 * The de-multiplexer component

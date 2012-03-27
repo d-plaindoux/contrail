@@ -46,7 +46,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @version 1.0
  */
 public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
-		MultipleDestinationComponent<DataWithInformation<U>, D>, FilteredDestinationComponentSet<U> {
+		MultipleDestinationComponent<DataWithInformation<U>, D>, FilteredDestinationComponents<U> {
 
 	/**
 	 * Static message definition for not yet connected component

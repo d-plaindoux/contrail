@@ -41,14 +41,14 @@ public class FilteredDeMultiplexerDataHandler<U> implements UpStreamDataHandler<
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final FilteredDestinationComponentSet<U> filteredDestinationComponentSet;
+	private final FilteredDestinationComponents<U> filteredDestinationComponentSet;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public FilteredDeMultiplexerDataHandler(FilteredDestinationComponentSet<U> filteredDestinationComponentSet) {
+	public FilteredDeMultiplexerDataHandler(FilteredDestinationComponents<U> filteredDestinationComponentSet) {
 		super();
 		this.filteredDestinationComponentSet = filteredDestinationComponentSet;
 	}

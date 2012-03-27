@@ -38,6 +38,6 @@ public interface MultiplexerDataHandlerFactory<D> {
 	 *            The filtered source component
 	 * @return a down stream data hander
 	 */
-	DownStreamDataHandler<DataWithInformation<D>> create(FilteredSourceComponentSet<D> filteredSource);
+	DownStreamDataHandler<DataWithInformation<D>> create(FilteredSourceComponents<D> filteredSource);
 
 }

@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
-import org.wolfgang.contrail.network.codec.payload.PayLoadTransducerFactory;
 
 /**
  * <code>TestSerializer</code>

@@ -91,7 +91,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -151,7 +151,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -186,7 +186,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -221,7 +221,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -255,7 +255,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
@@ -291,7 +291,7 @@ public class TestMultiplexer extends TestCase {
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
 			public DownStreamDataHandler<DataWithInformation<String>> create(
-					FilteredSourceComponentSet<String> filteredDestination) {
+					FilteredSourceComponents<String> filteredDestination) {
 				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};

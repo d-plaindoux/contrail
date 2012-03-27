@@ -46,7 +46,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @version 1.0
  */
 public class MultiplexerComponent<U, D> extends AbstractComponent implements
-		MultipleSourceComponent<U, DataWithInformation<D>>, FilteredSourceComponentSet<D> {
+		MultipleSourceComponent<U, DataWithInformation<D>>, FilteredSourceComponents<D> {
 
 	/**
 	 * Static message definition for not yet connected component

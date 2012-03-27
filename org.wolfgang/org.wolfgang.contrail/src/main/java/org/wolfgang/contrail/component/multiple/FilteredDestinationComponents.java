@@ -18,26 +18,36 @@
 
 package org.wolfgang.contrail.component.multiple;
 
+import java.util.Map;
+
+import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>DeMultiplexeDataHandlerFactory</code> is able to create a dedicated up
- * stream data handler using the parametric filtered source component.
+ * <code>FilteredDestinationComponentSet</code> provides basic mechanism for filtered
+ * multiple targets.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DeMultiplexerDataHandlerFactory<D> {
+public interface FilteredDestinationComponents<U> {
 
 	/**
-	 * Methods called whether a dedicated multiplexer up-stream data handler
-	 * must be created
+	 * Provide the existing filters
 	 * 
-	 * @param filteredSource
-	 *            The filtered source component
-	 * @return an upstream data handler
+	 * @return a map of filters
 	 */
-	UpStreamDataHandler<DataWithInformation<D>> create(FilteredDestinationComponents<D> filteredDestination);
+	Map<ComponentId, DataInformationFilter> getDestinationFilters();
 
+	/**
+	 * Provide a component using it's identifier
+	 * 
+	 * @return an destination component
+	 * @throws ComponentNotConnectedException
+	 */
+	DestinationComponent<DataWithInformation<U>, ?> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException;
+	
 }
