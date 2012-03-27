@@ -39,23 +39,22 @@ import org.wolfgang.contrail.link.ComponentsLink;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
- * <code>TestMultiplexer</code>
+ * <code>TestDeMultiplexer</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestMultiple extends TestCase {
+public class TestDeMultiplexer extends TestCase {
 
 	public void testDeMultiplexer01() {
 		final InitialComponent<DataWithInformation<String>, Void> source = new InitialComponent<DataWithInformation<String>, Void>(
 				new InitialDataReceiverFactory<DataWithInformation<String>, Void>() {
 					@Override
 					public DataReceiver<Void> create(InitialComponent<DataWithInformation<String>, Void> component) {
-						// TODO Auto-generated method stub
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
-								// TODO
+								// Nothing
 							}
 						};
 					}
@@ -131,11 +130,10 @@ public class TestMultiple extends TestCase {
 				new InitialDataReceiverFactory<DataWithInformation<String>, Void>() {
 					@Override
 					public DataReceiver<Void> create(InitialComponent<DataWithInformation<String>, Void> component) {
-						// TODO Auto-generated method stub
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
-								// TODO
+								// Nothing
 							}
 						};
 					}
@@ -254,225 +252,6 @@ public class TestMultiple extends TestCase {
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
 			final ComponentsLink<DataWithInformation<String>, Void> connect = manager.connect(deMultiplexer, listener1);
-			connect.dispose();
-			connect.dispose();
-			fail();
-		} catch (ComponentConnectionRejectedException e) {
-			fail();
-		} catch (ComponentDisconnectionRejectedException e) {
-			// OK
-		}
-	}
-
-	public void testMultiplexer01() {
-		final TerminalComponent<Void, DataWithInformation<String>> destination = new TerminalComponent<Void, DataWithInformation<String>>(
-				new TerminalDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<Void> create(TerminalComponent<Void, DataWithInformation<String>> component) {
-						// TODO Auto-generated method stub
-						return new DataReceiver<Void>() {
-							@Override
-							public void receiveData(Void data) throws DataHandlerException {
-								// TODO
-							}
-						};
-					}
-				});
-
-		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
-							}
-						};
-					}
-				});
-
-		final SourceComponent<Void, DataWithInformation<String>> listener2 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								fail();
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
-		try {
-			manager.connect(multiplexer, destination);
-
-			manager.connect(listener1, multiplexer);
-			manager.connect(listener2, multiplexer);
-
-			multiplexer.filterSource(listener1.getComponentId(), new DataInformationFilter() {
-				@Override
-				public boolean accept(DataInformation information) {
-					return information.hasValue("queue1", Object.class);
-				}
-			});
-
-			multiplexer.filterSource(listener2.getComponentId(), new DataInformationFilter() {
-				@Override
-				public boolean accept(DataInformation information) {
-					return information.hasValue("queue2" + "", Object.class);
-				}
-			});
-
-			final DataInformation information = DataInformationFactory.createDataInformation();
-			information.setValue("queue1", new Object());
-
-			destination.getDataSender()
-					.sendData(DataInformationFactory.createDataWithInformation(information, "Hello, World!"));
-
-		} catch (ComponentConnectionRejectedException e) {
-			fail();
-		} catch (DataHandlerException e) {
-			fail();
-		} catch (DataInformationValueAlreadyDefinedException e) {
-			fail();
-		}
-	}
-
-	public void testMultiplexer02() {
-		final TerminalComponent<Void, DataWithInformation<String>> destination = new TerminalComponent<Void, DataWithInformation<String>>(
-				new TerminalDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<Void> create(TerminalComponent<Void, DataWithInformation<String>> component) {
-						// TODO Auto-generated method stub
-						return new DataReceiver<Void>() {
-							@Override
-							public void receiveData(Void data) throws DataHandlerException {
-								// TODO
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
-		try {
-			manager.connect(multiplexer, destination);
-			manager.connect(multiplexer, destination);
-			fail();
-		} catch (ComponentConnectionRejectedException e) {
-			// OK
-		}
-	}
-
-	public void testMultiplexer03() {
-		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
-		try {
-			manager.connect(listener1, multiplexer);
-			manager.connect(listener1, multiplexer);
-			fail();
-		} catch (ComponentConnectionRejectedException e) {
-			// OK
-		}
-	}
-
-	public void testMultiplexer03b() {
-		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		try {
-			multiplexer.connect(listener1);
-			multiplexer.connect(listener1);
-			fail();
-		} catch (ComponentConnectionRejectedException e) {
-			// OK
-		}
-	}
-
-	public void testMultiplexer04() {
-		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
-		try {
-			ComponentsLink<Void, DataWithInformation<String>> connect = manager.connect(listener1, multiplexer);
-			connect.dispose();
-		} catch (ComponentConnectionRejectedException e) {
-			fail();
-		} catch (ComponentDisconnectionRejectedException e) {
-			fail();
-		}
-	}
-
-	public void testMultiplexer05() {
-		final SourceComponent<Void, DataWithInformation<String>> listener1 = new InitialComponent<Void, DataWithInformation<String>>(
-				new InitialDataReceiverFactory<Void, DataWithInformation<String>>() {
-					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							InitialComponent<Void, DataWithInformation<String>> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
-							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
-							}
-						};
-					}
-				});
-
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
-
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
-		try {
-			ComponentsLink<Void, DataWithInformation<String>> connect = manager.connect(listener1, multiplexer);
 			connect.dispose();
 			connect.dispose();
 			fail();
