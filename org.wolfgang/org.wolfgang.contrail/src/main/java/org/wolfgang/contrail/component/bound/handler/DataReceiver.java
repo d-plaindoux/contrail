@@ -16,35 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.relay;
+package org.wolfgang.contrail.component.bound.handler;
 
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>ByteArrayDestinationComponent</code>
+ * <code>DataReceiver</code> is capable to receive data from the component
+ * stream. This is mainly linked to an terminal upstream destination component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArrayDestinationComponent extends TerminalComponent<byte[],byte[]> {
+public interface DataReceiver<E> {
 
 	/**
-	 * Constructor
+	 * Method called whether a data shall be performed
+	 * 
+	 * @param data
+	 *            The data to be performed
+	 * @throws DataHandlerException
+	 *             thrown is the data can not be handled correctly
 	 */
-	public ByteArrayDestinationComponent() {
-		super(new TerminalDataReceiverFactory<byte[],byte[]>() {
-			@Override
-			public DataReceiver<byte[]> create(final TerminalComponent<byte[],byte[]> terminal) {
-				return new DataReceiver<byte[]>() {
-					@Override
-					public void receiveData(byte[] data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data);
-					}
-				};
-			}
-		});
-	}
+	void receiveData(E data) throws DataHandlerException;
 }

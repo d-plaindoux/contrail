@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

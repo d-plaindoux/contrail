@@ -21,9 +21,9 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

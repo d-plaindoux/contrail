@@ -23,6 +23,7 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.handler.DataSender;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -76,7 +77,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 			}
 		};
 
-		this.upstreamDataHandler = new UpStreamDataReceiverConnector<U>(dataFactory.create(this));
+		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this));
 		this.upStreamSourceComponent = null;
 	}
 

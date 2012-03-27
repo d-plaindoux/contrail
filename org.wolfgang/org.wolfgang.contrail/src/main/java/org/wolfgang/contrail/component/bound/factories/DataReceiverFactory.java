@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.bound.factories;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 
 /**
  * <code>DataReceiverFactory</code> is capable to build data receiver.
