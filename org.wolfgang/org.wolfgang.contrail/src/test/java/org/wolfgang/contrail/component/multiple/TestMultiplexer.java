@@ -22,19 +22,21 @@ import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.multiple.factories.MultiplexerDataHandlerFactory;
+import org.wolfgang.contrail.component.multiple.handler.FilteredMultiplexerDataHandler;
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataInformationValueAlreadyDefinedException;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentsLink;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 
@@ -88,7 +90,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -140,7 +150,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -167,7 +185,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -194,7 +220,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		try {
 			multiplexer.connect(listener1);
@@ -220,7 +254,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -248,7 +290,15 @@ public class TestMultiplexer extends TestCase {
 					}
 				});
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>();
+		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
+			@Override
+			public DownStreamDataHandler<DataWithInformation<String>> create(
+					FilteredSourceComponentSet<String> filteredDestination) {
+				return new FilteredMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {

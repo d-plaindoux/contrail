@@ -32,6 +32,7 @@ import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectUpStreamDataHandler;
+import org.wolfgang.contrail.component.multiple.factories.MultiplexerDataHandlerFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -92,10 +93,10 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	public MultiplexerComponent() {
+	public MultiplexerComponent(MultiplexerDataHandlerFactory<D> multiplexerDataHandlerFactory) {
 		super();
 		this.upStreamDataHandler = new DirectUpStreamDataHandler<U>(this);
-		this.downStreamDataHandler = new MultiplexerDataHandler<D>(this);
+		this.downStreamDataHandler = multiplexerDataHandlerFactory.create(this);
 	}
 
 	@Override
@@ -131,7 +132,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 		}
 	}
 
-	@Override
+	// REMOVED @Override
 	public void filterSource(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 

@@ -16,7 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
+package org.wolfgang.contrail.component.bound.factories;
+
+import org.wolfgang.contrail.component.bound.InitialComponent;
 
 /**
  * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated

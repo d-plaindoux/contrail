@@ -21,8 +21,8 @@ package org.wolfgang.contrail.component.Intermediate;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**

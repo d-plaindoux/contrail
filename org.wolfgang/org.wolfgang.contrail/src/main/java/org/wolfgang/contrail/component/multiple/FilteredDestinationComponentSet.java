@@ -20,7 +20,6 @@ package org.wolfgang.contrail.component.multiple;
 
 import java.util.Map;
 
-import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -34,7 +33,7 @@ import org.wolfgang.contrail.data.DataWithInformation;
  * @author Didier Plaindoux
  * @version 1.0
  */
-interface FilteredDestinationComponentSet<U> {
+public interface FilteredDestinationComponentSet<U> {
 
 	/**
 	 * Method used to add a filter to a given destination. All destination
@@ -47,7 +46,7 @@ interface FilteredDestinationComponentSet<U> {
 	 *            The filter (can be <code>null</code>)
 	 * @throws ComponentConnectedException
 	 */
-	void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException;
+	// TODO [REMOVE] -- void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException;
 
 	/**
 	 * Provide the existing filters

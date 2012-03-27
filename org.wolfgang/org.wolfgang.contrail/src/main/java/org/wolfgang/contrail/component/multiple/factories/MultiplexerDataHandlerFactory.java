@@ -16,34 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.link;
+package org.wolfgang.contrail.component.multiple.factories;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.component.multiple.FilteredSourceComponentSet;
+import org.wolfgang.contrail.data.DataWithInformation;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 
 /**
- * <code>DummySourceComponent</code> is a simple upstream source component.
+ * <code>MultiplexerDataHandlerFactory</code> is able to create a dedicated down
+ * stream data handler using the parametric filtered source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialComponent<Void, Void> {
+public interface MultiplexerDataHandlerFactory<D> {
 
 	/**
-	 * Constructor
+	 * Methods called whether a dedicated multiplexer down-stream data handler
+	 * must be created
+	 * 
+	 * @param filteredSource
+	 *            The filtered source component
+	 * @return a down stream data hander
 	 */
-	public DummySourceComponent() {
-		super(new InitialDataReceiverFactory<Void, Void>() {
-			@Override
-			public DataReceiver<Void> create(InitialComponent<Void, Void> initial) {
-				return new DataReceiver<Void>() {
-					public void receiveData(Void data) throws DataHandlerException {
-						// Ignore data
-					}
-				};
-			}
-		});
-	}
+	DownStreamDataHandler<DataWithInformation<D>> create(FilteredSourceComponentSet<D> filteredSource);
+
 }

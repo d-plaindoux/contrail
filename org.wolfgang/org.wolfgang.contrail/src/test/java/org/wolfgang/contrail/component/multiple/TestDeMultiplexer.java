@@ -23,18 +23,20 @@ import junit.framework.TestCase;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.component.multiple.factories.DeMultiplexerDataHandlerFactory;
+import org.wolfgang.contrail.component.multiple.handler.FilteredDeMultiplexerDataHandler;
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataInformationValueAlreadyDefinedException;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentsLink;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 
@@ -88,7 +90,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+		
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -139,7 +149,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -166,7 +184,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -192,8 +218,16 @@ public class TestDeMultiplexer extends TestCase {
 						};
 					}
 				});
+		
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		try {
 			deMultiplexer.connect(listener1);
@@ -219,7 +253,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {
@@ -247,7 +289,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>();
+		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
+			@Override
+			public UpStreamDataHandler<DataWithInformation<String>> create(
+					FilteredDestinationComponentSet<String> filteredDestination) {
+				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
+			}
+		};
+
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManager manager = new ComponentsLinkManager();
 		try {

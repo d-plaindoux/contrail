@@ -29,6 +29,8 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.component.multiple.factories.DeMultiplexerDataHandlerFactory;
+import org.wolfgang.contrail.component.multiple.factories.MultiplexerDataHandlerFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -58,8 +60,9 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	public RouterComponent() {
-		this(new DeMultiplexerComponent<U, DataWithInformation<D>>(), new MultiplexerComponent<DataWithInformation<U>, D>());
+	public RouterComponent(DeMultiplexerDataHandlerFactory<U> deMultiplexerFactory,	MultiplexerDataHandlerFactory<D> multiplexerFactory) {
+		this.deMultiplexerComponent = new DeMultiplexerComponent<U, DataWithInformation<D>>(deMultiplexerFactory);
+		this.multiplexerComponent = new MultiplexerComponent<DataWithInformation<U>, D>(multiplexerFactory);
 	}
 
 	/**
@@ -125,7 +128,7 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 		return deMultiplexerComponent.getUpStreamDataHandler();
 	}
 
-	@Override
+	// REMOVED @Override
 	public void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		deMultiplexerComponent.filterDestination(componentId, filter);
 	}
@@ -146,7 +149,7 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 		return multiplexerComponent.getSourceComponent(componentId);
 	}
 
-	@Override
+	// REMOVED @Override
 	public void filterSource(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		multiplexerComponent.filterSource(componentId, filter);
 	}

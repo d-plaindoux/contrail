@@ -32,6 +32,7 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
+import org.wolfgang.contrail.component.multiple.factories.DeMultiplexerDataHandlerFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -92,9 +93,9 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	public DeMultiplexerComponent() {
+	public DeMultiplexerComponent(DeMultiplexerDataHandlerFactory<U> upStreamDataHandler) {
 		super();
-		this.upStreamDataHandler = new DeMultiplexerDataHandler<U>(this);
+		this.upStreamDataHandler = upStreamDataHandler.create(this);
 		this.downStreamDataHandler = new DirectDownStreamDataHandler<D>(this);
 	}
 
@@ -132,7 +133,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements
 		}
 	}
 
-	@Override
+	// REMOVED @Override
 	public void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
 		assert componentId != null;
 

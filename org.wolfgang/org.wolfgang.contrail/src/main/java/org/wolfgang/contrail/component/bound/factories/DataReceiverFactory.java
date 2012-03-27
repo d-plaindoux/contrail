@@ -16,34 +16,25 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.link;
+package org.wolfgang.contrail.component.bound.factories;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>DummySourceComponent</code> is a simple upstream source component.
+ * <code>DataReceiverFactory</code> is capable to build data receiver.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummySourceComponent extends InitialComponent<Void, Void> {
+interface DataReceiverFactory<E, C> {
 
 	/**
-	 * Constructor
+	 * Method called whether a data receiver shall be built for a given
+	 * component
+	 * 
+	 * @param component
+	 *            The component used to build the data receiver
 	 */
-	public DummySourceComponent() {
-		super(new InitialDataReceiverFactory<Void, Void>() {
-			@Override
-			public DataReceiver<Void> create(InitialComponent<Void, Void> initial) {
-				return new DataReceiver<Void>() {
-					public void receiveData(Void data) throws DataHandlerException {
-						// Ignore data
-					}
-				};
-			}
-		});
-	}
+	DataReceiver<E> create(C component);
+
 }
