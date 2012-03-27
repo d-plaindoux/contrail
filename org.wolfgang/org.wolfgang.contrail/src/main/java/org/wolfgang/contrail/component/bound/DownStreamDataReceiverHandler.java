@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component.bound;
 
-import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;

@@ -16,26 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound.handler;
-
-import org.wolfgang.contrail.handler.DataHandlerException;
-
 /**
- * <code>DataReceiver</code> is capable to receive data from the component
- * stream. This is mainly linked to an terminal upstream destination component.
- * 
+ * Package providing common definitions and direct based handler implementations 
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataReceiver<E> {
-
-	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
-	 */
-	void receiveData(E data) throws DataHandlerException;
-}
+package org.wolfgang.contrail.component.core;

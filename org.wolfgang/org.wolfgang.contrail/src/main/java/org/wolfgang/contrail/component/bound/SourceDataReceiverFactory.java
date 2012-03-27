@@ -16,26 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound.handler;
+package org.wolfgang.contrail.component.bound;
 
-import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>DataSender</code> is capable to send data to the component stream.
- * This is mainly linked to an initial upstream source component.
+ * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
+ * to initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataSender<E> {
+public interface SourceDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialComponent<U, D>> {
 
-	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
-	 */
-	void sendData(E data) throws DataHandlerException;
+	// Nothing
+
 }

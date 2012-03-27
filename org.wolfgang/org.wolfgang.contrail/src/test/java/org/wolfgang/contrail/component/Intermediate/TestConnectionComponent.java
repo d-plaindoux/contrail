@@ -297,7 +297,6 @@ public class TestConnectionComponent extends TestCase {
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
-		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
 

@@ -16,29 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.multiple.factories;
+package org.wolfgang.contrail.component.bound;
 
-import org.wolfgang.contrail.component.multiple.FilteredDestinationComponentSet;
-import org.wolfgang.contrail.data.DataWithInformation;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>DeMultiplexeDataHandlerFactory</code> is able to create a dedicated up
- * stream data handler using the parametric filtered source component.
+ * <code>DataReceiverFactory</code> is capable to build data receiver.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DeMultiplexerDataHandlerFactory<D> {
+interface DataReceiverFactory<E, C> {
 
 	/**
-	 * Methods called whether a dedicated multiplexer up-stream data handler
-	 * must be created
+	 * Method called whether a data receiver shall be built for a given
+	 * component
 	 * 
-	 * @param filteredSource
-	 *            The filtered source component
-	 * @return an upstream data handler
+	 * @param component
+	 *            The component used to build the data receiver
 	 */
-	UpStreamDataHandler<DataWithInformation<D>> create(FilteredDestinationComponentSet<D> filteredDestination);
+	DataReceiver<E> create(C component);
 
 }

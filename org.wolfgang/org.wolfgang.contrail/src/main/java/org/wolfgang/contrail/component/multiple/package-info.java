@@ -16,19 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound.factories;
-
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-
 /**
- * <code>TerminalDataReceiverFactory</code> is a data receiver builder dedicated
- * to terminal upstream destination component.
- * 
+ * Package providing components with multiple sources and/or multiple destination
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalComponent<U,S>> {
-
-	// Nothing
-
-}
+package org.wolfgang.contrail.component.multiple;

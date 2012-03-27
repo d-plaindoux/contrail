@@ -22,8 +22,6 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.factories.InitialDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.handler.DataSender;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -59,7 +57,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
+	public InitialComponent(final SourceDataReceiverFactory<U, D> dataFactory) {
 		super();
 
 		this.dataEmitter = new DataSender<U>() {
@@ -73,7 +71,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 			}
 		};
 
-		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
+ 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
 		this.upStreamDestinationComponent = null;
 	}
 

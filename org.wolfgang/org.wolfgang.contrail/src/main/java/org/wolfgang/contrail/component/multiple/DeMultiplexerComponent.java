@@ -32,7 +32,6 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
-import org.wolfgang.contrail.component.multiple.factories.DeMultiplexerDataHandlerFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
 import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;

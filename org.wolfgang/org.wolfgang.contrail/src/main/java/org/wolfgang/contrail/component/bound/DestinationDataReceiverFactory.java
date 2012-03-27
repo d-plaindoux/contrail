@@ -16,18 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound.factories;
+package org.wolfgang.contrail.component.bound;
 
-import org.wolfgang.contrail.component.bound.InitialComponent;
+
 
 /**
- * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
- * to initial upstream source component.
+ * <code>TerminalDataReceiverFactory</code> is a data receiver builder dedicated
+ * to terminal upstream destination component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialComponent<U, D>> {
+public interface DestinationDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalComponent<U,S>> {
 
 	// Nothing
 

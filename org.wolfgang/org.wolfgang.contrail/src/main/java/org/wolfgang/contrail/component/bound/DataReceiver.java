@@ -16,35 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.Intermediate;
+package org.wolfgang.contrail.component.bound;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DestinationDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>IntegerDestinationComponent</code>
+ * <code>DataReceiver</code> is capable to receive data from the component
+ * stream. This is mainly linked to an terminal upstream destination component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerDestinationComponent extends TerminalComponent<Integer, Integer> {
+public interface DataReceiver<E> {
 
 	/**
-	 * Constructor
+	 * Method called whether a data shall be performed
+	 * 
+	 * @param data
+	 *            The data to be performed
+	 * @throws DataHandlerException
+	 *             thrown is the data can not be handled correctly
 	 */
-	public IntegerDestinationComponent() {
-		super(new DestinationDataReceiverFactory<Integer, Integer>() {
-			@Override
-			public DataReceiver<Integer> create(final TerminalComponent<Integer, Integer> terminal) {
-				return new DataReceiver<Integer>() {
-					@Override
-					public void receiveData(Integer data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data * data);
-					}
-				};
-			}
-		});
-	}
+	void receiveData(E data) throws DataHandlerException;
 }

@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.component.relay;
 
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DestinationDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.factories.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.component.bound.handler.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -35,7 +35,7 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[],byte
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
-		super(new TerminalDataReceiverFactory<byte[],byte[]>() {
+		super(new DestinationDataReceiverFactory<byte[],byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(final TerminalComponent<byte[],byte[]> terminal) {
 				return new DataReceiver<byte[]>() {

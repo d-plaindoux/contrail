@@ -19,8 +19,8 @@
 /**
  * Package providing generic component implementations for initial and terminal
  * components dedicated to frontier link management. External interaction is therefore 
- * done using {@link org.wolfgang.contrail.component.bound.handler.DataReceiver} and 
- * {@link org.wolfgang.contrail.component.bound.handler.DataSender} implementations. The 
+ * done using {@link org.wolfgang.contrail.component.bound.DataReceiver} and 
+ * {@link org.wolfgang.contrail.component.bound.DataSender} implementations. The 
  * initial is used as the first component able to receive and manage upstream
  * data i.e. from low level software layer and the terminal is dedicated to 
  * send data to the application layer.
