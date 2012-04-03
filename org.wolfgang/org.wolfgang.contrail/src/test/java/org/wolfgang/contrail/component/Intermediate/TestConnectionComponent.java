@@ -32,7 +32,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 import org.wolfgang.contrail.link.ComponentsLink;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
+import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -51,8 +51,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		initial.getDataSender().sendData("3");
 		assertEquals("9", stringReference.get());
@@ -70,8 +70,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		initial.getDataSender().sendData("0");
 		assertEquals("0", stringReference.get());
@@ -89,8 +89,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		initial.closeUpStream();
 		terminal.getDataSender().sendData(9);
@@ -109,8 +109,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			initial.closeUpStream();
@@ -133,8 +133,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			connection.closeUpStream();
@@ -157,8 +157,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			terminal.closeUpStream();
@@ -181,8 +181,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			initial.closeDownStream();
@@ -205,8 +205,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			connection.closeDownStream();
@@ -229,8 +229,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			terminal.closeDownStream();
@@ -253,8 +253,8 @@ public class TestConnectionComponent extends TestCase {
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			initial.getDataSender().sendData("NaN");
@@ -298,7 +298,7 @@ public class TestConnectionComponent extends TestCase {
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
 
-		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManager().connect(initial, connection);
+		final ComponentsLink<String, String> initialConnection = new ComponentsLinkManagerImpl().connect(initial, connection);
 
 		try {
 			initial.getDataSender().sendData("123");
@@ -317,7 +317,7 @@ public class TestConnectionComponent extends TestCase {
 
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManager().connect(connection, terminal);
+		final ComponentsLink<Integer, Integer> terminalConnection = new ComponentsLinkManagerImpl().connect(connection, terminal);
 
 		try {
 			terminal.getDataSender().sendData(123);

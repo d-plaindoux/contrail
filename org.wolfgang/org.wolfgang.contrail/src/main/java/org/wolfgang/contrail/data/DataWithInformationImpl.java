@@ -54,7 +54,7 @@ class DataWithInformationImpl<D> implements DataWithInformation<D> {
 	 * 
 	 * @return a data information (never <code>null</code>)
 	 */
-	public DataInformation getDataInformation() {
+	public DataInformation getInformation() {
 		return this.information;
 	}
 

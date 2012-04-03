@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 public class TestComponentLink extends TestCase {
 	
 	public void testLink01() {
-		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
 			linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 		} catch (ComponentConnectionRejectedException e) {
@@ -41,7 +41,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	public void testLink02() {
-		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
 			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
@@ -55,7 +55,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	public void testLink03() {
-		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
 			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {
@@ -71,7 +71,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	public void testLink04() {
-		final ComponentsLinkManager linkManager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
 			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
 			try {

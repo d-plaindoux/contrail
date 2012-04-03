@@ -31,7 +31,7 @@ public interface DataWithInformation<D> {
 	 * 
 	 * @return a data information (never <code>null</code>)
 	 */
-	DataInformation getDataInformation();
+	DataInformation getInformation();
 
 	/**
 	 * Provides the basic data

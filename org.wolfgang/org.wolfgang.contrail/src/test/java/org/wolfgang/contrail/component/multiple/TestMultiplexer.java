@@ -36,7 +36,7 @@ import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentsLink;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
+import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
  * <code>TestMultiplexer</code>
@@ -98,7 +98,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			manager.connect(multiplexer, destination);
 
@@ -158,7 +158,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			manager.connect(multiplexer, destination);
 			manager.connect(multiplexer, destination);
@@ -193,7 +193,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			manager.connect(listener1, multiplexer);
 			manager.connect(listener1, multiplexer);
@@ -262,7 +262,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			ComponentsLink<Void, DataWithInformation<String>> connect = manager.connect(listener1, multiplexer);
 			connect.dispose();
@@ -298,7 +298,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManager manager = new ComponentsLinkManager();
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			ComponentsLink<Void, DataWithInformation<String>> connect = manager.connect(listener1, multiplexer);
 			connect.dispose();

@@ -59,10 +59,9 @@ public class FilteredDeMultiplexerDataHandler<U> implements UpStreamDataHandler<
 
 		for (Entry<ComponentId, DataInformationFilter> entry : filteredDestinationComponentSet.getDestinationFilters()
 				.entrySet()) {
-			if (entry.getValue().accept(data.getDataInformation())) {
+			if (entry.getValue().accept(data.getInformation())) {
 				try {
-					filteredDestinationComponentSet.getDestinationComponent(entry.getKey()).getUpStreamDataHandler()
-							.handleData(data);
+					filteredDestinationComponentSet.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// TODO

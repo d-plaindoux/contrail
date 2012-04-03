@@ -58,7 +58,7 @@ public class FilteredMultiplexerDataHandler<D> implements DownStreamDataHandler<
 		boolean notHandled = true;
 
 		for (Entry<ComponentId, DataInformationFilter> entry : filteredSourceComponentSet.getSourceFilters().entrySet()) {
-			if (entry.getValue().accept(data.getDataInformation())) {
+			if (entry.getValue().accept(data.getInformation())) {
 				try {
 					filteredSourceComponentSet.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					notHandled = false;

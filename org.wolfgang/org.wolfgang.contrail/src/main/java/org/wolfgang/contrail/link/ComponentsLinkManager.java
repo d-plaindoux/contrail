@@ -18,38 +18,17 @@
 
 package org.wolfgang.contrail.link;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
 /**
- * The <code>ComponentsLinkFactory</code> is used when components link must be
- * established.
- * 
+ * <code>ComponentsLinkManager</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentsLinkManager {
-
-	/**
-	 * Created links
-	 */
-	private final List<ComponentsLink<?, ?>> links;
-
-	{
-		links = new ArrayList<ComponentsLink<?, ?>>();
-	}
-
-	/**
-	 * Constructor
-	 */
-	public ComponentsLinkManager() {
-		// Nothing
-	}
+public interface ComponentsLinkManager {
 
 	/**
 	 * Function able to create a link between to given component.
@@ -62,33 +41,14 @@ public class ComponentsLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	public final <U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
-			throws ComponentConnectionRejectedException {
-		final ComponentsLinkImpl<U, D> link = new ComponentsLinkImpl<U, D>(source, destination) {
-
-			@Override
-			public void dispose() throws ComponentDisconnectionRejectedException {
-				try {
-					super.dispose();
-				} finally {
-					links.remove(this);
-				}
-			}
-
-		};
-
-		this.links.add(link);
-
-		return link;
-	}
+	public abstract <U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+			throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when all established links must be retrieved
 	 * 
 	 * @return an array of established links
 	 */
-	public ComponentsLink<?, ?>[] getEstablishedLinks() {
-		return links.toArray(new ComponentsLink[links.size()]);
-	}
+	public abstract ComponentsLink<?, ?>[] getEstablishedLinks();
 
 }
