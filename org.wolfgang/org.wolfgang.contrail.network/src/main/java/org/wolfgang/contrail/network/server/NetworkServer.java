@@ -50,7 +50,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 public class NetworkServer implements Callable<Void>, Closeable {
 
 	/**
-	 * 
+	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
 
@@ -91,7 +91,11 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * Constructor
 	 * 
 	 * @param address
+	 *            The server init address
 	 * @param port
+	 *            The server port
+	 * @param factory
+	 *            The factory used to create components
 	 */
 	public NetworkServer(InetAddress address, int port, ComponentFactory factory) {
 		super();
