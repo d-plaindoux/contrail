@@ -33,12 +33,12 @@ import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> {
+class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> {
 
 	/**
 	 * The component which is in charge of this data handler
 	 */
-	private final TransducerBasedConnectionComponent<?, D, ?, U> component;
+	private final TransducerComponent<?, D, ?, U> component;
 
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
@@ -60,7 +60,7 @@ class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandle
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerBasedDownStreamDataHandler(TransducerBasedConnectionComponent<?, D, ?, U> component,
+	public TransducerDownStreamDataHandler(TransducerComponent<?, D, ?, U> component,
 			DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
@@ -71,7 +71,7 @@ class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandle
 		if (closed) {
 			throw new DownStreamDataHandlerClosedException();
 		} else if (this.component.getUpStreamSourceComponent() == null) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_UNKNOWN.format();
+			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
 		} else {
 			try {
@@ -80,7 +80,7 @@ class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandle
 					this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerException(message, e);
 			}
 		}
@@ -95,10 +95,10 @@ class TransducerBasedDownStreamDataHandler<U, D> implements DownStreamDataHandle
 				this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
 			}
 		} catch (DataTransducerException e) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 			throw new DataHandlerCloseException(message, e);
 		} catch (DataHandlerException e) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 			throw new DataHandlerCloseException(message, e);
 		}
 	}

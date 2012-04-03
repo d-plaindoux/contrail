@@ -38,7 +38,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends AbstractComponent implements
+public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent implements
 		IntermediateComponent<U1, D1, U2, D2> {
 
 	/**
@@ -86,10 +86,10 @@ public final class TransducerBasedConnectionComponent<U1, D1, U2, D2> extends Ab
 	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransducerBasedConnectionComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
+	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
-		this.upStreamDataHandler = new TransducerBasedUpStreamDataHandler<U1, U2>(this, upstreamXducer);
-		this.downStreamDataHandler = new TransducerBasedDownStreamDataHandler<D2, D1>(this, downstreamXducer);
+		this.upStreamDataHandler = new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer);
+		this.downStreamDataHandler = new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer);
 		this.upStreamSourceComponent = null;
 		this.upStreamDestinationComponent = null;
 	}

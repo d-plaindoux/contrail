@@ -32,12 +32,12 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
+class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 
 	/**
 	 * The component which is in charge of this data handler
 	 */
-	private final TransducerBasedConnectionComponent<U, ?, D, ?> component;
+	private final TransducerComponent<U, ?, D, ?> component;
 
 	/**
 	 * Boolean used to store the handler status i.e. closed or not.
@@ -57,7 +57,7 @@ class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U>
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerBasedUpStreamDataHandler(TransducerBasedConnectionComponent<U, ?, D, ?> component,
+	public TransducerUpStreamDataHandler(TransducerComponent<U, ?, D, ?> component,
 			DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
@@ -68,7 +68,7 @@ class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U>
 		if (closed) {
 			throw new UpStreamDataHandlerClosedException();
 		} else if (component.getUpStreamDestinationComponent() == null) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_UNKNOWN.format();
+			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
 		} else {
 			try {
@@ -77,7 +77,7 @@ class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U>
 					component.getUpStreamDestinationComponent().getUpStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
-				final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerException(message, e);
 			}
 		}
@@ -92,10 +92,10 @@ class TransducerBasedUpStreamDataHandler<U, D> implements UpStreamDataHandler<U>
 				component.getUpStreamDestinationComponent().getUpStreamDataHandler().handleData(value);
 			}
 		} catch (DataTransducerException e) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 			throw new DataHandlerCloseException(message, e);
 		} catch (DataHandlerException e) {
-			final String message = TransducerBasedConnectionComponent.XDUCER_ERROR.format(e.getMessage());
+			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 			throw new DataHandlerCloseException(message, e);
 		}
 	}
