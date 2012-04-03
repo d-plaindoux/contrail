@@ -42,9 +42,9 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	private DestinationComponent<U, D> upStreamDestinationComponent;
 
 	/**
-	 * The data injection mechanism
+	 * The data sender mechanism used by external components
 	 */
-	private final DataSender<U> dataEmitter;
+	private final DataSender<U> dataSender;
 
 	/**
 	 * The internal down stream data handler
@@ -57,10 +57,10 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialComponent(final SourceDataReceiverFactory<U, D> dataFactory) {
+	public InitialComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
 		super();
 
-		this.dataEmitter = new DataSender<U>() {
+		this.dataSender = new DataSender<U>() {
 			@Override
 			public void sendData(U data) throws DataHandlerException {
 				try {
@@ -71,7 +71,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 			}
 		};
 
- 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
+		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
 		this.upStreamDestinationComponent = null;
 	}
 
@@ -122,7 +122,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 *             thrown is the data can not be handled correctly
 	 */
 	public DataSender<U> getDataSender() {
-		return this.dataEmitter;
+		return this.dataSender;
 	}
 
 	@Override

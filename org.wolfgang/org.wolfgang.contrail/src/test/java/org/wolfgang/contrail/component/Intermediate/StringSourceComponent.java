@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.SourceDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -37,7 +37,7 @@ public class StringSourceComponent extends InitialComponent<String, String> {
 	 * Constructor
 	 */
 	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(new SourceDataReceiverFactory<String, String>() {
+		super(new InitialDataReceiverFactory<String, String>() {
 			@Override
 			public DataReceiver<String> create(InitialComponent<String, String> initial) {
 				return new DataReceiver<String>() {

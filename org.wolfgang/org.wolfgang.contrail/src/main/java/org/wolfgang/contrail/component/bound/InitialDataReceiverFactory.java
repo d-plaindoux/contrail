@@ -18,16 +18,14 @@
 
 package org.wolfgang.contrail.component.bound;
 
-
-
 /**
- * <code>TerminalDataReceiverFactory</code> is a data receiver builder dedicated
- * to terminal upstream destination component.
+ * <code>InitialDataReceiverFactory</code> is a data receiver builder dedicated
+ * to initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationDataReceiverFactory<U,S> extends DataReceiverFactory<U, TerminalComponent<U,S>> {
+public interface InitialDataReceiverFactory<U, D> extends DataReceiverFactory<D, InitialComponent<U, D>> {
 
 	// Nothing
 
