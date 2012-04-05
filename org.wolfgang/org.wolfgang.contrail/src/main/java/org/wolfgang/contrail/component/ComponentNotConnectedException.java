@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.component;
 
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>ComponentNotConnectedException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

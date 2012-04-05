@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.component;
 
 /**
- * The <code>ConnectionComponent</code> is capable to connect a source handler
+ * The <code>IntermediateComponent</code> is capable to connect a source handler
  * and a destination handler. In addition the data can be transformed from a
  * type S to a type D or vice-versa depending if components communicate using
  * upstream or downstream network. The first type was the event type received

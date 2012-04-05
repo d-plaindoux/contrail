@@ -21,16 +21,16 @@ package org.wolfgang.contrail.component;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * The <code>UpStreamDestinationComponent</code> is capable to receive event
- * from the framework. Receiving events consists in managing events from lower
- * components via the upstream network. In parallel a destination is capable to
- * respond sending messages to the interconnected source handler using the
- * downstream network.
+ * The <code>DestinationComponent</code> is capable to receive event from the
+ * framework. Receiving events consists in managing events from lower components
+ * via the upstream network. In parallel a destination is capable to respond
+ * sending messages to the interconnected source handler using the downstream
+ * network.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationComponent<U,D> extends Component {
+public interface DestinationComponent<U, D> extends Component {
 
 	/**
 	 * Method called when the corresponding upstream data handler shall be
@@ -49,7 +49,7 @@ public interface DestinationComponent<U,D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the connection cannot be performed
 	 */
-	void connect(SourceComponent<U,D> handler) throws ComponentConnectionRejectedException;
+	void connect(SourceComponent<U, D> handler) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -60,5 +60,5 @@ public interface DestinationComponent<U,D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the disconnection cannot be performed
 	 */
-	void disconnect(SourceComponent<U,D> handler) throws ComponentDisconnectionRejectedException;
+	void disconnect(SourceComponent<U, D> handler) throws ComponentDisconnectionRejectedException;
 }

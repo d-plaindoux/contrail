@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.component;
 
 /**
- * <code>ComponentConnectionRejectedException</code>
+ * <code>ComponentDisconnectionRejectedException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

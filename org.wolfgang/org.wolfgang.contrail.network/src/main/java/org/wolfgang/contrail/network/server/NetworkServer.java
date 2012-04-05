@@ -37,12 +37,12 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * The <code>NetworkServer</code> provides a server implementation using
- * standard libraries provides with Java like sockets and server sockets. The
- * current implementation don't use the new facilities and select mechanism. As
- * a consequence such code is not meant to be scalable as required for modern
- * framework like web portal. In addition this can be enough for an optimized
- * network layer relaying on federated network links between components
- * particularly on presence of multiple hop network links.
+ * standard libraries like sockets and server sockets. The current
+ * implementation don't use the new IO libraries and select mechanism. As a
+ * consequence this implementation is not meant to be scalable as required for
+ * modern framework like web portal. Nevertheless this can be enough for an
+ * optimized network layer relaying on federate network links between
+ * components particularly on presence of multiple hop network links.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -150,7 +150,6 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	@Override
 	public void close() throws IOException {
 		executor.shutdownNow();
-
 		if (serverSocket != null) {
 			serverSocket.close();
 		}

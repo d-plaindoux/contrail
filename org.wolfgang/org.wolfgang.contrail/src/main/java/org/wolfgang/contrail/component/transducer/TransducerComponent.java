@@ -31,9 +31,9 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>TransducerBasedConnectionComponent</code> is an implementation which
- * requires data transformations performed each time an upstream or downstream
- * data go through the connection component.
+ * <code>TransducerComponent</code> is an implementation which requires data
+ * transformations performed each time an upstream or downstream data go through
+ * the connection component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
