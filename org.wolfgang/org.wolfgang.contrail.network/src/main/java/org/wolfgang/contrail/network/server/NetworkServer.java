@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.factory.ComponentFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.integration.ComponentIntegrator;
 
 /**
  * The <code>NetworkServer</code> provides a server implementation using
@@ -67,7 +67,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final ComponentFactory factory;
+	private final ComponentIntegrator factory;
 
 	/**
 	 * The underlying server socket
@@ -97,7 +97,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * @param factory
 	 *            The factory used to create components
 	 */
-	public NetworkServer(InetAddress address, int port, ComponentFactory factory) {
+	public NetworkServer(InetAddress address, int port, ComponentIntegrator factory) {
 		super();
 		this.address = address;
 		this.port = port;

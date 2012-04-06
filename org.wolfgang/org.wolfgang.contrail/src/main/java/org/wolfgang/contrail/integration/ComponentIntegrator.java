@@ -16,20 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.factory;
+package org.wolfgang.contrail.integration;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 
 /**
- * A <code>ComponentFactory</code> is able to provide components based on
+ * A <code>ComponentIntegrator</code> is able to provide components based on
  * criterion. This is the main component to be used for a network components
  * construction. Since the component is returned it must be connected.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentFactory {
+public interface ComponentIntegrator {
 
 	/**
 	 * Method called whether a source component is required
@@ -41,8 +41,12 @@ public interface ComponentFactory {
 	 * @param downstream
 	 *            The downstream data type
 	 * @return a source component (Never <code>null</code>)
+	 * @throws CannotProvideInitialComponentException
+	 *             if no specific mechanisms are linked to the required stream
+	 *             types
 	 */
-	<U, D> DataSender<U> createInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream);
+	<U, D> DataSender<U> createInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
+			throws CannotProvideInitialComponentException;
 
 	/**
 	 * Method called whether a destination component is required
@@ -54,7 +58,11 @@ public interface ComponentFactory {
 	 * @param downstream
 	 *            The downstream data type
 	 * @return a destination component (Never <code>null</code>)
+	 * @throws CannotProvideTerminalComponentException
+	 *             if no specific mechanisms are linked to the required stream
+	 *             types
 	 */
-	<U, D> DataSender<D> createTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream);
+	<U, D> DataSender<D> createTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
+			throws CannotProvideTerminalComponentException;
 
 }
