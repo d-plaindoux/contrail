@@ -41,8 +41,8 @@ import org.wolfgang.contrail.integration.ComponentIntegrator;
  * implementation don't use the new IO libraries and select mechanism. As a
  * consequence this implementation is not meant to be scalable as required for
  * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federate network links between
- * components particularly on presence of multiple hop network links.
+ * optimized network layer relaying on federate network links between components
+ * particularly on presence of multiple hop network links.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -91,7 +91,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * Constructor
 	 * 
 	 * @param address
-	 *            The server init address
+	 *            The server internet address
 	 * @param port
 	 *            The server port
 	 * @param factory
@@ -124,6 +124,11 @@ public class NetworkServer implements Callable<Void>, Closeable {
 						throw new DataHandlerException(e);
 					}
 				}
+
+				@Override
+				public void close() throws IOException {
+					client.close();
+				}
 			};
 
 			final DataSender<byte[]> dataSender = factory.createInitial(dataReceiver, byte[].class, byte[].class);
@@ -132,12 +137,17 @@ public class NetworkServer implements Callable<Void>, Closeable {
 				@Override
 				public Void call() throws Exception {
 					final byte[] buffer = new byte[1024 * 8];
-					int len = client.getInputStream().read(buffer);
-					while (len != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
-						len = client.getInputStream().read(buffer);
+					try {
+						int len = client.getInputStream().read(buffer);
+						while (len != -1) {
+							dataSender.sendData(Arrays.copyOf(buffer, len));
+							len = client.getInputStream().read(buffer);
+						}
+						return null;
+					} catch (Exception e) {
+						dataSender.close();
+						throw e;
 					}
-					return null;
 				}
 			};
 

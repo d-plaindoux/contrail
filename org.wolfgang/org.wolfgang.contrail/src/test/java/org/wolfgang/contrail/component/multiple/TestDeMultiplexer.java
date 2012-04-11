@@ -18,16 +18,18 @@
 
 package org.wolfgang.contrail.component.multiple;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.data.DataInformation;
 import org.wolfgang.contrail.data.DataInformationFactory;
 import org.wolfgang.contrail.data.DataInformationFilter;
@@ -56,6 +58,11 @@ public class TestDeMultiplexer extends TestCase {
 							public void receiveData(Void data) throws DataHandlerException {
 								// Nothing
 							}
+
+							@Override
+							public void close() throws IOException {
+								// Nothing								
+							}
 						};
 					}
 				});
@@ -70,6 +77,11 @@ public class TestDeMultiplexer extends TestCase {
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								assertEquals("Hello, World!", data.getData());
 							}
+
+							@Override
+							public void close() throws IOException {
+								// Nothing								
+							}
 						};
 					}
 				});
@@ -83,6 +95,11 @@ public class TestDeMultiplexer extends TestCase {
 							@Override
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								fail();
+							}
+							
+							@Override
+							public void close() throws IOException {
+								// Nothing								
 							}
 						};
 					}
@@ -143,6 +160,11 @@ public class TestDeMultiplexer extends TestCase {
 							public void receiveData(Void data) throws DataHandlerException {
 								// Nothing
 							}
+							
+							@Override
+							public void close() throws IOException {
+								// Nothing								
+							}
 						};
 					}
 				});
@@ -177,6 +199,11 @@ public class TestDeMultiplexer extends TestCase {
 							@Override
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								assertEquals("Hello, World!", data.getData());
+							}
+							
+							@Override
+							public void close() throws IOException {
+								// Nothing								
 							}
 						};
 					}
@@ -213,6 +240,11 @@ public class TestDeMultiplexer extends TestCase {
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								assertEquals("Hello, World!", data.getData());
 							}
+							
+							@Override
+							public void close() throws IOException {
+								// Nothing								
+							}
 						};
 					}
 				});
@@ -246,6 +278,11 @@ public class TestDeMultiplexer extends TestCase {
 							@Override
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								assertEquals("Hello, World!", data.getData());
+							}
+
+							@Override
+							public void close() throws IOException {
+								// Nothing								
 							}
 						};
 					}
@@ -282,6 +319,11 @@ public class TestDeMultiplexer extends TestCase {
 							@Override
 							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
 								assertEquals("Hello, World!", data.getData());
+							}
+							
+							@Override
+							public void close() throws IOException {
+								// Nothing								
 							}
 						};
 					}

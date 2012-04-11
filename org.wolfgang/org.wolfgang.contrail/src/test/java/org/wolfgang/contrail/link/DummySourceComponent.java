@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.link;
 
+import java.io.IOException;
+
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
@@ -41,6 +43,11 @@ public class DummySourceComponent extends InitialComponent<Void, Void> {
 				return new DataReceiver<Void>() {
 					public void receiveData(Void data) throws DataHandlerException {
 						// Ignore data
+					}
+					
+					@Override
+					public void close() throws IOException {
+						// Nothing								
 					}
 				};
 			}

@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.bound;
 
+import java.io.IOException;
+
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -52,15 +54,12 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	private final DownStreamDataHandler<D> downStreamDataHandler;
 
 	/**
-	 * Constructor
+	 * Provides the local data sender
 	 * 
-	 * @param dataFactory
-	 *            The initial data receiver factory
+	 * @return a data sender (never <code>null</code>)
 	 */
-	public InitialComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
-		super();
-
-		this.dataSender = new DataSender<U>() {
+	private DataSender<U> getLocalDataSender() {
+		return new DataSender<U>() {
 			@Override
 			public void sendData(U data) throws DataHandlerException {
 				try {
@@ -69,8 +68,44 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 					throw new DataHandlerException(e);
 				}
 			}
-		};
 
+			@Override
+			public void close() throws IOException {
+				try {
+					getUpStreamDataHandler().handleClose();
+				} catch (ComponentNotConnectedException e) {
+					throw new IOException(e);
+				} catch (DataHandlerCloseException e) {
+					throw new IOException(e);
+				}
+			}
+		};
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param receiver
+	 *            The initial data receiver
+	 */
+	public InitialComponent(final DataReceiver<D> receiver) {
+		super();
+
+		this.dataSender = this.getLocalDataSender();
+		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(receiver);
+		this.upStreamDestinationComponent = null;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param dataFactory
+	 *            The initial data receiver factory
+	 */
+	public InitialComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
+		super();
+
+		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
 		this.upStreamDestinationComponent = null;
 	}

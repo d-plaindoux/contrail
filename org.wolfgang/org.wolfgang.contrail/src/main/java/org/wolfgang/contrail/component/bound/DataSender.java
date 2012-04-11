@@ -18,16 +18,18 @@
 
 package org.wolfgang.contrail.component.bound;
 
+import java.io.Closeable;
+
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>DataSender</code> is capable to send data to the component stream.
- * This is mainly linked to an initial upstream source component.
+ * <code>DataSender</code> is capable to send data to the component stream. This
+ * is mainly linked to an initial upstream source component.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataSender<E> {
+public interface DataSender<E> extends Closeable {
 
 	/**
 	 * Method called whether a data shall be performed

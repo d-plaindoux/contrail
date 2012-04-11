@@ -49,6 +49,11 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 							throw new DataHandlerException(e);
 						}
 					}
+					
+					@Override
+					public void close() throws IOException {
+						outputStream.close();								
+					}
 				};
 			}
 		});

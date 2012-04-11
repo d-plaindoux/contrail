@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.integration;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>InitialComponentIntegrator</code>
@@ -28,6 +29,17 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
  */
 public interface TerminalComponentUnitIntegrator<U, D> {
 
-	void performIntegration(TerminalComponent<U, D> component);
+	/**
+	 * Method called whether a link must be done
+	 * 
+	 * @param linkManager
+	 *            The link manager
+	 * @param component
+	 *            The component to be integrated
+	 * @throws CannotIntegrateTerminalComponentException
+	 *             if the terminal integration fails
+	 */
+	void performIntegration(ComponentsLinkManager linkManager, TerminalComponent<U, D> component)
+			throws CannotIntegrateTerminalComponentException;
 
 }

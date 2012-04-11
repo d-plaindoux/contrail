@@ -18,9 +18,11 @@
 
 package org.wolfgang.contrail.link;
 
+import java.io.IOException;
+
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -42,6 +44,11 @@ public class DummyDestinationComponent extends TerminalComponent<Void,Void> {
 					@Override
 					public void receiveData(Void data) throws DataHandlerException {
 						terminal.getDataSender().sendData(data);
+					}
+					
+					@Override
+					public void close() throws IOException {
+						terminal.getDataSender().close();								
 					}
 				};
 			}

@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.integration;
 
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>InitialComponentIntegrator</code>
@@ -28,6 +29,17 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
  */
 public interface InitialComponentUnitIntegrator<U, D> {
 
-	void performIntegration(InitialComponent<U, D> component);
+	/**
+	 * Method called whether a link must be done
+	 * 
+	 * @param linkManager
+	 *            The link manager
+	 * @param component
+	 *            The component to be integrated
+	 * @throws CannotIntegrateInitialComponentException 
+	 *             thrown if the integration cannot be done correctly
+	 */
+	void performIntegration(ComponentsLinkManager linkManager, InitialComponent<U, D> component)
+			throws CannotIntegrateInitialComponentException;
 
 }

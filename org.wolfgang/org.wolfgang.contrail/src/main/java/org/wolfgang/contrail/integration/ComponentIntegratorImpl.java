@@ -29,6 +29,8 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
+import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
  * The <code>ComponentIntegratorImpl</code> proposes an implementation using
@@ -38,6 +40,11 @@ import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
  * @version 1.0
  */
 public final class ComponentIntegratorImpl implements ComponentIntegrator {
+
+	/**
+	 * The dedicated link manager
+	 */
+	private final ComponentsLinkManager linkManager;
 
 	/**
 	 * Initial component integrators
@@ -50,6 +57,7 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 	private final Map<UnitIntegratorKey<?, ?>, TerminalComponentUnitIntegrator<?, ?>> terminalIntegrators;
 
 	{
+		this.linkManager = new ComponentsLinkManagerImpl();
 		this.initialIntegrators = new HashMap<UnitIntegratorKey<?, ?>, InitialComponentUnitIntegrator<?, ?>>();
 		this.terminalIntegrators = new HashMap<UnitIntegratorKey<?, ?>, TerminalComponentUnitIntegrator<?, ?>>();
 	}
@@ -66,7 +74,8 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 	 *            The integrator
 	 * @return true if the integrator is correctly added; false otherwise
 	 */
-	public <U, D> boolean add(Class<U> upstream, Class<D> downstream, InitialComponentUnitIntegrator<U, D> integrator) {
+	public <U, D> boolean addInitialIntegrator(Class<U> upstream, Class<D> downstream,
+			InitialComponentUnitIntegrator<U, D> integrator) {
 		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
@@ -88,7 +97,8 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 	 *            The integrator
 	 * @return true if the integrator is correctly added; false otherwise
 	 */
-	public <U, D> boolean add(Class<U> upstream, Class<D> downstream, TerminalComponentUnitIntegrator<U, D> integrator) {
+	public <U, D> boolean addTerminalIntegrator(Class<U> upstream, Class<D> downstream,
+			TerminalComponentUnitIntegrator<U, D> integrator) {
 		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
@@ -148,7 +158,7 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 
 	@Override
 	public <U, D> DataSender<U> createInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideInitialComponentException {
+			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
 		final InitialComponentUnitIntegrator<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
 
 		final InitialComponent<U, D> component = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
@@ -158,14 +168,14 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 			}
 		});
 
-		initialIntegrator.performIntegration(component);
+		initialIntegrator.performIntegration(linkManager, component);
 
 		return component.getDataSender();
 	}
 
 	@Override
 	public <U, D> DataSender<D> createTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideTerminalComponentException {
+			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException {
 		final TerminalComponentUnitIntegrator<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
 
 		final TerminalComponent<U, D> component = new TerminalComponent<U, D>(new TerminalDataReceiverFactory<U, D>() {
@@ -175,7 +185,7 @@ public final class ComponentIntegratorImpl implements ComponentIntegrator {
 			}
 		});
 
-		terminalIntegrator.performIntegration(component);
+		terminalIntegrator.performIntegration(linkManager, component);
 
 		return component.getDataSender();
 	}

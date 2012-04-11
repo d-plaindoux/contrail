@@ -1,0 +1,104 @@
+/*
+ * Copyright (C)2012 D. Plaindoux.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+package org.wolfgang.contrail.network.server;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import junit.framework.TestCase;
+
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.integration.CannotIntegrateInitialComponentException;
+import org.wolfgang.contrail.integration.ComponentIntegratorImpl;
+import org.wolfgang.contrail.integration.InitialComponentUnitIntegrator;
+import org.wolfgang.contrail.link.ComponentsLinkManager;
+
+/**
+ * <code>TestNetworkServer</code>
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public class TestNetworkServer extends TestCase {
+
+	public void testNominal01() throws IOException {
+		final ComponentIntegratorImpl integrator = new ComponentIntegratorImpl();
+
+		final InitialComponentUnitIntegrator<byte[], byte[]> initialComponentUnitIntegrator = new InitialComponentUnitIntegrator<byte[], byte[]>() {
+			@Override
+			public void performIntegration(ComponentsLinkManager linkManager,
+					final InitialComponent<byte[], byte[]> initialComponent) throws CannotIntegrateInitialComponentException {
+				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(
+						new TerminalDataReceiverFactory<byte[], byte[]>() {
+							@Override
+							public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> component) {
+								return new DataReceiver<byte[]>() {
+									@Override
+									public void receiveData(byte[] data) throws DataHandlerException {
+										component.getDataSender().sendData(data);
+									}
+
+									@Override
+									public void close() throws IOException {
+										component.getDataSender().close();
+									}
+								};
+							}
+						});
+
+				try {
+					linkManager.connect(initialComponent, terminalComponent);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotIntegrateInitialComponentException(e);
+				}
+			}
+		};
+
+		integrator.addInitialIntegrator(byte[].class, byte[].class, initialComponentUnitIntegrator);
+
+		final NetworkServer networkServer = new NetworkServer(InetAddress.getLocalHost(), 2666, integrator);
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		executor.submit(networkServer);
+
+		final Socket socket = new Socket(InetAddress.getLocalHost(), 2666);
+
+		final String message = "Hello, World!";
+
+		socket.getOutputStream().write(message.getBytes());
+
+		final byte[] buffer = new byte[1024];
+		final int len = socket.getInputStream().read(buffer);
+
+		assertEquals(message, new String(buffer, 0, len));
+
+		socket.close();
+		executor.shutdown();
+		networkServer.close();
+	}
+}

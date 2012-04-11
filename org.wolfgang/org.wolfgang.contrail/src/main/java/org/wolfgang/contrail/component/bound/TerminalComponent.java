@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.bound;
 
+import java.io.IOException;
+
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -52,8 +54,47 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	private final UpStreamDataHandler<U> upstreamDataHandler;
 
 	/**
-	 * Data receiver
+	 * Provides the local data sender
+	 * 
+	 * @return a data sender (never <code>null</code>)
 	 */
+	private DataSender<D> getLocalDataSender() {
+		return new DataSender<D>() {
+			@Override
+			public void sendData(D data) throws DataHandlerException {
+				try {
+					getDowntreamDataHandler().handleData(data);
+				} catch (ComponentNotConnectedException e) {
+					throw new DataHandlerException(e);
+				}
+			}
+
+			@Override
+			public void close() throws IOException {
+				try {
+					getDowntreamDataHandler().handleClose();
+				} catch (ComponentNotConnectedException e) {
+					throw new IOException(e);
+				} catch (DataHandlerCloseException e) {
+					throw new IOException(e);
+				}
+			}
+		};
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param receiver
+	 *            The terminal data receiver
+	 */
+	public TerminalComponent(final DataReceiver<U> receiver) {
+		super();
+
+		this.dataEmitter = this.getLocalDataSender();
+		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(receiver);
+		this.upStreamSourceComponent = null;
+	}
 
 	/**
 	 * Constructor
@@ -64,17 +105,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	public TerminalComponent(final TerminalDataReceiverFactory<U, D> dataFactory) {
 		super();
 
-		this.dataEmitter = new DataSender<D>() {
-			@Override
-			public void sendData(D data) throws DataHandlerException {
-				try {
-					getDowntreamDataHandler().handleData(data);
-				} catch (ComponentNotConnectedException e) {
-					throw new DataHandlerException(e);
-				}
-			}
-		};
-
+		this.dataEmitter = this.getLocalDataSender();
 		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this));
 		this.upStreamSourceComponent = null;
 	}

@@ -44,9 +44,11 @@ public interface ComponentIntegrator {
 	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
+	 * @throws CannotIntegrateInitialComponentException
+	 *             if the component integration fails
 	 */
 	<U, D> DataSender<U> createInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideInitialComponentException;
+			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException;
 
 	/**
 	 * Method called whether a destination component is required
@@ -61,8 +63,10 @@ public interface ComponentIntegrator {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
+	 * @throws CannotIntegrateTerminalComponentException
+	 *             if the component integration fails
 	 */
 	<U, D> DataSender<D> createTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideTerminalComponentException;
+			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException;
 
 }

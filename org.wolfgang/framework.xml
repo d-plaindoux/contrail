@@ -4,12 +4,11 @@
 	<Definitions>
 		<Transducer id="trans:payload" type="PayLoad" />
 		<Transducer id="trans:serial" type="Serializer" />
-		<Router 
 	</Definitions>
 	<Providers>
 		<Initial up="byte[]" down="byte[]">
-			<Component refid="trans:payload" />
-			<Component refid="trans:serial" />
+			<Component type="new" refid="trans:payload" />
+			<Component type="new" refid="trans:serial" />
 		</Initial>
 	</Providers>
 </Components>
