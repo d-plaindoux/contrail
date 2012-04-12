@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integrator;
+package org.wolfgang.contrail.ecosystem;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,11 +29,11 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
+import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
+import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
+import org.wolfgang.contrail.ecosystem.InitialComponentUnitIntegrator;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.integration.CannotIntegrateInitialComponentException;
-import org.wolfgang.contrail.integration.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.integration.ComponentIntegratorImpl;
-import org.wolfgang.contrail.integration.InitialComponentUnitIntegrator;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
@@ -42,11 +42,11 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestComponentIntegrator extends TestCase {
+public class TestComponentEcosystem extends TestCase {
 
 	public void testNominal01() throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
 
-		final ComponentIntegratorImpl integrator = new ComponentIntegratorImpl();
+		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
 
 		final InitialComponentUnitIntegrator<String, String> initialComponentUnitIntegrator = new InitialComponentUnitIntegrator<String, String>() {
 			@Override

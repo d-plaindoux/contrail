@@ -16,30 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integration;
-
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
+package org.wolfgang.contrail.ecosystem;
 
 /**
- * <code>InitialComponentIntegrator</code>
+ * <code>CannotCreateTerminalException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalComponentUnitIntegrator<U, D> {
+public class CannotProvideInitialComponentException extends Exception {
 
 	/**
-	 * Method called whether a link must be done
-	 * 
-	 * @param linkManager
-	 *            The link manager
-	 * @param component
-	 *            The component to be integrated
-	 * @throws CannotIntegrateTerminalComponentException
-	 *             if the terminal integration fails
+	 * The serialVersionUID attribute
 	 */
-	void performIntegration(ComponentsLinkManager linkManager, TerminalComponent<U, D> component)
-			throws CannotIntegrateTerminalComponentException;
+	private static final long serialVersionUID = 8864101185754000453L;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public CannotProvideInitialComponentException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotProvideInitialComponentException(String arg0) {
+		super(arg0);
+	}
 
 }

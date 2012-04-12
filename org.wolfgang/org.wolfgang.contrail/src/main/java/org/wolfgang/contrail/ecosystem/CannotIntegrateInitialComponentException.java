@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integration;
+package org.wolfgang.contrail.ecosystem;
 
 /**
  * <code>CannotIntegrateInitialComponentException</code>

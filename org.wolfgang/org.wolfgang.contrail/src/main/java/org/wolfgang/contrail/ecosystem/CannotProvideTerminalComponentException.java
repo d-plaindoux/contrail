@@ -16,15 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integration;
+package org.wolfgang.contrail.ecosystem;
 
 /**
- * <code>CannotCreateTerminalException</code>
+ * <code>CannotCreateTerminalComponentException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CannotProvideInitialComponentException extends Exception {
+public class CannotProvideTerminalComponentException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -37,7 +37,7 @@ public class CannotProvideInitialComponentException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public CannotProvideInitialComponentException(String arg0, Throwable arg1) {
+	public CannotProvideTerminalComponentException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 	}
 
@@ -46,7 +46,7 @@ public class CannotProvideInitialComponentException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public CannotProvideInitialComponentException(String arg0) {
+	public CannotProvideTerminalComponentException(String arg0) {
 		super(arg0);
 	}
 

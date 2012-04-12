@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integration;
+package org.wolfgang.contrail.ecosystem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ComponentIntegratorImpl implements ComponentIntegrator {
+public final class ComponentEcosystemImpl implements ComponentEcosystem {
 
 	/**
 	 * The dedicated link manager

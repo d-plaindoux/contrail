@@ -32,10 +32,10 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
+import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
+import org.wolfgang.contrail.ecosystem.InitialComponentUnitIntegrator;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.integration.CannotIntegrateInitialComponentException;
-import org.wolfgang.contrail.integration.ComponentIntegratorImpl;
-import org.wolfgang.contrail.integration.InitialComponentUnitIntegrator;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
@@ -47,7 +47,7 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
 public class TestNetworkServer extends TestCase {
 
 	public void testNominal01() throws IOException {
-		final ComponentIntegratorImpl integrator = new ComponentIntegratorImpl();
+		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
 
 		final InitialComponentUnitIntegrator<byte[], byte[]> initialComponentUnitIntegrator = new InitialComponentUnitIntegrator<byte[], byte[]>() {
 			@Override

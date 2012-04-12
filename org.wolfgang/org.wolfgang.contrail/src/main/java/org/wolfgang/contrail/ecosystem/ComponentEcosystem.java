@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.integration;
+package org.wolfgang.contrail.ecosystem;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -29,7 +29,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentIntegrator {
+public interface ComponentEcosystem {
 
 	/**
 	 * Method called whether a source component is required
