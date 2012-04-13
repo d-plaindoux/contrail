@@ -23,6 +23,9 @@ import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.InitialComponent;
@@ -49,17 +52,17 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	/**
 	 * Initial component integrators
 	 */
-	private final Map<UnitIntegratorKey<?, ?>, InitialComponentUnitIntegrator<?, ?>> initialIntegrators;
+	private final Map<UnitIntegratorKey<?, ?>, DestinationComponentFactory<?, ?>> initialIntegrators;
 
 	/**
 	 * Terminal component integrators
 	 */
-	private final Map<UnitIntegratorKey<?, ?>, TerminalComponentUnitIntegrator<?, ?>> terminalIntegrators;
+	private final Map<UnitIntegratorKey<?, ?>, SourceComponentFactory<?, ?>> terminalIntegrators;
 
 	{
 		this.linkManager = new ComponentsLinkManagerImpl();
-		this.initialIntegrators = new HashMap<UnitIntegratorKey<?, ?>, InitialComponentUnitIntegrator<?, ?>>();
-		this.terminalIntegrators = new HashMap<UnitIntegratorKey<?, ?>, TerminalComponentUnitIntegrator<?, ?>>();
+		this.initialIntegrators = new HashMap<UnitIntegratorKey<?, ?>, DestinationComponentFactory<?, ?>>();
+		this.terminalIntegrators = new HashMap<UnitIntegratorKey<?, ?>, SourceComponentFactory<?, ?>>();
 	}
 
 	/**
@@ -74,8 +77,8 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *            The integrator
 	 * @return true if the integrator is correctly added; false otherwise
 	 */
-	public <U, D> boolean addInitialIntegrator(Class<U> upstream, Class<D> downstream,
-			InitialComponentUnitIntegrator<U, D> integrator) {
+	public <U, D> boolean addDestinationFactory(Class<U> upstream, Class<D> downstream,
+			DestinationComponentFactory<U, D> integrator) {
 		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
@@ -97,8 +100,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *            The integrator
 	 * @return true if the integrator is correctly added; false otherwise
 	 */
-	public <U, D> boolean addTerminalIntegrator(Class<U> upstream, Class<D> downstream,
-			TerminalComponentUnitIntegrator<U, D> integrator) {
+	public <U, D> boolean addSourceFactory(Class<U> upstream, Class<D> downstream, SourceComponentFactory<U, D> integrator) {
 		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
@@ -120,12 +122,12 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *             if the initial component cannot be created
 	 */
 	@SuppressWarnings("unchecked")
-	private <U, D> InitialComponentUnitIntegrator<U, D> getInitialIntegrator(Class<U> upstream, Class<D> downstream)
+	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException {
 		final UnitIntegratorKey<U, D> entry = new UnitIntegratorKey<U, D>(upstream, downstream);
-		final InitialComponentUnitIntegrator<?, ?> integrator = this.initialIntegrators.get(entry);
+		final DestinationComponentFactory<?, ?> integrator = this.initialIntegrators.get(entry);
 		if (integrator != null) {
-			return (InitialComponentUnitIntegrator<U, D>) integrator;
+			return (DestinationComponentFactory<U, D>) integrator;
 		} else {
 			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "initial.integrator.refused");
 			throw new CannotProvideInitialComponentException(message.format(upstream, downstream));
@@ -144,12 +146,12 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *             if the terminal component cannot be created
 	 */
 	@SuppressWarnings("unchecked")
-	private <U, D> TerminalComponentUnitIntegrator<U, D> getTerminalIntegrator(Class<U> upstream, Class<D> downstream)
+	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException {
 		final UnitIntegratorKey<U, D> entry = new UnitIntegratorKey<U, D>(upstream, downstream);
-		final TerminalComponentUnitIntegrator<?, ?> integrator = this.terminalIntegrators.get(entry);
+		final SourceComponentFactory<?, ?> integrator = this.terminalIntegrators.get(entry);
 		if (integrator != null) {
-			return (TerminalComponentUnitIntegrator<U, D>) integrator;
+			return (SourceComponentFactory<U, D>) integrator;
 		} else {
 			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "terminal.integrator.refused");
 			throw new CannotProvideTerminalComponentException(message.format(upstream, downstream));
@@ -159,35 +161,47 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	@Override
 	public <U, D> DataSender<U> createInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
-		final InitialComponentUnitIntegrator<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
+		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
 
-		final InitialComponent<U, D> component = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
+		final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
 			@Override
 			public DataReceiver<D> create(InitialComponent<U, D> component) {
 				return receiver;
 			}
 		});
 
-		initialIntegrator.performIntegration(linkManager, component);
+		final DestinationComponent<U, D> destinationComponent = initialIntegrator.create();
 
-		return component.getDataSender();
+		try {
+			linkManager.connect(initialComponent, destinationComponent);
+		} catch (ComponentConnectionRejectedException e) {
+			throw new CannotIntegrateInitialComponentException(e);
+		}
+
+		return initialComponent.getDataSender();
 	}
 
 	@Override
 	public <U, D> DataSender<D> createTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException {
-		final TerminalComponentUnitIntegrator<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
+		final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
 
-		final TerminalComponent<U, D> component = new TerminalComponent<U, D>(new TerminalDataReceiverFactory<U, D>() {
+		final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(new TerminalDataReceiverFactory<U, D>() {
 			@Override
 			public DataReceiver<U> create(TerminalComponent<U, D> component) {
 				return receiver;
 			}
 		});
 
-		terminalIntegrator.performIntegration(linkManager, component);
+		final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
 
-		return component.getDataSender();
+		try {
+			linkManager.connect(sourceComponent, terminalComponent);
+		} catch (ComponentConnectionRejectedException e) {
+			throw new CannotIntegrateTerminalComponentException(e);
+		}
+
+		return terminalComponent.getDataSender();
 	}
 
 }

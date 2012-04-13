@@ -68,6 +68,7 @@ class UnitIntegratorKey<U, D> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
+		@SuppressWarnings("rawtypes")
 		UnitIntegratorKey other = (UnitIntegratorKey) obj;
 		if (downstream == null) {
 			if (other.downstream != null) {

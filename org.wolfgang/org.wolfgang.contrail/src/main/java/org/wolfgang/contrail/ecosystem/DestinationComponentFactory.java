@@ -18,8 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem;
 
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
+import org.wolfgang.contrail.component.DestinationComponent;
 
 /**
  * <code>InitialComponentIntegrator</code>
@@ -27,19 +26,15 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface TerminalComponentUnitIntegrator<U, D> {
+public interface DestinationComponentFactory<U, D> {
 
 	/**
 	 * Method called whether a link must be done
 	 * 
-	 * @param linkManager
-	 *            The link manager
-	 * @param component
-	 *            The component to be integrated
-	 * @throws CannotIntegrateTerminalComponentException
-	 *             if the terminal integration fails
+	 * @return the component receiving initial component data
+	 * @throws CannotIntegrateInitialComponentException
+	 *             thrown if the integration cannot be done correctly
 	 */
-	void performIntegration(ComponentsLinkManager linkManager, TerminalComponent<U, D> component)
-			throws CannotIntegrateTerminalComponentException;
+	DestinationComponent<U, D> create();
 
 }

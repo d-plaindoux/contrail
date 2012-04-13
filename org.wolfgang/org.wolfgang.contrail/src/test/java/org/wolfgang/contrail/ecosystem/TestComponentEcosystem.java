@@ -23,18 +23,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
-import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
-import org.wolfgang.contrail.ecosystem.InitialComponentUnitIntegrator;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>TestComponentIntegrator</code>
@@ -48,37 +42,29 @@ public class TestComponentEcosystem extends TestCase {
 
 		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
 
-		final InitialComponentUnitIntegrator<String, String> initialComponentUnitIntegrator = new InitialComponentUnitIntegrator<String, String>() {
+		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
 			@Override
-			public void performIntegration(ComponentsLinkManager linkManager,
-					final InitialComponent<String, String> initialComponent) {
-				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(
-						new TerminalDataReceiverFactory<String, String>() {
+			public DestinationComponent<String, String> create() {
+				return new TerminalComponent<String, String>(new TerminalDataReceiverFactory<String, String>() {
+					@Override
+					public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public DataReceiver<String> create(final TerminalComponent<String, String> component) {
-								return new DataReceiver<String>() {
-									@Override
-									public void receiveData(String data) throws DataHandlerException {
-										component.getDataSender().sendData(data);
-									}
-
-									@Override
-									public void close() throws IOException {
-										component.getDataSender().close();
-									}
-								};
+							public void receiveData(String data) throws DataHandlerException {
+								component.getDataSender().sendData(data);
 							}
-						});
 
-				try {
-					linkManager.connect(initialComponent, terminalComponent);
-				} catch (ComponentConnectionRejectedException e) {
-					// TODO
-				}
+							@Override
+							public void close() throws IOException {
+								component.getDataSender().close();
+							}
+						};
+					}
+				});
 			}
 		};
 
-		integrator.addInitialIntegrator(String.class, String.class, initialComponentUnitIntegrator);
+		integrator.addDestinationFactory(String.class, String.class, destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 

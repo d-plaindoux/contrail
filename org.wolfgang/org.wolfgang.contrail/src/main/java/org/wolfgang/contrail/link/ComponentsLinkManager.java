@@ -19,12 +19,13 @@
 package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
 /**
  * <code>ComponentsLinkManager</code>
- *
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
@@ -41,7 +42,7 @@ public interface ComponentsLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	public abstract <U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+	<U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
 			throws ComponentConnectionRejectedException;
 
 	/**
@@ -49,6 +50,19 @@ public interface ComponentsLinkManager {
 	 * 
 	 * @return an array of established links
 	 */
-	public abstract ComponentsLink<?, ?>[] getEstablishedLinks();
+	ComponentsLink<?, ?>[] getEstablishedLinks();
+
+	/**
+	 * Function able to disconnect a source and a destination
+	 * 
+	 * @param source
+	 *            The link source
+	 * @param destination
+	 *            The link destination
+	 * @return true if the disconnection has been done; false otherwise
+	 * @throws ComponentConnectionRejectedException
+	 */
+	<U, D> boolean disconnect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+			throws ComponentDisconnectionRejectedException;
 
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<Ecosystem>
+	<Definitions>
+		<Transducer id="transducer:payload" type="PayLoad" />
+		<Transducer id="transducer:serial" type="Serializer" />
+	</Definitions>
+	<Providers>
+		<Initial>
+			<Stream>
+				<In>byte[]</In>
+				<Out>byte[]</Out>
+			</Stream>
+			<Component refid="transducer:payload" />
+			<Component refid="transducer:serial" />
+		</Initial>
+	</Providers>
+</Ecosystem>
+
+<!-- initial { router | [ service | transfer ] | } when byte[] * byte[] { 
+	new entry | new trans:payload | new trans:serial | router } -->

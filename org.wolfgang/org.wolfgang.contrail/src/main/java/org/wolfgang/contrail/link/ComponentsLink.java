@@ -42,14 +42,14 @@ public interface ComponentsLink<U,D> {
 	 * 
 	 * @return the upstream source
 	 */
-	SourceComponent<U,D> getUpStreamSourceComponent();
+	SourceComponent<U,D> getSourceComponent();
 
 	/**
 	 * Method providing the destination
 	 * 
 	 * @return the upstream destination
 	 */
-	DestinationComponent<U,D> getUpStreamDestinationComponent();
+	DestinationComponent<U,D> getDestinationComponent();
 
 	/**
 	 * Method called whether the connection must be disposed.
