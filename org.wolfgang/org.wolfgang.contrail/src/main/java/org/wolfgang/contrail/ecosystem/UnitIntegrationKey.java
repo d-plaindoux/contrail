@@ -24,15 +24,15 @@ package org.wolfgang.contrail.ecosystem;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class UnitIntegratorKey<U, D> {
+class UnitIntegrationKey<U, D> {
 
 	/**
-	 * 
+	 * The upstream class type
 	 */
 	private final Class<U> upstream;
 
 	/**
-	 * 
+	 * The downstream class type
 	 */
 	private final Class<D> downstream;
 
@@ -40,9 +40,11 @@ class UnitIntegratorKey<U, D> {
 	 * Constructor
 	 * 
 	 * @param upstream
+	 *            The upstream class type
 	 * @param downstream
+	 *            The downstream class type
 	 */
-	public UnitIntegratorKey(Class<U> upstream, Class<D> downstream) {
+	public UnitIntegrationKey(Class<U> upstream, Class<D> downstream) {
 		super();
 		this.upstream = upstream;
 		this.downstream = downstream;
@@ -69,7 +71,7 @@ class UnitIntegratorKey<U, D> {
 			return false;
 		}
 		@SuppressWarnings("rawtypes")
-		UnitIntegratorKey other = (UnitIntegratorKey) obj;
+		UnitIntegrationKey other = (UnitIntegrationKey) obj;
 		if (downstream == null) {
 			if (other.downstream != null) {
 				return false;

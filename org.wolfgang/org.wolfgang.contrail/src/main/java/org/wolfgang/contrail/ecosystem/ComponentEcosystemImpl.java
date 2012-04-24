@@ -36,7 +36,7 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
 import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
- * The <code>ComponentIntegratorImpl</code> proposes an implementation using
+ * The <code>ComponentEcosystemImpl</code> proposes an implementation using
  * standard components and link mechanisms.
  * 
  * @author Didier Plaindoux
@@ -50,19 +50,19 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	private final ComponentsLinkManager linkManager;
 
 	/**
-	 * Initial component integrators
+	 * Initial component integration triggers
 	 */
-	private final Map<UnitIntegratorKey<?, ?>, DestinationComponentFactory<?, ?>> initialIntegrators;
+	private final Map<UnitIntegrationKey<?, ?>, DestinationComponentFactory<?, ?>> initialIntegrators;
 
 	/**
-	 * Terminal component integrators
+	 * Terminal component integration triggers
 	 */
-	private final Map<UnitIntegratorKey<?, ?>, SourceComponentFactory<?, ?>> terminalIntegrators;
+	private final Map<UnitIntegrationKey<?, ?>, SourceComponentFactory<?, ?>> terminalIntegrators;
 
 	{
 		this.linkManager = new ComponentsLinkManagerImpl();
-		this.initialIntegrators = new HashMap<UnitIntegratorKey<?, ?>, DestinationComponentFactory<?, ?>>();
-		this.terminalIntegrators = new HashMap<UnitIntegratorKey<?, ?>, SourceComponentFactory<?, ?>>();
+		this.initialIntegrators = new HashMap<UnitIntegrationKey<?, ?>, DestinationComponentFactory<?, ?>>();
+		this.terminalIntegrators = new HashMap<UnitIntegrationKey<?, ?>, SourceComponentFactory<?, ?>>();
 	}
 
 	/**
@@ -73,58 +73,58 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
-	 * @param integrator
-	 *            The integrator
-	 * @return true if the integrator is correctly added; false otherwise
+	 * @param factory
+	 *            The factory
+	 * @return true if the factory is correctly added; false otherwise
 	 */
 	public <U, D> boolean addDestinationFactory(Class<U> upstream, Class<D> downstream,
-			DestinationComponentFactory<U, D> integrator) {
-		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
+			DestinationComponentFactory<U, D> factory) {
+		final UnitIntegrationKey<U, D> unitIntegratorKey = new UnitIntegrationKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
 		} else {
-			this.initialIntegrators.put(new UnitIntegratorKey<U, D>(upstream, downstream), integrator);
+			this.initialIntegrators.put(new UnitIntegrationKey<U, D>(upstream, downstream), factory);
 			return false;
 		}
 	}
 
 	/**
-	 * Method used to add a new terminal component unit integrator. If the entry
-	 * is already defined this method do not add the integrator.
+	 * Method used to add a new terminal component unit integration trigger. If
+	 * the entry is already defined this method do not add the integrator.
 	 * 
 	 * @param upstream
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
-	 * @param integrator
-	 *            The integrator
-	 * @return true if the integrator is correctly added; false otherwise
+	 * @param factory
+	 *            The factory
+	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addSourceFactory(Class<U> upstream, Class<D> downstream, SourceComponentFactory<U, D> integrator) {
-		final UnitIntegratorKey<U, D> unitIntegratorKey = new UnitIntegratorKey<U, D>(upstream, downstream);
+	public <U, D> boolean addSourceFactory(Class<U> upstream, Class<D> downstream, SourceComponentFactory<U, D> factory) {
+		final UnitIntegrationKey<U, D> unitIntegratorKey = new UnitIntegrationKey<U, D>(upstream, downstream);
 		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
 		} else {
-			this.terminalIntegrators.put(unitIntegratorKey, integrator);
+			this.terminalIntegrators.put(unitIntegratorKey, factory);
 			return true;
 		}
 	}
 
 	/**
-	 * Method providing the initial component integrator using types.
+	 * Method providing the initial component factory using types.
 	 * 
 	 * @param upstream
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
-	 * @return the initial component integrator
+	 * @return the initial component factory
 	 * @throws CannotProvideInitialComponentException
 	 *             if the initial component cannot be created
 	 */
 	@SuppressWarnings("unchecked")
 	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException {
-		final UnitIntegratorKey<U, D> entry = new UnitIntegratorKey<U, D>(upstream, downstream);
+		final UnitIntegrationKey<U, D> entry = new UnitIntegrationKey<U, D>(upstream, downstream);
 		final DestinationComponentFactory<?, ?> integrator = this.initialIntegrators.get(entry);
 		if (integrator != null) {
 			return (DestinationComponentFactory<U, D>) integrator;
@@ -135,20 +135,20 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	}
 
 	/**
-	 * Method providing the terminal component integrator using types.
+	 * Method providing the terminal component factory using types.
 	 * 
 	 * @param upstream
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
-	 * @return the terminal component integrator
+	 * @return the terminal component factory
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
 	@SuppressWarnings("unchecked")
 	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException {
-		final UnitIntegratorKey<U, D> entry = new UnitIntegratorKey<U, D>(upstream, downstream);
+		final UnitIntegrationKey<U, D> entry = new UnitIntegrationKey<U, D>(upstream, downstream);
 		final SourceComponentFactory<?, ?> integrator = this.terminalIntegrators.get(entry);
 		if (integrator != null) {
 			return (SourceComponentFactory<U, D>) integrator;

@@ -22,7 +22,7 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 
 /**
- * A <code>ComponentIntegrator</code> is able to provide components based on
+ * A <code>ComponentEcosystem</code> is able to provide components based on
  * criterion. This is the main component to be used for a network components
  * construction. Since the component is returned it must be connected.
  * 
