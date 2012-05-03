@@ -42,25 +42,27 @@ public class TestComponentEcosystem extends TestCase {
 
 		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
 
+		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
+			@Override
+			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+				return new DataReceiver<String>() {
+					@Override
+					public void receiveData(String data) throws DataHandlerException {
+						component.getDataSender().sendData(data);
+					}
+					
+					@Override
+					public void close() throws IOException {
+						component.getDataSender().close();
+					}
+				};
+			}
+		};
+		
 		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
 			@Override
 			public DestinationComponent<String, String> create() {
-				return new TerminalComponent<String, String>(new TerminalDataReceiverFactory<String, String>() {
-					@Override
-					public DataReceiver<String> create(final TerminalComponent<String, String> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								component.getDataSender().sendData(data);
-							}
-
-							@Override
-							public void close() throws IOException {
-								component.getDataSender().close();
-							}
-						};
-					}
-				});
+				return new TerminalComponent<String, String>(dataFactory);
 			}
 		};
 
