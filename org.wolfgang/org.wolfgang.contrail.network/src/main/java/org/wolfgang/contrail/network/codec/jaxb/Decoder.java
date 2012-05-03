@@ -50,6 +50,7 @@ class Decoder implements DataTransducer<Bytes, Object> {
 	 * Constructor
 	 * 
 	 * @param types
+	 *            Types used for the decoding
 	 */
 	public Decoder(Class<?>[] types) {
 		super();

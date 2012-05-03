@@ -16,43 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.codec.payload;
+package org.wolfgang.contrail.network.codec.identity;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
- * <code>SerializerTransducerFactory</code> is in charge of transforming
- * upstream bytes to java object and vice-versa based on pay load. This class
- * provides dedicate encoder and decoder for such serialization based CoDec
+ * <code>Identity</code> do not perform any transformation.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PayLoadTransducerFactory {
+class Identity<A> implements DataTransducer<A, A> {
 
 	/**
 	 * Constructor
 	 */
-	private PayLoadTransducerFactory() {
-		// Prevent useless object creation
+	Identity() {
+		super();
 	}
 
-	/**
-	 * Method providing pay-load based decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
-	public static DataTransducer<byte[], Bytes> getDecoder() {
-		return new Decoder();
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<A> transform(A source) throws DataTransducerException {
+		return Arrays.asList(source);
 	}
 
-	/**
-	 * Method providing pay-load based encoder
-	 * 
-	 * @return a object to byte array data transformation
-	 */
-
-	public static DataTransducer<Bytes, byte[]> getEncoder() {
-		return new Encoder();
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<A> finish() throws DataTransducerException {
+		return Arrays.asList();
 	}
 }

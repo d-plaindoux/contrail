@@ -67,7 +67,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final ComponentEcosystem factory;
+	private final ComponentEcosystem ecosystem;
 
 	/**
 	 * The underlying server socket
@@ -94,14 +94,14 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 *            The server internet address
 	 * @param port
 	 *            The server port
-	 * @param factory
+	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetworkServer(InetAddress address, int port, ComponentEcosystem factory) {
+	public NetworkServer(InetAddress address, int port, ComponentEcosystem ecosystem) {
 		super();
 		this.address = address;
 		this.port = port;
-		this.factory = factory;
+		this.ecosystem = ecosystem;
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 				}
 			};
 
-			final DataSender<byte[]> dataSender = factory.createInitial(dataReceiver, byte[].class, byte[].class);
+			final DataSender<byte[]> dataSender = ecosystem.createInitial(dataReceiver, byte[].class, byte[].class);
 
 			final Callable<Void> reader = new Callable<Void>() {
 				@Override

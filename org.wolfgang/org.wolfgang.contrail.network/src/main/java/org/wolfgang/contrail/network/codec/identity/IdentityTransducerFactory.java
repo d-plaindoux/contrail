@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.codec.payload;
+package org.wolfgang.contrail.network.codec.identity;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 
@@ -28,12 +28,12 @@ import org.wolfgang.contrail.component.transducer.DataTransducer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PayLoadTransducerFactory {
+public final class IdentityTransducerFactory {
 
 	/**
 	 * Constructor
 	 */
-	private PayLoadTransducerFactory() {
+	private IdentityTransducerFactory() {
 		// Prevent useless object creation
 	}
 
@@ -42,17 +42,16 @@ public final class PayLoadTransducerFactory {
 	 * 
 	 * @return a byte array to object data transformation
 	 */
-	public static DataTransducer<byte[], Bytes> getDecoder() {
-		return new Decoder();
+	public static <A> DataTransducer<A, A> getDecoder() {
+		return new Identity<A>();
 	}
 
 	/**
-	 * Method providing pay-load based encoder
+	 * Method providing pay-load based decoder
 	 * 
-	 * @return a object to byte array data transformation
+	 * @return a byte array to object data transformation
 	 */
-
-	public static DataTransducer<Bytes, byte[]> getEncoder() {
-		return new Encoder();
+	public static <A> DataTransducer<A, A> getEncoder() {
+		return new Identity<A>();
 	}
 }

@@ -21,23 +21,18 @@ package org.wolfgang.contrail.network.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
 
 /**
  * <code>TestNetworkServer</code>
@@ -48,33 +43,36 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
 public class TestNetworkServer extends TestCase {
 
 	public void testNominal01() throws IOException {
-		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
+		final ComponentEcosystemImpl ecosystem = new ComponentEcosystemImpl();
+
+		// A little bit too complex ... isn't it ?
+		final TerminalDataReceiverFactory<byte[], byte[]> dataFactory = new TerminalDataReceiverFactory<byte[], byte[]>() {
+			@Override
+			public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> component) {
+				return new DataReceiver<byte[]>() {
+					@Override
+					public void receiveData(byte[] data) throws DataHandlerException {
+						component.getDataSender().sendData(data);
+					}
+					
+					@Override
+					public void close() throws IOException {
+						component.getDataSender().close();
+					}
+				};
+			}
+		};
 
 		final DestinationComponentFactory<byte[], byte[]> destinationComponentFactory = new DestinationComponentFactory<byte[], byte[]>() {
 			@Override
 			public DestinationComponent<byte[], byte[]> create() {
-				return new TerminalComponent<byte[], byte[]>(new TerminalDataReceiverFactory<byte[], byte[]>() {
-					@Override
-					public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> component) {
-						return new DataReceiver<byte[]>() {
-							@Override
-							public void receiveData(byte[] data) throws DataHandlerException {
-								component.getDataSender().sendData(data);
-							}
-
-							@Override
-							public void close() throws IOException {
-								component.getDataSender().close();
-							}
-						};
-					}
-				});
+				return new TerminalComponent<byte[], byte[]>(dataFactory);
 			}
 		};
 
-		integrator.addDestinationFactory(byte[].class, byte[].class, destinationComponentFactory);
+		ecosystem.addDestinationFactory(byte[].class, byte[].class, destinationComponentFactory);
 
-		final NetworkServer networkServer = new NetworkServer(InetAddress.getLocalHost(), 2666, integrator);
+		final NetworkServer networkServer = new NetworkServer(InetAddress.getLocalHost(), 2666, ecosystem);
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);
