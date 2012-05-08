@@ -33,6 +33,7 @@ import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.network.connection.NetworkServer;
 
 /**
  * <code>TestNetworkServer</code>

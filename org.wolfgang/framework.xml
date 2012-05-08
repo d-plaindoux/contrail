@@ -19,6 +19,9 @@
 			</Encoder>
 		</Transducer>
 	</Components>
+	<Core>
+		
+	</Core>
 	<Binders>
 		<InitialBinder>
 			<Type>
@@ -26,8 +29,8 @@
 				<Outgoing>byte[]</Outgoing>
 			</Type>
 			<Flow>
-				<Component refid="transducer:payload" shared="true" />
-				<Component refid="transducer:jaxb" />
+				<Component refid="transducer:payload"/>
+				<Component refid="transducer:jaxb"/>
 			</Flow>
 		</InitialBinder>
 	</Binders>

@@ -129,7 +129,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 		if (integrator != null) {
 			return (DestinationComponentFactory<U, D>) integrator;
 		} else {
-			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "initial.integrator.refused");
+			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "initial.factory.refused");
 			throw new CannotProvideInitialComponentException(message.format(upstream, downstream));
 		}
 	}
@@ -153,7 +153,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 		if (integrator != null) {
 			return (SourceComponentFactory<U, D>) integrator;
 		} else {
-			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "terminal.integrator.refused");
+			final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "terminal.factory.refused");
 			throw new CannotProvideTerminalComponentException(message.format(upstream, downstream));
 		}
 	}

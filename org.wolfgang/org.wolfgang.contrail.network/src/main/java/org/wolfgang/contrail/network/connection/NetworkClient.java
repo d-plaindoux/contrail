@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.server;
+package org.wolfgang.contrail.network.connection;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -32,22 +32,24 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
+import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>NetworkServer</code> provides a server implementation using
+ * The <code>NetworkClient</code> provides a client implementation using
  * standard libraries like sockets and server sockets. The current
  * implementation don't use the new IO libraries and select mechanism. As a
  * consequence this implementation is not meant to be scalable as required for
  * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federate network links between components
- * particularly on presence of multiple hop network links.
+ * optimized network layer relaying on federation network links between
+ * components particularly on presence of multiple hop network links.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkServer implements Callable<Void>, Closeable {
+public class NetworkClient implements Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -55,31 +57,16 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * The chosen inet address for the socket server
-	 */
-	private final InetAddress address;
-
-	/**
-	 * The chosen port number for the socket server
-	 */
-	private final int port;
-
-	/**
 	 * De-multiplexer component
 	 */
 	private final ComponentEcosystem ecosystem;
 
-	/**
-	 * The underlying server socket
-	 */
-	private ServerSocket serverSocket;
-
 	{
-		final ThreadGroup GROUP = new ThreadGroup("Network.Server");
+		final ThreadGroup GROUP = new ThreadGroup("Network.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(GROUP, r, "Network.Client");
+				return new Thread(GROUP, r, "Network.Connected.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
@@ -90,78 +77,70 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	/**
 	 * Constructor
 	 * 
+	 * @param ecosystem
+	 *            The factory used to create components
+	 */
+	public NetworkClient(ComponentEcosystem ecosystem) {
+		super();
+		this.ecosystem = ecosystem;
+	}
+
+	/**
+	 * Method called whether a client connection must be performed
+	 * 
 	 * @param address
 	 *            The server internet address
 	 * @param port
 	 *            The server port
-	 * @param ecosystem
-	 *            The factory used to create components
+	 * @throws IOException
+	 * @throws CannotIntegrateInitialComponentException
+	 * @throws CannotProvideInitialComponentException
 	 */
-	public NetworkServer(InetAddress address, int port, ComponentEcosystem ecosystem) {
-		super();
-		this.address = address;
-		this.port = port;
-		this.ecosystem = ecosystem;
-	}
+	public void connect(InetAddress address, int port) throws IOException, CannotProvideInitialComponentException,
+			CannotIntegrateInitialComponentException {
+		final Socket client = new Socket(address, port);
 
-	@Override
-	public Void call() throws Exception {
-		if (serverSocket != null) {
-			throw new IllegalAccessException();
-		}
+		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+			@Override
+			public void receiveData(byte[] data) throws DataHandlerException {
+				try {
+					client.getOutputStream().write(data);
+				} catch (IOException e) {
+					throw new DataHandlerException(e);
+				}
+			}
 
-		serverSocket = new ServerSocket(port, 0, address);
+			@Override
+			public void close() throws IOException {
+				client.close();
+			}
+		};
 
-		while (serverSocket.isBound()) {
-			final Socket client = serverSocket.accept();
+		final DataSender<byte[]> dataSender = ecosystem.createInitial(dataReceiver, byte[].class, byte[].class);
 
-			final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
-				@Override
-				public void receiveData(byte[] data) throws DataHandlerException {
-					try {
-						client.getOutputStream().write(data);
-					} catch (IOException e) {
-						throw new DataHandlerException(e);
+		final Callable<Void> reader = new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				final byte[] buffer = new byte[1024 * 8];
+				try {
+					int len = client.getInputStream().read(buffer);
+					while (len != -1) {
+						dataSender.sendData(Arrays.copyOf(buffer, len));
+						len = client.getInputStream().read(buffer);
 					}
+					return null;
+				} catch (Exception e) {
+					dataSender.close();
+					throw e;
 				}
+			}
+		};
 
-				@Override
-				public void close() throws IOException {
-					client.close();
-				}
-			};
-
-			final DataSender<byte[]> dataSender = ecosystem.createInitial(dataReceiver, byte[].class, byte[].class);
-
-			final Callable<Void> reader = new Callable<Void>() {
-				@Override
-				public Void call() throws Exception {
-					final byte[] buffer = new byte[1024 * 8];
-					try {
-						int len = client.getInputStream().read(buffer);
-						while (len != -1) {
-							dataSender.sendData(Arrays.copyOf(buffer, len));
-							len = client.getInputStream().read(buffer);
-						}
-						return null;
-					} catch (Exception e) {
-						dataSender.close();
-						throw e;
-					}
-				}
-			};
-
-			executor.submit(reader);
-		}
-
-		return null;
+		executor.submit(reader);
 	}
 
 	@Override
 	public void close() throws IOException {
 		executor.shutdownNow();
-		if (serverSocket != null) {
-			serverSocket.close();
-		}
 	}
 }
