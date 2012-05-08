@@ -47,7 +47,7 @@ public interface ComponentEcosystem {
 	 * @throws CannotIntegrateInitialComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<U> createInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
+	<U, D> DataSender<U> bindToInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException;
 
 	/**
@@ -66,7 +66,7 @@ public interface ComponentEcosystem {
 	 * @throws CannotIntegrateTerminalComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<D> createTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
+	<U, D> DataSender<D> bindToTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException;
 
 }

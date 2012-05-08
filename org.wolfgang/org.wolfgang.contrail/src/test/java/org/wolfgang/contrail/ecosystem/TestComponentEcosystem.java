@@ -82,7 +82,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DataSender<String> createInitial = integrator.createInitial(receiver, String.class, String.class);
+		final DataSender<String> createInitial = integrator.bindToInitial(receiver, String.class, String.class);
 		final String message = "Hello, World!";
 
 		try {

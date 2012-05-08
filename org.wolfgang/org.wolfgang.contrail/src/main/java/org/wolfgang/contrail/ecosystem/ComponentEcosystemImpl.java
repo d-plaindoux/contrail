@@ -159,7 +159,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	}
 
 	@Override
-	public <U, D> DataSender<U> createInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
+	public <U, D> DataSender<U> bindToInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
 		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
 
@@ -182,7 +182,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	}
 
 	@Override
-	public <U, D> DataSender<D> createTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
+	public <U, D> DataSender<D> bindToTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException {
 		final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
 

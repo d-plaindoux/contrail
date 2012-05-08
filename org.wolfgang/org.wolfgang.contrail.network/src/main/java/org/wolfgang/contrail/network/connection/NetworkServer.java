@@ -131,7 +131,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 				}
 			};
 
-			final DataSender<byte[]> dataSender = ecosystem.createInitial(dataReceiver, byte[].class, byte[].class);
+			final DataSender<byte[]> dataSender = ecosystem.bindToInitial(dataReceiver, byte[].class, byte[].class);
 
 			final Callable<Void> reader = new Callable<Void>() {
 				@Override
