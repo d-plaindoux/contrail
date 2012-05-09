@@ -35,11 +35,14 @@ import org.wolfgang.contrail.network.codec.payload.Bytes;
  */
 class Decoder implements DataTransducer<Bytes, Object> {
 
+	private final Class<?>[] acceptedTypes;
+
 	/**
 	 * Constructor
 	 */
-	Decoder() {
+	Decoder(Class<?>... acceptedTypes) {
 		super();
+		this.acceptedTypes = acceptedTypes;
 	}
 
 	@Override

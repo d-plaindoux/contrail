@@ -16,13 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection;
+package org.wolfgang.contrail.network.connection.process;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,18 +35,14 @@ import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>NetworkClient</code> provides a client implementation using
- * standard libraries like sockets and server sockets. The current
- * implementation don't use the new IO libraries and select mechanism. As a
- * consequence this implementation is not meant to be scalable as required for
- * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federation network links between
- * components particularly on presence of multiple hop network links.
- * 
+ * The <code>ProcessClient</code> provides a client implementation using
+ * standard libraries like process creation. This can be used to create a
+ * connection between two framework using SSH for example.
  * @author Didier Plaindoux
+ * 
  * @version 1.0
  */
-public class NetworkClient implements Closeable {
+public class ProcessClient implements Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -62,11 +55,11 @@ public class NetworkClient implements Closeable {
 	private final ComponentEcosystem ecosystem;
 
 	{
-		final ThreadGroup GROUP = new ThreadGroup("Network.Client");
+		final ThreadGroup GROUP = new ThreadGroup("Process.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(GROUP, r, "Network.Connected.Client");
+				return new Thread(GROUP, r, "Process.Connected.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
@@ -80,7 +73,7 @@ public class NetworkClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetworkClient(ComponentEcosystem ecosystem) {
+	public ProcessClient(ComponentEcosystem ecosystem) {
 		super();
 		this.ecosystem = ecosystem;
 	}
@@ -96,9 +89,9 @@ public class NetworkClient implements Closeable {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotProvideInitialComponentException
 	 */
-	public void connect(InetAddress address, int port) throws IOException, CannotProvideInitialComponentException,
+	public void connect(String[] command) throws IOException, CannotProvideInitialComponentException,
 			CannotBindToInitialComponentException {
-		final Socket client = new Socket(address, port);
+		final Process client = Runtime.getRuntime().exec(command);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
@@ -112,7 +105,7 @@ public class NetworkClient implements Closeable {
 
 			@Override
 			public void close() throws IOException {
-				client.close();
+				client.destroy();
 			}
 		};
 

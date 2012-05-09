@@ -43,8 +43,8 @@ public final class SerializationTransducerFactory {
 	 * 
 	 * @return a byte array to object data transformation
 	 */
-	public static DataTransducer<Bytes, Object> getDecoder() {
-		return new Decoder();
+	public static DataTransducer<Bytes, Object> getDecoder(Class<?>... acceptedTypes) {
+		return new Decoder(acceptedTypes);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public final class SerializationTransducerFactory {
 	 * @return a object to byte array data transformation
 	 */
 
-	public static DataTransducer<Object, Bytes> getEncoder() {
-		return new Encoder();
+	public static DataTransducer<Object, Bytes> getEncoder(Class<?>... acceptedTypes) {
+		return new Encoder(acceptedTypes);
 	}
 }

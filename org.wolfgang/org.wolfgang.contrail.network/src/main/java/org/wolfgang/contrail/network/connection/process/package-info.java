@@ -17,10 +17,10 @@
  */
 
 /**
- * Serialization based encoder and decoder. This CoDec uses the standard java 
- * serialization mechanism.
+ * Process based on standard java layer. Such client and server are defined 
+ * with a given Ecosystem able to manager new connections. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.network.codec.serializer;
+package org.wolfgang.contrail.network.connection.process;

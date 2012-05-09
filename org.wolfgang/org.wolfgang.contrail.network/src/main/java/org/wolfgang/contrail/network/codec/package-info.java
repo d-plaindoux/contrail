@@ -17,10 +17,9 @@
  */
 
 /**
- * Serialization based encoder and decoder. This CoDec uses the standard java 
- * serialization mechanism.
+ * Main package providing codec based on payload serailization and JAXB. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.network.codec.serializer;
+package org.wolfgang.contrail.network.codec;

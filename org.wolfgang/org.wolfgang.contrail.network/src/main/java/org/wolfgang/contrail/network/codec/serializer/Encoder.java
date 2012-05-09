@@ -36,10 +36,16 @@ import org.wolfgang.contrail.network.codec.payload.Bytes;
 class Encoder implements DataTransducer<Object, Bytes> {
 
 	/**
+	 * An array of accepted types
+	 */
+	private final Class<?>[] acceptedTypes;
+
+	/**
 	 * Constructor
 	 */
-	Encoder() {
+	Encoder(Class<?>... acceptedTypes) {
 		super();
+		this.acceptedTypes = acceptedTypes;
 	}
 
 	@Override

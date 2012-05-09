@@ -21,9 +21,10 @@ package org.wolfgang.contrail.network.codec.payload;
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 
 /**
- * <code>SerializerTransducerFactory</code> is in charge of transforming
- * upstream bytes to java object and vice-versa based on pay load. This class
- * provides dedicate encoder and decoder for such serialization based CoDec
+ * <code>PayLoadTransducerFactory</code> is in charge of transforming upstream
+ * byte array to consistent byte arrays and vice-versa based on pay load. This
+ * class provides dedicate encoder and decoder for such serialization based
+ * CoDec
  * 
  * @author Didier Plaindoux
  * @version 1.0

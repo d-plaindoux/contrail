@@ -17,8 +17,7 @@
  */
 
 /**
- * Server based on standard java socket layer (java.net). Such client and server are 
- * defined with a given Ecosystem able to manager new connections. 
+ * Main package providing a connection facility used to interconnect frameworks. 
  *
  * @author Didier Plaindoux
  * @version 1.0

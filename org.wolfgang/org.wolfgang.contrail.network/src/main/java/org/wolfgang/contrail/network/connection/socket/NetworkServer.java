@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection;
+package org.wolfgang.contrail.network.connection.socket;
 
 import java.io.Closeable;
 import java.io.IOException;
