@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CannotIntegrateTerminalComponentException extends Exception {
+public class CannotBindToTerminalComponentException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -36,7 +36,7 @@ public class CannotIntegrateTerminalComponentException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public CannotIntegrateTerminalComponentException(Throwable arg0) {
+	public CannotBindToTerminalComponentException(Throwable arg0) {
 		super(arg0);
 	}
 

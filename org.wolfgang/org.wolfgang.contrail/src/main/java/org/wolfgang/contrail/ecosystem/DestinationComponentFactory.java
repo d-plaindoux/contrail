@@ -32,7 +32,7 @@ public interface DestinationComponentFactory<U, D> {
 	 * Method called whether a link must be done
 	 * 
 	 * @return the component receiving initial component data
-	 * @throws CannotIntegrateInitialComponentException
+	 * @throws CannotBindToInitialComponentException
 	 *             thrown if the integration cannot be done correctly
 	 */
 	DestinationComponent<U, D> create();

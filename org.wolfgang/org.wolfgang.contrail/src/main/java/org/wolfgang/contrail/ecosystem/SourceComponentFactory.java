@@ -36,7 +36,7 @@ public interface SourceComponentFactory<U, D> {
 	 * @param component
 	 *            The component to be integrated
 	 * @return the source component receiving terminal component data
-	 * @throws CannotIntegrateTerminalComponentException
+	 * @throws CannotBindToTerminalComponentException
 	 *             if the terminal integration fails
 	 */
 	SourceComponent<U, D> create();

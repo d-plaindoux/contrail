@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CannotIntegrateInitialComponentException extends Exception {
+public class CannotBindToInitialComponentException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -36,7 +36,7 @@ public class CannotIntegrateInitialComponentException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public CannotIntegrateInitialComponentException(Throwable arg0) {
+	public CannotBindToInitialComponentException(Throwable arg0) {
 		super(arg0);
 	}
 

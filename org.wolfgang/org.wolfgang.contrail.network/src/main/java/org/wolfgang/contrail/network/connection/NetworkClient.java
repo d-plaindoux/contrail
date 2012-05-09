@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.CannotIntegrateInitialComponentException;
+import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -93,11 +93,11 @@ public class NetworkClient implements Closeable {
 	 * @param port
 	 *            The server port
 	 * @throws IOException
-	 * @throws CannotIntegrateInitialComponentException
+	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotProvideInitialComponentException
 	 */
 	public void connect(InetAddress address, int port) throws IOException, CannotProvideInitialComponentException,
-			CannotIntegrateInitialComponentException {
+			CannotBindToInitialComponentException {
 		final Socket client = new Socket(address, port);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {

@@ -38,7 +38,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestComponentEcosystem extends TestCase {
 
-	public void testNominal01() throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
+	public void testNominal01() throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
 
 		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
 

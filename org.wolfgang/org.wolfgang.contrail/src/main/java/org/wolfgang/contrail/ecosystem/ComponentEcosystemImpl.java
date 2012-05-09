@@ -160,7 +160,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 
 	@Override
 	public <U, D> DataSender<U> bindToInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException {
+			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
 		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
 
 		final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
@@ -175,7 +175,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 		try {
 			linkManager.connect(initialComponent, destinationComponent);
 		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotIntegrateInitialComponentException(e);
+			throw new CannotBindToInitialComponentException(e);
 		}
 
 		return initialComponent.getDataSender();
@@ -183,7 +183,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 
 	@Override
 	public <U, D> DataSender<D> bindToTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException {
+			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException {
 		final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
 
 		final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(new TerminalDataReceiverFactory<U, D>() {
@@ -198,7 +198,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 		try {
 			linkManager.connect(sourceComponent, terminalComponent);
 		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotIntegrateTerminalComponentException(e);
+			throw new CannotBindToTerminalComponentException(e);
 		}
 
 		return terminalComponent.getDataSender();

@@ -44,11 +44,11 @@ public interface ComponentEcosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotIntegrateInitialComponentException
+	 * @throws CannotBindToInitialComponentException
 	 *             if the component integration fails
 	 */
 	<U, D> DataSender<U> bindToInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideInitialComponentException, CannotIntegrateInitialComponentException;
+			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException;
 
 	/**
 	 * Method called whether a destination component is required
@@ -63,10 +63,10 @@ public interface ComponentEcosystem {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotIntegrateTerminalComponentException
+	 * @throws CannotBindToTerminalComponentException
 	 *             if the component integration fails
 	 */
 	<U, D> DataSender<D> bindToTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
-			throws CannotProvideTerminalComponentException, CannotIntegrateTerminalComponentException;
+			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException;
 
 }
