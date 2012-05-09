@@ -36,7 +36,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * The <code>ProcessClient</code> provides a client implementation using
- * standard libraries like process creation. This can be used to create a
+ * standard libraries runtime process creation. This can be used to create a
  * connection between two framework using SSH for example.
  * @author Didier Plaindoux
  * 
@@ -81,10 +81,8 @@ public class ProcessClient implements Closeable {
 	/**
 	 * Method called whether a client connection must be performed
 	 * 
-	 * @param address
-	 *            The server internet address
-	 * @param port
-	 *            The server port
+	 * @param command
+	 *            The command to be executed
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotProvideInitialComponentException

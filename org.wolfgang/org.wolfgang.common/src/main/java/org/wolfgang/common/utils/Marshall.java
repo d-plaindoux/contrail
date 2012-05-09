@@ -82,6 +82,7 @@ public final class Marshall {
 	 * @throws ClassNotFoundException
 	 *             if the object is not consistent with existing classes
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T bytesToObject(final byte[] bytes) throws IOException, ClassNotFoundException {
 		final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(bytes);
 		final ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);

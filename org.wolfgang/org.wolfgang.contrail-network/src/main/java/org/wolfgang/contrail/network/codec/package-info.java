@@ -17,7 +17,7 @@
  */
 
 /**
- * Main package providing codec based on payload serailization and JAXB. 
+ * Main package providing CoDec based on pay-load serialization and JAXB. 
  *
  * @author Didier Plaindoux
  * @version 1.0

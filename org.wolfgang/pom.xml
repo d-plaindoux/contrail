@@ -59,8 +59,8 @@
 
 	<modules>
 		<module>org.wolfgang.common</module>
-		<module>org.wolfgang.contrail</module>
-		<module>org.wolfgang.contrail.network</module>
+		<module>org.wolfgang.contrail-core</module>
+		<module>org.wolfgang.contrail-network</module>
 	</modules>
 
 </project>

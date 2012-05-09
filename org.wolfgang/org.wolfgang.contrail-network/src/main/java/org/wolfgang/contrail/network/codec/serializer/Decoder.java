@@ -35,6 +35,9 @@ import org.wolfgang.contrail.network.codec.payload.Bytes;
  */
 class Decoder implements DataTransducer<Bytes, Object> {
 
+	/**
+	 * Accepted types for the decoding
+	 */
 	private final Class<?>[] acceptedTypes;
 
 	/**
