@@ -54,7 +54,7 @@ public class ProcessHandler implements Closeable {
 	private final ExecutorService executor;
 
 	/**
-	 * De-multiplexer component
+	 * Ecosystem component
 	 */
 	private final ComponentEcosystem ecosystem;
 
