@@ -4,9 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wolfgang</groupId>
-	<artifactId>org.wolfgang.contrail-network</artifactId>
+	<artifactId>org.wolfgang.contrail-netty</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>org.wolfgang.contrail-network</name>
+	<name>org.wolfgang.contrail-netty</name>
 	<url>http://maven.apache.org</url>
 
 	<developers>
@@ -45,12 +45,6 @@
 			<groupId>org.wolfgang</groupId>
 			<artifactId>org.wolfgang.contrail-core</artifactId>
 			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.2.2</version>
 		</dependency>
 	</dependencies>
 
