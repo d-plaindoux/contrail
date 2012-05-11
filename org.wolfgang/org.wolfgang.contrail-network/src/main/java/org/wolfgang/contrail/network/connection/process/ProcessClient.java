@@ -96,6 +96,7 @@ public class ProcessClient implements Closeable {
 			public void receiveData(byte[] data) throws DataHandlerException {
 				try {
 					client.getOutputStream().write(data);
+					client.getOutputStream().flush();
 				} catch (IOException e) {
 					throw new DataHandlerException(e);
 				}

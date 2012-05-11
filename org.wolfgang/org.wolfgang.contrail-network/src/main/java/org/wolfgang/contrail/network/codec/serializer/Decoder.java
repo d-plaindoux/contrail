@@ -28,7 +28,7 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Decoder</code> is able to transform payload based array to an object
+ * <code>Decoder</code> is able to transform a payload based array to an object
  * 
  * @author Didier Plaindoux
  * @version 1.0

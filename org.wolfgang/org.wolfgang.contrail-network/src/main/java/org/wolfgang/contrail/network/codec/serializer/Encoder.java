@@ -28,7 +28,7 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
- * <code>Encoder</code> is capable to transform objects to byte array.
+ * <code>Encoder</code> is capable to transform objects to payload based byte array.
  * 
  * @author Didier Plaindoux
  * @version 1.0
