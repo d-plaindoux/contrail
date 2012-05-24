@@ -38,6 +38,7 @@ class Encoder implements DataTransducer<Object, Bytes> {
 	/**
 	 * An array of accepted types
 	 */
+	@SuppressWarnings("unused")
 	private final Class<?>[] acceptedTypes;
 
 	/**

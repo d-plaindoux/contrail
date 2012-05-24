@@ -1,0 +1,48 @@
+<html>
+  <head><title>Home</title></head>
+  <body>
+    <script type="text/javascript">
+      var webSocket;
+      var selfid = "${self.id}"
+      
+      if (!window.WebWebSocket) {
+          window.WebWebSocket = window.MozWebWebSocket;
+      }
+
+      if (window.WebWebSocket) {
+          webSocket = new WebWebSocket("${web.webSocket.location}");
+          webSocket.onmessage = function(event) { 
+              var ta = document.getElementById("responseText"); 
+              ta.value = ta.value + "\n" + selfid + "| " + event.data 
+          };
+          webSocket.onopen = function(event) { 
+              var ta = document.getElementById("responseText"); 
+              ta.value = selfid + "| " + "Web WebSocket opened!"; 
+          };
+          webSocket.onclose = function(event) { 
+              var ta = document.getElementById("responseText"); 
+              ta.value = ta.value  + "\n" + selfid + "| " + "Web WebSocket closed"; 
+          };
+      } else {
+          alert("Your browser does not support Web WebSocket.");
+      }
+
+      function send(message) {
+          if (!window.WebWebSocket) { 
+              return; 
+          }
+          if (webSocket.readyState == WebWebSocket.OPEN) {
+              webSocket.send(message);
+          } else {
+              alert("The webSocket is not open.");
+          }
+      }
+    </script>
+    <form onsubmit="return false;">
+      <input type="text" name="message" value="Hello, World!"></input>
+      <input type="button" value="Send Web WebSocket Data" onclick="send(this.form.message.value)" ></input>
+      <h3>Output</h3>                                
+      <textarea id="responseText" style="width: 500px; height:300px;"></textarea>
+    </form>  
+  </body>
+</html>

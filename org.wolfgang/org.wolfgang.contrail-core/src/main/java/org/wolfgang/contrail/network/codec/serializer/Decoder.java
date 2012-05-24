@@ -38,6 +38,7 @@ class Decoder implements DataTransducer<Bytes, Object> {
 	/**
 	 * Accepted types for the decoding
 	 */
+	@SuppressWarnings("unused")
 	private final Class<?>[] acceptedTypes;
 
 	/**
