@@ -56,6 +56,7 @@ public class NIOServer implements Callable<Void>, Closeable {
 	public NIOServer(int port, ChannelPipelineFactory pipeline) {
 		this.port = port;
 		this.pipeline = pipeline;
+		this.channelReference = new AtomicReference<Channel>();
 	}
 
 	/**
@@ -84,10 +85,4 @@ public class NIOServer implements Callable<Void>, Closeable {
 			channel.close();
 		}
 	}
-
-	/*
-	 * public static void main(String[] args) { int port; if (args.length > 0) {
-	 * port = Integer.parseInt(args[0]); } else { port = 8080; } new
-	 * NIOServer(port).run(); }
-	 */
 }

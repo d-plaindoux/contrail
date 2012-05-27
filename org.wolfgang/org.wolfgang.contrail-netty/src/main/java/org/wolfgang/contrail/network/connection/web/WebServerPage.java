@@ -22,11 +22,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
+import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
@@ -60,7 +60,7 @@ public final class WebServerPage {
 	 * @throws IOException
 	 *             if a problem occurs when the page retrieval fails
 	 */
-	public ChannelBuffer getPage(String resourceName, Map<String, String> definitions) throws IOException {
+	public Resource getResource(String resourceName) throws IOException {
 		// Retrieve the resource
 
 		final URL resource = WebServerPage.class.getResource(HTDOCS + resourceName);
@@ -87,13 +87,7 @@ public final class WebServerPage {
 		}
 
 		// Unfold HTML document
-
-		String content = new String(outputStream.toByteArray());
-
-		for (Entry<String, String> entry : definitions.entrySet()) {
-			content = content.replace("${" + entry.getKey() + "}", entry.getValue());
-		}
-
-		return ChannelBuffers.copiedBuffer(content.getBytes());
+		
+		return new Resource(new String(outputStream.toByteArray()));
 	}
 }

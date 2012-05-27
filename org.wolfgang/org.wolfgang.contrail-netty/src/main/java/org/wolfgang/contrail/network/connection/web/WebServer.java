@@ -46,4 +46,15 @@ public final class WebServer extends NIOServer {
 		super(port, new WebServerPipelineFactory());
 	}
 
+	public static void main(String[] args) {
+		int port;
+		if (args.length > 0) {
+			port = Integer.parseInt(args[0]);
+		} else {
+			port = 8080;
+		}
+
+		new WebServer(port).call();
+	}
+
 }

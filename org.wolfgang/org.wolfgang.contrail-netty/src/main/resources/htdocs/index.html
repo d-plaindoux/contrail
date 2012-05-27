@@ -5,12 +5,12 @@
       var webSocket;
       var selfid = "${self.id}"
       
-      if (!window.WebWebSocket) {
-          window.WebWebSocket = window.MozWebWebSocket;
+      if (!window.WebSocket) {
+          window.WebSocket = window.MozWebSocket;
       }
 
-      if (window.WebWebSocket) {
-          webSocket = new WebWebSocket("${web.webSocket.location}");
+      if (window.WebSocket) {
+          webSocket = new WebSocket("${web.socket.location}");
           webSocket.onmessage = function(event) { 
               var ta = document.getElementById("responseText"); 
               ta.value = ta.value + "\n" + selfid + "| " + event.data 
@@ -28,10 +28,10 @@
       }
 
       function send(message) {
-          if (!window.WebWebSocket) { 
+          if (!window.WebSocket) { 
               return; 
           }
-          if (webSocket.readyState == WebWebSocket.OPEN) {
+          if (webSocket.readyState == WebSocket.OPEN) {
               webSocket.send(message);
           } else {
               alert("The webSocket is not open.");
