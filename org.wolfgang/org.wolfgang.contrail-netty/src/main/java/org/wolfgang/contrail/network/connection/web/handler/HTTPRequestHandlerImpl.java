@@ -28,11 +28,14 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.OK;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -48,6 +51,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
+import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
@@ -59,10 +63,11 @@ import org.wolfgang.contrail.network.connection.web.resource.Resource;
  */
 public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 
-	private static final String WEBSOCKET = "/new.web.socket";
+	private static final String WEBSOCKET = "/web.socket";
 
 	private final WebServerPage serverPage;
 	private WebSocketServerHandshaker handshaker;
+	private ComponentEcosystem ecosystem;
 
 	/**
 	 * Constructor
@@ -135,8 +140,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 
 		// Check for closing frame
 		if (frame instanceof CloseWebSocketFrame) {
-			this.handshaker.close(ctx.getChannel(), (CloseWebSocketFrame) frame);
 		} else if (frame instanceof PingWebSocketFrame) {
+			this.handshaker.close(ctx.getChannel(), (CloseWebSocketFrame) frame);
 			this.sendWebSocketFrame(ctx, new PongWebSocketFrame(frame.getBinaryData()));
 		} else if (!(frame instanceof TextWebSocketFrame)) {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));

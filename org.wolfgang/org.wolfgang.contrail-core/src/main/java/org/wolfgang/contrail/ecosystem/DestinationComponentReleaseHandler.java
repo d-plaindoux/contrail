@@ -21,20 +21,13 @@ package org.wolfgang.contrail.ecosystem;
 import org.wolfgang.contrail.component.DestinationComponent;
 
 /**
- * <code>InitialComponentIntegrator</code>
+ * <code>ComponentReleaseHandler</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationComponentFactory<U, D> {
+public interface DestinationComponentReleaseHandler<U,D> {
 
-	/**
-	 * Method called whether a link must be done
-	 * 
-	 * @return the component receiving initial component data
-	 * @throws CannotBindToInitialComponentException
-	 *             thrown if the integration cannot be done correctly
-	 */
-	DestinationComponent<U, D> create(DestinationComponentReleaseHandler<U,D> handler);
+	void performRelease(DestinationComponent<U, D> destinationComponent);
 
 }

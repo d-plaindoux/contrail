@@ -28,10 +28,10 @@
 				<Incoming>byte[]</Incoming>
 				<Outgoing>byte[]</Outgoing>
 			</Type>
-			<Flow>
+			<DataFlow>
 				<Component refid="transducer:payload"/>
 				<Component refid="transducer:jaxb"/>
-			</Flow>
+			</DataFlow>
 		</InitialBinder>
 	</Binders>
 </Ecosystem>

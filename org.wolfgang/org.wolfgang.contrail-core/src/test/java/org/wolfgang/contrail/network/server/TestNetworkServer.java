@@ -32,6 +32,8 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.ecosystem.DestinationComponentReleaseHandler;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.socket.NetworkServer;
 
@@ -66,8 +68,20 @@ public class TestNetworkServer extends TestCase {
 
 		final DestinationComponentFactory<byte[], byte[]> destinationComponentFactory = new DestinationComponentFactory<byte[], byte[]>() {
 			@Override
-			public DestinationComponent<byte[], byte[]> create() {
-				return new TerminalComponent<byte[], byte[]>(dataFactory);
+			public DestinationComponent<byte[], byte[]> create(final DestinationComponentReleaseHandler<byte[], byte[]> handler) {
+				return new TerminalComponent<byte[], byte[]>(dataFactory) {
+					@Override
+					public void closeUpStream() throws DataHandlerCloseException {
+						super.closeUpStream();
+						handler.performRelease(this);
+					}
+
+					@Override
+					public void closeDownStream() throws DataHandlerCloseException {
+						super.closeDownStream();
+						handler.performRelease(this);
+					}
+				};
 			}
 		};
 

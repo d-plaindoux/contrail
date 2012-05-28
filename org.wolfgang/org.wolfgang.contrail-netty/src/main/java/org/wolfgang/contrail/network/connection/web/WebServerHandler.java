@@ -22,6 +22,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
+import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHander;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerImpl;
 
@@ -31,6 +32,11 @@ import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerIm
 class WebServerHandler extends SimpleChannelUpstreamHandler {
 
 	/**
+	 * The ecosystem to be us
+	 */
+	private final ComponentEcosystem ecosystem;
+
+	/**
 	 * Request handler
 	 */
 	private final HTTPRequestHander httpRequestHandler;
@@ -38,7 +44,8 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 	/**
 	 * Constructor
 	 */
-	public WebServerHandler() {
+	public WebServerHandler(ComponentEcosystem ecosystem) {		
+		this.ecosystem = ecosystem;
 		this.httpRequestHandler = new HTTPRequestHandlerImpl(new WebServerPage());
 	}
 

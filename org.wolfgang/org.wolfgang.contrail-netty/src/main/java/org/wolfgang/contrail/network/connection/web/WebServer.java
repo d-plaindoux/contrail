@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.network.connection.web;
 
+import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -42,8 +44,8 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(int port) {
-		super(port, new WebServerPipelineFactory());
+	public WebServer(ComponentEcosystem ecosystem, int port) {
+		super(port, new WebServerPipelineFactory(ecosystem));
 	}
 
 	public static void main(String[] args) {
@@ -54,7 +56,7 @@ public final class WebServer extends NIOServer {
 			port = 8080;
 		}
 
-		new WebServer(port).call();
+		new WebServer(new ComponentEcosystemImpl(),port).call();
 	}
 
 }
