@@ -24,7 +24,6 @@ import java.util.Map;
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -171,17 +170,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 			}
 		});
 
-		final DestinationComponent<U, D> destinationComponent = initialIntegrator.create(new DestinationComponentReleaseHandler<U, D>() {
-			@Override
-			public void performRelease(DestinationComponent<U, D> destinationComponent) {
-				try {
-					linkManager.disconnect(initialComponent, destinationComponent);
-				} catch (ComponentDisconnectionRejectedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		final DestinationComponent<U, D> destinationComponent = initialIntegrator.create();
 
 		try {
 			linkManager.connect(initialComponent, destinationComponent);
@@ -204,17 +193,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 			}
 		});
 
-		final SourceComponent<U, D> sourceComponent = terminalIntegrator.create(new SourceComponentReleaseHandler<U,D>() {			
-			@Override
-			public void performRelease(SourceComponent<U,D> sourceComponent) {
-				try {
-					linkManager.disconnect(sourceComponent, terminalComponent);
-				} catch (ComponentDisconnectionRejectedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
 
 		try {
 			linkManager.connect(sourceComponent, terminalComponent);

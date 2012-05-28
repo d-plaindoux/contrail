@@ -39,6 +39,6 @@ public interface SourceComponentFactory<U, D> {
 	 * @throws CannotBindToTerminalComponentException
 	 *             if the terminal integration fails
 	 */
-	SourceComponent<U, D> create(SourceComponentReleaseHandler<U,D> handler);
+	SourceComponent<U, D> create();
 
 }

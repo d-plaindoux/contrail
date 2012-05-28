@@ -28,7 +28,6 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -62,20 +61,8 @@ public class TestComponentEcosystem extends TestCase {
 		
 		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
 			@Override
-			public DestinationComponent<String, String> create(final DestinationComponentReleaseHandler<String, String> handler) {
-				return new TerminalComponent<String, String>(dataFactory) {
-					@Override
-					public void closeUpStream() throws DataHandlerCloseException {
-						super.closeUpStream();
-						handler.performRelease(this);
-					}
-					
-					@Override
-					public void closeDownStream() throws DataHandlerCloseException {
-						super.closeDownStream();
-						handler.performRelease(this);
-					}
-				};
+			public DestinationComponent<String, String> create() {
+				return new TerminalComponent<String, String>(dataFactory);
 			}
 		};
 

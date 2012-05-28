@@ -35,6 +35,6 @@ public interface DestinationComponentFactory<U, D> {
 	 * @throws CannotBindToInitialComponentException
 	 *             thrown if the integration cannot be done correctly
 	 */
-	DestinationComponent<U, D> create(DestinationComponentReleaseHandler<U,D> handler);
+	DestinationComponent<U, D> create();
 
 }
