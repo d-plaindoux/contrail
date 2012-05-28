@@ -18,12 +18,14 @@
 
 package org.wolfgang.contrail.ecosystem;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -32,6 +34,8 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.link.ComponentsLink;
 import org.wolfgang.contrail.link.ComponentsLinkManager;
 import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
@@ -161,47 +165,83 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	@Override
 	public <U, D> DataSender<U> bindToInitial(final DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
-		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
-
-		final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
-			@Override
-			public DataReceiver<D> create(InitialComponent<U, D> component) {
-				return receiver;
-			}
-		});
-
-		final DestinationComponent<U, D> destinationComponent = initialIntegrator.create();
-
 		try {
-			linkManager.connect(initialComponent, destinationComponent);
+			final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(upstream, downstream);
+
+			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
+				@Override
+				public DataReceiver<D> create(InitialComponent<U, D> component) {
+					return receiver;
+				}
+			});
+
+			final DestinationComponent<U, D> destinationComponent = initialIntegrator.create();
+
+			final ComponentsLink<U, D> link = linkManager.connect(initialComponent, destinationComponent);
+
+			return new DataSender<U>() {
+
+				@Override
+				public void close() throws IOException {
+					try {
+						link.dispose();
+					} catch (ComponentDisconnectionRejectedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					initialComponent.getDataSender().close();
+				}
+
+				@Override
+				public void sendData(U data) throws DataHandlerException {
+					initialComponent.getDataSender().sendData(data);
+				}
+			};
 		} catch (ComponentConnectionRejectedException e) {
 			throw new CannotBindToInitialComponentException(e);
 		}
 
-		return initialComponent.getDataSender();
 	}
 
 	@Override
 	public <U, D> DataSender<D> bindToTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException {
-		final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
-
-		final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(new TerminalDataReceiverFactory<U, D>() {
-			@Override
-			public DataReceiver<U> create(TerminalComponent<U, D> component) {
-				return receiver;
-			}
-		});
-
-		final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
-
 		try {
-			linkManager.connect(sourceComponent, terminalComponent);
+			final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
+
+			final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(
+					new TerminalDataReceiverFactory<U, D>() {
+						@Override
+						public DataReceiver<U> create(TerminalComponent<U, D> component) {
+							return receiver;
+						}
+					});
+
+			final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
+
+			final ComponentsLink<U, D> link = linkManager.connect(sourceComponent, terminalComponent);
+
+			return new DataSender<D>() {
+				@Override
+				public void close() throws IOException {
+					try {
+						link.dispose();
+					} catch (ComponentDisconnectionRejectedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					terminalComponent.getDataSender().close();
+				}
+
+				@Override
+				public void sendData(D data) throws DataHandlerException {
+					terminalComponent.getDataSender().sendData(data);
+				}
+			};
 		} catch (ComponentConnectionRejectedException e) {
 			throw new CannotBindToTerminalComponentException(e);
 		}
 
-		return terminalComponent.getDataSender();
 	}
 
 }
