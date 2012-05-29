@@ -81,10 +81,9 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *            The factory
 	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addDestinationFactory(Class<U> upstream, Class<D> downstream,
-			DestinationComponentFactory<U, D> factory) {
+	public <U, D> boolean addDestinationFactory(Class<U> upstream, Class<D> downstream,	DestinationComponentFactory<U, D> factory) {
 		final UnitIntegrationKey<U, D> unitIntegratorKey = new UnitIntegrationKey<U, D>(upstream, downstream);
-		if (this.terminalIntegrators.containsKey(unitIntegratorKey)) {
+		if (this.initialIntegrators.containsKey(unitIntegratorKey)) {
 			return false;
 		} else {
 			this.initialIntegrators.put(new UnitIntegrationKey<U, D>(upstream, downstream), factory);
@@ -207,7 +206,7 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	public <U, D> DataSender<D> bindToTerminal(final DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
 			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException {
 		try {
-			final SourceComponentFactory<U, D> terminalIntegrator = getTerminalIntegrator(upstream, downstream);
+			final SourceComponentFactory<U, D> terminalIntegrator = this.getTerminalIntegrator(upstream, downstream);
 
 			final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(
 					new TerminalDataReceiverFactory<U, D>() {

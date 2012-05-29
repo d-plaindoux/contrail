@@ -22,11 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
+import org.wolfgang.contrail.network.connection.web.resource.ResourceImpl;
 
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
@@ -88,6 +86,6 @@ public final class WebServerPage {
 
 		// Unfold HTML document
 		
-		return new Resource(new String(outputStream.toByteArray()));
+		return new ResourceImpl(new String(outputStream.toByteArray()));
 	}
 }

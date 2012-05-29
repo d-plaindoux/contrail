@@ -29,7 +29,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface HTTPRequestHander {
+public interface HTTPRequestHandler {
 
 	/**
 	 * Main method called whether an HTTP request is received
@@ -39,13 +39,13 @@ public interface HTTPRequestHander {
 	 * @return
 	 * @throws Exception
 	 */
-	public void handleHttpRequest(ChannelHandlerContext contex, HttpRequest req) throws Exception;
+	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest req) throws Exception;
 
 	/**
 	 * @param contex
 	 * @param frame
 	 * @throws Exception
 	 */
-	public void handleWebSocketFrame(ChannelHandlerContext contex, WebSocketFrame frame) throws Exception;
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
 
 }

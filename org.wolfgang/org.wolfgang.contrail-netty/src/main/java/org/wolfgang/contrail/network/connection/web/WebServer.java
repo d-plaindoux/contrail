@@ -18,8 +18,18 @@
 
 package org.wolfgang.contrail.network.connection.web;
 
+import java.io.IOException;
+
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
+import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -48,15 +58,52 @@ public final class WebServer extends NIOServer {
 		super(port, new WebServerPipelineFactory(ecosystem));
 	}
 
+	/**
+	 * Main
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		int port;
 		if (args.length > 0) {
 			port = Integer.parseInt(args[0]);
 		} else {
-			port = 8080;
+			port = 9090;
 		}
 
-		new WebServer(new ComponentEcosystemImpl(),port).call();
+		/**
+		 * Prepare the ecosystem
+		 */
+		
+		final ComponentEcosystemImpl ecosystem = new ComponentEcosystemImpl();
+		
+		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
+			@Override
+			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+				return new DataReceiver<String>() {
+					@Override
+					public void receiveData(String data) throws DataHandlerException {
+						component.getDataSender().sendData(data.toUpperCase());
+					}
+					
+					@Override
+					public void close() throws IOException {
+						component.getDataSender().close();
+					}
+				};
+			}
+		};
+		
+		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
+			@Override
+			public DestinationComponent<String, String> create() {
+				return new TerminalComponent<String, String>(dataFactory);
+			}
+		};
+
+		ecosystem.addDestinationFactory(String.class, String.class, destinationComponentFactory);
+		
+		new WebServer(ecosystem, port).call();
 	}
 
 }

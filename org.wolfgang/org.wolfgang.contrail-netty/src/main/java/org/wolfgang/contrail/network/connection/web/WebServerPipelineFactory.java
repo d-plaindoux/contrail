@@ -52,7 +52,7 @@ class WebServerPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("http_decoder", new HttpRequestDecoder());
 		pipeline.addLast("http_aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("http_encoder", new HttpResponseEncoder());
-		pipeline.addLast("websocket_handler", new WebServerHandler(ecosystem));
+		pipeline.addLast("websocket_handler", new WebServerHandler(this.ecosystem));
 		return pipeline;
 	}
 }

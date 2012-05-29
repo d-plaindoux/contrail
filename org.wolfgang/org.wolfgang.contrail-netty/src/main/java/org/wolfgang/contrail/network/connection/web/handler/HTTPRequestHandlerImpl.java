@@ -39,6 +39,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -51,7 +52,10 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
@@ -61,18 +65,40 @@ import org.wolfgang.contrail.network.connection.web.resource.Resource;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class HTTPRequestHandlerImpl implements HTTPRequestHander {
+public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 
 	private static final String WEBSOCKET = "/web.socket";
+	private static final DefaultHttpResponse DEFAULT_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, OK);
+	private static final DefaultHttpResponse NOT_FOUND_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, NOT_FOUND);
+	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
 
+	/**
+	 * 
+	 */
+	private final ComponentEcosystem ecosystem;
+
+	/**
+	 * 
+	 */
 	private final WebServerPage serverPage;
+
+	/**
+	 * 
+	 */
 	private WebSocketServerHandshaker handshaker;
-	private ComponentEcosystem ecosystem;
+
+	/**
+	 * 
+	 */
+	private DataSender<String> receiver;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param ecosystem2
 	 */
-	public HTTPRequestHandlerImpl(WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(ComponentEcosystem ecosystem, WebServerPage serverPage) {
+		this.ecosystem = ecosystem;
 		this.serverPage = serverPage;
 	}
 
@@ -84,10 +110,10 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 	 * @throws Exception
 	 */
 	@Override
-	public void handleHttpRequest(ChannelHandlerContext ctx, HttpRequest req) throws Exception {
+	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest req) throws Exception {
 		// Allow only GET methods ?
 		if (req.getMethod() != GET) {
-			this.sendHttpResponse(ctx, req, new DefaultHttpResponse(HTTP_1_1, FORBIDDEN));
+			this.sendHttpResponse(context, req, FORBIDDEN_HTTP_RESPONSE);
 		}
 
 		// Map containing informations
@@ -97,14 +123,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 		// Prepare the URI ?
 		final String resourceURI;
 		if (req.getUri().equals(WEBSOCKET)) {
-			final String location = this.getWebSocketLocation(req);
-			final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(location, null, false);
-			this.handshaker = wsFactory.newHandshaker(req);
-			if (this.handshaker == null) {
-				wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.getChannel());
-			} else {
-				this.handshaker.handshake(ctx.getChannel(), req).addListener(WebSocketServerHandshaker.HANDSHAKE_LISTENER);
-			}
+			this.initiateWebSocket(context, req);
 		} else {
 			if (req.getUri().equals("/")) {
 				resourceURI = "/index.html";
@@ -112,7 +131,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 				resourceURI = req.getUri();
 			}
 
-			final HttpResponse res = new DefaultHttpResponse(HTTP_1_1, OK);
+			final HttpResponse res = DEFAULT_HTTP_RESPONSE;
 
 			try {
 				final Resource resource = serverPage.getResource(resourceURI);
@@ -127,35 +146,110 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHander {
 				setContentLength(res, content.readableBytes());
 
 				res.setContent(content);
-				this.sendHttpResponse(ctx, req, res);
+				this.sendHttpResponse(context, req, res);
 
 			} catch (IOException e) {
-				this.sendHttpResponse(ctx, req, new DefaultHttpResponse(HTTP_1_1, NOT_FOUND));
+				this.sendHttpResponse(context, req, NOT_FOUND_HTTP_RESPONSE);
 			}
 		}
 	}
 
 	@Override
-	public void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataHandlerException,
+			IOException {
 		// Check for closing frame
 		if (frame instanceof CloseWebSocketFrame) {
+			this.handshaker.close(context.getChannel(), (CloseWebSocketFrame) frame);
+			this.handshaker = null;
+			this.receiver.close();
 		} else if (frame instanceof PingWebSocketFrame) {
-			this.handshaker.close(ctx.getChannel(), (CloseWebSocketFrame) frame);
-			this.sendWebSocketFrame(ctx, new PongWebSocketFrame(frame.getBinaryData()));
-		} else if (!(frame instanceof TextWebSocketFrame)) {
-			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
-		} else {
+			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
+		} else if (frame instanceof TextWebSocketFrame) {
 			final String request = ((TextWebSocketFrame) frame).getText();
-			// TODO replace this code ASAP
-			this.sendWebSocketFrame(ctx, new TextWebSocketFrame(request.toUpperCase()));
+			this.receiver.sendData(request);
+		} else {
+			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
 	}
 
+	//
+	// Basic and internal construction mechanisms
+	//
+
+	/**
+	 * @param req
+	 * @return
+	 */
 	private String getWebSocketLocation(HttpRequest req) {
 		return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + WEBSOCKET;
 	}
 
+	/**
+	 * @param context
+	 * @return
+	 */
+	private DataReceiver<String> createReceiver(final ChannelHandlerContext context) {
+		assert handshaker != null;
+
+		return new DataReceiver<String>() {
+			@Override
+			public void close() throws IOException {
+				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
+			}
+
+			@Override
+			public void receiveData(String data) throws DataHandlerException {
+				sendWebSocketFrame(context, new TextWebSocketFrame(data));
+			}
+		};
+	}
+
+	/**
+	 * @param context
+	 * @return
+	 */
+	private ChannelFutureListener createListener(ChannelHandlerContext context) {
+		final DataReceiver<String> emitter = createReceiver(context);
+
+		return new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture future) throws Exception {
+				if (!future.isSuccess()) {
+					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
+				} else {
+					try {
+						receiver = ecosystem.bindToInitial(emitter, String.class, String.class);
+					} catch (Exception e) {
+						Channels.fireExceptionCaught(future.getChannel(), e);
+						throw e;
+					}
+				}
+			}
+		};
+	}
+
+	//
+	// Framework initialization
+	//
+
+	/**
+	 * @param context
+	 * @param req
+	 * @throws Exception
+	 */
+	private void initiateWebSocket(ChannelHandlerContext context, HttpRequest req) throws Exception {
+		final String location = this.getWebSocketLocation(req);
+		final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(location, null, false);
+		this.handshaker = wsFactory.newHandshaker(req);
+		if (this.handshaker == null) {
+			wsFactory.sendUnsupportedWebSocketVersionResponse(context.getChannel());
+		} else {
+			this.handshaker.handshake(context.getChannel(), req).addListener(this.createListener(context));
+		}
+	}
+
+	//
+	// Message emission facilities
+	//
 	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {
 		// Send the response and close the connection if necessary.
 		ctx.getChannel().write(res);

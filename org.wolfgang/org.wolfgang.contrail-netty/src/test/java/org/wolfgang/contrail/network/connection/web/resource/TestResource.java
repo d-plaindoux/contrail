@@ -33,7 +33,7 @@ public class TestResource extends TestCase {
 	
 	public void testNominal() {
 		final String content = "This is a ${simple} test with some ${meta.variables}";
-		final Resource resource = new Resource(content);
+		final Resource resource = new ResourceImpl(content);
 		final Collection<String> freeVariables = resource.getFreeVariables();
 		
 		System.err.print(Arrays.toString(freeVariables.toArray()));
