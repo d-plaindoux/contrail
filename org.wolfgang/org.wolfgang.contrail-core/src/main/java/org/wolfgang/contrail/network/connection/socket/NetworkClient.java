@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.socket;
 
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -34,6 +37,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -54,6 +58,11 @@ public class NetworkClient implements Closeable {
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
+
+	/**
+	 * The filter
+	 */
+	private final FilteredUnitEcosystemKey filter;
 
 	/**
 	 * De-multiplexer component
@@ -79,8 +88,9 @@ public class NetworkClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetworkClient(ComponentEcosystem ecosystem) {
+	public NetworkClient(FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
 		super();
+		this.filter = and(filter, typed(byte[].class, byte[].class));
 		this.ecosystem = ecosystem;
 	}
 
@@ -116,7 +126,7 @@ public class NetworkClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(dataReceiver, byte[].class, byte[].class);
+		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

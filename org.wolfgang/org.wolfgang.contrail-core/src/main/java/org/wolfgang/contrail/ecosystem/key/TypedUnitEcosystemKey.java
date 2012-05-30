@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem;
+package org.wolfgang.contrail.ecosystem.key;
 
 /**
  * <code>Entry</code>
@@ -24,17 +24,17 @@ package org.wolfgang.contrail.ecosystem;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class UnitIntegrationKey<U, D> {
+public class TypedUnitEcosystemKey implements FilteredUnitEcosystemKey {
 
 	/**
 	 * The upstream class type
 	 */
-	private final Class<U> upstream;
+	private final Class<?> upstream;
 
 	/**
 	 * The downstream class type
 	 */
-	private final Class<D> downstream;
+	private final Class<?> downstream;
 
 	/**
 	 * Constructor
@@ -44,10 +44,28 @@ class UnitIntegrationKey<U, D> {
 	 * @param downstream
 	 *            The downstream class type
 	 */
-	public UnitIntegrationKey(Class<U> upstream, Class<D> downstream) {
+	public TypedUnitEcosystemKey(Class<?> upstream, Class<?> downstream) {
 		super();
 		this.upstream = upstream;
 		this.downstream = downstream;
+	}
+
+	/**
+	 * Return the value ofupstream
+	 * 
+	 * @return the upstream
+	 */
+	Class<?> getUpstream() {
+		return upstream;
+	}
+
+	/**
+	 * Return the value ofdownstream
+	 * 
+	 * @return the downstream
+	 */
+	Class<?> getDownstream() {
+		return downstream;
 	}
 
 	@Override
@@ -67,11 +85,12 @@ class UnitIntegrationKey<U, D> {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof TypedUnitEcosystemKey)) {
 			return false;
 		}
-		@SuppressWarnings("rawtypes")
-		UnitIntegrationKey other = (UnitIntegrationKey) obj;
+
+		TypedUnitEcosystemKey other = (TypedUnitEcosystemKey) obj;
+
 		if (downstream == null) {
 			if (other.downstream != null) {
 				return false;
@@ -87,5 +106,10 @@ class UnitIntegrationKey<U, D> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean filteredBy(RegisteredUnitEcosystemKey ecosystemKey) {
+		return ecosystemKey.accept(this);
 	}
 }

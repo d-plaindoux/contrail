@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 
 /**
  * A <code>ComponentEcosystem</code> is able to provide components based on
@@ -34,6 +35,8 @@ public interface ComponentEcosystem {
 	/**
 	 * Method called whether a source component is required
 	 * 
+	 * @param identifier
+	 *            The name of the required binder
 	 * @param factory
 	 *            The factory used to create final glue
 	 * @param upstream
@@ -47,18 +50,16 @@ public interface ComponentEcosystem {
 	 * @throws CannotBindToInitialComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<U> bindToInitial(DataReceiver<D> receiver, Class<U> upstream, Class<D> downstream)
+	<U, D> DataSender<U> bindToInitial(FilteredUnitEcosystemKey filter, DataReceiver<D> receiver)
 			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException;
 
 	/**
 	 * Method called whether a destination component is required
 	 * 
+	 * @param identifier
+	 *            The name of the required binder
 	 * @param factory
 	 *            The factory used to create final glue
-	 * @param upstream
-	 *            The upstream data type
-	 * @param downstream
-	 *            The downstream data type
 	 * @return a destination component (Never <code>null</code>)
 	 * @throws CannotProvideTerminalComponentException
 	 *             if no specific mechanisms are linked to the required stream
@@ -66,7 +67,7 @@ public interface ComponentEcosystem {
 	 * @throws CannotBindToTerminalComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<D> bindToTerminal(DataReceiver<U> receiver, Class<U> upstream, Class<D> downstream)
+	<U, D> DataSender<D> bindToTerminal(FilteredUnitEcosystemKey filter, DataReceiver<U> receiver)
 			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException;
 
 }

@@ -16,16 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.protocol;
+package org.wolfgang.contrail.ecosystem.key;
 
 /**
- * <code>Packet</code>
- *
+ * <code>FilteredUnitEcosystemKey</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetEvent {
-	
-	// TODO
+public class LogicalTrueEcosystemKey implements FilteredUnitEcosystemKey {
 
+	/**
+	 * Constructor
+	 * 
+	 * @param left
+	 * @param right
+	 */
+	public LogicalTrueEcosystemKey() {
+		super();
+	}
+
+	@Override
+	public boolean filteredBy(RegisteredUnitEcosystemKey ecosystemKey) {
+		return true;
+	}
+	
 }

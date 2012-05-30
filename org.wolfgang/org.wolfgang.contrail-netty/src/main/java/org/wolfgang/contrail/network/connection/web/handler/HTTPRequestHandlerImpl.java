@@ -28,14 +28,11 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.OK;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -55,6 +52,7 @@ import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
@@ -217,7 +215,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
 					try {
-						receiver = ecosystem.bindToInitial(emitter, String.class, String.class);
+						receiver = ecosystem.bindToInitial(UnitEcosystemKey.named("web.socket"), emitter);
 					} catch (Exception e) {
 						Channels.fireExceptionCaught(future.getChannel(), e);
 						throw e;

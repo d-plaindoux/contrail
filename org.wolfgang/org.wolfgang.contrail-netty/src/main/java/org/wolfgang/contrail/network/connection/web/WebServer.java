@@ -22,13 +22,12 @@ import java.io.IOException;
 
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -101,7 +100,7 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		ecosystem.addDestinationFactory(String.class, String.class, destinationComponentFactory);
+		ecosystem.addDestinationFactory(UnitEcosystemKey.getKey("web.socket", String.class, String.class), destinationComponentFactory);
 		
 		new WebServer(ecosystem, port).call();
 	}

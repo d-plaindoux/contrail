@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.process;
 
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,14 +35,15 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * The <code>ProcessClient</code> provides a client implementation using
  * standard libraries runtime process creation. This can be used to create a
  * connection between two framework using SSH for example.
- * @author Didier Plaindoux
  * 
+ * @author Didier Plaindoux
  * @version 1.0
  */
 public class ProcessClient implements Closeable {
@@ -50,7 +54,12 @@ public class ProcessClient implements Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * De-multiplexer component
+	 * The filter
+	 */
+	private final FilteredUnitEcosystemKey filter;
+
+	/**
+	 * The ecosystem
 	 */
 	private final ComponentEcosystem ecosystem;
 
@@ -73,8 +82,9 @@ public class ProcessClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessClient(ComponentEcosystem ecosystem) {
+	public ProcessClient(FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
 		super();
+		this.filter = and(filter,typed(byte[].class, byte[].class));
 		this.ecosystem = ecosystem;
 	}
 
@@ -108,7 +118,7 @@ public class ProcessClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(dataReceiver, byte[].class, byte[].class);
+		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

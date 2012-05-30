@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.socket.NetworkServer;
 
@@ -56,7 +56,7 @@ public class TestNetworkServer extends TestCase {
 					public void receiveData(byte[] data) throws DataHandlerException {
 						component.getDataSender().sendData(data);
 					}
-					
+
 					@Override
 					public void close() throws IOException {
 						component.getDataSender().close();
@@ -72,15 +72,16 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		ecosystem.addDestinationFactory(byte[].class, byte[].class, destinationComponentFactory);
+		ecosystem.addDestinationFactory(UnitEcosystemKey.getKey("test", byte[].class, byte[].class), destinationComponentFactory);
 
-		final NetworkServer networkServer = new NetworkServer(InetAddress.getLocalHost(), 2666, ecosystem);
+		final NetworkServer networkServer = new NetworkServer(InetAddress.getLocalHost(), 2666,	UnitEcosystemKey.allwaysTrue(), ecosystem);
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);
 
 		final Socket socket = new Socket(InetAddress.getLocalHost(), 2666);
 
+	
 		final String message = "Hello, World!";
 
 		socket.getOutputStream().write(message.getBytes());

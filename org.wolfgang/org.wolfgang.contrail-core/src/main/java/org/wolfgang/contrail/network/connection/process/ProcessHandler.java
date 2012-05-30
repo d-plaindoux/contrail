@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.process;
 
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +35,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -50,6 +54,11 @@ public class ProcessHandler implements Closeable {
 	private final ExecutorService executor;
 
 	/**
+	 * The filter
+	 */
+	private final FilteredUnitEcosystemKey filter;
+
+	/**
 	 * Ecosystem component
 	 */
 	private final ComponentEcosystem ecosystem;
@@ -64,8 +73,9 @@ public class ProcessHandler implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(ComponentEcosystem ecosystem) {
+	public ProcessHandler(FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
 		super();
+		this.filter = and(filter,typed(byte[].class, byte[].class));
 		this.ecosystem = ecosystem;
 	}
 
@@ -103,7 +113,7 @@ public class ProcessHandler implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(dataReceiver, byte[].class, byte[].class);
+		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

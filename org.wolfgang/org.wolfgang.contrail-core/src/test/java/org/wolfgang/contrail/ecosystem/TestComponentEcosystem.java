@@ -28,6 +28,7 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -50,7 +51,7 @@ public class TestComponentEcosystem extends TestCase {
 					public void receiveData(String data) throws DataHandlerException {
 						component.getDataSender().sendData(data);
 					}
-					
+
 					@Override
 					public void close() throws IOException {
 						component.getDataSender().close();
@@ -58,7 +59,7 @@ public class TestComponentEcosystem extends TestCase {
 				};
 			}
 		};
-		
+
 		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
 			@Override
 			public DestinationComponent<String, String> create() {
@@ -66,7 +67,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		integrator.addDestinationFactory(String.class, String.class, destinationComponentFactory);
+		integrator.addDestinationFactory(UnitEcosystemKey.getKey("test", String.class, String.class), destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 
@@ -82,7 +83,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DataSender<String> createInitial = integrator.bindToInitial(receiver, String.class, String.class);
+		final DataSender<String> createInitial = integrator.bindToInitial(UnitEcosystemKey.named("test"), receiver);
 		final String message = "Hello, World!";
 
 		try {

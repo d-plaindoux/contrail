@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.socket;
 
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
+import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -41,8 +45,8 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * implementation don't use the new IO libraries and select mechanism. As a
  * consequence this implementation is not meant to be scalable as required for
  * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federation network links between components
- * particularly on presence of multiple hop network links.
+ * optimized network layer relaying on federation network links between
+ * components particularly on presence of multiple hop network links.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -53,6 +57,11 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
+
+	/**
+	 * The filter
+	 */
+	private final FilteredUnitEcosystemKey filter;
 
 	/**
 	 * The chosen inet address for the socket server
@@ -97,8 +106,9 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetworkServer(InetAddress address, int port, ComponentEcosystem ecosystem) {
+	public NetworkServer(InetAddress address, int port, FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
 		super();
+		this.filter = and(filter, typed(byte[].class, byte[].class));
 		this.address = address;
 		this.port = port;
 		this.ecosystem = ecosystem;
@@ -132,7 +142,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 				}
 			};
 
-			final DataSender<byte[]> dataSender = ecosystem.bindToInitial(dataReceiver, byte[].class, byte[].class);
+			final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
 
 			final Callable<Void> reader = new Callable<Void>() {
 				@Override
