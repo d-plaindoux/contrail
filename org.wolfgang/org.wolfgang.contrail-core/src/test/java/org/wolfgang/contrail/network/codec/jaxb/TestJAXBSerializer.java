@@ -38,11 +38,12 @@ public class TestJAXBSerializer extends TestCase {
 		final SimpleClass source = new SimpleClass();
 		source.setValue("Hello, World!");
 
-		final DataTransducer<Object, Bytes> encoder = JAXBTransducerFactory.getEncoder(new Class[] { SimpleClass.class });
+		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		final List<Bytes> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
 
-		final DataTransducer<Bytes, Object> decoder = JAXBTransducerFactory.getDecoder(new Class[] { SimpleClass.class });
+		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
 		final List<Object> result = decoder.transform(bytes.get(0));
 		assertEquals(1, result.size());
 
@@ -50,7 +51,8 @@ public class TestJAXBSerializer extends TestCase {
 	}
 
 	public void testFailure01() {
-		final DataTransducer<Object, Bytes> encoder = JAXBTransducerFactory.getEncoder(new Class[] { SimpleClass.class });
+		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		try {
 			encoder.transform(this);
 			fail();
@@ -62,7 +64,8 @@ public class TestJAXBSerializer extends TestCase {
 	public void testFailure02() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 
-		final DataTransducer<Bytes, Object> decoder = JAXBTransducerFactory.getDecoder(new Class[] { SimpleClass.class });
+		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
 		try {
 			decoder.transform(new Bytes(bytes));
 			fail();

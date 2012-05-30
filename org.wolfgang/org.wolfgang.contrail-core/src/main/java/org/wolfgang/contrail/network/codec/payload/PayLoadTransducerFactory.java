@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.network.codec.payload;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.network.codec.CodecFactory;
 
 /**
  * <code>PayLoadTransducerFactory</code> is in charge of transforming upstream
@@ -29,12 +30,12 @@ import org.wolfgang.contrail.component.transducer.DataTransducer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PayLoadTransducerFactory {
+public final class PayLoadTransducerFactory implements CodecFactory<byte[], Bytes> {
 
 	/**
 	 * Constructor
 	 */
-	private PayLoadTransducerFactory() {
+	public PayLoadTransducerFactory() {
 		// Prevent useless object creation
 	}
 
@@ -43,7 +44,7 @@ public final class PayLoadTransducerFactory {
 	 * 
 	 * @return a byte array to object data transformation
 	 */
-	public static DataTransducer<byte[], Bytes> getDecoder() {
+	public DataTransducer<byte[], Bytes> getDecoder() {
 		return new Decoder();
 	}
 
@@ -53,7 +54,7 @@ public final class PayLoadTransducerFactory {
 	 * @return a object to byte array data transformation
 	 */
 
-	public static DataTransducer<Bytes, byte[]> getEncoder() {
+	public DataTransducer<Bytes, byte[]> getEncoder() {
 		return new Encoder();
 	}
 }

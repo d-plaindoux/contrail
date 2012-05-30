@@ -37,11 +37,13 @@ public class TestPayLoadTransducers extends TestCase {
 	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
-		final DataTransducer<Bytes, byte[]> encoder = PayLoadTransducerFactory.getEncoder();
+		final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
+		
+		final DataTransducer<Bytes, byte[]> encoder = payLoadTransducerFactory.getEncoder();
 		final List<byte[]> bytes = encoder.transform(new Bytes(source.getBytes()));
 		assertEquals(1, bytes.size());
 
-		final DataTransducer<byte[], Bytes> decoder = PayLoadTransducerFactory.getDecoder();
+		final DataTransducer<byte[], Bytes> decoder = payLoadTransducerFactory.getDecoder();
 		final List<Bytes> result = decoder.transform(bytes.get(0));
 		assertEquals(1, result.size());
 
@@ -51,14 +53,16 @@ public class TestPayLoadTransducers extends TestCase {
 	public void testNominalSplit() throws DataTransducerException {
 		final String source = "Hello, World!";
 
-		final DataTransducer<Bytes, byte[]> encoder = PayLoadTransducerFactory.getEncoder();
+		final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
+
+		final DataTransducer<Bytes, byte[]> encoder = payLoadTransducerFactory.getEncoder();
 		final List<byte[]> bytes = encoder.transform(new Bytes(source.getBytes()));
 		encoder.finish();
 
 		assertEquals(1, bytes.size());
 		final byte[] intermediate = bytes.get(0);
 
-		final DataTransducer<byte[], Bytes> decoder = PayLoadTransducerFactory.getDecoder();
+		final DataTransducer<byte[], Bytes> decoder = payLoadTransducerFactory.getDecoder();
 		final List<Bytes> fstResult = decoder.transform(Arrays.copyOfRange(intermediate, 0, intermediate.length / 2));
 		assertEquals(0, fstResult.size());
 

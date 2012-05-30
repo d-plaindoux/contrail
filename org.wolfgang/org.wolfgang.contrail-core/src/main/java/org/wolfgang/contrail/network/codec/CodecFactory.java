@@ -16,43 +16,30 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.codec.identity;
+package org.wolfgang.contrail.network.codec;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.network.codec.CodecFactory;
 
 /**
- * <code>SerializerTransducerFactory</code> is in charge of transforming
- * upstream bytes to java object and vice-versa based on pay load. This class
- * provides dedicate encoder and decoder for such serialization based CoDec
+ * <code>CodecFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
+public interface CodecFactory<U, D> {
 
 	/**
-	 * Constructor
-	 */
-	public IdentityTransducerFactory() {
-		// Prevent useless object creation
-	}
-
-	/**
-	 * Method providing pay-load based decoder
+	 * Method providing the decoder
 	 * 
-	 * @return a byte array to object data transformation
+	 * @return a transducer
 	 */
-	public DataTransducer<A, A> getDecoder() {
-		return new Identity<A>();
-	}
+	DataTransducer<U, D> getDecoder();
 
 	/**
-	 * Method providing pay-load based decoder
+	 * Method providing the encoder
 	 * 
-	 * @return a byte array to object data transformation
+	 * @return a transducer
 	 */
-	public DataTransducer<A, A> getEncoder() {
-		return new Identity<A>();
-	}
+	DataTransducer<D, U> getEncoder();
+
 }

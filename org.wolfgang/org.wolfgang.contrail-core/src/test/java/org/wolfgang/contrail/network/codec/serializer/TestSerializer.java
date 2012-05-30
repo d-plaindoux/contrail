@@ -37,11 +37,13 @@ public class TestSerializer extends TestCase {
 	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
-		final DataTransducer<Object, Bytes> encoder = SerializationTransducerFactory.getEncoder();
+		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+
+		final DataTransducer<Object, Bytes> encoder = serializationTransducerFactory.getEncoder();
 		final List<Bytes> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
 
-		final DataTransducer<Bytes, Object> decoder = SerializationTransducerFactory.getDecoder();
+		final DataTransducer<Bytes, Object> decoder = serializationTransducerFactory.getDecoder();
 		final List<Object> result = decoder.transform(bytes.get(0));
 		assertEquals(1, result.size());
 
@@ -49,7 +51,9 @@ public class TestSerializer extends TestCase {
 	}
 
 	public void testFailure01() {
-		final DataTransducer<Object, Bytes> encoder = SerializationTransducerFactory.getEncoder();
+		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+
+		final DataTransducer<Object, Bytes> encoder = serializationTransducerFactory.getEncoder();
 		try {
 			encoder.transform(this);
 			fail();
@@ -61,7 +65,9 @@ public class TestSerializer extends TestCase {
 	public void testFailure02() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 
-		final DataTransducer<Bytes, Object> decoder = SerializationTransducerFactory.getDecoder();
+		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+
+		final DataTransducer<Bytes, Object> decoder = serializationTransducerFactory.getDecoder();
 		try {
 			decoder.transform(new Bytes(bytes));
 			fail();

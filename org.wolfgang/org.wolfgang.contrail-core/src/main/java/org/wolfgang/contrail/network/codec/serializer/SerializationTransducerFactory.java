@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.network.codec.serializer;
 
 import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.network.codec.CodecFactory;
 import org.wolfgang.contrail.network.codec.payload.Bytes;
 
 /**
@@ -29,12 +30,18 @@ import org.wolfgang.contrail.network.codec.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class SerializationTransducerFactory {
+public final class SerializationTransducerFactory implements CodecFactory<Bytes, Object> {
+
+	/**
+	 * Accepted types
+	 */
+	private final Class<?>[] acceptedTypes;
 
 	/**
 	 * Constructor
 	 */
-	private SerializationTransducerFactory() {
+	public SerializationTransducerFactory(Class<?>... acceptedTypes) {
+		this.acceptedTypes = acceptedTypes;
 		// Prevent useless object creation
 	}
 
@@ -43,7 +50,7 @@ public final class SerializationTransducerFactory {
 	 * 
 	 * @return a byte array to object data transformation
 	 */
-	public static DataTransducer<Bytes, Object> getDecoder(Class<?>... acceptedTypes) {
+	public DataTransducer<Bytes, Object> getDecoder() {
 		return new Decoder(acceptedTypes);
 	}
 
@@ -53,7 +60,7 @@ public final class SerializationTransducerFactory {
 	 * @return a object to byte array data transformation
 	 */
 
-	public static DataTransducer<Object, Bytes> getEncoder(Class<?>... acceptedTypes) {
+	public DataTransducer<Object, Bytes> getEncoder() {
 		return new Encoder(acceptedTypes);
 	}
 }
