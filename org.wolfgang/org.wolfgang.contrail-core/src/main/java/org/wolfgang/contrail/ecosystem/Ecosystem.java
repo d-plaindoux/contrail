@@ -23,14 +23,14 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 
 /**
- * A <code>ComponentEcosystem</code> is able to provide components based on
- * criterion. This is the main component to be used for a network components
- * construction. Since the component is returned it must be connected.
+ * An <code>Ecosystem</code> is able to provide components based on criterion.
+ * This is the main component to be used for a network components construction.
+ * Since the component is returned it must be connected.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentEcosystem {
+public interface Ecosystem {
 
 	/**
 	 * Method called whether a source component is required

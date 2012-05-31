@@ -25,7 +25,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
 
 /**
  * <code>WebSocketServerPipelineFactory</code> is able to create the right
@@ -36,13 +36,13 @@ import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
  */
 class WebServerPipelineFactory implements ChannelPipelineFactory {
 
-	private final ComponentEcosystem ecosystem;
+	private final Ecosystem ecosystem;
 
 	/**
 	 * Constructor
 	 * 
 	 */
-	public WebServerPipelineFactory(ComponentEcosystem ecosystem) {
+	public WebServerPipelineFactory(Ecosystem ecosystem) {
 		this.ecosystem = ecosystem;
 	}
 	

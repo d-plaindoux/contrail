@@ -18,27 +18,45 @@
 
 package org.wolfgang.contrail.network.codec;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 
 /**
- * <code>CodecFactory</code>
+ * <code>CodecFactory</code> is the main interface used for encoder and decoder
+ * creation.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public interface CodecFactory<U, D> {
 
+	public static class Loader {
+		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
+			try {
+				final Class<?> codec = loader.loadClass(name);
+				try {
+					return (CodecFactory<?, ?>) codec.getConstructor(String[].class).newInstance(parameters);
+				} catch (NoSuchMethodException e) {
+					return (CodecFactory<?, ?>) codec.newInstance();
+				}
+			} catch (Exception e) {
+				throw new CodecFactoryCreationException(e);
+			}
+		}
+	}
+
 	/**
 	 * Method providing the decoder
 	 * 
-	 * @return a transducer
+	 * @return a decoding data transducer
 	 */
 	DataTransducer<U, D> getDecoder();
 
 	/**
 	 * Method providing the encoder
 	 * 
-	 * @return a transducer
+	 * @return an encoding data transducer
 	 */
 	DataTransducer<D, U> getEncoder();
 

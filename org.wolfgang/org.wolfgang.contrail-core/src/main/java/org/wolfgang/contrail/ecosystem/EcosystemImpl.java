@@ -43,13 +43,13 @@ import org.wolfgang.contrail.link.ComponentsLinkManager;
 import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
- * The <code>ComponentEcosystemImpl</code> proposes an implementation using
- * standard components and link mechanisms.
+ * The <code>EcosystemImpl</code> proposes an implementation using standard
+ * components and link mechanisms.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ComponentEcosystemImpl implements ComponentEcosystem {
+public final class EcosystemImpl implements Ecosystem {
 
 	/**
 	 * The dedicated link manager
@@ -84,7 +84,8 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 *            The factory
 	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addDestinationFactory(RegisteredUnitEcosystemKey ecosystemKey, DestinationComponentFactory<U, D> factory) {
+	public <U, D> boolean addDestinationFactory(RegisteredUnitEcosystemKey ecosystemKey,
+			DestinationComponentFactory<U, D> factory) {
 		if (this.initialIntegrators.containsKey(ecosystemKey)) {
 			return false;
 		} else {
@@ -125,8 +126,9 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if the initial component cannot be created
 	 */
-	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(FilteredUnitEcosystemKey filter) throws CannotProvideInitialComponentException {
-		
+	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(FilteredUnitEcosystemKey filter)
+			throws CannotProvideInitialComponentException {
+
 		for (Entry<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> unit : initialIntegrators.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
 				// TODO: unsafe code
@@ -149,7 +151,8 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
-	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(FilteredUnitEcosystemKey filter) throws CannotProvideTerminalComponentException {
+	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(FilteredUnitEcosystemKey filter)
+			throws CannotProvideTerminalComponentException {
 
 		for (Entry<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> unit : terminalIntegrators.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
@@ -163,7 +166,8 @@ public final class ComponentEcosystemImpl implements ComponentEcosystem {
 	}
 
 	@Override
-	public <U, D> DataSender<U> bindToInitial(FilteredUnitEcosystemKey filter, final DataReceiver<D> receiver) throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
+	public <U, D> DataSender<U> bindToInitial(FilteredUnitEcosystemKey filter, final DataReceiver<D> receiver)
+			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
 		try {
 			final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(filter);
 

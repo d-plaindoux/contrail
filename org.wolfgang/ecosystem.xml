@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<!-- ============================================================ -->
+<!-- Ecosystem definition -->
+<!-- ============================================================ -->
+
+<Ecosystem>
+	<Imports>
+		org.wolfgang.contrail.network.codec.jaxb		
+		org.wolfgang.contrail.network.codec.payload
+		org.wolfgang.contrail.network.codec.json
+	</Imports>
+	
+	<InitialBinders>
+		<!-- ============================================================ -->
+		<!-- IO Socket initial binder -->
+		<!-- ============================================================ -->
+		<DataFlow name="io.channel">
+			<Transducer factory="PayLoadTransducerFactory">
+				<Incoming ref="in" />
+				<Ougoing ref="payload.string" />
+			</Transducer>
+			<Transducer factory="StringTransducerFactory">
+				<Incoming ref="payload.string" />
+				<Ougoing ref="string.json" />
+			</Transducer>
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="string.json" />
+				<Ougoing ref="core.network" />
+			</Transducer>
+		</DataFlow>
+
+		<!-- ============================================================ -->
+		<!-- Web Socket initial binder -->
+		<!-- ============================================================ -->
+		<DataFlow name="web.channel">
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="in" />
+				<Ougoing ref="core.in" />
+			</Transducer>
+		</DataFlow>
+	</InitialBinders>
+
+	<InternalComponents>
+		<DataFlow name="core">
+			<Router factory="Networking">
+				<Incoming ref="network" />
+				<Outgoing ref="network.protocol" />
+			</Router>
+			<Router factory="IOClientHandler">
+				<Incoming ref="network.protocol" />
+				<Outgoing ref="io.client.json" />
+			</Router>
+			<Router factory="WebClientHandler">
+				<Incoming ref="network.protocol" />
+				<Outgoing ref="web.client.json" />
+			</Router>
+			<Router factory="ProtocolSelector">
+				<Incoming ref="network.protocol" />
+				<Outgoing ref="protocol" />
+			</Router>
+			<Router factory="ServiceHandler">
+				<Incoming ref="protocol" />
+				<Outgoing ref="service" />
+			</Router>
+			<Router factory="TransferHandler">
+				<Incoming ref="protocol" />
+				<Outgoing ref="transfer" />
+			</Router>
+		</DataFlow>
+	</InternalComponents>
+
+	<TerminalBinders>
+		<DataFlow name="io.client">
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="json" />
+				<Ougoing ref="json.string" />
+			</Transducer>
+			<Transducer factory="StringTransducerFactory">
+				<Incoming ref="json.string" />
+				<Ougoing ref="string.payload" />
+			</Transducer>
+			<Transducer factory="PayLoadTransducerFactory">
+				<Incoming ref="string.payload" />
+				<Ougoing ref="out" />
+			</Transducer>
+		</DataFlow>
+	</TerminalBinders>
+
+	<TerminalBinders>
+		<DataFlow name="web.client">
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="json" />
+				<Ougoing ref="json.string" />
+			</Transducer>
+		</DataFlow>
+	</TerminalBinders>
+
+	<Servers>
+		<Server factory="WebServer" port="9090" ref="web.channel" />
+		<Server factory="NetServer" port="8080" ref="io.channel" />
+	</Servers>
+
+	<Clients>
+		<Client factory="WebClient" ref="web.client.out" />
+		<Client factory="NetClient" ref="io.client.out" />
+	</Clients>
+</Ecosystem>

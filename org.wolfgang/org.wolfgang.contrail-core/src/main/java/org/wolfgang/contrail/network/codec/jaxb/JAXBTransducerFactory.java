@@ -33,9 +33,22 @@ import org.wolfgang.contrail.network.codec.payload.Bytes;
 public final class JAXBTransducerFactory implements CodecFactory<Bytes, Object> {
 
 	/**
-	 * 
+	 * Desired classes for JAXB encoding/decoding processes
 	 */
 	private final Class<?>[] types;
+
+	/**
+	 * Constructor
+	 * 
+	 * @throws ClassNotFoundException
+	 */
+	@SuppressWarnings("static-access")
+	public JAXBTransducerFactory(String... types) throws ClassNotFoundException {
+		this.types = new Class[types.length];
+		for (int i = 0; i < types.length; i++) {
+			this.types[i] = this.getClass().forName(types[i]);
+		}
+	}
 
 	/**
 	 * Constructor

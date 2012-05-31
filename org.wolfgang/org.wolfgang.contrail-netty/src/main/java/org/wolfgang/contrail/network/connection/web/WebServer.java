@@ -24,8 +24,8 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystemImpl;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
+import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -53,7 +53,7 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(ComponentEcosystem ecosystem, int port) {
+	public WebServer(Ecosystem ecosystem, int port) {
 		super(port, new WebServerPipelineFactory(ecosystem));
 	}
 
@@ -74,7 +74,7 @@ public final class WebServer extends NIOServer {
 		 * Prepare the ecosystem
 		 */
 		
-		final ComponentEcosystemImpl ecosystem = new ComponentEcosystemImpl();
+		final EcosystemImpl ecosystem = new EcosystemImpl();
 		
 		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
 			@Override

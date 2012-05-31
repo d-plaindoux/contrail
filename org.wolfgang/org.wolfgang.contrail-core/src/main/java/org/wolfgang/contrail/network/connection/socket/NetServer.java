@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -51,7 +51,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkServer implements Callable<Void>, Closeable {
+public class NetServer implements Callable<Void>, Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -76,7 +76,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final ComponentEcosystem ecosystem;
+	private final Ecosystem ecosystem;
 
 	/**
 	 * The underlying server socket
@@ -106,7 +106,7 @@ public class NetworkServer implements Callable<Void>, Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetworkServer(InetAddress address, int port, FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
+	public NetServer(InetAddress address, int port, FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
 		super();
 		this.filter = and(filter, typed(byte[].class, byte[].class));
 		this.address = address;

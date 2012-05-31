@@ -51,7 +51,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFa
 import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
@@ -73,7 +73,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * 
 	 */
-	private final ComponentEcosystem ecosystem;
+	private final Ecosystem ecosystem;
 
 	/**
 	 * 
@@ -95,7 +95,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * 
 	 * @param ecosystem2
 	 */
-	public HTTPRequestHandlerImpl(ComponentEcosystem ecosystem, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(Ecosystem ecosystem, WebServerPage serverPage) {
 		this.ecosystem = ecosystem;
 		this.serverPage = serverPage;
 	}

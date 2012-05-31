@@ -41,7 +41,7 @@ public class TestComponentEcosystem extends TestCase {
 
 	public void testNominal01() throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
 
-		final ComponentEcosystemImpl integrator = new ComponentEcosystemImpl();
+		final EcosystemImpl integrator = new EcosystemImpl();
 
 		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
 			@Override

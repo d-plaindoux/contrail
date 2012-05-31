@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.ComponentEcosystem;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -61,7 +61,7 @@ public class ProcessHandler implements Closeable {
 	/**
 	 * Ecosystem component
 	 */
-	private final ComponentEcosystem ecosystem;
+	private final Ecosystem ecosystem;
 
 	{
 		executor = Executors.newSingleThreadExecutor();
@@ -73,7 +73,7 @@ public class ProcessHandler implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(FilteredUnitEcosystemKey filter, ComponentEcosystem ecosystem) {
+	public ProcessHandler(FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
 		super();
 		this.filter = and(filter,typed(byte[].class, byte[].class));
 		this.ecosystem = ecosystem;

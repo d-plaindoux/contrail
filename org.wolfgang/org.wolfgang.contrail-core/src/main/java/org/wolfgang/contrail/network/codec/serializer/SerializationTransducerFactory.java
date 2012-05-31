@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -35,13 +36,34 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 	/**
 	 * Accepted types
 	 */
-	private final Class<?>[] acceptedTypes;
+	private final Class<?>[] types;
+
+	/**
+	 * Constructor
+	 */
+	@SuppressWarnings("static-access")
+	public SerializationTransducerFactory() {
+		this.types = new Class[0];
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @throws ClassNotFoundException
+	 */
+	@SuppressWarnings("static-access")
+	public SerializationTransducerFactory(String... types) throws ClassNotFoundException {
+		this.types = new Class[types.length];
+		for (int i = 0; i < types.length; i++) {
+			this.types[i] = this.getClass().forName(types[i]);
+		}
+	}
 
 	/**
 	 * Constructor
 	 */
 	public SerializationTransducerFactory(Class<?>... acceptedTypes) {
-		this.acceptedTypes = acceptedTypes;
+		this.types = acceptedTypes;
 		// Prevent useless object creation
 	}
 
@@ -51,7 +73,7 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 	 * @return a byte array to object data transformation
 	 */
 	public DataTransducer<Bytes, Object> getDecoder() {
-		return new Decoder(acceptedTypes);
+		return new Decoder(types);
 	}
 
 	/**
@@ -61,6 +83,6 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 	 */
 
 	public DataTransducer<Object, Bytes> getEncoder() {
-		return new Encoder(acceptedTypes);
+		return new Encoder(types);
 	}
 }
