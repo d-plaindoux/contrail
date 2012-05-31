@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.multiple;
 
+import static org.wolfgang.common.message.MessagesProvider.message;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements
 	static {
 		final String category = "org.wolfgang.contrail.message";
 
-		FILTERING_SOURCE_REQUIRED = MessagesProvider.get(category, "filtering.source.required");
+		FILTERING_SOURCE_REQUIRED = message(category, "filtering.source.required");
 	}
 
 	/**

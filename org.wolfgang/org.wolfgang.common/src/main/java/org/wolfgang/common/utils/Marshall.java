@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.utils;
 
+import static org.wolfgang.common.message.MessagesProvider.message;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -116,7 +118,7 @@ public final class Marshall {
 	 */
 	public static int bytesToInt(byte[] inBuffer) throws IOException {
 		if (inBuffer.length < INT_LENGTH) {
-			throw new IOException(MessagesProvider.get("org.wolfgang.common.message", "cannot.decode.int").format());
+			throw new IOException(message("org.wolfgang.common.message", "cannot.decode.int").format());
 		} else {
 			int value = 0;
 			for (int i = 0; i < INT_LENGTH; i++) {

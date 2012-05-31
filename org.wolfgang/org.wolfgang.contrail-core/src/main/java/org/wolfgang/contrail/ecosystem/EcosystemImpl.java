@@ -136,7 +136,7 @@ public final class EcosystemImpl implements Ecosystem {
 			}
 		}
 
-		final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "initial.factory.refused");
+		final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "initial.factory.refused");
 		throw new CannotProvideInitialComponentException(message.format(filter));
 	}
 
@@ -161,7 +161,7 @@ public final class EcosystemImpl implements Ecosystem {
 			}
 		}
 
-		final Message message = MessagesProvider.get("org/wolfgang/contrail/message", "terminal.factory.refused");
+		final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "terminal.factory.refused");
 		throw new CannotProvideTerminalComponentException(message.format(filter));
 	}
 

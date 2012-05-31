@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.core;
 
+import static org.wolfgang.common.message.MessagesProvider.message;
+
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.Component;
@@ -45,8 +47,8 @@ public abstract class AbstractComponent implements Component {
 	static {
 		final String category = "org.wolfgang.contrail.message";
 		
-		ALREADY_CONNECTED = MessagesProvider.get(category, "already.connected");
-		NOT_YET_CONNECTED = MessagesProvider.get(category, "not.yet.connected");
+		ALREADY_CONNECTED = message(category, "already.connected");
+		NOT_YET_CONNECTED = message(category, "not.yet.connected");
 	}
 	
 	/**

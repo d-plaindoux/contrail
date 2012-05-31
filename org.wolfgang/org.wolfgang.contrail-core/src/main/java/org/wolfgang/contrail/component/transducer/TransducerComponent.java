@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.component.transducer;
 
+import static org.wolfgang.common.message.MessagesProvider.message;
+
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
@@ -54,8 +56,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	static {
 		final String category = "org.wolfgang.contrail.message";
 
-		XDUCER_UNKNOWN = MessagesProvider.get(category, "transducer.upstream.unknown");
-		XDUCER_ERROR = MessagesProvider.get(category, "transducer.transformation.error");
+		XDUCER_UNKNOWN = message(category, "transducer.upstream.unknown");
+		XDUCER_ERROR = message(category, "transducer.transformation.error");
 	}
 
 	/**

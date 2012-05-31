@@ -19,10 +19,9 @@
 package org.wolfgang.contrail.ecosystem.builder;
 
 import static org.wolfgang.contrail.network.codec.CodecFactory.Loader.load;
+import static org.wolfgang.common.message.MessagesProvider.message;
 
-import java.util.Collection;
-
-import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.transducer.TransducerComponent;
 import org.wolfgang.contrail.network.codec.CodecFactory;
@@ -37,7 +36,7 @@ import org.wolfgang.contrail.network.codec.CodecFactoryCreationException;
 public class DataFlowTransducerComponent implements DataFlowComponent {
 
 	/**
-	 * 
+	 * The factory
 	 */
 	private final String factory;
 
@@ -73,18 +72,20 @@ public class DataFlowTransducerComponent implements DataFlowComponent {
 	}
 
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Component getComponent(ClassLoader loader, String[] imports) throws DataFlowComponentCreationException {
 		for (String anImport : imports) {
-			final CodecFactory codec;		
+			final CodecFactory codec;
 			try {
 				codec = load(loader, anImport + this.factory, this.parameters.clone());
 			} catch (CodecFactoryCreationException e) {
 				throw new DataFlowComponentCreationException(e);
 			}
-			return new TransducerComponent(codec.getDecoder(), codec.getEncoder());			
+			return new TransducerComponent(codec.getDecoder(), codec.getEncoder());
 		}
-		
-		throw new DataFlowComponentCreationException(MessagesProvider.get("org.wolgang.contrail.message", "dataflow.factory.not.found").format(this.factory));
+
+		final Message message = message("org.wolgang.contrail.message", "dataflow.factory.not.found");
+		throw new DataFlowComponentCreationException(message.format(this.factory));
 	}
 
 	@Override

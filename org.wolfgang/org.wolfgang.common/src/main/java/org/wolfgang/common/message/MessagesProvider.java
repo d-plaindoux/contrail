@@ -55,7 +55,7 @@ public final class MessagesProvider extends SecurityManager {
 	 *            Parameters used to format the message
 	 * @return a message formatter
 	 */
-	public static synchronized Message get(String category, String key) {
+	public static synchronized Message message(String category, String key) {
 		if (sharedInstance == null) {
 			sharedInstance = new MessagesProvider();
 		}
@@ -67,7 +67,7 @@ public final class MessagesProvider extends SecurityManager {
 			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage());
 		}
 
-		return sharedInstance.message(category, key);
+		return sharedInstance.getMessage(category, key);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public final class MessagesProvider extends SecurityManager {
 	 *            The parameters to be used for by the message formatter
 	 * @return a string
 	 */
-	private Message message(String category, String key) {
+	private Message getMessage(String category, String key) {
 		final ResourceBundle resourceBundle = resourceBundles.get(category);
 		if (resourceBundle != null) {
 			try {
