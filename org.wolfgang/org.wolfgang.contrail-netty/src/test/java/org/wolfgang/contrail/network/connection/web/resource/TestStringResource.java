@@ -18,34 +18,28 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import junit.framework.TestCase;
 
 /**
- * A <code>Resource</code> is the basic information sent to a client when an
- * http request has been received and managed.
- * 
+ * <code>TestResource</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Resource {
+public class TestStringResource extends TestCase {
+	
+	public void testNominal() {
+		final String content = "This is a ${simple} test with some ${meta.variables}";
+		final Resource resource = new StringResourceImpl(content);
+		final Collection<String> freeVariables = resource.getFreeVariables();
+		
+		System.err.print(Arrays.toString(freeVariables.toArray()));
+		
+		assertTrue(freeVariables.contains("simple"));
+		assertTrue(freeVariables.contains("meta.variables"));
+	}
 
-	/**
-	 * Method called when the content must be computed with a given set of
-	 * defined variables identified by a name and bind to a given string value.
-	 * 
-	 * @param definitions
-	 *            The set of variables
-	 * @return a channel buffer containing the evaluated resource
-	 * @throws IOException
-	 */
-	ChannelBuffer getContent(Map<String, String> definitions) throws IOException;
-
-	/**
-	 * @return the set of required variables
-	 */
-	Collection<String> getFreeVariables();
 }

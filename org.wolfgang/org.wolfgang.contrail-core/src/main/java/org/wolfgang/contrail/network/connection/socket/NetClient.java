@@ -70,11 +70,11 @@ public class NetClient implements Closeable {
 	private final Ecosystem ecosystem;
 
 	{
-		final ThreadGroup GROUP = new ThreadGroup("Network.Client");
+		final ThreadGroup group = new ThreadGroup("Network.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(GROUP, r, "Network.Connected.Client");
+				return new Thread(group, r, "Network.Connected.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();

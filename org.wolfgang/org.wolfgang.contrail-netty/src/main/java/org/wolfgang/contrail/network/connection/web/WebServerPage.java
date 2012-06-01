@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
-import org.wolfgang.contrail.network.connection.web.resource.ResourceImpl;
+import org.wolfgang.contrail.network.connection.web.resource.StringResourceImpl;
 
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
@@ -86,6 +86,6 @@ public final class WebServerPage {
 
 		// Unfold HTML document
 		
-		return new ResourceImpl(new String(outputStream.toByteArray()));
+		return new StringResourceImpl(new String(outputStream.toByteArray()));
 	}
 }

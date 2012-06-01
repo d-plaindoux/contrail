@@ -84,11 +84,11 @@ public class NetServer implements Callable<Void>, Closeable {
 	private ServerSocket serverSocket;
 
 	{
-		final ThreadGroup GROUP = new ThreadGroup("Socket.Server");
+		final ThreadGroup group = new ThreadGroup("Socket.Server");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(GROUP, r, "Socket.Accepted.Client");
+				return new Thread(group, r, "Socket.Accepted.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();

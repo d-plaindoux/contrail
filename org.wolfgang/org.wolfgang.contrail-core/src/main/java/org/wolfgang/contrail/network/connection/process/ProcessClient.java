@@ -64,11 +64,11 @@ public class ProcessClient implements Closeable {
 	private final Ecosystem ecosystem;
 
 	{
-		final ThreadGroup GROUP = new ThreadGroup("Process.Client");
+		final ThreadGroup group = new ThreadGroup("Process.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(GROUP, r, "Process.Connected.Client");
+				return new Thread(group, r, "Process.Connected.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();

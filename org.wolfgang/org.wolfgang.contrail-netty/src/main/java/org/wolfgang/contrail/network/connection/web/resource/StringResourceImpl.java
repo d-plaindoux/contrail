@@ -21,7 +21,6 @@ package org.wolfgang.contrail.network.connection.web.resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -29,15 +28,16 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- * <code>Resource</code>
+ * <code>StringResourceImpl</code> is a Resource implementation based a single
+ * string.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ResourceImpl implements Resource {
+public class StringResourceImpl implements Resource {
 
 	/**
-	 * 
+	 * The string template
 	 */
 	private final String contentResource;
 
@@ -45,17 +45,12 @@ public class ResourceImpl implements Resource {
 	 * Constructor
 	 * 
 	 * @param contentResource
+	 *            The string template
 	 */
-	public ResourceImpl(String contentResource) {
+	public StringResourceImpl(String contentResource) {
 		this.contentResource = contentResource;
 	}
 
-	/**
-	 * @param resourceName
-	 * @param definitions
-	 * @return
-	 * @throws IOException
-	 */
 	@Override
 	public ChannelBuffer getContent(Map<String, String> definitions) throws IOException {
 		String content = contentResource;
@@ -67,15 +62,13 @@ public class ResourceImpl implements Resource {
 		return ChannelBuffers.copiedBuffer(content.getBytes());
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Collection<String> getFreeVariables() {
-		final List<String> freeVariables = new ArrayList<String>();
+		final Collection<String> freeVariables = new ArrayList<String>();
 
 		int start = 0;
-		int end = start;
+		int end;
+		
 		while (start != -1) {
 			start = contentResource.indexOf("${", start);
 			if (start != -1) {
@@ -83,9 +76,9 @@ public class ResourceImpl implements Resource {
 				if (end == -1) {
 					start = -1;
 				} else {
-					final String token_name = contentResource.substring(start + 2, end);
-					if (!freeVariables.contains(token_name)) {
-						freeVariables.add(token_name);
+					final String tokenName = contentResource.substring(start + 2, end);
+					if (!freeVariables.contains(tokenName)) {
+						freeVariables.add(tokenName);
 					}
 					start = end;
 				}
