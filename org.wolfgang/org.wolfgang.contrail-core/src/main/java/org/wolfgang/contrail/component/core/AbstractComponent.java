@@ -21,7 +21,6 @@ package org.wolfgang.contrail.component.core;
 import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentId;
 

@@ -21,7 +21,6 @@ package org.wolfgang.contrail.component.transducer;
 import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;

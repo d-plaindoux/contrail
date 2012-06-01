@@ -18,8 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.builder;
 
-import static org.wolfgang.contrail.network.codec.CodecFactory.Loader.load;
 import static org.wolfgang.common.message.MessagesProvider.message;
+import static org.wolfgang.contrail.network.codec.CodecFactory.Loader.load;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.Component;
@@ -41,17 +41,17 @@ public class DataFlowTransducerComponent implements DataFlowComponent {
 	private final String factory;
 
 	/**
-	 * 
+	 * The parameters used for the transducer coding decoding creation 
 	 */
 	private final String[] parameters;
 
 	/**
-	 * 
+	 * The input name
 	 */
 	private final String input;
 
 	/**
-	 * 
+	 * The output name
 	 */
 	private final String output;
 

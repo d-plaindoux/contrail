@@ -23,8 +23,6 @@ import java.util.Map;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataWithInformation;
 
 /**
  * <code>FilteredSourceComponentSet</code> provides basic mechanism for filtered
@@ -40,7 +38,7 @@ public interface FilteredSourceComponents<D> {
 	 * 
 	 * @return a map of filters
 	 */
-	Map<ComponentId, DataInformationFilter> getSourceFilters();
+	Map<ComponentId, DataFilter<D>> getSourceFilters();
 
 	/**
 	 * Provide a component using it's identifier
@@ -48,6 +46,5 @@ public interface FilteredSourceComponents<D> {
 	 * @return an source component
 	 * @throws ComponentNotConnectedException
 	 */
-	SourceComponent<?, DataWithInformation<D>> getSourceComponent(ComponentId componentId)
-			throws ComponentNotConnectedException;
+	SourceComponent<?, D> getSourceComponent(ComponentId componentId) throws ComponentNotConnectedException;
 }

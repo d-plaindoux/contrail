@@ -18,13 +18,14 @@
 
 package org.wolfgang.contrail.ecosystem;
 
+import static org.wolfgang.common.message.MessagesProvider.message;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -126,17 +127,17 @@ public final class EcosystemImpl implements Ecosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if the initial component cannot be created
 	 */
+	@SuppressWarnings("unchecked")
 	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(FilteredUnitEcosystemKey filter)
 			throws CannotProvideInitialComponentException {
 
 		for (Entry<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> unit : initialIntegrators.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
-				// TODO: unsafe code
 				return (DestinationComponentFactory<U, D>) unit.getValue();
 			}
 		}
 
-		final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "initial.factory.refused");
+		final Message message = message("org/wolfgang/contrail/message", "initial.factory.refused");
 		throw new CannotProvideInitialComponentException(message.format(filter));
 	}
 
@@ -151,17 +152,17 @@ public final class EcosystemImpl implements Ecosystem {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
+	@SuppressWarnings("unchecked")
 	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(FilteredUnitEcosystemKey filter)
 			throws CannotProvideTerminalComponentException {
 
 		for (Entry<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> unit : terminalIntegrators.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
-				// TODO: unsafe code
 				return (SourceComponentFactory<U, D>) unit.getValue();
 			}
 		}
 
-		final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "terminal.factory.refused");
+		final Message message = message("org/wolfgang/contrail/message", "terminal.factory.refused");
 		throw new CannotProvideTerminalComponentException(message.format(filter));
 	}
 

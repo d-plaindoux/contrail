@@ -30,11 +30,6 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
-import org.wolfgang.contrail.data.DataInformation;
-import org.wolfgang.contrail.data.DataInformationFactory;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataInformationValueAlreadyDefinedException;
-import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentsLink;
@@ -49,10 +44,10 @@ import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 public class TestDeMultiplexer extends TestCase {
 
 	public void testDeMultiplexer01() {
-		final InitialComponent<DataWithInformation<String>, Void> source = new InitialComponent<DataWithInformation<String>, Void>(
-				new InitialDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(
+				new InitialDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<Void> create(InitialComponent<DataWithInformation<String>, Void> component) {
+					public DataReceiver<Void> create(InitialComponent<String, Void> component) {
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
@@ -67,15 +62,15 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DestinationComponent<DataWithInformation<String>, Void> listener1 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
+							public void receiveData(String data) throws DataHandlerException {
+								assertTrue(data.endsWith("Hello, World!"));
 							}
 
 							@Override
@@ -86,14 +81,14 @@ public class TestDeMultiplexer extends TestCase {
 					}
 				});
 
-		final DestinationComponent<DataWithInformation<String>, Void> listener2 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener2 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
+							public void receiveData(String data) throws DataHandlerException {
 								fail();
 							}
 							
@@ -107,7 +102,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -122,39 +117,34 @@ public class TestDeMultiplexer extends TestCase {
 			manager.connect(deMultiplexer, listener1);
 			manager.connect(deMultiplexer, listener2);
 
-			deMultiplexer.filterDestination(listener1.getComponentId(), new DataInformationFilter() {
+			deMultiplexer.filterDestination(listener1.getComponentId(), new DataFilter<String>() {
 				@Override
-				public boolean accept(DataInformation information) {
-					return information.hasValue("queue1", Object.class);
+				public boolean accept(String information) {
+					return information.startsWith("@queue1:");
 				}
 			});
 
-			deMultiplexer.filterDestination(listener2.getComponentId(), new DataInformationFilter() {
+			deMultiplexer.filterDestination(listener2.getComponentId(), new DataFilter<String>() {
 				@Override
-				public boolean accept(DataInformation information) {
-					return information.hasValue("queue2" + "", Object.class);
+				public boolean accept(String information) {
+					return information.startsWith("@queue2:" + "");
 				}
 			});
 
-			final DataInformation information = DataInformationFactory.createDataInformation();
-			information.setValue("queue1", new Object());
-
-			source.getDataSender().sendData(DataInformationFactory.createDataWithInformation(information, "Hello, World!"));
+			source.getDataSender().sendData("@queue1:Hello, World!");
 
 		} catch (ComponentConnectionRejectedException e) {
 			fail();
 		} catch (DataHandlerException e) {
 			fail();
-		} catch (DataInformationValueAlreadyDefinedException e) {
-			fail();
 		}
 	}
 
 	public void testDeMultiplexer02() {
-		final InitialComponent<DataWithInformation<String>, Void> source = new InitialComponent<DataWithInformation<String>, Void>(
-				new InitialDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(
+				new InitialDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<Void> create(InitialComponent<DataWithInformation<String>, Void> component) {
+					public DataReceiver<Void> create(InitialComponent<String, Void> component) {
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
@@ -171,7 +161,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -190,15 +180,15 @@ public class TestDeMultiplexer extends TestCase {
 	}
 
 	public void testDeMultiplexer03() {
-		final DestinationComponent<DataWithInformation<String>, Void> listener1 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
+							public void receiveData(String data) throws DataHandlerException {
+								assertEquals("Hello, World!", data);
 							}
 							
 							@Override
@@ -211,7 +201,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -230,15 +220,15 @@ public class TestDeMultiplexer extends TestCase {
 	}
 
 	public void testDeMultiplexer03b() {
-		final DestinationComponent<DataWithInformation<String>, Void> listener1 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
+							public void receiveData(String data) throws DataHandlerException {
+								assertEquals("Hello, World!", data);
 							}
 							
 							@Override
@@ -251,7 +241,7 @@ public class TestDeMultiplexer extends TestCase {
 		
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -269,15 +259,15 @@ public class TestDeMultiplexer extends TestCase {
 	}
 
 	public void testDeMultiplexer04() {
-		final DestinationComponent<DataWithInformation<String>, Void> listener1 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
+							public void receiveData(String data) throws DataHandlerException {
+								assertEquals("Hello, World!", data);
 							}
 
 							@Override
@@ -290,7 +280,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -300,7 +290,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<DataWithInformation<String>, Void> connect = manager.connect(deMultiplexer, listener1);
+			final ComponentsLink<String, Void> connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();
 		} catch (ComponentConnectionRejectedException e) {
 			fail();
@@ -310,15 +300,15 @@ public class TestDeMultiplexer extends TestCase {
 	}
 
 	public void testDeMultiplexer05() {
-		final DestinationComponent<DataWithInformation<String>, Void> listener1 = new TerminalComponent<DataWithInformation<String>, Void>(
-				new TerminalDataReceiverFactory<DataWithInformation<String>, Void>() {
+		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
+				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<DataWithInformation<String>> create(
-							TerminalComponent<DataWithInformation<String>, Void> component) {
-						return new DataReceiver<DataWithInformation<String>>() {
+					public DataReceiver<String> create(
+							TerminalComponent<String, Void> component) {
+						return new DataReceiver<String>() {
 							@Override
-							public void receiveData(DataWithInformation<String> data) throws DataHandlerException {
-								assertEquals("Hello, World!", data.getData());
+							public void receiveData(String data) throws DataHandlerException {
+								assertEquals("Hello, World!", data);
 							}
 							
 							@Override
@@ -331,7 +321,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<DataWithInformation<String>> create(
+			public UpStreamDataHandler<String> create(
 					FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
@@ -341,7 +331,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<DataWithInformation<String>, Void> connect = manager.connect(deMultiplexer, listener1);
+			final ComponentsLink<String, Void> connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();
 			connect.dispose();
 			fail();

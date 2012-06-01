@@ -22,8 +22,6 @@ import java.util.Map.Entry;
 
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -36,7 +34,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FilteredDeMultiplexerDataHandler<U> implements UpStreamDataHandler<DataWithInformation<U>> {
+public class FilteredDeMultiplexerDataHandler<U> implements UpStreamDataHandler<U> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -54,12 +52,11 @@ public class FilteredDeMultiplexerDataHandler<U> implements UpStreamDataHandler<
 	}
 
 	@Override
-	public void handleData(DataWithInformation<U> data) throws DataHandlerException {
+	public void handleData(U data) throws DataHandlerException {
 		boolean notHandled = true;
 
-		for (Entry<ComponentId, DataInformationFilter> entry : filteredDestinationComponentSet.getDestinationFilters()
-				.entrySet()) {
-			if (entry.getValue().accept(data.getInformation())) {
+		for (Entry<ComponentId, DataFilter<U>> entry : filteredDestinationComponentSet.getDestinationFilters().entrySet()) {
+			if (entry.getValue().accept(data)) {
 				try {
 					filteredDestinationComponentSet.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
 					notHandled = false;

@@ -16,42 +16,25 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.data;
+package org.wolfgang.contrail.component.multiple;
 
 /**
- * A <code>DataInformation</code> provides basic information used for filtering
- * mechanism.
+ * The <code>DataFilter</code> is the basic mechanism used for data filtering
+ * mechanism. This is mainly used for multiplexer, demultiplexer and router
+ * components.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class DataInformationFactory {
+public interface DataFilter<U> {
 
 	/**
-	 * Constructor
-	 */
-	private DataInformationFactory() {
-		// Prevent useless object creation
-	}
-
-	/**
-	 * Create a fresh data information
+	 * Predicate called whether a given data must be filtered.
 	 * 
-	 * @return a data information
-	 */
-	public static DataInformation createDataInformation() {
-		return new DataInformationImpl();
-	}
-
-	/**
-	 * Create a fresh data with informations
-	 * 
-	 * @param dataInformation
 	 * @param data
-	 * @return a data with information
+	 *            The data to be accepted or not
+	 * @return true if the filter accept the information; false otherwise
 	 */
-	public static <D> DataWithInformation<D> createDataWithInformation(DataInformation dataInformation, D data) {
-		return new DataWithInformationImpl<D>(dataInformation, data);
-	}
+	boolean accept(U data);
 
 }

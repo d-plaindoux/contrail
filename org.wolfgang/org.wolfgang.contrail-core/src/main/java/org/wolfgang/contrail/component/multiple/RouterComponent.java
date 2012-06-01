@@ -29,8 +29,6 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -41,26 +39,26 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RouterComponent<U, D> extends AbstractComponent implements
-		MultipleDestinationComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredDestinationComponents<U>,
-		MultipleSourceComponent<DataWithInformation<U>, DataWithInformation<D>>, FilteredSourceComponents<D> {
+public class RouterComponent<U, D> extends AbstractComponent implements MultipleDestinationComponent<U, D>,
+		FilteredDestinationComponents<U>, MultipleSourceComponent<U, D>, FilteredSourceComponents<D> {
 
 	/**
 	 * The de-multiplexer component
 	 */
-	private final DeMultiplexerComponent<U, DataWithInformation<D>> deMultiplexerComponent;
+	private final DeMultiplexerComponent<U, D> deMultiplexerComponent;
 
 	/**
 	 * The multiplexer component
 	 */
-	private final MultiplexerComponent<DataWithInformation<U>, D> multiplexerComponent;
+	private final MultiplexerComponent<U, D> multiplexerComponent;
 
 	/**
 	 * Constructor
 	 */
-	public RouterComponent(DeMultiplexerDataHandlerFactory<U> deMultiplexerFactory,	MultiplexerDataHandlerFactory<D> multiplexerFactory) {
-		this.deMultiplexerComponent = new DeMultiplexerComponent<U, DataWithInformation<D>>(deMultiplexerFactory);
-		this.multiplexerComponent = new MultiplexerComponent<DataWithInformation<U>, D>(multiplexerFactory);
+	public RouterComponent(DeMultiplexerDataHandlerFactory<U> deMultiplexerFactory,
+			MultiplexerDataHandlerFactory<D> multiplexerFactory) {
+		this.deMultiplexerComponent = new DeMultiplexerComponent<U, D>(deMultiplexerFactory);
+		this.multiplexerComponent = new MultiplexerComponent<U, D>(multiplexerFactory);
 	}
 
 	/**
@@ -69,22 +67,19 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 	 * @param deMultiplexerComponent
 	 * @param multiplexerComponent
 	 */
-	public RouterComponent(DeMultiplexerComponent<U, DataWithInformation<D>> deMultiplexerComponent,
-			MultiplexerComponent<DataWithInformation<U>, D> multiplexerComponent) {
+	public RouterComponent(DeMultiplexerComponent<U, D> deMultiplexerComponent, MultiplexerComponent<U, D> multiplexerComponent) {
 		super();
 		this.deMultiplexerComponent = deMultiplexerComponent;
 		this.multiplexerComponent = multiplexerComponent;
 	}
 
 	@Override
-	public void connect(DestinationComponent<DataWithInformation<U>, DataWithInformation<D>> handler)
-			throws ComponentConnectionRejectedException {
+	public void connect(DestinationComponent<U, D> handler) throws ComponentConnectionRejectedException {
 		deMultiplexerComponent.connect(handler);
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<DataWithInformation<U>, DataWithInformation<D>> handler)
-			throws ComponentNotConnectedException {
+	public void disconnect(DestinationComponent<U, D> handler) throws ComponentNotConnectedException {
 		deMultiplexerComponent.disconnect(handler);
 	}
 
@@ -99,30 +94,27 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 	}
 
 	@Override
-	public void connect(SourceComponent<DataWithInformation<U>, DataWithInformation<D>> handler)
-			throws ComponentConnectedException {
+	public void connect(SourceComponent<U, D> handler) throws ComponentConnectedException {
 		deMultiplexerComponent.connect(handler);
 	}
 
 	@Override
-	public void disconnect(SourceComponent<DataWithInformation<U>, DataWithInformation<D>> handler)
-			throws ComponentNotConnectedException {
+	public void disconnect(SourceComponent<U, D> handler) throws ComponentNotConnectedException {
 		deMultiplexerComponent.disconnect(handler);
 	}
 
 	@Override
-	public Map<ComponentId, DataInformationFilter> getDestinationFilters() {
+	public Map<ComponentId, DataFilter<U>> getDestinationFilters() {
 		return deMultiplexerComponent.getDestinationFilters();
 	}
 
 	@Override
-	public DestinationComponent<DataWithInformation<U>, DataWithInformation<D>> getDestinationComponent(ComponentId componentId)
-			throws ComponentNotConnectedException {
+	public DestinationComponent<U, D> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException {
 		return deMultiplexerComponent.getDestinationComponent(componentId);
 	}
 
 	@Override
-	public UpStreamDataHandler<DataWithInformation<U>> getUpStreamDataHandler() {
+	public UpStreamDataHandler<U> getUpStreamDataHandler() {
 		return deMultiplexerComponent.getUpStreamDataHandler();
 	}
 
@@ -137,23 +129,22 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 	 *            The filter (can be <code>null</code>)
 	 * @throws ComponentConnectedException
 	 */
-	public void filterDestination(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
+	public void filterDestination(ComponentId componentId, DataFilter<U> filter) throws ComponentConnectedException {
 		deMultiplexerComponent.filterDestination(componentId, filter);
 	}
 
 	@Override
-	public DownStreamDataHandler<DataWithInformation<D>> getDownStreamDataHandler() {
+	public DownStreamDataHandler<D> getDownStreamDataHandler() {
 		return deMultiplexerComponent.getDownStreamDataHandler();
 	}
 
 	@Override
-	public Map<ComponentId, DataInformationFilter> getSourceFilters() {
+	public Map<ComponentId, DataFilter<D>> getSourceFilters() {
 		return multiplexerComponent.getSourceFilters();
 	}
 
 	@Override
-	public SourceComponent<DataWithInformation<U>, DataWithInformation<D>> getSourceComponent(ComponentId componentId)
-			throws ComponentNotConnectedException {
+	public SourceComponent<U, D> getSourceComponent(ComponentId componentId) throws ComponentNotConnectedException {
 		return multiplexerComponent.getSourceComponent(componentId);
 	}
 
@@ -168,7 +159,7 @@ public class RouterComponent<U, D> extends AbstractComponent implements
 	 *            The filter (can be <code>null</code>)
 	 * @throws ComponentConnectedException
 	 */
-	public void filterSource(ComponentId componentId, DataInformationFilter filter) throws ComponentConnectedException {
+	public void filterSource(ComponentId componentId, DataFilter<D> filter) throws ComponentConnectedException {
 		multiplexerComponent.filterSource(componentId, filter);
 	}
 }

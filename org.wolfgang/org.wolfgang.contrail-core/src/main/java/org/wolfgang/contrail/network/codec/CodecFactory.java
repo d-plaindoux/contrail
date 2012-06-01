@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.network.codec;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 
 /**

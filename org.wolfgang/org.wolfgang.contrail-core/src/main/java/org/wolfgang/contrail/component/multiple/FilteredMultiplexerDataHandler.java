@@ -22,8 +22,6 @@ import java.util.Map.Entry;
 
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.data.DataInformationFilter;
-import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -36,7 +34,7 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FilteredMultiplexerDataHandler<D> implements DownStreamDataHandler<DataWithInformation<D>> {
+public class FilteredMultiplexerDataHandler<D> implements DownStreamDataHandler<D> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -54,11 +52,11 @@ public class FilteredMultiplexerDataHandler<D> implements DownStreamDataHandler<
 	}
 
 	@Override
-	public void handleData(DataWithInformation<D> data) throws DataHandlerException {
+	public void handleData(D data) throws DataHandlerException {
 		boolean notHandled = true;
 
-		for (Entry<ComponentId, DataInformationFilter> entry : filteredSourceComponentSet.getSourceFilters().entrySet()) {
-			if (entry.getValue().accept(data.getInformation())) {
+		for (Entry<ComponentId, DataFilter<D>> entry : filteredSourceComponentSet.getSourceFilters().entrySet()) {
+			if (entry.getValue().accept(data)) {
 				try {
 					filteredSourceComponentSet.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					notHandled = false;

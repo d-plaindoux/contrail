@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component.multiple;
 
-import org.wolfgang.contrail.data.DataWithInformation;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
@@ -38,6 +37,6 @@ public interface DeMultiplexerDataHandlerFactory<D> {
 	 *            The filtered source component
 	 * @return an upstream data handler
 	 */
-	UpStreamDataHandler<DataWithInformation<D>> create(FilteredDestinationComponents<D> filteredDestination);
+	UpStreamDataHandler<D> create(FilteredDestinationComponents<D> filteredDestination);
 
 }

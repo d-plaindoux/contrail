@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.wolfgang.common.message.MessagesProvider;
-
 /**
  * The <code>Marshall</code> module is in charge of object to/from bytes
  * transformations.
