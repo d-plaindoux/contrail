@@ -16,25 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem;
-
-import org.wolfgang.contrail.component.DestinationComponent;
-
 /**
- * <code>DestinationComponentFactory</code>
- * 
+ * Main package providing protocol events 
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationComponentFactory<U, D> {
-
-	/**
-	 * Method called whether a link must be done
-	 * 
-	 * @return the component receiving initial component data
-	 * @throws CannotBindToInitialComponentException
-	 *             thrown if the integration cannot be done correctly
-	 */
-	DestinationComponent<U, D> create();
-
-}
+package org.wolgang.contrail.network.protocol;

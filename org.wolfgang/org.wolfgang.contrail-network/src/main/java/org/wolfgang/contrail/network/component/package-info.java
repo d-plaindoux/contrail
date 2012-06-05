@@ -16,16 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.protocol;
-
 /**
- * <code>Packet</code>
+ * Main package providing basic filter used for an elaboration of a router.
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetEvent {
-	
-	// TODO
-
-}
+package org.wolfgang.contrail.network.component;

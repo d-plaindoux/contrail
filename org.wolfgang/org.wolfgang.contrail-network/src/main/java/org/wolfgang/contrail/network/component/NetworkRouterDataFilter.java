@@ -16,36 +16,40 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.multiple;
+package org.wolfgang.contrail.network.component;
 
-import java.util.Map;
+import java.util.Collection;
+import java.util.UUID;
 
-import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.multiple.DataFilter;
+import org.wolgang.contrail.network.protocol.NetworkEvent;
 
 /**
- * <code>FilteredDestinationComponentSet</code> provides basic mechanism for
- * filtered multiple targets.
+ * <code>NetworkRouterDataFilter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface FilteredDestinationComponents<U> {
+public class NetworkRouterDataFilter implements DataFilter<NetworkEvent> {
 
 	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
+	 * The identifier
 	 */
-	Map<ComponentId, DataFilter<U>> getDestinationFilters();
+	private final Collection<UUID> identifiers;
 
 	/**
-	 * Provide a component using it's identifier
+	 * Constructor
 	 * 
-	 * @return an destination component
-	 * @throws ComponentNotConnectedException
+	 * @param identifier
 	 */
-	DestinationComponent<U, ?> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException;
+	public NetworkRouterDataFilter(Collection<UUID> identifiers) {
+		super();
+		this.identifiers = identifiers;
+	}
+
+	@Override
+	public boolean accept(NetworkEvent data) {
+		return identifiers.contains(data.getTargetIdentifier());
+	}
 
 }

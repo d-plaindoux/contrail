@@ -56,7 +56,7 @@ public class TestDeMultiplexer extends TestCase {
 
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -65,8 +65,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -75,7 +74,7 @@ public class TestDeMultiplexer extends TestCase {
 
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -84,17 +83,16 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener2 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
 								fail();
 							}
-							
+
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -102,12 +100,11 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
-		
+
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
@@ -150,10 +147,10 @@ public class TestDeMultiplexer extends TestCase {
 							public void receiveData(Void data) throws DataHandlerException {
 								// Nothing
 							}
-							
+
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -161,13 +158,13 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
+				deMultiplexerFactory);
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
@@ -183,17 +180,16 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
 								assertEquals("Hello, World!", data);
 							}
-							
+
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -201,13 +197,13 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
+				deMultiplexerFactory);
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
@@ -223,31 +219,30 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
 								assertEquals("Hello, World!", data);
 							}
-							
+
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
 				});
-		
+
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
+				deMultiplexerFactory);
 
 		try {
 			deMultiplexer.connect(listener1);
@@ -262,8 +257,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -272,7 +266,7 @@ public class TestDeMultiplexer extends TestCase {
 
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -280,13 +274,13 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
+				deMultiplexerFactory);
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
@@ -303,17 +297,16 @@ public class TestDeMultiplexer extends TestCase {
 		final DestinationComponent<String, Void> listener1 = new TerminalComponent<String, Void>(
 				new TerminalDataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(
-							TerminalComponent<String, Void> component) {
+					public DataReceiver<String> create(TerminalComponent<String, Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
 								assertEquals("Hello, World!", data);
 							}
-							
+
 							@Override
 							public void close() throws IOException {
-								// Nothing								
+								// Nothing
 							}
 						};
 					}
@@ -321,13 +314,13 @@ public class TestDeMultiplexer extends TestCase {
 
 		final DeMultiplexerDataHandlerFactory<String> deMultiplexerFactory = new DeMultiplexerDataHandlerFactory<String>() {
 			@Override
-			public UpStreamDataHandler<String> create(
-					FilteredDestinationComponents<String> filteredDestination) {
+			public UpStreamDataHandler<String> create(FilteredDestinationComponents<String> filteredDestination) {
 				return new FilteredDeMultiplexerDataHandler<String>(filteredDestination);
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
+				deMultiplexerFactory);
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {

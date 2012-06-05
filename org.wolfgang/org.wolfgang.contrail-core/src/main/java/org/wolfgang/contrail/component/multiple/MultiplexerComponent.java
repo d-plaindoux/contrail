@@ -44,7 +44,8 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, D>,	FilteredSourceComponents<D> {
+public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, D>,
+		FilteredSourceComponents<D> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -102,9 +103,8 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	}
 
 	@Override
-	public SourceComponent<U, D> getSourceComponent(ComponentId componentId)
-			throws ComponentNotConnectedException {
-		final SourceComponent<U,D> destinationComponent = this.sourceComponents.get(componentId);
+	public SourceComponent<U, D> getSourceComponent(ComponentId componentId) throws ComponentNotConnectedException {
+		final SourceComponent<U, D> destinationComponent = this.sourceComponents.get(componentId);
 
 		if (destinationComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());

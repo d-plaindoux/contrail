@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<!-- ============================================================ -->
+<!-- Ecosystem definition -->
+<!-- ============================================================ -->
+
+<Ecosystem>
+	<Imports>
+		<Import>org.wolfgang.contrail.network.codec.jaxb</Import>
+		<Import>org.wolfgang.contrail.network.codec.payload</Import>
+		<Import>org.wolfgang.contrail.network.codec.json</Import>
+	</Imports>
+
+	<InitialBinders>
+		<!-- ============================================================ -->
+		<!-- IO Socket initial binder -->
+		<!-- ============================================================ -->
+		<DataFlow name="net.incoming">
+			<Transducer factory="PayLoadTransducerFactory">
+				<Incoming ref="incoming" />
+				<Ougoing ref="payload.string" />
+			</Transducer>
+			<Transducer factory="StringTransducerFactory">
+				<Incoming ref="payload.string" />
+				<Ougoing ref="string.json" />
+			</Transducer>
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="string.json" />
+				<Ougoing ref="core.network.incoming" />
+			</Transducer>
+		</DataFlow>
+
+		<!-- ============================================================ -->
+		<!-- Web Socket initial binder -->
+		<!-- ============================================================ -->
+		<DataFlow name="web.incoming">
+			<Transducer factory="JSONTransducerFactory">
+				<Incoming ref="in" />
+				<Ougoing ref="core.network.in" />
+			</Transducer>
+		</DataFlow>
+	</InitialBinders>
+
+	<InternalComponents>
+		<DataFlow name="core.network">
+			<Terminal factory="Networking">
+				<Incoming ref="incoming" />
+				<Outgoing ref="network.target" />
+			</Terminal>
+			<Terminal factory="RemoteNetworkTarget">
+				<Incoming ref="network.target" />
+				<Outgoing ref="network.outgoing" />
+			</Terminal>
+			<Router factory="LocalNetworkTarget">
+				<Incoming ref="network.target" />
+				<Outgoing ref="protocol" />
+			</Router>
+			<Terminal factory="ServiceHandler">
+				<Incoming ref="protocol" />
+				<Outgoing ref="service.outgoing" />
+			</Terminal>
+			<Terminal factory="TransferHandler">
+				<Incoming ref="protocol" />
+				<Outgoing ref="transfer.outgoing" />
+			</Terminal>
+		</DataFlow>
+	</InternalComponents>
+
+	<Servers>
+		<Server factory="NetServer" port="6048" ref="net.incoming.incoming" />
+		<Server factory="WebServer" port="9090" ref="web.incoming.incoming" />
+	</Servers>
+</Ecosystem>

@@ -16,36 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.multiple;
+package org.wolgang.contrail.network.protocol;
 
-import java.util.Map;
-
-import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
+import java.util.UUID;
 
 /**
- * <code>FilteredDestinationComponentSet</code> provides basic mechanism for
- * filtered multiple targets.
+ * <code>NetworkEvent</code> is the basic and one possible top-level type
+ * implemented by network events.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface FilteredDestinationComponents<U> {
+public interface NetworkEvent {
 
 	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
+	 * @return
 	 */
-	Map<ComponentId, DataFilter<U>> getDestinationFilters();
+	UUID getTargetIdentifier();
 
 	/**
-	 * Provide a component using it's identifier
-	 * 
-	 * @return an destination component
-	 * @throws ComponentNotConnectedException
+	 * @return
 	 */
-	DestinationComponent<U, ?> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException;
+	UUID getSourceIdentifier();
 
 }

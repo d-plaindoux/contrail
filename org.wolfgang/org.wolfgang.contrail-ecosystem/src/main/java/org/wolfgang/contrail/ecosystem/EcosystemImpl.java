@@ -60,17 +60,17 @@ public final class EcosystemImpl implements Ecosystem {
 	/**
 	 * Initial component integration triggers
 	 */
-	private final Map<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> initialIntegrators;
+	private final Map<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> initialHooks;
 
 	/**
 	 * Terminal component integration triggers
 	 */
-	private final Map<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> terminalIntegrators;
+	private final Map<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> terminalHooks;
 
 	{
 		this.linkManager = new ComponentsLinkManagerImpl();
-		this.initialIntegrators = new HashMap<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>>();
-		this.terminalIntegrators = new HashMap<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>>();
+		this.initialHooks = new HashMap<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>>();
+		this.terminalHooks = new HashMap<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>>();
 	}
 
 	/**
@@ -87,10 +87,10 @@ public final class EcosystemImpl implements Ecosystem {
 	 */
 	public <U, D> boolean addDestinationFactory(RegisteredUnitEcosystemKey ecosystemKey,
 			DestinationComponentFactory<U, D> factory) {
-		if (this.initialIntegrators.containsKey(ecosystemKey)) {
+		if (this.initialHooks.containsKey(ecosystemKey)) {
 			return false;
 		} else {
-			this.initialIntegrators.put(ecosystemKey, factory);
+			this.initialHooks.put(ecosystemKey, factory);
 			return false;
 		}
 	}
@@ -108,10 +108,10 @@ public final class EcosystemImpl implements Ecosystem {
 	 * @return true if the factory is correctly added; false otherwise
 	 */
 	public <U, D> boolean addSourceFactory(RegisteredUnitEcosystemKey ecosystemKey, SourceComponentFactory<U, D> factory) {
-		if (this.terminalIntegrators.containsKey(ecosystemKey)) {
+		if (this.terminalHooks.containsKey(ecosystemKey)) {
 			return false;
 		} else {
-			this.terminalIntegrators.put(ecosystemKey, factory);
+			this.terminalHooks.put(ecosystemKey, factory);
 			return true;
 		}
 	}
@@ -131,7 +131,7 @@ public final class EcosystemImpl implements Ecosystem {
 	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(FilteredUnitEcosystemKey filter)
 			throws CannotProvideInitialComponentException {
 
-		for (Entry<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> unit : initialIntegrators.entrySet()) {
+		for (Entry<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> unit : initialHooks.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
 				return (DestinationComponentFactory<U, D>) unit.getValue();
 			}
@@ -156,7 +156,7 @@ public final class EcosystemImpl implements Ecosystem {
 	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(FilteredUnitEcosystemKey filter)
 			throws CannotProvideTerminalComponentException {
 
-		for (Entry<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> unit : terminalIntegrators.entrySet()) {
+		for (Entry<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> unit : terminalHooks.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
 				return (SourceComponentFactory<U, D>) unit.getValue();
 			}
