@@ -16,27 +16,54 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.contrail.component.bound;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>CannotCreateDataSenderException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkRouterFactory {
+public class CannotCreateDataSenderException extends Exception {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -9200648015853026201L;
 
 	/**
 	 * Constructor
 	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
+	public CannotCreateDataSenderException() {
+		super();
 	}
 
 	/**
-	 * @return a network router component
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
 	 */
-	public static NetworkRouterComponent create() {
-		return new NetworkRouterComponent();
+	public CannotCreateDataSenderException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataSenderException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataSenderException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

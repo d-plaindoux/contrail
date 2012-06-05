@@ -30,8 +30,10 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
@@ -44,7 +46,7 @@ import org.wolfgang.contrail.network.connection.socket.NetServer;
  */
 public class TestNetworkServer extends TestCase {
 
-	public void testNominal01() throws IOException {
+	public void testNominal01() throws IOException, CannotProvideInitialComponentException {
 		final EcosystemImpl ecosystem = new EcosystemImpl();
 
 		// A little bit too complex ... isn't it ?
@@ -72,9 +74,10 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		ecosystem.addDestinationFactory(UnitEcosystemKey.getKey("test", byte[].class, byte[].class), destinationComponentFactory);
+		final RegisteredUnitEcosystemKey key = UnitEcosystemKey.getKey("test", byte[].class, byte[].class);
+		ecosystem.addDestinationFactory(key, destinationComponentFactory);
 
-		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,	UnitEcosystemKey.allwaysTrue(), ecosystem);
+		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,	ecosystem.<byte[],byte[]>getInitialBinder(key));
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);

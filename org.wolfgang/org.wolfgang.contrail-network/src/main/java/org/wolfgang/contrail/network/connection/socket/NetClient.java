@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.network.connection.socket;
 
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -32,12 +29,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
-import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -60,14 +55,9 @@ public class NetClient implements Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * The filter
-	 */
-	private final FilteredUnitEcosystemKey filter;
-
-	/**
 	 * De-multiplexer component
 	 */
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Network.Client");
@@ -88,10 +78,9 @@ public class NetClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetClient(FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
+	public NetClient(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
 		super();
-		this.filter = and(filter, typed(byte[].class, byte[].class));
-		this.ecosystem = ecosystem;
+		this.factory = factory;
 	}
 
 	/**
@@ -104,9 +93,9 @@ public class NetClient implements Closeable {
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotCreateDataSenderException
 	 */
-	public void connect(InetAddress address, int port) throws IOException, CannotProvideInitialComponentException,
-			CannotBindToInitialComponentException {
+	public void connect(InetAddress address, int port) throws IOException, CannotCreateDataSenderException {
 		final Socket client = new Socket(address, port);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
@@ -126,7 +115,7 @@ public class NetClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
+		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

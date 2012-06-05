@@ -16,27 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.contrail.component.bound;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>DataSenderFactory</code> is capable to build data sender.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkRouterFactory {
+public interface DataSenderFactory<E, C> {
 
 	/**
-	 * Constructor
+	 * Method called whether a data receiver shall be built for a given
+	 * component
+	 * 
+	 * @param component
+	 *            The component used to build the data receiver
+	 * @return a data sender (Never <code>null</code>)
+	 * @throws CannotCreateDataSenderException
+	 *             if the data sender cannot be correctly created
 	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
+	DataSender<E> create(C component) throws CannotCreateDataSenderException;
 
-	/**
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create() {
-		return new NetworkRouterComponent();
-	}
 }

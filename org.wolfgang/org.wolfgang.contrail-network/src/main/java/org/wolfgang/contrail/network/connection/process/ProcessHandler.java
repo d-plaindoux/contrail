@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.network.connection.process;
 
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,12 +27,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
-import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -54,14 +49,9 @@ public class ProcessHandler implements Closeable {
 	private final ExecutorService executor;
 
 	/**
-	 * The filter
+	 * The data sender factory
 	 */
-	private final FilteredUnitEcosystemKey filter;
-
-	/**
-	 * Ecosystem component
-	 */
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
 
 	{
 		executor = Executors.newSingleThreadExecutor();
@@ -73,10 +63,9 @@ public class ProcessHandler implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
+	public ProcessHandler(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
 		super();
-		this.filter = and(filter,typed(byte[].class, byte[].class));
-		this.ecosystem = ecosystem;
+		this.factory = factory;
 	}
 
 	/**
@@ -85,10 +74,9 @@ public class ProcessHandler implements Closeable {
 	 * @param command
 	 *            The command to be executed
 	 * @throws IOException
-	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotCreateDataSenderException
 	 */
-	public void connect() throws IOException, CannotProvideInitialComponentException, CannotBindToInitialComponentException {
+	public void connect() throws IOException, CannotCreateDataSenderException {
 
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
@@ -113,7 +101,7 @@ public class ProcessHandler implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
+		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

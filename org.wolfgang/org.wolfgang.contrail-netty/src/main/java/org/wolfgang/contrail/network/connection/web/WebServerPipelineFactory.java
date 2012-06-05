@@ -25,6 +25,8 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 
 /**
@@ -36,23 +38,22 @@ import org.wolfgang.contrail.ecosystem.Ecosystem;
  */
 class WebServerPipelineFactory implements ChannelPipelineFactory {
 
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<String, DataReceiver<String>> factory;
 
 	/**
 	 * Constructor
-	 * 
 	 */
-	public WebServerPipelineFactory(Ecosystem ecosystem) {
-		this.ecosystem = ecosystem;
+	public WebServerPipelineFactory(DataSenderFactory<String, DataReceiver<String>> factory) {
+		this.factory = factory;
 	}
-	
+
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		final ChannelPipeline pipeline = pipeline();
 		pipeline.addLast("http_decoder", new HttpRequestDecoder());
 		pipeline.addLast("http_aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("http_encoder", new HttpResponseEncoder());
-		pipeline.addLast("websocket_handler", new WebServerHandler(this.ecosystem));
+		pipeline.addLast("websocket_handler", new WebServerHandler(this.factory));
 		return pipeline;
 	}
 }

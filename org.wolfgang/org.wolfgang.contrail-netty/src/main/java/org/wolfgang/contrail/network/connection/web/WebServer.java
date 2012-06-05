@@ -22,11 +22,13 @@ import java.io.IOException;
 
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
+import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
@@ -53,16 +55,17 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(Ecosystem ecosystem, int port) {
-		super(port, new WebServerPipelineFactory(ecosystem));
+	public WebServer(DataSenderFactory<String, DataReceiver<String>> factory, int port) {
+		super(port, new WebServerPipelineFactory(factory));
 	}
 
 	/**
 	 * Main
 	 * 
 	 * @param args
+	 * @throws CannotProvideInitialComponentException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CannotProvideInitialComponentException {
 		int port;
 		if (args.length > 0) {
 			port = Integer.parseInt(args[0]);
@@ -73,9 +76,9 @@ public final class WebServer extends NIOServer {
 		/**
 		 * Prepare the ecosystem
 		 */
-		
+
 		final EcosystemImpl ecosystem = new EcosystemImpl();
-		
+
 		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
 			@Override
 			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
@@ -84,7 +87,7 @@ public final class WebServer extends NIOServer {
 					public void receiveData(String data) throws DataHandlerException {
 						component.getDataSender().sendData(data.toUpperCase());
 					}
-					
+
 					@Override
 					public void close() throws IOException {
 						component.getDataSender().close();
@@ -92,7 +95,7 @@ public final class WebServer extends NIOServer {
 				};
 			}
 		};
-		
+
 		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
 			@Override
 			public DestinationComponent<String, String> create() {
@@ -100,9 +103,10 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		ecosystem.addDestinationFactory(UnitEcosystemKey.getKey("web.socket", String.class, String.class), destinationComponentFactory);
-		
-		new WebServer(ecosystem, port).call();
+		final RegisteredUnitEcosystemKey key = UnitEcosystemKey.getKey("web.socket", String.class, String.class);
+		ecosystem.addDestinationFactory(key, destinationComponentFactory);
+
+		new WebServer(ecosystem.<String, String> getInitialBinder(key), port).call();
 	}
 
 }

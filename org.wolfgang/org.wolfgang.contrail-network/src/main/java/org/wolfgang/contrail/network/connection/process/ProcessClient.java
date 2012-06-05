@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.network.connection.process;
 
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,12 +27,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.CannotBindToInitialComponentException;
-import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -54,14 +49,9 @@ public class ProcessClient implements Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * The filter
+	 * The data sender factory
 	 */
-	private final FilteredUnitEcosystemKey filter;
-
-	/**
-	 * The ecosystem
-	 */
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Process.Client");
@@ -82,10 +72,9 @@ public class ProcessClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessClient(FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
+	public ProcessClient(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
 		super();
-		this.filter = and(filter,typed(byte[].class, byte[].class));
-		this.ecosystem = ecosystem;
+		this.factory = factory;
 	}
 
 	/**
@@ -94,11 +83,9 @@ public class ProcessClient implements Closeable {
 	 * @param command
 	 *            The command to be executed
 	 * @throws IOException
-	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotCreateDataSenderException
 	 */
-	public void connect(String[] command) throws IOException, CannotProvideInitialComponentException,
-			CannotBindToInitialComponentException {
+	public void connect(String[] command) throws IOException, CannotCreateDataSenderException {
 		final Process client = Runtime.getRuntime().exec(command);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
@@ -118,7 +105,7 @@ public class ProcessClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
+		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.ecosystem;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 
 /**
@@ -33,41 +33,32 @@ import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 public interface Ecosystem {
 
 	/**
-	 * Method called whether a source component is required
+	 * Method called whether an initial component binder is required
 	 * 
-	 * @param identifier
+	 * @param key
 	 *            The name of the required binder
-	 * @param factory
-	 *            The factory used to create final glue
-	 * @param upstream
-	 *            The upstream data type
-	 * @param downstream
-	 *            The downstream data type
-	 * @return a source component (Never <code>null</code>)
+	 * @return a data sender factory (Never <code>null</code>)
 	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
 	 * @throws CannotBindToInitialComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<U> bindToInitial(FilteredUnitEcosystemKey filter, DataReceiver<D> receiver)
-			throws CannotProvideInitialComponentException, CannotBindToInitialComponentException;
+	<U, D> DataSenderFactory<U, DataReceiver<D>> getInitialBinder(final FilteredUnitEcosystemKey key)
+			throws CannotProvideInitialComponentException;
 
 	/**
-	 * Method called whether a destination component is required
+	 * Method called whether a terminal component binder is required
 	 * 
-	 * @param identifier
+	 * @param key
 	 *            The name of the required binder
-	 * @param factory
-	 *            The factory used to create final glue
-	 * @return a destination component (Never <code>null</code>)
-	 * @throws CannotProvideTerminalComponentException
+	 * @return a data sender factory (Never <code>null</code>)
+	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotBindToTerminalComponentException
+	 * @throws CannotBindToInitialComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSender<D> bindToTerminal(FilteredUnitEcosystemKey filter, DataReceiver<U> receiver)
-			throws CannotProvideTerminalComponentException, CannotBindToTerminalComponentException;
-
+	<U, D> DataSenderFactory<D, DataReceiver<U>> getTerminalBinder(final FilteredUnitEcosystemKey key)
+			throws CannotProvideTerminalComponentException;
 }

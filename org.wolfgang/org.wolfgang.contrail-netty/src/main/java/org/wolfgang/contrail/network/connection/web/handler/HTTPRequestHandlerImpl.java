@@ -51,8 +51,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFa
 import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
@@ -73,7 +72,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * 
 	 */
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<String, DataReceiver<String>> factory;
 
 	/**
 	 * 
@@ -95,8 +94,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * 
 	 * @param ecosystem2
 	 */
-	public HTTPRequestHandlerImpl(Ecosystem ecosystem, WebServerPage serverPage) {
-		this.ecosystem = ecosystem;
+	public HTTPRequestHandlerImpl(DataSenderFactory<String, DataReceiver<String>> factory, WebServerPage serverPage) {
+		this.factory = factory;
 		this.serverPage = serverPage;
 	}
 
@@ -215,7 +214,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
 					try {
-						receiver = ecosystem.bindToInitial(UnitEcosystemKey.named("web.socket"), emitter);
+						receiver = factory.create(emitter);
 					} catch (Exception e) {
 						Channels.fireExceptionCaught(future.getChannel(), e);
 						throw e;

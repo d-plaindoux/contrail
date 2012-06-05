@@ -25,7 +25,7 @@ package org.wolfgang.contrail.component.bound;
  * @author Didier Plaindoux
  * @version 1.0
  */
-interface DataReceiverFactory<E, C> {
+public interface DataReceiverFactory<E, C> {
 
 	/**
 	 * Method called whether a data receiver shall be built for a given

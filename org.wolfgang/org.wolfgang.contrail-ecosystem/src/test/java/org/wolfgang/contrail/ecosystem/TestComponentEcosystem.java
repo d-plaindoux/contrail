@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -39,7 +40,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestComponentEcosystem extends TestCase {
 
-	public void testNominal01() throws CannotProvideInitialComponentException, CannotBindToInitialComponentException {
+	public void testNominal01() throws CannotProvideInitialComponentException, CannotBindToInitialComponentException, CannotCreateDataSenderException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
@@ -83,7 +84,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DataSender<String> createInitial = integrator.bindToInitial(UnitEcosystemKey.named("test"), receiver);
+		final DataSender<String> createInitial = integrator.<String,String>getInitialBinder(UnitEcosystemKey.named("test")).create(receiver);
 		final String message = "Hello, World!";
 
 		try {

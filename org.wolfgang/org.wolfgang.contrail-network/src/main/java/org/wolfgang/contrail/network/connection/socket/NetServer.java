@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.network.connection.socket;
 
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.and;
-import static org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey.typed;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,8 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -59,11 +55,6 @@ public class NetServer implements Callable<Void>, Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * The filter
-	 */
-	private final FilteredUnitEcosystemKey filter;
-
-	/**
 	 * The chosen inet address for the socket server
 	 */
 	private final InetAddress address;
@@ -76,7 +67,7 @@ public class NetServer implements Callable<Void>, Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final Ecosystem ecosystem;
+	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
 
 	/**
 	 * The underlying server socket
@@ -106,12 +97,11 @@ public class NetServer implements Callable<Void>, Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetServer(InetAddress address, int port, FilteredUnitEcosystemKey filter, Ecosystem ecosystem) {
+	public NetServer(InetAddress address, int port, DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
 		super();
-		this.filter = and(filter, typed(byte[].class, byte[].class));
 		this.address = address;
 		this.port = port;
-		this.ecosystem = ecosystem;
+		this.factory = factory;
 	}
 
 	@Override
@@ -142,7 +132,7 @@ public class NetServer implements Callable<Void>, Closeable {
 				}
 			};
 
-			final DataSender<byte[]> dataSender = ecosystem.bindToInitial(filter, dataReceiver);
+			final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
 
 			final Callable<Void> reader = new Callable<Void>() {
 				@Override
