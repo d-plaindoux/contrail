@@ -82,7 +82,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	public NetworkRouterComponent() {
+	NetworkRouterComponent() {
 		this.dataHandler = new NetworkRouterStreamDataHandler(this);
 	}
 

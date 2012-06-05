@@ -23,7 +23,6 @@ import java.util.Map.Entry;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.multiple.DataFilter;
-import org.wolfgang.contrail.component.multiple.FilteredDestinationComponents;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -65,7 +64,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
-					// TODO
+					// Ignore ? TODO
 				}
 			}
 		}
@@ -76,23 +75,25 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 					component.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
-					// TODO
+					// Ignore ? TODO
 				}
 			}
 		}
 
 		if (notHandled) {
-			throw new DataHandlerException();
+			// Can we handle this message ?
 		}
 	}
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
-		// TODO Auto-generated method stub
+		component.closeDownStream();
+		component.closeUpStream();
 	}
 
 	@Override
 	public void handleLost() throws DataHandlerCloseException {
-		// TODO Auto-generated method stub
+		component.closeDownStream();
+		component.closeUpStream();
 	}
 }
