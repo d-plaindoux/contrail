@@ -41,7 +41,7 @@ public interface Ecosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotBindToInitialComponentException
+	 * @throws CannotProvideInitialComponentException
 	 *             if the component integration fails
 	 */
 	<U, D> DataSenderFactory<U, DataReceiver<D>> getInitialBinder(final FilteredUnitEcosystemKey key)
@@ -56,7 +56,7 @@ public interface Ecosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotBindToInitialComponentException
+	 * @throws CannotProvideTerminalComponentException
 	 *             if the component integration fails
 	 */
 	<U, D> DataSenderFactory<D, DataReceiver<U>> getTerminalBinder(final FilteredUnitEcosystemKey key)

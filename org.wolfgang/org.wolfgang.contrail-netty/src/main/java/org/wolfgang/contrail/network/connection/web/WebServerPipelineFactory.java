@@ -27,7 +27,6 @@ import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
 
 /**
  * <code>WebSocketServerPipelineFactory</code> is able to create the right

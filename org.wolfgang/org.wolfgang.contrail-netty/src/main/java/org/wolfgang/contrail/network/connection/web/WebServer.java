@@ -34,16 +34,8 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
- * <code>WebServer</code> is A HTTP server which serves bsic HTTP requests and
- * Web Socket. This server will work with:
- * <ul>
- * <li>Safari 5+ (draft-ietf-hybi-thewebsocketprotocol-00)
- * <li>Chrome 6-13 (draft-ietf-hybi-thewebsocketprotocol-00)
- * <li>Chrome 14+ (draft-ietf-hybi-thewebsocketprotocol-10)
- * <li>Chrome 16+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
- * <li>Firefox 7+ (draft-ietf-hybi-thewebsocketprotocol-10)
- * <li>Firefox 11+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
- * </ul>
+ * <code>WebServer</code> is A HTTP server which serves HTTP requests and Web
+ * Socket.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -55,8 +47,8 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(DataSenderFactory<String, DataReceiver<String>> factory, int port) {
-		super(port, new WebServerPipelineFactory(factory));
+	public WebServer(String host, int port, DataSenderFactory<String, DataReceiver<String>> factory) {
+		super(host, port, new WebServerPipelineFactory(factory));
 	}
 
 	/**
@@ -106,7 +98,7 @@ public final class WebServer extends NIOServer {
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKey.getKey("web.socket", String.class, String.class);
 		ecosystem.addDestinationFactory(key, destinationComponentFactory);
 
-		new WebServer(ecosystem.<String, String> getInitialBinder(key), port).call();
+		new WebServer("localhost", port, ecosystem.<String, String> getInitialBinder(key)).call();
 	}
 
 }

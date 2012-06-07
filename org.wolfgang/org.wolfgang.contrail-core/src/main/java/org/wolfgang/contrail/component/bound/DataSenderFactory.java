@@ -31,7 +31,7 @@ public interface DataSenderFactory<E, C> {
 	 * component
 	 * 
 	 * @param component
-	 *            The component used to build the data receiver
+	 *            The component used to build the data sender
 	 * @return a data sender (Never <code>null</code>)
 	 * @throws CannotCreateDataSenderException
 	 *             if the data sender cannot be correctly created

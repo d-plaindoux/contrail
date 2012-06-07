@@ -40,11 +40,23 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 public class NIOServer implements Callable<Void>, Closeable {
 
 	/**
+	 * 
+	 */
+	private final String host;
+
+	/**
 	 * Port number for web based communication
 	 */
 	private final int port;
+	
+	/**
+	 * 
+	 */
 	private final ChannelPipelineFactory pipeline;
 
+	/**
+	 * 
+	 */
 	private AtomicReference<Channel> channelReference;
 
 	/**
@@ -53,7 +65,8 @@ public class NIOServer implements Callable<Void>, Closeable {
 	 * @param port
 	 *            The port number
 	 */
-	public NIOServer(int port, ChannelPipelineFactory pipeline) {
+	public NIOServer(String host, int port, ChannelPipelineFactory pipeline) {
+		this.host = host;
 		this.port = port;
 		this.pipeline = pipeline;
 		this.channelReference = new AtomicReference<Channel>();
