@@ -9,7 +9,7 @@
           window.WebSocket = window.MozWebSocket;
       }
 
-      if (window.WebSocket) {
+      if ('WebSocket' in window) {
           webSocket = new WebSocket("${web.socket.location}");
           webSocket.onmessage = function(event) { 
               var ta = document.getElementById("responseText"); 

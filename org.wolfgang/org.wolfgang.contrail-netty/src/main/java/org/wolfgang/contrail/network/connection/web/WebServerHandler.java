@@ -40,19 +40,23 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 	/**
 	 * Constructor
 	 */
-	public WebServerHandler(DataSenderFactory<String, DataReceiver<String>> factory) {		
+	public WebServerHandler(DataSenderFactory<String, DataReceiver<String>> factory) {
 		this.httpRequestHandler = new HTTPRequestHandlerImpl(factory, new WebServerPage());
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		Object msg = e.getMessage();
-		if (msg instanceof HttpRequest) {
-			final HttpRequest httpRequest = (HttpRequest) msg;
-			this.httpRequestHandler.handleHttpRequest(ctx, httpRequest);
-		} else if (msg instanceof WebSocketFrame) {
-			final WebSocketFrame webSocketFrame = (WebSocketFrame) msg;
-			this.httpRequestHandler.handleWebSocketFrame(ctx, webSocketFrame);
+	public void messageReceived(ChannelHandlerContext context, MessageEvent event) throws Exception {
+		try {
+			Object msg = event.getMessage();
+			if (msg instanceof HttpRequest) {
+				final HttpRequest httpRequest = (HttpRequest) msg;
+				this.httpRequestHandler.handleHttpRequest(context, httpRequest);
+			} else if (msg instanceof WebSocketFrame) {
+				final WebSocketFrame webSocketFrame = (WebSocketFrame) msg;
+				this.httpRequestHandler.handleWebSocketFrame(context, webSocketFrame);
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 	}
 

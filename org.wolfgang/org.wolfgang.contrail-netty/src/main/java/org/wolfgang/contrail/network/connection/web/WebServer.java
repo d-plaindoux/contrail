@@ -77,7 +77,8 @@ public final class WebServer extends NIOServer {
 				return new DataReceiver<String>() {
 					@Override
 					public void receiveData(String data) throws DataHandlerException {
-						component.getDataSender().sendData(data.toUpperCase());
+						System.err.println("Receive data <" + data + '>');
+						component.getDataSender().sendData(data);
 					}
 
 					@Override
