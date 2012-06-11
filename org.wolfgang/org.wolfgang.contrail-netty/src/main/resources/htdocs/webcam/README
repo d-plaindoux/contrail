@@ -1,0 +1,9 @@
+For the Video emitter
+---------------------
+  Checked with Opera v12 [opera:config]
+   - activate [Enable WebSockets]
+   - activate [Allow Camera to Canvas Copy] 
+   
+For the Video receiver
+----------------------
+  Any browser supporting WebSocket 

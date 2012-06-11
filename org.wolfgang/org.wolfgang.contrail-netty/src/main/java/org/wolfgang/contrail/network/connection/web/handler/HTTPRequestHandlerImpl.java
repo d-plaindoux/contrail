@@ -190,6 +190,11 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 
 		return new DataReceiver<String>() {
 			@Override
+			public String toString() {
+				return "Web Socket " + context.getName();
+			}
+
+			@Override
 			public void close() throws IOException {
 				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
 			}

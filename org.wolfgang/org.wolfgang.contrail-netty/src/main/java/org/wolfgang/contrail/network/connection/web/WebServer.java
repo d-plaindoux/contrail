@@ -19,6 +19,8 @@
 package org.wolfgang.contrail.network.connection.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -70,20 +72,26 @@ public final class WebServer extends NIOServer {
 		 */
 
 		final EcosystemImpl ecosystem = new EcosystemImpl();
+		final List<TerminalComponent<String, String>> components = new ArrayList<TerminalComponent<String, String>>();
 
 		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
 			@Override
 			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+				System.err.println("Accept client " + component.toString());
+				components.add(component);
+				
 				return new DataReceiver<String>() {
 					@Override
 					public void receiveData(String data) throws DataHandlerException {
-						System.err.println("Receive data <" + data + '>');
-						component.getDataSender().sendData(data);
+						for (TerminalComponent<String, String> aComponent : components) {
+							aComponent.getDataSender().sendData(data);
+						}
 					}
 
 					@Override
 					public void close() throws IOException {
 						component.getDataSender().close();
+						components.remove(component);
 					}
 				};
 			}
