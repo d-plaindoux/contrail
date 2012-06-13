@@ -1,5 +1,4 @@
-/*
- * Copyright (C)2012 D. Plaindoux.
+/* Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,29 +15,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
-
-import org.wolgang.contrail.network.source.EndPoint;
+ct.network = {
+	version : 0.1,
+	socket : function(endPoint) {			
+		if ('MozWebSocket' in window) {
+			window.WebSocket = window.MozWebSocket;
+		}
+				
+		if ('WebSocket' in window) {
+			return ct.lang.Extensible(new window.WebSocket(endPoint));
+		} else {
+			throw ('[FATAL] Web Sockets not supported');
+		}				
+	}
+};	
 
 /**
- * <code>NetworkRouterFactory</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
+ * End Of File
  */
-public final class NetworkRouterFactory {
-
-	/**
-	 * Constructor
-	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create(EndPoint endPoint) {
-		return new NetworkRouterComponent(endPoint);
-	}
-}

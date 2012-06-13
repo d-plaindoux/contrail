@@ -16,29 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
-
-import org.wolgang.contrail.network.source.EndPoint;
+package org.wolgang.contrail.network.source;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>EndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkRouterFactory {
+public interface ClientEndPoint extends SimpleEndPoint {
 
-	/**
-	 * Constructor
-	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create(EndPoint endPoint) {
-		return new NetworkRouterComponent(endPoint);
-	}
+	// Nothing to do
+	
 }

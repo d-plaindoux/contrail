@@ -27,7 +27,7 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolgang.contrail.network.protocol.NetworkEvent;
+import org.wolgang.contrail.network.event.NetworkEvent;
 
 /**
  * A <code>FilteredDeMultiplexerDataHandler</code> is able to manage information
@@ -64,7 +64,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
-					// Ignore ? TODO
+					// Ignore
 				}
 			}
 		}
@@ -75,7 +75,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 					component.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
-					// Ignore ? TODO
+					// Ignore
 				}
 			}
 		}

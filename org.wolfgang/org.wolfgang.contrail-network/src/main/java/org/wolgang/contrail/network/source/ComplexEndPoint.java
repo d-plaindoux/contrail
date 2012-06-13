@@ -16,10 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolgang.contrail.network.source;
+
 /**
- * Main package providing protocol events 
- *
+ * <code>EndPoint</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolgang.contrail.network.protocol;
+public interface ComplexEndPoint extends EndPoint {
+
+	// Nothing to do
+	
+}

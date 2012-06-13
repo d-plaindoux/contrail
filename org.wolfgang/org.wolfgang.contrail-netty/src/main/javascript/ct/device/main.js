@@ -1,5 +1,4 @@
-/*
- * Copyright (C)2012 D. Plaindoux.
+/* Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,29 +15,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
-
-import org.wolgang.contrail.network.source.EndPoint;
-
-/**
- * <code>NetworkRouterFactory</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public final class NetworkRouterFactory {
-
-	/**
-	 * Constructor
-	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create(EndPoint endPoint) {
-		return new NetworkRouterComponent(endPoint);
+ct["device"] = {
+	video : function() {
+      	if(navigator.getUserMedia) {
+	        return function(successCallback, errorCallback){ navigator.getUserMedia('video', successCallback, errorCallback) };
+      	} else {
+	        throw "Web camera streaming not supported";
+	    };
 	}
 }

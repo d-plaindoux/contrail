@@ -16,27 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.protocol;
-
-import java.util.UUID;
+package org.wolgang.contrail.network.source;
 
 /**
- * <code>NetworkEvent</code> is the basic and one possible top-level type
- * implemented by network events.
+ * <code>EndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetworkEvent {
+public interface SimpleEndPoint extends EndPoint {
 
-	/**
-	 * @return
-	 */
-	UUID getTargetIdentifier();
-
-	/**
-	 * @return
-	 */
-	UUID getSourceIdentifier();
-
+	// Nothing to do
+	
 }

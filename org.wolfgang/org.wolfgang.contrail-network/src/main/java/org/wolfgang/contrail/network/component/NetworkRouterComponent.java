@@ -34,7 +34,8 @@ import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolgang.contrail.network.protocol.NetworkEvent;
+import org.wolgang.contrail.network.event.NetworkEvent;
+import org.wolgang.contrail.network.source.EndPoint;
 
 /**
  * <code>NetwortRouterComponent</code> is a component able to manage
@@ -71,6 +72,11 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	 */
 	private final Map<ComponentId, SourceComponent<NetworkEvent, NetworkEvent>> sourceComponents;
 
+	/**
+	 * The network component identification
+	 */
+	private final EndPoint endPoint;
+
 	/* init */
 	{
 		this.destinationFilters = new HashMap<ComponentId, DataFilter<NetworkEvent>>();
@@ -82,7 +88,8 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	NetworkRouterComponent() {
+	NetworkRouterComponent(EndPoint endPoint) {
+		this.endPoint = endPoint;
 		this.dataHandler = new NetworkRouterStreamDataHandler(this);
 	}
 

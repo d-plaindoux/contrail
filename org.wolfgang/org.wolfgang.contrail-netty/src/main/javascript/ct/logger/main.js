@@ -1,5 +1,4 @@
-/*
- * Copyright (C)2012 D. Plaindoux.
+/* Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,29 +15,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+ct.require("lang");
 
-import org.wolgang.contrail.network.source.EndPoint;
-
-/**
- * <code>NetworkRouterFactory</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public final class NetworkRouterFactory {
-
-	/**
-	 * Constructor
-	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create(EndPoint endPoint) {
-		return new NetworkRouterComponent(endPoint);
+ct.logger = {
+	INFO : 4,
+	WARNING : 2,
+	ALERT : 1,
+	NONE : 0,
+	Object : function(level, display) {
+		return ct.lang.Object({
+			level : level,
+			display : display
+		}, {
+			info : function(message) {
+				if(this.getLevel() & ct.logger.INFO == ct.logger.INFO) {
+					this.getDisplay().printMessage("[info] " + message)
+				}
+			},
+			warning : function(message) {
+				if(this.getLevel() & ct.logger.WARNING == ct.logger.WARNING) {
+					this.getDisplay().printMessage("[warn] " + message)
+				}
+			},
+			alert : function(message) {
+				if(this.getLevel() & ct.logger.ALERT == ct.logger.ALERT) {
+					this.getDisplay().printMessage("[alert] " + message)
+				}
+			}
+		});
 	}
 }

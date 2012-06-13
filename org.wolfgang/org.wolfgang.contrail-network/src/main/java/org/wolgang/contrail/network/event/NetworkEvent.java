@@ -16,29 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolgang.contrail.network.event;
 
-import org.wolgang.contrail.network.source.EndPoint;
+import java.util.UUID;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>NetworkEvent</code> is the basic and one possible top-level type
+ * implemented by network events.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkRouterFactory {
+public interface NetworkEvent {
 
 	/**
-	 * Constructor
+	 * @return
 	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
-	}
+	UUID getTargetIdentifier();
 
 	/**
-	 * @return a network router component
+	 * @return
 	 */
-	public static NetworkRouterComponent create(EndPoint endPoint) {
-		return new NetworkRouterComponent(endPoint);
-	}
+	UUID getSourceIdentifier();
+
 }

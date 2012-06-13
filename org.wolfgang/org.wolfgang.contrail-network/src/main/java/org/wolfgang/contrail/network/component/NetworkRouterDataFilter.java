@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import org.wolfgang.contrail.component.multiple.DataFilter;
-import org.wolgang.contrail.network.protocol.NetworkEvent;
+import org.wolgang.contrail.network.event.NetworkEvent;
 
 /**
  * <code>NetworkRouterDataFilter</code>
