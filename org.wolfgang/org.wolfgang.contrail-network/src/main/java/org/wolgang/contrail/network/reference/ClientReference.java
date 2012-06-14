@@ -16,39 +16,64 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolgang.contrail.network.reference;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-import org.wolfgang.contrail.component.multiple.DataFilter;
-import org.wolgang.contrail.network.event.NetworkEvent;
-
 /**
- * <code>NetworkRouterDataFilter</code>
+ * <code>ClientEndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkTargetDataFilter implements DataFilter<NetworkEvent> {
+public final class ClientReference implements SimpleReference, Serializable {
 
 	/**
-	 * The identifier
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 5456798609368987358L;
+
+	/**
+	 * The internal identifier
 	 */
 	private final UUID identifier;
 
 	/**
 	 * Constructor
-	 * 
-	 * @param identifier
 	 */
-	public NetworkTargetDataFilter(UUID identifier) {
-		super();
+	ClientReference(UUID identifier) {
 		this.identifier = identifier;
 	}
 
 	@Override
-	public boolean accept(NetworkEvent data) {
-		return identifier.equals(data.getTargetIdentifier());
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ClientReference)) {
+			return false;
+		}
+		ClientReference other = (ClientReference) obj;
+		if (identifier == null) {
+			if (other.identifier != null) {
+				return false;
+			}
+		} else if (!identifier.equals(other.identifier)) {
+			return false;
+		}
+		return true;
 	}
 
 }

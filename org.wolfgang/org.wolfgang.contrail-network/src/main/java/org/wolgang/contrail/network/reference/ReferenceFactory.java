@@ -16,17 +16,44 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.source;
+package org.wolgang.contrail.network.reference;
+
+import java.util.UUID;
 
 /**
- * <code>EndPoint</code> is the main class for a network component
- * identification
+ * <code>EndPointFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EndPoint {
+public final class ReferenceFactory {
 
-	// Nothing to do
+	/**
+	 * Constructor
+	 */
+	private ReferenceFactory() {
+		// prevent useless construction
+	}
+
+	/**
+	 * @return a client end-point
+	 */
+	public static ClientReference createClientEndPoint(UUID identifier) {
+		return new ClientReference(identifier);
+	}
+
+	/**
+	 * @return a server end-point
+	 */
+	public static ServerReference createServerEndPoint(UUID identifier) {
+		return new ServerReference(identifier);
+	}
+
+	/**
+	 * @return a chain of end-points
+	 */
+	public static ChainedReferences chainedEndPoint() {
+		return new ChainedReferences();
+	}
 
 }

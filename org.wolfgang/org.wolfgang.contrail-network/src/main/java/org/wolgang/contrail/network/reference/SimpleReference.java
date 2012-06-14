@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.source;
+package org.wolgang.contrail.network.reference;
 
 /**
  * <code>EndPoint</code>
@@ -24,7 +24,7 @@ package org.wolgang.contrail.network.source;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface SimpleEndPoint extends EndPoint {
+public interface SimpleReference extends Reference {
 
 	// Nothing to do
 	

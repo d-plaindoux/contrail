@@ -20,6 +20,8 @@ package org.wolgang.contrail.network.event;
 
 import java.util.UUID;
 
+import org.wolgang.contrail.network.reference.Reference;
+
 /**
  * <code>NetworkEvent</code> is the basic and one possible top-level type
  * implemented by network events.
@@ -32,11 +34,11 @@ public interface NetworkEvent {
 	/**
 	 * @return
 	 */
-	UUID getTargetIdentifier();
+	Reference getTargetEndPoint();
 
 	/**
 	 * @return
 	 */
-	UUID getSourceIdentifier();
+	Reference getSourceEndPoint();
 
 }

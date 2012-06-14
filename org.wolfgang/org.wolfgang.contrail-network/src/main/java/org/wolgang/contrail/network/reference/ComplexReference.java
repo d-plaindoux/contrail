@@ -16,40 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
-
-import java.util.Collection;
-import java.util.UUID;
-
-import org.wolfgang.contrail.component.multiple.DataFilter;
-import org.wolgang.contrail.network.event.NetworkEvent;
+package org.wolgang.contrail.network.reference;
 
 /**
- * <code>NetworkRouterDataFilter</code>
+ * <code>EndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkRouterDataFilter implements DataFilter<NetworkEvent> {
+public interface ComplexReference extends Reference {
 
-	/**
-	 * The identifier
-	 */
-	private final Collection<UUID> identifiers;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param identifier
-	 */
-	public NetworkRouterDataFilter(Collection<UUID> identifiers) {
-		super();
-		this.identifiers = identifiers;
-	}
-
-	@Override
-	public boolean accept(NetworkEvent data) {
-		return identifiers.contains(data.getTargetIdentifier());
-	}
-
+	// Nothing to do
+	
 }

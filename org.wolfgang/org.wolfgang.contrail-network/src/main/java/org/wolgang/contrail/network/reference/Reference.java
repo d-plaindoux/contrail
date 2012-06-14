@@ -16,16 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.source;
+package org.wolgang.contrail.network.reference;
 
 /**
- * <code>EndPoint</code>
+ * <code>EndPoint</code> is the main class for a network component
+ * identification
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ChainedEndPoint extends EndPoint {
+public interface Reference {
 
-	public ChainedEndPoint chainWith(SimpleEndPoint endPoint);
-	
+	// Nothing to do
+
 }

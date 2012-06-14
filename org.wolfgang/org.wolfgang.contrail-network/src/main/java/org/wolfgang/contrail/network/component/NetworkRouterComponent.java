@@ -35,7 +35,8 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.source.EndPoint;
+import org.wolgang.contrail.network.reference.Reference;
+import org.wolgang.contrail.network.reference.SimpleReference;
 
 /**
  * <code>NetwortRouterComponent</code> is a component able to manage
@@ -75,7 +76,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * The network component identification
 	 */
-	private final EndPoint endPoint;
+	private final SimpleReference endPoint;
 
 	/* init */
 	{
@@ -88,7 +89,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	NetworkRouterComponent(EndPoint endPoint) {
+	NetworkRouterComponent(SimpleReference endPoint) {
 		this.endPoint = endPoint;
 		this.dataHandler = new NetworkRouterStreamDataHandler(this);
 	}
