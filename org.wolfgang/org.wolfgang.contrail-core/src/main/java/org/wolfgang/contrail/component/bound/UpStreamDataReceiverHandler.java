@@ -52,7 +52,7 @@ class UpStreamDataReceiverHandler<E> implements UpStreamDataHandler<E> {
 	 * @param receiver
 	 *            The receiver
 	 */
-	public UpStreamDataReceiverHandler(DataReceiver<E> receiver) {
+	UpStreamDataReceiverHandler(DataReceiver<E> receiver) {
 		this.receiver = receiver;
 	}
 
