@@ -21,8 +21,9 @@ package org.wolfgang.contrail.link;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -31,24 +32,24 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DummyDestinationComponent extends TerminalComponent<Void,Void> {
+public class DummyDestinationComponent extends TerminalComponent<Void, Void> {
 
 	/**
 	 * Constructor
 	 */
 	public DummyDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Void, Void>() {
+		super(new DataReceiverFactory<Void, Void>() {
 			@Override
-			public DataReceiver<Void> create(final TerminalComponent<Void, Void> terminal) {
+			public DataReceiver<Void> create(final DataSender<Void> sender) {
 				return new DataReceiver<Void>() {
 					@Override
 					public void receiveData(Void data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data);
+						sender.sendData(data);
 					}
-					
+
 					@Override
 					public void close() throws IOException {
-						terminal.getDataSender().close();								
+						sender.close();
 					}
 				};
 			}

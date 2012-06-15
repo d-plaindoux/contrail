@@ -21,30 +21,22 @@ package org.wolfgang.contrail.network.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
-import org.wolfgang.contrail.ecosystem.SourceComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
 
 /**
@@ -65,18 +57,18 @@ public class TestNetworkServer extends TestCase {
 		// In Java 8: dataFactory = component -> new DataReceiver<byte[]>() {
 		// ... };
 
-		final TerminalDataReceiverFactory<byte[], byte[]> dataFactory = new TerminalDataReceiverFactory<byte[], byte[]>() {
+		final DataReceiverFactory<byte[], byte[]> dataFactory = new DataReceiverFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> component) {
+			public DataReceiver<byte[]> create(final DataSender<byte[]> component) {
 				return new DataReceiver<byte[]>() {
 					@Override
 					public void receiveData(byte[] data) throws DataHandlerException {
-						component.getDataSender().sendData(data);
+						component.sendData(data);
 					}
 
 					@Override
 					public void close() throws IOException {
-						component.getDataSender().close();
+						component.close();
 					}
 				};
 			}

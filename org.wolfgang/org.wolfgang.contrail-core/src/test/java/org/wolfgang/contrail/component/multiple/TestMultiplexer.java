@@ -26,10 +26,10 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentsLink;
@@ -45,9 +45,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer01() {
 		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(
-				new TerminalDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<Void, String>() {
 					@Override
-					public DataReceiver<Void> create(TerminalComponent<Void, String> component) {
+					public DataReceiver<Void> create(DataSender<String> component) {
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
@@ -63,9 +63,9 @@ public class TestMultiplexer extends TestCase {
 				});
 
 		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -81,9 +81,9 @@ public class TestMultiplexer extends TestCase {
 				});
 
 		final SourceComponent<Void, String> listener2 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -139,9 +139,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer02() {
 		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(
-				new TerminalDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<Void, String>() {
 					@Override
-					public DataReceiver<Void> create(TerminalComponent<Void, String> component) {
+					public DataReceiver<Void> create(DataSender<String> component) {
 						return new DataReceiver<Void>() {
 							@Override
 							public void receiveData(Void data) throws DataHandlerException {
@@ -177,9 +177,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer03() {
 		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -215,9 +215,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer03b() {
 		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -252,9 +252,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer04() {
 		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {
@@ -291,9 +291,9 @@ public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer05() {
 		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new InitialDataReceiverFactory<Void, String>() {
+				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(InitialComponent<Void, String> component) {
+					public DataReceiver<String> create(DataSender<Void> component) {
 						return new DataReceiver<String>() {
 							@Override
 							public void receiveData(String data) throws DataHandlerException {

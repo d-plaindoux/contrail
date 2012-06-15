@@ -18,14 +18,13 @@
 
 package org.wolfgang.contrail.component.bound;
 
-
 /**
- * <code>DataReceiverFactory</code> is capable to build data receiver.
+ * <code>DataReceiverFactory</code> is capable to build data receiver
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataReceiverFactory<E, C> {
+public interface DataReceiverFactory<R, S> {
 
 	/**
 	 * Method called whether a data receiver shall be built for a given
@@ -34,6 +33,6 @@ public interface DataReceiverFactory<E, C> {
 	 * @param component
 	 *            The component used to build the data receiver
 	 */
-	DataReceiver<E> create(C component);
+	DataReceiver<R> create(DataSender<S> sender);
 
 }

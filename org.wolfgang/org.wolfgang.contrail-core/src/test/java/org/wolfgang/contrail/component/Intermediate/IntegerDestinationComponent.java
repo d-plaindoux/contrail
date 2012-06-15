@@ -21,8 +21,9 @@ package org.wolfgang.contrail.component.Intermediate;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -37,18 +38,18 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 	 * Constructor
 	 */
 	public IntegerDestinationComponent() {
-		super(new TerminalDataReceiverFactory<Integer, Integer>() {
+		super(new DataReceiverFactory<Integer, Integer>() {
 			@Override
-			public DataReceiver<Integer> create(final TerminalComponent<Integer, Integer> terminal) {
+			public DataReceiver<Integer> create(final DataSender<Integer> terminal) {
 				return new DataReceiver<Integer>() {
 					@Override
 					public void receiveData(Integer data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data * data);
+						terminal.sendData(data * data);
 					}
 
 					@Override
 					public void close() throws IOException {
-						terminal.getDataSender().close();
+						terminal.close();
 					}
 				};
 			}

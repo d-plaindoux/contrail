@@ -21,8 +21,9 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -37,18 +38,18 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 	 * Constructor
 	 */
 	public ByteArrayDestinationComponent() {
-		super(new TerminalDataReceiverFactory<byte[], byte[]>() {
+		super(new DataReceiverFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> terminal) {
+			public DataReceiver<byte[]> create(final DataSender<byte[]> sender) {
 				return new DataReceiver<byte[]>() {
 					@Override
 					public void receiveData(byte[] data) throws DataHandlerException {
-						terminal.getDataSender().sendData(data);
+						sender.sendData(data);
 					}
 
 					@Override
 					public void close() throws IOException {
-						terminal.getDataSender().close();
+						sender.close();
 					}
 				};
 			}

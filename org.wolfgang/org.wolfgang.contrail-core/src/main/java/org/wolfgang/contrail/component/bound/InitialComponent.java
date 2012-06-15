@@ -102,11 +102,11 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialComponent(final InitialDataReceiverFactory<U, D> dataFactory) {
+	public InitialComponent(final DataReceiverFactory<D, U> dataFactory) {
 		super();
 
 		this.dataSender = this.getLocalDataSender();
-		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this));
+		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this.dataSender));
 		this.upStreamDestinationComponent = null;
 	}
 

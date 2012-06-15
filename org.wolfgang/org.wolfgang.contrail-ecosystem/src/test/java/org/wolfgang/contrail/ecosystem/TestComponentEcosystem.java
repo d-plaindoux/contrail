@@ -26,9 +26,9 @@ import junit.framework.TestCase;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -44,18 +44,18 @@ public class TestComponentEcosystem extends TestCase {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
-		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
+		final DataReceiverFactory<String, String> dataFactory = new DataReceiverFactory<String, String>() {
 			@Override
-			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+			public DataReceiver<String> create(final DataSender<String> sender) {
 				return new DataReceiver<String>() {
 					@Override
 					public void receiveData(String data) throws DataHandlerException {
-						component.getDataSender().sendData(data);
+						sender.sendData(data);
 					}
 
 					@Override
 					public void close() throws IOException {
-						component.getDataSender().close();
+						sender.close();
 					}
 				};
 			}

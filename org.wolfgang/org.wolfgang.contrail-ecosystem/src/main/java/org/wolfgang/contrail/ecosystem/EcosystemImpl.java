@@ -32,12 +32,11 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -172,7 +171,7 @@ public final class EcosystemImpl implements Ecosystem {
 			throws CannotProvideInitialComponentException {
 		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(key);
 
-		return new DataSenderFactory<U,D>() {
+		return new DataSenderFactory<U, D>() {
 			@Override
 			public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
 				try {
@@ -187,9 +186,9 @@ public final class EcosystemImpl implements Ecosystem {
 	private <U, D> DataSender<U> bindToInitial(DestinationComponentFactory<U, D> initialIntegrator,
 			final DataReceiver<D> receiver) throws CannotBindToInitialComponentException {
 		try {
-			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new InitialDataReceiverFactory<U, D>() {
+			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new DataReceiverFactory<D, U>() {
 				@Override
-				public DataReceiver<D> create(InitialComponent<U, D> component) {
+				public DataReceiver<D> create(DataSender<U> component) {
 					return receiver;
 				}
 			});
@@ -241,13 +240,12 @@ public final class EcosystemImpl implements Ecosystem {
 	private <U, D> DataSender<D> bindToTerminal(SourceComponentFactory<U, D> terminalIntegrator, final DataReceiver<U> receiver)
 			throws CannotBindToTerminalComponentException {
 		try {
-			final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(
-					new TerminalDataReceiverFactory<U, D>() {
-						@Override
-						public DataReceiver<U> create(TerminalComponent<U, D> component) {
-							return receiver;
-						}
-					});
+			final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(new DataReceiverFactory<U, D>() {
+				@Override
+				public DataReceiver<U> create(DataSender<D> component) {
+					return receiver;
+				}
+			});
 
 			final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
 

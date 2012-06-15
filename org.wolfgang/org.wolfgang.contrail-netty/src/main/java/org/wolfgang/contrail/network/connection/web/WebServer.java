@@ -24,9 +24,10 @@ import java.util.List;
 
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -72,25 +73,25 @@ public final class WebServer extends NIOServer {
 		 */
 
 		final EcosystemImpl ecosystem = new EcosystemImpl();
-		final List<TerminalComponent<String, String>> components = new ArrayList<TerminalComponent<String, String>>();
+		final List<DataSender<String>> components = new ArrayList<DataSender<String>>();
 
-		final TerminalDataReceiverFactory<String, String> dataFactory = new TerminalDataReceiverFactory<String, String>() {
+		final DataReceiverFactory<String, String> dataFactory = new DataReceiverFactory<String, String>() {
 			@Override
-			public DataReceiver<String> create(final TerminalComponent<String, String> component) {
+			public DataReceiver<String> create(final DataSender<String> component) {
 				System.err.println("Accept client " + component.toString());
 				components.add(component);
-				
+
 				return new DataReceiver<String>() {
 					@Override
 					public void receiveData(String data) throws DataHandlerException {
-						for (TerminalComponent<String, String> aComponent : components) {
-							aComponent.getDataSender().sendData(data);
+						for (DataSender<String> aComponent : components) {
+							aComponent.sendData(data);
 						}
 					}
 
 					@Override
 					public void close() throws IOException {
-						component.getDataSender().close();
+						component.close();
 						components.remove(component);
 					}
 				};

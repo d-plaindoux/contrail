@@ -102,11 +102,11 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * @param dataFactory
 	 *            The terminal data receiver factory
 	 */
-	public TerminalComponent(final TerminalDataReceiverFactory<U, D> dataFactory) {
+	public TerminalComponent(final DataReceiverFactory<U, D> dataFactory) {
 		super();
 
 		this.dataEmitter = this.getLocalDataSender();
-		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this));
+		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this.dataEmitter));
 		this.upStreamSourceComponent = null;
 	}
 

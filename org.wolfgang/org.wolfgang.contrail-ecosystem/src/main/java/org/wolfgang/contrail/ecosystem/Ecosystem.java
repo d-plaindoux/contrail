@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.ecosystem;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 
