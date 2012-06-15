@@ -49,7 +49,7 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(String host, int port, DataSenderFactory<String, DataReceiver<String>> factory) {
+	public WebServer(String host, int port, DataSenderFactory<String, String> factory) {
 		super(host, port, new WebServerPipelineFactory(factory));
 	}
 

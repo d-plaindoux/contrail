@@ -37,12 +37,12 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
  */
 class WebServerPipelineFactory implements ChannelPipelineFactory {
 
-	private final DataSenderFactory<String, DataReceiver<String>> factory;
+	private final DataSenderFactory<String, String> factory;
 
 	/**
 	 * Constructor
 	 */
-	public WebServerPipelineFactory(DataSenderFactory<String, DataReceiver<String>> factory) {
+	public WebServerPipelineFactory(DataSenderFactory<String, String> factory) {
 		this.factory = factory;
 	}
 

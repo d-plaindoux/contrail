@@ -44,7 +44,7 @@ public interface Ecosystem {
 	 * @throws CannotProvideInitialComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSenderFactory<U, DataReceiver<D>> getInitialBinder(final FilteredUnitEcosystemKey key)
+	<U, D> DataSenderFactory<U, D> getInitialBinder(final FilteredUnitEcosystemKey key)
 			throws CannotProvideInitialComponentException;
 
 	/**
@@ -59,6 +59,6 @@ public interface Ecosystem {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSenderFactory<D, DataReceiver<U>> getTerminalBinder(final FilteredUnitEcosystemKey key)
+	<U, D> DataSenderFactory<D, U> getTerminalBinder(final FilteredUnitEcosystemKey key)
 			throws CannotProvideTerminalComponentException;
 }

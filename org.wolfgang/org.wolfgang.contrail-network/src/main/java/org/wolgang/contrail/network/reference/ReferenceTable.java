@@ -19,13 +19,16 @@
 package org.wolgang.contrail.network.reference;
 
 /**
- * <code>EndPointTable</code>
- *
+ * A <code>ReferenceTable</code> provides basic mechanisms used to retrieve
+ * informations linked to a given reference
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ReferenceTable {
-	
-	
+public interface ReferenceTable<E> {
+
+	void insert(SimpleReference reference, E element);
+
+	E retrieve(SimpleReference reference);
 
 }

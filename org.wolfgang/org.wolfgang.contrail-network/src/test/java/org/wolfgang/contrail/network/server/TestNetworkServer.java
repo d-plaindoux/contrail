@@ -21,21 +21,30 @@ package org.wolfgang.contrail.network.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialDataReceiverFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalDataReceiverFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.SourceComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
 
 /**
@@ -47,9 +56,15 @@ import org.wolfgang.contrail.network.connection.socket.NetServer;
 public class TestNetworkServer extends TestCase {
 
 	public void testNominal01() throws IOException, CannotProvideInitialComponentException {
-		final EcosystemImpl ecosystem = new EcosystemImpl();
+		//
+		// Complex server based on ecosystem
+		//
 
-		// A little bit too complex ... isn't it ?
+		final EcosystemImpl serverEcosystem = new EcosystemImpl();
+
+		// In Java 8: dataFactory = component -> new DataReceiver<byte[]>() {
+		// ... };
+
 		final TerminalDataReceiverFactory<byte[], byte[]> dataFactory = new TerminalDataReceiverFactory<byte[], byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(final TerminalComponent<byte[], byte[]> component) {
@@ -67,6 +82,9 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
+		// In Java 8: destinationComponentFactory = () -> new
+		// TerminalComponent<byte[], byte[]>(dataFactory);
+
 		final DestinationComponentFactory<byte[], byte[]> destinationComponentFactory = new DestinationComponentFactory<byte[], byte[]>() {
 			@Override
 			public DestinationComponent<byte[], byte[]> create() {
@@ -75,16 +93,19 @@ public class TestNetworkServer extends TestCase {
 		};
 
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKey.getKey("test", byte[].class, byte[].class);
-		ecosystem.addDestinationFactory(key, destinationComponentFactory);
+		serverEcosystem.addDestinationFactory(key, destinationComponentFactory);
 
-		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,	ecosystem.<byte[],byte[]>getInitialBinder(key));
+		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,
+				serverEcosystem.<byte[], byte[]> getInitialBinder(key));
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);
 
-		final Socket socket = new Socket(InetAddress.getLocalHost(), 2666);
+		//
+		// Simple socket based client
+		//
 
-	
+		final Socket socket = new Socket(InetAddress.getLocalHost(), 2666);
 		final String message = "Hello, World!";
 
 		socket.getOutputStream().write(message.getBytes());

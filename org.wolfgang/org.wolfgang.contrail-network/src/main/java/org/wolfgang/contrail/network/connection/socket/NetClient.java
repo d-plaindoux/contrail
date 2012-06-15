@@ -57,7 +57,7 @@ public class NetClient implements Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
+	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Network.Client");
@@ -78,7 +78,7 @@ public class NetClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetClient(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
+	public NetClient(DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}

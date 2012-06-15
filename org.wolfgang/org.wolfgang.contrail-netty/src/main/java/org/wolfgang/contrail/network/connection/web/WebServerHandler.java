@@ -40,7 +40,7 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 	/**
 	 * Constructor
 	 */
-	public WebServerHandler(DataSenderFactory<String, DataReceiver<String>> factory) {
+	public WebServerHandler(DataSenderFactory<String, String> factory) {
 		this.httpRequestHandler = new HTTPRequestHandlerImpl(factory, new WebServerPage());
 	}
 

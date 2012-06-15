@@ -16,26 +16,43 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
+package org.wolgang.contrail.network.reference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * <code>DataSenderFactory</code> is capable to build data sender.
+ * <code>ReferenceTableImpl</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataSenderFactory<U, D> {
+public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 
 	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
-	 * 
-	 * @param component
-	 *            The component used to build the data sender
-	 * @return a data sender (Never <code>null</code>)
-	 * @throws CannotCreateDataSenderException
-	 *             if the data sender cannot be correctly created
+	 * The internal map
 	 */
-	DataSender<U> create(DataReceiver<D> component) throws CannotCreateDataSenderException;
+	private final Map<SimpleReference, E> table;
+
+	{
+		this.table = new HashMap<SimpleReference, E>();
+	}
+
+	/**
+	 * Constructor
+	 */
+	private ReferenceTableImpl() {
+		// Nothing to do
+	}
+
+	@Override
+	public void insert(SimpleReference reference, E element) {
+		this.table.put(reference, element);
+	}
+
+	@Override
+	public E retrieve(SimpleReference reference) {
+		return this.table.get(reference);
+	}
 
 }

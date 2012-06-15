@@ -168,11 +168,11 @@ public final class EcosystemImpl implements Ecosystem {
 		throw new CannotProvideTerminalComponentException(message.format(filter));
 	}
 
-	public <U, D> DataSenderFactory<U, DataReceiver<D>> getInitialBinder(final FilteredUnitEcosystemKey key)
+	public <U, D> DataSenderFactory<U, D> getInitialBinder(final FilteredUnitEcosystemKey key)
 			throws CannotProvideInitialComponentException {
 		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(key);
 
-		return new DataSenderFactory<U, DataReceiver<D>>() {
+		return new DataSenderFactory<U,D>() {
 			@Override
 			public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
 				try {
@@ -222,11 +222,11 @@ public final class EcosystemImpl implements Ecosystem {
 	}
 
 	@Override
-	public <U, D> DataSenderFactory<D, DataReceiver<U>> getTerminalBinder(final FilteredUnitEcosystemKey key)
+	public <U, D> DataSenderFactory<D, U> getTerminalBinder(final FilteredUnitEcosystemKey key)
 			throws CannotProvideTerminalComponentException {
 		final SourceComponentFactory<U, D> terminalIntegrator = this.getTerminalIntegrator(key);
 
-		return new DataSenderFactory<D, DataReceiver<U>>() {
+		return new DataSenderFactory<D, U>() {
 			@Override
 			public DataSender<D> create(DataReceiver<U> receiver) throws CannotCreateDataSenderException {
 				try {

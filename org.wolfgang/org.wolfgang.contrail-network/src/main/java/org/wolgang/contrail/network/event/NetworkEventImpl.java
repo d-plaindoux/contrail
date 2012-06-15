@@ -23,29 +23,55 @@ import java.io.Serializable;
 import org.wolgang.contrail.network.reference.Reference;
 
 /**
- * <code>NetworkEvent</code> is the basic and one possible top-level type
- * implemented by network events.
+ * <code>NetworkEventImpl</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetworkEvent {
+public class NetworkEventImpl implements NetworkEvent {
 
 	/**
-	 * @return the target reference
+	 * The source
 	 */
-	Reference getTargetReference();
+	private final Reference source;
 
 	/**
-	 * @return the source reference
+	 * The target
 	 */
-	Reference getSourceReference();
+	private final Reference target;
 
 	/**
-	 * Provide the message content
+	 * The content
+	 */
+	private final Serializable content;
+
+	/**
+	 * Constructor
 	 * 
-	 * @return a content
+	 * @param source
+	 * @param target
+	 * @param content
 	 */
-	Serializable getContent();
+	private NetworkEventImpl(Reference source, Reference target, Serializable content) {
+		super();
+		this.source = source;
+		this.target = target;
+		this.content = content;
+	}
+
+	@Override
+	public Reference getTargetReference() {
+		return this.target;
+	}
+
+	@Override
+	public Reference getSourceReference() {
+		return this.source;
+	}
+
+	@Override
+	public Serializable getContent() {
+		return this.content;
+	}
 
 }

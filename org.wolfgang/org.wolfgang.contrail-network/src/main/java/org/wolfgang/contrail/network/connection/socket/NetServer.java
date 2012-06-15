@@ -67,7 +67,7 @@ public class NetServer implements Callable<Void>, Closeable {
 	/**
 	 * De-multiplexer component
 	 */
-	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
+	private final DataSenderFactory<byte[], byte[]> factory;
 
 	/**
 	 * The underlying server socket
@@ -97,7 +97,7 @@ public class NetServer implements Callable<Void>, Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetServer(InetAddress address, int port, DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
+	public NetServer(InetAddress address, int port, DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.address = address;
 		this.port = port;

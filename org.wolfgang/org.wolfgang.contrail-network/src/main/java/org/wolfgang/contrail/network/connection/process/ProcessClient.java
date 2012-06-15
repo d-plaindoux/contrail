@@ -51,7 +51,7 @@ public class ProcessClient implements Closeable {
 	/**
 	 * The data sender factory
 	 */
-	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
+	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Process.Client");
@@ -72,7 +72,7 @@ public class ProcessClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessClient(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
+	public ProcessClient(DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}

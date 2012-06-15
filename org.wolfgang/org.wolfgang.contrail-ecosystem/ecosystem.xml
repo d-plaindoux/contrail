@@ -16,61 +16,69 @@
 		<!-- IO Socket initial binder -->
 		<!-- ============================================================ -->
 		<DataFlow name="net.incoming">
-			<Transducer factory="PayLoadTransducerFactory">
-				<Incoming ref="in" />
+			<Transducer ref="in" factory="PayLoadTransducerFactory">
 				<Ougoing ref="payload.string" />
 			</Transducer>
-			<Transducer factory="StringTransducerFactory">
-				<Incoming ref="payload.string" />
+			<Transducer ref="payload.string" factory="StringTransducerFactory">
 				<Ougoing ref="string.json" />
 			</Transducer>
-			<Transducer factory="JSONTransducerFactory">
-				<Incoming ref="string.json" />
+			<Transducer ref="string.json" factory="JSONTransducerFactory">
 				<Ougoing ref="core.network.incoming" />
 			</Transducer>
+		</DataFlow>
+
+		<DataFlow name="net.outgoing">
+			<ReverseDataFlow name="new.incoming"></ReverseDataFlow>
 		</DataFlow>
 
 		<!-- ============================================================ -->
 		<!-- Web Socket initial binder -->
 		<!-- ============================================================ -->
 		<DataFlow name="web.incoming">
-			<Transducer factory="JSONTransducerFactory">
-				<Incoming ref="in" />
+			<Transducer ref="in" factory="JSONTransducerFactory">
 				<Ougoing ref="core.network.in" />
 			</Transducer>
+		</DataFlow>
+
+		<DataFlow name="web.outgoing">
+			<ReverseDataFlow name="web.incoming"></ReverseDataFlow>
 		</DataFlow>
 	</InitialBinders>
 
 	<InternalComponents>
-		<DataFlow name="core.network">
-			<Terminal factory="Networking">
-				<Incoming ref="incoming" />
-				<Outgoing ref="network.target" />
-			</Terminal>
-			<Router factory="NetworkRouterFactory">
-				<Incoming ref="network.target" />
-				<Outgoing ref="protocol" />
+		<DataFlow name="local.network">
+			<Router ref="in" factory="ProtocolRouterFactory">
+				<Outgoing ref="service" filter="isAServiceHandler"/>
+				<Outgoing ref="transfer" filter="isTransferHandler"/>
 			</Router>
-			<Terminal factory="ServiceHandler">
-				<Incoming ref="protocol" />
+			<Terminal ref="service" factory="ServiceHandler">
 				<Outgoing ref="service.outgoing" />
 			</Terminal>
-			<Terminal factory="TransferHandler">
-				<Incoming ref="protocol" />
+			<Terminal ref="transfer" factory="TransferHandler">
 				<Outgoing ref="transfer.outgoing" />
 			</Terminal>
 		</DataFlow>
+		
+		<DataFlow name="core.network">
+			<Terminal ref="incoming" factory="Networking">
+				<Outgoing ref="network.target" />
+			</Terminal>
+			<Router ref="network.target" factory="NetworkRouterFactory">
+				<Outgoing ref="local.network.in" filter="isSameReference" />
+				<Outgoing ref="local.network.in" filter="SameReference" />
+			</Router>
+		</DataFlow>
 	</InternalComponents>
 
-	<Servers>
-		<Server factory="NetServer" port="6048" ref="net.incoming.in" />
-		<Server factory="WebServer" port="9090" ref="web.incoming.in" />
-	</Servers>
-	
+	<ActiveWorkers>
+		<Worker factory="NetServer" port="6048" ref="net.incoming.in" />
+		<Worker factory="WebServer" port="9090" ref="web.incoming.in" />
+	</ActiveWorkers>
+
 	<Clients>
-		<Client name="a.*" factory="NetClient" ref="net.incoming.inc" />
-		<Client name="b.*" factory="NetClient" ref="net.incoming.inc" />
-		<Client name="c.*" factory="NetClient" ref="net.incoming.inc" />
-		<Client name="d.*" factory="NetClient" ref="net.incoming.inc" />
+		<Client name="a.*" factory="NetClient" ref="net.outgoing.inc" />
+		<Client name="b.*" factory="NetClient" ref="net.outgoing.inc" />
+		<Client name="c.*" factory="NetClient" ref="net.outgoing.inc" />
+		<Client name="d.*" factory="NetClient" ref="net.outgoing.inc" />
 	</Clients>
 </Ecosystem>

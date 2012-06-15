@@ -51,7 +51,7 @@ public class ProcessHandler implements Closeable {
 	/**
 	 * The data sender factory
 	 */
-	private final DataSenderFactory<byte[], DataReceiver<byte[]>> factory;
+	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
 		executor = Executors.newSingleThreadExecutor();
@@ -63,7 +63,7 @@ public class ProcessHandler implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(DataSenderFactory<byte[], DataReceiver<byte[]>> factory) {
+	public ProcessHandler(DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}

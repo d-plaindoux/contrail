@@ -72,7 +72,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * 
 	 */
-	private final DataSenderFactory<String, DataReceiver<String>> factory;
+	private final DataSenderFactory<String, String> factory;
 
 	/**
 	 * 
@@ -94,7 +94,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * 
 	 * @param ecosystem2
 	 */
-	public HTTPRequestHandlerImpl(DataSenderFactory<String, DataReceiver<String>> factory, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(DataSenderFactory<String, String> factory, WebServerPage serverPage) {
 		this.factory = factory;
 		this.serverPage = serverPage;
 	}
