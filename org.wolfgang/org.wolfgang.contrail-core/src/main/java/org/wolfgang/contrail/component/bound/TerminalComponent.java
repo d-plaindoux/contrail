@@ -21,6 +21,8 @@ package org.wolfgang.contrail.component.bound;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -29,6 +31,8 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLinkFactory;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * The <code>TerminalComponent</code> is capable to receive incoming events.
@@ -41,7 +45,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private SourceComponent<U, D> upStreamSourceComponent;
+	private SourceComponentLink<U, D> upStreamSourceComponentLink;
 
 	/**
 	 * The data injection mechanism
@@ -52,6 +56,10 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * The internal down stream data handler
 	 */
 	private final UpStreamDataHandler<U> upstreamDataHandler;
+
+	{
+		this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+	}
 
 	/**
 	 * Provides the local data sender
@@ -93,7 +101,6 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 		this.dataEmitter = this.getLocalDataSender();
 		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(receiver);
-		this.upStreamSourceComponent = null;
 	}
 
 	/**
@@ -107,7 +114,6 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 		this.dataEmitter = this.getLocalDataSender();
 		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this.dataEmitter));
-		this.upStreamSourceComponent = null;
 	}
 
 	/**
@@ -118,27 +124,32 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 *             thrown if the handler is not yet available
 	 */
 	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamSourceComponent == null) {
+		if (this.upStreamSourceComponentLink.getSourceComponent() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamSourceComponent.getDownStreamDataHandler();
+			return upStreamSourceComponentLink.getSourceComponent().getDownStreamDataHandler();
 		}
 	}
 
 	@Override
-	public void connect(SourceComponent<U, D> handler) throws ComponentConnectedException {
-		if (this.upStreamSourceComponent == null) {
-			this.upStreamSourceComponent = handler;
+	public boolean acceptSource(ComponentId componentId) {
+		return this.upStreamSourceComponentLink.getSourceComponent() == null;
+	}
+
+	@Override
+	public void connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
+		if (acceptSource(handler.getSourceComponent().getComponentId())) {
+			this.upStreamSourceComponentLink = handler;
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public void disconnect(SourceComponent<U, D> handler) throws ComponentNotConnectedException {
-		if (this.upStreamSourceComponent != null
-				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
-			this.upStreamSourceComponent = null;
+	public void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
+		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSourceComponent();
+		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
+			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -167,6 +178,10 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		this.upStreamSourceComponent.closeDownStream();
+		if (this.upStreamSourceComponentLink.getSourceComponent() == null) {
+			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
+		} else {
+			this.upStreamSourceComponentLink.getSourceComponent().closeDownStream();
+		}
 	}
 }

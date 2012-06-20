@@ -43,27 +43,26 @@ public interface ComponentsLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	<U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+	<U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
 			throws ComponentConnectionRejectedException;
 
 	/**
-	 * Method called when all established links must be retrieved
+	 * Method called to retrieve all sources connected to the identified
+	 * component
 	 * 
-	 * @return an array of established links
-	 */
-	ComponentsLink<?, ?>[] getEstablishedLinks();
-
-	/**
-	 * Method called when all established links must be retrieved
-	 * 
-	 * @return an array of established links
+	 * @param componentId
+	 *            A component identifier
+	 * @return an array of component sources
 	 */
 	SourceComponent<?, ?>[] getSources(ComponentId componentId);
 
 	/**
-	 * Method called when all established links must be retrieved
+	 * Method called to retrieve all destinations connected to the identified
+	 * component
 	 * 
-	 * @return an array of established links
+	 * @param componentId
+	 *            A component identifier
+	 * @return an array of component destinations
 	 */
 	DestinationComponent<?, ?>[] getDestinations(ComponentId componentId);
 

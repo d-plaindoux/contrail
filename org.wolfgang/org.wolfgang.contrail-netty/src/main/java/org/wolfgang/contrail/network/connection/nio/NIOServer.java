@@ -85,6 +85,7 @@ public class NIOServer implements Callable<Void>, Closeable {
 		serverBootstrap.setPipelineFactory(pipeline);
 
 		// Bind and start to accept incoming connections.
+		
 		channelReference.set(serverBootstrap.bind(new InetSocketAddress(port)));
 
 		return null;

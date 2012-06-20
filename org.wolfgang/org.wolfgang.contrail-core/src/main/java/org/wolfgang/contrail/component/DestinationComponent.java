@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component;
 
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * The <code>DestinationComponent</code> is capable to receive event from the
@@ -41,6 +42,15 @@ public interface DestinationComponent<U, D> extends Component {
 	UpStreamDataHandler<U> getUpStreamDataHandler();
 
 	/**
+	 * Method called whether a connection must be performed
+	 * 
+	 * @param componentId
+	 *            The component identifier
+	 * @return true if the source can be connected; false otherwise
+	 */
+	boolean acceptSource(ComponentId componentId);
+
+	/**
 	 * Method called when the parametric upstream source component shall be
 	 * connected to the current component.
 	 * 
@@ -49,7 +59,7 @@ public interface DestinationComponent<U, D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the connection cannot be performed
 	 */
-	void connect(SourceComponent<U, D> handler) throws ComponentConnectionRejectedException;
+	void connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called when the connected upstream source component shall be
@@ -60,5 +70,5 @@ public interface DestinationComponent<U, D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the disconnection cannot be performed
 	 */
-	void disconnect(SourceComponent<U, D> handler) throws ComponentDisconnectionRejectedException;
+	void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException;
 }

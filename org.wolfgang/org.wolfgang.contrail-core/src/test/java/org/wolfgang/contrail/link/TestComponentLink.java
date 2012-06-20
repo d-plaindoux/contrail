@@ -25,16 +25,18 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 
 /**
  * <code>TestComponentLink</code>
- *
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class TestComponentLink extends TestCase {
-	
+
 	public void testLink01() {
 		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
-			linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final DummySourceComponent source = new DummySourceComponent();
+			final DummyDestinationComponent destination = new DummyDestinationComponent();
+			linkManager.connect(source, destination);
 		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
@@ -43,7 +45,9 @@ public class TestComponentLink extends TestCase {
 	public void testLink02() {
 		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final DummySourceComponent source = new DummySourceComponent();
+			final DummyDestinationComponent destination = new DummyDestinationComponent();
+			final ComponentLink connect = linkManager.connect(source, destination);
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {
@@ -57,14 +61,21 @@ public class TestComponentLink extends TestCase {
 	public void testLink03() {
 		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final DummySourceComponent source = new DummySourceComponent();
+			final DummyDestinationComponent destination = new DummyDestinationComponent();
+			final ComponentLink connect = linkManager.connect(source, destination);
+
+			assertEquals(1, linkManager.getDestinations(source.getComponentId()).length);
+			assertEquals(1, linkManager.getSources(destination.getComponentId()).length);
+
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {
 				fail(e.getMessage());
 			}
-			
-			assertEquals(0, linkManager.getEstablishedLinks().length);			
+
+			assertEquals(0, linkManager.getDestinations(source.getComponentId()).length);
+			assertEquals(0, linkManager.getSources(destination.getComponentId()).length);
 		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
@@ -73,7 +84,10 @@ public class TestComponentLink extends TestCase {
 	public void testLink04() {
 		final ComponentsLinkManagerImpl linkManager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<Void,Void> connect = linkManager.connect(new DummySourceComponent(), new DummyDestinationComponent());
+			final DummySourceComponent source = new DummySourceComponent();
+			final DummyDestinationComponent destination = new DummyDestinationComponent();
+			final ComponentLink connect = linkManager.connect(source, destination);
+
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {

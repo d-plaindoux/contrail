@@ -45,7 +45,7 @@ public interface CodecFactory<U, D> {
 				final Class<?> codec = loader.loadClass(name);
 				try {
 					final Constructor<?> constructor = codec.getConstructor(String[].class);
-					return (CodecFactory<?, ?>) constructor.newInstance(parameters);
+					return (CodecFactory<?, ?>) constructor.newInstance(new Object[] { parameters });
 				} catch (NoSuchMethodException e) {
 					return (CodecFactory<?, ?>) codec.newInstance();
 				}

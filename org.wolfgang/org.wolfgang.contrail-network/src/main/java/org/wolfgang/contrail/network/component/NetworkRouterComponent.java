@@ -34,8 +34,9 @@ import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.Reference;
 import org.wolgang.contrail.network.reference.SimpleReference;
 
 /**
@@ -61,7 +62,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DestinationComponent<NetworkEvent, NetworkEvent>> destinationComponents;
+	private final Map<ComponentId, DestinationComponentLink<NetworkEvent, NetworkEvent>> destinationComponents;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -71,19 +72,21 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, SourceComponent<NetworkEvent, NetworkEvent>> sourceComponents;
+	private final Map<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>> sourceComponents;
 
 	/**
 	 * The network component identification
 	 */
 	private final SimpleReference endPoint;
 
-	/* init */
+	/**
+	 * Initialization
+	 */
 	{
 		this.destinationFilters = new HashMap<ComponentId, DataFilter<NetworkEvent>>();
-		this.destinationComponents = new HashMap<ComponentId, DestinationComponent<NetworkEvent, NetworkEvent>>();
+		this.destinationComponents = new HashMap<ComponentId, DestinationComponentLink<NetworkEvent, NetworkEvent>>();
 		this.sourceFilters = new HashMap<ComponentId, DataFilter<NetworkEvent>>();
-		this.sourceComponents = new HashMap<ComponentId, SourceComponent<NetworkEvent, NetworkEvent>>();
+		this.sourceComponents = new HashMap<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>>();
 	}
 
 	/**
@@ -95,19 +98,25 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	}
 
 	@Override
-	public void connect(DestinationComponent<NetworkEvent, NetworkEvent> handler) throws ComponentConnectionRejectedException {
-		if (this.destinationComponents.containsKey(handler.getComponentId())) {
+	public boolean acceptDestination(ComponentId componentId) {
+		return !this.destinationComponents.containsKey(componentId);
+	}
+
+	@Override
+	public void connectDestination(DestinationComponentLink<NetworkEvent, NetworkEvent> handler)
+			throws ComponentConnectionRejectedException {
+		if (this.acceptDestination(handler.getDestinationComponent().getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		} else {
-			this.destinationComponents.put(handler.getComponentId(), handler);
+			this.destinationComponents.put(handler.getDestinationComponent().getComponentId(), handler);
 		}
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<NetworkEvent, NetworkEvent> handler) throws ComponentNotConnectedException {
-		if (this.destinationComponents.containsKey(handler.getComponentId())) {
-			this.destinationComponents.remove(handler.getComponentId());
-			this.destinationFilters.remove(handler.getComponentId());
+	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+		if (this.destinationComponents.containsKey(componentId)) {
+			this.destinationComponents.remove(componentId);
+			this.destinationFilters.remove(componentId);
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -115,34 +124,39 @@ public class NetworkRouterComponent extends AbstractComponent implements
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (DestinationComponent<NetworkEvent, NetworkEvent> source : this.destinationComponents.values()) {
-			source.closeUpStream();
+		for (DestinationComponentLink<NetworkEvent, NetworkEvent> source : this.destinationComponents.values()) {
+			source.getDestinationComponent().closeUpStream();
 		}
 	}
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		for (SourceComponent<NetworkEvent, NetworkEvent> source : this.sourceComponents.values()) {
-			source.closeUpStream();
+		for (SourceComponentLink<NetworkEvent, NetworkEvent> source : this.sourceComponents.values()) {
+			source.getSourceComponent().closeUpStream();
 		}
 	}
 
 	@Override
-	public void connect(SourceComponent<NetworkEvent, NetworkEvent> handler) throws ComponentConnectedException {
+	public boolean acceptSource(ComponentId componentId) {
+		return !this.sourceComponents.containsKey(componentId);
+	}
+
+	@Override
+	public void connectSource(SourceComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectedException {
 		assert handler != null;
 
-		if (this.sourceComponents.containsKey(handler.getComponentId())) {
+		if (this.acceptSource(handler.getSourceComponent().getComponentId())) {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		} else {
-			this.sourceComponents.put(handler.getComponentId(), handler);
+			this.sourceComponents.put(handler.getSourceComponent().getComponentId(), handler);
 		}
 	}
 
 	@Override
-	public void disconnect(SourceComponent<NetworkEvent, NetworkEvent> handler) throws ComponentNotConnectedException {
-		if (this.sourceComponents.containsKey(handler.getComponentId())) {
-			this.sourceComponents.remove(handler.getComponentId());
-			this.sourceFilters.remove(handler.getComponentId());
+	public void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
+		if (this.sourceComponents.containsKey(componentId)) {
+			this.sourceComponents.remove(componentId);
+			this.sourceFilters.remove(componentId);
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -165,13 +179,13 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	 */
 	public DestinationComponent<NetworkEvent, NetworkEvent> getDestinationComponent(ComponentId componentId)
 			throws ComponentNotConnectedException {
-		final DestinationComponent<NetworkEvent, NetworkEvent> destinationComponent = this.destinationComponents
+		final DestinationComponentLink<NetworkEvent, NetworkEvent> destinationComponent = this.destinationComponents
 				.get(componentId);
 
 		if (destinationComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponent;
+			return destinationComponent.getDestinationComponent();
 		}
 	}
 
@@ -225,12 +239,12 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	 */
 	public SourceComponent<NetworkEvent, NetworkEvent> getSourceComponent(ComponentId componentId)
 			throws ComponentNotConnectedException {
-		final SourceComponent<NetworkEvent, NetworkEvent> destinationComponent = this.sourceComponents.get(componentId);
+		final SourceComponentLink<NetworkEvent, NetworkEvent> destinationComponent = this.sourceComponents.get(componentId);
 
 		if (destinationComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponent;
+			return destinationComponent.getSourceComponent();
 		}
 	}
 

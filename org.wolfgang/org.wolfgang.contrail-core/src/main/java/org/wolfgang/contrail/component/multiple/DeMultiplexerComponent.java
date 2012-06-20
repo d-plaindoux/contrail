@@ -26,6 +26,7 @@ import java.util.Map;
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -36,6 +37,9 @@ import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLinkFactory;
+import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * The <code>DeMultiplexerComponent</code> is capable to manage multiple
@@ -54,7 +58,6 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 
 	static {
 		final String category = "org.wolfgang.contrail.message";
-
 		FILTERING_SOURCE_REQUIRED = message(category, "filtering.source.required");
 	}
 
@@ -66,7 +69,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DestinationComponent<U, D>> destinationComponents;
+	private final Map<ComponentId, DestinationComponentLink<U, D>> destinationComponents;
 
 	/**
 	 * The internal upstream data handler
@@ -81,11 +84,12 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	/**
 	 * The connected upstream destination component (can be <code>null</code>)
 	 */
-	private SourceComponent<U, D> upStreamSourceComponent;
+	private SourceComponentLink<U, D> upStreamSourceComponentLink;
 
 	{
 		this.destinationFilters = new HashMap<ComponentId, DataFilter<U>>();
-		this.destinationComponents = new HashMap<ComponentId, DestinationComponent<U, D>>();
+		this.destinationComponents = new HashMap<ComponentId, DestinationComponentLink<U, D>>();
+		this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 	}
 
 	/**
@@ -104,12 +108,12 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 
 	@Override
 	public DestinationComponent<U, D> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException {
-		final DestinationComponent<U, D> destinationComponent = this.destinationComponents.get(componentId);
+		final DestinationComponentLink<U, D> destinationComponentLink = this.destinationComponents.get(componentId);
 
-		if (destinationComponent == null) {
+		if (destinationComponentLink.getDestinationComponent() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponent;
+			return destinationComponentLink.getDestinationComponent();
 		}
 	}
 
@@ -119,13 +123,18 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	}
 
 	@Override
-	public void connect(DestinationComponent<U, D> handler) throws ComponentConnectionRejectedException {
+	public boolean acceptDestination(ComponentId componentId) {
+		return !this.destinationComponents.containsKey(componentId);
+	}
+
+	@Override
+	public void connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
 		assert handler != null;
 
-		if (this.destinationComponents.containsKey(handler.getComponentId())) {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
+		if (this.acceptDestination(handler.getDestinationComponent().getComponentId())) {
+			this.destinationComponents.put(handler.getDestinationComponent().getComponentId(), handler);
 		} else {
-			this.destinationComponents.put(handler.getComponentId(), handler);
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
@@ -153,10 +162,10 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<U, D> handler) throws ComponentNotConnectedException {
-		if (this.destinationComponents.containsKey(handler.getComponentId())) {
-			this.destinationComponents.remove(handler.getComponentId());
-			this.destinationFilters.remove(handler.getComponentId());
+	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+		if (this.destinationComponents.containsKey(componentId)) {
+			this.destinationComponents.remove(componentId);
+			this.destinationFilters.remove(componentId);
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -164,8 +173,8 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (DestinationComponent<U, D> source : this.destinationComponents.values()) {
-			source.closeUpStream();
+		for (DestinationComponentLink<U, D> source : this.destinationComponents.values()) {
+			source.getDestinationComponent().closeUpStream();
 		}
 	}
 
@@ -180,19 +189,24 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	}
 
 	@Override
-	public void connect(SourceComponent<U, D> handler) throws ComponentConnectedException {
-		if (this.upStreamSourceComponent == null) {
-			this.upStreamSourceComponent = handler;
+	public boolean acceptSource(ComponentId componentId) {
+		return this.upStreamSourceComponentLink.getSourceComponent() == null;
+	}
+
+	@Override
+	public void connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
+		if (this.acceptSource(handler.getSourceComponent().getComponentId())) {
+			this.upStreamSourceComponentLink = handler;
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public void disconnect(SourceComponent<U, D> handler) throws ComponentNotConnectedException {
-		if (this.upStreamSourceComponent != null
-				&& this.upStreamSourceComponent.getComponentId().equals(handler.getComponentId())) {
-			this.upStreamSourceComponent = null;
+	public void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
+		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSourceComponent();
+		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
+			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}

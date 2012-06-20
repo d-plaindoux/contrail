@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.link.ComponentsLink;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
@@ -241,9 +241,11 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+
 		try {
-			multiplexer.connect(listener1);
-			multiplexer.connect(listener1);
+			manager.connect(listener1, multiplexer);
+			manager.connect(listener1, multiplexer);
 			fail();
 		} catch (ComponentConnectionRejectedException e) {
 			// OK
@@ -280,7 +282,7 @@ public class TestMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			ComponentsLink<Void, String> connect = manager.connect(listener1, multiplexer);
+			ComponentLink connect = manager.connect(listener1, multiplexer);
 			connect.dispose();
 		} catch (ComponentConnectionRejectedException e) {
 			fail();
@@ -319,7 +321,7 @@ public class TestMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			ComponentsLink<Void, String> connect = manager.connect(listener1, multiplexer);
+			ComponentLink connect = manager.connect(listener1, multiplexer);
 			connect.dispose();
 			connect.dispose();
 			fail();

@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.link;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -40,10 +39,10 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	/**
 	 * Created links
 	 */
-	private final List<ComponentsLink<?, ?>> links;
+	private final List<ComponentLinkImpl<?, ?>> links;
 
 	{
-		links = new ArrayList<ComponentsLink<?, ?>>();
+		links = new ArrayList<ComponentLinkImpl<?, ?>>();
 	}
 
 	/**
@@ -54,9 +53,10 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	}
 
 	@Override
-	public final <U, D> ComponentsLink<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+	public final <U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
 			throws ComponentConnectionRejectedException {
-		final ComponentsLinkImpl<U, D> link = new ComponentsLinkImpl<U, D>(source, destination) {
+
+		final ComponentLinkImpl<U, D> link = new ComponentLinkImpl<U, D>(source, destination) {
 			@Override
 			public void dispose() throws ComponentDisconnectionRejectedException {
 				try {
@@ -75,7 +75,7 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	@Override
 	public final <U, D> boolean disconnect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
 			throws ComponentDisconnectionRejectedException {
-		for (ComponentsLink<?, ?> link : links) {
+		for (ComponentLinkImpl<?, ?> link : links) {
 			if (link.getSourceComponent().equals(source) && link.getDestinationComponent().equals(destination)) {
 				link.dispose();
 				// Secured remove since we exit this method just after
@@ -88,14 +88,9 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	}
 
 	@Override
-	public ComponentsLink<?, ?>[] getEstablishedLinks() {
-		return links.toArray(new ComponentsLink[links.size()]);
-	}
-
-	@Override
 	public SourceComponent<?, ?>[] getSources(ComponentId componentId) {
 		final List<SourceComponent<?, ?>> sources = new ArrayList<SourceComponent<?, ?>>();
-		for (ComponentsLink<?, ?> link : links) {
+		for (ComponentLinkImpl<?, ?> link : links) {
 			if (link.getDestinationComponent().getComponentId().equals(componentId)) {
 				sources.add(link.getSourceComponent());
 			}
@@ -106,7 +101,7 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	@Override
 	public DestinationComponent<?, ?>[] getDestinations(ComponentId componentId) {
 		final List<DestinationComponent<?, ?>> destinations = new ArrayList<DestinationComponent<?, ?>>();
-		for (ComponentsLink<?, ?> link : links) {
+		for (ComponentLinkImpl<?, ?> link : links) {
 			if (link.getSourceComponent().getComponentId().equals(componentId)) {
 				destinations.add(link.getDestinationComponent());
 			}

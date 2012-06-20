@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.link.ComponentsLink;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
@@ -131,6 +131,7 @@ public class TestDeMultiplexer extends TestCase {
 			source.getDataSender().sendData("@queue1:Hello, World!");
 
 		} catch (ComponentConnectionRejectedException e) {
+			e.printStackTrace();
 			fail();
 		} catch (DataHandlerException e) {
 			fail();
@@ -244,9 +245,11 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
+		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+
 		try {
-			deMultiplexer.connect(listener1);
-			deMultiplexer.connect(listener1);
+			manager.connect(deMultiplexer, listener1);
+			manager.connect(deMultiplexer, listener1);
 			fail();
 		} catch (ComponentConnectionRejectedException e) {
 			// OK
@@ -284,7 +287,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<String, Void> connect = manager.connect(deMultiplexer, listener1);
+			final ComponentLink connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();
 		} catch (ComponentConnectionRejectedException e) {
 			fail();
@@ -324,7 +327,7 @@ public class TestDeMultiplexer extends TestCase {
 
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
-			final ComponentsLink<String, Void> connect = manager.connect(deMultiplexer, listener1);
+			final ComponentLink connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();
 			connect.dispose();
 			fail();

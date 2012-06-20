@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.bound;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -29,6 +30,8 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLinkFactory;
+import org.wolfgang.contrail.link.DestinationComponentLink;
 
 /**
  * The <code>InitialComponent</code> is capable to send event in the framework.
@@ -41,7 +44,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponent<U, D> upStreamDestinationComponent;
+	private DestinationComponentLink<U, D> upStreamDestinationComponentLink;
 
 	/**
 	 * The data sender mechanism used by external components
@@ -52,6 +55,10 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * The internal down stream data handler
 	 */
 	private final DownStreamDataHandler<D> downStreamDataHandler;
+
+	{
+		this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+	}
 
 	/**
 	 * Provides the local data sender
@@ -93,7 +100,6 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(receiver);
-		this.upStreamDestinationComponent = null;
 	}
 
 	/**
@@ -107,7 +113,6 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this.dataSender));
-		this.upStreamDestinationComponent = null;
 	}
 
 	/**
@@ -118,27 +123,32 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 *             thrown if the handler is not yet available
 	 */
 	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponent == null) {
+		if (this.upStreamDestinationComponentLink.getDestinationComponent() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamDestinationComponent.getUpStreamDataHandler();
+			return upStreamDestinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
 		}
 	}
 
 	@Override
-	public void connect(DestinationComponent<U, D> handler) throws ComponentConnectedException {
-		if (this.upStreamDestinationComponent == null) {
-			this.upStreamDestinationComponent = handler;
+	public boolean acceptDestination(ComponentId componentId) {
+		return this.upStreamDestinationComponentLink.getDestinationComponent() == null;
+	}
+
+	@Override
+	public void connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
+		if (acceptDestination(handler.getDestinationComponent().getComponentId())) {
+			this.upStreamDestinationComponentLink = handler;
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public void disconnect(DestinationComponent<U, D> handler) throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponent != null
-				&& this.upStreamDestinationComponent.getComponentId().equals(handler.getComponentId())) {
-			this.upStreamDestinationComponent = null;
+	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+		final DestinationComponent<U, D> destinationComponent = this.upStreamDestinationComponentLink.getDestinationComponent();
+		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
+			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -162,7 +172,11 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		this.upStreamDestinationComponent.closeUpStream();
+		if (this.upStreamDestinationComponentLink.getDestinationComponent() == null) {
+			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
+		} else {
+			this.upStreamDestinationComponentLink.getDestinationComponent().closeUpStream();
+		}
 	}
 
 	@Override
