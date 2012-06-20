@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem.key;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NamedUnitEcosystemKey implements FilteredUnitEcosystemKey {
+public class NamedUnitEcosystemKey implements UnitEcosystemKey {
 
 	/**
 	 * The unit ecosystem name

@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem.key;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class LogicalTrueEcosystemKey implements FilteredUnitEcosystemKey {
+public class LogicalTrueEcosystemKey implements UnitEcosystemKey {
 
 	/**
 	 * Constructor

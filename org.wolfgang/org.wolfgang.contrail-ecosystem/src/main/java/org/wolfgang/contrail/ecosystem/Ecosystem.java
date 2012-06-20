@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.ecosystem;
 
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 
 /**
  * An <code>Ecosystem</code> is able to provide components based on criterion.
@@ -32,32 +32,16 @@ import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 public interface Ecosystem {
 
 	/**
-	 * Method called whether an initial component binder is required
+	 * Method called whether an component binder is required
 	 * 
 	 * @param key
 	 *            The name of the required binder
 	 * @return a data sender factory (Never <code>null</code>)
-	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotProvideComponentException
 	 *             if no specific mechanisms are linked to the required stream
 	 *             types
-	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotProvideComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> DataSenderFactory<U, D> getInitialBinder(final FilteredUnitEcosystemKey key)
-			throws CannotProvideInitialComponentException;
-
-	/**
-	 * Method called whether a terminal component binder is required
-	 * 
-	 * @param key
-	 *            The name of the required binder
-	 * @return a data sender factory (Never <code>null</code>)
-	 * @throws CannotProvideInitialComponentException
-	 *             if no specific mechanisms are linked to the required stream
-	 *             types
-	 * @throws CannotProvideTerminalComponentException
-	 *             if the component integration fails
-	 */
-	<U, D> DataSenderFactory<D, U> getTerminalBinder(final FilteredUnitEcosystemKey key)
-			throws CannotProvideTerminalComponentException;
+	<U, D> DataSenderFactory<U, D> getBinder(final UnitEcosystemKey key) throws CannotProvideComponentException;
 }

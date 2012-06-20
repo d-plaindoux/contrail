@@ -40,6 +40,14 @@ public interface SourceComponent<U, D> extends Component {
 	DownStreamDataHandler<D> getDownStreamDataHandler();
 
 	/**
+	 * Method called whether a connection must be performed
+	 * 
+	 * @param componentId
+	 * @return
+	 */
+	// TODO -- boolean acceptConnection(ComponentId componentId);
+
+	/**
 	 * Method called when the parametric upstream source component shall be
 	 * connected to the current component.
 	 * 

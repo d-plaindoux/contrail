@@ -31,8 +31,16 @@ import org.wolfgang.contrail.component.transducer.DataTransducer;
  */
 public interface CodecFactory<U, D> {
 
+	/**
+	 * <code>Loader</code> is dedicated to CoDec creation. This creation is done
+	 * using parameters if defined otherwise default constructor is invoked.
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
 	public static class Loader {
-		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
+		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters)
+				throws CodecFactoryCreationException {
 			try {
 				final Class<?> codec = loader.loadClass(name);
 				try {

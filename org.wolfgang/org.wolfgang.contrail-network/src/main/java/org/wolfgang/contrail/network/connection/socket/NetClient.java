@@ -92,7 +92,7 @@ public class NetClient implements Closeable {
 	 *            The server port
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotProvideInitialComponentException
+	 * @throws CannotProvideComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
 	public void connect(InetAddress address, int port) throws IOException, CannotCreateDataSenderException {

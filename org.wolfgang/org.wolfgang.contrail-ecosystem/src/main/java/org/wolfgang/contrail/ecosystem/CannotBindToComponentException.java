@@ -19,34 +19,24 @@
 package org.wolfgang.contrail.ecosystem;
 
 /**
- * <code>CannotCreateTerminalException</code>
+ * <code>CannotIntegrateInitialComponentException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CannotProvideInitialComponentException extends Exception {
+public class CannotBindToComponentException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = 8864101185754000453L;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public CannotProvideInitialComponentException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
+	private static final long serialVersionUID = 4756321258681902289L;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param arg0
 	 */
-	public CannotProvideInitialComponentException(String arg0) {
+	public CannotBindToComponentException(Throwable arg0) {
 		super(arg0);
 	}
 

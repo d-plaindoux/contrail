@@ -19,10 +19,12 @@
 package org.wolfgang.contrail.link;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
@@ -88,6 +90,28 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	@Override
 	public ComponentsLink<?, ?>[] getEstablishedLinks() {
 		return links.toArray(new ComponentsLink[links.size()]);
+	}
+
+	@Override
+	public SourceComponent<?, ?>[] getSources(ComponentId componentId) {
+		final List<SourceComponent<?, ?>> sources = new ArrayList<SourceComponent<?, ?>>();
+		for (ComponentsLink<?, ?> link : links) {
+			if (link.getDestinationComponent().getComponentId().equals(componentId)) {
+				sources.add(link.getSourceComponent());
+			}
+		}
+		return sources.toArray(new SourceComponent[links.size()]);
+	}
+
+	@Override
+	public DestinationComponent<?, ?>[] getDestinations(ComponentId componentId) {
+		final List<DestinationComponent<?, ?>> destinations = new ArrayList<DestinationComponent<?, ?>>();
+		for (ComponentsLink<?, ?> link : links) {
+			if (link.getSourceComponent().getComponentId().equals(componentId)) {
+				destinations.add(link.getDestinationComponent());
+			}
+		}
+		return destinations.toArray(new DestinationComponent[links.size()]);
 	}
 
 }

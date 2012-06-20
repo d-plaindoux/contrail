@@ -19,62 +19,13 @@
 package org.wolfgang.contrail.ecosystem.key;
 
 /**
- * <code>Entry</code>
+ * <code>FilteredUnitEcosystemKey</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class UnitEcosystemKey {
+public interface UnitEcosystemKey {
 
-	/**
-	 * @param name
-	 * @param upstream
-	 * @param downstream
-	 * @return
-	 */
-	public static RegisteredUnitEcosystemKey getKey(String name, Class<?> upstream, Class<?> downstream) {
-		return new RegisteredUnitEcosystemKey(name, upstream, downstream);
-	}
+	boolean filteredBy(RegisteredUnitEcosystemKey ecosystemKey);
 
-	/**
-	 * @param upstream
-	 * @param downstream
-	 * @return
-	 */
-	public static FilteredUnitEcosystemKey typed(Class<?> upstream, Class<?> downstream) {
-		return new TypedUnitEcosystemKey(upstream, downstream);
-	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	public static FilteredUnitEcosystemKey named(String name) {
-		return new NamedUnitEcosystemKey(name);
-	}
-
-	/**
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	public static FilteredUnitEcosystemKey and(FilteredUnitEcosystemKey left, FilteredUnitEcosystemKey right) {
-		return new LogicalAndUnitEcosystemKey(left, right);
-	}
-
-	/**
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	public static FilteredUnitEcosystemKey or(FilteredUnitEcosystemKey left, FilteredUnitEcosystemKey right) {
-		return new LogicalOrUnitEcosystemKey(left, right);
-	}
-	
-	/**
-	 * 
-	 */
-	public static FilteredUnitEcosystemKey allwaysTrue() {
-		return new LogicalTrueEcosystemKey();
-	}
 }

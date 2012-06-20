@@ -20,6 +20,7 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
@@ -51,6 +52,20 @@ public interface ComponentsLinkManager {
 	 * @return an array of established links
 	 */
 	ComponentsLink<?, ?>[] getEstablishedLinks();
+
+	/**
+	 * Method called when all established links must be retrieved
+	 * 
+	 * @return an array of established links
+	 */
+	SourceComponent<?, ?>[] getSources(ComponentId componentId);
+
+	/**
+	 * Method called when all established links must be retrieved
+	 * 
+	 * @return an array of established links
+	 */
+	DestinationComponent<?, ?>[] getDestinations(ComponentId componentId);
 
 	/**
 	 * Function able to disconnect a source and a destination

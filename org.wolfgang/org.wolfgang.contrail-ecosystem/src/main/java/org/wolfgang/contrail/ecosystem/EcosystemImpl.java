@@ -20,29 +20,14 @@ package org.wolfgang.contrail.ecosystem;
 
 import static org.wolfgang.common.message.MessagesProvider.message;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.ecosystem.key.FilteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentsLink;
-import org.wolfgang.contrail.link.ComponentsLinkManager;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 
 /**
  * The <code>EcosystemImpl</code> proposes an implementation using standard
@@ -54,24 +39,12 @@ import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 public final class EcosystemImpl implements Ecosystem {
 
 	/**
-	 * The dedicated link manager
-	 */
-	private final ComponentsLinkManager linkManager;
-
-	/**
 	 * Initial component integration triggers
 	 */
-	private final Map<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> initialHooks;
-
-	/**
-	 * Terminal component integration triggers
-	 */
-	private final Map<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> terminalHooks;
+	private final Map<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>> hooks;
 
 	{
-		this.linkManager = new ComponentsLinkManagerImpl();
-		this.initialHooks = new HashMap<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>>();
-		this.terminalHooks = new HashMap<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>>();
+		this.hooks = new HashMap<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>>();
 	}
 
 	/**
@@ -86,60 +59,13 @@ public final class EcosystemImpl implements Ecosystem {
 	 *            The factory
 	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addDestinationFactory(RegisteredUnitEcosystemKey ecosystemKey,
-			DestinationComponentFactory<U, D> factory) {
-		if (this.initialHooks.containsKey(ecosystemKey)) {
+	public <U, D> boolean addFactory(RegisteredUnitEcosystemKey ecosystemKey, DataSenderFactory<U, D> factory) {
+		if (this.hooks.containsKey(ecosystemKey)) {
 			return false;
 		} else {
-			this.initialHooks.put(ecosystemKey, factory);
-			return false;
-		}
-	}
-
-	/**
-	 * Method used to add a new terminal component unit integration trigger. If
-	 * the entry is already defined this method do not add the integrator.
-	 * 
-	 * @param upstream
-	 *            The upstream type
-	 * @param downstream
-	 *            The downstream type
-	 * @param factory
-	 *            The factory
-	 * @return true if the factory is correctly added; false otherwise
-	 */
-	public <U, D> boolean addSourceFactory(RegisteredUnitEcosystemKey ecosystemKey, SourceComponentFactory<U, D> factory) {
-		if (this.terminalHooks.containsKey(ecosystemKey)) {
-			return false;
-		} else {
-			this.terminalHooks.put(ecosystemKey, factory);
+			this.hooks.put(ecosystemKey, factory);
 			return true;
 		}
-	}
-
-	/**
-	 * Method providing the initial component factory using types.
-	 * 
-	 * @param upstream
-	 *            The upstream type
-	 * @param downstream
-	 *            The downstream type
-	 * @return the initial component factory
-	 * @throws CannotProvideInitialComponentException
-	 *             if the initial component cannot be created
-	 */
-	@SuppressWarnings("unchecked")
-	private <U, D> DestinationComponentFactory<U, D> getInitialIntegrator(FilteredUnitEcosystemKey filter)
-			throws CannotProvideInitialComponentException {
-
-		for (Entry<RegisteredUnitEcosystemKey, DestinationComponentFactory<?, ?>> unit : initialHooks.entrySet()) {
-			if (filter.filteredBy(unit.getKey())) {
-				return (DestinationComponentFactory<U, D>) unit.getValue();
-			}
-		}
-
-		final Message message = message("org/wolfgang/contrail/message", "initial.factory.refused");
-		throw new CannotProvideInitialComponentException(message.format(filter));
 	}
 
 	/**
@@ -149,128 +75,19 @@ public final class EcosystemImpl implements Ecosystem {
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
-	 * @return the terminal component factory
+ 	 * @return the terminal component factory
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
 	@SuppressWarnings("unchecked")
-	private <U, D> SourceComponentFactory<U, D> getTerminalIntegrator(FilteredUnitEcosystemKey filter)
-			throws CannotProvideTerminalComponentException {
-
-		for (Entry<RegisteredUnitEcosystemKey, SourceComponentFactory<?, ?>> unit : terminalHooks.entrySet()) {
+	public <U, D> DataSenderFactory<U, D> getBinder(final UnitEcosystemKey filter) throws CannotProvideComponentException {
+		for (Entry<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>> unit : hooks.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
-				return (SourceComponentFactory<U, D>) unit.getValue();
+				return (DataSenderFactory<U, D>) unit.getValue();
 			}
 		}
 
-		final Message message = message("org/wolfgang/contrail/message", "terminal.factory.refused");
-		throw new CannotProvideTerminalComponentException(message.format(filter));
-	}
-
-	public <U, D> DataSenderFactory<U, D> getInitialBinder(final FilteredUnitEcosystemKey key)
-			throws CannotProvideInitialComponentException {
-		final DestinationComponentFactory<U, D> initialIntegrator = getInitialIntegrator(key);
-
-		return new DataSenderFactory<U, D>() {
-			@Override
-			public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
-				try {
-					return bindToInitial(initialIntegrator, receiver);
-				} catch (CannotBindToInitialComponentException e) {
-					throw new CannotCreateDataSenderException(e);
-				}
-			}
-		};
-	}
-
-	private <U, D> DataSender<U> bindToInitial(DestinationComponentFactory<U, D> initialIntegrator,
-			final DataReceiver<D> receiver) throws CannotBindToInitialComponentException {
-		try {
-			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(new DataReceiverFactory<D, U>() {
-				@Override
-				public DataReceiver<D> create(DataSender<U> component) {
-					return receiver;
-				}
-			});
-
-			final DestinationComponent<U, D> destinationComponent = initialIntegrator.create();
-
-			final ComponentsLink<U, D> link = linkManager.connect(initialComponent, destinationComponent);
-
-			return new DataSender<U>() {
-
-				@Override
-				public void close() throws IOException {
-					try {
-						link.dispose();
-					} catch (ComponentDisconnectionRejectedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					initialComponent.getDataSender().close();
-				}
-
-				@Override
-				public void sendData(U data) throws DataHandlerException {
-					initialComponent.getDataSender().sendData(data);
-				}
-			};
-		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotBindToInitialComponentException(e);
-		}
-	}
-
-	@Override
-	public <U, D> DataSenderFactory<D, U> getTerminalBinder(final FilteredUnitEcosystemKey key)
-			throws CannotProvideTerminalComponentException {
-		final SourceComponentFactory<U, D> terminalIntegrator = this.getTerminalIntegrator(key);
-
-		return new DataSenderFactory<D, U>() {
-			@Override
-			public DataSender<D> create(DataReceiver<U> receiver) throws CannotCreateDataSenderException {
-				try {
-					return bindToTerminal(terminalIntegrator, receiver);
-				} catch (CannotBindToTerminalComponentException e) {
-					throw new CannotCreateDataSenderException(e);
-				}
-			}
-		};
-	}
-
-	private <U, D> DataSender<D> bindToTerminal(SourceComponentFactory<U, D> terminalIntegrator, final DataReceiver<U> receiver)
-			throws CannotBindToTerminalComponentException {
-		try {
-			final TerminalComponent<U, D> terminalComponent = new TerminalComponent<U, D>(new DataReceiverFactory<U, D>() {
-				@Override
-				public DataReceiver<U> create(DataSender<D> component) {
-					return receiver;
-				}
-			});
-
-			final SourceComponent<U, D> sourceComponent = terminalIntegrator.create();
-
-			final ComponentsLink<U, D> link = linkManager.connect(sourceComponent, terminalComponent);
-
-			return new DataSender<D>() {
-				@Override
-				public void close() throws IOException {
-					try {
-						link.dispose();
-					} catch (ComponentDisconnectionRejectedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					terminalComponent.getDataSender().close();
-				}
-
-				@Override
-				public void sendData(D data) throws DataHandlerException {
-					terminalComponent.getDataSender().sendData(data);
-				}
-			};
-		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotBindToTerminalComponentException(e);
-		}
-
+		final Message message = message("org/wolfgang/contrail/message", "component.binder.not.found");
+		throw new CannotProvideComponentException(message.format(filter));
 	}
 }

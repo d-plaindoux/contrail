@@ -111,7 +111,6 @@ public class TestDeMultiplexer extends TestCase {
 		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
 		try {
 			manager.connect(source, deMultiplexer);
-
 			manager.connect(deMultiplexer, listener1);
 			manager.connect(deMultiplexer, listener2);
 

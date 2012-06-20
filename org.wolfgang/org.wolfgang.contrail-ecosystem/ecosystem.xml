@@ -11,7 +11,7 @@
 		<Import>org.wolfgang.contrail.network.codec.json</Import>
 	</Imports>
 
-	<InitialBinders>
+	<Binders>
 		<!-- ============================================================ -->
 		<!-- IO Socket initial binder -->
 		<!-- ============================================================ -->
@@ -43,7 +43,7 @@
 		<DataFlow name="web.outgoing">
 			<ReverseDataFlow name="web.incoming"></ReverseDataFlow>
 		</DataFlow>
-	</InitialBinders>
+	</Binders>
 
 	<InternalComponents>
 		<DataFlow name="local.network">

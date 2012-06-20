@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -23,24 +24,29 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 
 /**
- * <code>TestComponentIntegrator</code>
+ * <code>TestComponentEcosystem</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class TestComponentEcosystem extends TestCase {
 
-	public void testNominal01() throws CannotProvideInitialComponentException, CannotBindToInitialComponentException, CannotCreateDataSenderException {
+	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException,
+			CannotCreateDataSenderException, DataHandlerException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
@@ -61,14 +67,22 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DestinationComponentFactory<String, String> destinationComponentFactory = new DestinationComponentFactory<String, String>() {
+		final DataSenderFactory<String, String> destinationComponentFactory = new DataSenderFactory<String, String>() {
 			@Override
-			public DestinationComponent<String, String> create() {
-				return new TerminalComponent<String, String>(dataFactory);
+			public DataSender<String> create(DataReceiver<String> receiver) throws CannotCreateDataSenderException {
+				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
+				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
+				final ComponentsLinkManagerImpl componentsLinkManagerImpl = new ComponentsLinkManagerImpl();
+				try {
+					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateDataSenderException(e);
+				}
+				return initialComponent.getDataSender();
 			}
 		};
 
-		integrator.addDestinationFactory(UnitEcosystemKey.getKey("test", String.class, String.class), destinationComponentFactory);
+		integrator.addFactory(UnitEcosystemKeyFactory.getKey("test", String.class, String.class), destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 
@@ -84,14 +98,11 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DataSender<String> createInitial = integrator.<String,String>getInitialBinder(UnitEcosystemKey.named("test")).create(receiver);
+		final UnitEcosystemKey namedKey = UnitEcosystemKeyFactory.named("test");
+		final DataSender<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
 		final String message = "Hello, World!";
 
-		try {
-			createInitial.sendData(message);
-		} catch (DataHandlerException e) {
-			fail();
-		}
+		createInitial.sendData(message);
 
 		assertEquals(message, stringReference.get());
 	}

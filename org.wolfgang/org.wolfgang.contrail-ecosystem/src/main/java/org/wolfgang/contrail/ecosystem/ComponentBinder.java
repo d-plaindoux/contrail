@@ -18,27 +18,17 @@
 
 package org.wolfgang.contrail.ecosystem;
 
-import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.bound.DataReceiverFactory;
+import org.wolfgang.contrail.component.bound.DataSender;
 
 /**
- * <code>InitialComponentIntegrator</code>
- * 
+ * <code>ComponentBinder</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface SourceComponentFactory<U, D> {
-
-	/**
-	 * Method called whether a link must be done
-	 * 
-	 * @param linkManager
-	 *            The link manager
-	 * @param component
-	 *            The component to be integrated
-	 * @return the source component receiving terminal component data
-	 * @throws CannotBindToTerminalComponentException
-	 *             if the terminal integration fails
-	 */
-	SourceComponent<U, D> create();
+public interface ComponentBinder<S,D> {
+	
+	DataSender<D> bind(DataReceiverFactory<S, D> factory);
 
 }

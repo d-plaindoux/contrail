@@ -26,17 +26,20 @@ import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.ecosystem.CannotProvideInitialComponentException;
-import org.wolfgang.contrail.ecosystem.DestinationComponentFactory;
+import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
 
 /**
@@ -47,17 +50,17 @@ import org.wolfgang.contrail.network.connection.socket.NetServer;
  */
 public class TestNetworkServer extends TestCase {
 
-	public void testNominal01() throws IOException, CannotProvideInitialComponentException {
+	public void testNominal01() throws IOException, CannotProvideComponentException {
 		//
 		// Complex server based on ecosystem
 		//
 
 		final EcosystemImpl serverEcosystem = new EcosystemImpl();
 
-		// In Java 8: dataFactory = component -> new DataReceiver<byte[]>() {
+		// Lambda-Java: dataFactory = component -> new DataReceiver<byte[]>() {
 		// ... };
 
-		final DataReceiverFactory<byte[], byte[]> dataFactory = new DataReceiverFactory<byte[], byte[]>() {
+		final DataReceiverFactory<byte[], byte[]> dataReceiverFactory = new DataReceiverFactory<byte[], byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(final DataSender<byte[]> component) {
 				return new DataReceiver<byte[]>() {
@@ -74,21 +77,30 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		// In Java 8: destinationComponentFactory = () -> new
-		// TerminalComponent<byte[], byte[]>(dataFactory);
+		// Lambda-Java: dataSenderFactory = () -> new TerminalComponent<byte[],
+		// byte[]>(dataReceiverFactory).getDataSender();
 
-		final DestinationComponentFactory<byte[], byte[]> destinationComponentFactory = new DestinationComponentFactory<byte[], byte[]>() {
+		final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
 			@Override
-			public DestinationComponent<byte[], byte[]> create() {
-				return new TerminalComponent<byte[], byte[]>(dataFactory);
+			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
+				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(receiver);
+				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(
+						dataReceiverFactory);
+				final ComponentsLinkManagerImpl componentsLinkManagerImpl = new ComponentsLinkManagerImpl();
+				try {
+					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateDataSenderException(e);
+				}
+				return initialComponent.getDataSender();
 			}
 		};
 
-		final RegisteredUnitEcosystemKey key = UnitEcosystemKey.getKey("test", byte[].class, byte[].class);
-		serverEcosystem.addDestinationFactory(key, destinationComponentFactory);
+		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("test", byte[].class, byte[].class);
+		serverEcosystem.addFactory(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,
-				serverEcosystem.<byte[], byte[]> getInitialBinder(key));
+				serverEcosystem.<byte[], byte[]> getBinder(key));
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);

@@ -24,9 +24,9 @@ package org.wolfgang.contrail.ecosystem.key;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class LogicalOrUnitEcosystemKey implements FilteredUnitEcosystemKey {
+public class LogicalOrUnitEcosystemKey implements UnitEcosystemKey {
 
-	private final FilteredUnitEcosystemKey left, right;
+	private final UnitEcosystemKey left, right;
 
 	/**
 	 * Constructor
@@ -34,7 +34,7 @@ public class LogicalOrUnitEcosystemKey implements FilteredUnitEcosystemKey {
 	 * @param left
 	 * @param right
 	 */
-	public LogicalOrUnitEcosystemKey(FilteredUnitEcosystemKey left, FilteredUnitEcosystemKey right) {
+	public LogicalOrUnitEcosystemKey(UnitEcosystemKey left, UnitEcosystemKey right) {
 		super();
 		this.left = left;
 		this.right = right;

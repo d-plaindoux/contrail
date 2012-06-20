@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem.key;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TypedUnitEcosystemKey implements FilteredUnitEcosystemKey {
+public class TypedUnitEcosystemKey implements UnitEcosystemKey {
 
 	/**
 	 * The upstream class type
