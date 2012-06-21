@@ -39,7 +39,7 @@ import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
 
 /**
@@ -86,7 +86,7 @@ public class TestNetworkServer extends TestCase {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(receiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(
 						dataReceiverFactory);
-				final ComponentsLinkManagerImpl componentsLinkManagerImpl = new ComponentsLinkManagerImpl();
+				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {

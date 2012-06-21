@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -34,6 +35,7 @@ import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolgang.contrail.network.event.NetworkEvent;
@@ -103,17 +105,23 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	}
 
 	@Override
-	public void connectDestination(DestinationComponentLink<NetworkEvent, NetworkEvent> handler)
+	public ComponentLink connectDestination(DestinationComponentLink<NetworkEvent, NetworkEvent> handler)
 			throws ComponentConnectionRejectedException {
-		if (this.acceptDestination(handler.getDestinationComponent().getComponentId())) {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		if (this.acceptDestination(componentId)) {
+			this.destinationComponents.put(componentId, handler);
+			return new ComponentLink() {
+				@Override
+				public void dispose() throws ComponentDisconnectionRejectedException {
+					disconnectDestination(componentId);
+				}
+			};
 		} else {
-			this.destinationComponents.put(handler.getDestinationComponent().getComponentId(), handler);
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
-	@Override
-	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		if (this.destinationComponents.containsKey(componentId)) {
 			this.destinationComponents.remove(componentId);
 			this.destinationFilters.remove(componentId);
@@ -142,18 +150,25 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	}
 
 	@Override
-	public void connectSource(SourceComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectedException {
+	public ComponentLink connectSource(SourceComponentLink<NetworkEvent, NetworkEvent> handler)
+			throws ComponentConnectedException {
 		assert handler != null;
 
-		if (this.acceptSource(handler.getSourceComponent().getComponentId())) {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		if (this.acceptSource(componentId)) {
+			this.sourceComponents.put(componentId, handler);
+			return new ComponentLink() {
+				@Override
+				public void dispose() throws ComponentDisconnectionRejectedException {
+					disconnectSource(componentId);
+				}
+			};
 		} else {
-			this.sourceComponents.put(handler.getSourceComponent().getComponentId(), handler);
+			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
-	@Override
-	public void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
+	private void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
 		if (this.sourceComponents.containsKey(componentId)) {
 			this.sourceComponents.remove(componentId);
 			this.sourceFilters.remove(componentId);

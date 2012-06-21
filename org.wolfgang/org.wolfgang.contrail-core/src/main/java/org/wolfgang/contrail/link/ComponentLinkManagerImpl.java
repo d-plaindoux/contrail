@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
+public class ComponentLinkManagerImpl implements ComponentLinkManager {
 
 	/**
 	 * Created links
@@ -48,7 +48,7 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	/**
 	 * Constructor
 	 */
-	public ComponentsLinkManagerImpl() {
+	public ComponentLinkManagerImpl() {
 		// Nothing
 	}
 
@@ -73,12 +73,12 @@ public class ComponentsLinkManagerImpl implements ComponentsLinkManager {
 	}
 
 	@Override
-	public final <U, D> boolean disconnect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
+	public final boolean disconnect(ComponentId sourceId, ComponentId destinationId)
 			throws ComponentDisconnectionRejectedException {
 		for (ComponentLinkImpl<?, ?> link : links) {
-			if (link.getSourceComponent().equals(source) && link.getDestinationComponent().equals(destination)) {
+			if (link.getSourceComponent().getComponentId().equals(sourceId)
+					&& link.getDestinationComponent().getComponentId().equals(destinationId)) {
 				link.dispose();
-				// Secured remove since we exit this method just after
 				links.remove(link);
 				return true;
 			}

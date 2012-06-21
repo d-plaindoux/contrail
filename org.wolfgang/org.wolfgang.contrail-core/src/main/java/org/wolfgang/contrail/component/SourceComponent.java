@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component;
 
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 
 /**
@@ -49,25 +50,15 @@ public interface SourceComponent<U, D> extends Component {
 	boolean acceptDestination(ComponentId componentId);
 
 	/**
-	 * Method called when the parametric upstream source component shall be
+	 * Method called when the parametric destination component shall be
 	 * connected to the current component.
 	 * 
 	 * @param handler
 	 *            The destination component
+	 * @return a component link reflecting the connection
 	 * @throws ComponentConnectionRejectedException
 	 *             is the connection cannot be performed
 	 */
-	void connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
-
-	/**
-	 * Method called when the connected upstream source component shall be
-	 * disconnected from the current component.
-	 * 
-	 * @param handler
-	 *            The destination component
-	 * @throws ComponentDisconnectionRejectedException
-	 *             is the disconnection cannot be performed
-	 */
-	void disconnectDestination(ComponentId componentId) throws ComponentDisconnectionRejectedException;
+	ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
 
 }

@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * <code>TestComponentEcosystem</code>
@@ -72,7 +72,7 @@ public class TestComponentEcosystem extends TestCase {
 			public DataSender<String> create(DataReceiver<String> receiver) throws CannotCreateDataSenderException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
-				final ComponentsLinkManagerImpl componentsLinkManagerImpl = new ComponentsLinkManagerImpl();
+				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {

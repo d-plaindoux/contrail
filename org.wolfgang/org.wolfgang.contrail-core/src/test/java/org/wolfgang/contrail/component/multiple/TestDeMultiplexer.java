@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * <code>TestDeMultiplexer</code>
@@ -108,7 +108,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(source, deMultiplexer);
 			manager.connect(deMultiplexer, listener1);
@@ -167,7 +167,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(source, deMultiplexer);
 			manager.connect(source, deMultiplexer);
@@ -206,7 +206,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(deMultiplexer, listener1);
 			manager.connect(deMultiplexer, listener1);
@@ -245,7 +245,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 
 		try {
 			manager.connect(deMultiplexer, listener1);
@@ -285,7 +285,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			final ComponentLink connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();
@@ -325,7 +325,7 @@ public class TestDeMultiplexer extends TestCase {
 		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(
 				deMultiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			final ComponentLink connect = manager.connect(deMultiplexer, listener1);
 			connect.dispose();

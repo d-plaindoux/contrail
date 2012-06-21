@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentsLinkManager {
+public interface ComponentLinkManager {
 
 	/**
 	 * Function able to create a link between to given component.
@@ -70,13 +70,12 @@ public interface ComponentsLinkManager {
 	 * Function able to disconnect a source and a destination
 	 * 
 	 * @param source
-	 *            The link source
+	 *            The source identifier
 	 * @param destination
-	 *            The link destination
+	 *            The destination identifier
 	 * @return true if the disconnection has been done; false otherwise
 	 * @throws ComponentConnectionRejectedException
 	 */
-	<U, D> boolean disconnect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
-			throws ComponentDisconnectionRejectedException;
+	boolean disconnect(ComponentId sourceId, ComponentId destinationId) throws ComponentDisconnectionRejectedException;
 
 }

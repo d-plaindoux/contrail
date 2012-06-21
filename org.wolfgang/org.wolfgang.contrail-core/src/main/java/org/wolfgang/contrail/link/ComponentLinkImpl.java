@@ -20,6 +20,7 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
@@ -36,11 +37,13 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 	 * The upstream source used for the interconnection
 	 */
 	private final SourceComponent<U, D> source;
+	private final ComponentLink sourceConnection;
 
 	/**
 	 * The upstream destination used for the interconnection
 	 */
 	private final DestinationComponent<U, D> destination;
+	private final ComponentLink destinationConnection;
 
 	/**
 	 * Constructor
@@ -58,13 +61,13 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 		this.source = source;
 		this.destination = destination;
 
-		source.connectDestination(this);
+		this.sourceConnection = source.connectDestination(this);
 
 		try {
-			destination.connectSource(this);
+			this.destinationConnection = destination.connectSource(this);
 		} catch (ComponentConnectionRejectedException e) {
 			try {
-				source.disconnectDestination(destination.getComponentId());
+				this.sourceConnection.dispose();
 			} catch (Exception consume) {
 				// Ignore
 			}
@@ -86,9 +89,9 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 	@Override
 	public void dispose() throws ComponentDisconnectionRejectedException {
 		try {
-			this.source.disconnectDestination(this.destination.getComponentId());
+			this.sourceConnection.dispose();
 		} finally {
-			this.destination.disconnectSource(this.source.getComponentId());
+			this.destinationConnection.dispose();
 		}
 	}
 }

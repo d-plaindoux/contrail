@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * <code>TestMultiplexer</code>
@@ -107,7 +107,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(multiplexer, destination);
 
@@ -165,7 +165,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(multiplexer, destination);
 			manager.connect(multiplexer, destination);
@@ -203,7 +203,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			manager.connect(listener1, multiplexer);
 			manager.connect(listener1, multiplexer);
@@ -241,7 +241,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 
 		try {
 			manager.connect(listener1, multiplexer);
@@ -280,7 +280,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			ComponentLink connect = manager.connect(listener1, multiplexer);
 			connect.dispose();
@@ -319,7 +319,7 @@ public class TestMultiplexer extends TestCase {
 
 		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
 
-		final ComponentsLinkManagerImpl manager = new ComponentsLinkManagerImpl();
+		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
 			ComponentLink connect = manager.connect(listener1, multiplexer);
 			connect.dispose();

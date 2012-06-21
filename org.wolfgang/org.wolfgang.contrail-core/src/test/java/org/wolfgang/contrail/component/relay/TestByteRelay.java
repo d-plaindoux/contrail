@@ -32,7 +32,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentsLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * <code>TestByteRelay</code>
@@ -49,7 +49,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.getDataSender().sendData("Hello,".getBytes());
 			source.getDataSender().sendData(" World!".getBytes());
@@ -69,7 +69,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeUpStream();
 			destination.getDataSender().sendData("Hello,".getBytes());
@@ -90,7 +90,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeUpStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -112,7 +112,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentsLinkManagerImpl().connect(source, destination);
+			new ComponentLinkManagerImpl().connect(source, destination);
 
 			destination.closeUpStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -132,7 +132,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentsLinkManagerImpl().connect(source, destination);
+			new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeDownStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -152,7 +152,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentsLinkManagerImpl().connect(source, destination);
+			new ComponentLinkManagerImpl().connect(source, destination);
 
 			destination.closeDownStream();
 			source.getDataSender().sendData("Hello,".getBytes());
@@ -198,12 +198,12 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
 
 		try {
-			new ComponentsLinkManagerImpl().connect(source1, destination);
+			new ComponentLinkManagerImpl().connect(source1, destination);
 			fail();
 		} catch (ComponentConnectedException e) {
 			// OK
@@ -217,12 +217,12 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
 
 		try {
-			new ComponentsLinkManagerImpl().connect(source, destination1);
+			new ComponentLinkManagerImpl().connect(source, destination1);
 			fail();
 		} catch (ComponentConnectedException e) {
 			// OK
@@ -236,11 +236,11 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 		interconnection.dispose();
 
 		try {
-			source.disconnectDestination(destination.getComponentId());
+			interconnection.dispose();
 			fail();
 		} catch (ComponentNotConnectedException e) {
 			// OK
@@ -252,51 +252,15 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
+		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 		interconnection.dispose();
 
 		try {
-			destination.disconnectSource(source.getComponentId());
+			interconnection.dispose();
 			fail();
 		} catch (ComponentNotConnectedException e) {
 			// OK
 		}
 
-	}
-
-	public void testNotConnected03() throws DataHandlerException, IOException, ComponentConnectionRejectedException,
-			ComponentDisconnectionRejectedException {
-
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
-		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
-
-		try {
-			source.disconnectDestination(destination1.getComponentId());
-			fail();
-		} catch (ComponentNotConnectedException e) {
-			// OK
-		}
-
-		interconnection.dispose();
-	}
-
-	public void testNotConnected04() throws DataHandlerException, IOException, ComponentConnectionRejectedException,
-			ComponentDisconnectionRejectedException {
-
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
-		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
-		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentsLinkManagerImpl().connect(source, destination);
-
-		try {
-			destination.disconnectSource(source1.getComponentId());
-			fail();
-		} catch (ComponentNotConnectedException e) {
-			// OK
-		}
-
-		interconnection.dispose();
 	}
 }

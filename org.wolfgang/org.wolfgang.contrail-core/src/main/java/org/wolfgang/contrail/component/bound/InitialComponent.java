@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.bound;
 import java.io.IOException;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -30,6 +31,7 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 
@@ -136,16 +138,22 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	@Override
-	public void connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
-		if (acceptDestination(handler.getDestinationComponent().getComponentId())) {
+	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		if (acceptDestination(componentId)) {
 			this.upStreamDestinationComponentLink = handler;
+			return new ComponentLink() {
+				@Override
+				public void dispose() throws ComponentDisconnectionRejectedException {
+					disconnectDestination(componentId);
+				}
+			};
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
-	@Override
-	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		final DestinationComponent<U, D> destinationComponent = this.upStreamDestinationComponentLink.getDestinationComponent();
 		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
 			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();

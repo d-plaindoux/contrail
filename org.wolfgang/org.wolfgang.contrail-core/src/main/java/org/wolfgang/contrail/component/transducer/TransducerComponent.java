@@ -32,6 +32,7 @@ import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
@@ -124,16 +125,22 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	}
 
 	@Override
-	public void connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectedException {
-		if (this.acceptSource(handler.getSourceComponent().getComponentId())) {
+	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectedException {
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		if (this.acceptSource(componentId)) {
 			this.upStreamSourceComponentLink = handler;
+			return new ComponentLink() {
+				@Override
+				public void dispose() throws ComponentDisconnectionRejectedException {
+					disconnectSource(componentId);
+				}
+			};
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
-	@Override
-	public void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
+	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
 		final SourceComponent<U1, D1> sourceComponent = upStreamSourceComponentLink.getSourceComponent();
 		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
 			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
@@ -148,16 +155,22 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	}
 
 	@Override
-	public void connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectedException {
-		if (this.acceptDestination(handler.getDestinationComponent().getComponentId())) {
+	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectedException {
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		if (this.acceptDestination(componentId)) {
 			this.upStreamDestinationComponentLink = handler;
+			return new ComponentLink() {
+				@Override
+				public void dispose() throws ComponentDisconnectionRejectedException {
+					disconnectDestination(componentId);
+				}
+			};
 		} else {
 			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
 		}
 	}
 
-	@Override
-	public void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		final DestinationComponent<U2, D2> destinationComponent = upStreamDestinationComponentLink.getDestinationComponent();
 		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
 			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
