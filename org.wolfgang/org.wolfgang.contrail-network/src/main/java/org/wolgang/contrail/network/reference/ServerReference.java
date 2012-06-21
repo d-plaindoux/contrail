@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ServerReference implements SimpleReference, Serializable {
+public final class ServerReference implements DirectReference, Serializable {
 
 	/**
 	 * The serialVersionUID attribute

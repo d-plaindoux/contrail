@@ -24,7 +24,7 @@ package org.wolgang.contrail.network.reference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComplexReference extends Reference {
+public interface IndirectReference extends Reference {
 
 	// Nothing to do
 	

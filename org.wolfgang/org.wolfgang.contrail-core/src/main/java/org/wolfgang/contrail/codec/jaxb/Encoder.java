@@ -31,7 +31,6 @@ import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.transducer.DataTransducer;
 import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
-
 /**
  * <code>Encoder</code> is capable to transform an object to a byte array using
  * JAXB
@@ -60,6 +59,7 @@ class Encoder implements DataTransducer<Object, Bytes> {
 	@Override
 	public List<Bytes> transform(Object source) throws DataTransducerException {
 		try {
+			// TODO - Cache Object
 			final JAXBContext context = JAXBContext.newInstance(types);
 			final Marshaller marshaller = context.createMarshaller();
 			final ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -81,7 +81,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		}
 
 		if (notHandled) {
-			// Can we handle this message ?
+			// TODO -- Try to handle this message based on route definition
 		}
 	}
 

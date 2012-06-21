@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.SimpleReference;
+import org.wolgang.contrail.network.reference.DirectReference;
 
 /**
  * <code>NetwortRouterComponent</code> is a component able to manage
@@ -79,7 +79,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * The network component identification
 	 */
-	private final SimpleReference endPoint;
+	private final DirectReference endPoint;
 
 	/**
 	 * Initialization
@@ -94,7 +94,7 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	NetworkRouterComponent(SimpleReference endPoint) {
+	NetworkRouterComponent(DirectReference endPoint) {
 		this.endPoint = endPoint;
 		this.dataHandler = new NetworkRouterStreamDataHandler(this);
 	}

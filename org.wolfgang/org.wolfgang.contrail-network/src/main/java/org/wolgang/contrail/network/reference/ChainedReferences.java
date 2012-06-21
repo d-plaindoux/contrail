@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ChainedReferences implements ComplexReference, Serializable {
+public final class ChainedReferences implements IndirectReference, Serializable {
 
 	/**
 	 * The serialVersionUID attribute
@@ -37,10 +37,10 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	/**
 	 * 
 	 */
-	private final ArrayList<SimpleReference> references;
+	private final ArrayList<DirectReference> references;
 
 	{
-		this.references = new ArrayList<SimpleReference>();
+		this.references = new ArrayList<DirectReference>();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	 * @param endPoint
 	 *            The new added simple endpoint
 	 */
-	public void addToChain(SimpleReference endPoint) {
+	public void addToChain(DirectReference endPoint) {
 		assert endPoint != null;
 		references.add(0, endPoint);
 	}
@@ -64,9 +64,9 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	/**
 	 * @param endPoint
 	 */
-	public int getIndex(SimpleReference endPoint) {
+	public int getIndex(DirectReference endPoint) {
 		int position = -1;
-		for (SimpleReference current : references) {
+		for (DirectReference current : references) {
 			position += 1;
 			if (current.equals(endPoint)) {
 				return position;
@@ -79,7 +79,7 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	 * @param endPoint
 	 * @return
 	 */
-	public boolean hasNextReference(SimpleReference endPoint) {
+	public boolean hasNextReference(DirectReference endPoint) {
 		final int index = this.getIndex(endPoint);
 		return -1 < index && index + 1 < this.references.size();
 	}
@@ -88,7 +88,7 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	 * @param endPoint
 	 * @return
 	 */
-	public SimpleReference getNextReference(SimpleReference endPoint) {
+	public DirectReference getNextReference(DirectReference endPoint) {
 		assert this.hasNextReference(endPoint);
 		return this.references.get(this.getIndex(endPoint) + 1);
 	}
@@ -97,7 +97,7 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	 * @param endPoint
 	 * @return
 	 */
-	public boolean hasPreviousReference(SimpleReference endPoint) {
+	public boolean hasPreviousReference(DirectReference endPoint) {
 		final int index = this.getIndex(endPoint);
 		return -1 < index - 1;
 	}
@@ -106,7 +106,7 @@ public final class ChainedReferences implements ComplexReference, Serializable {
 	 * @param endPoint
 	 * @return
 	 */
-	public SimpleReference getPreviousReference(SimpleReference endPoint) {
+	public DirectReference getPreviousReference(DirectReference endPoint) {
 		assert this.hasPreviousReference(endPoint);
 		return this.references.get(this.getIndex(endPoint) - 1);
 	}

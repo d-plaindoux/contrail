@@ -60,9 +60,9 @@
 	<modules>
 		<module>org.wolfgang.common</module>
 		<module>org.wolfgang.contrail-core</module>
+		<module>org.wolfgang.contrail-ecosystem</module>
 		<module>org.wolfgang.contrail-network</module>
 		<module>org.wolfgang.contrail-netty</module>
-		<module>org.wolfgang.contrail-ecosystem</module>
 	</modules>
 
 </project>

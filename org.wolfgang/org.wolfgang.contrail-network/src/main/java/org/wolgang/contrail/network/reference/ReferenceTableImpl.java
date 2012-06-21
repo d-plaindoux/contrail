@@ -32,10 +32,10 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	/**
 	 * The internal map
 	 */
-	private final Map<SimpleReference, E> table;
+	private final Map<DirectReference, E> table;
 
 	{
-		this.table = new HashMap<SimpleReference, E>();
+		this.table = new HashMap<DirectReference, E>();
 	}
 
 	/**
@@ -46,12 +46,12 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
-	public void insert(SimpleReference reference, E element) {
+	public void insert(DirectReference reference, E element) {
 		this.table.put(reference, element);
 	}
 
 	@Override
-	public E retrieve(SimpleReference reference) {
+	public E retrieve(DirectReference reference) {
 		return this.table.get(reference);
 	}
 

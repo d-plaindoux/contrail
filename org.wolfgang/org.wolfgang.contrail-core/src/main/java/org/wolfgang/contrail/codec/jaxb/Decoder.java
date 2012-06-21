@@ -61,6 +61,7 @@ class Decoder implements DataTransducer<Bytes, Object> {
 	public List<Object> transform(Bytes source) throws DataTransducerException {
 		final InputStream stream = new ByteArrayInputStream(source.getContent());
 		try {
+			// TODO - Cache Object
 			final JAXBContext context = JAXBContext.newInstance(types);
 			final Unmarshaller unmarshaller = context.createUnmarshaller();
 			return Arrays.asList(unmarshaller.unmarshal(stream));

@@ -27,8 +27,8 @@ package org.wolgang.contrail.network.reference;
  */
 public interface ReferenceTable<E> {
 
-	void insert(SimpleReference reference, E element);
+	void insert(DirectReference reference, E element);
 
-	E retrieve(SimpleReference reference);
+	E retrieve(DirectReference reference);
 
 }

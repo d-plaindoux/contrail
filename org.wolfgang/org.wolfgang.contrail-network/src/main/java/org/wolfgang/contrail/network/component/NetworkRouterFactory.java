@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.network.component;
 
-import org.wolgang.contrail.network.reference.SimpleReference;
+import org.wolgang.contrail.network.reference.DirectReference;
 
 /**
  * <code>NetworkRouterFactory</code>
@@ -38,7 +38,7 @@ public final class NetworkRouterFactory {
 	/**
 	 * @return a network router component
 	 */
-	public static NetworkRouterComponent create(SimpleReference endPoint) {
+	public static NetworkRouterComponent create(DirectReference endPoint) {
 		return new NetworkRouterComponent(endPoint);
 	}
 }
