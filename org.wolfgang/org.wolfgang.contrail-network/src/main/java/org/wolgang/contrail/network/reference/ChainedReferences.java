@@ -110,4 +110,9 @@ public final class ChainedReferences implements IndirectReference, Serializable 
 		assert this.hasPreviousReference(endPoint);
 		return this.references.get(this.getIndex(endPoint) - 1);
 	}
+
+	@Override
+	public <E> E visit(ReferenceVisitor<E> visitor) {
+		return visitor.visit(this);
+	}
 }

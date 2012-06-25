@@ -78,4 +78,9 @@ public final class ServerReference implements DirectReference, Serializable {
 		}
 		return true;
 	}
+
+	@Override
+	public <E> E visit(ReferenceVisitor<E> visitor) {
+		return visitor.visit(this);
+	}
 }

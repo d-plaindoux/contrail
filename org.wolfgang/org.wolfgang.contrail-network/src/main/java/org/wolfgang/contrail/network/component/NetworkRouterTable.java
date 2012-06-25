@@ -16,17 +16,30 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.component;
+
+import org.wolgang.contrail.network.reference.ReferenceTableImpl;
 
 /**
- * <code>EndPoint</code> is the main class for a network component
- * identification
+ * <code>NetworkRouterTable</code> is able to provide callback linked to single
+ * reference.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Reference {
+public class NetworkRouterTable extends ReferenceTableImpl<NetworkRouterTable.Entry> {
 
-	<E> E visit(ReferenceVisitor<E> visitor);
+	public interface Entry {
+
+		void createDataHandler(NetworkRouterComponent component);
+
+	}
+
+	/**
+	 * Constructor
+	 */
+	public NetworkRouterTable() {
+		super();
+	}
 
 }

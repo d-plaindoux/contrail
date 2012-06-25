@@ -19,14 +19,38 @@
 package org.wolgang.contrail.network.reference;
 
 /**
- * <code>EndPoint</code> is the main class for a network component
- * identification
+ * The <code>ReferenceVisitor</code> is the dedicated reference visitor.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Reference {
+public interface ReferenceVisitor<T> {
 
-	<E> E visit(ReferenceVisitor<E> visitor);
+	/**
+	 * Method called whether a client reference is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
+	 */
+	T visit(ClientReference reference);
+
+	/**
+	 * Method called whether a server reference is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
+	 */
+	T visit(ServerReference reference);
+
+	/**
+	 * Method called whether a chained references is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
+	 */
+	T visit(ChainedReferences reference);
 
 }

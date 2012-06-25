@@ -28,6 +28,11 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolgang.contrail.network.event.NetworkEvent;
+import org.wolgang.contrail.network.reference.ChainedReferences;
+import org.wolgang.contrail.network.reference.ClientReference;
+import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolgang.contrail.network.reference.ReferenceVisitor;
+import org.wolgang.contrail.network.reference.ServerReference;
 
 /**
  * A <code>FilteredDeMultiplexerDataHandler</code> is able to manage information
@@ -37,21 +42,27 @@ import org.wolgang.contrail.network.event.NetworkEvent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<NetworkEvent>, DownStreamDataHandler<NetworkEvent> {
+public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<NetworkEvent>, DownStreamDataHandler<NetworkEvent>,
+		ReferenceVisitor<NetworkRouterTable.Entry> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
 	private final NetworkRouterComponent component;
+	private final NetworkRouterTable routerTable;
+	private final DirectReference selfReference;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public NetworkRouterStreamDataHandler(NetworkRouterComponent component) {
+	public NetworkRouterStreamDataHandler(NetworkRouterComponent component, DirectReference selfReference,
+			NetworkRouterTable routerTable) {
 		super();
 		this.component = component;
+		this.selfReference = selfReference;
+		this.routerTable = routerTable;
 	}
 
 	@Override
@@ -81,7 +92,11 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		}
 
 		if (notHandled) {
-			// TODO -- Try to handle this message based on route definition
+			final NetworkRouterTable.Entry entry = data.getTargetReference().visit(this);
+			if (entry != null) {
+				entry.createDataHandler(this.component);
+				notHandled = false;
+			}
 		}
 	}
 
@@ -95,5 +110,20 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 	public void handleLost() throws DataHandlerCloseException {
 		component.closeDownStream();
 		component.closeUpStream();
+	}
+
+	@Override
+	public NetworkRouterTable.Entry visit(ClientReference reference) {
+		return this.routerTable.retrieve(reference);
+	}
+
+	@Override
+	public NetworkRouterTable.Entry visit(ServerReference reference) {
+		return this.routerTable.retrieve(reference);
+	}
+
+	@Override
+	public NetworkRouterTable.Entry visit(ChainedReferences reference) {
+		return this.routerTable.retrieve(reference.getNextReference(this.selfReference));
 	}
 }

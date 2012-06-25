@@ -77,11 +77,6 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	private final Map<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>> sourceComponents;
 
 	/**
-	 * The network component identification
-	 */
-	private final DirectReference endPoint;
-
-	/**
 	 * Initialization
 	 */
 	{
@@ -94,9 +89,8 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	NetworkRouterComponent(DirectReference endPoint) {
-		this.endPoint = endPoint;
-		this.dataHandler = new NetworkRouterStreamDataHandler(this);
+	NetworkRouterComponent(NetworkRouterTable table, DirectReference selfReference) {
+		this.dataHandler = new NetworkRouterStreamDataHandler(this, selfReference, table);
 	}
 
 	@Override

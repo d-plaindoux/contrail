@@ -36,9 +36,11 @@ public final class NetworkRouterFactory {
 	}
 
 	/**
+	 * Method called whether a network router is required.
+	 * 
 	 * @return a network router component
 	 */
-	public static NetworkRouterComponent create(DirectReference endPoint) {
-		return new NetworkRouterComponent(endPoint);
+	public static NetworkRouterComponent create(NetworkRouterTable table, DirectReference selfReference) {
+		return new NetworkRouterComponent(table, selfReference);
 	}
 }

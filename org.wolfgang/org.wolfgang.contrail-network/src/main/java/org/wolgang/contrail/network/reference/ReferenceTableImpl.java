@@ -41,7 +41,7 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	/**
 	 * Constructor
 	 */
-	private ReferenceTableImpl() {
+	protected ReferenceTableImpl() {
 		// Nothing to do
 	}
 
