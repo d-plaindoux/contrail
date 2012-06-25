@@ -41,7 +41,7 @@ public class DataFlowTransducerComponent implements DataFlowComponent {
 	private final String factory;
 
 	/**
-	 * The parameters used for the transducer coding decoding creation 
+	 * The parameters used for the coding decoding mechanisms creation
 	 */
 	private final String[] parameters;
 

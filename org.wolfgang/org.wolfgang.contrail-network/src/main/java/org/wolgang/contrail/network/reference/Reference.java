@@ -27,6 +27,6 @@ package org.wolgang.contrail.network.reference;
  */
 public interface Reference {
 
-	<E> E visit(ReferenceVisitor<E> visitor);
+	<E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X;
 
 }

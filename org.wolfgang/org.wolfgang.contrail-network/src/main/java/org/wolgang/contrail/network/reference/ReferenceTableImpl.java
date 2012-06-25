@@ -46,13 +46,20 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
-	public void insert(DirectReference reference, E element) {
-		this.table.put(reference, element);
+	public void insert(DirectReference reference, E element) throws ReferenceEntryAlreadyExistException {
+		if (this.table.containsKey(reference)) {
+			throw new ReferenceEntryAlreadyExistException();
+		} else {
+			this.table.put(reference, element);
+		}
 	}
 
 	@Override
-	public E retrieve(DirectReference reference) {
-		return this.table.get(reference);
+	public E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException {
+		if (this.table.containsKey(reference)) {
+			return this.table.get(reference);
+		} else {
+			throw new ReferenceEntryNotFoundException();
+		}
 	}
-
 }

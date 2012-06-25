@@ -50,69 +50,60 @@ public final class ChainedReferences implements IndirectReference, Serializable 
 		// Nothing special
 	}
 
-	/**
-	 * Method called whether a simple end point must be added
-	 * 
-	 * @param endPoint
-	 *            The new added simple endpoint
-	 */
-	public void addToChain(DirectReference endPoint) {
-		assert endPoint != null;
-		references.add(0, endPoint);
+	@Override
+	public void addFirst(DirectReference reference) {
+		assert reference != null;
+		references.add(reference);
+	}
+
+	@Override
+	public void addLast(DirectReference reference) {
+		assert reference != null;
+		references.add(reference);
 	}
 
 	/**
-	 * @param endPoint
+	 * Method called whether a direct reference index must be retrieved
+	 * 
+	 * @param reference
 	 */
-	public int getIndex(DirectReference endPoint) {
+	private int getIndex(DirectReference reference) {
 		int position = -1;
 		for (DirectReference current : references) {
 			position += 1;
-			if (current.equals(endPoint)) {
+			if (current.equals(reference)) {
 				return position;
 			}
 		}
 		return -1;
 	}
 
-	/**
-	 * @param endPoint
-	 * @return
-	 */
-	public boolean hasNextReference(DirectReference endPoint) {
-		final int index = this.getIndex(endPoint);
+	@Override
+	public boolean hasNextReference(DirectReference reference) {
+		final int index = this.getIndex(reference);
 		return -1 < index && index + 1 < this.references.size();
 	}
 
-	/**
-	 * @param endPoint
-	 * @return
-	 */
-	public DirectReference getNextReference(DirectReference endPoint) {
-		assert this.hasNextReference(endPoint);
-		return this.references.get(this.getIndex(endPoint) + 1);
-	}
-
-	/**
-	 * @param endPoint
-	 * @return
-	 */
-	public boolean hasPreviousReference(DirectReference endPoint) {
-		final int index = this.getIndex(endPoint);
-		return -1 < index - 1;
-	}
-
-	/**
-	 * @param endPoint
-	 * @return
-	 */
-	public DirectReference getPreviousReference(DirectReference endPoint) {
-		assert this.hasPreviousReference(endPoint);
-		return this.references.get(this.getIndex(endPoint) - 1);
+	@Override
+	public DirectReference getNextReference(DirectReference reference) {
+		assert this.hasNextReference(reference);
+		return this.references.get(this.getIndex(reference) + 1);
 	}
 
 	@Override
-	public <E> E visit(ReferenceVisitor<E> visitor) {
+	public boolean hasPreviousReference(DirectReference reference) {
+		final int index = this.getIndex(reference);
+		return -1 < index - 1;
+	}
+
+	@Override
+	public DirectReference getPreviousReference(DirectReference reference) {
+		assert this.hasPreviousReference(reference);
+		return this.references.get(this.getIndex(reference) - 1);
+	}
+
+	@Override
+	public <E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X {
 		return visitor.visit(this);
 	}
 }

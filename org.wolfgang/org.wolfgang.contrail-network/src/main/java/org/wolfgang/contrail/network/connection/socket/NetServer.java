@@ -104,13 +104,27 @@ public class NetServer implements Callable<Void>, Closeable {
 		this.factory = factory;
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param port
+	 * @param binder
+	 */
+	public NetServer(int port, DataSenderFactory<byte[], byte[]> binder) {
+		this(null, port, binder);
+	}
+
 	@Override
 	public Void call() throws Exception {
 		if (serverSocket != null) {
 			throw new IllegalAccessException();
 		}
 
-		serverSocket = new ServerSocket(port, 0, address);
+		if (address != null) {
+			serverSocket = new ServerSocket(port, 0, address);
+		} else {
+			serverSocket = new ServerSocket(port, 0);
+		}
 
 		while (serverSocket.isBound()) {
 			final Socket client = serverSocket.accept();

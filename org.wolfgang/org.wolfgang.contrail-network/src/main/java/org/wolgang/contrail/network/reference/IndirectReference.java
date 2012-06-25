@@ -26,6 +26,44 @@ package org.wolgang.contrail.network.reference;
  */
 public interface IndirectReference extends Reference {
 
-	// Nothing to do
-	
+	/**
+	 * Method called whether a simple end point must be added as fist reference
+	 * 
+	 * @param reference
+	 *            The new added direct reference
+	 */
+	void addFirst(DirectReference reference);
+
+	/**
+	 * Method called whether a simple end point must be added as last reference
+	 * 
+	 * @param reference
+	 *            The new added direct reference
+	 */
+	void addLast(DirectReference reference);
+
+	/**
+	 * @param reference
+	 * @return
+	 */
+	boolean hasNextReference(DirectReference reference);
+
+	/**
+	 * @param reference
+	 * @return
+	 */
+	DirectReference getNextReference(DirectReference reference);
+
+	/**
+	 * @param reference
+	 * @return
+	 */
+	boolean hasPreviousReference(DirectReference reference);
+
+	/**
+	 * @param reference
+	 * @return
+	 */
+	DirectReference getPreviousReference(DirectReference reference);
+
 }

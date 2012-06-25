@@ -28,7 +28,7 @@ import org.wolfgang.contrail.component.ComponentId;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class ComponentIdImpl implements ComponentId {
+public class ComponentIdImpl implements ComponentId {
 
 	private final UUID identifier;
 
@@ -36,8 +36,18 @@ class ComponentIdImpl implements ComponentId {
 	 * Constructor
 	 */
 	ComponentIdImpl() {
+		this(UUID.randomUUID());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param uuid
+	 *            The identifier
+	 */
+	public ComponentIdImpl(UUID uuid) {
 		super();
-		this.identifier = UUID.randomUUID();
+		this.identifier = uuid;
 	}
 
 	@Override

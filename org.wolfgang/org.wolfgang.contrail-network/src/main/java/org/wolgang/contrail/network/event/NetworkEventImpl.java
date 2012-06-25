@@ -28,7 +28,12 @@ import org.wolgang.contrail.network.reference.Reference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkEventImpl implements NetworkEvent {
+public class NetworkEventImpl implements NetworkEvent, Serializable {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 1887763768371792297L;
 
 	/**
 	 * The source
@@ -52,7 +57,7 @@ public class NetworkEventImpl implements NetworkEvent {
 	 * @param target
 	 * @param content
 	 */
-	private NetworkEventImpl(Reference source, Reference target, Serializable content) {
+	public NetworkEventImpl(Reference source, Reference target, Serializable content) {
 		super();
 		this.source = source;
 		this.target = target;

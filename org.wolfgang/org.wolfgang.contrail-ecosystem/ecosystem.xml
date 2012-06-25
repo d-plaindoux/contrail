@@ -48,8 +48,8 @@
 	<InternalComponents>
 		<DataFlow name="local.network">
 			<Router ref="in" factory="ProtocolRouterFactory">
-				<Outgoing ref="service" filter="isAServiceHandler"/>
-				<Outgoing ref="transfer" filter="isTransferHandler"/>
+				<Outgoing ref="service" filter="isAServiceHandler" />
+				<Outgoing ref="transfer" filter="isTransferHandler" />
 			</Router>
 			<Terminal ref="service" factory="ServiceHandler">
 				<Outgoing ref="service.outgoing" />
@@ -58,14 +58,14 @@
 				<Outgoing ref="transfer.outgoing" />
 			</Terminal>
 		</DataFlow>
-		
+
 		<DataFlow name="core.network">
 			<Terminal ref="incoming" factory="Networking">
 				<Outgoing ref="network.target" />
 			</Terminal>
 			<Router ref="network.target" factory="NetworkRouterFactory">
-				<Outgoing ref="local.network.in" filter="isSameReference" />
-				<Outgoing ref="local.network.in" filter="SameReference" />
+				<Outgoing ref="local.network.in" filter="isLocalReference" />
+				<Outgoing ref="local.network.in" filter="isRemoteReference" />
 			</Router>
 		</DataFlow>
 	</InternalComponents>
@@ -75,10 +75,4 @@
 		<Worker factory="WebServer" port="9090" ref="web.incoming.in" />
 	</ActiveWorkers>
 
-	<Clients>
-		<Client name="a.*" factory="NetClient" ref="net.outgoing.inc" />
-		<Client name="b.*" factory="NetClient" ref="net.outgoing.inc" />
-		<Client name="c.*" factory="NetClient" ref="net.outgoing.inc" />
-		<Client name="d.*" factory="NetClient" ref="net.outgoing.inc" />
-	</Clients>
 </Ecosystem>

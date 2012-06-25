@@ -77,7 +77,7 @@ public final class ClientReference implements DirectReference, Serializable {
 	}
 
 	@Override
-	public <E> E visit(ReferenceVisitor<E> visitor) {
+	public <E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X {
 		return visitor.visit(this);
 	}
 }

@@ -48,13 +48,13 @@ import org.wolgang.contrail.network.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkRouterComponent extends AbstractComponent implements
-		MultipleDestinationComponent<NetworkEvent, NetworkEvent>, MultipleSourceComponent<NetworkEvent, NetworkEvent> {
+public class NetworkComponent extends AbstractComponent implements MultipleDestinationComponent<NetworkEvent, NetworkEvent>,
+		MultipleSourceComponent<NetworkEvent, NetworkEvent> {
 
 	/**
 	 * The multiplexer component
 	 */
-	private final NetworkRouterStreamDataHandler dataHandler;
+	private final NetworkStreamDataHandler dataHandler;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -89,8 +89,15 @@ public class NetworkRouterComponent extends AbstractComponent implements
 	/**
 	 * Constructor
 	 */
-	NetworkRouterComponent(NetworkRouterTable table, DirectReference selfReference) {
-		this.dataHandler = new NetworkRouterStreamDataHandler(this, selfReference, table);
+	NetworkComponent(NetworkTable table, DirectReference selfReference) {
+		this.dataHandler = new NetworkStreamDataHandler(this, selfReference, table);
+	}
+
+	/**
+	 * @return the network table
+	 */
+	public NetworkTable getNetworkTable() {
+		return this.dataHandler.getRouterTable();
 	}
 
 	@Override

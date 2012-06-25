@@ -27,8 +27,8 @@ package org.wolgang.contrail.network.reference;
  */
 public interface ReferenceTable<E> {
 
-	void insert(DirectReference reference, E element);
+	void insert(DirectReference reference, E element) throws ReferenceEntryAlreadyExistException;
 
-	E retrieve(DirectReference reference);
+	E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException;
 
 }

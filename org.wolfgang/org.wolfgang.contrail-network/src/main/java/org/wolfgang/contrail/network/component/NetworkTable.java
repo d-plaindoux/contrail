@@ -28,7 +28,7 @@ import org.wolgang.contrail.network.reference.ReferenceTableImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkRouterTable extends ReferenceTableImpl<NetworkRouterTable.Entry> {
+public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 
 	/**
 	 * <code>Entry</code>
@@ -37,13 +37,13 @@ public class NetworkRouterTable extends ReferenceTableImpl<NetworkRouterTable.En
 	 * @version 1.0
 	 */
 	public interface Entry {
-		ComponentId createDataHandler(NetworkRouterComponent component);
+		ComponentId createDataHandler();
 	}
 
 	/**
 	 * Constructor
 	 */
-	public NetworkRouterTable() {
+	public NetworkTable() {
 		super();
 	}
 

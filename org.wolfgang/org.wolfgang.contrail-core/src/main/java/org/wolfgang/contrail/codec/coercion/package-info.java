@@ -16,44 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
-
-import java.util.UUID;
-
 /**
- * <code>EndPointFactory</code>
- * 
+ * Serialization based encoder and decoder. This CoDec uses the standard java 
+ * serialization mechanism.
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ReferenceFactory {
-
-	/**
-	 * Constructor
-	 */
-	private ReferenceFactory() {
-		// prevent useless construction
-	}
-
-	/**
-	 * @return a client end-point
-	 */
-	public static DirectReference createClientReference(UUID identifier) {
-		return new ClientReference(identifier);
-	}
-
-	/**
-	 * @return a server end-point
-	 */
-	public static DirectReference createServerReference(UUID identifier) {
-		return new ServerReference(identifier);
-	}
-
-	/**
-	 * @return a chain of end-points
-	 */
-	public static IndirectReference emptyIndirectReference() {
-		return new ChainedReferences();
-	}
-
-}
+package org.wolfgang.contrail.codec.coercion;

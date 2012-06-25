@@ -39,26 +39,19 @@ public class EcosystemFactoryImpl implements EcosystemFactory {
 	/**
 	 * Initial binders
 	 */
-	private final Collection<DataFlow> initialBinders;
+	private final Collection<DataFlow> binders;
 
 	/**
 	 * Internal components
 	 */
 	private final Collection<DataFlow> internalComponents;
 
-	/**
-	 * Terminal binders
-	 */
-	private final Collection<DataFlow> terminalBinders;
-
 	/* initialization */
 	{
 		this.imports = new ArrayList<String>();
-		this.initialBinders = new ArrayList<DataFlow>();
+		this.binders = new ArrayList<DataFlow>();
 		this.internalComponents = new ArrayList<DataFlow>();
-		this.terminalBinders = new ArrayList<DataFlow>();
-
-		this.imports.add(""); // Empty import to be used first
+		this.imports.add(""); // Empty import to be used first 
 	}
 
 	/**
@@ -74,28 +67,22 @@ public class EcosystemFactoryImpl implements EcosystemFactory {
 	}
 
 	@Override
-	public void addInitialComponentBinder(DataFlow flow) {
-		this.initialBinders.add(flow);
+	public void addBinderDataFlow(DataFlow flow) {
+		this.binders.add(flow);
 	}
 
 	@Override
-	public void addInternalComponent(DataFlow flow) {
+	public void addInternalDataFlow(DataFlow flow) {
 		this.internalComponents.add(flow);
 	}
 
-	@Override
-	public void addTerminalComponentBinder(DataFlow flow) {
-		this.terminalBinders.add(flow);
-	}
-
 	private boolean validate(DataFlow dataFlow) {
-
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean validate() {
-		for (DataFlow dataFlow : initialBinders) {
+		for (DataFlow dataFlow : binders) {
 			if (!validate(dataFlow)) {
 				return false;
 			}
@@ -107,11 +94,6 @@ public class EcosystemFactoryImpl implements EcosystemFactory {
 			}
 		}
 
-		for (DataFlow dataFlow : terminalBinders) {
-			if (!validate(dataFlow)) {
-				return false;
-			}
-		}
 		return true;
 	}
 

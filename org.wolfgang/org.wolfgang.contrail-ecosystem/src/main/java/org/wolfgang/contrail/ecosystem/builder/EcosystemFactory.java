@@ -21,8 +21,8 @@ package org.wolfgang.contrail.ecosystem.builder;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 
 /**
- * <code>EcosystemFactory</code> is the basic interface used for the
- * component ecosystem creation
+ * <code>EcosystemFactory</code> is the basic interface used for the component
+ * ecosystem creation
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -40,7 +40,7 @@ public interface EcosystemFactory {
 	 * @param flow
 	 *            the binded data flow
 	 */
-	void addInitialComponentBinder(DataFlow flow);
+	void addBinderDataFlow(DataFlow flow);
 
 	/**
 	 * Add a new internal component
@@ -48,15 +48,7 @@ public interface EcosystemFactory {
 	 * @param flow
 	 *            the binded data flow
 	 */
-	void addInternalComponent(DataFlow flow);
-
-	/**
-	 * Add a new terminal binder
-	 * 
-	 * @param flow
-	 *            the binded data flow
-	 */
-	void addTerminalComponentBinder(DataFlow flow);
+	void addInternalDataFlow(DataFlow flow);
 
 	/**
 	 * Predicated used whether the current construction must be validated

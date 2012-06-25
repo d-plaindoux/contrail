@@ -31,6 +31,7 @@ import org.wolgang.contrail.network.event.NetworkEvent;
 import org.wolgang.contrail.network.reference.ChainedReferences;
 import org.wolgang.contrail.network.reference.ClientReference;
 import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolgang.contrail.network.reference.ReferenceEntryNotFoundException;
 import org.wolgang.contrail.network.reference.ReferenceVisitor;
 import org.wolgang.contrail.network.reference.ServerReference;
 
@@ -43,14 +44,14 @@ import org.wolgang.contrail.network.reference.ServerReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<NetworkEvent>, DownStreamDataHandler<NetworkEvent>,
-		ReferenceVisitor<NetworkRouterTable.Entry> {
+public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEvent>, DownStreamDataHandler<NetworkEvent>,
+		ReferenceVisitor<NetworkTable.Entry, ReferenceEntryNotFoundException> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final NetworkRouterComponent component;
-	private final NetworkRouterTable routerTable;
+	private final NetworkComponent component;
+	private final NetworkTable routerTable;
 	private final DirectReference selfReference;
 
 	/**
@@ -58,12 +59,29 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 	 * 
 	 * @param upStreamDeMultiplexer
 	 */
-	public NetworkRouterStreamDataHandler(NetworkRouterComponent component, DirectReference selfReference,
-			NetworkRouterTable routerTable) {
+	public NetworkStreamDataHandler(NetworkComponent component, DirectReference selfReference, NetworkTable routerTable) {
 		super();
 		this.component = component;
 		this.selfReference = selfReference;
 		this.routerTable = routerTable;
+	}
+
+	/**
+	 * Return the value of routerTable
+	 * 
+	 * @return the routerTable
+	 */
+	NetworkTable getRouterTable() {
+		return routerTable;
+	}
+
+	/**
+	 * Return the value of selfReference
+	 * 
+	 * @return the selfReference
+	 */
+	DirectReference getSelfReference() {
+		return selfReference;
 	}
 
 	private void handleData(NetworkEvent data, ComponentId componentId) throws DataHandlerException,
@@ -98,14 +116,16 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		}
 
 		if (notHandled) {
-			final NetworkRouterTable.Entry entry = data.getTargetReference().visit(this);
-			if (entry != null) {
-				try {
-					this.handleData(data, entry.createDataHandler(this.component));
+			try {
+				final NetworkTable.Entry entry = data.getTargetReference().visit(this);
+				if (entry != null) {
+					this.handleData(data, entry.createDataHandler());
 					notHandled = false;
-				} catch (ComponentNotConnectedException e) {
-					// Ignore
 				}
+			} catch (ComponentNotConnectedException e) {
+				// Ignore
+			} catch (ReferenceEntryNotFoundException e1) {
+				// Ignore
 			}
 		}
 	}
@@ -123,17 +143,17 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 	}
 
 	@Override
-	public NetworkRouterTable.Entry visit(ClientReference reference) {
+	public NetworkTable.Entry visit(ClientReference reference) throws ReferenceEntryNotFoundException {
 		return this.routerTable.retrieve(reference);
 	}
 
 	@Override
-	public NetworkRouterTable.Entry visit(ServerReference reference) {
+	public NetworkTable.Entry visit(ServerReference reference) throws ReferenceEntryNotFoundException {
 		return this.routerTable.retrieve(reference);
 	}
 
 	@Override
-	public NetworkRouterTable.Entry visit(ChainedReferences reference) {
+	public NetworkTable.Entry visit(ChainedReferences reference) throws ReferenceEntryNotFoundException {
 		return this.routerTable.retrieve(reference.getNextReference(this.selfReference));
 	}
 }

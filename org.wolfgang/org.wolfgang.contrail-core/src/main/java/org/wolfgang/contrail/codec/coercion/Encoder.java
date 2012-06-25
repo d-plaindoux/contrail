@@ -16,31 +16,44 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.contrail.codec.coercion;
 
-import org.wolgang.contrail.network.reference.DirectReference;
+import java.util.Arrays;
+import java.util.List;
+
+import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.transducer.DataTransducerException;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>Encoder</code> is capable to transform objects to payload based byte
+ * array.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkRouterFactory {
+class Encoder<T> implements DataTransducer<T, Object> {
+
+	/**
+	 * An array of accepted types
+	 */
+	@SuppressWarnings("unused")
+	private final Class<T> coercionType;
 
 	/**
 	 * Constructor
 	 */
-	private NetworkRouterFactory() {
-		// Prevent useless creation
+	Encoder(Class<T> coercionType) {
+		super();
+		this.coercionType = coercionType;
 	}
 
-	/**
-	 * Method called whether a network router is required.
-	 * 
-	 * @return a network router component
-	 */
-	public static NetworkRouterComponent create(NetworkRouterTable table, DirectReference selfReference) {
-		return new NetworkRouterComponent(table, selfReference);
+	@Override
+	public List<Object> transform(T source) throws DataTransducerException {
+		return Arrays.asList((Object) source);
+	}
+
+	@Override
+	public List<Object> finish() throws DataTransducerException {
+		return Arrays.asList();
 	}
 }

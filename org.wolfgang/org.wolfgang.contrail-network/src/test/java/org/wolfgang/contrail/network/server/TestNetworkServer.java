@@ -21,12 +21,20 @@ package org.wolfgang.contrail.network.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.common.utils.UUIDUtils;
+import org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory;
+import org.wolfgang.contrail.codec.payload.Bytes;
+import org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory;
+import org.wolfgang.contrail.codec.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
@@ -34,13 +42,24 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.multiple.DataFilter;
+import org.wolfgang.contrail.component.transducer.TransducerComponent;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.network.component.NetworkComponent;
+import org.wolfgang.contrail.network.component.NetworkFactory;
+import org.wolfgang.contrail.network.component.NetworkTable;
+import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
+import org.wolgang.contrail.network.event.NetworkEvent;
+import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
+import org.wolgang.contrail.network.reference.ReferenceFactory;
 
 /**
  * <code>TestNetworkServer</code>
@@ -51,14 +70,14 @@ import org.wolfgang.contrail.network.connection.socket.NetServer;
 public class TestNetworkServer extends TestCase {
 
 	public void testNominal01() throws IOException, CannotProvideComponentException {
-		//
+
+		// ------------------------------------------------------------------------------------------------
 		// Complex server based on ecosystem
-		//
+		// ------------------------------------------------------------------------------------------------
 
 		final EcosystemImpl serverEcosystem = new EcosystemImpl();
 
-		// Lambda-Java: dataFactory = component -> new DataReceiver<byte[]>() {
-		// ... };
+		// component -> new DataReceiver<byte[]>() {...};
 
 		final DataReceiverFactory<byte[], byte[]> dataReceiverFactory = new DataReceiverFactory<byte[], byte[]>() {
 			@Override
@@ -77,8 +96,7 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		// Lambda-Java: dataSenderFactory = () -> new TerminalComponent<byte[],
-		// byte[]>(dataReceiverFactory).getDataSender();
+		// () -> new TerminalComponent<byte[], byte[]>(...).getDataSender();
 
 		final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
 			@Override
@@ -99,18 +117,17 @@ public class TestNetworkServer extends TestCase {
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("test", byte[].class, byte[].class);
 		serverEcosystem.addFactory(key, dataSenderFactory);
 
-		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,
-				serverEcosystem.<byte[], byte[]> getBinder(key));
+		final NetServer networkServer = new NetServer(2666, serverEcosystem.<byte[], byte[]> getBinder(key));
 
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);
 
-		//
+		// ------------------------------------------------------------------------------------------------
 		// Simple socket based client
-		//
+		// ------------------------------------------------------------------------------------------------
 
-		final Socket socket = new Socket(InetAddress.getLocalHost(), 2666);
+		final Socket socket = new Socket("localhost", 2666);
 		final String message = "Hello, World!";
 
 		socket.getOutputStream().write(message.getBytes());
@@ -123,9 +140,5 @@ public class TestNetworkServer extends TestCase {
 		socket.close();
 		executor.shutdown();
 		networkServer.close();
-	}
-
-	public void testNetworkRouter01() {
-
 	}
 }

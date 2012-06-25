@@ -16,44 +16,31 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.component;
 
-import java.util.UUID;
+import org.wolgang.contrail.network.reference.DirectReference;
 
 /**
- * <code>EndPointFactory</code>
+ * <code>NetworkRouterFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ReferenceFactory {
+public final class NetworkFactory {
 
 	/**
 	 * Constructor
 	 */
-	private ReferenceFactory() {
-		// prevent useless construction
+	private NetworkFactory() {
+		// Prevent useless creation
 	}
 
 	/**
-	 * @return a client end-point
+	 * Method called whether a network router is required.
+	 * 
+	 * @return a network router component
 	 */
-	public static DirectReference createClientReference(UUID identifier) {
-		return new ClientReference(identifier);
+	public static NetworkComponent create(DirectReference selfReference) {
+		return new NetworkComponent(new NetworkTable(), selfReference);
 	}
-
-	/**
-	 * @return a server end-point
-	 */
-	public static DirectReference createServerReference(UUID identifier) {
-		return new ServerReference(identifier);
-	}
-
-	/**
-	 * @return a chain of end-points
-	 */
-	public static IndirectReference emptyIndirectReference() {
-		return new ChainedReferences();
-	}
-
 }

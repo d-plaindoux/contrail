@@ -18,42 +18,59 @@
 
 package org.wolgang.contrail.network.reference;
 
-import java.util.UUID;
-
 /**
- * <code>EndPointFactory</code>
- * 
+ * <code>ReferenceEntryNotFoundException</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ReferenceFactory {
+public class ReferenceEntryNotFoundException extends Exception {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 794213387202243031L;
 
 	/**
 	 * Constructor
+	 * 
 	 */
-	private ReferenceFactory() {
-		// prevent useless construction
+	public ReferenceEntryNotFoundException() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @return a client end-point
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
 	 */
-	public static DirectReference createClientReference(UUID identifier) {
-		return new ClientReference(identifier);
+	public ReferenceEntryNotFoundException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @return a server end-point
+	 * Constructor
+	 * 
+	 * @param arg0
 	 */
-	public static DirectReference createServerReference(UUID identifier) {
-		return new ServerReference(identifier);
+	public ReferenceEntryNotFoundException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @return a chain of end-points
+	 * Constructor
+	 * 
+	 * @param arg0
 	 */
-	public static IndirectReference emptyIndirectReference() {
-		return new ChainedReferences();
+	public ReferenceEntryNotFoundException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 }

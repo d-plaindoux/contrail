@@ -24,7 +24,7 @@ package org.wolgang.contrail.network.reference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ReferenceVisitor<T> {
+public interface ReferenceVisitor<T, E extends Exception> {
 
 	/**
 	 * Method called whether a client reference is visited
@@ -33,7 +33,7 @@ public interface ReferenceVisitor<T> {
 	 *            The reference
 	 * @return the visit result
 	 */
-	T visit(ClientReference reference);
+	T visit(ClientReference reference) throws E;
 
 	/**
 	 * Method called whether a server reference is visited
@@ -42,7 +42,7 @@ public interface ReferenceVisitor<T> {
 	 *            The reference
 	 * @return the visit result
 	 */
-	T visit(ServerReference reference);
+	T visit(ServerReference reference) throws E;
 
 	/**
 	 * Method called whether a chained references is visited
@@ -51,6 +51,6 @@ public interface ReferenceVisitor<T> {
 	 *            The reference
 	 * @return the visit result
 	 */
-	T visit(ChainedReferences reference);
+	T visit(ChainedReferences reference) throws E;
 
 }

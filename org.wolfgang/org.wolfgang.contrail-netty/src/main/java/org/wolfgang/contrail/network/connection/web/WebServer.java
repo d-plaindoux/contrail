@@ -80,7 +80,6 @@ public final class WebServer extends NIOServer {
 		final DataReceiverFactory<String, String> dataFactory = new DataReceiverFactory<String, String>() {
 			@Override
 			public DataReceiver<String> create(final DataSender<String> component) {
-				System.err.println("Accept client " + component.toString());
 				components.add(component);
 
 				return new DataReceiver<String>() {

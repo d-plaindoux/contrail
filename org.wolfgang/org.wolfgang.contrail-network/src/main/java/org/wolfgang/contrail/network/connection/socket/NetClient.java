@@ -36,7 +36,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>NetworkClient</code> provides a client implementation using
+ * The <code>NetClient</code> provides a client implementation using
  * standard libraries like sockets and server sockets. The current
  * implementation don't use the new IO libraries and select mechanism. As a
  * consequence this implementation is not meant to be scalable as required for
