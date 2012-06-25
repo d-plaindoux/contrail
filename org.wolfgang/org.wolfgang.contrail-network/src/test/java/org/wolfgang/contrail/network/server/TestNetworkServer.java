@@ -101,6 +101,7 @@ public class TestNetworkServer extends TestCase {
 
 		final NetServer networkServer = new NetServer(InetAddress.getLocalHost(), 2666,
 				serverEcosystem.<byte[], byte[]> getBinder(key));
+
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		executor.submit(networkServer);
@@ -122,5 +123,9 @@ public class TestNetworkServer extends TestCase {
 		socket.close();
 		executor.shutdown();
 		networkServer.close();
+	}
+
+	public void testNetworkRouter01() {
+
 	}
 }

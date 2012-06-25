@@ -35,9 +35,10 @@ import org.wolgang.contrail.network.reference.ReferenceVisitor;
 import org.wolgang.contrail.network.reference.ServerReference;
 
 /**
- * A <code>FilteredDeMultiplexerDataHandler</code> is able to manage information
+ * A <code>NetworkRouterStreamDataHandler</code> is able to manage information
  * using filters owned buy each filtered upstream destination component linked
- * to the multiplexer component.
+ * to the multiplexer component. The data is a network event in this case and
+ * the management is done using a dedicated network router.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -65,6 +66,11 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		this.routerTable = routerTable;
 	}
 
+	private void handleData(NetworkEvent data, ComponentId componentId) throws DataHandlerException,
+			ComponentNotConnectedException {
+		component.getSourceComponent(componentId).getDownStreamDataHandler().handleData(data);
+	}
+
 	@Override
 	public void handleData(NetworkEvent data) throws DataHandlerException {
 		boolean notHandled = true;
@@ -72,7 +78,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getSourceFilters().entrySet()) {
 			if (entry.getValue().accept(data)) {
 				try {
-					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
+					this.handleData(data, entry.getKey());
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore
@@ -83,7 +89,7 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getDestinationFilters().entrySet()) {
 			if (entry.getValue().accept(data)) {
 				try {
-					component.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
+					this.handleData(data, entry.getKey());
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore
@@ -94,8 +100,12 @@ public class NetworkRouterStreamDataHandler implements UpStreamDataHandler<Netwo
 		if (notHandled) {
 			final NetworkRouterTable.Entry entry = data.getTargetReference().visit(this);
 			if (entry != null) {
-				entry.createDataHandler(this.component);
-				notHandled = false;
+				try {
+					this.handleData(data, entry.createDataHandler(this.component));
+					notHandled = false;
+				} catch (ComponentNotConnectedException e) {
+					// Ignore
+				}
 			}
 		}
 	}
