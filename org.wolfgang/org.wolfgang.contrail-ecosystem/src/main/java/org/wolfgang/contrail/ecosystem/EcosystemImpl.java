@@ -75,7 +75,7 @@ public final class EcosystemImpl implements Ecosystem {
 	 *            The upstream type
 	 * @param downstream
 	 *            The downstream type
- 	 * @return the terminal component factory
+	 * @return the terminal component factory
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
@@ -87,7 +87,7 @@ public final class EcosystemImpl implements Ecosystem {
 			}
 		}
 
-		final Message message = message("org/wolfgang/contrail/message", "component.binder.not.found");
+		final Message message = message("org/wolfgang/contrail/ecosystem", "dataflow.factory.not.found");
 		throw new CannotProvideComponentException(message.format(filter));
 	}
 }

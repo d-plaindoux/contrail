@@ -132,4 +132,9 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 	public boolean filteredBy(RegisteredUnitEcosystemKey ecosystemKey) {
 		return ecosystemKey.accept(this);
 	}
-}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+	}
