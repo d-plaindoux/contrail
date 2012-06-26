@@ -29,7 +29,6 @@ import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
@@ -80,13 +79,7 @@ public class TestNetworkRouterServer extends TestCase {
 				});
 
 		manager01.connect(network01, terminalComponent01);
-		network01.filterDestination(terminalComponent01.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference01);
-			}
-		});
+
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
@@ -126,13 +119,6 @@ public class TestNetworkRouterServer extends TestCase {
 				});
 
 		manager01.connect(network01, terminalComponent01);
-		network01.filterDestination(terminalComponent01.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference01);
-			}
-		});
 
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
 		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01, reference02));
@@ -168,13 +154,6 @@ public class TestNetworkRouterServer extends TestCase {
 				});
 
 		manager02.connect(network02, terminalComponent02);
-		network02.filterDestination(terminalComponent02.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference02);
-			}
-		});
 
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
 		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02, reference01));

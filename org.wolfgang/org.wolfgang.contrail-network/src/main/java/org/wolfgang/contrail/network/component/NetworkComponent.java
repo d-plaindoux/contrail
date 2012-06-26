@@ -27,28 +27,27 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
+import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolgang.contrail.network.event.NetworkEvent;
 import org.wolgang.contrail.network.reference.DirectReference;
 
 /**
- * <code>NetwortRouterComponent</code> is a component able to manage
- * NetworkEvent
+ * <code>NetwortComponent</code> is a component able to manage NetworkEvent and
+ * opening route on-demand.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkComponent extends AbstractComponent implements MultipleDestinationComponent<NetworkEvent, NetworkEvent>,
+public class NetworkComponent extends AbstractComponent implements DestinationComponent<NetworkEvent, NetworkEvent>,
 		MultipleSourceComponent<NetworkEvent, NetworkEvent> {
 
 	/**
@@ -59,37 +58,31 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DataFilter<NetworkEvent>> destinationFilters;
+	private DestinationComponentLink<NetworkEvent, NetworkEvent> destinationLink;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DestinationComponentLink<NetworkEvent, NetworkEvent>> destinationComponents;
+	private final Map<ComponentId, DirectReference> sourceFilters;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DataFilter<NetworkEvent>> sourceFilters;
-
-	/**
-	 * The set of connected filtering destination component (can be empty)
-	 */
-	private final Map<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>> sourceComponents;
+	private final Map<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>> sourceLinks;
 
 	/**
 	 * Initialization
 	 */
 	{
-		this.destinationFilters = new HashMap<ComponentId, DataFilter<NetworkEvent>>();
-		this.destinationComponents = new HashMap<ComponentId, DestinationComponentLink<NetworkEvent, NetworkEvent>>();
-		this.sourceFilters = new HashMap<ComponentId, DataFilter<NetworkEvent>>();
-		this.sourceComponents = new HashMap<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>>();
+		this.sourceFilters = new HashMap<ComponentId, DirectReference>();
+		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>>();
 	}
 
 	/**
 	 * Constructor
 	 */
 	NetworkComponent(NetworkTable table, DirectReference selfReference) {
+		this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		this.dataHandler = new NetworkStreamDataHandler(this, selfReference, table);
 	}
 
@@ -102,7 +95,7 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return !this.destinationComponents.containsKey(componentId);
+		return this.destinationLink.getDestinationComponent() == null;
 	}
 
 	@Override
@@ -110,7 +103,7 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 			throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (this.acceptDestination(componentId)) {
-			this.destinationComponents.put(componentId, handler);
+			this.destinationLink = handler;
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -123,9 +116,8 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (this.destinationComponents.containsKey(componentId)) {
-			this.destinationComponents.remove(componentId);
-			this.destinationFilters.remove(componentId);
+		if (this.destinationLink.getDestinationComponent() != null) {
+			this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -133,21 +125,21 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		for (DestinationComponentLink<NetworkEvent, NetworkEvent> source : this.destinationComponents.values()) {
-			source.getDestinationComponent().closeUpStream();
+		if (this.destinationLink.getDestinationComponent() != null) {
+			this.destinationLink.getDestinationComponent().closeUpStream();
 		}
 	}
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		for (SourceComponentLink<NetworkEvent, NetworkEvent> source : this.sourceComponents.values()) {
+		for (SourceComponentLink<NetworkEvent, NetworkEvent> source : this.sourceLinks.values()) {
 			source.getSourceComponent().closeUpStream();
 		}
 	}
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return !this.sourceComponents.containsKey(componentId);
+		return !this.sourceLinks.containsKey(componentId);
 	}
 
 	@Override
@@ -157,7 +149,7 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 
 		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
-			this.sourceComponents.put(componentId, handler);
+			this.sourceLinks.put(componentId, handler);
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -170,67 +162,17 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
-		if (this.sourceComponents.containsKey(componentId)) {
-			this.sourceComponents.remove(componentId);
+		if (this.sourceLinks.containsKey(componentId)) {
+			this.sourceLinks.remove(componentId);
 			this.sourceFilters.remove(componentId);
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 
-	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
-	 */
-	public Map<ComponentId, DataFilter<NetworkEvent>> getDestinationFilters() {
-		return this.destinationFilters;
-	}
-
-	/**
-	 * Provide a component using it's identifier
-	 * 
-	 * @return an destination component
-	 * @throws ComponentNotConnectedException
-	 */
-	public DestinationComponent<NetworkEvent, NetworkEvent> getDestinationComponent(ComponentId componentId)
-			throws ComponentNotConnectedException {
-		final DestinationComponentLink<NetworkEvent, NetworkEvent> destinationComponent = this.destinationComponents
-				.get(componentId);
-
-		if (destinationComponent == null) {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		} else {
-			return destinationComponent.getDestinationComponent();
-		}
-	}
-
 	@Override
 	public UpStreamDataHandler<NetworkEvent> getUpStreamDataHandler() {
-		return this.dataHandler;
-	}
-
-	/**
-	 * Method used to add a filter to a given destination. All destination
-	 * without any filter are unreachable. A filter must be added if destination
-	 * component must be used when data are managed.
-	 * 
-	 * @param componentId
-	 *            The component identifier
-	 * @param filter
-	 *            The filter (can be <code>null</code>)
-	 * @throws ComponentConnectedException
-	 */
-	public void filterDestination(ComponentId componentId, DataFilter<NetworkEvent> filter) throws ComponentConnectedException {
-		assert componentId != null;
-
-		if (!this.destinationComponents.containsKey(componentId)) {
-			throw new ComponentConnectedException(NOT_YET_CONNECTED.format());
-		} else if (filter == null) {
-			this.destinationFilters.remove(componentId);
-		} else {
-			this.destinationFilters.put(componentId, filter);
-		}
+		return this.destinationLink.getDestinationComponent().getUpStreamDataHandler();
 	}
 
 	@Override
@@ -243,7 +185,7 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	 * 
 	 * @return a map of filters
 	 */
-	public Map<ComponentId, DataFilter<NetworkEvent>> getSourceFilters() {
+	public Map<ComponentId, DirectReference> getSourceFilters() {
 		return this.sourceFilters;
 	}
 
@@ -255,7 +197,7 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	 */
 	public SourceComponent<NetworkEvent, NetworkEvent> getSourceComponent(ComponentId componentId)
 			throws ComponentNotConnectedException {
-		final SourceComponentLink<NetworkEvent, NetworkEvent> destinationComponent = this.sourceComponents.get(componentId);
+		final SourceComponentLink<NetworkEvent, NetworkEvent> destinationComponent = this.sourceLinks.get(componentId);
 
 		if (destinationComponent == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -275,10 +217,10 @@ public class NetworkComponent extends AbstractComponent implements MultipleDesti
 	 *            The filter (can be <code>null</code>)
 	 * @throws ComponentConnectedException
 	 */
-	public void filterSource(ComponentId componentId, DataFilter<NetworkEvent> filter) throws ComponentConnectedException {
+	public void filterSource(ComponentId componentId, DirectReference filter) throws ComponentConnectedException {
 		assert componentId != null;
 
-		if (!this.sourceComponents.containsKey(componentId)) {
+		if (!this.sourceLinks.containsKey(componentId)) {
 			throw new ComponentConnectedException(NOT_YET_CONNECTED.format());
 		} else if (filter == null) {
 			this.sourceFilters.remove(componentId);

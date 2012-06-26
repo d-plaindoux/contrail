@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 
 /**
- * <code>FilteredSourceComponentSet</code> provides basic mechanism for filtered
+ * <code>FilteredSourceComponentSet</code> provides basic mechanism filtering
  * multiple targets.
  * 
  * @author Didier Plaindoux

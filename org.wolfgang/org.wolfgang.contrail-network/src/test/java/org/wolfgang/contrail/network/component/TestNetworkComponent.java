@@ -66,12 +66,12 @@ public class TestNetworkComponent extends TestCase {
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
 				return sourceComponent;
 			}
 		});
 
-		assertEquals(componentId, networkRouterTable.retrieve(clientReference).createDataHandler().getComponentId());
+		assertEquals(componentId, networkRouterTable.retrieve(clientReference).createSourceComponent().getComponentId());
 	}
 
 	public void testFailure01() throws NoSuchAlgorithmException {
@@ -83,7 +83,7 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+				public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
 					return sourceComponent;
 				}
 			});
@@ -94,7 +94,7 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+				public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
 					return sourceComponent;
 				}
 			});
@@ -113,14 +113,14 @@ public class TestNetworkComponent extends TestCase {
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
 				return sourceComponent;
 			}
 		});
 
 		final DirectReference somebodyReference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Somebody"));
 		try {
-			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).createDataHandler().getComponentId());
+			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).createSourceComponent().getComponentId());
 			fail();
 		} catch (ReferenceEntryNotFoundException e) {
 			// OK

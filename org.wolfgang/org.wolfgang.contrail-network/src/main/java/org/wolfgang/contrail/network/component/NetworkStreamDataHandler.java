@@ -22,11 +22,9 @@ import java.util.Map.Entry;
 
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolgang.contrail.network.event.NetworkEvent;
 import org.wolgang.contrail.network.reference.ChainedReferences;
 import org.wolgang.contrail.network.reference.ClientReference;
@@ -44,7 +42,7 @@ import org.wolgang.contrail.network.reference.ServerReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEvent>, DownStreamDataHandler<NetworkEvent>,
+public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEvent>,
 		ReferenceVisitor<NetworkTable.Entry, ReferenceEntryNotFoundException> {
 
 	/**
@@ -86,45 +84,37 @@ public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEven
 
 	@Override
 	public void handleData(NetworkEvent data) throws DataHandlerException {
-		boolean notHandled = true;
 
-		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getDestinationFilters().entrySet()) {
-			if (entry.getValue().accept(data)) {
-				try {
-					component.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
-					notHandled = false;
-				} catch (ComponentNotConnectedException consume) {
-					// Ignore
-				}
-			}
+		/**
+		 * Local Routing
+		 */
+		if (data.getTargetReference().equals(getSelfReference())) {
+			component.getUpStreamDataHandler().handleData(data);
+			return;
 		}
 
-		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getSourceFilters().entrySet()) {
-			if (entry.getValue().accept(data)) {
+		for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
+			if (data.getTargetReference().equals(entry.getValue())) {
 				try {
 					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
-					notHandled = false;
+					return;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore
 				}
 			}
 		}
 
-		if (notHandled) {
-			try {
-				final NetworkTable.Entry entry = data.getTargetReference().visit(this);
-				if (entry != null) {
-					entry.createDataHandler().getDownStreamDataHandler().handleData(data);
-					notHandled = false;
-				}
-			} catch (ReferenceEntryNotFoundException e1) {
-				// Ignore
+		try {
+			final NetworkTable.Entry entry = data.getTargetReference().visit(this);
+			if (entry != null) {
+				entry.createSourceComponent().getDownStreamDataHandler().handleData(data);
+				return;
 			}
+		} catch (ReferenceEntryNotFoundException e1) {
+			// Ignore
 		}
 
-		if (notHandled) {
-			throw new DataHandlerException();
-		}
+		throw new DataHandlerException();
 	}
 
 	@Override

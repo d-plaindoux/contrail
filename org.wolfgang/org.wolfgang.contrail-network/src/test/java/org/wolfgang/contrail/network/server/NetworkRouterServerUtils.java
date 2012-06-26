@@ -72,7 +72,7 @@ class NetworkRouterServerUtils extends TestCase {
 			final DirectReference reference, final String host, final int port) {
 		return new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
 				try {
 					// Payload component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
@@ -95,13 +95,7 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 					componentLinkManager.connect(coercionTransducer, component);
 
-					component.filterSource(coercionTransducer.getComponentId(), new DataFilter<NetworkEvent>() {
-						@Override
-						public boolean accept(NetworkEvent data) {
-							// TODO -- Deal with IndirectReference
-							return data.getTargetReference().equals(reference);
-						}
-					});
+					component.filterSource(coercionTransducer.getComponentId(), reference);
 
 					final NetClient netClient = new NetClient(new DataSenderFactory<byte[], byte[]>() {
 						@Override
@@ -158,13 +152,7 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 					componentLinkManager.connect(coercionTransducer, component);
-					component.filterSource(coercionTransducer.getComponentId(), new DataFilter<NetworkEvent>() {
-						@Override
-						public boolean accept(NetworkEvent data) {
-							// TODO -- Deal with IndirectReference later
-							return data.getTargetReference().equals(reference);
-						}
-					});
+					component.filterSource(coercionTransducer.getComponentId(), reference);
 
 					// Initial component
 
@@ -207,13 +195,7 @@ class NetworkRouterServerUtils extends TestCase {
 				});
 
 		manager01.connect(network01, terminalComponent01);
-		network01.filterDestination(terminalComponent01.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference01);
-			}
-		});
+
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
@@ -252,13 +234,6 @@ class NetworkRouterServerUtils extends TestCase {
 				});
 
 		manager01.connect(network01, terminalComponent01);
-		network01.filterDestination(terminalComponent01.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference01);
-			}
-		});
 
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
 		ecosystem01.addFactory(key01, serverBinder(network01, manager01, reference02));
@@ -293,13 +268,6 @@ class NetworkRouterServerUtils extends TestCase {
 				});
 
 		manager02.connect(network02, terminalComponent02);
-		network02.filterDestination(terminalComponent02.getComponentId(), new DataFilter<NetworkEvent>() {
-			@Override
-			public boolean accept(NetworkEvent data) {
-				// TODO -- Deal with IndirectReference
-				return data.getTargetReference().equals(reference02);
-			}
-		});
 
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
 		ecosystem02.addFactory(key02, serverBinder(network02, manager02, reference01));

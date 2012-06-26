@@ -38,7 +38,7 @@ public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 	 * @version 1.0
 	 */
 	public interface Entry {
-		SourceComponent<NetworkEvent, NetworkEvent> createDataHandler();
+		SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent();
 	}
 
 	/**
