@@ -84,19 +84,14 @@ public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEven
 		return selfReference;
 	}
 
-	private void handleData(NetworkEvent data, ComponentId componentId) throws DataHandlerException,
-			ComponentNotConnectedException {
-		component.getSourceComponent(componentId).getDownStreamDataHandler().handleData(data);
-	}
-
 	@Override
 	public void handleData(NetworkEvent data) throws DataHandlerException {
 		boolean notHandled = true;
 
-		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getSourceFilters().entrySet()) {
+		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getDestinationFilters().entrySet()) {
 			if (entry.getValue().accept(data)) {
 				try {
-					this.handleData(data, entry.getKey());
+					component.getDestinationComponent(entry.getKey()).getUpStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore
@@ -104,10 +99,10 @@ public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEven
 			}
 		}
 
-		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getDestinationFilters().entrySet()) {
+		for (Entry<ComponentId, DataFilter<NetworkEvent>> entry : component.getSourceFilters().entrySet()) {
 			if (entry.getValue().accept(data)) {
 				try {
-					this.handleData(data, entry.getKey());
+					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					notHandled = false;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore
@@ -119,14 +114,16 @@ public class NetworkStreamDataHandler implements UpStreamDataHandler<NetworkEven
 			try {
 				final NetworkTable.Entry entry = data.getTargetReference().visit(this);
 				if (entry != null) {
-					this.handleData(data, entry.createDataHandler());
+					entry.createDataHandler().getDownStreamDataHandler().handleData(data);
 					notHandled = false;
 				}
-			} catch (ComponentNotConnectedException e) {
-				// Ignore
 			} catch (ReferenceEntryNotFoundException e1) {
 				// Ignore
 			}
+		}
+
+		if (notHandled) {
+			throw new DataHandlerException();
 		}
 	}
 

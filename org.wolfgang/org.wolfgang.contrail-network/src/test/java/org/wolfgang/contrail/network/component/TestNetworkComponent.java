@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.network.component;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -25,7 +26,11 @@ import junit.framework.TestCase;
 
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.core.ComponentIdImpl;
+import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.bound.DataReceiver;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolgang.contrail.network.event.NetworkEvent;
 import org.wolgang.contrail.network.reference.DirectReference;
 import org.wolgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
 import org.wolgang.contrail.network.reference.ReferenceEntryNotFoundException;
@@ -39,34 +44,47 @@ import org.wolgang.contrail.network.reference.ReferenceFactory;
  */
 public class TestNetworkComponent extends TestCase {
 
+	private SourceComponent<NetworkEvent, NetworkEvent> getSourceComponent() {
+		return new InitialComponent<NetworkEvent, NetworkEvent>(new DataReceiver<NetworkEvent>() {
+			@Override
+			public void close() throws IOException {
+			}
+
+			@Override
+			public void receiveData(NetworkEvent data) throws DataHandlerException {
+			}
+		});
+	}
+
 	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryNotFoundException,
 			ReferenceEntryAlreadyExistException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
-		final ComponentIdImpl componentId = new ComponentIdImpl(identifier);
+		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
+		final ComponentId componentId = sourceComponent.getComponentId();
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public ComponentId createDataHandler() {
-				return componentId;
+			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+				return sourceComponent;
 			}
 		});
 
-		assertEquals(componentId, networkRouterTable.retrieve(clientReference).createDataHandler());
+		assertEquals(componentId, networkRouterTable.retrieve(clientReference).createDataHandler().getComponentId());
 	}
 
 	public void testFailure01() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
-		final ComponentIdImpl componentId = new ComponentIdImpl(identifier);
+		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public ComponentId createDataHandler() {
-					return componentId;
+				public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+					return sourceComponent;
 				}
 			});
 		} catch (ReferenceEntryAlreadyExistException e1) {
@@ -76,8 +94,8 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public ComponentId createDataHandler() {
-					return componentId;
+				public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+					return sourceComponent;
 				}
 			});
 			fail();
@@ -90,18 +108,19 @@ public class TestNetworkComponent extends TestCase {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
-		final ComponentIdImpl componentId = new ComponentIdImpl(identifier);
+		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
+		final ComponentId componentId = sourceComponent.getComponentId();
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public ComponentId createDataHandler() {
-				return componentId;
+			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+				return sourceComponent;
 			}
 		});
 
 		final DirectReference somebodyReference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Somebody"));
 		try {
-			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).createDataHandler());
+			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).createDataHandler().getComponentId());
 			fail();
 		} catch (ReferenceEntryNotFoundException e) {
 			// OK

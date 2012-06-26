@@ -73,7 +73,7 @@ public class DataFlowTransducerComponent implements DataFlowComponent {
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Component getComponent(ClassLoader loader, String[] imports) throws DataFlowComponentCreationException {
+	public TransducerComponent getComponent(ClassLoader loader, String[] imports) throws DataFlowComponentCreationException {
 		for (String anImport : imports) {
 			final CodecFactory codec;
 			try {

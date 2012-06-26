@@ -61,12 +61,125 @@ import org.wolgang.contrail.network.reference.ReferenceEntryAlreadyExistExceptio
 import org.wolgang.contrail.network.reference.ReferenceFactory;
 
 /**
- * <code>TestNetworkServer</code>
+ * <code>NetworkRouterServerUtils</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkRouterServer extends TestCase {
+class NetworkRouterServerUtils extends TestCase {
+
+	static NetworkTable.Entry clientBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager,
+			final DirectReference reference, final String host, final int port) {
+		return new NetworkTable.Entry() {
+			@Override
+			public SourceComponent<NetworkEvent, NetworkEvent> createDataHandler() {
+				try {
+					// Payload component
+					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(
+							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
+
+					// Serialization component
+					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(
+							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
+
+					// Coercion component
+					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(
+							NetworkEvent.class);
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
+							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+
+					// Create the link from the client to the network
+					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
+					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
+					componentLinkManager.connect(coercionTransducer, component);
+
+					component.filterSource(coercionTransducer.getComponentId(), new DataFilter<NetworkEvent>() {
+						@Override
+						public boolean accept(NetworkEvent data) {
+							// TODO -- Deal with IndirectReference
+							return data.getTargetReference().equals(reference);
+						}
+					});
+
+					final NetClient netClient = new NetClient(new DataSenderFactory<byte[], byte[]>() {
+						@Override
+						public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+							// Initial component
+							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
+							try {
+								componentLinkManager.connect(initial, payLoadTransducer);
+								return initial.getDataSender();
+							} catch (ComponentConnectionRejectedException e) {
+								throw new CannotCreateDataSenderException(e);
+							}
+						}
+					});
+
+					netClient.connect(InetAddress.getByName(host), port);
+
+					return coercionTransducer;
+				} catch (ComponentConnectionRejectedException e) {
+					return null; // TODO
+				} catch (UnknownHostException e) {
+					return null; // TODO
+				} catch (IOException e) {
+					return null; // TODO
+				} catch (CannotCreateDataSenderException e) {
+					return null; // TODO
+				}
+			}
+		};
+	}
+
+	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component,
+			final ComponentLinkManager componentLinkManager, final DirectReference reference) {
+		return new DataSenderFactory<byte[], byte[]>() {
+			@Override
+			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
+				// Payload component
+				try {
+					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(
+							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
+
+					// Serialization component
+					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(
+							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
+
+					// Coercion component
+					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(
+							NetworkEvent.class);
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
+							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+
+					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
+					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
+					componentLinkManager.connect(coercionTransducer, component);
+					component.filterSource(coercionTransducer.getComponentId(), new DataFilter<NetworkEvent>() {
+						@Override
+						public boolean accept(NetworkEvent data) {
+							// TODO -- Deal with IndirectReference later
+							return data.getTargetReference().equals(reference);
+						}
+					});
+
+					// Initial component
+
+					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
+
+					componentLinkManager.connect(initial, payLoadTransducer);
+					return initial.getDataSender();
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateDataSenderException(e);
+				} catch (Exception e) {
+					throw new CannotCreateDataSenderException(e);
+				}
+			}
+		};
+	}
 
 	public void testNominal01() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException,
 			ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException, DataHandlerException {
@@ -123,8 +236,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 01
 		// ------------------------------------------------------------------------------------------------
-		network01.getNetworkTable().insert(reference02,
-				NetworkRouterServerUtils.clientBinder(network01, manager01, reference02, "localhost", 6666));
+		network01.getNetworkTable().insert(reference02, clientBinder(network01, manager01, reference02, "localhost", 6666));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(
 				new DataReceiver<NetworkEvent>() {
@@ -149,7 +261,7 @@ public class TestNetworkRouterServer extends TestCase {
 		});
 
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01, reference02));
+		ecosystem01.addFactory(key01, serverBinder(network01, manager01, reference02));
 
 		final NetServer networkServer01 = new NetServer(6667, ecosystem01.<byte[], byte[]> getBinder(key01));
 		final ExecutorService executor01 = Executors.newSingleThreadExecutor();
@@ -165,8 +277,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 02
 		// ------------------------------------------------------------------------------------------------
-		network02.getNetworkTable().insert(reference01,
-				NetworkRouterServerUtils.clientBinder(network02, manager02, reference01, "localhost", 6667));
+		network02.getNetworkTable().insert(reference01, clientBinder(network02, manager02, reference01, "localhost", 6667));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent02 = new TerminalComponent<NetworkEvent, NetworkEvent>(
 				new DataReceiver<NetworkEvent>() {
@@ -191,7 +302,7 @@ public class TestNetworkRouterServer extends TestCase {
 		});
 
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02, reference01));
+		ecosystem02.addFactory(key02, serverBinder(network02, manager02, reference01));
 
 		final NetServer networkServer02 = new NetServer(6666, ecosystem01.<byte[], byte[]> getBinder(key02));
 		final ExecutorService executor02 = Executors.newSingleThreadExecutor();
