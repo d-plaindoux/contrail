@@ -107,10 +107,12 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 		try {
 			final NetworkTable.Entry entry = data.getTargetReference().visit(this);
 			if (entry != null) {
-				entry.createSourceComponent().getDownStreamDataHandler().handleData(data);
+				entry.create().getDownStreamDataHandler().handleData(data);
 				return;
 			}
-		} catch (ReferenceEntryNotFoundException e1) {
+		} catch (ReferenceEntryNotFoundException e) {
+			// Ignore
+		} catch (CannotCreateComponentException e) {
 			// Ignore
 		}
 

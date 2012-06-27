@@ -57,7 +57,7 @@ public class TestNetworkComponent extends TestCase {
 	}
 
 	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryNotFoundException,
-			ReferenceEntryAlreadyExistException {
+			ReferenceEntryAlreadyExistException, CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
@@ -66,12 +66,12 @@ public class TestNetworkComponent extends TestCase {
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
+			public SourceComponent<NetworkEvent, NetworkEvent> create() {
 				return sourceComponent;
 			}
 		});
 
-		assertEquals(componentId, networkRouterTable.retrieve(clientReference).createSourceComponent().getComponentId());
+		assertEquals(componentId, networkRouterTable.retrieve(clientReference).create().getComponentId());
 	}
 
 	public void testFailure01() throws NoSuchAlgorithmException {
@@ -83,7 +83,7 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
+				public SourceComponent<NetworkEvent, NetworkEvent> create() {
 					return sourceComponent;
 				}
 			});
@@ -94,7 +94,7 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
+				public SourceComponent<NetworkEvent, NetworkEvent> create() {
 					return sourceComponent;
 				}
 			});
@@ -104,7 +104,8 @@ public class TestNetworkComponent extends TestCase {
 		}
 	}
 
-	public void testFailure02() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException {
+	public void testFailure02() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException,
+			CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
@@ -113,14 +114,14 @@ public class TestNetworkComponent extends TestCase {
 
 		networkRouterTable.insert(clientReference, new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
+			public SourceComponent<NetworkEvent, NetworkEvent> create() {
 				return sourceComponent;
 			}
 		});
 
 		final DirectReference somebodyReference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Somebody"));
 		try {
-			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).createSourceComponent().getComponentId());
+			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).create().getComponentId());
 			fail();
 		} catch (ReferenceEntryNotFoundException e) {
 			// OK

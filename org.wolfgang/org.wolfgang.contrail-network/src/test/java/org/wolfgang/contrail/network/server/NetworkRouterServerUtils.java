@@ -24,6 +24,8 @@ import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -40,7 +42,6 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.multiple.DataFilter;
 import org.wolfgang.contrail.component.transducer.TransducerComponent;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -49,6 +50,7 @@ import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.network.component.CannotCreateComponentException;
 import org.wolfgang.contrail.network.component.NetworkComponent;
 import org.wolfgang.contrail.network.component.NetworkFactory;
 import org.wolfgang.contrail.network.component.NetworkTable;
@@ -72,7 +74,8 @@ class NetworkRouterServerUtils extends TestCase {
 			final DirectReference reference, final String host, final int port) {
 		return new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> createSourceComponent() {
+			public SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException {
+				Logger.getAnonymousLogger().log(Level.INFO, "Opening a client binder at " + host + ":" + port);
 				try {
 					// Payload component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
@@ -115,13 +118,13 @@ class NetworkRouterServerUtils extends TestCase {
 
 					return coercionTransducer;
 				} catch (ComponentConnectionRejectedException e) {
-					return null; // TODO
+					throw new CannotCreateComponentException(e);
 				} catch (UnknownHostException e) {
-					return null; // TODO
+					throw new CannotCreateComponentException(e);
 				} catch (IOException e) {
-					return null; // TODO
+					throw new CannotCreateComponentException(e);
 				} catch (CannotCreateDataSenderException e) {
-					return null; // TODO
+					throw new CannotCreateComponentException(e);
 				}
 			}
 		};
@@ -132,6 +135,7 @@ class NetworkRouterServerUtils extends TestCase {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
+				Logger.getAnonymousLogger().log(Level.INFO, "Opening a server binder");
 				// Payload component
 				try {
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();

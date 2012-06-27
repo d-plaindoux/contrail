@@ -120,8 +120,12 @@ public class TestNetworkRouterServer extends TestCase {
 
 		manager01.connect(network01, terminalComponent01);
 
+		// ------------------------------------------------------------------------------------------------
+
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
 		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01, reference02));
+
+		// ------------------------------------------------------------------------------------------------
 
 		final NetServer networkServer01 = new NetServer(6667, ecosystem01.<byte[], byte[]> getBinder(key01));
 		final ExecutorService executor01 = Executors.newSingleThreadExecutor();
@@ -155,8 +159,12 @@ public class TestNetworkRouterServer extends TestCase {
 
 		manager02.connect(network02, terminalComponent02);
 
+		// ------------------------------------------------------------------------------------------------
+
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
 		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02, reference01));
+
+		// ------------------------------------------------------------------------------------------------
 
 		final NetServer networkServer02 = new NetServer(6666, ecosystem02.<byte[], byte[]> getBinder(key02));
 		final ExecutorService executor02 = Executors.newSingleThreadExecutor();

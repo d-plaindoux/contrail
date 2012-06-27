@@ -18,34 +18,56 @@
 
 package org.wolfgang.contrail.network.component;
 
-import org.wolfgang.contrail.component.SourceComponent;
-import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.ReferenceTableImpl;
-
 /**
- * <code>NetworkRouterTable</code> is able to provide callback linked to single
- * reference.
+ * <code>CannotCreateComponentException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
+public class CannotCreateComponentException extends Exception {
 
 	/**
-	 * <code>Entry</code>
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
+	 * The serialVersionUID attribute
 	 */
-	public interface Entry {
-		SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException;
-	}
+	private static final long serialVersionUID = -1069734740818041861L;
 
 	/**
 	 * Constructor
 	 */
-	public NetworkTable() {
+	public CannotCreateComponentException() {
 		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public CannotCreateComponentException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateComponentException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateComponentException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
 
 }
