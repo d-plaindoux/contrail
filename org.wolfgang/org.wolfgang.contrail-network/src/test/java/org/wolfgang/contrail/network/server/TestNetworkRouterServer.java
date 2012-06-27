@@ -20,11 +20,13 @@ package org.wolfgang.contrail.network.server;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -54,13 +56,16 @@ import org.wolgang.contrail.network.reference.ReferenceFactory;
 public class TestNetworkRouterServer extends TestCase {
 
 	public void testNominal01() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException,
-			ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException, DataHandlerException {
+			ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException, DataHandlerException,
+			InterruptedException, ExecutionException {
 		final DirectReference reference01 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client1"));
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
 		final NetworkComponent network01 = NetworkFactory.create(reference01);
+
+		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 01
@@ -74,7 +79,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 					@Override
 					public void receiveData(NetworkEvent data) throws DataHandlerException {
-						System.err.println("RECV01| " + data.getContent());
+						futureResponse.setValue("RECV01| " + data.getContent());
 					}
 				});
 
@@ -86,10 +91,13 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference01, "Hello , World from Client01!");
 		terminalComponent01.getDataSender().sendData(event01);
+
+		assertEquals("RECV01| Hello , World from Client01!", futureResponse.get());
 	}
 
 	public void testNominal02() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException,
-			ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException, DataHandlerException {
+			ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException, DataHandlerException,
+			InterruptedException, ExecutionException {
 		final DirectReference reference01 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client1"));
 		final DirectReference reference02 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client2"));
 		// ------------------------------------------------------------------------------------------------
@@ -105,6 +113,8 @@ public class TestNetworkRouterServer extends TestCase {
 		network01.getNetworkTable().insert(reference02,
 				NetworkRouterServerUtils.clientBinder(network01, manager01, reference02, "localhost", 6666));
 
+		final FutureResponse<String> futureResponse = new FutureResponse<String>();
+
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(
 				new DataReceiver<NetworkEvent>() {
 					@Override
@@ -114,7 +124,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 					@Override
 					public void receiveData(NetworkEvent data) throws DataHandlerException {
-						System.err.println("RECV01| " + data.getContent());
+						futureResponse.setValue("RECV01| " + data.getContent());
 					}
 				});
 
@@ -153,7 +163,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 					@Override
 					public void receiveData(NetworkEvent data) throws DataHandlerException {
-						System.err.println("RECV02| " + data.getContent());
+						futureResponse.setValue("RECV02| " + data.getContent());
 					}
 				});
 
@@ -176,5 +186,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference02, "Hello , World from Client01!");
 		terminalComponent01.getDataSender().sendData(event01);
+
+		assertEquals("RECV02| Hello , World from Client01!", futureResponse.get());
 	}
 }
