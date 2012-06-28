@@ -92,10 +92,13 @@ public class TestNetworkRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference01, "Hello , World from Client01!");
-		terminalComponent01.getDataSender().sendData(event01);
-
-		assertEquals("RECV01| Hello , World from Client01!", futureResponse.get());
+		for (int i = 0; i < 1; i++) {
+			final String content = "Hello , World from Client01! [" + i + "]";
+			final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference01, content);
+			terminalComponent01.getDataSender().sendData(event01);
+			assertEquals("RECV01| " + content, futureResponse.get());
+			futureResponse.reset();
+		}
 	}
 
 	public void testNominal02Relay() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException,
@@ -188,15 +191,19 @@ public class TestNetworkRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference02, "Hello , World from Client01!");
-		terminalComponent01.getDataSender().sendData(event01);
-
-		assertEquals("RECV02| Hello , World from Client01!", futureResponse.get());
+		for (int i = 0; i < 1; i++) {
+			final String content = "Hello , World from Client01! [" + i + "]";
+			final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference02, content);
+			terminalComponent01.getDataSender().sendData(event01);
+			assertEquals("RECV02| " + content, futureResponse.get());
+			futureResponse.reset();
+		}
 
 		// ------------------------------------------------------------------------------------------------
 
 		networkServer01.close();
 		networkServer02.close();
+		
 		executor01.shutdownNow();
 		executor02.shutdownNow();
 	}
@@ -291,7 +298,7 @@ public class TestNetworkRouterServer extends TestCase {
 		executor02.submit(networkServer02);
 
 		// ------------------------------------------------------------------------------------------------
-		// Component 02 definition
+		// Component 03 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager03 = new ComponentLinkManagerImpl();
 		final NetworkComponent network03 = NetworkFactory.create(reference03);

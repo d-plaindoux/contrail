@@ -42,6 +42,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.transducer.TransducerComponent;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -168,9 +169,15 @@ class NetworkRouterServerUtils extends TestCase {
 										// Re-set the established link
 										futureResponse.get().dispose();
 										componentLinkManager.connect(coercionTransducer, component);
-										component.filterSource(coercionTransducer.getComponentId(), reference);
+										if (reference == null || reference.equals(component.getSelfReference())) {
+											// Do not add a corresponding filter
+											// Close the emit capable layer
+											coercionTransducer.closeDownStream();
+										} else {
+											component.filterSource(coercionTransducer.getComponentId(), reference);
+										}
 										// Re-send the event now
-										component.getUpStreamDataHandler().handleData(data);
+										component.getDownStreamDataHandler().handleData(data);
 									} catch (ComponentDisconnectionRejectedException e) {
 										throw new DataHandlerException(e);
 									} catch (ComponentConnectionRejectedException e) {
@@ -178,6 +185,8 @@ class NetworkRouterServerUtils extends TestCase {
 									} catch (InterruptedException e) {
 										throw new DataHandlerException(e);
 									} catch (ExecutionException e) {
+										throw new DataHandlerException(e.getCause());
+									} catch (DataHandlerCloseException e) {
 										throw new DataHandlerException(e.getCause());
 									}
 								}
