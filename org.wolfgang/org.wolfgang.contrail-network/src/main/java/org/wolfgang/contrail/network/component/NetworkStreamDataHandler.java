@@ -86,6 +86,8 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 	@Override
 	public void handleData(NetworkEvent data) throws DataHandlerException {
 
+		final NetworkEvent newData = data.sentBy(this.getSelfReference());
+
 		/**
 		 * Local Routing
 		 */
@@ -97,7 +99,7 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 		for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
 			if (data.getTargetReference().equals(entry.getValue())) {
 				try {
-					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
+					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(newData);
 					return;
 				} catch (ComponentNotConnectedException consume) {
 					// Ignore

@@ -93,6 +93,13 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 		return this.dataHandler.getRouterTable();
 	}
 
+	/**
+	 * @return the network component reference
+	 */
+	public DirectReference getSelfReference() {
+		return this.dataHandler.getSelfReference();
+	}
+
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
 		return this.destinationLink.getDestinationComponent() == null;

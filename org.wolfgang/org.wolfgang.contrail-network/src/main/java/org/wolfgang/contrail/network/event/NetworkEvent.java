@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.event;
 
 import java.io.Serializable;
 
+import org.wolfgang.contrail.network.reference.DirectReference;
 import org.wolfgang.contrail.network.reference.Reference;
 
 /**
@@ -30,6 +31,20 @@ import org.wolfgang.contrail.network.reference.Reference;
  * @version 1.0
  */
 public interface NetworkEvent {
+
+	/**
+	 * Method providing the previous reference
+	 * 
+	 * @return a direct reference
+	 */
+	DirectReference getSender();
+
+	/**
+	 * Method setting previous reference
+	 * 
+	 * @return a direct reference
+	 */
+	NetworkEvent sentBy(DirectReference reference);
 
 	/**
 	 * @return the target reference

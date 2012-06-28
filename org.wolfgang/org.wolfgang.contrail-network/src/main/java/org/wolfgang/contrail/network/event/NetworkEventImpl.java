@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.event;
 
 import java.io.Serializable;
 
+import org.wolfgang.contrail.network.reference.DirectReference;
 import org.wolfgang.contrail.network.reference.Reference;
 
 /**
@@ -39,6 +40,11 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	 * The source
 	 */
 	private final Reference source;
+
+	/**
+	 * The last component which sent the event
+	 */
+	public DirectReference previousReference;
 
 	/**
 	 * The target
@@ -62,6 +68,7 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 		this.source = source;
 		this.target = target;
 		this.content = content;
+		this.previousReference = null;
 	}
 
 	@Override
@@ -79,4 +86,14 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 		return this.content;
 	}
 
+	@Override
+	public DirectReference getSender() {
+		return previousReference;
+	}
+
+	@Override
+	public NetworkEvent sentBy(DirectReference reference) {
+		this.previousReference = reference;
+		return this;
+	}
 }

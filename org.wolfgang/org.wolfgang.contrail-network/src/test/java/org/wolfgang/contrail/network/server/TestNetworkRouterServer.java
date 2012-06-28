@@ -137,7 +137,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01, reference01));
+		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01));
 
 		// ------------------------------------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02, reference02));
+		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02));
 
 		// ------------------------------------------------------------------------------------------------
 
@@ -241,7 +241,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01, reference01));
+		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01));
 
 		// ------------------------------------------------------------------------------------------------
 
@@ -282,7 +282,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02, reference02));
+		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02));
 
 		// ------------------------------------------------------------------------------------------------
 
@@ -321,7 +321,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final RegisteredUnitEcosystemKey key03 = UnitEcosystemKeyFactory.getKey("03", NetworkEvent.class, NetworkEvent.class);
-		ecosystem03.addFactory(key03, NetworkRouterServerUtils.serverBinder(network03, manager03, reference03));
+		ecosystem03.addFactory(key03, NetworkRouterServerUtils.serverBinder(network03, manager03));
 
 		// ------------------------------------------------------------------------------------------------
 

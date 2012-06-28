@@ -83,4 +83,9 @@ public final class ServerReference implements DirectReference, Serializable {
 	public <E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return "ServerReference [" + identifier + "]";
+	}
 }
