@@ -19,7 +19,7 @@
 package org.wolfgang.common.concurrent;
 
 /**
- * <code>Response</code>
+ * <code>Response</code> defines basic behaviors for response handlers.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -27,12 +27,18 @@ package org.wolfgang.common.concurrent;
 public interface Response<V> {
 
 	/**
+	 * Method called whether a value must be a response
+	 * 
 	 * @param value
+	 *            The value to setup
 	 */
 	void setValue(V value);
 
 	/**
-	 * @param error
+	 * Method called whether an error must be a response
+	 * 
+	 * @param value
+	 *            The error to setup
 	 */
 	void setError(Throwable error);
 

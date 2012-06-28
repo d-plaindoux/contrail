@@ -20,6 +20,7 @@ package org.wolgang.contrail.network.reference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * <code>ReferenceTableImpl</code>
@@ -32,10 +33,10 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	/**
 	 * The internal map
 	 */
-	private final Map<DirectReference, E> table;
+	private final Map<ReferenceFilter, E> table;
 
 	{
-		this.table = new HashMap<DirectReference, E>();
+		this.table = new HashMap<ReferenceFilter, E>();
 	}
 
 	/**
@@ -46,20 +47,23 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
-	public void insert(DirectReference reference, E element) throws ReferenceEntryAlreadyExistException {
-		if (this.table.containsKey(reference)) {
-			throw new ReferenceEntryAlreadyExistException();
-		} else {
-			this.table.put(reference, element);
+	public void insert(ReferenceFilter referenceFilter, E element) throws ReferenceEntryAlreadyExistException {
+		for (ReferenceFilter filter : table.keySet()) {
+			if (referenceFilter.subFilterOf(filter)) {
+				throw new ReferenceEntryAlreadyExistException();
+			}
 		}
+
+		this.table.put(referenceFilter, element);
 	}
 
 	@Override
 	public E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException {
-		if (this.table.containsKey(reference)) {
-			return this.table.get(reference);
-		} else {
-			throw new ReferenceEntryNotFoundException();
+		for (Entry<ReferenceFilter, E> entry : table.entrySet()) {
+			if (entry.getKey().accept(reference)) {
+				return entry.getValue();
+			}
 		}
+		throw new ReferenceEntryNotFoundException();
 	}
 }

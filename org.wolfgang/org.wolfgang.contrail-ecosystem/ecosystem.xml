@@ -64,7 +64,9 @@
 				<Outgoing ref="network.target" />
 			</Terminal>
 			<Router ref="network.target" factory="NetworkRouterFactory">
-				<Outgoing ref="local.network.in" filter="isLocalReference" />
+				<Table>
+					// TODO
+				</Table>
 				<Outgoing ref="local.network.in" filter="isRemoteReference" />
 			</Router>
 		</DataFlow>

@@ -89,10 +89,12 @@ public class TestFuture extends TestCase {
 		}.start();
 
 		try {
-			assertEquals(value, futureResponse.get());
+			assertEquals(value, futureResponse.get(4, TimeUnit.SECONDS));
 		} catch (InterruptedException e) {
 			fail();
 		} catch (ExecutionException e) {
+			fail();
+		} catch (TimeoutException e) {
 			fail();
 		}
 	}
@@ -113,12 +115,14 @@ public class TestFuture extends TestCase {
 		}.start();
 
 		try {
-			futureResponse.get();
+			futureResponse.get(4, TimeUnit.SECONDS);
 			fail();
 		} catch (InterruptedException e) {
 			fail();
 		} catch (ExecutionException e) {
 			assertEquals(value, e.getCause());
+		} catch (TimeoutException e) {
+			fail();
 		}
 	}
 }

@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -43,7 +44,7 @@ import org.wolgang.contrail.network.reference.ServerReference;
  * @version 1.0
  */
 public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEvent>,
-		ReferenceVisitor<NetworkTable.Entry, ReferenceEntryNotFoundException> {
+		ReferenceVisitor<SourceComponent<NetworkEvent, NetworkEvent>, CannotCreateComponentException> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -105,13 +106,8 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 		}
 
 		try {
-			final NetworkTable.Entry entry = data.getTargetReference().visit(this);
-			if (entry != null) {
-				entry.create().getDownStreamDataHandler().handleData(data);
-				return;
-			}
-		} catch (ReferenceEntryNotFoundException e) {
-			// Ignore
+			data.getTargetReference().visit(this).getDownStreamDataHandler().handleData(data);
+			return;
 		} catch (CannotCreateComponentException e) {
 			// Ignore
 		}
@@ -131,18 +127,33 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 		component.closeUpStream();
 	}
 
-	@Override
-	public NetworkTable.Entry visit(ClientReference reference) throws ReferenceEntryNotFoundException {
-		return this.routerTable.retrieve(reference);
+	private SourceComponent<NetworkEvent, NetworkEvent> visitNow(DirectReference reference)
+			throws CannotCreateComponentException {
+		try {
+			final NetworkTable.Entry retrieve = this.routerTable.retrieve(reference);
+			return retrieve.create(reference);
+		} catch (ReferenceEntryNotFoundException e) {
+			throw new CannotCreateComponentException(e);
+		}
 	}
 
 	@Override
-	public NetworkTable.Entry visit(ServerReference reference) throws ReferenceEntryNotFoundException {
-		return this.routerTable.retrieve(reference);
+	public SourceComponent<NetworkEvent, NetworkEvent> visit(ClientReference reference) throws CannotCreateComponentException {
+		return this.visitNow(reference);
 	}
 
 	@Override
-	public NetworkTable.Entry visit(ChainedReferences reference) throws ReferenceEntryNotFoundException {
-		return this.routerTable.retrieve(reference.getNextReference(this.selfReference));
+	public SourceComponent<NetworkEvent, NetworkEvent> visit(ServerReference reference) throws CannotCreateComponentException {
+		return this.visitNow(reference);
+	}
+
+	@Override
+	public SourceComponent<NetworkEvent, NetworkEvent> visit(ChainedReferences reference) throws CannotCreateComponentException {
+		if (reference.hasNextReference(this.selfReference)) {
+			final DirectReference nextReference = reference.getNextReference(this.selfReference);
+			return this.visitNow(nextReference);
+		} else {
+			throw new CannotCreateComponentException(/* TODO */);
+		}
 	}
 }

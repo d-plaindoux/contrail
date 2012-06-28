@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.component;
 
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolgang.contrail.network.event.NetworkEvent;
+import org.wolgang.contrail.network.reference.DirectReference;
 import org.wolgang.contrail.network.reference.ReferenceTableImpl;
 
 /**
@@ -38,7 +39,7 @@ public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 	 * @version 1.0
 	 */
 	public interface Entry {
-		SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException;
+		SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) throws CannotCreateComponentException;
 	}
 
 	/**

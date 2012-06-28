@@ -19,34 +19,15 @@
 package org.wolgang.contrail.network.reference;
 
 /**
- * A <code>ReferenceTable</code> provides basic mechanisms used to retrieve
- * informations linked to a given reference
+ * <code>ReferenceFilter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ReferenceTable<E> {
+public interface ReferenceFilter {
 
-	/**
-	 * Method called whether an entry must be added.
-	 * 
-	 * @param referenceFilter
-	 *            The reference filter
-	 * @param element
-	 *            The element to be linked to the filter
-	 * @throws ReferenceEntryAlreadyExistException
-	 */
-	void insert(ReferenceFilter referenceFilter, E element) throws ReferenceEntryAlreadyExistException;
+	boolean accept(DirectReference directReference);
 
-	/**
-	 * Method called whether an entry must be retrieved using a given direct
-	 * reference
-	 * 
-	 * @param reference
-	 *            The reference to be used
-	 * @return the corresponding entry (never <code>null</code>)
-	 * @throws ReferenceEntryNotFoundException
-	 */
-	E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException;
+	boolean subFilterOf(ReferenceFilter filter);
 
 }
