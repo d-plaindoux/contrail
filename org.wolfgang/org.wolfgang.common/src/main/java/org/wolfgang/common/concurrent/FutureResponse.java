@@ -173,4 +173,10 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 			barrier.unlock();
 		}
 	}
+
+	public void reset() {
+		this.status = null;
+		this.value = null;
+		this.error = null;
+	}
 }
