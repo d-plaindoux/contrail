@@ -19,15 +19,34 @@
 package org.wolfgang.contrail.network.reference;
 
 /**
- * <code>ReferenceFilter</code>
+ * <code>ReferenceFilter</code> is able to filter given direct reference. This
+ * mechanism is linked to the {@link ReferenceTable}. In addition each filter
+ * must also provides basic material for filter comparison used when new route
+ * entry must be added.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public interface ReferenceFilter {
 
+	/**
+	 * Predicate used when the filter must be applied to a given direct
+	 * reference
+	 * 
+	 * @param directReference
+	 *            The reference to filter
+	 * @return true if the filter accept the reference; false otherwise
+	 */
 	boolean accept(DirectReference directReference);
 
+	/**
+	 * Predicate used when the filter must be compared with a given one.
+	 * reference
+	 * 
+	 * @param filter
+	 *            The filter to compare
+	 * @return true if the filter subsumes the current one; false otherwise
+	 */
 	boolean subFilterOf(ReferenceFilter filter);
 
 }
