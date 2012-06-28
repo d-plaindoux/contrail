@@ -176,7 +176,8 @@ class NetworkRouterServerUtils extends TestCase {
 										} else {
 											component.filterSource(coercionTransducer.getComponentId(), reference);
 										}
-										// Re-send the event now
+										// Re-send the event to the network
+										// component
 										component.getDownStreamDataHandler().handleData(data);
 									} catch (ComponentDisconnectionRejectedException e) {
 										throw new DataHandlerException(e);

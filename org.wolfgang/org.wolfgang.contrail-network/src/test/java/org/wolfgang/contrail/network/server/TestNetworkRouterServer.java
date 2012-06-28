@@ -203,7 +203,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		networkServer01.close();
 		networkServer02.close();
-		
+
 		executor01.shutdownNow();
 		executor02.shutdownNow();
 	}
@@ -246,17 +246,6 @@ public class TestNetworkRouterServer extends TestCase {
 		manager01.connect(network01, terminalComponent01);
 
 		// ------------------------------------------------------------------------------------------------
-
-		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01));
-
-		// ------------------------------------------------------------------------------------------------
-
-		final NetServer networkServer01 = new NetServer(6666, ecosystem01.<byte[], byte[]> getBinder(key01));
-		final ExecutorService executor01 = Executors.newSingleThreadExecutor();
-		executor01.submit(networkServer01);
-
-		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager02 = new ComponentLinkManagerImpl();
@@ -266,8 +255,6 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 02
 		// ------------------------------------------------------------------------------------------------
-		network02.getNetworkTable().insert(ReferenceFilterFactory.in(reference01),
-				NetworkRouterServerUtils.clientBinder(network02, manager02, "localhost", 6666));
 		network02.getNetworkTable().insert(ReferenceFilterFactory.in(reference03),
 				NetworkRouterServerUtils.clientBinder(network02, manager02, "localhost", 6668));
 
@@ -342,16 +329,20 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference03, "Hello , World from Client01!");
 		terminalComponent01.getDataSender().sendData(event01);
-
 		assertEquals("RECV03| Hello , World from Client01!", futureResponse.get());
+		futureResponse.reset();
+
+		// Reuse opened connection ...
+
+		final NetworkEventImpl event02 = new NetworkEventImpl(reference03, reference01, "Hello , World from Client03!");
+		terminalComponent01.getDataSender().sendData(event02);
+		assertEquals("RECV01| Hello , World from Client03!", futureResponse.get());
 
 		// ------------------------------------------------------------------------------------------------
 
-		networkServer01.close();
 		networkServer02.close();
 		networkServer03.close();
 
-		executor01.shutdownNow();
 		executor02.shutdownNow();
 		executor03.shutdownNow();
 	}
