@@ -19,9 +19,9 @@
 package org.wolfgang.contrail.network.component;
 
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.DirectReference;
-import org.wolgang.contrail.network.reference.ReferenceTableImpl;
+import org.wolfgang.contrail.network.event.NetworkEvent;
+import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceTableImpl;
 
 /**
  * <code>NetworkRouterTable</code> is able to provide callback linked to single

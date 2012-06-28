@@ -37,8 +37,8 @@ import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
-import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.event.NetworkEvent;
+import org.wolfgang.contrail.network.reference.DirectReference;
 
 /**
  * <code>NetwortComponent</code> is a component able to manage NetworkEvent and

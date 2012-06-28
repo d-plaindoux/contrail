@@ -16,41 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
 
 /**
- * The <code>ReferenceVisitor</code> is the dedicated reference visitor.
+ * <code>ReferenceFilter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ReferenceVisitor<T, E extends Exception> {
+public interface ReferenceFilter {
 
-	/**
-	 * Method called whether a client reference is visited
-	 * 
-	 * @param reference
-	 *            The reference
-	 * @return the visit result
-	 */
-	T visit(ClientReference reference) throws E;
+	boolean accept(DirectReference directReference);
 
-	/**
-	 * Method called whether a server reference is visited
-	 * 
-	 * @param reference
-	 *            The reference
-	 * @return the visit result
-	 */
-	T visit(ServerReference reference) throws E;
-
-	/**
-	 * Method called whether a chained references is visited
-	 * 
-	 * @param reference
-	 *            The reference
-	 * @return the visit result
-	 */
-	T visit(ChainedReferences reference) throws E;
+	boolean subFilterOf(ReferenceFilter filter);
 
 }

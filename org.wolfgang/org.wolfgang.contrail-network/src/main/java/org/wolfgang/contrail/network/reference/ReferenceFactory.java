@@ -16,18 +16,44 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
+
+import java.util.UUID;
 
 /**
- * <code>ReferenceFilter</code>
+ * <code>EndPointFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ReferenceFilter {
+public final class ReferenceFactory {
 
-	boolean accept(DirectReference directReference);
+	/**
+	 * Constructor
+	 */
+	private ReferenceFactory() {
+		// prevent useless construction
+	}
 
-	boolean subFilterOf(ReferenceFilter filter);
+	/**
+	 * @return a client end-point
+	 */
+	public static DirectReference createClientReference(UUID identifier) {
+		return new ClientReference(identifier);
+	}
+
+	/**
+	 * @return a server end-point
+	 */
+	public static DirectReference createServerReference(UUID identifier) {
+		return new ServerReference(identifier);
+	}
+
+	/**
+	 * @return a chain of end-points
+	 */
+	public static IndirectReference emptyIndirectReference() {
+		return new ChainedReferences();
+	}
 
 }

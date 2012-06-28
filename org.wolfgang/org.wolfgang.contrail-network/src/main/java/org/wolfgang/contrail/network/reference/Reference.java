@@ -16,36 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.event;
-
-import java.io.Serializable;
-
-import org.wolgang.contrail.network.reference.Reference;
+package org.wolfgang.contrail.network.reference;
 
 /**
- * <code>NetworkEvent</code> is the basic and one possible top-level type
- * implemented by network events.
+ * <code>EndPoint</code> is the main class for a network component
+ * identification
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetworkEvent {
+public interface Reference {
 
-	/**
-	 * @return the target reference
-	 */
-	Reference getTargetReference();
-
-	/**
-	 * @return the source reference
-	 */
-	Reference getSourceReference();
-
-	/**
-	 * Provide the message content
-	 * 
-	 * @return a content
-	 */
-	Serializable getContent();
+	<E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X;
 
 }

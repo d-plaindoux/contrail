@@ -24,9 +24,9 @@ import java.util.UUID;
 import junit.framework.TestCase;
 
 import org.wolfgang.common.utils.UUIDUtils;
-import org.wolgang.contrail.network.reference.DirectReference;
-import org.wolgang.contrail.network.reference.IndirectReference;
-import org.wolgang.contrail.network.reference.ReferenceFactory;
+import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.IndirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceFactory;
 
 /**
  * <code>TestReference</code>

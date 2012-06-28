@@ -18,11 +18,11 @@
 
 package org.wolfgang.contrail.network.component;
 
-import org.wolgang.contrail.network.reference.ChainedReferences;
-import org.wolgang.contrail.network.reference.ClientReference;
-import org.wolgang.contrail.network.reference.DirectReference;
-import org.wolgang.contrail.network.reference.ReferenceVisitor;
-import org.wolgang.contrail.network.reference.ServerReference;
+import org.wolfgang.contrail.network.reference.ChainedReferences;
+import org.wolfgang.contrail.network.reference.ClientReference;
+import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceVisitor;
+import org.wolfgang.contrail.network.reference.ServerReference;
 
 /**
  * <code>NetworkReferenceVisitor</code>

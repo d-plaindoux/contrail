@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
 
 /**
  * <code>ReferenceEntryNotFoundException</code>
@@ -24,7 +24,7 @@ package org.wolgang.contrail.network.reference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ReferenceEntryAlreadyExistException extends Exception {
+public class ReferenceEntryNotFoundException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -35,7 +35,7 @@ public class ReferenceEntryAlreadyExistException extends Exception {
 	 * Constructor
 	 * 
 	 */
-	public ReferenceEntryAlreadyExistException() {
+	public ReferenceEntryNotFoundException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -46,7 +46,7 @@ public class ReferenceEntryAlreadyExistException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public ReferenceEntryAlreadyExistException(String arg0, Throwable arg1) {
+	public ReferenceEntryNotFoundException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 		// TODO Auto-generated constructor stub
 	}
@@ -56,7 +56,7 @@ public class ReferenceEntryAlreadyExistException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ReferenceEntryAlreadyExistException(String arg0) {
+	public ReferenceEntryNotFoundException(String arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
@@ -66,7 +66,7 @@ public class ReferenceEntryAlreadyExistException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ReferenceEntryAlreadyExistException(Throwable arg0) {
+	public ReferenceEntryNotFoundException(Throwable arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}

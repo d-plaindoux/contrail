@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
 
 import java.util.Arrays;
 import java.util.Collection;

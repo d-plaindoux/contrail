@@ -16,44 +16,41 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
-
-import java.util.UUID;
+package org.wolfgang.contrail.network.reference;
 
 /**
- * <code>EndPointFactory</code>
+ * The <code>ReferenceVisitor</code> is the dedicated reference visitor.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ReferenceFactory {
+public interface ReferenceVisitor<T, E extends Exception> {
 
 	/**
-	 * Constructor
+	 * Method called whether a client reference is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
 	 */
-	private ReferenceFactory() {
-		// prevent useless construction
-	}
+	T visit(ClientReference reference) throws E;
 
 	/**
-	 * @return a client end-point
+	 * Method called whether a server reference is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
 	 */
-	public static DirectReference createClientReference(UUID identifier) {
-		return new ClientReference(identifier);
-	}
+	T visit(ServerReference reference) throws E;
 
 	/**
-	 * @return a server end-point
+	 * Method called whether a chained references is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
 	 */
-	public static DirectReference createServerReference(UUID identifier) {
-		return new ServerReference(identifier);
-	}
-
-	/**
-	 * @return a chain of end-points
-	 */
-	public static IndirectReference emptyIndirectReference() {
-		return new ChainedReferences();
-	}
+	T visit(ChainedReferences reference) throws E;
 
 }

@@ -16,36 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * <code>EndPoint</code>
+ * <code>ClientEndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ServerReference implements DirectReference, Serializable {
+public final class ClientReference implements DirectReference, Serializable {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = -5559719113890135312L;
+	private static final long serialVersionUID = 5456798609368987358L;
 
 	/**
-	 * The identifier
+	 * The internal identifier
 	 */
 	private final UUID identifier;
 
 	/**
 	 * Constructor
-	 * 
-	 * @param host
-	 * @param port
 	 */
-	public ServerReference(UUID identifier) {
+	ClientReference(UUID identifier) {
 		this.identifier = identifier;
 	}
 
@@ -65,10 +62,10 @@ public final class ServerReference implements DirectReference, Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ServerReference)) {
+		if (!(obj instanceof ClientReference)) {
 			return false;
 		}
-		ServerReference other = (ServerReference) obj;
+		ClientReference other = (ClientReference) obj;
 		if (identifier == null) {
 			if (other.identifier != null) {
 				return false;

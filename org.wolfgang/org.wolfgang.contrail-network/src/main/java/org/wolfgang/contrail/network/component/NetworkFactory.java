@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.network.component;
 
-import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.DirectReference;
 
 /**
  * <code>NetworkRouterFactory</code>

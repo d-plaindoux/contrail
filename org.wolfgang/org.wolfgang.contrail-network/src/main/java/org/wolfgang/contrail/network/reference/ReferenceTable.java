@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.reference;
+package org.wolfgang.contrail.network.reference;
 
 /**
  * A <code>ReferenceTable</code> provides basic mechanisms used to retrieve

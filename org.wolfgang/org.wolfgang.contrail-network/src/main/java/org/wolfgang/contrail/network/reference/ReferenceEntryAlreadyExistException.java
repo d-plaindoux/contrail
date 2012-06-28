@@ -16,67 +16,61 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.network.event;
-
-import java.io.Serializable;
-
-import org.wolgang.contrail.network.reference.Reference;
+package org.wolfgang.contrail.network.reference;
 
 /**
- * <code>NetworkEventImpl</code>
- * 
+ * <code>ReferenceEntryNotFoundException</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkEventImpl implements NetworkEvent, Serializable {
+public class ReferenceEntryAlreadyExistException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = 1887763768371792297L;
-
-	/**
-	 * The source
-	 */
-	private final Reference source;
-
-	/**
-	 * The target
-	 */
-	private final Reference target;
-
-	/**
-	 * The content
-	 */
-	private final Serializable content;
+	private static final long serialVersionUID = 794213387202243031L;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param source
-	 * @param target
-	 * @param content
 	 */
-	public NetworkEventImpl(Reference source, Reference target, Serializable content) {
+	public ReferenceEntryAlreadyExistException() {
 		super();
-		this.source = source;
-		this.target = target;
-		this.content = content;
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public Reference getTargetReference() {
-		return this.target;
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public ReferenceEntryAlreadyExistException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public Reference getSourceReference() {
-		return this.source;
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ReferenceEntryAlreadyExistException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public Serializable getContent() {
-		return this.content;
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ReferenceEntryAlreadyExistException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 }

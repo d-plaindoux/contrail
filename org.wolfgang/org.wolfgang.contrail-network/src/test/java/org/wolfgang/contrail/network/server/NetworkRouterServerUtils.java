@@ -43,8 +43,8 @@ import org.wolfgang.contrail.network.component.CannotCreateComponentException;
 import org.wolfgang.contrail.network.component.NetworkComponent;
 import org.wolfgang.contrail.network.component.NetworkTable;
 import org.wolfgang.contrail.network.connection.socket.NetClient;
-import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.event.NetworkEvent;
+import org.wolfgang.contrail.network.reference.DirectReference;
 
 /**
  * <code>NetworkRouterServerUtils</code>

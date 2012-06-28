@@ -22,4 +22,4 @@
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolgang.contrail.network.event;
+package org.wolfgang.contrail.network.event;

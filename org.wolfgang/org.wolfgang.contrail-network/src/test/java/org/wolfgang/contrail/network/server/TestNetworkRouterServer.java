@@ -41,12 +41,12 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.component.NetworkComponent;
 import org.wolfgang.contrail.network.component.NetworkFactory;
 import org.wolfgang.contrail.network.connection.socket.NetServer;
-import org.wolgang.contrail.network.event.NetworkEvent;
-import org.wolgang.contrail.network.event.NetworkEventImpl;
-import org.wolgang.contrail.network.reference.DirectReference;
-import org.wolgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
-import org.wolgang.contrail.network.reference.ReferenceFactory;
-import org.wolgang.contrail.network.reference.ReferenceFilterFactory;
+import org.wolfgang.contrail.network.event.NetworkEvent;
+import org.wolfgang.contrail.network.event.NetworkEventImpl;
+import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
+import org.wolfgang.contrail.network.reference.ReferenceFactory;
+import org.wolfgang.contrail.network.reference.ReferenceFilterFactory;
 
 /**
  * <code>TestNetworkServer</code>
