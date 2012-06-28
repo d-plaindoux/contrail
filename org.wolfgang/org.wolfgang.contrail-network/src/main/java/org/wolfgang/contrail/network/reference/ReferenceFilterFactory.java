@@ -29,7 +29,13 @@ import java.util.Collection;
  */
 public final class ReferenceFilterFactory {
 
-	public static class ReferenceFilterInCollection implements ReferenceFilter {
+	/**
+	 * <code>ReferenceFilterInCollection</code>
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	private static class ReferenceFilterInCollection implements ReferenceFilter {
 		final Collection<DirectReference> collection;
 
 		/**
@@ -66,6 +72,14 @@ public final class ReferenceFilterFactory {
 		// Prevent useless object construction
 	}
 
+	/**
+	 * Method building a reference filter able to accept a finite set of direct
+	 * reference
+	 * 
+	 * @param references
+	 *            The array of direct reference to be used by the filter
+	 * @return a reference filter
+	 */
 	public static ReferenceFilter in(final DirectReference... references) {
 		assert references.length > 0;
 		return new ReferenceFilterInCollection(Arrays.asList(references));
