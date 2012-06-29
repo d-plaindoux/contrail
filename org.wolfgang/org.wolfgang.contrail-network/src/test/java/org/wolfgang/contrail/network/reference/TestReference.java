@@ -68,21 +68,12 @@ public class TestReference extends TestCase {
 		final DirectReference reference02 = ReferenceFactory.createServerReference(UUID.randomUUID());
 		final IndirectReference indirectReference = ReferenceFactory.emptyIndirectReference();
 
-		indirectReference.addLast(reference01);
-		indirectReference.addLast(reference02);
-
-		assertEquals(reference02, indirectReference.getNextReference(reference01));
+		indirectReference.add(reference02);
+		indirectReference.add(reference01);
+		
+		assertEquals(reference01, indirectReference.getNext());
+		indirectReference.removeNext();
+		
+		assertEquals(reference02, indirectReference.getNext());
 	}
-
-	public void testNominal04() throws NoSuchAlgorithmException {
-		final DirectReference reference01 = ReferenceFactory.createServerReference(UUID.randomUUID());
-		final DirectReference reference02 = ReferenceFactory.createServerReference(UUID.randomUUID());
-		final IndirectReference indirectReference = ReferenceFactory.emptyIndirectReference();
-
-		indirectReference.addLast(reference01);
-		indirectReference.addLast(reference02);
-
-		assertEquals(reference01, indirectReference.getPreviousReference(reference02));
-	}
-
 }

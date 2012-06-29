@@ -21,7 +21,7 @@ package org.wolfgang.contrail.network.event;
 import java.io.Serializable;
 
 import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.Reference;
+import org.wolfgang.contrail.network.reference.IndirectReference;
 
 /**
  * <code>NetworkEvent</code> is the basic and one possible top-level type
@@ -49,12 +49,12 @@ public interface NetworkEvent {
 	/**
 	 * @return the target reference
 	 */
-	Reference getTargetReference();
+	IndirectReference getReferenceToDestination();
 
 	/**
 	 * @return the source reference
 	 */
-	Reference getSourceReference();
+	IndirectReference getReferenceToSource();
 
 	/**
 	 * Provide the message content

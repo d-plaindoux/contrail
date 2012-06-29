@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.network.server;
 
+import static org.wolfgang.contrail.network.reference.ReferenceFactory.createClientReference;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +47,6 @@ import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.event.NetworkEventImpl;
 import org.wolfgang.contrail.network.reference.DirectReference;
 import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
-import org.wolfgang.contrail.network.reference.ReferenceFactory;
 import org.wolfgang.contrail.network.reference.ReferenceFilterFactory;
 
 /**
@@ -62,7 +63,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 
-		final DirectReference reference01 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client1"));
+		final DirectReference reference01 = createClientReference(UUIDUtils.digestBased("Client1"));
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
@@ -94,7 +95,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		for (int i = 0; i < 1; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
-			final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference01, content);
+			final NetworkEventImpl event01 = new NetworkEventImpl(reference01, content);
 			terminalComponent01.getDataSender().sendData(event01);
 			assertEquals("RECV01| " + content, futureResponse.get());
 			futureResponse.reset();
@@ -107,8 +108,8 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 
-		final DirectReference reference01 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client1"));
-		final DirectReference reference02 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client2"));
+		final DirectReference reference01 = createClientReference(UUIDUtils.digestBased("Client1"));
+		final DirectReference reference02 = createClientReference(UUIDUtils.digestBased("Client2"));
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 01
 		// ------------------------------------------------------------------------------------------------
-		network01.getNetworkTable().insert(ReferenceFilterFactory.in(reference02),
+		network01.getNetworkTable().insert(ReferenceFilterFactory.memberOf(reference02),
 				NetworkRouterServerUtils.clientBinder(network01, manager01, "localhost", 6667));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(
@@ -158,7 +159,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 02
 		// ------------------------------------------------------------------------------------------------
-		network02.getNetworkTable().insert(ReferenceFilterFactory.in(reference01),
+		network02.getNetworkTable().insert(ReferenceFilterFactory.memberOf(reference01),
 				NetworkRouterServerUtils.clientBinder(network02, manager02, "localhost", 6666));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent02 = new TerminalComponent<NetworkEvent, NetworkEvent>(
@@ -193,7 +194,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		for (int i = 0; i < 1; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
-			final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference02, content);
+			final NetworkEventImpl event01 = new NetworkEventImpl(reference02, content);
 			terminalComponent01.getDataSender().sendData(event01);
 			assertEquals("RECV02| " + content, futureResponse.get());
 			futureResponse.reset();
@@ -214,20 +215,19 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 
-		final DirectReference reference01 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client1"));
-		final DirectReference reference02 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client2"));
-		final DirectReference reference03 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Client3"));
+		final DirectReference reference01 = createClientReference(UUIDUtils.digestBased("Client1"));
+		final DirectReference reference02 = createClientReference(UUIDUtils.digestBased("Client2"));
+		final DirectReference reference03 = createClientReference(UUIDUtils.digestBased("Client3"));
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
 		final NetworkComponent network01 = NetworkFactory.create(reference01);
-		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 01
 		// ------------------------------------------------------------------------------------------------
-		network01.getNetworkTable().insert(ReferenceFilterFactory.in(reference02, reference03),
+		network01.getNetworkTable().insert(ReferenceFilterFactory.memberOf(reference02, reference03),
 				NetworkRouterServerUtils.clientBinder(network01, manager01, "localhost", 6667));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(
@@ -255,7 +255,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 02
 		// ------------------------------------------------------------------------------------------------
-		network02.getNetworkTable().insert(ReferenceFilterFactory.in(reference03),
+		network02.getNetworkTable().insert(ReferenceFilterFactory.memberOf(reference03),
 				NetworkRouterServerUtils.clientBinder(network02, manager02, "localhost", 6668));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent02 = new TerminalComponent<NetworkEvent, NetworkEvent>(
@@ -294,7 +294,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Populate component 03
 		// ------------------------------------------------------------------------------------------------
-		network03.getNetworkTable().insert(ReferenceFilterFactory.in(reference01, reference02),
+		network03.getNetworkTable().insert(ReferenceFilterFactory.memberOf(reference01, reference02),
 				NetworkRouterServerUtils.clientBinder(network03, manager03, "localhost", 6667));
 
 		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent03 = new TerminalComponent<NetworkEvent, NetworkEvent>(
@@ -327,14 +327,14 @@ public class TestNetworkRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		final NetworkEventImpl event01 = new NetworkEventImpl(reference01, reference03, "Hello , World from Client01!");
+		final NetworkEventImpl event01 = new NetworkEventImpl(reference03, "Hello , World from Client01!");
 		terminalComponent01.getDataSender().sendData(event01);
 		assertEquals("RECV03| Hello , World from Client01!", futureResponse.get());
 		futureResponse.reset();
 
-		// Reuse opened connection ...
+		// Reuse opened connections ...
 
-		final NetworkEventImpl event02 = new NetworkEventImpl(reference03, reference01, "Hello , World from Client03!");
+		final NetworkEventImpl event02 = new NetworkEventImpl(reference01, "Hello , World from Client03!");
 		terminalComponent01.getDataSender().sendData(event02);
 		assertEquals("RECV01| Hello , World from Client03!", futureResponse.get());
 

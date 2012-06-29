@@ -43,8 +43,7 @@ import org.wolfgang.contrail.network.reference.ServerReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEvent>,
-		ReferenceVisitor<SourceComponent<NetworkEvent, NetworkEvent>, CannotCreateComponentException> {
+public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEvent> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -87,15 +86,41 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 	public void handleData(NetworkEvent data) throws DataHandlerException {
 
 		/**
-		 * Local Routing
+		 * Manage the packet removing the target if it has been reached
 		 */
-		if (data.getTargetReference().equals(getSelfReference())) {
+		if (data.getReferenceToDestination().hasNext()) {
+			final DirectReference currentTarget = data.getReferenceToDestination().getNext();
+
+			if (currentTarget.equals(this.getSelfReference())) {
+				data.getReferenceToDestination().removeNext();
+			}
+		}
+
+		/**
+		 * Add the sender if the chosen route is private·
+		 */
+		if (data.getSender() != null && !this.routerTable.exist(data.getSender())) {
+			data.getReferenceToSource().add(data.getSender());
+		}
+
+		/**
+		 * Are we in the target ?
+		 */
+		if (!data.getReferenceToDestination().hasNext()) {
 			component.getUpStreamDataHandler().handleData(data);
 			return;
 		}
 
+		/**
+		 * Pickup the next and may be intermediate target
+		 */
+		final DirectReference nextTarget = data.getReferenceToDestination().getNext();
+
+		/**
+		 * Use an already open source
+		 */
 		for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
-			if (data.getTargetReference().equals(entry.getValue())) {
+			if (nextTarget.equals(entry.getValue())) {
 				try {
 					component.getSourceComponent(entry.getKey()).getDownStreamDataHandler().handleData(data);
 					return;
@@ -105,13 +130,19 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 			}
 		}
 
+		/**
+		 * Try to open a new source
+		 */
 		try {
-			data.getTargetReference().visit(this).getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
+			this.createSource(nextTarget).getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
 			return;
 		} catch (CannotCreateComponentException e) {
 			// Ignore
 		}
 
+		/**
+		 * General failure ... no route available
+		 */
 		throw new DataHandlerException();
 	}
 
@@ -127,6 +158,14 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 		component.closeUpStream();
 	}
 
+	/**
+	 * Method creating a source component linked to a given direct reference
+	 * 
+	 * @param reference
+	 *            The direct reference
+	 * @return a source component (never <code>null</code>)
+	 * @throws CannotCreateComponentException
+	 */
 	private SourceComponent<NetworkEvent, NetworkEvent> createSource(DirectReference reference)
 			throws CannotCreateComponentException {
 		try {
@@ -134,26 +173,6 @@ public class NetworkStreamDataHandler implements DownStreamDataHandler<NetworkEv
 			return retrieve.create(reference);
 		} catch (ReferenceEntryNotFoundException e) {
 			throw new CannotCreateComponentException(e);
-		}
-	}
-
-	@Override
-	public SourceComponent<NetworkEvent, NetworkEvent> visit(ClientReference reference) throws CannotCreateComponentException {
-		return this.createSource(reference);
-	}
-
-	@Override
-	public SourceComponent<NetworkEvent, NetworkEvent> visit(ServerReference reference) throws CannotCreateComponentException {
-		return this.createSource(reference);
-	}
-
-	@Override
-	public SourceComponent<NetworkEvent, NetworkEvent> visit(ChainedReferences reference) throws CannotCreateComponentException {
-		if (reference.hasNextReference(this.selfReference)) {
-			final DirectReference nextReference = reference.getNextReference(this.selfReference);
-			return this.createSource(nextReference);
-		} else {
-			throw new CannotCreateComponentException(/* TODO */);
 		}
 	}
 }

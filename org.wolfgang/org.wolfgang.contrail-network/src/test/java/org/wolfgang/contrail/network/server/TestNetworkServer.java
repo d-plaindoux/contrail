@@ -98,9 +98,7 @@ public class TestNetworkServer extends TestCase {
 		serverEcosystem.addFactory(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer(2666, serverEcosystem.<byte[], byte[]> getBinder(key));
-
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
-
 		executor.submit(networkServer);
 
 		// ------------------------------------------------------------------------------------------------

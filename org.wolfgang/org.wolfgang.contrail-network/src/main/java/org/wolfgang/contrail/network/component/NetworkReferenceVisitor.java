@@ -32,7 +32,6 @@ import org.wolfgang.contrail.network.reference.ServerReference;
  */
 public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Exception> {
 
-	private final DirectReference currentReference;
 	private final DirectReference targetReference;
 
 	/**
@@ -41,9 +40,8 @@ public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Except
 	 * @param currentReference
 	 * @param targetReference
 	 */
-	public NetworkReferenceVisitor(DirectReference currentReference, DirectReference targetReference) {
+	public NetworkReferenceVisitor(DirectReference targetReference) {
 		super();
-		this.currentReference = currentReference;
 		this.targetReference = targetReference;
 	}
 
@@ -59,8 +57,8 @@ public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Except
 
 	@Override
 	public Boolean visit(ChainedReferences reference) throws Exception {
-		if (reference.hasNextReference(currentReference)) {
-			final DirectReference nextReference = reference.getNextReference(currentReference);
+		if (reference.hasNext()) {
+			final DirectReference nextReference = reference.getNext();
 			return nextReference.equals(targetReference);
 		} else {
 			return false;

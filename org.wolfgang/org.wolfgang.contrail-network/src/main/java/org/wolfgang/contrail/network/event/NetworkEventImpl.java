@@ -21,7 +21,8 @@ package org.wolfgang.contrail.network.event;
 import java.io.Serializable;
 
 import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.Reference;
+import org.wolfgang.contrail.network.reference.IndirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceFactory;
 
 /**
  * <code>NetworkEventImpl</code>
@@ -37,19 +38,19 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	private static final long serialVersionUID = 1887763768371792297L;
 
 	/**
-	 * The source
-	 */
-	private final Reference source;
-
-	/**
 	 * The last component which sent the event
 	 */
-	public DirectReference previousReference;
+	public DirectReference lastSender;
+
+	/**
+	 * The source
+	 */
+	private final IndirectReference source;
 
 	/**
 	 * The target
 	 */
-	private final Reference target;
+	private final IndirectReference target;
 
 	/**
 	 * The content
@@ -63,21 +64,21 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	 * @param target
 	 * @param content
 	 */
-	public NetworkEventImpl(Reference source, Reference target, Serializable content) {
+	public NetworkEventImpl(DirectReference target, Serializable content) {
 		super();
-		this.source = source;
-		this.target = target;
+		this.source = ReferenceFactory.emptyIndirectReference();
+		this.target = ReferenceFactory.emptyIndirectReference().add(target);
 		this.content = content;
-		this.previousReference = null;
+		this.lastSender = null;
 	}
 
 	@Override
-	public Reference getTargetReference() {
+	public IndirectReference getReferenceToDestination() {
 		return this.target;
 	}
 
 	@Override
-	public Reference getSourceReference() {
+	public IndirectReference getReferenceToSource() {
 		return this.source;
 	}
 
@@ -88,12 +89,12 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 
 	@Override
 	public DirectReference getSender() {
-		return previousReference;
+		return lastSender;
 	}
 
 	@Override
 	public NetworkEvent sentBy(DirectReference reference) {
-		this.previousReference = reference;
+		this.lastSender = reference;
 		return this;
 	}
 }

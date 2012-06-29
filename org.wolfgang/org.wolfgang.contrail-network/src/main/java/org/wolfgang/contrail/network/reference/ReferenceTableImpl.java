@@ -58,6 +58,16 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
+	public boolean exist(DirectReference reference) {
+		for (Entry<ReferenceFilter, E> entry : table.entrySet()) {
+			if (entry.getKey().accept(reference)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException {
 		for (Entry<ReferenceFilter, E> entry : table.entrySet()) {
 			if (entry.getKey().accept(reference)) {

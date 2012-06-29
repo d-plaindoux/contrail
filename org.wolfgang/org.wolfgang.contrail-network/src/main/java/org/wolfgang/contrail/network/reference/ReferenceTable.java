@@ -39,6 +39,15 @@ public interface ReferenceTable<E> {
 	void insert(ReferenceFilter referenceFilter, E element) throws ReferenceEntryAlreadyExistException;
 
 	/**
+	 * Predicate checking a route entry existing for the direct reference
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return true if the reference has an entry; false otherwise
+	 */
+	boolean exist(DirectReference reference);
+
+	/**
 	 * Method called whether an entry must be retrieved using a given direct
 	 * reference
 	 * 

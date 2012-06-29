@@ -51,55 +51,28 @@ public final class ChainedReferences implements IndirectReference, Serializable 
 	}
 
 	@Override
-	public void addFirst(DirectReference reference) {
-		assert reference != null;
-		references.add(reference);
+	public DirectReference getNext() {
+		assert this.hasNext();
+		return this.references.get(0);
 	}
 
 	@Override
-	public void addLast(DirectReference reference) {
-		assert reference != null;
-		references.add(reference);
-	}
-
-	/**
-	 * Method called whether a direct reference index must be retrieved
-	 * 
-	 * @param reference
-	 */
-	private int getIndex(DirectReference reference) {
-		int position = -1;
-		for (DirectReference current : references) {
-			position += 1;
-			if (current.equals(reference)) {
-				return position;
-			}
-		}
-		return -1;
+	public IndirectReference removeNext() {
+		assert this.hasNext();
+		this.references.remove(0);
+		return this;
 	}
 
 	@Override
-	public boolean hasNextReference(DirectReference reference) {
-		final int index = this.getIndex(reference);
-		return -1 < index && index + 1 < this.references.size();
+	public boolean hasNext() {
+		// TODO Auto-generated method stub
+		return this.references.size() > 0;
 	}
 
 	@Override
-	public DirectReference getNextReference(DirectReference reference) {
-		assert this.hasNextReference(reference);
-		return this.references.get(this.getIndex(reference) + 1);
-	}
-
-	@Override
-	public boolean hasPreviousReference(DirectReference reference) {
-		final int index = this.getIndex(reference);
-		return -1 < index - 1;
-	}
-
-	@Override
-	public DirectReference getPreviousReference(DirectReference reference) {
-		assert this.hasPreviousReference(reference);
-		return this.references.get(this.getIndex(reference) - 1);
+	public IndirectReference add(DirectReference reference) {
+		this.references.add(0, reference);
+		return this;
 	}
 
 	@Override

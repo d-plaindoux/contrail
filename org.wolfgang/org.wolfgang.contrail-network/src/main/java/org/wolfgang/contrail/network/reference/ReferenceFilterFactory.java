@@ -80,7 +80,7 @@ public final class ReferenceFilterFactory {
 	 *            The array of direct reference to be used by the filter
 	 * @return a reference filter
 	 */
-	public static ReferenceFilter in(final DirectReference... references) {
+	public static ReferenceFilter memberOf(final DirectReference... references) {
 		assert references.length > 0;
 		return new ReferenceFilterInCollection(Arrays.asList(references));
 	}

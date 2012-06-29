@@ -65,7 +65,7 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
-		networkRouterTable.insert(ReferenceFilterFactory.in(clientReference), new NetworkTable.Entry() {
+		networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
 			@Override
 			public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
 				return sourceComponent;
@@ -82,7 +82,7 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 
 		try {
-			networkRouterTable.insert(ReferenceFilterFactory.in(clientReference), new NetworkTable.Entry() {
+			networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
 				@Override
 				public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
 					return sourceComponent;
@@ -93,7 +93,7 @@ public class TestNetworkComponent extends TestCase {
 		}
 
 		try {
-			networkRouterTable.insert(ReferenceFilterFactory.in(clientReference), new NetworkTable.Entry() {
+			networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
 				@Override
 				public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
 					return sourceComponent;
@@ -113,7 +113,7 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
-		networkRouterTable.insert(ReferenceFilterFactory.in(clientReference), new NetworkTable.Entry() {
+		networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
 			@Override
 			public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
 				return sourceComponent;
