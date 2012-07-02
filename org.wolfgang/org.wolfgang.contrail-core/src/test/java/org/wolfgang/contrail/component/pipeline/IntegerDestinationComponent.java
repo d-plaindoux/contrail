@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.Intermediate;
+package org.wolfgang.contrail.component.pipeline;
 
 import java.io.IOException;
 

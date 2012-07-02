@@ -83,6 +83,6 @@ public final class ClientReference implements DirectReference, Serializable {
 
 	@Override
 	public String toString() {
-		return "ClientReference [" + identifier + "]";
+		return "Client[" + identifier + "]";
 	}
 }

@@ -20,7 +20,7 @@ package org.wolfgang.contrail.codec;
 
 import java.lang.reflect.Constructor;
 
-import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**
  * <code>CodecFactory</code> is the main interface used for encoder and decoder

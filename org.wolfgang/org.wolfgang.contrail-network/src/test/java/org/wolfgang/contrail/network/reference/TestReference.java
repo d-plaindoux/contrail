@@ -68,8 +68,8 @@ public class TestReference extends TestCase {
 		final DirectReference reference02 = ReferenceFactory.createServerReference(UUID.randomUUID());
 		final IndirectReference indirectReference = ReferenceFactory.emptyIndirectReference();
 
-		indirectReference.add(reference02);
-		indirectReference.add(reference01);
+		indirectReference.addFirst(reference02);
+		indirectReference.addFirst(reference01);
 		
 		assertEquals(reference01, indirectReference.getNext());
 		indirectReference.removeNext();

@@ -34,6 +34,6 @@ public interface SourceComponentLink<U, D> extends ComponentLink {
 	 * 
 	 * @return the upstream source
 	 */
-	SourceComponent<U, D> getSourceComponent();
+	SourceComponent<U, D> getSource();
 
 }

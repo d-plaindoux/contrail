@@ -111,10 +111,10 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	public DestinationComponent<U, D> getDestinationComponent(ComponentId componentId) throws ComponentNotConnectedException {
 		final DestinationComponentLink<U, D> destinationComponentLink = this.destinationComponents.get(componentId);
 
-		if (destinationComponentLink.getDestinationComponent() == null) {
+		if (destinationComponentLink.getDestination() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponentLink.getDestinationComponent();
+			return destinationComponentLink.getDestination();
 		}
 	}
 
@@ -132,7 +132,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
 		assert handler != null;
 
-		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationComponents.put(componentId, handler);
 			return new ComponentLink() {
@@ -181,7 +181,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
 		for (DestinationComponentLink<U, D> source : this.destinationComponents.values()) {
-			source.getDestinationComponent().closeUpStream();
+			source.getDestination().closeUpStream();
 		}
 	}
 
@@ -197,12 +197,12 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.upStreamSourceComponentLink.getSourceComponent() == null;
+		return this.upStreamSourceComponentLink.getSource() == null;
 	}
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		final ComponentId componentId = handler.getSource().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.upStreamSourceComponentLink = handler;
 			return new ComponentLink() {
@@ -217,7 +217,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSourceComponent();
+		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSource();
 		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
 			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {

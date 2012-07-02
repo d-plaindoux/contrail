@@ -125,21 +125,21 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 *             thrown if the handler is not yet available
 	 */
 	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamSourceComponentLink.getSourceComponent() == null) {
+		if (this.upStreamSourceComponentLink.getSource() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamSourceComponentLink.getSourceComponent().getDownStreamDataHandler();
+			return upStreamSourceComponentLink.getSource().getDownStreamDataHandler();
 		}
 	}
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.upStreamSourceComponentLink.getSourceComponent() == null;
+		return this.upStreamSourceComponentLink.getSource() == null;
 	}
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		final ComponentId componentId = handler.getSource().getComponentId();
 		if (acceptSource(componentId)) {
 			this.upStreamSourceComponentLink = handler;
 			return new ComponentLink() {
@@ -154,7 +154,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSourceComponent();
+		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSource();
 		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
 			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
@@ -185,10 +185,10 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		if (this.upStreamSourceComponentLink.getSourceComponent() == null) {
+		if (this.upStreamSourceComponentLink.getSource() == null) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.upStreamSourceComponentLink.getSourceComponent().closeDownStream();
+			this.upStreamSourceComponentLink.getSource().closeDownStream();
 		}
 	}
 }

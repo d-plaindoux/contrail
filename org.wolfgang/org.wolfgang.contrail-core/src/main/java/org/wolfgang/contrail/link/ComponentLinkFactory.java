@@ -49,7 +49,7 @@ public final class ComponentLinkFactory {
 			}
 
 			@Override
-			public SourceComponent<U, D> getSourceComponent() {
+			public SourceComponent<U, D> getSource() {
 				return null;
 			}
 		};
@@ -67,7 +67,7 @@ public final class ComponentLinkFactory {
 			}
 
 			@Override
-			public DestinationComponent<U, D> getDestinationComponent() {
+			public DestinationComponent<U, D> getDestination() {
 				return null;
 			}
 		};

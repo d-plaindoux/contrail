@@ -25,8 +25,8 @@ import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.common.utils.Option;
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 
 /**
  * <code>Decoder</code> is able to transform a byte stream to a payload based

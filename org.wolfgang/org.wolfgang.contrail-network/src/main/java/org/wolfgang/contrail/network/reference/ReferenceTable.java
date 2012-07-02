@@ -28,17 +28,6 @@ package org.wolfgang.contrail.network.reference;
 public interface ReferenceTable<E> {
 
 	/**
-	 * Method called whether an entry must be added.
-	 * 
-	 * @param referenceFilter
-	 *            The reference filter
-	 * @param element
-	 *            The element to be linked to the filter
-	 * @throws ReferenceEntryAlreadyExistException
-	 */
-	void insert(ReferenceFilter referenceFilter, E element) throws ReferenceEntryAlreadyExistException;
-
-	/**
 	 * Predicate checking a route entry existing for the direct reference
 	 * 
 	 * @param reference
@@ -58,4 +47,17 @@ public interface ReferenceTable<E> {
 	 */
 	E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException;
 
+	/**
+	 * Method called whether an entry must be added.
+	 * 
+	 * @param element
+	 *            The element to be linked to the filter
+	 * @param mainReference
+	 *            The main direct reference
+	 * @param references
+	 *            Secondary references for indirect routes
+	 * @throws ReferenceEntryAlreadyExistException
+	 */
+	void insert(E element, DirectReference mainReference, DirectReference... references)
+			throws ReferenceEntryAlreadyExistException;
 }

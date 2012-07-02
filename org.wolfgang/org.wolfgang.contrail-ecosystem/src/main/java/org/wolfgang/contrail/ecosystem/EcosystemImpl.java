@@ -28,6 +28,8 @@ import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * The <code>EcosystemImpl</code> proposes an implementation using standard
@@ -43,8 +45,23 @@ public final class EcosystemImpl implements Ecosystem {
 	 */
 	private final Map<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>> hooks;
 
+	/**
+	 * The related link manager
+	 */
+	private final ComponentLinkManager linkManager;
+
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>>();
+		this.linkManager = new ComponentLinkManagerImpl();
+	}
+
+	/**
+	 * Return the value of the link manager
+	 * 
+	 * @return the link manager
+	 */
+	public ComponentLinkManager getLinkManager() {
+		return linkManager;
 	}
 
 	/**

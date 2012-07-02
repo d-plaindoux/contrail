@@ -112,10 +112,10 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	public SourceComponent<U, D> getSourceComponent(ComponentId componentId) throws ComponentNotConnectedException {
 		final SourceComponentLink<U, D> sourceComponentLink = this.sourceComponents.get(componentId);
 
-		if (sourceComponentLink.getSourceComponent() == null) {
+		if (sourceComponentLink.getSource() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return sourceComponentLink.getSourceComponent();
+			return sourceComponentLink.getSource();
 		}
 	}
 
@@ -133,7 +133,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
 		assert handler != null;
 
-		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		final ComponentId componentId = handler.getSource().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponents.put(componentId, handler);
 			return new ComponentLink() {
@@ -182,7 +182,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
 		for (SourceComponentLink<U, D> source : this.sourceComponents.values()) {
-			source.getSourceComponent().closeUpStream();
+			source.getSource().closeUpStream();
 		}
 	}
 
@@ -198,12 +198,12 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.upStreamDestinationComponentLink.getDestinationComponent() == null;
+		return this.upStreamDestinationComponentLink.getDestination() == null;
 	}
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.upStreamDestinationComponentLink = handler;
 			return new ComponentLink() {
@@ -218,7 +218,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		final DestinationComponent<U, D> destinationComponent = upStreamDestinationComponentLink.getDestinationComponent();
+		final DestinationComponent<U, D> destinationComponent = upStreamDestinationComponentLink.getDestination();
 		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
 			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {

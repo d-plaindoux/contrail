@@ -25,7 +25,7 @@ import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.codec.CodecFactoryCreationException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.transducer.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>DataFlowTransducerComponent</code>

@@ -174,9 +174,9 @@ public class NetServer implements Callable<Void>, Closeable {
 
 	@Override
 	public void close() throws IOException {
-		executor.shutdownNow();
 		if (serverSocket != null) {
 			serverSocket.close();
 		}
+		executor.shutdownNow();
 	}
 }

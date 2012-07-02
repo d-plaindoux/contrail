@@ -21,8 +21,8 @@ package org.wolfgang.contrail.codec.identity;
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 
 /**
  * <code>Identity</code> do not perform any transformation.

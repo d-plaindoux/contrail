@@ -16,13 +16,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.Intermediate;
+package org.wolfgang.contrail.component.pipeline;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 
 /**
  * <code>IntegerToString</code>
@@ -30,15 +30,19 @@ import org.wolfgang.contrail.component.transducer.DataTransducerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class IntegerToString implements DataTransducer<Integer, String> {
+public class StringToInteger implements DataTransducer<String, Integer> {
 
 	@Override
-	public List<String> transform(Integer s) {
-		return Arrays.asList(String.valueOf(s));
+	public List<Integer> transform(String s) throws DataTransducerException {
+		try {
+			return Arrays.asList(Integer.parseInt(s));
+		} catch (NumberFormatException e) {
+			throw new DataTransducerException(e);
+		}
 	}
 
 	@Override
-	public List<String> finish() throws DataTransducerException {
+	public List<Integer> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

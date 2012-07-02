@@ -20,7 +20,6 @@ package org.wolfgang.contrail.network.reference;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * <code>ReferenceTableImpl</code>
@@ -33,10 +32,10 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	/**
 	 * The internal map
 	 */
-	private final Map<ReferenceFilter, E> table;
+	private final Map<DirectReference, E> table;
 
 	{
-		this.table = new HashMap<ReferenceFilter, E>();
+		this.table = new HashMap<DirectReference, E>();
 	}
 
 	/**
@@ -47,33 +46,34 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
-	public void insert(ReferenceFilter referenceFilter, E element) throws ReferenceEntryAlreadyExistException {
-		for (ReferenceFilter filter : table.keySet()) {
-			if (referenceFilter.subFilterOf(filter)) {
-				throw new ReferenceEntryAlreadyExistException();
-			}
+	public void insert(E element, DirectReference mainReference, DirectReference... references)
+			throws ReferenceEntryAlreadyExistException {
+		if (table.containsKey(mainReference)) {
+			throw new ReferenceEntryAlreadyExistException();
+		} else {
+			this.table.put(mainReference, element);
 		}
 
-		this.table.put(referenceFilter, element);
+		for (DirectReference reference : references) {
+			if (table.containsKey(reference)) {
+				// Ignore ?
+			} else {
+				this.table.put(reference, element);
+			}
+		}
 	}
 
 	@Override
 	public boolean exist(DirectReference reference) {
-		for (Entry<ReferenceFilter, E> entry : table.entrySet()) {
-			if (entry.getKey().accept(reference)) {
-				return true;
-			}
-		}
-		return false;
+		return this.table.containsKey(reference);
 	}
 
 	@Override
 	public E retrieve(DirectReference reference) throws ReferenceEntryNotFoundException {
-		for (Entry<ReferenceFilter, E> entry : table.entrySet()) {
-			if (entry.getKey().accept(reference)) {
-				return entry.getValue();
-			}
+		if (table.containsKey(reference)) {
+			return table.get(reference);
+		} else {
+			throw new ReferenceEntryNotFoundException();
 		}
-		throw new ReferenceEntryNotFoundException();
 	}
 }

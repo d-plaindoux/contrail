@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.codec.identity;
 
 import org.wolfgang.contrail.codec.CodecFactory;
-import org.wolfgang.contrail.component.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**
  * <code>SerializerTransducerFactory</code> is in charge of transforming

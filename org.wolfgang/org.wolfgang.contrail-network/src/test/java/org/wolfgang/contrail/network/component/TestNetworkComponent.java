@@ -35,7 +35,6 @@ import org.wolfgang.contrail.network.reference.DirectReference;
 import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
 import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
 import org.wolfgang.contrail.network.reference.ReferenceFactory;
-import org.wolfgang.contrail.network.reference.ReferenceFilterFactory;
 
 /**
  * <code>TestNetworkComponent</code>
@@ -65,14 +64,19 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
-		networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
+		networkRouterTable.insert(new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
+			public SourceComponent<NetworkEvent, NetworkEvent> create() {
 				return sourceComponent;
 			}
-		});
 
-		assertEquals(componentId, networkRouterTable.retrieve(clientReference).create(clientReference).getComponentId());
+			@Override
+			public DirectReference getReferenceToUse() {
+				return clientReference;
+			}
+		}, clientReference);
+
+		assertEquals(componentId, networkRouterTable.retrieve(clientReference).create().getComponentId());
 	}
 
 	public void testFailure01() throws NoSuchAlgorithmException {
@@ -82,23 +86,33 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 
 		try {
-			networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
+			networkRouterTable.insert(new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
+				public SourceComponent<NetworkEvent, NetworkEvent> create() {
 					return sourceComponent;
 				}
-			});
+
+				@Override
+				public DirectReference getReferenceToUse() {
+					return clientReference;
+				}
+			}, clientReference);
 		} catch (ReferenceEntryAlreadyExistException e1) {
 			fail();
 		}
 
 		try {
-			networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
+			networkRouterTable.insert(new NetworkTable.Entry() {
 				@Override
-				public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
+				public SourceComponent<NetworkEvent, NetworkEvent> create() {
 					return sourceComponent;
 				}
-			});
+
+				@Override
+				public DirectReference getReferenceToUse() {
+					return clientReference;
+				}
+			}, clientReference);
 			fail();
 		} catch (ReferenceEntryAlreadyExistException e) {
 			// OK
@@ -113,16 +127,21 @@ public class TestNetworkComponent extends TestCase {
 		final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
-		networkRouterTable.insert(ReferenceFilterFactory.memberOf(clientReference), new NetworkTable.Entry() {
+		networkRouterTable.insert(new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) {
+			public SourceComponent<NetworkEvent, NetworkEvent> create() {
 				return sourceComponent;
 			}
-		});
+
+			@Override
+			public DirectReference getReferenceToUse() {
+				return clientReference;
+			}
+		}, clientReference);
 
 		final DirectReference somebodyReference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Somebody"));
 		try {
-			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).create(clientReference).getComponentId());
+			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).create().getComponentId());
 			fail();
 		} catch (ReferenceEntryNotFoundException e) {
 			// OK

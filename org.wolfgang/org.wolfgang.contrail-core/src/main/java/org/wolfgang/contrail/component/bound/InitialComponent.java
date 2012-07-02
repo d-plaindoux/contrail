@@ -125,21 +125,21 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 *             thrown if the handler is not yet available
 	 */
 	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponentLink.getDestinationComponent() == null) {
+		if (this.upStreamDestinationComponentLink.getDestination() == null) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamDestinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
+			return upStreamDestinationComponentLink.getDestination().getUpStreamDataHandler();
 		}
 	}
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.upStreamDestinationComponentLink.getDestinationComponent() == null;
+		return this.upStreamDestinationComponentLink.getDestination() == null;
 	}
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
+		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (acceptDestination(componentId)) {
 			this.upStreamDestinationComponentLink = handler;
 			return new ComponentLink() {
@@ -154,7 +154,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		final DestinationComponent<U, D> destinationComponent = this.upStreamDestinationComponentLink.getDestinationComponent();
+		final DestinationComponent<U, D> destinationComponent = this.upStreamDestinationComponentLink.getDestination();
 		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
 			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
@@ -180,10 +180,10 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		if (this.upStreamDestinationComponentLink.getDestinationComponent() == null) {
+		if (this.upStreamDestinationComponentLink.getDestination() == null) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.upStreamDestinationComponentLink.getDestinationComponent().closeUpStream();
+			this.upStreamDestinationComponentLink.getDestination().closeUpStream();
 		}
 	}
 

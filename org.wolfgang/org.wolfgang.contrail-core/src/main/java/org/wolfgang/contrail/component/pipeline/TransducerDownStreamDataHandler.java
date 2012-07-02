@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.transducer;
+package org.wolfgang.contrail.component.pipeline;
 
 import java.util.List;
 
@@ -60,8 +60,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerDownStreamDataHandler(TransducerComponent<?, D, ?, U> component,
-			DataTransducer<U, D> downstreamXducer) {
+	public TransducerDownStreamDataHandler(TransducerComponent<?, D, ?, U> component, DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
 	}
@@ -70,14 +69,14 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 	public void handleData(U data) throws DataHandlerException {
 		if (closed) {
 			throw new DownStreamDataHandlerClosedException();
-		} else if (this.component.getUpStreamSourceComponent() == null) {
+		} else if (this.component.getSourceComponent() == null) {
 			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
 		} else {
 			try {
 				final List<D> transform = streamXducer.transform(data);
 				for (D value : transform) {
-					this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponent().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -92,7 +91,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 		try {
 			final List<D> transform = streamXducer.finish();
 			for (D value : transform) {
-				this.component.getUpStreamSourceComponent().getDownStreamDataHandler().handleData(value);
+				this.component.getSourceComponent().getDownStreamDataHandler().handleData(value);
 			}
 		} catch (DataTransducerException e) {
 			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());

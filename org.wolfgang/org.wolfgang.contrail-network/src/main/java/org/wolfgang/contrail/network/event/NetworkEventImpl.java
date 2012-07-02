@@ -50,7 +50,7 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	/**
 	 * The target
 	 */
-	private final IndirectReference target;
+	private final IndirectReference destination;
 
 	/**
 	 * The content
@@ -61,20 +61,23 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	 * Constructor
 	 * 
 	 * @param source
-	 * @param target
+	 * @param destination
 	 * @param content
 	 */
-	public NetworkEventImpl(DirectReference target, Serializable content) {
+	public NetworkEventImpl(Serializable content, DirectReference... targets) {
 		super();
 		this.source = ReferenceFactory.emptyIndirectReference();
-		this.target = ReferenceFactory.emptyIndirectReference().add(target);
+		this.destination = ReferenceFactory.emptyIndirectReference();
+		for (int i = targets.length; i > 0; i--) {
+			this.destination.addFirst(targets[i - 1]);
+		}
 		this.content = content;
 		this.lastSender = null;
 	}
 
 	@Override
 	public IndirectReference getReferenceToDestination() {
-		return this.target;
+		return this.destination;
 	}
 
 	@Override
@@ -97,4 +100,10 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 		this.lastSender = reference;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "NetworkEventImpl [source=" + source + ", destination=" + destination + "]";
+	}
+
 }

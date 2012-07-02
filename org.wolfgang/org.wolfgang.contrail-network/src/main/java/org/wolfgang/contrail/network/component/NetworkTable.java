@@ -21,6 +21,7 @@ package org.wolfgang.contrail.network.component;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
 import org.wolfgang.contrail.network.reference.ReferenceTableImpl;
 
 /**
@@ -39,7 +40,16 @@ public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 	 * @version 1.0
 	 */
 	public interface Entry {
-		SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference) throws CannotCreateComponentException;
+		/**
+		 * @return
+		 */
+		DirectReference getReferenceToUse();
+
+		/**
+		 * @return
+		 * @throws CannotCreateComponentException
+		 */
+		SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException;
 	}
 
 	/**
@@ -49,4 +59,12 @@ public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 		super();
 	}
 
+	public DirectReference getDirectTarget(DirectReference reference) {
+		try {
+			return this.retrieve(reference).getReferenceToUse();
+		} catch (ReferenceEntryNotFoundException e) {
+			// No specific reference entry ...
+			return reference;
+		}
+	}
 }

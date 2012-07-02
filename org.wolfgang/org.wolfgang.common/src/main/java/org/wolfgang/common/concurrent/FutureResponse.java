@@ -78,7 +78,12 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		barrier.lock();
 		try {
 			if (this.status == null) {
-				this.condition.await();
+				// Wait for 3,14 minutes at most ...
+				this.condition.await(60 * 3 + 14, TimeUnit.SECONDS);
+
+				if (this.status == null) {
+					throw new InterruptedException();
+				}
 			}
 			switch (status) {
 			case ERROR:

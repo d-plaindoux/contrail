@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.reference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * <code>ChainedReferences</code>
@@ -70,8 +71,12 @@ public final class ChainedReferences implements IndirectReference, Serializable 
 	}
 
 	@Override
-	public IndirectReference add(DirectReference reference) {
-		this.references.add(0, reference);
+	public IndirectReference addFirst(DirectReference reference) {
+		if (this.hasNext() && this.getNext().equals(reference)) {
+			// Already pushed so forget it ...
+		} else {
+			this.references.add(0, reference);
+		}
 		return this;
 	}
 
@@ -79,4 +84,10 @@ public final class ChainedReferences implements IndirectReference, Serializable 
 	public <E, X extends Exception> E visit(ReferenceVisitor<E, X> visitor) throws X {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(references.toArray(new DirectReference[references.size()]));
+	}
+
 }

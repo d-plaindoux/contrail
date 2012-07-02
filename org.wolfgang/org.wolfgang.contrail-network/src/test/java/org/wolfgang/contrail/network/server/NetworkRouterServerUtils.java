@@ -21,9 +21,6 @@ package org.wolfgang.contrail.network.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -33,7 +30,6 @@ import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.codec.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -41,8 +37,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.transducer.TransducerComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -52,6 +47,7 @@ import org.wolfgang.contrail.network.component.NetworkTable;
 import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
 
 /**
  * <code>NetworkRouterServerUtils</code>
@@ -61,21 +57,18 @@ import org.wolfgang.contrail.network.reference.DirectReference;
  */
 class NetworkRouterServerUtils extends TestCase {
 
-	static NetworkTable.Entry clientBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager,
-			final String host, final int port) {
-		return new NetworkTable.Entry() {
+	static void clientBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
+			final DirectReference... references) throws ReferenceEntryAlreadyExistException {
+		final NetworkTable.Entry entry = new NetworkTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> create(DirectReference reference)
-					throws CannotCreateComponentException {
-				Logger.getAnonymousLogger().log(
-						Level.INFO,
-						component.getSelfReference() + " - Opening a client binder at " + host + ":" + port + " for "
-								+ reference);
+			public SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException {
+
+				System.err.println(component.getSelfReference() + " - Opening a client to " + this.getReferenceToUse() + " [endpoint=" + host + ":" + port + "]");
 				try {
-					// Payload component
+					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(
-							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
+							payLoadTransducerFactory.getEncoder());
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
@@ -83,8 +76,7 @@ class NetworkRouterServerUtils extends TestCase {
 							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
 
 					// Coercion component
-					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(
-							NetworkEvent.class);
+					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
 					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
 							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
 
@@ -93,7 +85,7 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 					componentLinkManager.connect(coercionTransducer, component);
 
-					component.filterSource(coercionTransducer.getComponentId(), reference);
+					component.filterSource(coercionTransducer.getComponentId(), this.getReferenceToUse());
 
 					final NetClient netClient = new NetClient(new DataSenderFactory<byte[], byte[]>() {
 						@Override
@@ -122,20 +114,28 @@ class NetworkRouterServerUtils extends TestCase {
 					throw new CannotCreateComponentException(e);
 				}
 			}
+
+			@Override
+			public DirectReference getReferenceToUse() {
+				return mainReference;
+			}
 		};
+
+		component.getNetworkTable().insert(entry, mainReference, references);
 	}
 
-	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component,
-			final ComponentLinkManager componentLinkManager) {
+	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager) {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
-				Logger.getAnonymousLogger().log(Level.INFO, "Opening a server binder [Handshake]");
-				// Payload component
+
+				System.err.println(component.getSelfReference() + " - Accept a client [Entering handshake stage]");
+
 				try {
+					// Payload component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(
-							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
+							payLoadTransducerFactory.getEncoder());
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
@@ -143,8 +143,7 @@ class NetworkRouterServerUtils extends TestCase {
 							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
 
 					// Coercion component
-					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(
-							NetworkEvent.class);
+					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
 					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
 							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
 
@@ -152,46 +151,37 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 
 					final FutureResponse<ComponentLink> futureResponse = new FutureResponse<ComponentLink>();
-					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(
-							new DataReceiver<NetworkEvent>() {
-								@Override
-								public void close() throws IOException {
-									// TODO
-								}
+					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(new DataReceiver<NetworkEvent>() {
+						@Override
+						public void close() throws IOException {
+							// TODO
+						}
 
-								@Override
-								public void receiveData(NetworkEvent data) throws DataHandlerException {
-									try {
-										// Retrieve the component reference
-										final DirectReference reference = data.getSender();
-										Logger.getAnonymousLogger().log(Level.INFO,
-												component.getSelfReference() + " - Accepting a client [" + reference + "]");
-										// Re-set the established link
-										futureResponse.get().dispose();
-										componentLinkManager.connect(coercionTransducer, component);
-										if (reference == null || reference.equals(component.getSelfReference())) {
-											// Do not add a corresponding filter
-											// Close the emit capable layer
-											coercionTransducer.closeDownStream();
-										} else {
-											component.filterSource(coercionTransducer.getComponentId(), reference);
-										}
-										// Re-send the event to the network
-										// component
-										component.getDownStreamDataHandler().handleData(data);
-									} catch (ComponentDisconnectionRejectedException e) {
-										throw new DataHandlerException(e);
-									} catch (ComponentConnectionRejectedException e) {
-										throw new DataHandlerException(e);
-									} catch (InterruptedException e) {
-										throw new DataHandlerException(e);
-									} catch (ExecutionException e) {
-										throw new DataHandlerException(e.getCause());
-									} catch (DataHandlerCloseException e) {
-										throw new DataHandlerException(e.getCause());
-									}
+						@Override
+						public void receiveData(NetworkEvent data) throws DataHandlerException {
+							try {
+								// Retrieve the component reference
+								final DirectReference reference = data.getSender();
+
+								System.err.println(component.getSelfReference() + " - Accept a client from " + reference + " [Finishing handshake stage]");
+
+								// Re-set the established link
+								futureResponse.get().dispose();
+								componentLinkManager.connect(coercionTransducer, component);
+
+								if (reference == null || reference.equals(component.getSelfReference())) {
+									coercionTransducer.closeDownStream();
+								} else {
+									component.filterSource(coercionTransducer.getComponentId(), reference);
 								}
-							});
+								// Re-send the event to the network
+								// component
+								component.getDownStreamDataHandler().handleData(data);
+							} catch (Exception e) {
+								throw new DataHandlerException(e);
+							}
+						}
+					});
 
 					futureResponse.setValue(componentLinkManager.connect(coercionTransducer, handshake));
 

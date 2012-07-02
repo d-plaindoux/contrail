@@ -34,6 +34,6 @@ public interface DestinationComponentLink<U, D> extends ComponentLink {
 	 * 
 	 * @return the upstream destination
 	 */
-	DestinationComponent<U, D> getDestinationComponent();
+	DestinationComponent<U, D> getDestination();
 
 }

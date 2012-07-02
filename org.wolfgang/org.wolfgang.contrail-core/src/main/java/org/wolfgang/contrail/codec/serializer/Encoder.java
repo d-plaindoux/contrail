@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.codec.payload.Bytes;
-import org.wolfgang.contrail.component.transducer.DataTransducer;
-import org.wolfgang.contrail.component.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 
 /**
  * <code>Encoder</code> is capable to transform objects to payload based byte array.

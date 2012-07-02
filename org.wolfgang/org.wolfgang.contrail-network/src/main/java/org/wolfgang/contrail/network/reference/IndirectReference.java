@@ -53,6 +53,6 @@ public interface IndirectReference extends Reference {
 	 * @param reference
 	 *            The new added direct reference
 	 */
-	IndirectReference add(DirectReference reference);
+	IndirectReference addFirst(DirectReference reference);
 
 }

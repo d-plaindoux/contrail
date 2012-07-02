@@ -16,22 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
+package org.wolfgang.contrail.component.pipeline;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 
 /**
- * The <code>IntermediateComponent</code> is capable to connect a source handler
- * and a destination handler. In addition the data can be transformed from a
- * type S to a type D or vice-versa depending if components communicate using
- * upstream or downstream network. The first type was the event type received
- * from the upstream network - denoted by the destination facet. The second type
- * was the event type sent to the upstream network - denoted by the source
- * facet.
+ * <code>IntegerToString</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface IntermediateComponent<U1, D1, U2, D2> extends DestinationComponent<U1, D1>, SourceComponent<U2, D2> {
+public class IntegerToString implements DataTransducer<Integer, String> {
 
-	// Nothing
+	@Override
+	public List<String> transform(Integer s) {
+		return Arrays.asList(String.valueOf(s));
+	}
 
+	@Override
+	public List<String> finish() throws DataTransducerException {
+		return Arrays.asList();
+	}
 }
