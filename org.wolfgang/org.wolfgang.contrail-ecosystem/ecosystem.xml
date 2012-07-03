@@ -5,76 +5,28 @@
 <!-- ============================================================ -->
 
 <Ecosystem>
-	<Imports>
-		<Import>org.wolfgang.contrail.network.codec.jaxb</Import>
-		<Import>org.wolfgang.contrail.network.codec.payload</Import>
-		<Import>org.wolfgang.contrail.network.codec.json</Import>
-	</Imports>
+	<Transducer name="PayLoad"   factory="org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory" />
+	<Transducer name="Serialize" factory="org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory" />
+	<Transducer name="Coercion"  factory="org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory" >
+		<Param>NetEvent</Param>
+	</Transducer>
+	<Terminal   name="Logger"    factory="..."/>
+	
+	<Router name="NetworkRouter" singleton="yes">
+		<SelfReference name="A.A"></SelfReference>
+		<Table>
+			<Reference name="A.B" filter="A.*">
+				tcp://localhost:6666/PayLoad/Serialize/Coercion/NetworkRouter
+			</Reference>
+		</Table>
+	</Router>
 
-	<Binders>
-		<!-- ============================================================ -->
-		<!-- IO Socket initial binder -->
-		<!-- ============================================================ -->
-		<DataFlow name="net.incoming">
-			<Transducer ref="in" factory="PayLoadTransducerFactory">
-				<Ougoing ref="payload.string" />
-			</Transducer>
-			<Transducer ref="payload.string" factory="StringTransducerFactory">
-				<Ougoing ref="string.json" />
-			</Transducer>
-			<Transducer ref="string.json" factory="JSONTransducerFactory">
-				<Ougoing ref="core.network.incoming" />
-			</Transducer>
-		</DataFlow>
-
-		<DataFlow name="net.outgoing">
-			<ReverseDataFlow name="new.incoming"></ReverseDataFlow>
-		</DataFlow>
-
-		<!-- ============================================================ -->
-		<!-- Web Socket initial binder -->
-		<!-- ============================================================ -->
-		<DataFlow name="web.incoming">
-			<Transducer ref="in" factory="JSONTransducerFactory">
-				<Ougoing ref="core.network.in" />
-			</Transducer>
-		</DataFlow>
-
-		<DataFlow name="web.outgoing">
-			<ReverseDataFlow name="web.incoming"></ReverseDataFlow>
-		</DataFlow>
-	</Binders>
-
-	<InternalComponents>
-		<DataFlow name="local.network">
-			<Router ref="in" factory="ProtocolRouterFactory">
-				<Outgoing ref="service" filter="isAServiceHandler" />
-				<Outgoing ref="transfer" filter="isTransferHandler" />
-			</Router>
-			<Terminal ref="service" factory="ServiceHandler">
-				<Outgoing ref="service.outgoing" />
-			</Terminal>
-			<Terminal ref="transfer" factory="TransferHandler">
-				<Outgoing ref="transfer.outgoing" />
-			</Terminal>
-		</DataFlow>
-
-		<DataFlow name="core.network">
-			<Terminal ref="incoming" factory="Networking">
-				<Outgoing ref="network.target" />
-			</Terminal>
-			<Router ref="network.target" factory="NetworkRouterFactory">
-				<Table>
-					// TODO
-				</Table>
-				<Outgoing ref="local.network.in" filter="isRemoteReference" />
-			</Router>
-		</DataFlow>
-	</InternalComponents>
-
-	<ActiveWorkers>
-		<Worker factory="NetServer" port="6048" ref="net.incoming.in" />
-		<Worker factory="WebServer" port="9090" ref="web.incoming.in" />
-	</ActiveWorkers>
-
+	<Accept>
+		<Entry>
+			tcp://localhost:6667/PayLoad/Serialize/Coercion/NetworkRouter
+		</Entry>
+		<!--  Entry>
+			ws://localhost:6667/Jaxb/JSon/Coercion/NetworkRouter
+		</Entry -->
+	</Accept>
 </Ecosystem>

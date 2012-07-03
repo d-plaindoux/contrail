@@ -30,7 +30,6 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;
 import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
@@ -87,9 +86,6 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 
 	@Override
 	public void handleData(NetworkEvent data) throws DataHandlerException {
-
-		System.err.println(this.selfReference + " - Managing data " + data);
-
 		/**
 		 * Add the sender if the chosen route is private·
 		 */
@@ -112,7 +108,6 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 		 * Are we in the targeted network component ?
 		 */
 		if (!data.getReferenceToDestination().hasNext()) {
-			System.err.println(this.selfReference + " - Target destination reached");
 			try {
 				final DestinationComponent<NetworkEvent, NetworkEvent> destination = component.getDestination();
 				destination.getUpStreamDataHandler().handleData(data);
@@ -135,7 +130,6 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 				if (nextTarget.equals(entry.getValue())) {
 					try {
 						final SourceComponent<NetworkEvent, NetworkEvent> source = component.getSource(entry.getKey());
-						System.err.println(this.selfReference + " - Send data using connection to " + nextTarget + " source=" + source.hashCode());
 						source.getDownStreamDataHandler().handleData(data);
 						return;
 					} catch (ComponentNotConnectedException consume) {
@@ -149,7 +143,6 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 			 */
 			try {
 				final SourceComponent<NetworkEvent, NetworkEvent> source = this.createSource(nextTarget);
-				System.err.println(this.selfReference + " - Send data using connection to " + nextTarget + " source=" + source.hashCode());
 				source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
 				return;
 			} catch (CannotCreateComponentException e) {

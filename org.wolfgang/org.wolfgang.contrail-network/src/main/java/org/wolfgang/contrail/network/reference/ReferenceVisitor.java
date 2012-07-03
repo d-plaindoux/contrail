@@ -33,16 +33,7 @@ public interface ReferenceVisitor<T, E extends Exception> {
 	 *            The reference
 	 * @return the visit result
 	 */
-	T visit(ClientReference reference) throws E;
-
-	/**
-	 * Method called whether a server reference is visited
-	 * 
-	 * @param reference
-	 *            The reference
-	 * @return the visit result
-	 */
-	T visit(ServerReference reference) throws E;
+	T visit(DirectReference reference) throws E;
 
 	/**
 	 * Method called whether a chained references is visited
@@ -51,6 +42,6 @@ public interface ReferenceVisitor<T, E extends Exception> {
 	 *            The reference
 	 * @return the visit result
 	 */
-	T visit(ChainedReferences reference) throws E;
+	T visit(IndirectReference reference) throws E;
 
 }

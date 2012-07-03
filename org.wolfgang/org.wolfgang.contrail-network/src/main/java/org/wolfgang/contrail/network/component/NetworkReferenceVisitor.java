@@ -18,11 +18,9 @@
 
 package org.wolfgang.contrail.network.component;
 
-import org.wolfgang.contrail.network.reference.ChainedReferences;
-import org.wolfgang.contrail.network.reference.ClientReference;
 import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.IndirectReference;
 import org.wolfgang.contrail.network.reference.ReferenceVisitor;
-import org.wolfgang.contrail.network.reference.ServerReference;
 
 /**
  * <code>NetworkReferenceVisitor</code>
@@ -46,17 +44,12 @@ public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Except
 	}
 
 	@Override
-	public Boolean visit(ClientReference reference) throws Exception {
+	public Boolean visit(DirectReference reference) throws Exception {
 		return targetReference.equals(reference);
 	}
 
 	@Override
-	public Boolean visit(ServerReference reference) throws Exception {
-		return targetReference.equals(reference);
-	}
-
-	@Override
-	public Boolean visit(ChainedReferences reference) throws Exception {
+	public Boolean visit(IndirectReference reference) throws Exception {
 		if (reference.hasNext()) {
 			final DirectReference nextReference = reference.getNext();
 			return nextReference.equals(targetReference);

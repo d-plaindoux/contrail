@@ -28,7 +28,7 @@ import java.util.Arrays;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ChainedReferences implements IndirectReference, Serializable {
+final class ChainedReferences implements IndirectReference, Serializable {
 
 	/**
 	 * The serialVersionUID attribute

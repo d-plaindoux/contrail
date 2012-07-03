@@ -57,7 +57,7 @@ import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistExcepti
  */
 class NetworkRouterServerUtils extends TestCase {
 
-	static void clientBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
+	static void client(final NetworkComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
 			final DirectReference... references) throws ReferenceEntryAlreadyExistException {
 		final NetworkTable.Entry entry = new NetworkTable.Entry() {
 			@Override
