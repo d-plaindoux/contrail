@@ -39,8 +39,7 @@ public interface CodecFactory<U, D> {
 	 * @version 1.0
 	 */
 	public static class Loader {
-		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters)
-				throws CodecFactoryCreationException {
+		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
 			try {
 				final Class<?> codec = loader.loadClass(name);
 				try {

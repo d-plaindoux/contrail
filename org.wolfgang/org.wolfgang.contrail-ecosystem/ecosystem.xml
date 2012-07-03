@@ -1,32 +1,48 @@
 <?xml version="1.0"?>
-
-<!-- ============================================================ -->
-<!-- Ecosystem definition -->
-<!-- ============================================================ -->
-
 <Ecosystem>
-	<Transducer name="PayLoad"   factory="org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory" />
-	<Transducer name="Serialize" factory="org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory" />
-	<Transducer name="Coercion"  factory="org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory" >
+	<Transducer name="PayLoad"
+		factory="org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory" />
+
+	<Transducer name="Serialize"
+		factory="org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory" />
+
+	<Transducer name="Coercion"
+		factory="org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory">
 		<Param>NetEvent</Param>
 	</Transducer>
-	<Terminal   name="Logger"    factory="..."/>
-	
-	<Router name="NetworkRouter" singleton="yes">
-		<SelfReference name="A.A"></SelfReference>
-		<Table>
-			<Reference name="A.B" filter="A.*">
-				tcp://localhost:6666/PayLoad/Serialize/Coercion/NetworkRouter
-			</Reference>
-		</Table>
+
+	<Component name="Logger" factory="org.wolfgang.contrail.bound.LoggerComponent" />
+
+	<Router name="NetworkRoute"
+		factory="org.wolfgang.contrail.network.component.NetworkFactory"
+		singleton="yes">
+		<Entry name="A.A">
+			<Flow>Logger</Flow>
+		</Entry>
+
+		<Client name="A.B" filter="A.*" endpoint="tcp://localhost:6666">
+			<!-- Net Socket Client -->
+			<Flow>PayLoad Serialize Coercion NetworkRoute</Flow>
+		</Client>
+
+		<Client name="A.C" filter="A.*" endpoint="ws://localhost:6668">
+			<!-- Web Socket Client -->
+			<Flow>JSon Coercion NetworkRoute</Flow>
+		</Client>
 	</Router>
 
-	<Accept>
-		<Entry>
-			tcp://localhost:6667/PayLoad/Serialize/Coercion/NetworkRouter
-		</Entry>
-		<!--  Entry>
-			ws://localhost:6667/Jaxb/JSon/Coercion/NetworkRouter
-		</Entry -->
-	</Accept>
+	<Hook name=NetHook ">
+		<Flow>PayLoad Serialize Coercion NetworkRoute</Flow>
+	</Hook>
+
+	<Hook name=WebHook ">
+		<Flow>JSon Coercion NetworkRoute</Flow>
+	</Hook>
+
+	<Server endpoint="tcp://localhost:6667">
+		<Flow>PayLoad Serialize Coercion NetworkRoute</Flow>
+	</Server>
+	<Server endpoint="ws://localhost:6667">
+		<Flow>JSon Coercion NetworkRoute</Flow>
+	</Server>
 </Ecosystem>
