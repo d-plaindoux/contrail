@@ -31,16 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Client {
 
-	@XmlAttribute(name = "name")
 	private String name;
-
-	@XmlAttribute(name = "filter")
 	private String filter;
-
-	@XmlAttribute(name = "endpoint")
 	private String endpoint;
-
-	@XmlElement(name = "Flow")
 	private String flow;
 
 	/**
@@ -55,6 +48,7 @@ public class Client {
 	 * 
 	 * @return the name
 	 */
+	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -84,6 +78,7 @@ public class Client {
 	 * @param filter
 	 *            the filter to set
 	 */
+	@XmlAttribute
 	public void setFilter(String filter) {
 		this.filter = filter;
 	}
@@ -103,6 +98,7 @@ public class Client {
 	 * @param endpoint
 	 *            the endpoint to set
 	 */
+	@XmlAttribute
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
@@ -122,6 +118,7 @@ public class Client {
 	 * @param flow
 	 *            the flow to set
 	 */
+	@XmlElement
 	public void setFlow(String flow) {
 		this.flow = flow;
 	}

@@ -31,10 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Server {
 
-	@XmlAttribute(name = "endpoint")
 	private String endpoint;
-
-	@XmlElement(name = "Flow")
 	private String flow;
 
 	/**
@@ -59,6 +56,7 @@ public class Server {
 	 * @param endpoint
 	 *            the endpoint to set
 	 */
+	@XmlAttribute
 	void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
@@ -78,6 +76,7 @@ public class Server {
 	 * @param flow
 	 *            the flow to set
 	 */
+	@XmlElement
 	void setFlow(String flow) {
 		this.flow = flow;
 	}
