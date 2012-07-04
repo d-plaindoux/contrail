@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.codec.payload;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
@@ -37,6 +38,11 @@ public final class PayLoadTransducerFactory implements CodecFactory<byte[], Byte
 	 */
 	public PayLoadTransducerFactory() {
 		// Prevent useless object creation
+	}
+
+	@Override
+	public Pair<Class<byte[]>, Class<Bytes>> getTypes() {
+		return Pair.create(byte[].class, Bytes.class);
 	}
 
 	/**

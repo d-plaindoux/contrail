@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -45,7 +46,7 @@ import org.wolfgang.contrail.network.reference.ReferenceFactory;
 public class TestNetworkComponent extends TestCase {
 
 	private SourceComponent<NetworkEvent, NetworkEvent> getSourceComponent() {
-		return new InitialComponent<NetworkEvent, NetworkEvent>(new DataReceiver<NetworkEvent>() {
+		return new InitialComponent<NetworkEvent, NetworkEvent>(Pair.create(NetworkEvent.class, NetworkEvent.class), new DataReceiver<NetworkEvent>() {
 			@Override
 			public void close() throws IOException {
 			}
@@ -56,8 +57,7 @@ public class TestNetworkComponent extends TestCase {
 		});
 	}
 
-	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryNotFoundException,
-			ReferenceEntryAlreadyExistException, CannotCreateComponentException {
+	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryNotFoundException, ReferenceEntryAlreadyExistException, CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();
@@ -119,8 +119,7 @@ public class TestNetworkComponent extends TestCase {
 		}
 	}
 
-	public void testFailure02() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException,
-			CannotCreateComponentException {
+	public void testFailure02() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final NetworkTable networkRouterTable = new NetworkTable();

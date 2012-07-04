@@ -34,13 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Terminal {
 
-	@XmlAttribute(name = "name")
 	private String name;
-
-	@XmlAttribute(name = "factory")
 	private String factory;
-
-	@XmlElement(name = "Param")
 	private List<String> parameters;
 
 	{
@@ -59,6 +54,7 @@ public class Terminal {
 	 * 
 	 * @return the name
 	 */
+	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -78,6 +74,7 @@ public class Terminal {
 	 * 
 	 * @return the factory
 	 */
+	@XmlAttribute
 	public String getFactory() {
 		return factory;
 	}
@@ -88,7 +85,6 @@ public class Terminal {
 	 * @param factory
 	 *            the factory to set
 	 */
-	@XmlAttribute(name = "factory")
 	public void setFactory(String factory) {
 		this.factory = factory;
 	}
@@ -98,6 +94,7 @@ public class Terminal {
 	 * 
 	 * @return the parameters
 	 */
+	@XmlElement(name = "param")
 	public List<String> getParameters() {
 		return parameters;
 	}

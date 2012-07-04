@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -49,8 +50,7 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, D>,
-		FilteredSourceComponents<D> {
+public class MultiplexerComponent<U, D> extends AbstractComponent implements MultipleSourceComponent<U, D>, FilteredSourceComponents<D> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -62,6 +62,11 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 
 		FILTERING_SOURCE_REQUIRED = message(category, "filtering.source.required");
 	}
+
+	/**
+	 * up and down stream data type
+	 */
+	private Pair<Class<U>, Class<D>> types;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -97,10 +102,17 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	/**
 	 * Constructor
 	 */
-	public MultiplexerComponent(MultiplexerDataHandlerFactory<D> multiplexerDataHandlerFactory) {
+	public MultiplexerComponent(Pair<Class<U>, Class<D>> types, MultiplexerDataHandlerFactory<D> multiplexerDataHandlerFactory) {
 		super();
+
+		this.types = types;
 		this.upStreamDataHandler = new DirectUpStreamDataHandler<U>(this);
 		this.downStreamDataHandler = multiplexerDataHandlerFactory.create(this);
+	}
+
+	@Override
+	public Pair<Class<U>, Class<D>> getUpStreamType() {
+		return this.types;
 	}
 
 	@Override

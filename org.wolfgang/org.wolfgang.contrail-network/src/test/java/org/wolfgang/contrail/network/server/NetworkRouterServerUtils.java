@@ -25,6 +25,7 @@ import java.net.UnknownHostException;
 import junit.framework.TestCase;
 
 import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory;
@@ -67,18 +68,18 @@ class NetworkRouterServerUtils extends TestCase {
 				try {
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
-							payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(Pair.create(Bytes.class, Bytes.class),
+							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
-					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(Pair.create(Object.class, Object.class),
 							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
 
 					// Coercion component
 					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
-							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(Pair.create(
+							NetworkEvent.class, NetworkEvent.class), coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
 
 					// Create the link from the client to the network
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
@@ -91,7 +92,7 @@ class NetworkRouterServerUtils extends TestCase {
 						@Override
 						public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
 							// Initial component
-							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
+							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(Pair.create(byte[].class, byte[].class), component);
 							try {
 								componentLinkManager.connect(initial, payLoadTransducer);
 								return initial.getDataSender();
@@ -134,18 +135,18 @@ class NetworkRouterServerUtils extends TestCase {
 				try {
 					// Payload component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
-							payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(Pair.create(Bytes.class, Bytes.class),
+							payLoadTransducerFactory.getDecoder(), payLoadTransducerFactory.getEncoder());
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
-					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(Pair.create(Object.class, Object.class),
 							serializationTransducerFactory.getDecoder(), serializationTransducerFactory.getEncoder());
 
 					// Coercion component
 					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(
-							coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(Pair.create(
+							NetworkEvent.class, NetworkEvent.class), coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
 
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
@@ -187,7 +188,7 @@ class NetworkRouterServerUtils extends TestCase {
 
 					// Initial component
 
-					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
+					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(Pair.create(byte[].class, byte[].class), receiver);
 					componentLinkManager.connect(initial, payLoadTransducer);
 					return initial.getDataSender();
 				} catch (ComponentConnectionRejectedException e) {

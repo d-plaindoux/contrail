@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -39,7 +40,7 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 	 * Constructor
 	 */
 	public ByteArraySourceComponent(final OutputStream outputStream) {
-		super(new DataReceiverFactory<byte[], byte[]>() {
+		super(Pair.create(byte[].class, byte[].class),new DataReceiverFactory<byte[], byte[]>() {
 			@Override
 			public DataReceiver<byte[]> create(DataSender<byte[]> initial) {
 				return new DataReceiver<byte[]>() {

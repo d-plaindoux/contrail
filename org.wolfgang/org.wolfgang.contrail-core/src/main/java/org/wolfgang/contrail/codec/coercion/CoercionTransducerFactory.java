@@ -19,7 +19,9 @@
 
 package org.wolfgang.contrail.codec.coercion;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**
@@ -54,6 +56,11 @@ public final class CoercionTransducerFactory<T> implements CodecFactory<Object, 
 	public CoercionTransducerFactory(Class<T> coercionType) {
 		this.coercionType = coercionType;
 		// Prevent useless object creation
+	}
+
+	@Override
+	public Pair<Class<Object>, Class<T>> getTypes() {
+		return Pair.create(Object.class, this.coercionType);
 	}
 
 	/**

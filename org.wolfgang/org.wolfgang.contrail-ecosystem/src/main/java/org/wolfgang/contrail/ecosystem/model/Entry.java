@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Entry {
 
 	private String name;
-
 	private String flow;
 
 	/**
@@ -47,6 +46,7 @@ public class Entry {
 	 * 
 	 * @return the name
 	 */
+	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -57,7 +57,6 @@ public class Entry {
 	 * @param name
 	 *            the name to set
 	 */
-	@XmlAttribute
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -67,6 +66,7 @@ public class Entry {
 	 * 
 	 * @return the flow
 	 */
+	@XmlElement
 	public String getFlow() {
 		return flow;
 	}
@@ -77,7 +77,6 @@ public class Entry {
 	 * @param flow
 	 *            the flow to set
 	 */
-	@XmlElement
 	public void setFlow(String flow) {
 		this.flow = flow;
 	}

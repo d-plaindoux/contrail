@@ -8,41 +8,46 @@
 
 	<transducer name='Coercion'
 		factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>
-		<param>NetEvent</param>
+		<param> NetEvent </param>
 	</transducer>
 
-	<component name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
+	<transducer name='JSon'
+		factory='org.wolfgang.contrail.codec.json.JsonTransducerFactory'>
+		<param> NetEvent </param>
+	</transducer>
 
-	<router name='NetworkRoute'
-		factory='org.wolfgang.contrail.network.component.NetworkFactory'
-		singleton='yes'>
-		<entry name='A.A'>
-			<flow>Logger</flow>
-		</entry>
+	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
+
+	<router name='NetStation '
+		factory='org.wolfgang.contrail.network.component.NetworkFactory'>
+		<self name='A.A' />
 
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
 			<!-- Net Socket Client -->
-			<flow>PayLoad Serialize Coercion NetworkRoute</flow>
+			<flow> PayLoad Serialize Coercion NetStation </flow>
 		</client>
 
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			<!-- Web Socket Client -->
-			<flow>JSon Coercion NetworkRoute</flow>
+			<flow> JSon Coercion NetStation </flow>
 		</client>
 	</router>
 
-	<hook name=NetHook '>
-		<flow>PayLoad Serialize Coercion NetworkRoute</flow>
-	</hook>
+	<entry name='NetHook'>
+		<flow> PayLoad Serialize Coercion NetStation </flow>
+	</entry>
 
-	<hook name=WebHook '>
-		<flow>JSon Coercion NetworkRoute</flow>
-	</hook>
+	<entry name='WebHook' typein="String" typeout="String">
+		<flow> JSon Coercion NetStation </flow>
+	</entry>
 
 	<server endpoint='tcp://localhost:6667'>
-		<flow>PayLoad Serialize Coercion NetworkRoute</flow>
+		<flow> PayLoad Serialize Coercion NetStation </flow>
 	</server>
+
 	<server endpoint='ws://localhost:6667'>
-		<flow>JSon Coercion NetworkRoute</flow>
+		<flow> JSon Coercion NetStation </flow>
 	</server>
+
+	<flow> NetStation Logger </flow>
 </ecosystem>

@@ -46,6 +46,7 @@ public class Server {
 	 * 
 	 * @return the endpoint
 	 */
+	@XmlAttribute
 	String getEndpoint() {
 		return endpoint;
 	}
@@ -56,7 +57,6 @@ public class Server {
 	 * @param endpoint
 	 *            the endpoint to set
 	 */
-	@XmlAttribute
 	void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
@@ -66,6 +66,7 @@ public class Server {
 	 * 
 	 * @return the flow
 	 */
+	@XmlElement
 	String getFlow() {
 		return flow;
 	}
@@ -76,7 +77,6 @@ public class Server {
 	 * @param flow
 	 *            the flow to set
 	 */
-	@XmlElement
 	void setFlow(String flow) {
 		this.flow = flow;
 	}

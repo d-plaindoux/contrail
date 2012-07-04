@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.bound;
 
 import java.io.IOException;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
@@ -42,6 +43,11 @@ import org.wolfgang.contrail.link.DestinationComponentLink;
  * @version 1.0
  */
 public class InitialComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
+
+	/**
+	 * Types for initial up and down stream
+	 */
+	private final Pair<Class<U>, Class<D>> types;
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
@@ -97,9 +103,10 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DataReceiver<D> receiver) {
+	public InitialComponent(Pair<Class<U>, Class<D>> types, final DataReceiver<D> receiver) {
 		super();
 
+		this.types = types;
 		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(receiver);
 	}
@@ -110,11 +117,17 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param dataFactory
 	 *            The initial data receiver factory
 	 */
-	public InitialComponent(final DataReceiverFactory<D, U> dataFactory) {
+	public InitialComponent(Pair<Class<U>, Class<D>> types, final DataReceiverFactory<D, U> dataFactory) {
 		super();
 
+		this.types = types;
 		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this.dataSender));
+	}
+
+	@Override
+	public Pair<Class<U>, Class<D>> getUpStreamType() {
+		return this.types;
 	}
 
 	/**

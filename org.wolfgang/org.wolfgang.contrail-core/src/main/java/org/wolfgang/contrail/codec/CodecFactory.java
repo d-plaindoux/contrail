@@ -20,6 +20,7 @@ package org.wolfgang.contrail.codec;
 
 import java.lang.reflect.Constructor;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**
@@ -53,6 +54,13 @@ public interface CodecFactory<U, D> {
 			}
 		}
 	}
+
+	/**
+	 * Method called whether types must be retrieved
+	 * 
+	 * @return a pair of types
+	 */
+	Pair<Class<U>, Class<D>> getTypes();
 
 	/**
 	 * Method providing the decoder

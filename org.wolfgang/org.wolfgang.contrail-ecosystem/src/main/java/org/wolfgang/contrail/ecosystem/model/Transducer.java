@@ -34,13 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Transducer {
 
-	@XmlAttribute(name = "name")
 	private String name;
-
-	@XmlAttribute(name = "factory")
 	private String factory;
-
-	@XmlElement(name = "Param")
 	private List<String> parameters;
 
 	{
@@ -59,6 +54,7 @@ public class Transducer {
 	 * 
 	 * @return the name
 	 */
+	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -78,6 +74,7 @@ public class Transducer {
 	 * 
 	 * @return the factory
 	 */
+	@XmlAttribute
 	public String getFactory() {
 		return factory;
 	}
@@ -97,6 +94,7 @@ public class Transducer {
 	 * 
 	 * @return the parameters
 	 */
+	@XmlElement(name = "param")
 	public List<String> getParameters() {
 		return parameters;
 	}

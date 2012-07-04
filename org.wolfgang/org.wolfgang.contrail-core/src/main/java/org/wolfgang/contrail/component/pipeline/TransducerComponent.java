@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.pipeline;
 import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
@@ -84,6 +85,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	 */
 	private DestinationComponentLink<U2, D2> destinationComponentLink;
 
+	private Pair<Class<U2>, Class<D2>> upstreamTypes;
+
 	/**
 	 * Constructor
 	 * 
@@ -92,12 +95,18 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	 * @param streamXducer
 	 *            The data transformation used for outgoing data (downstream)
 	 */
-	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
+	public TransducerComponent(Pair<Class<U2>, Class<D2>> upstreamTypes, DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
+		this.upstreamTypes = upstreamTypes;
 		this.upStreamDataHandler = new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer);
 		this.downStreamDataHandler = new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer);
 		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+	}
+
+	@Override
+	public Pair<Class<U2>, Class<D2>> getUpStreamType() {
+		return this.upstreamTypes;
 	}
 
 	/**

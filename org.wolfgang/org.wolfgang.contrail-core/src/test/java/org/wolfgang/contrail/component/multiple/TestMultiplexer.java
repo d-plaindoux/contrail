@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -44,59 +45,56 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestMultiplexer extends TestCase {
 
 	public void testMultiplexer01() {
-		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(
-				new DataReceiverFactory<Void, String>() {
+		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(new DataReceiverFactory<Void, String>() {
+			@Override
+			public DataReceiver<Void> create(DataSender<String> component) {
+				return new DataReceiver<Void>() {
 					@Override
-					public DataReceiver<Void> create(DataSender<String> component) {
-						return new DataReceiver<Void>() {
-							@Override
-							public void receiveData(Void data) throws DataHandlerException {
-								// Nothing
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(Void data) throws DataHandlerException {
+						// Nothing
 					}
-				});
 
-		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								assertTrue(data.endsWith("Hello, World!"));
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void close() throws IOException {
+						// Nothing
 					}
-				});
+				};
+			}
+		});
 
-		final SourceComponent<Void, String> listener2 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
+		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								fail();
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(String data) throws DataHandlerException {
+						assertTrue(data.endsWith("Hello, World!"));
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
+
+		final SourceComponent<Void, String> listener2 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
+					@Override
+					public void receiveData(String data) throws DataHandlerException {
+						fail();
+					}
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -105,7 +103,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -138,23 +136,22 @@ public class TestMultiplexer extends TestCase {
 	}
 
 	public void testMultiplexer02() {
-		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(
-				new DataReceiverFactory<Void, String>() {
+		final TerminalComponent<Void, String> destination = new TerminalComponent<Void, String>(new DataReceiverFactory<Void, String>() {
+			@Override
+			public DataReceiver<Void> create(DataSender<String> component) {
+				return new DataReceiver<Void>() {
 					@Override
-					public DataReceiver<Void> create(DataSender<String> component) {
-						return new DataReceiver<Void>() {
-							@Override
-							public void receiveData(Void data) throws DataHandlerException {
-								// Nothing
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(Void data) throws DataHandlerException {
+						// Nothing
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -163,7 +160,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -176,23 +173,22 @@ public class TestMultiplexer extends TestCase {
 	}
 
 	public void testMultiplexer03() {
-		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
+		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								assertEquals("Hello, World!", data);
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(String data) throws DataHandlerException {
+						assertEquals("Hello, World!", data);
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -201,7 +197,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -214,23 +210,22 @@ public class TestMultiplexer extends TestCase {
 	}
 
 	public void testMultiplexer03b() {
-		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
+		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								assertEquals("Hello, World!", data);
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(String data) throws DataHandlerException {
+						assertEquals("Hello, World!", data);
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -239,7 +234,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 
@@ -253,23 +248,22 @@ public class TestMultiplexer extends TestCase {
 	}
 
 	public void testMultiplexer04() {
-		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
+		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								assertEquals("Hello, World!", data);
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(String data) throws DataHandlerException {
+						assertEquals("Hello, World!", data);
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -278,7 +272,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -292,23 +286,22 @@ public class TestMultiplexer extends TestCase {
 	}
 
 	public void testMultiplexer05() {
-		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(
-				new DataReceiverFactory<String, Void>() {
+		final SourceComponent<Void, String> listener1 = new InitialComponent<Void, String>(Pair.create(Void.class, String.class), new DataReceiverFactory<String, Void>() {
+			@Override
+			public DataReceiver<String> create(DataSender<Void> component) {
+				return new DataReceiver<String>() {
 					@Override
-					public DataReceiver<String> create(DataSender<Void> component) {
-						return new DataReceiver<String>() {
-							@Override
-							public void receiveData(String data) throws DataHandlerException {
-								assertTrue(data.endsWith("Hello, World!"));
-							}
-
-							@Override
-							public void close() throws IOException {
-								// Nothing
-							}
-						};
+					public void receiveData(String data) throws DataHandlerException {
+						assertTrue(data.endsWith("Hello, World!"));
 					}
-				});
+
+					@Override
+					public void close() throws IOException {
+						// Nothing
+					}
+				};
+			}
+		});
 
 		final MultiplexerDataHandlerFactory<String> multiplexerFactory = new MultiplexerDataHandlerFactory<String>() {
 			@Override
@@ -317,7 +310,7 @@ public class TestMultiplexer extends TestCase {
 			}
 		};
 
-		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(multiplexerFactory);
+		final MultiplexerComponent<Void, String> multiplexer = new MultiplexerComponent<Void, String>(Pair.create(Void.class, String.class), multiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {

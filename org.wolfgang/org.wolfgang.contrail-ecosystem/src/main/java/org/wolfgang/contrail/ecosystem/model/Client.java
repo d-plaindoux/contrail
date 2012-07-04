@@ -48,7 +48,6 @@ public class Client {
 	 * 
 	 * @return the name
 	 */
-	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -59,6 +58,7 @@ public class Client {
 	 * @param name
 	 *            the name to set
 	 */
+	@XmlAttribute
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -68,6 +68,7 @@ public class Client {
 	 * 
 	 * @return the filter
 	 */
+	@XmlAttribute
 	public String getFilter() {
 		return filter;
 	}
@@ -78,7 +79,6 @@ public class Client {
 	 * @param filter
 	 *            the filter to set
 	 */
-	@XmlAttribute
 	public void setFilter(String filter) {
 		this.filter = filter;
 	}
@@ -88,6 +88,7 @@ public class Client {
 	 * 
 	 * @return the endpoint
 	 */
+	@XmlAttribute
 	public String getEndpoint() {
 		return endpoint;
 	}
@@ -98,7 +99,6 @@ public class Client {
 	 * @param endpoint
 	 *            the endpoint to set
 	 */
-	@XmlAttribute
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
@@ -108,6 +108,7 @@ public class Client {
 	 * 
 	 * @return the flow
 	 */
+	@XmlElement
 	public String getFlow() {
 		return flow;
 	}
@@ -118,7 +119,6 @@ public class Client {
 	 * @param flow
 	 *            the flow to set
 	 */
-	@XmlElement
 	public void setFlow(String flow) {
 		this.flow = flow;
 	}

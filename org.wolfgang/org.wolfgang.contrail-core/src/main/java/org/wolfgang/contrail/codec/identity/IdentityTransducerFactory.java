@@ -18,7 +18,9 @@
 
 package org.wolfgang.contrail.codec.identity;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**
@@ -31,11 +33,18 @@ import org.wolfgang.contrail.component.pipeline.DataTransducer;
  */
 public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
 
+	private final Class<A> type;
+
 	/**
 	 * Constructor
 	 */
-	public IdentityTransducerFactory() {
-		// Prevent useless object creation
+	public IdentityTransducerFactory(Class<A> type) {
+		this.type = type;
+	}
+
+	@Override
+	public Pair<Class<A>, Class<A>> getTypes() {
+		return Pair.create(type, type);
 	}
 
 	/**

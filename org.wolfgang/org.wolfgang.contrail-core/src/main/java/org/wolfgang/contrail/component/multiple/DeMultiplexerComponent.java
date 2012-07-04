@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -49,8 +50,7 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DeMultiplexerComponent<U, D> extends AbstractComponent implements MultipleDestinationComponent<U, D>,
-		FilteredDestinationComponents<U> {
+public class DeMultiplexerComponent<U, D> extends AbstractComponent implements MultipleDestinationComponent<U, D>, FilteredDestinationComponents<U> {
 
 	/**
 	 * Static message definition for not yet connected component
@@ -61,6 +61,11 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 		final String category = "org.wolfgang.contrail.message";
 		FILTERING_SOURCE_REQUIRED = message(category, "filtering.source.required");
 	}
+
+	/**
+	 * Up and down stream types
+	 */
+	private final Pair<Class<U>, Class<D>> types;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -96,10 +101,16 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 	/**
 	 * Constructor
 	 */
-	public DeMultiplexerComponent(DeMultiplexerDataHandlerFactory<U> upStreamDataHandler) {
+	public DeMultiplexerComponent(Pair<Class<U>, Class<D>> types, DeMultiplexerDataHandlerFactory<U> upStreamDataHandler) {
 		super();
+		this.types = types;
 		this.upStreamDataHandler = upStreamDataHandler.create(this);
 		this.downStreamDataHandler = new DirectDownStreamDataHandler<D>(this);
+	}
+
+	@Override
+	public Pair<Class<U>, Class<D>> getUpStreamType() {
+		return this.types;
 	}
 
 	@Override

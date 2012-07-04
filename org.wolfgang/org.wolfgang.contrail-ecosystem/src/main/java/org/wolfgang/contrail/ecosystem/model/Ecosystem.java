@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * <code>Ecosystem</code>
@@ -31,21 +32,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
+@XmlSeeAlso({ Entry.class, Transducer.class, Router.class, Terminal.class, Server.class })
 public class Ecosystem {
 
-	@XmlElement(name = "Transducer")
+	private String flow;
+	private List<Entry> entries;
 	private List<Transducer> transducers;
-
-	@XmlElement(name = "Router")
 	private List<Router> routers;
-
-	@XmlElement(name = "Terminal")
 	private List<Terminal> terminals;
-
-	@XmlElement(name = "Server")
 	private List<Server> servers;
 
 	{
+		this.entries = new ArrayList<Entry>();
 		this.transducers = new ArrayList<Transducer>();
 		this.routers = new ArrayList<Router>();
 		this.terminals = new ArrayList<Terminal>();
@@ -60,10 +58,51 @@ public class Ecosystem {
 	}
 
 	/**
+	 * Return the value of flow
+	 * 
+	 * @return the flow
+	 */
+	@XmlElement
+	public String getFlow() {
+		return flow;
+	}
+
+	/**
+	 * Set the value of flow
+	 * 
+	 * @param flow
+	 *            the flow to set
+	 */
+	public void setFlow(String flow) {
+		this.flow = flow;
+	}
+
+	/**
+	 * Return the value of entries
+	 * 
+	 * @return the entries
+	 */
+	@XmlElement(name = "entry")
+	public List<Entry> getEntries() {
+		return entries;
+	}
+
+	/**
+	 * Set the value of entries
+	 * 
+	 * @param entries
+	 *            the entries to set
+	 */
+	public void add(Entry entry) {
+		this.entries.add(entry);
+	}
+
+	/**
 	 * Return the value of transducers
 	 * 
 	 * @return the transducers
 	 */
+	@XmlElement(name = "transducer")
 	public List<Transducer> getTransducers() {
 		return transducers;
 	}
@@ -83,6 +122,7 @@ public class Ecosystem {
 	 * 
 	 * @return the routers
 	 */
+	@XmlElement(name = "router")
 	public List<Router> getRouters() {
 		return routers;
 	}
@@ -102,6 +142,7 @@ public class Ecosystem {
 	 * 
 	 * @return the terminals
 	 */
+	@XmlElement(name = "terminal")
 	public List<Terminal> getTerminals() {
 		return terminals;
 	}
@@ -121,6 +162,7 @@ public class Ecosystem {
 	 * 
 	 * @return the servers
 	 */
+	@XmlElement(name = "server")
 	public List<Server> getServers() {
 		return servers;
 	}

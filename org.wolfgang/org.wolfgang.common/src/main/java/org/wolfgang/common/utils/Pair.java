@@ -27,6 +27,10 @@ package org.wolfgang.common.utils;
  */
 public class Pair<First, Second> {
 
+	public static <U, D> Pair<U, D> create(U u, D d) {
+		return new Pair<U, D>(u, d);
+	}
+
 	/**
 	 * The first attribute
 	 */

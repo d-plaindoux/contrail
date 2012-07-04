@@ -24,6 +24,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * <code>Router</code>
@@ -32,15 +33,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
+@XmlSeeAlso({ Entry.class, Client.class })
 public class Router {
 
-	@XmlAttribute(name = "name")
 	private String name;
-
-	@XmlElement(name = "Entry")
-	private Entry self;
-
-	@XmlElement(name = "Client")
+	private String factory;
+	private String self;
 	private List<Client> clients;
 
 	{
@@ -59,6 +57,7 @@ public class Router {
 	 * 
 	 * @return the name
 	 */
+	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -74,29 +73,61 @@ public class Router {
 	}
 
 	/**
-	 * Return the value ofself
+	 * Return the value of factory
 	 * 
-	 * @return the self
+	 * @return the factory
 	 */
-	public Entry getSelf() {
+	@XmlAttribute
+	public String getFactory() {
+		return factory;
+	}
+
+	/**
+	 * Set the value of factory
+	 * 
+	 * @param factory
+	 *            the factory to set
+	 */
+	public void setFactory(String factory) {
+		this.factory = factory;
+	}
+
+	/**
+	 * Return the value of entry
+	 * 
+	 * @return the entry
+	 */
+	@XmlElement
+	public String getSelf() {
 		return self;
 	}
 
 	/**
-	 * Set the value of self
+	 * Set the value of entry
 	 * 
 	 * @param self
-	 *            the self to set
+	 *            the entry to set
 	 */
-	public void setSelf(Entry self) {
+	public void setSelf(String self) {
 		this.self = self;
 	}
 
 	/**
-	 * Return the value ofclients
+	 * Set the value of clients
+	 * 
+	 * @param clients
+	 *            the clients to set
+	 */
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
+	}
+
+	/**
+	 * Return the value of clients
 	 * 
 	 * @return the clients
 	 */
+	@XmlElement(name = "client")
 	public List<Client> getClients() {
 		return clients;
 	}

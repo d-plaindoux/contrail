@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -103,7 +104,7 @@ public final class WebServer extends NIOServer {
 
 			@Override
 			public DataSender<String> create(DataReceiver<String> receiver) throws CannotCreateDataSenderException {
-				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
+				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(Pair.create(String.class, String.class), receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
