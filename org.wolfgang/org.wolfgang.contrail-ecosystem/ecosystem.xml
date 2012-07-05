@@ -8,12 +8,12 @@
 
 	<transducer name='Coercion'
 		factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>
-		<param> NetEvent </param>
+		<param> org.wolfgang.contrail.network.event.NetEvent </param>
 	</transducer>
 
-	<transducer name='JSon'
-		factory='org.wolfgang.contrail.codec.json.JsonTransducerFactory'>
-		<param> NetEvent </param>
+	<transducer name='JAXB'
+		factory='org.wolfgang.contrail.codec.json.JAXBTransducerFactory'>
+		<param> org.wolfgang.contrail.network.event.NetEvent </param>
 	</transducer>
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
@@ -29,7 +29,7 @@
 
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			<!-- Web Socket Client -->
-			<flow> JSon Coercion NetStation </flow>
+			<flow> JAXB Coercion NetStation </flow>
 		</client>
 	</router>
 
@@ -38,7 +38,7 @@
 	</entry>
 
 	<entry name='WebHook' typein="String" typeout="String">
-		<flow> JSon Coercion NetStation </flow>
+		<flow> JAXB Coercion NetStation </flow>
 	</entry>
 
 	<server endpoint='tcp://localhost:6667'>
@@ -46,7 +46,7 @@
 	</server>
 
 	<server endpoint='ws://localhost:6667'>
-		<flow> JSon Coercion NetStation </flow>
+		<flow> JAXB Coercion NetStation </flow>
 	</server>
 
 	<flow> NetStation Logger </flow>

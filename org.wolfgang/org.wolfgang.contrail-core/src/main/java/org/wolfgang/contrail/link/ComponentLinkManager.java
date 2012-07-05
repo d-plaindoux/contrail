@@ -43,8 +43,7 @@ public interface ComponentLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	<U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
-			throws ComponentConnectionRejectedException;
+	<U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called to retrieve all sources connected to the identified

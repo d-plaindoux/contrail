@@ -36,4 +36,11 @@ public interface DestinationComponentLink<U, D> extends ComponentLink {
 	 */
 	DestinationComponent<U, D> getDestination();
 
+	/**
+	 * Method called whether the component link manager must be retrieved
+	 * 
+	 * @return the component link manager
+	 */
+	ComponentLinkManager getComponentLinkManager();
+
 }

@@ -39,11 +39,12 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentLink;
+import org.wolfgang.contrail.link.ComponentLinkImpl;
 import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.component.CannotCreateComponentException;
 import org.wolfgang.contrail.network.component.NetworkComponent;
+import org.wolfgang.contrail.network.component.NetworkHandShake;
 import org.wolfgang.contrail.network.component.NetworkTable;
 import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.event.NetworkEvent;
@@ -125,7 +126,7 @@ class NetworkRouterServerUtils extends TestCase {
 		component.getNetworkTable().insert(entry, mainReference, references);
 	}
 
-	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component, final ComponentLinkManager componentLinkManager) {
+	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component, final ComponentLinkManagerImpl componentLinkManager) {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
@@ -151,39 +152,9 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 
-					final FutureResponse<ComponentLink> futureResponse = new FutureResponse<ComponentLink>();
-					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(new DataReceiver<NetworkEvent>() {
-						@Override
-						public void close() throws IOException {
-							// TODO
-						}
-
-						@Override
-						public void receiveData(NetworkEvent data) throws DataHandlerException {
-							try {
-								// Retrieve the component reference
-								final DirectReference reference = data.getSender();
-
-								System.err.println(component.getSelfReference() + " - Accept a client from " + reference + " [Finishing handshake stage]");
-
-								// Re-set the established link
-								futureResponse.get().dispose();
-								componentLinkManager.connect(coercionTransducer, component);
-
-								if (reference == null || reference.equals(component.getSelfReference())) {
-									coercionTransducer.closeDownStream();
-								} else {
-									component.filterSource(coercionTransducer.getComponentId(), reference);
-								}
-								// Re-send the event to the network
-								// component
-								component.getDownStreamDataHandler().handleData(data);
-							} catch (Exception e) {
-								throw new DataHandlerException(e);
-							}
-						}
-					});
-
+					final FutureResponse<ComponentLinkImpl> futureResponse = new FutureResponse<ComponentLinkImpl>();
+					final NetworkHandShake handshakeReceiver = new NetworkHandShake(futureResponse, component, coercionTransducer);
+					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(handshakeReceiver);
 					futureResponse.setValue(componentLinkManager.connect(coercionTransducer, handshake));
 
 					// Initial component

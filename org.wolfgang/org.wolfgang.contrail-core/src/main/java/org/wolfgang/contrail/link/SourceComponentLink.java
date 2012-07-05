@@ -36,4 +36,11 @@ public interface SourceComponentLink<U, D> extends ComponentLink {
 	 */
 	SourceComponent<U, D> getSource();
 
+	/**
+	 * Method called whether the component link manager must be retrieved
+	 * 
+	 * @return the component link manager
+	 */
+	ComponentLinkManager getComponentLinkManager();
+
 }

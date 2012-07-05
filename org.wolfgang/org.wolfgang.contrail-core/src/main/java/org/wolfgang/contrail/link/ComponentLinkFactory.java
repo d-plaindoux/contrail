@@ -52,6 +52,11 @@ public final class ComponentLinkFactory {
 			public SourceComponent<U, D> getSource() {
 				return null;
 			}
+
+			@Override
+			public ComponentLinkManager getComponentLinkManager() {
+				throw new IllegalAccessError();
+			}
 		};
 	}
 
@@ -69,6 +74,11 @@ public final class ComponentLinkFactory {
 			@Override
 			public DestinationComponent<U, D> getDestination() {
 				return null;
+			}
+
+			@Override
+			public ComponentLinkManager getComponentLinkManager() {
+				throw new IllegalAccessError();
 			}
 		};
 	}

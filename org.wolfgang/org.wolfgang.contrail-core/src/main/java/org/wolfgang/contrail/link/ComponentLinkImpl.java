@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationComponentLink<U, D> {
+public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationComponentLink<U, D> {
 
 	/**
 	 * The upstream source used for the interconnection
@@ -43,6 +43,7 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 	 */
 	private final DestinationComponent<U, D> destination;
 	private final ComponentLink destinationConnection;
+	private final ComponentLinkManager componentLinkManager;
 
 	/**
 	 * Constructor
@@ -54,9 +55,9 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 	 * @throws ComponentConnectionRejectedException
 	 *             thrown if the connection cannot be performed
 	 */
-	ComponentLinkImpl(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
-			throws ComponentConnectionRejectedException {
+	ComponentLinkImpl(ComponentLinkManager componentLinkManager, SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
 		super();
+		this.componentLinkManager = componentLinkManager;
 		this.source = source;
 		this.destination = destination;
 
@@ -73,6 +74,11 @@ class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, DestinationC
 
 			throw e;
 		}
+	}
+
+	@Override
+	public ComponentLinkManager getComponentLinkManager() {
+		return this.componentLinkManager;
 	}
 
 	@Override

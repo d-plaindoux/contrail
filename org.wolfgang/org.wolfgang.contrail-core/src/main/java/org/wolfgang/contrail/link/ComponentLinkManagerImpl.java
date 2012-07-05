@@ -53,10 +53,9 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	}
 
 	@Override
-	public final <U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination)
-			throws ComponentConnectionRejectedException {
+	public final <U, D> ComponentLinkImpl<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
 
-		final ComponentLinkImpl<U, D> link = new ComponentLinkImpl<U, D>(source, destination) {
+		final ComponentLinkImpl<U, D> link = new ComponentLinkImpl<U, D>(this, source, destination) {
 			@Override
 			public void dispose() throws ComponentDisconnectionRejectedException {
 				try {
@@ -73,11 +72,9 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	}
 
 	@Override
-	public final boolean disconnect(ComponentId sourceId, ComponentId destinationId)
-			throws ComponentDisconnectionRejectedException {
+	public final boolean disconnect(ComponentId sourceId, ComponentId destinationId) throws ComponentDisconnectionRejectedException {
 		for (ComponentLinkImpl<?, ?> link : links) {
-			if (link.getSource().getComponentId().equals(sourceId)
-					&& link.getDestination().getComponentId().equals(destinationId)) {
+			if (link.getSource().getComponentId().equals(sourceId) && link.getDestination().getComponentId().equals(destinationId)) {
 				link.dispose();
 				links.remove(link);
 				return true;

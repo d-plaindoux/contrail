@@ -48,7 +48,7 @@ public final class EcosystemImpl implements Ecosystem {
 	/**
 	 * The related link manager
 	 */
-	private final ComponentLinkManager linkManager;
+	private final ComponentLinkManagerImpl linkManager;
 
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>>();
@@ -60,7 +60,7 @@ public final class EcosystemImpl implements Ecosystem {
 	 * 
 	 * @return the link manager
 	 */
-	public ComponentLinkManager getLinkManager() {
+	public ComponentLinkManagerImpl getLinkManager() {
 		return linkManager;
 	}
 
