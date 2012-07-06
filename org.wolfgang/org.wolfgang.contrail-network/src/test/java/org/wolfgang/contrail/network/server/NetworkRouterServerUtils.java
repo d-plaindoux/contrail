@@ -152,7 +152,7 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 
-					final FutureResponse<ComponentLinkImpl> futureResponse = new FutureResponse<ComponentLinkImpl>();
+					final FutureResponse<ComponentLinkImpl<NetworkEvent, NetworkEvent>> futureResponse = new FutureResponse<ComponentLinkImpl<NetworkEvent, NetworkEvent>>();
 					final NetworkHandShake handshakeReceiver = new NetworkHandShake(futureResponse, component, coercionTransducer);
 					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(handshakeReceiver);
 					futureResponse.setValue(componentLinkManager.connect(coercionTransducer, handshake));

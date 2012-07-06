@@ -25,9 +25,7 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkImpl;
-import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;
 
@@ -39,7 +37,7 @@ import org.wolfgang.contrail.network.reference.DirectReference;
  */
 public class NetworkHandShake implements DataReceiver<NetworkEvent> {
 
-	private final Future<ComponentLinkImpl> future;
+	private final Future<ComponentLinkImpl<NetworkEvent, NetworkEvent>> future;
 	private final NetworkComponent component;
 	private final SourceComponent<NetworkEvent, NetworkEvent> sourceComponent;
 
@@ -51,7 +49,7 @@ public class NetworkHandShake implements DataReceiver<NetworkEvent> {
 	 * @param componentLinkManager
 	 * @param sourceComponent
 	 */
-	public NetworkHandShake(Future<ComponentLinkImpl> future, NetworkComponent component, SourceComponent<NetworkEvent, NetworkEvent> sourceComponent) {
+	public NetworkHandShake(Future<ComponentLinkImpl<NetworkEvent, NetworkEvent>> future, NetworkComponent component, SourceComponent<NetworkEvent, NetworkEvent> sourceComponent) {
 		super();
 		this.future = future;
 		this.component = component;
@@ -79,15 +77,13 @@ public class NetworkHandShake implements DataReceiver<NetworkEvent> {
 			final DirectReference senderReference = data.getSender();
 			final DirectReference receiverReference = component.getSelfReference();
 
-			System.err.println(receiverReference + " - Accept a client from " + senderReference + " [Finishing handshake stage]");
-
 			// Re-set the established link
-			final ComponentLinkImpl destinationLink = future.get();
+			final ComponentLinkImpl<NetworkEvent, NetworkEvent> destinationLink = future.get();
 
 			destinationLink.dispose();
 			destinationLink.getComponentLinkManager().connect(sourceComponent, component);
 
-			if (senderReference == null || senderReference.equals(component.getSelfReference())) {
+			if (senderReference == null || senderReference.equals(receiverReference)) {
 				sourceComponent.closeDownStream();
 			} else {
 				component.filterSource(sourceComponent.getComponentId(), senderReference);

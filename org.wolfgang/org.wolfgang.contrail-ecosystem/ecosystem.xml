@@ -34,7 +34,7 @@
 	</router>
 
 	<entry name='NetHook'>
-		<flow> PayLoad Serialize Coercion NetStation </flow>
+		<flow> PayLoad Serialize Coercion NetShake NetStation </flow>
 	</entry>
 
 	<entry name='WebHook' typein="String" typeout="String">
@@ -42,7 +42,7 @@
 	</entry>
 
 	<server endpoint='tcp://localhost:6667'>
-		<flow> PayLoad Serialize Coercion NetStation </flow>
+		<flow> PayLoad Serialize Coercion NetShake NetStation </flow>
 	</server>
 
 	<server endpoint='ws://localhost:6667'>
