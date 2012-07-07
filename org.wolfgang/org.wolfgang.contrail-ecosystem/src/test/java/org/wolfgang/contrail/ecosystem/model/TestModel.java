@@ -133,25 +133,25 @@ public class TestModel extends TestCase {
 	// ------------------------------
 
 	public void testTransducer01() throws JAXBException {
-		final String content = "<transducer name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'/>";
-		final Transducer decoded = decode(Transducer.class, content);
+		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'/>";
+		final Pipeline decoded = decode(Pipeline.class, content);
 		assertEquals("Coercion", decoded.getName());
 		assertEquals("org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory", decoded.getFactory());
 		assertEquals(0, decoded.getParameters().size());
 	}
 
 	public void testTransducer02() throws JAXBException {
-		final String content = "<transducer name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>" + "<param>NetEvent</param> " + "</transducer>";
-		final Transducer decoded = decode(Transducer.class, content);
+		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>" + "<param>NetEvent</param> " + "</pipeline>";
+		final Pipeline decoded = decode(Pipeline.class, content);
 		assertEquals("Coercion", decoded.getName());
 		assertEquals("org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory", decoded.getFactory());
 		assertEquals(Arrays.asList("NetEvent"), decoded.getParameters());
 	}
 
 	public void testTransducer03() throws JAXBException {
-		final String content = "<transducer name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'> " + "<param>NetEvent1</param> " + "<param>NetEvent2</param> "
-				+ "</transducer>";
-		final Transducer decoded = decode(Transducer.class, content);
+		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'> " + "<param>NetEvent1</param> " + "<param>NetEvent2</param> "
+				+ "</pipeline>";
+		final Pipeline decoded = decode(Pipeline.class, content);
 		assertEquals("Coercion", decoded.getName());
 		assertEquals("org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory", decoded.getFactory());
 		assertEquals(Arrays.asList("NetEvent1", "NetEvent2"), decoded.getParameters());
@@ -186,9 +186,9 @@ public class TestModel extends TestCase {
 	// ------------------------------
 
 	public void testEcosystem() throws JAXBException {
-		final String content = "<ecosystem><transducer name='PayLoad' factory='org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory' />"
-				+ "<transducer name='Serialize' factory='org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory'/>"
-				+ "<transducer name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'><param>NetEvent</param></transducer>"
+		final String content = "<ecosystem><pipeline name='PayLoad' factory='org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory' />"
+				+ "<pipeline name='Serialize' factory='org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory'/>"
+				+ "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'><param>NetEvent</param></pipeline>"
 				+ "<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent'/>"
 				+ "<router name='NetworkRoute' factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
 				+ "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>" + "<flow>PayLoad Serialize Coercion NetworkRoute</flow>" + "</client>"

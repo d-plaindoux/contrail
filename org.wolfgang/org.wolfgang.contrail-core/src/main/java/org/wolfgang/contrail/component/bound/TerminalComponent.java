@@ -25,7 +25,6 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -46,7 +45,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	/**
 	 * Related down stream data handler after connection. Null otherwise
 	 */
-	private SourceComponentLink<U, D> upStreamSourceComponentLink;
+	private SourceComponentLink<U, D> sourceComponentLink;
 
 	/**
 	 * The data injection mechanism
@@ -59,7 +58,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	private final UpStreamDataHandler<U> upstreamDataHandler;
 
 	{
-		this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 	}
 
 	/**
@@ -125,23 +124,23 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 *             thrown if the handler is not yet available
 	 */
 	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamSourceComponentLink.getSource() == null) {
+		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamSourceComponentLink.getSource().getDownStreamDataHandler();
+			return sourceComponentLink.getSource().getDownStreamDataHandler();
 		}
 	}
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.upStreamSourceComponentLink.getSource() == null;
+		return ComponentLinkFactory.isUndefined(this.sourceComponentLink);
 	}
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
 		final ComponentId componentId = handler.getSource().getComponentId();
 		if (acceptSource(componentId)) {
-			this.upStreamSourceComponentLink = handler;
+			this.sourceComponentLink = handler;
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -154,9 +153,8 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		final SourceComponent<U, D> sourceComponent = this.upStreamSourceComponentLink.getSource();
-		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
-			this.upStreamSourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+		if (!acceptSource(componentId) && this.sourceComponentLink.getSource().getComponentId().equals(componentId)) {
+			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -185,10 +183,10 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		if (this.upStreamSourceComponentLink.getSource() == null) {
+		if (this.sourceComponentLink.getSource() == null) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.upStreamSourceComponentLink.getSource().closeDownStream();
+			this.sourceComponentLink.getSource().closeDownStream();
 		}
 	}
 }

@@ -208,7 +208,7 @@ public class DeMultiplexerComponent<U, D> extends AbstractComponent implements M
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.upStreamSourceComponentLink.getSource() == null;
+		return ComponentLinkFactory.isUndefined(this.upStreamSourceComponentLink);
 	}
 
 	@Override

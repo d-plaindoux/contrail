@@ -23,7 +23,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.codec.payload.Bytes;
-import org.wolfgang.contrail.codec.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
-public class Transducer {
+public class Pipeline {
 
 	private String name;
 	private String factory;
@@ -45,7 +45,7 @@ public class Transducer {
 	/**
 	 * Constructor
 	 */
-	public Transducer() {
+	public Pipeline() {
 		super();
 	}
 

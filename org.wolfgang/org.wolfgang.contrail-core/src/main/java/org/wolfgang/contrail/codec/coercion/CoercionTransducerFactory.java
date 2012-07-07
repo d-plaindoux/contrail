@@ -21,7 +21,6 @@ package org.wolfgang.contrail.codec.coercion;
 
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
-import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 
 /**

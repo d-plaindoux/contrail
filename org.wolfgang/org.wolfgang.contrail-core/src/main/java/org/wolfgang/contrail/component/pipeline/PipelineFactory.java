@@ -18,28 +18,38 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Constructor;
+
+import org.wolfgang.contrail.component.PipelineComponent;
 
 /**
- * <code>IntegerToString</code>
+ * <code>PipelineFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements DataTransducer<String, Integer> {
+public final class PipelineFactory {
 
-	@Override
-	public List<Integer> transform(String s) throws DataTransducerException {
-		try {
-			return Arrays.asList(Integer.parseInt(s));
-		} catch (NumberFormatException e) {
-			throw new DataTransducerException(e);
-		}
+	/**
+	 * Constructor
+	 */
+	private PipelineFactory() {
+		super();
 	}
 
-	@Override
-	public List<Integer> finish() throws DataTransducerException {
-		return Arrays.asList();
+	@SuppressWarnings("rawtypes")
+	public static PipelineComponent create(ClassLoader loader, String name, String[] parameters) throws PipelineComponentCreationException {
+		try {
+
+			final Class<?> component = loader.loadClass(name);
+			try {
+				final Constructor<?> constructor = component.getConstructor(String[].class);
+				return (PipelineComponent) constructor.newInstance(new Object[] { parameters });
+			} catch (NoSuchMethodException e) {
+				return (PipelineComponent) component.newInstance();
+			}
+		} catch (Exception e) {
+			throw new PipelineComponentCreationException(e);
+		}
 	}
 }

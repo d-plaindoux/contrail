@@ -21,9 +21,6 @@ package org.wolfgang.contrail.component.pipeline;
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.component.pipeline.DataTransducerException;
-
 /**
  * <code>IntegerToString</code>
  * 

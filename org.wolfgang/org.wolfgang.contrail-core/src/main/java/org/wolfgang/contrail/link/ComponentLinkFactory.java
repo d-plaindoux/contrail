@@ -50,7 +50,7 @@ public final class ComponentLinkFactory {
 
 			@Override
 			public SourceComponent<U, D> getSource() {
-				return null;
+				throw new IllegalAccessError();
 			}
 
 			@Override
@@ -73,7 +73,7 @@ public final class ComponentLinkFactory {
 
 			@Override
 			public DestinationComponent<U, D> getDestination() {
-				return null;
+				throw new IllegalAccessError();
 			}
 
 			@Override
@@ -81,6 +81,32 @@ public final class ComponentLinkFactory {
 				throw new IllegalAccessError();
 			}
 		};
+	}
+
+	/**
+	 * @param componentLink
+	 * @return
+	 */
+	public static boolean isUndefined(SourceComponentLink<?, ?> componentLink) {
+		try {
+			componentLink.getSource();
+			return false;
+		} catch (IllegalAccessError e) {
+			return true;
+		}
+	}
+
+	/**
+	 * @param componentLink
+	 * @return
+	 */
+	public static boolean isUndefined(DestinationComponentLink<?, ?> componentLink) {
+		try {
+			componentLink.getDestination();
+			return false;
+		} catch (IllegalAccessError e) {
+			return true;
+		}
 	}
 
 }

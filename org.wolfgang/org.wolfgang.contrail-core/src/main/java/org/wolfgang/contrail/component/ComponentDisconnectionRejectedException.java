@@ -34,9 +34,18 @@ public class ComponentDisconnectionRejectedException extends Exception {
 	/**
 	 * Constructor
 	 * 
+	 */
+	public ComponentDisconnectionRejectedException() {
+		super();
+	}
+	
+	/**
+	 * Constructor
+	 * 
 	 * @param arg0
 	 */
 	public ComponentDisconnectionRejectedException(String arg0) {
 		super(arg0);
 	}
+
 }

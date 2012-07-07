@@ -25,7 +25,6 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -52,7 +51,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponentLink<U, D> upStreamDestinationComponentLink;
+	private DestinationComponentLink<U, D> destinationComponentLink;
 
 	/**
 	 * The data sender mechanism used by external components
@@ -65,7 +64,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	private final DownStreamDataHandler<D> downStreamDataHandler;
 
 	{
-		this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 	}
 
 	/**
@@ -138,23 +137,23 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 *             thrown if the handler is not yet available
 	 */
 	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
-		if (this.upStreamDestinationComponentLink.getDestination() == null) {
+		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return upStreamDestinationComponentLink.getDestination().getUpStreamDataHandler();
+			return destinationComponentLink.getDestination().getUpStreamDataHandler();
 		}
 	}
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.upStreamDestinationComponentLink.getDestination() == null;
+		return ComponentLinkFactory.isUndefined(this.destinationComponentLink);
 	}
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
 		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (acceptDestination(componentId)) {
-			this.upStreamDestinationComponentLink = handler;
+			this.destinationComponentLink = handler;
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -167,9 +166,8 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		final DestinationComponent<U, D> destinationComponent = this.upStreamDestinationComponentLink.getDestination();
-		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
-			this.upStreamDestinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
+			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -193,10 +191,10 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		if (this.upStreamDestinationComponentLink.getDestination() == null) {
+		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.upStreamDestinationComponentLink.getDestination().closeUpStream();
+			this.destinationComponentLink.getDestination().closeUpStream();
 		}
 	}
 

@@ -24,6 +24,7 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
+import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
  * The <code>TransformationBasedDownStreamDataHandlle</code> is an
@@ -69,14 +70,14 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 	public void handleData(U data) throws DataHandlerException {
 		if (closed) {
 			throw new DownStreamDataHandlerClosedException();
-		} else if (this.component.getSourceComponent() == null) {
+		} else if (ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
 			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
 		} else {
 			try {
 				final List<D> transform = streamXducer.transform(data);
 				for (D value : transform) {
-					this.component.getSourceComponent().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -88,17 +89,19 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
 		this.closed = true;
-		try {
-			final List<D> transform = streamXducer.finish();
-			for (D value : transform) {
-				this.component.getSourceComponent().getDownStreamDataHandler().handleData(value);
+		if (!ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
+			try {
+				final List<D> transform = streamXducer.finish();
+				for (D value : transform) {
+					this.component.getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(value);
+				}
+			} catch (DataTransducerException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
+			} catch (DataHandlerException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataHandlerCloseException(message, e);
 			}
-		} catch (DataTransducerException e) {
-			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-			throw new DataHandlerCloseException(message, e);
-		} catch (DataHandlerException e) {
-			final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-			throw new DataHandlerCloseException(message, e);
 		}
 	}
 

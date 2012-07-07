@@ -32,19 +32,19 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @version 1.0
  */
 @XmlRootElement
-@XmlSeeAlso({ Entry.class, Transducer.class, Router.class, Terminal.class, Server.class })
+@XmlSeeAlso({ Entry.class, Pipeline.class, Router.class, Terminal.class, Server.class })
 public class Ecosystem {
 
 	private String flow;
 	private List<Entry> entries;
-	private List<Transducer> transducers;
+	private List<Pipeline> pipelines;
 	private List<Router> routers;
 	private List<Terminal> terminals;
 	private List<Server> servers;
 
 	{
 		this.entries = new ArrayList<Entry>();
-		this.transducers = new ArrayList<Transducer>();
+		this.pipelines = new ArrayList<Pipeline>();
 		this.routers = new ArrayList<Router>();
 		this.terminals = new ArrayList<Terminal>();
 		this.servers = new ArrayList<Server>();
@@ -98,23 +98,23 @@ public class Ecosystem {
 	}
 
 	/**
-	 * Return the value of transducers
+	 * Return the value of pipelines
 	 * 
-	 * @return the transducers
+	 * @return the pipelines
 	 */
-	@XmlElement(name = "transducer")
-	public List<Transducer> getTransducers() {
-		return transducers;
+	@XmlElement(name = "pipeline")
+	public List<Pipeline> getTransducers() {
+		return pipelines;
 	}
 
 	/**
-	 * Set the value of transducers
+	 * Set the value of pipelines
 	 * 
 	 * @param transducers
-	 *            the transducers to set
+	 *            the pipelines to set
 	 */
-	public void add(Transducer transducer) {
-		this.transducers.add(transducer);
+	public void add(Pipeline transducer) {
+		this.pipelines.add(transducer);
 	}
 
 	/**

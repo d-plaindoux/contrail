@@ -1,20 +1,23 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<transducer name='PayLoad'
+	<pipeline name='PayLoad'
 		factory='org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory' />
 
-	<transducer name='Serialize'
+	<pipeline name='Serialize'
 		factory='org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory' />
 
-	<transducer name='Coercion'
+	<pipeline name='Coercion'
 		factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>
 		<param> org.wolfgang.contrail.network.event.NetEvent </param>
-	</transducer>
+	</pipeline>
 
-	<transducer name='JAXB'
+	<pipeline name='JAXB'
 		factory='org.wolfgang.contrail.codec.json.JAXBTransducerFactory'>
 		<param> org.wolfgang.contrail.network.event.NetEvent </param>
-	</transducer>
+	</pipeline>
+
+	<pipeline name='ClientAcceptance'
+		factory='org.wolfgang.contrail.network.component.NetworkAcceptanceComponent' />
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
@@ -24,29 +27,29 @@
 
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
 			<!-- Net Socket Client -->
-			<flow> PayLoad Serialize Coercion NetStation </flow>
+			<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
 		</client>
 
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			<!-- Web Socket Client -->
-			<flow> JAXB Coercion NetStation </flow>
+			<flow> JAXB Coercion ClientAcceptance NetStation </flow>
 		</client>
 	</router>
 
 	<entry name='NetHook'>
-		<flow> PayLoad Serialize Coercion NetShake NetStation </flow>
+		<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
 	</entry>
 
 	<entry name='WebHook' typein="String" typeout="String">
-		<flow> JAXB Coercion NetStation </flow>
+		<flow> JAXB Coercion ClientAcceptance NetStation </flow>
 	</entry>
 
 	<server endpoint='tcp://localhost:6667'>
-		<flow> PayLoad Serialize Coercion NetShake NetStation </flow>
+		<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
 	</server>
 
 	<server endpoint='ws://localhost:6667'>
-		<flow> JAXB Coercion NetStation </flow>
+		<flow> JAXB Coercion ClientAcceptance NetStation </flow>
 	</server>
 
 	<flow> NetStation Logger </flow>

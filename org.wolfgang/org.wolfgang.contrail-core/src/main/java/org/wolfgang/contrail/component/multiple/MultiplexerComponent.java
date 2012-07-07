@@ -210,7 +210,7 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.upStreamDestinationComponentLink.getDestination() == null;
+		return ComponentLinkFactory.isUndefined(this.upStreamDestinationComponentLink);
 	}
 
 	@Override

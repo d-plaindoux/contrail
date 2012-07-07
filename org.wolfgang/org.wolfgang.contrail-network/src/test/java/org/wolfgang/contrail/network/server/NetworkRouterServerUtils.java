@@ -24,7 +24,6 @@ import java.net.UnknownHostException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.codec.payload.Bytes;
@@ -37,14 +36,12 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
-import org.wolfgang.contrail.link.ComponentLinkImpl;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.component.CannotCreateComponentException;
+import org.wolfgang.contrail.network.component.NetworkAcceptanceComponent;
 import org.wolfgang.contrail.network.component.NetworkComponent;
-import org.wolfgang.contrail.network.component.NetworkHandShake;
 import org.wolfgang.contrail.network.component.NetworkTable;
 import org.wolfgang.contrail.network.connection.socket.NetClient;
 import org.wolfgang.contrail.network.event.NetworkEvent;
@@ -152,10 +149,10 @@ class NetworkRouterServerUtils extends TestCase {
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 
-					final FutureResponse<ComponentLinkImpl<NetworkEvent, NetworkEvent>> futureResponse = new FutureResponse<ComponentLinkImpl<NetworkEvent, NetworkEvent>>();
-					final NetworkHandShake handshakeReceiver = new NetworkHandShake(futureResponse, component, coercionTransducer);
-					final TerminalComponent<NetworkEvent, NetworkEvent> handshake = new TerminalComponent<NetworkEvent, NetworkEvent>(handshakeReceiver);
-					futureResponse.setValue(componentLinkManager.connect(coercionTransducer, handshake));
+					final NetworkAcceptanceComponent networkAcceptanceComponent = new NetworkAcceptanceComponent();
+
+					componentLinkManager.connect(coercionTransducer, networkAcceptanceComponent);
+					componentLinkManager.connect(networkAcceptanceComponent, component);
 
 					// Initial component
 

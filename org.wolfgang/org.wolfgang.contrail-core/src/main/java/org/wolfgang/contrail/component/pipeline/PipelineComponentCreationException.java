@@ -18,28 +18,51 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * <code>IntegerToString</code>
+ * <code>PipelineComponentCreationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringToInteger implements DataTransducer<String, Integer> {
+public class PipelineComponentCreationException extends Exception {
 
-	@Override
-	public List<Integer> transform(String s) throws DataTransducerException {
-		try {
-			return Arrays.asList(Integer.parseInt(s));
-		} catch (NumberFormatException e) {
-			throw new DataTransducerException(e);
-		}
+	/**
+	 * Constructor
+	 */
+	PipelineComponentCreationException() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public List<Integer> finish() throws DataTransducerException {
-		return Arrays.asList();
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 * @param cause
+	 */
+	PipelineComponentCreationException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 */
+	PipelineComponentCreationException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param cause
+	 */
+	PipelineComponentCreationException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
 }

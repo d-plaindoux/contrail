@@ -18,8 +18,11 @@
 
 package org.wolfgang.contrail.link;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 
@@ -45,6 +48,12 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 	private final ComponentLink destinationConnection;
 	private final ComponentLinkManager componentLinkManager;
 
+	private final AtomicBoolean disposed;
+
+	{
+		this.disposed = new AtomicBoolean(false);
+	}
+
 	/**
 	 * Constructor
 	 * 
@@ -67,11 +76,10 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 			this.destinationConnection = destination.connectSource(this);
 		} catch (ComponentConnectionRejectedException e) {
 			try {
-				this.sourceConnection.dispose();
-			} catch (Exception consume) {
+				this.dispose();
+			} catch (ComponentDisconnectionRejectedException consume) {
 				// Ignore
 			}
-
 			throw e;
 		}
 	}
@@ -93,10 +101,18 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 
 	@Override
 	public void dispose() throws ComponentDisconnectionRejectedException {
-		try {
-			this.sourceConnection.dispose();
-		} finally {
-			this.destinationConnection.dispose();
+		if (!this.disposed.getAndSet(true)) {
+			try {
+				if (this.sourceConnection != null) {
+					this.sourceConnection.dispose();
+				}
+			} finally {
+				if (this.destinationConnection != null) {
+					this.destinationConnection.dispose();
+				}
+			}
+		} else {
+			throw new ComponentNotConnectedException();
 		}
 	}
 }

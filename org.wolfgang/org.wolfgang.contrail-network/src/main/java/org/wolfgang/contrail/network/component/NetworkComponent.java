@@ -112,7 +112,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	 * @throws ComponentNotConnectedException
 	 */
 	DestinationComponent<NetworkEvent, NetworkEvent> getDestination() throws ComponentNotConnectedException {
-		if (destinationLink.getDestination() == null) {
+		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
 			return destinationLink.getDestination();
@@ -121,7 +121,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.destinationLink.getDestination() == null;
+		return ComponentLinkFactory.isUndefined(this.destinationLink);
 	}
 
 	@Override
@@ -141,16 +141,16 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (this.destinationLink.getDestination() != null) {
-			this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
-		} else {
+		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
+		} else {
+			this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		}
 	}
 
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
-		if (this.destinationLink.getDestination() != null) {
+		if (!ComponentLinkFactory.isUndefined(this.destinationLink)) {
 			this.destinationLink.getDestination().closeUpStream();
 		}
 	}
@@ -222,7 +222,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	public SourceComponent<NetworkEvent, NetworkEvent> getSource(ComponentId componentId) throws ComponentNotConnectedException {
 		final SourceComponentLink<NetworkEvent, NetworkEvent> sourceComponentLink = this.sourceLinks.get(componentId);
 
-		if (sourceComponentLink == null) {
+		if (ComponentLinkFactory.isUndefined(sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
 			return sourceComponentLink.getSource();

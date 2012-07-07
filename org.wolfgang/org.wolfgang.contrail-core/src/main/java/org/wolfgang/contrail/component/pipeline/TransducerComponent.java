@@ -26,9 +26,7 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -114,8 +112,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	 * 
 	 * @return the current up stream source component
 	 */
-	SourceComponent<U1, D1> getSourceComponent() {
-		return this.sourceComponentLink.getSource();
+	SourceComponentLink<U1, D1> getSourceComponentLink() {
+		return this.sourceComponentLink;
 	}
 
 	/**
@@ -123,13 +121,13 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	 * 
 	 * @return the current up stream source component
 	 */
-	DestinationComponent<U2, D2> getDestinationComponent() {
-		return this.destinationComponentLink.getDestination();
+	DestinationComponentLink<U2, D2> getDestinationComponentLink() {
+		return this.destinationComponentLink;
 	}
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.sourceComponentLink.getSource() == null;
+		return ComponentLinkFactory.isUndefined(this.sourceComponentLink);
 	}
 
 	@Override
@@ -149,8 +147,7 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		final SourceComponent<U1, D1> sourceComponent = sourceComponentLink.getSource();
-		if (sourceComponent != null && sourceComponent.getComponentId().equals(componentId)) {
+		if (!acceptSource(componentId) && sourceComponentLink.getSource().getComponentId().equals(componentId)) {
 			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -159,7 +156,7 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.destinationComponentLink.getDestination() == null;
+		return ComponentLinkFactory.isUndefined(this.destinationComponentLink);
 	}
 
 	@Override
@@ -179,8 +176,7 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		final DestinationComponent<U2, D2> destinationComponent = destinationComponentLink.getDestination();
-		if (destinationComponent != null && destinationComponent.getComponentId().equals(componentId)) {
+		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
 			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());

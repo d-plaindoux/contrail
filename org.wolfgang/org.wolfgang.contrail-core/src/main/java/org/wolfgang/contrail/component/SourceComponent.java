@@ -28,7 +28,7 @@ import org.wolfgang.contrail.link.DestinationComponentLink;
  * Sending events consists in propagating events to upper components via the
  * upstream network. In parallel a source is capable to receive messages sent by
  * destination using the interconnected destination handler based on the
- * downstream network.
+ * downstream data handler.
  * 
  * @author Didier Plaindoux
  * @version 1.0

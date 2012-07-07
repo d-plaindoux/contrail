@@ -30,11 +30,18 @@ public class ComponentNotConnectedException extends ComponentDisconnectionReject
 
 	/**
 	 * Constructor
+	 */
+	public ComponentNotConnectedException() {
+		super();
+	}
+
+	/**
+	 * Constructor
 	 * 
 	 * @param arg0
 	 */
 	public ComponentNotConnectedException(String arg0) {
 		super(arg0);
 	}
-	
+
 }
