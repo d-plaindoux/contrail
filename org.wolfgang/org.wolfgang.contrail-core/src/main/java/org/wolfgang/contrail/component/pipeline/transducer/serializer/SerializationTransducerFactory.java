@@ -17,11 +17,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.coercion;
+package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 
-import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
@@ -31,44 +32,53 @@ import org.wolfgang.contrail.component.pipeline.TransducerComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class CoercionTransducerFactory<T> implements CodecFactory<Object, T> {
+public final class SerializationTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**
 	 * Accepted types
 	 */
-	private final Class<T> coercionType;
+	private final Class<?>[] types;
+
+	/**
+	 * Constructor
+	 */
+	public SerializationTransducerFactory() {
+		this.types = new Class[0];
+	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings({ "static-access", "unchecked" })
-	public CoercionTransducerFactory(String... types) throws ClassNotFoundException {
-		assert types.length == 1;
-		this.coercionType = (Class<T>) this.getClass().forName(types[0]);
+	@SuppressWarnings("static-access")
+	public SerializationTransducerFactory(String... types) throws ClassNotFoundException {
+		this.types = new Class[types.length];
+		for (int i = 0; i < types.length; i++) {
+			this.types[i] = this.getClass().forName(types[i]);
+		}
 	}
 
 	/**
 	 * Constructor
 	 */
-	public CoercionTransducerFactory(Class<T> coercionType) {
-		this.coercionType = coercionType;
+	public SerializationTransducerFactory(Class<?>... acceptedTypes) {
+		this.types = acceptedTypes;
 		// Prevent useless object creation
 	}
 
 	@Override
-	public DataTransducer<Object, T> getDecoder() {
-		return new Decoder<T>(this.coercionType);
+	public DataTransducer<Bytes, Object> getDecoder() {
+		return new Decoder(types);
 	}
 
 	@Override
-	public DataTransducer<T, Object> getEncoder() {
-		return new Encoder<T>(this.coercionType);
+	public DataTransducer<Object, Bytes> getEncoder() {
+		return new Encoder(types);
 	}
 
 	@Override
-	public TransducerComponent<Object, Object, T, T> getComponent() {
-		return new TransducerComponent<Object, Object, T, T>(getDecoder(), getEncoder());
+	public TransducerComponent<Bytes, Bytes, Object, Object> getComponent() {
+		return new TransducerComponent<Bytes, Bytes, Object, Object>(getDecoder(), getEncoder());
 	}
 }

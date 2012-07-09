@@ -16,58 +16,54 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.contrail.component.pipeline.transducer;
 
 /**
- * <code>CannotCreateComponentException</code>
+ * <code>CodecFactoryCreationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CannotCreateComponentException extends Exception {
+public class CodecFactoryCreationException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = -1069734740818041861L;
+	private static final long serialVersionUID = 3623709178771182278L;
 
 	/**
 	 * Constructor
 	 */
-	public CannotCreateComponentException() {
+	public CodecFactoryCreationException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param arg0
-	 * @param arg1
+	 * @param message
+	 * @param cause
 	 */
-	public CannotCreateComponentException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
+	public CodecFactoryCreationException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param arg0
+	 * @param message
 	 */
-	public CannotCreateComponentException(String arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public CodecFactoryCreationException(String message) {
+		super(message);
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param arg0
+	 * @param cause
 	 */
-	public CannotCreateComponentException(Throwable arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public CodecFactoryCreationException(Throwable cause) {
+		super(cause);
 	}
 
 }

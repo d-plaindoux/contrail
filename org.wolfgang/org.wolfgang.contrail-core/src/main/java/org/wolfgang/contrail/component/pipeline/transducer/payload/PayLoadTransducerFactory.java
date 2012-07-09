@@ -16,12 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.payload;
+package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
-import org.wolfgang.common.utils.Pair;
-import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 
 /**
  * <code>PayLoadTransducerFactory</code> is in charge of transforming upstream
@@ -32,7 +31,7 @@ import org.wolfgang.contrail.component.pipeline.TransducerComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PayLoadTransducerFactory implements CodecFactory<byte[], Bytes> {
+public final class PayLoadTransducerFactory implements TransducerFactory<byte[], Bytes> {
 
 	/**
 	 * Constructor

@@ -73,27 +73,36 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		return false;
 	}
 
+	private boolean waitIfNecessary(long timeout, TimeUnit unit) {
+		if (this.status == null) {
+			try {
+				this.condition.await(timeout, unit);
+			} catch (InterruptedException consume) {
+				// Ignore
+			}
+		}
+
+		return this.status != null;
+	}
+
 	@Override
 	public V get() throws InterruptedException, ExecutionException {
 		barrier.lock();
 		try {
-			if (this.status == null) {
-				// Wait for 3,14 minutes at most ...
-				this.condition.await(60 * 3 + 14, TimeUnit.SECONDS);
-
-				if (this.status == null) {
-					throw new InterruptedException();
+			if (!this.waitIfNecessary(60 * 3 + 14, TimeUnit.SECONDS)) {
+				throw new InterruptedException();
+			} else {
+				/* Manage the status */
+				switch (status) {
+				case ERROR:
+					throw new ExecutionException(this.error);
+				case CANCEL:
+					throw new CancellationException();
+				case VALUE:
+					return this.value;
+				default:
+					throw new IllegalArgumentException();
 				}
-			}
-			switch (status) {
-			case ERROR:
-				throw new ExecutionException(this.error);
-			case CANCEL:
-				throw new CancellationException();
-			case VALUE:
-				return this.value;
-			default:
-				throw new IllegalArgumentException();
 			}
 		} finally {
 			barrier.unlock();
@@ -104,23 +113,19 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		barrier.lock();
 		try {
-			if (this.status == null) {
-				this.condition.await(timeout, unit);
-
-				if (this.status == null) {
-					throw new TimeoutException();
+			if (!this.waitIfNecessary(timeout, unit)) {
+				throw new TimeoutException();
+			} else {
+				switch (status) {
+				case ERROR:
+					throw new ExecutionException(this.error);
+				case CANCEL:
+					throw new CancellationException();
+				case VALUE:
+					return this.value;
+				default:
+					throw new IllegalArgumentException();
 				}
-			}
-
-			switch (status) {
-			case ERROR:
-				throw new ExecutionException(this.error);
-			case CANCEL:
-				throw new CancellationException();
-			case VALUE:
-				return this.value;
-			default:
-				throw new IllegalArgumentException();
 			}
 		} finally {
 			barrier.unlock();

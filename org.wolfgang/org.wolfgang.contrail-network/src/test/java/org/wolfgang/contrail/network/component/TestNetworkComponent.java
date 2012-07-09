@@ -25,6 +25,7 @@ import java.util.UUID;
 import junit.framework.TestCase;
 
 import org.wolfgang.common.utils.UUIDUtils;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;

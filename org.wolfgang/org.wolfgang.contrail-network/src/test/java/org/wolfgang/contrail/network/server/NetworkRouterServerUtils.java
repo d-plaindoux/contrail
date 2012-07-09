@@ -24,10 +24,7 @@ import java.net.UnknownHostException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory;
-import org.wolfgang.contrail.codec.payload.Bytes;
-import org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory;
-import org.wolfgang.contrail.codec.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
@@ -36,9 +33,12 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
-import org.wolfgang.contrail.network.component.CannotCreateComponentException;
 import org.wolfgang.contrail.network.component.NetworkAcceptanceComponent;
 import org.wolfgang.contrail.network.component.NetworkComponent;
 import org.wolfgang.contrail.network.component.NetworkTable;

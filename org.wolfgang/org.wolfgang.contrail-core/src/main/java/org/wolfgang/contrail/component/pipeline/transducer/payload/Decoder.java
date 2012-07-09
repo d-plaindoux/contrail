@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.payload;
+package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
 import java.io.IOException;
 import java.util.ArrayList;

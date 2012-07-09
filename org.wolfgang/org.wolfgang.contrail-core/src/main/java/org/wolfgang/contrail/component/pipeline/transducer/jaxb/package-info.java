@@ -16,54 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec;
-
 /**
- * <code>CodecFactoryCreationException</code>
- * 
+ * Packet based on JAXB. Dedicated JAXB encoder and decoder are provided for 
+ * this purpose.
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CodecFactoryCreationException extends Exception {
-
-	/**
-	 * The serialVersionUID attribute
-	 */
-	private static final long serialVersionUID = 3623709178771182278L;
-
-	/**
-	 * Constructor
-	 */
-	public CodecFactoryCreationException() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	public CodecFactoryCreationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public CodecFactoryCreationException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param cause
-	 */
-	public CodecFactoryCreationException(Throwable cause) {
-		super(cause);
-	}
-
-}
+package org.wolfgang.contrail.component.pipeline.transducer.jaxb;

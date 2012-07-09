@@ -22,7 +22,7 @@
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
 	<router name='NetStation '
-		factory='org.wolfgang.contrail.network.component.NetworkFactory'>
+		factory='org.wolfgang.contrail.network.component.NetworkComponent'>
 		<self name='A.A' />
 
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>

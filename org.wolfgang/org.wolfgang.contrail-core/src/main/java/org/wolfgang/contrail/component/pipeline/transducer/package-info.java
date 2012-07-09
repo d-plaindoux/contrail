@@ -17,10 +17,9 @@
  */
 
 /**
- * Packet based on JAXB. Dedicated JAXB encoder and decoder are provided for 
- * this purpose.
+ * Main package providing CoDec based on pay-load serialization and JAXB. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.codec.jaxb;
+package org.wolfgang.contrail.component.pipeline.transducer;

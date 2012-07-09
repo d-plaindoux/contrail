@@ -23,4 +23,4 @@
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.codec.serializer;
+package org.wolfgang.contrail.component.pipeline.transducer.serializer;

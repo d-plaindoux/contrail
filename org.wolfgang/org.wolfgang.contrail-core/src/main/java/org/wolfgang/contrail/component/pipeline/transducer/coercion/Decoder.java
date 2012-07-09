@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.coercion;
+package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 
 import java.util.Arrays;
 import java.util.List;

@@ -16,9 +16,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.payload;
+package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -26,42 +25,41 @@ import java.util.List;
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
- * <code>Encoder</code> is capable to transform a byte array to another one with
- * a prefix as a payload.
+ * <code>Encoder</code> is capable to transform objects to payload based byte array.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Bytes, byte[]> {
+class Encoder implements DataTransducer<Object, Bytes> {
+
+	/**
+	 * An array of accepted types
+	 */
+	@SuppressWarnings("unused")
+	private final Class<?>[] acceptedTypes;
 
 	/**
 	 * Constructor
 	 */
-	Encoder() {
+	Encoder(Class<?>... acceptedTypes) {
 		super();
+		this.acceptedTypes = acceptedTypes;
 	}
 
 	@Override
-	public List<byte[]> transform(Bytes source) throws DataTransducerException {
+	public List<Bytes> transform(Object source) throws DataTransducerException {
 		try {
-			final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			try {
-				final byte[] bytes = source.getContent();
-				stream.write(Marshall.intToBytes(bytes.length));
-				stream.write(bytes);
-			} finally {
-				stream.close();
-			}
-			return Arrays.asList(stream.toByteArray());
+			return Arrays.asList(new Bytes(Marshall.objectToBytes(source)));
 		} catch (IOException e) {
 			throw new DataTransducerException(e);
 		}
 	}
 
 	@Override
-	public List<byte[]> finish() throws DataTransducerException {
+	public List<Bytes> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

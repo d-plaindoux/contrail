@@ -16,16 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.serializer;
+package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
-import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>Decoder</code> is able to transform a payload based array to an object

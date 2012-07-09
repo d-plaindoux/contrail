@@ -20,8 +20,9 @@ package org.wolfgang.contrail.component.pipeline;
 
 import java.lang.reflect.Constructor;
 
-import org.wolfgang.contrail.codec.CodecFactory;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 
 /**
  * <code>PipelineFactory</code>
@@ -39,16 +40,16 @@ public final class PipelineFactory {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(ClassLoader loader, String name, String[] parameters) throws PipelineComponentCreationException {
+	public static PipelineComponent create(ClassLoader loader, String factoryName, String[] parameters) throws CannotCreateComponentException {
 		try {
-			final Class<?> component = loader.loadClass(name);
-			if (CodecFactory.class.isAssignableFrom(component)) {
-				CodecFactory factory = null;
+			final Class<?> component = loader.loadClass(factoryName);
+			if (TransducerFactory.class.isAssignableFrom(component)) {
+				TransducerFactory factory = null;
 				try {
 					final Constructor<?> constructor = component.getConstructor(String[].class);
-					factory = (CodecFactory) constructor.newInstance(new Object[] { parameters });
+					factory = (TransducerFactory) constructor.newInstance(new Object[] { parameters });
 				} catch (NoSuchMethodException e) {
-					factory = (CodecFactory) component.newInstance();
+					factory = (TransducerFactory) component.newInstance();
 				}
 				return factory.getComponent();
 			} else {
@@ -60,7 +61,7 @@ public final class PipelineFactory {
 				}
 			}
 		} catch (Exception e) {
-			throw new PipelineComponentCreationException(e);
+			throw new CannotCreateComponentException(e);
 		}
 	}
 }

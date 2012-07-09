@@ -17,10 +17,15 @@
  */
 
 /**
- * Serialization based encoder and decoder. This CoDec uses the standard java 
- * serialization mechanism.
+ * Payload based encoder and decoder. Managed packets start with the size of the
+ * byte.
+ * 
+ * Each packet received or sent have the following format:
+ *    +-----+----------------+
+ *    + len + len bytes .... | 
+ *    +-----+----------------+
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.codec.coercion;
+package org.wolfgang.contrail.component.pipeline.transducer.payload;

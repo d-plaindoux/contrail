@@ -1,5 +1,4 @@
 /*
-
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -17,34 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.serializer;
+package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
 
-import org.wolfgang.contrail.codec.CodecFactory;
-import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
- * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
- * bytes to java object and vice-versa based on pay load. This class provides
+ * <code>JAXBTransducerFactory</code> is in charge of transforming upstream
+ * bytes to java object and vice-versa based on JAXB. This class provides
  * dedicate encoder and decoder for such serialization based codec
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class SerializationTransducerFactory implements CodecFactory<Bytes, Object> {
+public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**
-	 * Accepted types
+	 * Desired classes for JAXB encoding/decoding processes
 	 */
 	private final Class<?>[] types;
-
-	/**
-	 * Constructor
-	 */
-	public SerializationTransducerFactory() {
-		this.types = new Class[0];
-	}
 
 	/**
 	 * Constructor
@@ -52,7 +44,7 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("static-access")
-	public SerializationTransducerFactory(String... types) throws ClassNotFoundException {
+	public JAXBTransducerFactory(String... types) throws ClassNotFoundException {
 		this.types = new Class[types.length];
 		for (int i = 0; i < types.length; i++) {
 			this.types[i] = this.getClass().forName(types[i]);
@@ -62,9 +54,8 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 	/**
 	 * Constructor
 	 */
-	public SerializationTransducerFactory(Class<?>... acceptedTypes) {
-		this.types = acceptedTypes;
-		// Prevent useless object creation
+	public JAXBTransducerFactory(Class<?>... types) {
+		this.types = types;
 	}
 
 	@Override

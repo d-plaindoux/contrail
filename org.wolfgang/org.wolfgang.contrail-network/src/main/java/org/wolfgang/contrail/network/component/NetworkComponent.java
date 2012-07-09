@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.MultipleSourceComponent;
+import org.wolfgang.contrail.component.RouterSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -47,7 +47,7 @@ import org.wolfgang.contrail.network.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkComponent extends AbstractComponent implements DestinationComponent<NetworkEvent, NetworkEvent>, MultipleSourceComponent<NetworkEvent, NetworkEvent> {
+public class NetworkComponent extends AbstractComponent implements DestinationComponent<NetworkEvent, NetworkEvent>, RouterSourceComponent<NetworkEvent, NetworkEvent> {
 
 	/**
 	 * The multiplexer component

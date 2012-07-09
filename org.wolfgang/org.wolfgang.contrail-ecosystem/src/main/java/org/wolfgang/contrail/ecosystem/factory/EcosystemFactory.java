@@ -22,8 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.pipeline.PipelineComponentCreationException;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.TerminalFactory;
 import org.wolfgang.contrail.component.pipeline.PipelineFactory;
 import org.wolfgang.contrail.ecosystem.model.Ecosystem;
 import org.wolfgang.contrail.ecosystem.model.Pipeline;
@@ -36,20 +39,37 @@ import org.wolfgang.contrail.ecosystem.model.Terminal;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@SuppressWarnings("rawtypes")
 public final class EcosystemFactory {
+
+	/**
+	 * <code>Lazy</code>
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	public interface Lazy<C extends Component> {
+		public C create() throws CannotCreateComponentException;
+	}
+
+	/**
+	 * The class loader to use when components must be created
+	 */
+	private final ClassLoader classLoader;
 
 	/**
 	 * Declared pipelines
 	 */
-	private final Map<String, LazyPipeline> pipelines;
-	private final ClassLoader classLoader;
+	private final Map<String, Lazy<PipelineComponent>> pipelines;
 
-	public interface LazyPipeline {
-		public PipelineComponent<?, ?, ?, ?> create() throws PipelineComponentCreationException;
-	}
+	/**
+	 * Declared terminal
+	 */
+	private final Map<String, Lazy<TerminalComponent>> terminals;
 
 	{
-		this.pipelines = new HashMap<String, EcosystemFactory.LazyPipeline>();
+		this.pipelines = new HashMap<String, Lazy<PipelineComponent>>();
+		this.terminals = new HashMap<String, Lazy<TerminalComponent>>();
 		this.classLoader = EcosystemFactory.class.getClassLoader();
 	}
 
@@ -57,13 +77,28 @@ public final class EcosystemFactory {
 	 * @param pipeline
 	 * @return
 	 */
-	private LazyPipeline create(Pipeline pipeline) {
+	private Lazy<PipelineComponent> create(Pipeline pipeline) {
 		final String factory = pipeline.getFactory();
 		final List<String> parameters = pipeline.getParameters();
-		return new LazyPipeline() {
+		return new Lazy<PipelineComponent>() {
 			@Override
-			public PipelineComponent<?, ?, ?, ?> create() throws PipelineComponentCreationException {
+			public PipelineComponent create() throws CannotCreateComponentException {
 				return PipelineFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
+			}
+		};
+	}
+
+	/**
+	 * @param pipeline
+	 * @return
+	 */
+	private Lazy<TerminalComponent> create(Terminal terminal) {
+		final String factory = terminal.getFactory();
+		final List<String> parameters = terminal.getParameters();
+		return new Lazy<TerminalComponent>() {
+			@Override
+			public TerminalComponent create() throws CannotCreateComponentException {
+				return TerminalFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
 			}
 		};
 	}
@@ -72,7 +107,7 @@ public final class EcosystemFactory {
 	 * @param terminal
 	 */
 	private void register(Terminal terminal) {
-		// TODO Auto-generated method stub
+		this.terminals.put(terminal.getName(), create(terminal));
 	}
 
 	/**

@@ -16,38 +16,58 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec.payload;
+package org.wolfgang.contrail.component;
 
 /**
- * <code>Bytes</code> contains a consistent byte array in term of coding and
- * decoding
+ * <code>CannotCreateComponentException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class Bytes {
+public class CannotCreateComponentException extends Exception {
 
 	/**
-	 * The content
+	 * The serialVersionUID attribute
 	 */
-	private final byte[] content;
+	private static final long serialVersionUID = -1069734740818041861L;
+
+	/**
+	 * Constructor
+	 */
+	public CannotCreateComponentException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param content
+	 * @param arg0
+	 * @param arg1
 	 */
-	public Bytes(byte[] content) {
-		super();
-		this.content = content;
+	public CannotCreateComponentException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Provides the byte array
+	 * Constructor
 	 * 
-	 * @return a byte array
+	 * @param arg0
 	 */
-	public byte[] getContent() {
-		return content;
+	public CannotCreateComponentException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateComponentException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
+
 }

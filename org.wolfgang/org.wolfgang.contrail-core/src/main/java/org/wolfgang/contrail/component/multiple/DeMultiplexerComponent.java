@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.MultipleDestinationComponent;
+import org.wolfgang.contrail.component.RouterDestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.core.DirectDownStreamDataHandler;
@@ -49,7 +49,7 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DeMultiplexerComponent<U, D> extends AbstractComponent implements MultipleDestinationComponent<U, D>, FilteredDestinationComponents<U> {
+public class DeMultiplexerComponent<U, D> extends AbstractComponent implements RouterDestinationComponent<U, D>, FilteredDestinationComponents<U> {
 
 	/**
 	 * Static message definition for not yet connected component

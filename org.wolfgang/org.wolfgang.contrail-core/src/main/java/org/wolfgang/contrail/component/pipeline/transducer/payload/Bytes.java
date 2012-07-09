@@ -16,58 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline;
+package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
 /**
- * <code>PipelineComponentCreationException</code>
+ * <code>Bytes</code> contains a consistent byte array in term of coding and
+ * decoding
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class PipelineComponentCreationException extends Exception {
+public final class Bytes {
 
 	/**
-	 * The serialVersionUID attribute
+	 * The content
 	 */
-	private static final long serialVersionUID = 2299252811931302235L;
+	private final byte[] content;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param content
 	 */
-	PipelineComponentCreationException() {
+	public Bytes(byte[] content) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.content = content;
 	}
 
 	/**
-	 * Constructor
+	 * Provides the byte array
 	 * 
-	 * @param message
-	 * @param cause
+	 * @return a byte array
 	 */
-	PipelineComponentCreationException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
+	public byte[] getContent() {
+		return content;
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	PipelineComponentCreationException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param cause
-	 */
-	PipelineComponentCreationException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
 }

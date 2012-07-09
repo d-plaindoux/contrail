@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.codec;
+package org.wolfgang.contrail.component.pipeline.transducer;
 
 import java.lang.reflect.Constructor;
 
@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.pipeline.TransducerComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface CodecFactory<U, D> {
+public interface TransducerFactory<U, D> {
 
 	/**
 	 * <code>Loader</code> is dedicated to CoDec creation. This creation is done
@@ -40,14 +40,14 @@ public interface CodecFactory<U, D> {
 	 * @version 1.0
 	 */
 	public static class Loader {
-		public static CodecFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
+		public static TransducerFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
 			try {
 				final Class<?> codec = loader.loadClass(name);
 				try {
 					final Constructor<?> constructor = codec.getConstructor(String[].class);
-					return (CodecFactory<?, ?>) constructor.newInstance(new Object[] { parameters });
+					return (TransducerFactory<?, ?>) constructor.newInstance(new Object[] { parameters });
 				} catch (NoSuchMethodException e) {
-					return (CodecFactory<?, ?>) codec.newInstance();
+					return (TransducerFactory<?, ?>) codec.newInstance();
 				}
 			} catch (Exception e) {
 				throw new CodecFactoryCreationException(e);

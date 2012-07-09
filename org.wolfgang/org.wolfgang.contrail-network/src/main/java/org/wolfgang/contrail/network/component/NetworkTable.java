@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.network.component;
 
+import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;

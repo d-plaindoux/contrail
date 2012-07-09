@@ -22,9 +22,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.jaxb.JAXBTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>TestSerializer</code>
