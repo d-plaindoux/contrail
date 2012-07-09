@@ -19,7 +19,6 @@
 
 package org.wolfgang.contrail.codec.serializer;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
@@ -68,10 +67,6 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 		// Prevent useless object creation
 	}
 
-	private Pair<Class<Object>, Class<Object>> getSourceTypes() {
-		return Pair.create(Object.class, Object.class);
-	}
-
 	@Override
 	public DataTransducer<Bytes, Object> getDecoder() {
 		return new Decoder(types);
@@ -84,6 +79,6 @@ public final class SerializationTransducerFactory implements CodecFactory<Bytes,
 
 	@Override
 	public TransducerComponent<Bytes, Bytes, Object, Object> getComponent() {
-		return new TransducerComponent<Bytes, Bytes, Object, Object>(getSourceTypes(), getDecoder(), getEncoder());
+		return new TransducerComponent<Bytes, Bytes, Object, Object>(getDecoder(), getEncoder());
 	}
 }

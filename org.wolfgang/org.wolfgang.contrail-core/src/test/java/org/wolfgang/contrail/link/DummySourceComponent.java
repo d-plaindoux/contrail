@@ -20,7 +20,6 @@ package org.wolfgang.contrail.link;
 
 import java.io.IOException;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -39,7 +38,7 @@ public class DummySourceComponent extends InitialComponent<Void, Void> {
 	 * Constructor
 	 */
 	public DummySourceComponent() {
-		super(Pair.create(Void.class, Void.class), new DataReceiverFactory<Void, Void>() {
+		super(new DataReceiverFactory<Void, Void>() {
 			@Override
 			public DataReceiver<Void> create(DataSender<Void> sender) {
 				return new DataReceiver<Void>() {

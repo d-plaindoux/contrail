@@ -24,7 +24,6 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -46,7 +45,7 @@ import org.wolfgang.contrail.network.reference.ReferenceFactory;
 public class TestNetworkComponent extends TestCase {
 
 	private SourceComponent<NetworkEvent, NetworkEvent> getSourceComponent() {
-		return new InitialComponent<NetworkEvent, NetworkEvent>(Pair.create(NetworkEvent.class, NetworkEvent.class), new DataReceiver<NetworkEvent>() {
+		return new InitialComponent<NetworkEvent, NetworkEvent>(new DataReceiver<NetworkEvent>() {
 			@Override
 			public void close() throws IOException {
 			}

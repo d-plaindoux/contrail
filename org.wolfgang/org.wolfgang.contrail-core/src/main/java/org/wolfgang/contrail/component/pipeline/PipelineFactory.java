@@ -38,7 +38,7 @@ public final class PipelineFactory {
 		super();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public static PipelineComponent create(ClassLoader loader, String name, String[] parameters) throws PipelineComponentCreationException {
 		try {
 			final Class<?> component = loader.loadClass(name);

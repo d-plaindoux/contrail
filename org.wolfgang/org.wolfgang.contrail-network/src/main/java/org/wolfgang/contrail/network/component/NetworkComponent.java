@@ -21,7 +21,6 @@ package org.wolfgang.contrail.network.component;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -84,11 +83,6 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	NetworkComponent(NetworkTable table, DirectReference selfReference) {
 		this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		this.networkStreamStation = new NetworkStreamStation(this, selfReference, table);
-	}
-
-	@Override
-	public Pair<Class<NetworkEvent>, Class<NetworkEvent>> getUpStreamType() {
-		return Pair.create(NetworkEvent.class, NetworkEvent.class);
 	}
 
 	/**

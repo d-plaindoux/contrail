@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -45,7 +44,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestDeMultiplexer extends TestCase {
 
 	public void testDeMultiplexer01() {
-		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(Pair.create(String.class, Void.class), new DataReceiverFactory<Void, String>() {
+		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(new DataReceiverFactory<Void, String>() {
 			@Override
 			public DataReceiver<Void> create(DataSender<String> component) {
 				return new DataReceiver<Void>() {
@@ -103,7 +102,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -136,7 +135,7 @@ public class TestDeMultiplexer extends TestCase {
 	}
 
 	public void testDeMultiplexer02() {
-		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(Pair.create(String.class, Void.class), new DataReceiverFactory<Void, String>() {
+		final InitialComponent<String, Void> source = new InitialComponent<String, Void>(new DataReceiverFactory<Void, String>() {
 			@Override
 			public DataReceiver<Void> create(DataSender<String> component) {
 				return new DataReceiver<Void>() {
@@ -160,7 +159,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -197,7 +196,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -234,7 +233,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 
@@ -272,7 +271,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {
@@ -310,7 +309,7 @@ public class TestDeMultiplexer extends TestCase {
 			}
 		};
 
-		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(Pair.create(String.class, Void.class), deMultiplexerFactory);
+		final DeMultiplexerComponent<String, Void> deMultiplexer = new DeMultiplexerComponent<String, Void>(deMultiplexerFactory);
 
 		final ComponentLinkManagerImpl manager = new ComponentLinkManagerImpl();
 		try {

@@ -201,7 +201,7 @@ public class TestModel extends TestCase {
 		final Ecosystem decoded = decode(Ecosystem.class, content);
 		assertEquals("Network Logger", decoded.getFlow());
 		assertEquals(2, decoded.getEntries().size());
-		assertEquals(3, decoded.getTransducers().size());
+		assertEquals(3, decoded.getPipelines().size());
 		assertEquals(1, decoded.getTerminals().size());
 		assertEquals(1, decoded.getRouters().size());
 		assertEquals(2, decoded.getServers().size());

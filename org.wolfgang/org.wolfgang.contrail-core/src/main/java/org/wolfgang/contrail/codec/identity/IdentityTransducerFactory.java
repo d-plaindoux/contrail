@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.codec.identity;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.TransducerComponent;
@@ -33,6 +32,9 @@ import org.wolfgang.contrail.component.pipeline.TransducerComponent;
  */
 public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
 
+	/**
+	 * 
+	 */
 	private final Class<A> type;
 
 	/**
@@ -40,10 +42,6 @@ public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
 	 */
 	public IdentityTransducerFactory(Class<A> type) {
 		this.type = type;
-	}
-
-	private Pair<Class<A>, Class<A>> getSourceTypes() {
-		return Pair.create(type, type);
 	}
 
 	@Override
@@ -58,6 +56,6 @@ public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
 
 	@Override
 	public TransducerComponent<A, A, A, A> getComponent() {
-		return new TransducerComponent<A, A, A, A>(getSourceTypes(), getDecoder(), getEncoder());
+		return new TransducerComponent<A, A, A, A>(getDecoder(), getEncoder());
 	}
 }

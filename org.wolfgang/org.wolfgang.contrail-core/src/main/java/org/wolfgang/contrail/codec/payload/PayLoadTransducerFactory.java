@@ -41,10 +41,6 @@ public final class PayLoadTransducerFactory implements CodecFactory<byte[], Byte
 		// Prevent useless object creation
 	}
 
-	private Pair<Class<Bytes>, Class<Bytes>> getSourceTypes() {
-		return Pair.create(Bytes.class, Bytes.class);
-	}
-
 	@Override
 	public DataTransducer<byte[], Bytes> getDecoder() {
 		return new Decoder();
@@ -57,6 +53,6 @@ public final class PayLoadTransducerFactory implements CodecFactory<byte[], Byte
 
 	@Override
 	public TransducerComponent<byte[], byte[], Bytes, Bytes> getComponent() {
-		return new TransducerComponent<byte[], byte[], Bytes, Bytes>(getSourceTypes(), getDecoder(), getEncoder());
+		return new TransducerComponent<byte[], byte[], Bytes, Bytes>(getDecoder(), getEncoder());
 	}
 }

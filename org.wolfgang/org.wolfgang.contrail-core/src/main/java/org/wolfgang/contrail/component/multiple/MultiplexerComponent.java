@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -64,11 +63,6 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	}
 
 	/**
-	 * up and down stream data type
-	 */
-	private Pair<Class<U>, Class<D>> types;
-
-	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
 	private final Map<ComponentId, DataFilter<D>> sourceFilters;
@@ -102,17 +96,11 @@ public class MultiplexerComponent<U, D> extends AbstractComponent implements Mul
 	/**
 	 * Constructor
 	 */
-	public MultiplexerComponent(Pair<Class<U>, Class<D>> types, MultiplexerDataHandlerFactory<D> multiplexerDataHandlerFactory) {
+	public MultiplexerComponent(MultiplexerDataHandlerFactory<D> multiplexerDataHandlerFactory) {
 		super();
 
-		this.types = types;
 		this.upStreamDataHandler = new DirectUpStreamDataHandler<U>(this);
 		this.downStreamDataHandler = multiplexerDataHandlerFactory.create(this);
-	}
-
-	@Override
-	public Pair<Class<U>, Class<D>> getUpStreamType() {
-		return this.types;
 	}
 
 	@Override

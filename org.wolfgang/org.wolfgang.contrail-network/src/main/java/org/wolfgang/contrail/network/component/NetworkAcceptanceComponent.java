@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.network.component;
 
 import org.wolfgang.common.utils.Coercion;
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
@@ -145,11 +144,6 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 			// TODO - Add a specific message
 			throw new ComponentConnectionRejectedException("TODO");
 		}
-	}
-
-	@Override
-	public Pair<Class<NetworkEvent>, Class<NetworkEvent>> getUpStreamType() {
-		return Pair.create(NetworkEvent.class, NetworkEvent.class);
 	}
 
 	@Override

@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.DestinationComponentLink;
@@ -34,11 +33,6 @@ import org.wolfgang.contrail.link.DestinationComponentLink;
  * @version 1.0
  */
 public interface SourceComponent<U, D> extends Component {
-
-	/**
-	 * @return
-	 */
-	Pair<Class<U>, Class<D>> getUpStreamType();
 
 	/**
 	 * Provides the data channel used for down stream communication facility

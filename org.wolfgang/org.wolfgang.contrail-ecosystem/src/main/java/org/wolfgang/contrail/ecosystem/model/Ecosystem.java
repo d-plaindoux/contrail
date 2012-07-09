@@ -103,7 +103,7 @@ public class Ecosystem {
 	 * @return the pipelines
 	 */
 	@XmlElement(name = "pipeline")
-	public List<Pipeline> getTransducers() {
+	public List<Pipeline> getPipelines() {
 		return pipelines;
 	}
 
