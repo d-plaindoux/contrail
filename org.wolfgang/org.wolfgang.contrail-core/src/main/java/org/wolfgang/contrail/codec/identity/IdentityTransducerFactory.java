@@ -21,6 +21,7 @@ package org.wolfgang.contrail.codec.identity;
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>SerializerTransducerFactory</code> is in charge of transforming
@@ -41,26 +42,22 @@ public final class IdentityTransducerFactory<A> implements CodecFactory<A, A> {
 		this.type = type;
 	}
 
-	@Override
-	public Pair<Class<A>, Class<A>> getTypes() {
+	private Pair<Class<A>, Class<A>> getSourceTypes() {
 		return Pair.create(type, type);
 	}
 
-	/**
-	 * Method providing pay-load based decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
+	@Override
 	public DataTransducer<A, A> getDecoder() {
 		return new Identity<A>();
 	}
 
-	/**
-	 * Method providing pay-load based decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
+	@Override
 	public DataTransducer<A, A> getEncoder() {
 		return new Identity<A>();
+	}
+
+	@Override
+	public TransducerComponent<A, A, A, A> getComponent() {
+		return new TransducerComponent<A, A, A, A>(getSourceTypes(), getDecoder(), getEncoder());
 	}
 }

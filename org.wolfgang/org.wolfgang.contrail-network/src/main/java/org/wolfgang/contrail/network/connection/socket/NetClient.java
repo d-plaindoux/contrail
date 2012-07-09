@@ -33,7 +33,6 @@ import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -93,7 +92,6 @@ public class NetClient implements Closeable {
 	 *            The server port
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotProvideComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
 	public void connect(InetAddress address, int port) throws IOException, CannotCreateDataSenderException {

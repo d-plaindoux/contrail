@@ -22,6 +22,7 @@ import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>JAXBTransducerFactory</code> is in charge of transforming upstream
@@ -58,27 +59,22 @@ public final class JAXBTransducerFactory implements CodecFactory<Bytes, Object> 
 		this.types = types;
 	}
 
-	@Override
-	public Pair<Class<Bytes>, Class<Object>> getTypes() {
-		return Pair.create(Bytes.class, Object.class);
+	private Pair<Class<Object>, Class<Object>> getSourceTypes() {
+		return Pair.create(Object.class, Object.class);
 	}
 
-	/**
-	 * Method providing JAXB based decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
+	@Override
 	public DataTransducer<Bytes, Object> getDecoder() {
 		return new Decoder(types);
 	}
 
-	/**
-	 * Method providing JAXB based encoder
-	 * 
-	 * @return a object to byte array data transformation
-	 */
-
+	@Override
 	public DataTransducer<Object, Bytes> getEncoder() {
 		return new Encoder(types);
+	}
+
+	@Override
+	public TransducerComponent<Bytes, Bytes, Object, Object> getComponent() {
+		return new TransducerComponent<Bytes, Bytes, Object, Object>(getSourceTypes(), getDecoder(), getEncoder());
 	}
 }

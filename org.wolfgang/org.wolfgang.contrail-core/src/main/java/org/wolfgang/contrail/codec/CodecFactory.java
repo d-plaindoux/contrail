@@ -20,8 +20,8 @@ package org.wolfgang.contrail.codec;
 
 import java.lang.reflect.Constructor;
 
-import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>CodecFactory</code> is the main interface used for encoder and decoder
@@ -56,13 +56,6 @@ public interface CodecFactory<U, D> {
 	}
 
 	/**
-	 * Method called whether types must be retrieved
-	 * 
-	 * @return a pair of types
-	 */
-	Pair<Class<U>, Class<D>> getTypes();
-
-	/**
 	 * Method providing the decoder
 	 * 
 	 * @return a decoding data transducer
@@ -76,4 +69,10 @@ public interface CodecFactory<U, D> {
 	 */
 	DataTransducer<D, U> getEncoder();
 
+	/**
+	 * Method called whether a transducer component must be created
+	 * 
+	 * @return a transducer component
+	 */
+	TransducerComponent<U, U, D, D> getComponent();
 }

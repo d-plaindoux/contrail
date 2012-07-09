@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.pipeline;
 
 import java.lang.reflect.Constructor;
 
+import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.PipelineComponent;
 
 /**
@@ -37,16 +38,26 @@ public final class PipelineFactory {
 		super();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static PipelineComponent create(ClassLoader loader, String name, String[] parameters) throws PipelineComponentCreationException {
 		try {
-
 			final Class<?> component = loader.loadClass(name);
-			try {
-				final Constructor<?> constructor = component.getConstructor(String[].class);
-				return (PipelineComponent) constructor.newInstance(new Object[] { parameters });
-			} catch (NoSuchMethodException e) {
-				return (PipelineComponent) component.newInstance();
+			if (CodecFactory.class.isAssignableFrom(component)) {
+				CodecFactory factory = null;
+				try {
+					final Constructor<?> constructor = component.getConstructor(String[].class);
+					factory = (CodecFactory) constructor.newInstance(new Object[] { parameters });
+				} catch (NoSuchMethodException e) {
+					factory = (CodecFactory) component.newInstance();
+				}
+				return factory.getComponent();
+			} else {
+				try {
+					final Constructor<?> constructor = component.getConstructor(String[].class);
+					return (PipelineComponent) constructor.newInstance(new Object[] { parameters });
+				} catch (NoSuchMethodException e) {
+					return (PipelineComponent) component.newInstance();
+				}
 			}
 		} catch (Exception e) {
 			throw new PipelineComponentCreationException(e);

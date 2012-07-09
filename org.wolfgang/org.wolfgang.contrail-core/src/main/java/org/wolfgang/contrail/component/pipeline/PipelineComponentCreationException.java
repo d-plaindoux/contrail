@@ -27,6 +27,11 @@ package org.wolfgang.contrail.component.pipeline;
 public class PipelineComponentCreationException extends Exception {
 
 	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 2299252811931302235L;
+
+	/**
 	 * Constructor
 	 */
 	PipelineComponentCreationException() {

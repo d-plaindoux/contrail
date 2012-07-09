@@ -22,6 +22,7 @@ package org.wolfgang.contrail.codec.coercion;
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
@@ -57,27 +58,22 @@ public final class CoercionTransducerFactory<T> implements CodecFactory<Object, 
 		// Prevent useless object creation
 	}
 
-	@Override
-	public Pair<Class<Object>, Class<T>> getTypes() {
-		return Pair.create(Object.class, this.coercionType);
+	private Pair<Class<T>, Class<T>> getSourceTypes() {
+		return Pair.create(this.coercionType, this.coercionType);
 	}
 
-	/**
-	 * Method providing payload based serialization decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
+	@Override
 	public DataTransducer<Object, T> getDecoder() {
 		return new Decoder<T>(this.coercionType);
 	}
 
-	/**
-	 * Method providing payload based serialization encoder
-	 * 
-	 * @return a object to byte array data transformation
-	 */
-
+	@Override
 	public DataTransducer<T, Object> getEncoder() {
 		return new Encoder<T>(this.coercionType);
+	}
+
+	@Override
+	public TransducerComponent<Object, Object, T, T> getComponent() {
+		return new TransducerComponent<Object, Object, T, T>(getSourceTypes(), getDecoder(), getEncoder());
 	}
 }

@@ -21,6 +21,7 @@ package org.wolfgang.contrail.codec.payload;
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.CodecFactory;
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>PayLoadTransducerFactory</code> is in charge of transforming upstream
@@ -40,27 +41,22 @@ public final class PayLoadTransducerFactory implements CodecFactory<byte[], Byte
 		// Prevent useless object creation
 	}
 
-	@Override
-	public Pair<Class<byte[]>, Class<Bytes>> getTypes() {
-		return Pair.create(byte[].class, Bytes.class);
+	private Pair<Class<Bytes>, Class<Bytes>> getSourceTypes() {
+		return Pair.create(Bytes.class, Bytes.class);
 	}
 
-	/**
-	 * Method providing pay-load based decoder
-	 * 
-	 * @return a byte array to object data transformation
-	 */
+	@Override
 	public DataTransducer<byte[], Bytes> getDecoder() {
 		return new Decoder();
 	}
 
-	/**
-	 * Method providing pay-load based encoder
-	 * 
-	 * @return a object to byte array data transformation
-	 */
-
+	@Override
 	public DataTransducer<Bytes, byte[]> getEncoder() {
 		return new Encoder();
+	}
+
+	@Override
+	public TransducerComponent<byte[], byte[], Bytes, Bytes> getComponent() {
+		return new TransducerComponent<byte[], byte[], Bytes, Bytes>(getSourceTypes(), getDecoder(), getEncoder());
 	}
 }
