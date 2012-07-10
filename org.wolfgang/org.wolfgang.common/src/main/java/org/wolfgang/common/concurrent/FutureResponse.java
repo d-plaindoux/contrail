@@ -73,6 +73,15 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		return false;
 	}
 
+	/**
+	 * Method checking the status availability
+	 * 
+	 * @param timeout
+	 *            The time out
+	 * @param unit
+	 *            The time unit
+	 * @return true if the status has been set up; flase otherwise
+	 */
 	private boolean waitIfNecessary(long timeout, TimeUnit unit) {
 		if (this.status == null) {
 			try {
@@ -182,11 +191,5 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		} finally {
 			barrier.unlock();
 		}
-	}
-
-	public void reset() {
-		this.status = null;
-		this.value = null;
-		this.error = null;
 	}
 }
