@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
-public class Client {
+public class Client implements Validation {
 
 	private String name;
 	private String filter;
@@ -121,5 +121,10 @@ public class Client {
 	 */
 	public void setFlow(String flow) {
 		this.flow = flow;
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO
 	}
 }

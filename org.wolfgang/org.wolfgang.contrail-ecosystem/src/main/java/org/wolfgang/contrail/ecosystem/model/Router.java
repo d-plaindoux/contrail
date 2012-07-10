@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  */
 @XmlRootElement
 @XmlSeeAlso({ Entry.class, Client.class })
-public class Router {
+public class Router implements Validation {
 
 	private String name;
 	private String factory;
@@ -140,6 +140,12 @@ public class Router {
 	 */
 	public void add(Client client) {
 		this.clients.add(client);
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

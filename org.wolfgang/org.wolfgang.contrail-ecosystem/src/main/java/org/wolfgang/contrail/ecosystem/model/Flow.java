@@ -18,72 +18,34 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * <code>Client</code>
+ * <code>Flow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Server implements Validation {
-
-	private String endpoint;
-	private String flow;
+public final class Flow {
 
 	/**
 	 * Constructor
 	 */
-	public Server() {
+	private Flow() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Return the value of endpoint
-	 * 
-	 * @return the endpoint
-	 */
-	@XmlAttribute
-	String getEndpoint() {
-		return endpoint;
-	}
-
-	/**
-	 * Set the value of endpoint
-	 * 
-	 * @param endpoint
-	 *            the endpoint to set
-	 */
-	void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
-
-	/**
-	 * Return the value offlow
-	 * 
-	 * @return the flow
-	 */
-	@XmlElement
-	String getFlow() {
-		return flow;
-	}
-
-	/**
-	 * Set the value of flow
+	 * Method in charge of decomposing a flow representation
 	 * 
 	 * @param flow
-	 *            the flow to set
+	 *            The definition
+	 * @return a string array (Never <code>null</code>)
 	 */
-	void setFlow(String flow) {
-		this.flow = flow;
-	}
-
-	@Override
-	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		
+	public static String[] decompose(String flow) {
+		if (flow == null) {
+			return new String[0];
+		} else {
+			return flow.split("\\s+");
+		}
 	}
 }

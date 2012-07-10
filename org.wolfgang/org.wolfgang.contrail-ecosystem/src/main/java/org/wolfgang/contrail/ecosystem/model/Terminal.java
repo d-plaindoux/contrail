@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
-public class Terminal {
+public class Terminal implements Validation {
 
 	private String name;
 	private String factory;
@@ -107,5 +107,11 @@ public class Terminal {
 	 */
 	public void add(String parameter) {
 		this.parameters.add(parameter);
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  */
 @XmlRootElement
 @XmlSeeAlso({ Entry.class, Pipeline.class, Router.class, Terminal.class, Server.class })
-public class Ecosystem {
+public class Ecosystem implements Validation {
 
 	private String flow;
 	private List<Entry> entries;
@@ -176,4 +176,9 @@ public class Ecosystem {
 	public void add(Server server) {
 		this.servers.add(server);
 	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO Auto-generated method stub
+	}	
 }

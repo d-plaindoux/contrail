@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement
-public class Entry {
+public class Entry implements Validation {
 
 	private String name;
 	private String flow;
@@ -79,5 +79,11 @@ public class Entry {
 	 */
 	public void setFlow(String flow) {
 		this.flow = flow;
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO Auto-generated method stub
+
 	}
 }

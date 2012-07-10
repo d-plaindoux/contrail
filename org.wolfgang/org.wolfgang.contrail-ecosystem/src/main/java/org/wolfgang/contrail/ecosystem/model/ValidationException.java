@@ -18,72 +18,59 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * <code>Client</code>
- * 
+ * <code>ValidationException</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Server implements Validation {
+public class ValidationException extends Exception {
 
-	private String endpoint;
-	private String flow;
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -4318321767475806832L;
 
 	/**
 	 * Constructor
+	 * 
 	 */
-	public Server() {
+	private ValidationException() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Return the value of endpoint
+	 * Constructor
 	 * 
-	 * @return the endpoint
+	 * @param arg0
+	 * @param arg1
 	 */
-	@XmlAttribute
-	String getEndpoint() {
-		return endpoint;
+	private ValidationException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Set the value of endpoint
+	 * Constructor
 	 * 
-	 * @param endpoint
-	 *            the endpoint to set
+	 * @param arg0
 	 */
-	void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
+	private ValidationException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * Return the value offlow
+	 * Constructor
 	 * 
-	 * @return the flow
+	 * @param arg0
 	 */
-	@XmlElement
-	String getFlow() {
-		return flow;
+	private ValidationException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
+	
+	
 
-	/**
-	 * Set the value of flow
-	 * 
-	 * @param flow
-	 *            the flow to set
-	 */
-	void setFlow(String flow) {
-		this.flow = flow;
-	}
-
-	@Override
-	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		
-	}
 }

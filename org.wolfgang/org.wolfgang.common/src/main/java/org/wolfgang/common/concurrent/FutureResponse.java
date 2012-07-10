@@ -165,9 +165,7 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 	public void setValue(V value) {
 		barrier.lock();
 		try {
-			if (this.isCancelled() || this.isDone()) {
-				// Do nothing
-			} else {
+			if (!this.isCancelled() && !this.isDone()) {
 				this.value = value;
 				this.status = Status.VALUE;
 				this.condition.signalAll();
@@ -181,9 +179,7 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 	public void setError(Throwable error) {
 		barrier.lock();
 		try {
-			if (this.isCancelled() || this.isDone()) {
-				// Do nothing
-			} else {
+			if (!this.isCancelled() && !this.isDone()) {
 				this.error = error;
 				this.status = Status.ERROR;
 				this.condition.signalAll();
