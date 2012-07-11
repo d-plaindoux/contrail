@@ -16,38 +16,47 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model;
+package org.wolfgang.common.lang;
 
 /**
- * <code>ValidationException</code>
+ * <code>TypeUtils</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ValidationException extends Exception {
+public final class TypeUtils {
 
-	/**
-	 * The serialVersionUID attribute
+	/** 
+	 * Basic types definitions
 	 */
-	private static final long serialVersionUID = -4318321767475806832L;
+	private static Class<?>[] TYPES = { 
+		byte.class, short.class, int.class, float.class, long.class, double.class, boolean.class, 
+		byte[].class, short[].class, int[].class, float[].class, long[].class, double[].class, boolean[].class 
+	};
 
 	/**
 	 * Constructor
-	 * 
-	 * @param arg0
 	 */
-	ValidationException(String arg0) {
-		super(arg0);
+	private TypeUtils() {
+		super();
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param format
-	 * @param e
-	 */
-	ValidationException(String format, Throwable e) {
-		super(format, e);
+	public static Class<?> getType(String type) throws ClassNotFoundException {
+		try {
+			return Class.forName(type);
+		} catch (ClassNotFoundException e) {
+			try {
+				return Class.forName("java.lang." + type);
+			} catch (ClassNotFoundException _) {
+				for (Class<?> aClass : TYPES) {
+					if (type.equals(aClass.getCanonicalName())) {
+						return aClass;
+					}
+				}
+
+				throw e;
+			}
+		}
 	}
 
 }

@@ -27,6 +27,73 @@ package org.wolfgang.contrail.ecosystem.model;
 public final class Flow {
 
 	/**
+	 * <code>Item</code>
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
+	public static class Item {
+
+		/**
+		 * The name (never <code>null</code>)
+		 */
+		private final String name;
+
+		/**
+		 * The alias (can be <code>null</code>)
+		 */
+		private final String alias;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param name
+		 * @param alias
+		 */
+		private Item(String alias, String name) {
+			super();
+			this.alias = alias;
+			this.name = name;
+		}
+
+		/**
+		 * Constructor
+		 * 
+		 * @param name
+		 */
+		private Item(String name) {
+			this(null, name);
+		}
+
+		/**
+		 * Return the value of name
+		 * 
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * Return the value of alias
+		 * 
+		 * @return the alias
+		 */
+		public String getAlias() {
+			return alias;
+		}
+
+		/**
+		 * Predicate checking the alias availability
+		 * 
+		 * @return true if the alias is defined; false otherwise
+		 */
+		public boolean asAlias() {
+			return alias != null;
+		}
+	}
+
+	/**
 	 * Constructor
 	 */
 	private Flow() {
@@ -41,11 +108,24 @@ public final class Flow {
 	 *            The definition
 	 * @return a string array (Never <code>null</code>)
 	 */
-	public static String[] decompose(String flow) {
+	public static Item[] decompose(String flow) {
 		if (flow == null) {
-			return new String[0];
+			return new Item[0];
 		} else {
-			return flow.split("\\s+");
+			final String[] flows = flow.split("\\s+");
+			final Item[] items = new Item[flows.length];
+
+			for (int i = 0; i < items.length; i++) {
+				final String s = flows[i];
+				final int indexOf = s.indexOf('=');
+				if (indexOf > 0) {
+					items[i] = new Item(s.substring(0, indexOf), s.substring(indexOf + 1));
+				} else {
+					items[i] = new Item(s);
+				}
+			}
+
+			return items;
 		}
 	}
 }

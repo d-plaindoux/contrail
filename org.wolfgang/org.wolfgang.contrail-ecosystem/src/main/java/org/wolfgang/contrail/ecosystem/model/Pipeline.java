@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.wolfgang.common.message.MessagesProvider;
+
 /**
  * <code>Transducer</code>
  * 
@@ -111,7 +113,10 @@ public class Pipeline implements Validation {
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		
+		if (this.name == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
+		} else if (this.factory == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(name));
+		}
 	}
 }

@@ -21,36 +21,36 @@
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
-	<router name='NetStation '
+	<router name='NetStation'
 		factory='org.wolfgang.contrail.network.component.NetworkComponent'>
 		<self name='A.A' />
 
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
 			<!-- Net Socket Client -->
-			<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
+			<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
 		</client>
 
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			<!-- Web Socket Client -->
-			<flow> JAXB Coercion ClientAcceptance NetStation </flow>
+			<flow> JAXB Coercion ClientAcceptance NS </flow>
 		</client>
 	</router>
 
-	<entry name='NetHook'>
-		<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
-	</entry>
+	<binder name='NetHook'>
+		<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
+	</binder>
 
-	<entry name='WebHook' typein="String" typeout="String">
-		<flow> JAXB Coercion ClientAcceptance NetStation </flow>
-	</entry>
+	<binder name='WebHook' typein="String" typeout="String">
+		<flow> JAXB Coercion ClientAcceptance NS </flow>
+	</binder>
 
 	<server endpoint='tcp://localhost:6667'>
-		<flow> PayLoad Serialize Coercion ClientAcceptance NetStation </flow>
+		<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
 	</server>
 
 	<server endpoint='ws://localhost:6667'>
-		<flow> JAXB Coercion ClientAcceptance NetStation </flow>
+		<flow> JAXB Coercion ClientAcceptance NS </flow>
 	</server>
 
-	<flow> NetStation Logger </flow>
+	<flow> NS=NetStation Logger </flow>
 </ecosystem>

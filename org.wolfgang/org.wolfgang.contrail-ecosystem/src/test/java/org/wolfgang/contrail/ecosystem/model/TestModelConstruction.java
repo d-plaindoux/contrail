@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestModel extends TestCase {
+public class TestModelConstruction extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	private <T> T decode(Class<T> type, String content) throws JAXBException {
@@ -56,8 +56,8 @@ public class TestModel extends TestCase {
 	// ------------------------------
 
 	public void testEntry() throws JAXBException {
-		final String content = "<entry name='A.A'> <flow>Logger</flow> </entry>";
-		final Entry decoded = decode(Entry.class, content);
+		final String content = "<binder name='A.A'> <flow>Logger</flow> </binder>";
+		final Binder decoded = decode(Binder.class, content);
 		assertEquals("A.A", decoded.getName());
 		assertEquals("Logger", decoded.getFlow());
 	}
@@ -193,7 +193,7 @@ public class TestModel extends TestCase {
 				+ "<router name='NetworkRoute' factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
 				+ "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>" + "<flow>PayLoad Serialize Coercion NetworkRoute</flow>" + "</client>"
 				+ "<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>" + "<flow>JSon Coercion NetworkRoute</flow></client></router>"
-				+ "<entry name='NetHook'><flow>PayLoad Serialize Coercion NetworkRoute</flow></entry>" + "<entry name='WebHook'><flow>JSon Coercion NetworkRoute</flow></entry>"
+				+ "<binder name='NetHook'><flow>PayLoad Serialize Coercion NetworkRoute</flow></binder>" + "<binder name='WebHook'><flow>JSon Coercion NetworkRoute</flow></binder>"
 				+ "<server endpoint='tcp://localhost:6667'><flow>PayLoad Serialize Coercion NetworkRoute</flow></server>"
 				+ "<server endpoint='ws://localhost:6667'><flow>JSon Coercion NetworkRoute</flow></server>" 
 				+ "<flow>Network Logger</flow>"

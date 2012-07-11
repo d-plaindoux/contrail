@@ -21,6 +21,8 @@ package org.wolfgang.contrail.ecosystem.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wolfgang.contrail.ecosystem.model.Flow.Item;
+
 /**
  * <code>EcosystemChecker</code>
  * 
@@ -44,24 +46,20 @@ public class EcosystemChecker {
 		this.ecosystem = ecosystem;
 	};
 
-	public List<String> getFreeVariables() {
+	public List<String> getUnusedReferences() {
 		final List<String> flows = new ArrayList<String>();
-		final List<String> boundVariables = new ArrayList<String>();
-		final List<String> freeVariables = new ArrayList<String>();
+		final List<String> unusedVariables = new ArrayList<String>();
 
 		for (Pipeline pipeline : ecosystem.getPipelines()) {
-			boundVariables.add(pipeline.getName());
-			freeVariables.remove(pipeline.getName());
+			unusedVariables.add(pipeline.getName());
 		}
 
 		for (Terminal terminal : ecosystem.getTerminals()) {
-			boundVariables.add(terminal.getName());
-			freeVariables.remove(terminal.getName());
+			unusedVariables.add(terminal.getName());
 		}
 
 		for (Router router : ecosystem.getRouters()) {
-			boundVariables.add(router.getName());
-			freeVariables.remove(router.getName());
+			unusedVariables.add(router.getName());
 
 			for (Client client : router.getClients()) {
 				flows.add(client.getFlow());
@@ -73,7 +71,7 @@ public class EcosystemChecker {
 			flows.add(server.getFlow());
 		}
 
-		for (Entry entry : ecosystem.getEntries()) {
+		for (Binder entry : ecosystem.getEntries()) {
 			// Check the end point
 			flows.add(entry.getFlow());
 		}
@@ -81,13 +79,62 @@ public class EcosystemChecker {
 		flows.add(ecosystem.getFlow());
 
 		for (String client : flows) {
-			for (String flow : Flow.decompose(client)) {
-				if (!boundVariables.contains(flow) && !freeVariables.add(flow)) {
-					freeVariables.add(flow);
+			for (Item flow : Flow.decompose(client)) {
+				if (unusedVariables.contains(flow.getName())) {
+					unusedVariables.remove(flow.getName());
 				}
 			}
 		}
 
-		return freeVariables;
+		return unusedVariables;
+	}
+
+	public List<String> getUnknownReferences() {
+		final List<String> flows = new ArrayList<String>();
+		final List<String> boundVariables = new ArrayList<String>();
+		final List<String> unknownVariables = new ArrayList<String>();
+
+		for (Pipeline pipeline : ecosystem.getPipelines()) {
+			boundVariables.add(pipeline.getName());
+		}
+
+		for (Terminal terminal : ecosystem.getTerminals()) {
+			boundVariables.add(terminal.getName());
+		}
+
+		for (Router router : ecosystem.getRouters()) {
+			boundVariables.add(router.getName());
+
+			for (Client client : router.getClients()) {
+				flows.add(client.getFlow());
+			}
+		}
+
+		for (Server server : ecosystem.getServers()) {
+			// Check the end point
+			flows.add(server.getFlow());
+		}
+
+		for (Binder entry : ecosystem.getEntries()) {
+			// Check the end point
+			flows.add(entry.getFlow());
+		}
+
+		flows.add(ecosystem.getFlow());
+
+		for (String client : flows) {
+			for (Item flow : Flow.decompose(client)) {
+				if (!boundVariables.contains(flow.getName()) && !unknownVariables.add(flow.getName())) {
+					unknownVariables.add(flow.getName());
+				}
+
+				if (flow.asAlias() && !boundVariables.contains(flow.getAlias())) {
+					boundVariables.add(flow.getAlias());
+					unknownVariables.remove(flow.getAlias());
+				}
+			}
+		}
+
+		return unknownVariables;
 	}
 }

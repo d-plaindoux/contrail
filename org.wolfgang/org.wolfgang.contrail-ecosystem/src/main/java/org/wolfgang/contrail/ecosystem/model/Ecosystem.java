@@ -32,18 +32,18 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @version 1.0
  */
 @XmlRootElement
-@XmlSeeAlso({ Entry.class, Pipeline.class, Router.class, Terminal.class, Server.class })
+@XmlSeeAlso({ Binder.class, Pipeline.class, Router.class, Terminal.class, Server.class })
 public class Ecosystem implements Validation {
 
 	private String flow;
-	private List<Entry> entries;
+	private List<Binder> binders;
 	private List<Pipeline> pipelines;
 	private List<Router> routers;
 	private List<Terminal> terminals;
 	private List<Server> servers;
 
 	{
-		this.entries = new ArrayList<Entry>();
+		this.binders = new ArrayList<Binder>();
 		this.pipelines = new ArrayList<Pipeline>();
 		this.routers = new ArrayList<Router>();
 		this.terminals = new ArrayList<Terminal>();
@@ -82,19 +82,19 @@ public class Ecosystem implements Validation {
 	 * 
 	 * @return the entries
 	 */
-	@XmlElement(name = "entry")
-	public List<Entry> getEntries() {
-		return entries;
+	@XmlElement(name = "binder")
+	public List<Binder> getEntries() {
+		return binders;
 	}
 
 	/**
 	 * Set the value of entries
 	 * 
-	 * @param entries
+	 * @param binders
 	 *            the entries to set
 	 */
-	public void add(Entry entry) {
-		this.entries.add(entry);
+	public void add(Binder entry) {
+		this.binders.add(entry);
 	}
 
 	/**
@@ -179,6 +179,24 @@ public class Ecosystem implements Validation {
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-	}	
+		for (Terminal terminal : terminals) {
+			terminal.validate();
+		}
+
+		for (Pipeline pipeline : pipelines) {
+			pipeline.validate();
+		}
+
+		for (Router router : routers) {
+			router.validate();
+		}
+
+		for (Server server : servers) {
+			server.validate();
+		}
+
+		for (Binder binder : binders) {
+			binder.validate();
+		}
+	}
 }

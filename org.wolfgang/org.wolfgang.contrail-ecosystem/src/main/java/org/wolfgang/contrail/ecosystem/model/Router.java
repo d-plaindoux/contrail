@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.wolfgang.common.message.MessagesProvider;
+
 /**
  * <code>Router</code>
  * 
@@ -33,7 +35,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @version 1.0
  */
 @XmlRootElement
-@XmlSeeAlso({ Entry.class, Client.class })
+@XmlSeeAlso({ Binder.class, Client.class })
 public class Router implements Validation {
 
 	private String name;
@@ -144,8 +146,17 @@ public class Router implements Validation {
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		
+		if (this.name == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
+		} else if (this.factory == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(name));
+		} else if (this.self == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "self.undefined").format(name));
+		} else {
+			for (Client client : clients) {
+				client.validate();
+			}
+		}
 	}
 
 }

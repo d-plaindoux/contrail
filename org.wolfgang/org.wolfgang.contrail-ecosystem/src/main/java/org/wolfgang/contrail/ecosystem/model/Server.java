@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.wolfgang.common.message.MessagesProvider;
+
 /**
  * <code>Client</code>
  * 
@@ -83,7 +85,10 @@ public class Server implements Validation {
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		
+		if (this.endpoint == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "endpoint.server.undefined").format());
+		} else if (this.flow == null || this.flow.trim().length() == 0) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "flow.undefined").format(endpoint));
+		}
 	}
 }
