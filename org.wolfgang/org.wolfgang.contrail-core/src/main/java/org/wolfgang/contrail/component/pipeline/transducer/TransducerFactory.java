@@ -21,7 +21,6 @@ package org.wolfgang.contrail.component.pipeline.transducer;
 import java.lang.reflect.Constructor;
 
 import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.component.pipeline.TransducerComponent;
 
 /**
  * <code>CodecFactory</code> is the main interface used for encoder and decoder
