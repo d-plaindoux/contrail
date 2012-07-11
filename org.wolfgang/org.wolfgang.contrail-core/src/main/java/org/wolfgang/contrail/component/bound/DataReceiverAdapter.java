@@ -16,10 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.component.bound;
+
+import java.io.IOException;
+
+import org.wolfgang.contrail.handler.DataHandlerException;
+
 /**
- * Main package providing transducer andCoDec based on pay-load serialization and JAXB. 
- *
+ * <code>DataReceiverAdapter</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.pipeline.transducer;
+public class DataReceiverAdapter<E> implements DataReceiver<E> {
+
+	@Override
+	public void close() throws IOException {
+		// Nothing
+	}
+
+	@Override
+	public void receiveData(E data) throws DataHandlerException {
+		// Nothing
+	}
+
+}

@@ -44,7 +44,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("A");
 		ecosystem.add(decoded);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -62,7 +62,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("A B");
 		ecosystem.add(decoded);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -86,7 +86,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("A C B D");
 		ecosystem.add(decoded);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -110,7 +110,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("A C B D");
 		ecosystem.add(decoded);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(2, freeVariables.size());
 		assertEquals(Arrays.asList("B", "D"), freeVariables);
@@ -135,7 +135,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("A B D");
 		ecosystem.add(decoded);
 
-		final List<String> unusedVariables = new EcosystemChecker(ecosystem).getUnusedReferences();
+		final List<String> unusedVariables = EcosystemCheckerUtils.getUnusedReferences(ecosystem);
 
 		assertEquals(1, unusedVariables.size());
 		assertEquals(Arrays.asList("C"), unusedVariables);
@@ -160,7 +160,7 @@ public class TestModelChecker extends TestCase {
 		decoded.setFlow("B D");
 		ecosystem.add(decoded);
 
-		final List<String> unusedVariables = new EcosystemChecker(ecosystem).getUnusedReferences();
+		final List<String> unusedVariables = EcosystemCheckerUtils.getUnusedReferences(ecosystem);
 
 		assertEquals(2, unusedVariables.size());
 		// Order is important in this test | TODO remove this constraint ASAP
@@ -185,10 +185,10 @@ public class TestModelChecker extends TestCase {
 		final Router router = new Router();
 		final Client client = new Client();
 		client.setFlow("A B C D");
-		
+
 		router.add(client);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -217,7 +217,7 @@ public class TestModelChecker extends TestCase {
 
 		ecosystem.add(router);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -246,7 +246,7 @@ public class TestModelChecker extends TestCase {
 
 		ecosystem.add(router);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(0, freeVariables.size());
 	}
@@ -275,7 +275,7 @@ public class TestModelChecker extends TestCase {
 
 		ecosystem.add(router);
 
-		final List<String> freeVariables = new EcosystemChecker(ecosystem).getUnknownReferences();
+		final List<String> freeVariables = EcosystemCheckerUtils.getUnknownReferences(ecosystem);
 
 		assertEquals(1, freeVariables.size());
 		assertEquals(Arrays.asList("b"), freeVariables);

@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
 
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;

@@ -129,6 +129,8 @@ public class NetServer implements Callable<Void>, Closeable {
 		while (serverSocket.isBound()) {
 			final Socket client = serverSocket.accept();
 
+			// Check executor.getActiveCount() in order to prevent DoS
+
 			final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 				@Override
 				public void receiveData(byte[] data) throws DataHandlerException {

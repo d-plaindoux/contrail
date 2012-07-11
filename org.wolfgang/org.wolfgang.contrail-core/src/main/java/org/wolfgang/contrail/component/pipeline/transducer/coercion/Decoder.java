@@ -21,8 +21,8 @@ package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.component.pipeline.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 
 /**
  * <code>Decoder</code> is able to transform a payload based array to an object

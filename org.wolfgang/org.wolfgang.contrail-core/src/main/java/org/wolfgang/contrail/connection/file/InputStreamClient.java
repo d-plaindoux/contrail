@@ -1,5 +1,6 @@
 /*
- * Copyright (C)2012 D. Plaindoux.
+ * Copyrig
+ht (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,12 +17,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.socket;
+package org.wolfgang.contrail.connection.file;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -37,18 +37,14 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>NetClient</code> provides a client implementation using
- * standard libraries like sockets and server sockets. The current
- * implementation don't use the new IO libraries and select mechanism. As a
- * consequence this implementation is not meant to be scalable as required for
- * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federation network links between
- * components particularly on presence of multiple hop network links.
+ * The <code>FileClient</code> provides a client implementation using standard
+ * libraries like files. The connection requires the input file specification
+ * for the emission.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetClient implements Closeable {
+public class InputStreamClient implements Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -56,16 +52,16 @@ public class NetClient implements Closeable {
 	private final ThreadPoolExecutor executor;
 
 	/**
-	 * De-multiplexer component
+	 * Data sender factory
 	 */
 	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
-		final ThreadGroup group = new ThreadGroup("Network.Client");
+		final ThreadGroup group = new ThreadGroup("File.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
-				return new Thread(group, r, "Network.Connected.Client");
+				return new Thread(group, r, "File.Connected.Client");
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
@@ -79,40 +75,29 @@ public class NetClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetClient(DataSenderFactory<byte[], byte[]> factory) {
+	public InputStreamClient(DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
 
 	/**
-	 * Method called whether a client connection must be performed
-	 * 
-	 * @param address
-	 *            The server internet address
-	 * @param port
-	 *            The server port
-	 * @return 
+	 * @param input
+	 *            The input file (can be <code>null</code>)
+	 * @return
 	 * @throws IOException
-	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public Future<Void> connect(InetAddress address, int port) throws IOException, CannotCreateDataSenderException {
-		final Socket client = new Socket(address, port);
+	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataSenderException {
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
-				try {
-					client.getOutputStream().write(data);
-					client.getOutputStream().flush();
-				} catch (IOException e) {
-					throw new DataHandlerException(e);
-				}
+			public void close() throws IOException {
+				// Nothing
 			}
 
 			@Override
-			public void close() throws IOException {
-				client.close();
+			public void receiveData(byte[] data) throws DataHandlerException {
+				// Nothing
 			}
 		};
 
@@ -123,14 +108,13 @@ public class NetClient implements Closeable {
 			public Void call() throws Exception {
 				final byte[] buffer = new byte[1024 * 8];
 				try {
-					int len = client.getInputStream().read(buffer);
+					int len = inputStream.read(buffer);
 					while (len != -1) {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
-						len = client.getInputStream().read(buffer);
+						len = inputStream.read(buffer);
 					}
 					return null;
 				} catch (Exception e) {
-					dataSender.close();
 					throw e;
 				}
 			}

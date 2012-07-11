@@ -16,8 +16,11 @@
 		<param> org.wolfgang.contrail.network.event.NetEvent </param>
 	</pipeline>
 
-	<pipeline name='ClientAcceptance'
+	<pipeline name='ClientConnector'
 		factory='org.wolfgang.contrail.network.component.NetworkAcceptanceComponent' />
+
+	<pipeline name='Parallel'
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentComponent' />
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
@@ -27,29 +30,29 @@
 
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
 			<!-- Net Socket Client -->
-			<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
+			<flow> PayLoad Serialize Parallel Coercion ClientConnector NS </flow>
 		</client>
 
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			<!-- Web Socket Client -->
-			<flow> JAXB Coercion ClientAcceptance NS </flow>
+			<flow> JAXB Parallel Coercion ClientConnector NS </flow>
 		</client>
 	</router>
 
 	<binder name='NetHook'>
-		<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
+		<flow> PayLoad Serialize Coercion ClientConnector NS </flow>
 	</binder>
 
 	<binder name='WebHook' typein="String" typeout="String">
-		<flow> JAXB Coercion ClientAcceptance NS </flow>
+		<flow> JAXB Parallel Coercion ClientConnector NS </flow>
 	</binder>
 
 	<server endpoint='tcp://localhost:6667'>
-		<flow> PayLoad Serialize Coercion ClientAcceptance NS </flow>
+		<flow> PayLoad Serialize Coercion ClientConnector NS </flow>
 	</server>
 
 	<server endpoint='ws://localhost:6667'>
-		<flow> JAXB Coercion ClientAcceptance NS </flow>
+		<flow> JAXB Parallel Coercion ClientConnector NS </flow>
 	</server>
 
 	<flow> NS=NetStation Logger </flow>

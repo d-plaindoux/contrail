@@ -21,20 +21,9 @@ package org.wolfgang.contrail.component.pipeline.transducer;
 import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.contrail.component.ComponentConnectedException;
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentLinkFactory;
-import org.wolfgang.contrail.link.DestinationComponentLink;
-import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * <code>TransducerComponent</code> is an implementation which requires data
@@ -44,7 +33,7 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent implements PipelineComponent<U1, D1, U2, D2> {
+public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineComponent<U1, D1, U2, D2> {
 
 	/**
 	 * Static message definition for unknown transformation
@@ -74,17 +63,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	private final DownStreamDataHandler<D2> downStreamDataHandler;
 
 	/**
-	 * Related down stream data handler after connection. Null otherwise
-	 */
-	private SourceComponentLink<U1, D1> sourceComponentLink;
-
-	/**
-	 * Related up stream data handler after connection. Null otherwise
-	 */
-	private DestinationComponentLink<U2, D2> destinationComponentLink;
-
-	/**
 	 * Constructor
+	 * 
 	 * @param upstreamXducer
 	 *            The data transformation used for incoming data (upstream)
 	 * @param streamXducer
@@ -95,84 +75,6 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 
 		this.upStreamDataHandler = new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer);
 		this.downStreamDataHandler = new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer);
-		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
-		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
-	}
-
-	/**
-	 * Provides the embedded upstream source component (internal use only)
-	 * 
-	 * @return the current up stream source component
-	 */
-	SourceComponentLink<U1, D1> getSourceComponentLink() {
-		return this.sourceComponentLink;
-	}
-
-	/**
-	 * Provides the embedded upstream source component (internal use only)
-	 * 
-	 * @return the current up stream source component
-	 */
-	DestinationComponentLink<U2, D2> getDestinationComponentLink() {
-		return this.destinationComponentLink;
-	}
-
-	@Override
-	public boolean acceptSource(ComponentId componentId) {
-		return ComponentLinkFactory.isUndefined(this.sourceComponentLink);
-	}
-
-	@Override
-	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getSource().getComponentId();
-		if (this.acceptSource(componentId)) {
-			this.sourceComponentLink = handler;
-			return new ComponentLink() {
-				@Override
-				public void dispose() throws ComponentDisconnectionRejectedException {
-					disconnectSource(componentId);
-				}
-			};
-		} else {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
-		}
-	}
-
-	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		if (!acceptSource(componentId) && sourceComponentLink.getSource().getComponentId().equals(componentId)) {
-			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
-		} else {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		}
-	}
-
-	@Override
-	public boolean acceptDestination(ComponentId componentId) {
-		return ComponentLinkFactory.isUndefined(this.destinationComponentLink);
-	}
-
-	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestination().getComponentId();
-		if (this.acceptDestination(componentId)) {
-			this.destinationComponentLink = handler;
-			return new ComponentLink() {
-				@Override
-				public void dispose() throws ComponentDisconnectionRejectedException {
-					disconnectDestination(componentId);
-				}
-			};
-		} else {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
-		}
-	}
-
-	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
-			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
-		} else {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		}
 	}
 
 	@Override
@@ -183,27 +85,5 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractComponent
 	@Override
 	public DownStreamDataHandler<D2> getDownStreamDataHandler() {
 		return downStreamDataHandler;
-	}
-
-	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
-		try {
-			this.upStreamDataHandler.handleClose();
-		} finally {
-			if (this.destinationComponentLink.getDestination() != null) {
-				this.destinationComponentLink.getDestination().closeUpStream();
-			}
-		}
-	}
-
-	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
-		try {
-			this.downStreamDataHandler.handleClose();
-		} finally {
-			if (this.sourceComponentLink.getSource() != null) {
-				this.sourceComponentLink.getSource().closeDownStream();
-			}
-		}
 	}
 }

@@ -27,8 +27,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.component.pipeline.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**

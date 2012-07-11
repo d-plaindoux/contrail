@@ -20,8 +20,6 @@ package org.wolfgang.contrail.component.pipeline.transducer;
 
 import java.util.List;
 
-import org.wolfgang.contrail.component.pipeline.DataTransducer;
-import org.wolfgang.contrail.component.pipeline.DataTransducerException;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;

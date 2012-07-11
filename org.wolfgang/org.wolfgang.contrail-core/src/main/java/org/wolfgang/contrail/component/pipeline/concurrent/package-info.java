@@ -16,51 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline;
-
 /**
- * <code>DataTransducerException</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
+ * This package is dedicated threaded pipeline data hander. One is provided for source
+ * data event and the other one for destination data event. Therefore kind of parallelism
+ * can be done choosing the best component of both combining these pipelines. 
  */
-public class DataTransducerException extends Exception {
 
-	private static final long serialVersionUID = 3615754764253846911L;
+package org.wolfgang.contrail.component.pipeline.concurrent;
 
-	/**
-	 * Constructor
-	 */
-	public DataTransducerException() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public DataTransducerException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public DataTransducerException(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public DataTransducerException(Throwable arg0) {
-		super(arg0);
-	}
-
-}
