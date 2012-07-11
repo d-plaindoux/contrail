@@ -41,6 +41,7 @@ public class Router implements Validation {
 	private String name;
 	private String factory;
 	private String self;
+	private List<String> parameters;
 	private List<Client> clients;
 
 	{
@@ -122,6 +123,26 @@ public class Router implements Validation {
 	 */
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
+	}
+
+	/**
+	 * Return the value of parameters
+	 * 
+	 * @return the parameters
+	 */
+	@XmlElement(name = " param")
+	public List<String> getParameters() {
+		return parameters;
+	}
+
+	/**
+	 * Set the value of parameters
+	 * 
+	 * @param parameter
+	 *            the parameters to set
+	 */
+	public void add(String parameter) {
+		this.parameters.add(parameter);
 	}
 
 	/**

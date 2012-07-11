@@ -78,7 +78,7 @@ public final class SerializationTransducerFactory implements TransducerFactory<B
 	}
 
 	@Override
-	public TransducerComponent<Bytes, Bytes, Object, Object> getComponent() {
+	public TransducerComponent<Bytes, Bytes, Object, Object> createComponent() {
 		return new TransducerComponent<Bytes, Bytes, Object, Object>(getDecoder(), getEncoder());
 	}
 }

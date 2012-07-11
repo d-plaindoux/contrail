@@ -69,7 +69,7 @@ public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Obj
 	}
 
 	@Override
-	public TransducerComponent<Bytes, Bytes, Object, Object> getComponent() {
+	public TransducerComponent<Bytes, Bytes, Object, Object> createComponent() {
 		return new TransducerComponent<Bytes, Bytes, Object, Object>(getDecoder(), getEncoder());
 	}
 }

@@ -73,5 +73,5 @@ public interface TransducerFactory<U, D> {
 	 * 
 	 * @return a transducer component
 	 */
-	TransducerComponent<U, U, D, D> getComponent();
+	TransducerComponent<U, U, D, D> createComponent();
 }

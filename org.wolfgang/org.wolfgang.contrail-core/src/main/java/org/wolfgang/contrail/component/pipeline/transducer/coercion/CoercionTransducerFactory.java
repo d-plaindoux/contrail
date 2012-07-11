@@ -68,7 +68,7 @@ public final class CoercionTransducerFactory<T> implements TransducerFactory<Obj
 	}
 
 	@Override
-	public TransducerComponent<Object, Object, T, T> getComponent() {
+	public TransducerComponent<Object, Object, T, T> createComponent() {
 		return new TransducerComponent<Object, Object, T, T>(getDecoder(), getEncoder());
 	}
 }

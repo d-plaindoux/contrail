@@ -51,7 +51,7 @@ public final class PayLoadTransducerFactory implements TransducerFactory<byte[],
 	}
 
 	@Override
-	public TransducerComponent<byte[], byte[], Bytes, Bytes> getComponent() {
+	public TransducerComponent<byte[], byte[], Bytes, Bytes> createComponent() {
 		return new TransducerComponent<byte[], byte[], Bytes, Bytes>(getDecoder(), getEncoder());
 	}
 }

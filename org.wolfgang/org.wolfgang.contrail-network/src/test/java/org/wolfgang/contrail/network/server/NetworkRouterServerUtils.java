@@ -65,17 +65,15 @@ class NetworkRouterServerUtils extends TestCase {
 				try {
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
-							payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = payLoadTransducerFactory.createComponent();
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
-					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(serializationTransducerFactory.getDecoder(),
-							serializationTransducerFactory.getEncoder());
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
 					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					// Create the link from the client to the network
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
@@ -130,18 +128,17 @@ class NetworkRouterServerUtils extends TestCase {
 
 				try {
 					// Payload component
+					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
-					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = new TransducerComponent<byte[], byte[], Bytes, Bytes>(payLoadTransducerFactory.getDecoder(),
-							payLoadTransducerFactory.getEncoder());
+					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = payLoadTransducerFactory.createComponent();
 
 					// Serialization component
 					final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
-					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = new TransducerComponent<Bytes, Bytes, Object, Object>(serializationTransducerFactory.getDecoder(),
-							serializationTransducerFactory.getEncoder());
+					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
 					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = new TransducerComponent<Object, Object, NetworkEvent, NetworkEvent>(coercionTransducerFactory.getDecoder(), coercionTransducerFactory.getEncoder());
+					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);

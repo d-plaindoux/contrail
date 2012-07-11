@@ -25,8 +25,10 @@ import java.util.Map;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.RouterSourceComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalFactory;
+import org.wolfgang.contrail.component.multiple.RouterSourceFactory;
 import org.wolfgang.contrail.component.pipeline.PipelineFactory;
 import org.wolfgang.contrail.ecosystem.model.Ecosystem;
 import org.wolfgang.contrail.ecosystem.model.Pipeline;
@@ -63,6 +65,11 @@ public final class EcosystemFactory {
 	private final Map<String, Lazy<PipelineComponent>> pipelines;
 
 	/**
+	 * Declared pipelines
+	 */
+	private final Map<String, Lazy<RouterSourceComponent>> routers;
+
+	/**
 	 * Declared terminal
 	 */
 	private final Map<String, Lazy<TerminalComponent>> terminals;
@@ -70,6 +77,7 @@ public final class EcosystemFactory {
 	{
 		this.pipelines = new HashMap<String, Lazy<PipelineComponent>>();
 		this.terminals = new HashMap<String, Lazy<TerminalComponent>>();
+		this.routers = new HashMap<String, Lazy<RouterSourceComponent>>();
 		this.classLoader = EcosystemFactory.class.getClassLoader();
 	}
 
@@ -104,6 +112,21 @@ public final class EcosystemFactory {
 	}
 
 	/**
+	 * @param pipeline
+	 * @return
+	 */
+	private Lazy<RouterSourceComponent> create(Router router) {
+		final String factory = router.getFactory();
+		final List<String> parameters = router.getParameters();
+		return new Lazy<RouterSourceComponent>() {
+			@Override
+			public RouterSourceComponent create() throws CannotCreateComponentException {
+				return RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]), new RouterSourceFactory.Client[0]);
+			}
+		};
+	}
+
+	/**
 	 * @param terminal
 	 */
 	private void register(Terminal terminal) {
@@ -121,7 +144,7 @@ public final class EcosystemFactory {
 	 * @param router
 	 */
 	private void register(Router router) {
-		// TODO Auto-generated method stub
+		this.routers.put(router.getName(), create(router));
 	}
 
 	/**

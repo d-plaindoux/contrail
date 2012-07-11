@@ -51,7 +51,7 @@ public final class PipelineFactory {
 				} catch (NoSuchMethodException e) {
 					factory = (TransducerFactory) component.newInstance();
 				}
-				return factory.getComponent();
+				return factory.createComponent();
 			} else {
 				try {
 					final Constructor<?> constructor = component.getConstructor(String[].class);
