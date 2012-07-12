@@ -25,21 +25,10 @@
 	<pipeline name='ConcurrentDestination'
 		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentDestinationPipelineComponent' />
 
-	<flow name='Parallel'>
-		ConcurrentSource ConcurrentDestination
-	</flow>
-
-	<flow name='Event'>
-		Parallel Coercion ClientConnector NS
-	</flow>
-
-	<flow name='NetEvent'>
-		PayLoad Serialize Parallel Coercion ClientConnector NS
-	</flow>
-
-	<flow name='WebEvent'>
-		JAXB Parallel Coercion ClientConnector NS
-	</flow>
+	<flow name='Parallel'> ConcurrentSource ConcurrentDestination </flow>
+	<flow name='Event'> Parallel Coercion ClientConnector NS </flow>
+	<flow name='NetEvent'> PayLoad Serialize Event </flow>
+	<flow name='WebEvent'> JAXB Event </flow>
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
@@ -47,18 +36,18 @@
 		factory='org.wolfgang.contrail.network.component.NetworkComponent'>
 		<self name='A.A' />
 
+		<!-- Net Socket Client -->
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
-			<!-- Net Socket Client -->
 			NetEvent
 		</client>
 
+		<!-- Web Socket Client -->
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
-			<!-- Web Socket Client -->
 			WebEvent
 		</client>
 	</router>
 
-	<binder name='NetHook'>
+	<binder name='NetHook' typein="byte[]" typeout="byte[]">
 		NetEvent
 	</binder>
 
