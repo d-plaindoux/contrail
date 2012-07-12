@@ -18,13 +18,20 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
+
+import org.wolfgang.common.message.MessagesProvider;
+
 /**
  * <code>Flow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class Flow {
+@XmlRootElement
+public class Flow implements Validation {
 
 	/**
 	 * <code>Item</code>
@@ -93,10 +100,13 @@ public final class Flow {
 		}
 	}
 
+	private String name;
+	private String value;
+
 	/**
 	 * Constructor
 	 */
-	private Flow() {
+	public Flow() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -126,6 +136,55 @@ public final class Flow {
 			}
 
 			return items;
+		}
+	}
+
+	/**
+	 * Return the value ofname
+	 * 
+	 * @return the name
+	 */
+	@XmlAttribute
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Set the value of name
+	 * 
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Return the value of value
+	 * 
+	 * @return the value
+	 */
+	@XmlValue
+	public String getValue() {
+		return value.trim();
+	}
+
+	/**
+	 * Set the value of value
+	 * 
+	 * @param value
+	 *            the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		if (this.name == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
+		} else if (this.value == null || this.value.trim().length() == 0) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "flow.undefined").format(name));
 		}
 	}
 }

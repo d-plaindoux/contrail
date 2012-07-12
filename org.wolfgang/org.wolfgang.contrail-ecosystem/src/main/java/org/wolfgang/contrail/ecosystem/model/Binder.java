@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.ecosystem.model;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.lang.TypeUtils;
 import org.wolfgang.common.message.MessagesProvider;
@@ -71,9 +71,9 @@ public class Binder implements Validation {
 	 * 
 	 * @return the flow
 	 */
-	@XmlElement
+	@XmlValue
 	public String getFlow() {
-		return flow;
+		return flow.trim();
 	}
 
 	/**

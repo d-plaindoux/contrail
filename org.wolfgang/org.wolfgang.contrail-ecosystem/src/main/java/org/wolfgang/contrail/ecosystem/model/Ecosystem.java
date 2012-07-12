@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso({ Binder.class, Pipeline.class, Router.class, Terminal.class, Server.class })
 public class Ecosystem implements Validation {
 
-	private String flow;
+	private String main;
+	private List<Flow> flows;
 	private List<Binder> binders;
 	private List<Pipeline> pipelines;
 	private List<Router> routers;
@@ -43,6 +44,7 @@ public class Ecosystem implements Validation {
 	private List<Server> servers;
 
 	{
+		this.flows = new ArrayList<Flow>();
 		this.binders = new ArrayList<Binder>();
 		this.pipelines = new ArrayList<Pipeline>();
 		this.routers = new ArrayList<Router>();
@@ -63,8 +65,8 @@ public class Ecosystem implements Validation {
 	 * @return the flow
 	 */
 	@XmlElement
-	public String getFlow() {
-		return flow;
+	public String getMain() {
+		return main;
 	}
 
 	/**
@@ -73,8 +75,28 @@ public class Ecosystem implements Validation {
 	 * @param flow
 	 *            the flow to set
 	 */
-	public void setFlow(String flow) {
-		this.flow = flow;
+	public void setMain(String main) {
+		this.main = main.trim();
+	}
+
+	/**
+	 * Return the value of flows
+	 * 
+	 * @return the flows
+	 */
+	@XmlElement(name = "flow")
+	public List<Flow> getFlows() {
+		return flows;
+	}
+
+	/**
+	 * Set the value of flows
+	 * 
+	 * @param flows
+	 *            the flows to set
+	 */
+	public void add(Flow flow) {
+		this.flows.add(flow);
 	}
 
 	/**
@@ -198,5 +220,9 @@ public class Ecosystem implements Validation {
 		for (Binder binder : binders) {
 			binder.validate();
 		}
-	}
+
+		for (Flow flow : flows) {
+			flow.validate();
+		}
+}
 }

@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.ecosystem.model;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.message.MessagesProvider;
 
@@ -68,7 +68,7 @@ public class Server implements Validation {
 	 * 
 	 * @return the flow
 	 */
-	@XmlElement
+	@XmlValue
 	String getFlow() {
 		return flow;
 	}
@@ -80,7 +80,7 @@ public class Server implements Validation {
 	 *            the flow to set
 	 */
 	void setFlow(String flow) {
-		this.flow = flow;
+		this.flow = flow.trim();
 	}
 
 	@Override

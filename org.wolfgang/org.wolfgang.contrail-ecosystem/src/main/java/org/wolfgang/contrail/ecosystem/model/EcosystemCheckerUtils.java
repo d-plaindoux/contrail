@@ -65,6 +65,11 @@ public final class EcosystemCheckerUtils {
 			}
 		}
 
+		for (Flow entry : ecosystem.getFlows()) {
+			unusedVariables.add(entry.getName());
+			flows.add(entry.getValue());
+		}
+
 		for (Server server : ecosystem.getServers()) {
 			// Check the end point
 			flows.add(server.getFlow());
@@ -75,7 +80,7 @@ public final class EcosystemCheckerUtils {
 			flows.add(entry.getFlow());
 		}
 
-		flows.add(ecosystem.getFlow());
+		flows.add(ecosystem.getMain());
 
 		for (String client : flows) {
 			for (Item flow : Flow.decompose(client)) {
@@ -116,6 +121,11 @@ public final class EcosystemCheckerUtils {
 			}
 		}
 
+		for (Flow entry : ecosystem.getFlows()) {
+			boundVariables.add(entry.getName());
+			flows.add(entry.getValue());
+		}
+
 		for (Server server : ecosystem.getServers()) {
 			// Check the end point
 			flows.add(server.getFlow());
@@ -126,7 +136,7 @@ public final class EcosystemCheckerUtils {
 			flows.add(entry.getFlow());
 		}
 
-		flows.add(ecosystem.getFlow());
+		flows.add(ecosystem.getMain());
 
 		for (String client : flows) {
 			for (Item flow : Flow.decompose(client)) {
