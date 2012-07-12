@@ -18,28 +18,37 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+
 /**
  * <code>TestResource</code>
- *
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class TestStringResource extends TestCase {
-	
-	public void testNominal() {
-		final String content = "This is a ${simple} test with some ${meta.variables}";
-		final Resource resource = new StringResourceImpl(content);
+
+	public void testNominal01() {
+		final Resource resource = new StringResourceImpl("This is a ${simple} test with some ${meta.variables}");
 		final Collection<String> freeVariables = resource.getFreeVariables();
-		
-		System.err.print(Arrays.toString(freeVariables.toArray()));
-		
+
 		assertTrue(freeVariables.contains("simple"));
 		assertTrue(freeVariables.contains("meta.variables"));
 	}
 
+	public void testNominal02() throws IOException {
+		final Resource resource = new StringResourceImpl("Hello, ${who}!");
+		final Map<String, String> variables = new HashMap<String, String>();
+		variables.put("who", "World");
+
+		final ChannelBuffer content = resource.getContent(variables);		
+		assertEquals("Hello, World!", new String(content.array()));
+	}
 }

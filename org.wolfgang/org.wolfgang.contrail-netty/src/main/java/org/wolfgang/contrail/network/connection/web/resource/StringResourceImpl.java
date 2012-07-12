@@ -52,7 +52,7 @@ public class StringResourceImpl implements Resource {
 	}
 
 	@Override
-	public ChannelBuffer getContent(Map<String, String> definitions) throws IOException {
+	public ChannelBuffer getContent(Map<String, String> definitions) {
 		String content = contentResource;
 
 		for (Entry<String, String> entry : definitions.entrySet()) {

@@ -80,7 +80,7 @@ public class TestFuture extends TestCase {
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS));
+					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
 					futureResponse.setError(e);
 				}
@@ -106,7 +106,7 @@ public class TestFuture extends TestCase {
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS));
+					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
 					futureResponse.setError(e);
 				}
