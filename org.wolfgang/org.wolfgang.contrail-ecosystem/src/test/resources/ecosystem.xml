@@ -19,8 +19,15 @@
 	<pipeline name='ClientConnector'
 		factory='org.wolfgang.contrail.network.component.NetworkAcceptanceComponent' />
 
-	<pipeline name='Parallel'
-		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentComponent' />
+	<pipeline name='ConcurrentSource'
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentSourcePipelineComponent' />
+
+	<pipeline name='ConcurrentDestination'
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentDestinationPipelineComponent' />
+
+	<composition name='Parallel'>
+		<flow>ConcurrentSource ConcurrentDestination</flow>
+	</composition>
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 

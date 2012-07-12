@@ -55,7 +55,7 @@ public class TestCoercionTransducers extends TestCase {
 		assertEquals(source, results.get(0));
 	}
 
-	public void testNominal02() {
+	public void testFailure01() {
 		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
 		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
 		try {

@@ -82,6 +82,9 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerException(message, e);
+			} catch (RuntimeException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataHandlerException(message, e);
 			}
 		}
 	}

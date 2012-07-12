@@ -43,33 +43,30 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComposeComponent extends TestCase {
 
 	@SuppressWarnings("rawtypes")
-	public void testComposet01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
+	public void testCompose01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final PipelineComponent[] pipelines = new PipelineComponent[] { 
-				new PayLoadTransducerFactory().createComponent(), 
-				new SerializationTransducerFactory().createComponent(),
-				new CoercionTransducerFactory<String>(String.class).createComponent() 
-		};
-		
+		final PipelineComponent[] pipelines = new PipelineComponent[] { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
+				new CoercionTransducerFactory<String>(String.class).createComponent() };
+
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>() {
 			@Override
 			public void receiveData(byte[] data) throws DataHandlerException {
 				sourceFuture.setValue(data);
 			}
 		});
-		
+
 		final ComposedPipelineComponent<byte[], byte[], String, String> composedComponent = new ComposedPipelineComponent<byte[], byte[], String, String>(pipelines);
-		
+
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>() {
 			@Override
 			public void receiveData(String data) throws DataHandlerException {
 				terminalFuture.setValue(data);
 			}
 		});
-		
+
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 		componentLinkManagerImpl.connect(initialComponent, composedComponent);
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
@@ -78,5 +75,29 @@ public class TestComposeComponent extends TestCase {
 		initialComponent.getDataSender().sendData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void testFailure01() throws ComponentConnectionRejectedException {
+		final String source = new String("Hello, World!");
+
+		final PipelineComponent[] pipelines = new PipelineComponent[] { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
+
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>());
+		final ComposedPipelineComponent<byte[], byte[], String, String> composedComponent = new ComposedPipelineComponent<byte[], byte[], String, String>(pipelines);
+
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>());
+		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+
+		componentLinkManagerImpl.connect(initialComponent, composedComponent);
+		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
+
+		try {
+			terminalComponent.getDataSender().sendData(source);
+			fail();
+		} catch (DataHandlerException e) {
+			assertEquals(ClassCastException.class, e.getCause().getClass());
+		}
+
 	}
 }

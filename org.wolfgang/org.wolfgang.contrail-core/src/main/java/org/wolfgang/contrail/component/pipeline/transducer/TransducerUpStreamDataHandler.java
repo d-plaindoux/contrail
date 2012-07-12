@@ -76,6 +76,9 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 				for (D value : transform) {
 					component.getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(value);
 				}
+			} catch (RuntimeException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataHandlerException(message, e);
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataHandlerException(message, e);
@@ -106,5 +109,4 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 	public void handleLost() {
 		this.closed = true;
 	}
-
 }
