@@ -16,31 +16,46 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.contrail.component.network;
 
 import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.network.reference.IndirectReference;
+import org.wolfgang.contrail.network.reference.ReferenceVisitor;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>NetworkReferenceVisitor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkFactory {
+public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Exception> {
+
+	private final DirectReference targetReference;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param currentReference
+	 * @param targetReference
 	 */
-	private NetworkFactory() {
-		// Prevent useless creation
+	public NetworkReferenceVisitor(DirectReference targetReference) {
+		super();
+		this.targetReference = targetReference;
 	}
 
-	/**
-	 * Method called whether a network router is required.
-	 * 
-	 * @return a network router component
-	 */
-	public static NetworkComponent create(DirectReference selfReference) {
-		return new NetworkComponent(new NetworkTable(), selfReference);
+	@Override
+	public Boolean visit(DirectReference reference) throws Exception {
+		return targetReference.equals(reference);
 	}
+
+	@Override
+	public Boolean visit(IndirectReference reference) throws Exception {
+		if (reference.hasNext()) {
+			final DirectReference nextReference = reference.getNext();
+			return nextReference.equals(targetReference);
+		} else {
+			return false;
+		}
+	}
+
 }

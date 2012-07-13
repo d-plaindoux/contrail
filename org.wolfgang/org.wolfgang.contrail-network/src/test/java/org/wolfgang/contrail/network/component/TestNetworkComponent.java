@@ -30,6 +30,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.network.NetworkTable;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.network.event.NetworkEvent;
 import org.wolfgang.contrail.network.reference.DirectReference;

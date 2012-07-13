@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso({ Binder.class, Pipeline.class, Router.class, Terminal.class, Server.class })
 public class Ecosystem implements Validation {
 
+	private List<Variable> variables;
+
 	private String main;
 	private List<Flow> flows;
 	private List<Binder> binders;
@@ -44,6 +46,7 @@ public class Ecosystem implements Validation {
 	private List<Server> servers;
 
 	{
+		this.variables = new ArrayList<Variable>();
 		this.flows = new ArrayList<Flow>();
 		this.binders = new ArrayList<Binder>();
 		this.pipelines = new ArrayList<Pipeline>();
@@ -199,6 +202,26 @@ public class Ecosystem implements Validation {
 		this.servers.add(server);
 	}
 
+	/**
+	 * Return the value of variables
+	 * 
+	 * @return the variables
+	 */
+	@XmlElement(name = "let")
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	/**
+	 * Set the value of variables
+	 * 
+	 * @param variables
+	 *            the variables to set
+	 */
+	public void add(Variable variable) {
+		this.variables.add(variable);
+	}
+
 	@Override
 	public void validate() throws ValidationException {
 		for (Terminal terminal : terminals) {
@@ -224,5 +247,5 @@ public class Ecosystem implements Validation {
 		for (Flow flow : flows) {
 			flow.validate();
 		}
-}
+	}
 }

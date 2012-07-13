@@ -16,10 +16,31 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.component.network;
+
+import org.wolfgang.contrail.network.reference.DirectReference;
+
 /**
- * Main package providing basic filter used for an elaboration of a router.
- *
+ * <code>NetworkRouterFactory</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.network.component;
+public final class NetworkFactory {
+
+	/**
+	 * Constructor
+	 */
+	private NetworkFactory() {
+		// Prevent useless creation
+	}
+
+	/**
+	 * Method called whether a network router is required.
+	 * 
+	 * @return a network router component
+	 */
+	public static NetworkComponent create(DirectReference selfReference) {
+		return new NetworkComponent(new NetworkTable(), selfReference);
+	}
+}
