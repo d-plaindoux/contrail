@@ -75,7 +75,7 @@ public final class EcosystemCheckerUtils {
 			flows.add(server.getFlow());
 		}
 
-		for (Binder entry : ecosystem.getEntries()) {
+		for (Binder entry : ecosystem.getBinders()) {
 			// Check the end point
 			flows.add(entry.getFlow());
 		}
@@ -131,7 +131,7 @@ public final class EcosystemCheckerUtils {
 			flows.add(server.getFlow());
 		}
 
-		for (Binder entry : ecosystem.getEntries()) {
+		for (Binder entry : ecosystem.getBinders()) {
 			// Check the end point
 			flows.add(entry.getFlow());
 		}

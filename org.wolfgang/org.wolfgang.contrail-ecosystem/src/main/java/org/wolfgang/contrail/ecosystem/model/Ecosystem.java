@@ -105,7 +105,7 @@ public class Ecosystem implements Validation {
 	 * @return the entries
 	 */
 	@XmlElement(name = "binder")
-	public List<Binder> getEntries() {
+	public List<Binder> getBinders() {
 		return binders;
 	}
 

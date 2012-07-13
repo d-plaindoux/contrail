@@ -223,7 +223,7 @@ public class TestModelConstruction extends TestCase {
 		decoded.validate();
 		
 		assertEquals("Network Logger", decoded.getMain());
-		assertEquals(2, decoded.getEntries().size());
+		assertEquals(2, decoded.getBinders().size());
 		assertEquals(3, decoded.getPipelines().size());
 		assertEquals(1, decoded.getTerminals().size());
 		assertEquals(1, decoded.getRouters().size());
