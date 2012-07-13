@@ -1,26 +1,24 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<let name='component'>org.wolfgang.contrail.component</let>
-	<let name='pipeline'>$(component).pipeline</let>
 
 	<pipeline name='PayLoad'
-		factory='$(pipeline).transducer.payload.PayLoadTransducerFactory' />
+		factory='org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory' />
 	<pipeline name='Serialize'
-		factory='$(pipeline).transducer.serializer.SerializerTransducerFactory' />
+		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializerTransducerFactory' />
 	<pipeline name='Coercion'
-		factory='$(pipeline).transducer.coercion.CoercionTransducerFactory'>
+		factory='org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory'>
 		<param> org.wolfgang.contrail.network.event.NetEvent </param>
 	</pipeline>
 	<pipeline name='JAXB'
-		factory='$(pipeline).transducer.json.JAXBTransducerFactory'>
+		factory='org.wolfgang.contrail.component.pipeline.transducer.json.JAXBTransducerFactory'>
 		<param> org.wolfgang.contrail.network.event.NetEvent </param>
 	</pipeline>
 	<pipeline name='ClientConnector'
-		factory='$(component).network.NetworkAcceptanceComponent' />
+		factory='org.wolfgang.contrail.component.network.NetworkAcceptanceComponent' />
 	<pipeline name='ConcurrentSource'
-		factory='$(pipeline).concurrent.ConcurrentSourcePipelineComponent' />
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentSourcePipelineComponent' />
 	<pipeline name='ConcurrentDestination'
-		factory='$(pipeline).concurrent.ConcurrentDestinationPipelineComponent' />
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentDestinationPipelineComponent' />
 
 	<flow name='Parallel'> ConcurrentSource ConcurrentDestination </flow>
 	<flow name='NetEvent'> Parallel Coercion ClientConnector NS </flow>
@@ -29,14 +27,15 @@
 
 	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
 
-	<router name='NetStation' factory='$(component).network.NetworkComponent'>
+	<router name='NetStation'
+		factory='org.wolfgang.contrail.component.network.NetworkComponent'>
 		<self name='A.A' />
 
 		<!-- Net Socket Client -->
 		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
 			TCPEvent
 		</client>
-		
+
 		<!-- Web Socket Client -->
 		<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
 			WebEvent
