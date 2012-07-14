@@ -77,34 +77,7 @@ public final class EcosystemFactory {
 		public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
-
-				Component source = initialComponent;
-
-				for (Item item : items) {
-					final Component component;
-
-					if (item.asAlias()) {
-						if (aliasedComponents.containsKey(item.getAlias())) {
-							component = aliasedComponents.get(item.getAlias());
-						} else {
-							component = EcosystemFactory.this.create(item.getName());
-							if (component == null) {
-								throw new CannotCreateDataSenderException();
-							} else {
-								aliasedComponents.put(item.getAlias(), component);
-							}
-						}
-					} else {
-						component = EcosystemFactory.this.create(item.getName());
-						if (component == null) {
-							throw new CannotCreateDataSenderException();
-						}
-					}
-
-					componentLinkManager.connect((SourceComponent) source, (DestinationComponent) component);
-					source = component;
-				}
-
+				EcosystemFactory.this.create(initialComponent, items);
 				return initialComponent.getDataSender();
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataSenderException(e);
@@ -167,16 +140,31 @@ public final class EcosystemFactory {
 	 * @param name
 	 * @return
 	 * @throws CannotCreateComponentException
+	 * @throws CannotCreateDataSenderException
+	 * @throws ComponentConnectionRejectedException
 	 */
-	private Component create(Component source, Item[] items) throws CannotCreateComponentException {
+	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
+
+		Component current = source;
+
 		for (Item item : items) {
 			final Component component;
-
+			final String name = item.getName();
 			if (item.asAlias()) {
 				if (aliasedComponents.containsKey(item.getAlias())) {
 					component = aliasedComponents.get(item.getAlias());
 				} else {
-					component = EcosystemFactory.this.create(item.getName());
+					if (pipelines.containsKey(name)) {
+						component = create(pipelines.get(name));
+					} else if (terminals.containsKey(name)) {
+						component = create(terminals.get(name));
+					} else if (routers.containsKey(name)) {
+						component = create(routers.get(name));
+					} else if (flows.containsKey(name)) {
+						component = create(current, Flow.decompose(flows.get(name).getValue()));
+					} else {
+						return null;
+					}
 					if (component == null) {
 						throw new CannotCreateDataSenderException();
 					} else {
@@ -184,25 +172,27 @@ public final class EcosystemFactory {
 					}
 				}
 			} else {
-				component = EcosystemFactory.this.create(item.getName());
+				if (pipelines.containsKey(name)) {
+					component = create(pipelines.get(name));
+				} else if (terminals.containsKey(name)) {
+					component = create(terminals.get(name));
+				} else if (routers.containsKey(name)) {
+					component = create(routers.get(name));
+				} else if (flows.containsKey(name)) {
+					component = create(current, Flow.decompose(flows.get(name).getValue()));
+				} else {
+					return null;
+				}
 				if (component == null) {
 					throw new CannotCreateDataSenderException();
 				}
 			}
 
-			componentLinkManager.connect((SourceComponent) source, (DestinationComponent) component);
-			source = component;
+			componentLinkManager.connect((SourceComponent) current, (DestinationComponent) component);
+			current = component;
 		}
 
-		if (pipelines.containsKey(name)) {
-			return create(pipelines.get(name));
-		} else if (terminals.containsKey(name)) {
-			return create(terminals.get(name));
-		} else if (routers.containsKey(name)) {
-			return create(routers.get(name));
-		} else {
-			return null;
-		}
+		return current;
 	}
 
 	/**
@@ -300,6 +290,6 @@ public final class EcosystemFactory {
 			ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(Flow.decompose(binder.getFlow())));
 		}
 
-		return null;
+		return ecosystemImpl;
 	}
 }
