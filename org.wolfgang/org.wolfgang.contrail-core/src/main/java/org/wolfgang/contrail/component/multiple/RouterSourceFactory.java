@@ -57,4 +57,8 @@ public class RouterSourceFactory {
 		}
 
 	}
+
+	public static RouterSourceFactory.Client createClient(ClassLoader loader, String factoryName, String[] parameters, Client[] clients) throws CannotCreateComponentException {
+		return null;
+	}
 }

@@ -16,46 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.event;
+
+import java.io.Serializable;
 
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.IndirectReference;
-import org.wolfgang.contrail.reference.ReferenceVisitor;
 
 /**
- * <code>NetworkReferenceVisitor</code>
+ * <code>NetworkEvent</code> is the basic and one possible top-level type
+ * implemented by network events.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkReferenceVisitor implements ReferenceVisitor<Boolean, Exception> {
-
-	private final DirectReference targetReference;
+public interface NetworkEvent {
 
 	/**
-	 * Constructor
+	 * Method providing the previous reference
 	 * 
-	 * @param currentReference
-	 * @param targetReference
+	 * @return a direct reference
 	 */
-	public NetworkReferenceVisitor(DirectReference targetReference) {
-		super();
-		this.targetReference = targetReference;
-	}
+	DirectReference getSender();
 
-	@Override
-	public Boolean visit(DirectReference reference) throws Exception {
-		return targetReference.equals(reference);
-	}
+	/**
+	 * Method setting previous reference
+	 * 
+	 * @return a direct reference
+	 */
+	NetworkEvent sentBy(DirectReference reference);
 
-	@Override
-	public Boolean visit(IndirectReference reference) throws Exception {
-		if (reference.hasNext()) {
-			final DirectReference nextReference = reference.getNext();
-			return nextReference.equals(targetReference);
-		} else {
-			return false;
-		}
-	}
+	/**
+	 * @return the target reference
+	 */
+	IndirectReference getReferenceToDestination();
+
+	/**
+	 * @return the source reference
+	 */
+	IndirectReference getReferenceToSource();
+
+	/**
+	 * Provide the message content
+	 * 
+	 * @return a content
+	 */
+	Serializable getContent();
 
 }

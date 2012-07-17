@@ -27,13 +27,13 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.event.NetworkEvent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 
 /**
  * A <code>NetworkRouterStreamDataHandler</code> is able to manage information

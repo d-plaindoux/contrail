@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,9 @@ import org.wolfgang.contrail.component.pipeline.PipelineFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.Binder;
+import org.wolfgang.contrail.ecosystem.model.Client;
 import org.wolfgang.contrail.ecosystem.model.Ecosystem;
+import org.wolfgang.contrail.ecosystem.model.EndPoint;
 import org.wolfgang.contrail.ecosystem.model.Flow;
 import org.wolfgang.contrail.ecosystem.model.Flow.Item;
 import org.wolfgang.contrail.ecosystem.model.Pipeline;
@@ -225,7 +229,26 @@ public final class EcosystemFactory {
 	private RouterSourceComponent create(Router router) throws CannotCreateComponentException {
 		final String factory = router.getFactory();
 		final List<String> parameters = router.getParameters();
-		return RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]), new RouterSourceFactory.Client[0]);
+		final List<RouterSourceFactory.Client> clients = new ArrayList<RouterSourceFactory.Client>();
+
+		for (Client client : router.getClients()) {
+			try {
+				final EndPoint endpoint = new EndPoint(client.getEndpoint());
+				if (endpoint.getScheme().equals("tcp")) {
+					clients.add(new RouterSourceFactory.Client() {
+						@Override
+						public void install(RouterSourceComponent<?, ?> component) {
+							
+						}
+					});
+				}
+			} catch (URISyntaxException e) {
+				// TODO -- Log it when a logger is provided
+			}
+
+		}
+
+		return RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]), clients.toArray(new RouterSourceFactory.Client[clients.size()]));
 	}
 
 	/**

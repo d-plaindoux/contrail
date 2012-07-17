@@ -30,6 +30,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.RouterSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.event.NetworkEvent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -37,8 +38,7 @@ import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.reference.DirectReference;
+import org.wolfgang.contrail.reference.DirectReference;
 
 /**
  * <code>NetwortComponent</code> is a component able to manage NetworkEvent and

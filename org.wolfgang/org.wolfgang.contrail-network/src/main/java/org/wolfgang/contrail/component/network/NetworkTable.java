@@ -20,10 +20,10 @@ package org.wolfgang.contrail.component.network;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
-import org.wolfgang.contrail.network.reference.ReferenceTableImpl;
+import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
+import org.wolfgang.contrail.reference.ReferenceTableImpl;
 
 /**
  * <code>NetworkRouterTable</code> is able to provide callback linked to single

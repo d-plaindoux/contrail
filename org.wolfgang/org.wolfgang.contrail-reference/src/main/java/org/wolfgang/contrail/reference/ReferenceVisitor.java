@@ -16,31 +16,32 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
-
-import org.wolfgang.contrail.reference.DirectReference;
+package org.wolfgang.contrail.reference;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * The <code>ReferenceVisitor</code> is the dedicated reference visitor.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkFactory {
+public interface ReferenceVisitor<T, E extends Exception> {
 
 	/**
-	 * Constructor
-	 */
-	private NetworkFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * Method called whether a network router is required.
+	 * Method called whether a client reference is visited
 	 * 
-	 * @return a network router component
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
 	 */
-	public static NetworkComponent create(DirectReference selfReference) {
-		return new NetworkComponent(new NetworkTable(), selfReference);
-	}
+	T visit(DirectReference reference) throws E;
+
+	/**
+	 * Method called whether a chained references is visited
+	 * 
+	 * @param reference
+	 *            The reference
+	 * @return the visit result
+	 */
+	T visit(IndirectReference reference) throws E;
+
 }

@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.network.server;
 
-import static org.wolfgang.contrail.network.reference.ReferenceFactory.createClientReference;
+import static org.wolfgang.contrail.reference.ReferenceFactory.createClientReference;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -38,18 +38,18 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.network.NetworkComponent;
 import org.wolfgang.contrail.component.network.NetworkFactory;
+import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
+import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.event.NetworkEventImpl;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
-import org.wolfgang.contrail.network.connection.socket.NetServer;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.event.NetworkEventImpl;
-import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 
 /**
  * <code>TestNetworkServer</code>

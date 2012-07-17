@@ -40,12 +40,12 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.event.NetworkEvent;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
-import org.wolfgang.contrail.network.connection.socket.NetClient;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 
 /**
  * <code>NetworkRouterServerUtils</code>

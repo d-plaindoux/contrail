@@ -16,31 +16,50 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.ecosystem.model;
 
-import org.wolfgang.contrail.reference.DirectReference;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>EndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkFactory {
+public class EndPoint {
+
+	private final URI endPoint;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param endPoint
+	 * @throws URISyntaxException
 	 */
-	private NetworkFactory() {
-		// Prevent useless creation
+	public EndPoint(String endPoint) throws URISyntaxException {
+		super();
+		this.endPoint = new URI(endPoint);
 	}
 
 	/**
-	 * Method called whether a network router is required.
-	 * 
-	 * @return a network router component
+	 * @return the scheme
 	 */
-	public static NetworkComponent create(DirectReference selfReference) {
-		return new NetworkComponent(new NetworkTable(), selfReference);
+	public String getScheme() {
+		return this.endPoint.getScheme();
+	}
+
+	/**
+	 * @return the specified host IP or name
+	 */
+	public String getHost() {
+		return this.endPoint.getHost();
+	}
+
+	/**
+	 * @return the specified port number
+	 */
+	public int getPort() {
+		return this.endPoint.getPort();
 	}
 }

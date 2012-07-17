@@ -31,12 +31,12 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.network.NetworkTable;
+import org.wolfgang.contrail.event.NetworkEvent;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.network.event.NetworkEvent;
-import org.wolfgang.contrail.network.reference.DirectReference;
-import org.wolfgang.contrail.network.reference.ReferenceEntryAlreadyExistException;
-import org.wolfgang.contrail.network.reference.ReferenceEntryNotFoundException;
-import org.wolfgang.contrail.network.reference.ReferenceFactory;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
+import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
+import org.wolfgang.contrail.reference.ReferenceFactory;
 
 /**
  * <code>TestNetworkComponent</code>

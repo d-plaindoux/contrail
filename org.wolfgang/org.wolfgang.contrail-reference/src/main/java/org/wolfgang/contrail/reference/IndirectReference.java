@@ -16,31 +16,43 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
-
-import org.wolfgang.contrail.reference.DirectReference;
+package org.wolfgang.contrail.reference;
 
 /**
- * <code>NetworkRouterFactory</code>
+ * <code>EndPoint</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class NetworkFactory {
+public interface IndirectReference extends Reference {
 
 	/**
-	 * Constructor
-	 */
-	private NetworkFactory() {
-		// Prevent useless creation
-	}
-
-	/**
-	 * Method called whether a network router is required.
+	 * Method called whether a simple end point must be added as fist reference
 	 * 
-	 * @return a network router component
+	 * @param reference
+	 *            The new added direct reference
 	 */
-	public static NetworkComponent create(DirectReference selfReference) {
-		return new NetworkComponent(new NetworkTable(), selfReference);
-	}
+	DirectReference getNext();
+
+	/**
+	 * Method called whether a simple end point must be added as fist reference
+	 * 
+	 * @param reference
+	 *            The new added direct reference
+	 */
+	IndirectReference removeNext();
+
+	/**
+	 * @return
+	 */
+	boolean hasNext();
+
+	/**
+	 * Method called whether a simple end point must be added as last reference
+	 * 
+	 * @param reference
+	 *            The new added direct reference
+	 */
+	IndirectReference addFirst(DirectReference reference);
+
 }
