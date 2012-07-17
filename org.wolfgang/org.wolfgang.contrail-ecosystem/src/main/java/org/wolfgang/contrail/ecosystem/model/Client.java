@@ -34,6 +34,7 @@ import org.wolfgang.common.message.MessagesProvider;
 public class Client implements Validation {
 
 	private String name;
+	private String factory;
 	private String filter;
 	private String endpoint;
 	private String flow;
@@ -66,6 +67,26 @@ public class Client implements Validation {
 		if (this.filter == null) {
 			this.filter = name;
 		}
+	}
+
+	/**
+	 * Return the value of factory
+	 * 
+	 * @return the factory
+	 */
+	@XmlAttribute
+	public String getFactory() {
+		return factory;
+	}
+
+	/**
+	 * Set the value of factory
+	 * 
+	 * @param factory
+	 *            the factory to set
+	 */
+	public void setFactory(String factory) {
+		this.factory = factory;
 	}
 
 	/**
@@ -132,6 +153,8 @@ public class Client implements Validation {
 	public void validate() throws ValidationException {
 		if (this.name == null) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
+		} else if (this.factory == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(name));
 		} else if (this.flow == null || this.flow.trim().length() == 0) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "flow.undefined").format(name));
 		} else if (this.endpoint == null) {

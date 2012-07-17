@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,6 @@ import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.Binder;
 import org.wolfgang.contrail.ecosystem.model.Client;
 import org.wolfgang.contrail.ecosystem.model.Ecosystem;
-import org.wolfgang.contrail.ecosystem.model.EndPoint;
 import org.wolfgang.contrail.ecosystem.model.Flow;
 import org.wolfgang.contrail.ecosystem.model.Flow.Item;
 import org.wolfgang.contrail.ecosystem.model.Pipeline;
@@ -233,15 +233,9 @@ public final class EcosystemFactory {
 
 		for (Client client : router.getClients()) {
 			try {
-				final EndPoint endpoint = new EndPoint(client.getEndpoint());
-				if (endpoint.getScheme().equals("tcp")) {
-					clients.add(new RouterSourceFactory.Client() {
-						@Override
-						public void install(RouterSourceComponent<?, ?> component) {
-							
-						}
-					});
-				}
+				final URI endpoint = new URI(client.getEndpoint());
+				// client.getFlow() ?
+				clients.add(RouterSourceFactory.createClient(classLoader, client.getFactory(), endpoint));
 			} catch (URISyntaxException e) {
 				// TODO -- Log it when a logger is provided
 			}

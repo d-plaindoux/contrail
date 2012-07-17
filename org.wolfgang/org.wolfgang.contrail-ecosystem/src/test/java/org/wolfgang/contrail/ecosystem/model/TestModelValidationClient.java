@@ -69,9 +69,9 @@ public class TestModelValidationClient extends TestCase {
 			client.setEndpoint("ws://localhost:2666");
 			client.validate();
 
-			assertEquals("A", client.getFilter());
-		} catch (ValidationException e) {
 			fail();
+		} catch (ValidationException e) {
+			// OK
 		}
 	}
 
@@ -79,6 +79,37 @@ public class TestModelValidationClient extends TestCase {
 		final Client client = new Client();
 		try {
 			client.setName("A");
+			client.setFlow("A");
+			client.setEndpoint("ws://localhost:2666");
+			client.setFilter("B");
+			client.validate();
+
+			fail();
+		} catch (ValidationException e) {
+			// OK
+		}
+	}
+
+	public void testNominal06() {
+		final Client client = new Client();
+		try {
+			client.setName("A");
+			client.setFactory("a.b.c");
+			client.setFlow("A");
+			client.setEndpoint("ws://localhost:2666");
+			client.validate();
+
+			assertEquals("A", client.getFilter());
+		} catch (ValidationException e) {
+			fail();
+		}
+	}
+
+	public void testNominal07() {
+		final Client client = new Client();
+		try {
+			client.setName("A");
+			client.setFactory("a.b.c");
 			client.setFlow("A");
 			client.setEndpoint("ws://localhost:2666");
 			client.setFilter("B");

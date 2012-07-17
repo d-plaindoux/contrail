@@ -67,10 +67,11 @@ public class TestModelConstruction extends TestCase {
 	// ------------------------------
 
 	public void testClient() throws JAXBException, ValidationException {
-		final String content = "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'> " + "PayLoad Serialize Coercion NetworkRoute " + "</client>";
+		final String content = "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'> " + "PayLoad Serialize Coercion NetworkRoute " + "</client>";
 		final Client decoded = decode(Client.class, content);
 		decoded.validate();
 
+		assertEquals("a", decoded.getFactory());
 		assertEquals("A.B", decoded.getName());
 		assertEquals("A.*", decoded.getFilter());
 		assertEquals("tcp://localhost:6666", decoded.getEndpoint());
@@ -92,7 +93,7 @@ public class TestModelConstruction extends TestCase {
 
 	public void testRouter02() throws JAXBException, ValidationException {
 		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
-				+ "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>" + "</router>";
+				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>" + "</router>";
 		final Router decoded = decode(Router.class, content);
 		decoded.validate();
 
@@ -102,6 +103,7 @@ public class TestModelConstruction extends TestCase {
 
 		final Client client = decoded.getClients().get(0);
 		assertEquals("A.B", client.getName());
+		assertEquals("a", client.getFactory());
 		assertEquals("A.*", client.getFilter());
 		assertEquals("tcp://localhost:6666", client.getEndpoint());
 		assertEquals("PayLoad Serialize Coercion NetworkRoute", client.getFlow());
@@ -109,8 +111,8 @@ public class TestModelConstruction extends TestCase {
 
 	public void testRouter03() throws JAXBException {
 		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
-				+ "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>"
-				+ "<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>JSon Coercion NetworkRoute</client>" + "</router>";
+				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>"
+				+ "<client factory='a' name='A.C' filter='A.*' endpoint='ws://localhost:6668'>JSon Coercion NetworkRoute</client>" + "</router>";
 		final Router decoded = decode(Router.class, content);
 		assertEquals("NetworkRoute", decoded.getName());
 		assertEquals("org.wolfgang.contrail.network.component.NetworkFactory", decoded.getFactory());
@@ -209,12 +211,12 @@ public class TestModelConstruction extends TestCase {
 				+ "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'><param>NetEvent</param></pipeline>"
 				+ "<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent'/>"
 				+ "<router name='NetworkRoute' factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
-				+ "<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>" + "PayLoad Serialize Coercion NetworkRoute" + "</client>"
-				+ "<client name='A.C' filter='A.*' endpoint='ws://localhost:6668'>" + "JSon Coercion NetworkRoute </client></router>"
+				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>" + "PayLoad Serialize Coercion NetworkRoute" + "</client>"
+				+ "<client factory='a' name='A.C' filter='A.*' endpoint='ws://localhost:6668'>" + "JSon Coercion NetworkRoute </client></router>"
 				+ "<binder name='NetHook' typein='String' typeout='String'>PayLoad Serialize Coercion NetworkRoute</binder>" 
 				+ "<binder name='WebHook' typein='String' typeout='String'>JSon Coercion NetworkRoute</binder>"
-				+ "<server endpoint='tcp://localhost:6667'>PayLoad Serialize Coercion NetworkRoute</server>"
-				+ "<server endpoint='ws://localhost:6667'>JSon Coercion NetworkRoute</server>" 
+				+ "<server factory='a' endpoint='tcp://localhost:6667'>PayLoad Serialize Coercion NetworkRoute</server>"
+				+ "<server factory='a' endpoint='ws://localhost:6667'>JSon Coercion NetworkRoute</server>" 
 				+ "<flow name='bb'>Network Logger</flow>"
 				+ "<flow name='aa'>Network Logger</flow>"
 				+ "<main>Network Logger</main>"

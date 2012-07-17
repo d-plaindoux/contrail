@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component.multiple;
 
 import java.lang.reflect.Constructor;
+import java.net.URI;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.RouterSourceComponent;
@@ -58,7 +59,7 @@ public class RouterSourceFactory {
 
 	}
 
-	public static RouterSourceFactory.Client createClient(ClassLoader loader, String factoryName, String[] parameters, Client[] clients) throws CannotCreateComponentException {
-		return null;
+	public static RouterSourceFactory.Client createClient(ClassLoader loader, String factoryName, URI uri) throws CannotCreateComponentException {
+		return null;		
 	}
 }
