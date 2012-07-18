@@ -22,6 +22,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -82,10 +83,11 @@ public class ProcessClient implements Closeable {
 	 * 
 	 * @param command
 	 *            The command to be executed
+	 * @return
 	 * @throws IOException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public void connect(String[] command) throws IOException, CannotCreateDataSenderException {
+	public Future<Void> connect(String[] command) throws IOException, CannotCreateDataSenderException {
 		final Process client = Runtime.getRuntime().exec(command);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
@@ -110,12 +112,11 @@ public class ProcessClient implements Closeable {
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				final byte[] buffer = new byte[1024 * 8];
 				try {
-					int len = client.getInputStream().read(buffer);
-					while (len != -1) {
+					final byte[] buffer = new byte[1024 * 8];
+					int len;
+					while ((len = client.getInputStream().read(buffer)) != -1) {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
-						len = client.getInputStream().read(buffer);
 					}
 					return null;
 				} catch (Exception e) {
@@ -125,7 +126,7 @@ public class ProcessClient implements Closeable {
 			}
 		};
 
-		executor.submit(reader);
+		return executor.submit(reader);
 	}
 
 	@Override

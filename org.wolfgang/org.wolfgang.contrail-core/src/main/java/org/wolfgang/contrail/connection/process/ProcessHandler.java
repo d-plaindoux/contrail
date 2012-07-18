@@ -81,8 +81,8 @@ public class ProcessHandler implements Closeable {
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
 
-		// System.setIn(null);
-		// System.setOut(null);
+		// TODO -- System.setIn(?);
+		// TODO -- System.setOut(?);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
@@ -106,12 +106,11 @@ public class ProcessHandler implements Closeable {
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				final byte[] buffer = new byte[1024 * 8];
 				try {
-					int len = input.read(buffer);
-					while (len != -1) {
+					final byte[] buffer = new byte[1024 * 8];
+					int len;
+					while ((len = input.read(buffer)) != -1) {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
-						len = input.read(buffer);
 					}
 					return null;
 				} catch (Exception e) {
