@@ -23,4 +23,4 @@
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrai.connection.process;
+package org.wolfgang.contrail.connection.process;

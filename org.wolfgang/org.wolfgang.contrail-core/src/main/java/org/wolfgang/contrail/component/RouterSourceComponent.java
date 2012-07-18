@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
+
 /**
  * The <code>MultipleSourceComponent</code> is capable to manage event from a
  * given source and sending each message to a selected destination based on
@@ -30,6 +31,6 @@ package org.wolfgang.contrail.component;
  */
 public interface RouterSourceComponent<U, D> extends DestinationComponent<U, D>, SourceComponent<U, D> {
 
-	// No specific behaviors
+	// Nothing more
 
 }

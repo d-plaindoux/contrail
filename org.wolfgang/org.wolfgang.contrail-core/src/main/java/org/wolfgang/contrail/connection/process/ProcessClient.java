@@ -16,16 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrai.connection.process;
+package org.wolfgang.contrail.connection.process;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -34,19 +34,19 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>ProcessHandler</code> provides a client process handler
- * implementation using standard libraries runtime process creation. This can be
- * used to create a connection between two framework using SSH for example.
+ * The <code>ProcessClient</code> provides a client implementation using
+ * standard libraries runtime process creation. This can be used to create a
+ * connection between two framework using SSH for example.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ProcessHandler implements Closeable {
+public class ProcessClient implements Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
 	 */
-	private final ExecutorService executor;
+	private final ThreadPoolExecutor executor;
 
 	/**
 	 * The data sender factory
@@ -54,7 +54,16 @@ public class ProcessHandler implements Closeable {
 	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
-		executor = Executors.newSingleThreadExecutor();
+		final ThreadGroup group = new ThreadGroup("Process.Client");
+		final ThreadFactory threadFactory = new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				return new Thread(group, r, "Process.Connected.Client");
+			}
+		};
+		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
+		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
+		this.executor.allowCoreThreadTimeOut(true);
 	}
 
 	/**
@@ -63,7 +72,7 @@ public class ProcessHandler implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(DataSenderFactory<byte[], byte[]> factory) {
+	public ProcessClient(DataSenderFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
@@ -76,20 +85,15 @@ public class ProcessHandler implements Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public void connect() throws IOException, CannotCreateDataSenderException {
-
-		final InputStream input = System.in;
-		final OutputStream output = System.out;
-
-		// System.setIn(null);
-		// System.setOut(null);
+	public void connect(String[] command) throws IOException, CannotCreateDataSenderException {
+		final Process client = Runtime.getRuntime().exec(command);
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
 			public void receiveData(byte[] data) throws DataHandlerException {
 				try {
-					output.write(data);
-					output.flush();
+					client.getOutputStream().write(data);
+					client.getOutputStream().flush();
 				} catch (IOException e) {
 					throw new DataHandlerException(e);
 				}
@@ -97,7 +101,7 @@ public class ProcessHandler implements Closeable {
 
 			@Override
 			public void close() throws IOException {
-				System.exit(0); // End of the process
+				client.destroy();
 			}
 		};
 
@@ -108,10 +112,10 @@ public class ProcessHandler implements Closeable {
 			public Void call() throws Exception {
 				final byte[] buffer = new byte[1024 * 8];
 				try {
-					int len = input.read(buffer);
+					int len = client.getInputStream().read(buffer);
 					while (len != -1) {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
-						len = input.read(buffer);
+						len = client.getInputStream().read(buffer);
 					}
 					return null;
 				} catch (Exception e) {

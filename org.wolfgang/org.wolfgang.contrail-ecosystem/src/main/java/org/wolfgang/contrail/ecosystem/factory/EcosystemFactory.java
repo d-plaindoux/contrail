@@ -229,20 +229,19 @@ public final class EcosystemFactory {
 	private RouterSourceComponent create(Router router) throws CannotCreateComponentException {
 		final String factory = router.getFactory();
 		final List<String> parameters = router.getParameters();
-		final List<RouterSourceFactory.Client> clients = new ArrayList<RouterSourceFactory.Client>();
+		final RouterSourceComponent routerComponent = RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
 
 		for (Client client : router.getClients()) {
 			try {
-				final URI endpoint = new URI(client.getEndpoint());
-				// client.getFlow() ?
-				clients.add(RouterSourceFactory.createClient(classLoader, client.getFactory(), endpoint));
+				final URI uri = new URI(client.getEndpoint());
+				// TODO -- client.getFlow() ?
+				// Create the client ...
 			} catch (URISyntaxException e) {
 				// TODO -- Log it when a logger is provided
 			}
-
 		}
-
-		return RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]), clients.toArray(new RouterSourceFactory.Client[clients.size()]));
+		
+		return routerComponent;
 	}
 
 	/**

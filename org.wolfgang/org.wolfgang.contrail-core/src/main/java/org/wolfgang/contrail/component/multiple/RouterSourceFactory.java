@@ -31,11 +31,6 @@ import org.wolfgang.contrail.component.RouterSourceComponent;
  * @version 1.0
  */
 public class RouterSourceFactory {
-
-	public interface Client {
-		void install(RouterSourceComponent<?, ?> component);
-	}
-
 	/**
 	 * @param classLoader
 	 * @param factoryName
@@ -44,7 +39,7 @@ public class RouterSourceFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static RouterSourceComponent create(ClassLoader loader, String factoryName, String[] parameters, Client[] clients) throws CannotCreateComponentException {
+	public static RouterSourceComponent create(ClassLoader loader, String factoryName, String[] parameters) throws CannotCreateComponentException {
 		try {
 			final Class<?> component = loader.loadClass(factoryName);
 			try {
@@ -57,9 +52,5 @@ public class RouterSourceFactory {
 			throw new CannotCreateComponentException(e);
 		}
 
-	}
-
-	public static RouterSourceFactory.Client createClient(ClassLoader loader, String factoryName, URI uri) throws CannotCreateComponentException {
-		return null;		
 	}
 }
