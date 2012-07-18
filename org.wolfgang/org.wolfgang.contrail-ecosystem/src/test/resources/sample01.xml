@@ -1,0 +1,56 @@
+<?xml version='1.0'?>
+<ecosystem>
+
+	<pipeline name='PayLoad'
+		factory='org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory' />
+	<pipeline name='Serialize'
+		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializerTransducerFactory' />
+	<pipeline name='Coercion'
+		factory='org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory'>
+		<param> org.wolfgang.contrail.network.event.NETEvent </param>
+	</pipeline>
+	<pipeline name='JAXB'
+		factory='org.wolfgang.contrail.component.pipeline.transducer.json.JAXBTransducerFactory'>
+		<param> org.wolfgang.contrail.network.event.NETEvent </param>
+	</pipeline>
+	<pipeline name='ClientConnector'
+		factory='org.wolfgang.contrail.component.network.NETworkAcceptanceComponent' />
+	<pipeline name='ParallelSource'
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentSourcePipelineComponent' />
+	<pipeline name='ParallelDestination'
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ConcurrentDestinationPipelineComponent' />
+
+	<flow name='Parallel'> ParallelSource ParallelDestination </flow>
+	<flow name='NETEvent'> Parallel Coercion ClientConnector NS </flow>
+	<flow name='TCPEvent'> PayLoad Serialize NETEvent </flow>
+	<flow name='WEBEvent'> JAXB NETEvent </flow>
+
+	<terminal name='Logger' factory='org.wolfgang.contrail.bound.LoggerComponent' />
+
+	<router name='NETStation'
+		factory='org.wolfgang.contrail.component.network.NETworkComponent'>
+		<self name='A.A' />
+
+		<!-- NET Socket Client -->
+		<client factory='' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
+			TCPEvent
+		</client>
+
+		<!-- WEB Socket Client -->
+		<client factory='' name='A.C' filter='A.*' endpoint='ws://localhost:6668'>
+			WEBEvent
+		</client>
+	</router>
+
+	<binder name='NETHook' typein="byte[]" typeout="byte[]">
+		TCPEvent
+	</binder>
+	<binder name='WEBHook' typein="String" typeout="String">
+		WEBEvent
+	</binder>
+
+	<server factory='' endpoint='tcp://localhost:6667'> TCPEvent </server>
+	<server factory='' endpoint='ws://localhost:6666'> WEBEvent </server>
+
+	<main> NS=NETStation Logger </main>
+</ecosystem>

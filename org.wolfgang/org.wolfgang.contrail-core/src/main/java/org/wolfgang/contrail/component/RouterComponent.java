@@ -26,8 +26,7 @@ package org.wolfgang.contrail.component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RouterComponent<S, D> extends RouterDestinationComponent<S, D>,
-		RouterSourceComponent<S, D> {
+public interface RouterComponent<S, D> extends RouterDestinationComponent<S, D>, RouterSourceComponent<S, D> {
 
 	// No specific behaviors
 
