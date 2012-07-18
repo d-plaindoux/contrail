@@ -1,0 +1,13 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<terminal name='Tracer'
+		factory='org.wolfgang.contrail.ecosystem.factory.TestComponent' />
+
+	<flow name="MainFlow">
+		Tracer
+	</flow>
+
+	<binder name='Main' typein="String" typeout="String">
+		Tracer
+	</binder>
+</ecosystem>

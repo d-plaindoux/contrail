@@ -143,6 +143,42 @@ public final class EcosystemFactory {
 	}
 
 	/**
+	 * Method called when a link must be established between two components
+	 * 
+	 * @param source
+	 *            The source (Can be <code>null</code>)
+	 * @param destination
+	 *            The destination (Never <code>null</code>)
+	 * @return the destination
+	 * @throws ComponentConnectionRejectedException
+	 */
+	@SuppressWarnings("unchecked")
+	private Component link(final Component source, final Component destination) throws ComponentConnectionRejectedException {
+		if (source != null) {
+			// TODO -- Check the components type
+			componentLinkManager.connect((SourceComponent) source, (DestinationComponent) destination);
+		}
+
+		return destination;
+	}
+
+	/**
+	 * Method called when a component is aliased
+	 * 
+	 * @param name
+	 *            The name (Can be <code>null</code>)
+	 * @param component
+	 *            The component (Never <code>null</code>)
+	 * @return the component
+	 */
+	private Component register(String name, Component component) {
+		if (name != null) {
+			aliasedComponents.put(name, component);
+		}
+		return component;
+	}
+
+	/**
 	 * Internal method dedicated to the component flow creation
 	 * 
 	 * @param source
@@ -154,57 +190,41 @@ public final class EcosystemFactory {
 	 * @throws CannotCreateDataSenderException
 	 * @throws ComponentConnectionRejectedException
 	 */
-	@SuppressWarnings("unchecked")
-	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
+	private Component create(final Component source, final Item item) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
+		final String name = item.getName();
 
+		if (item.asAlias() && this.aliasedComponents.containsKey(item.getAlias())) {
+			return link(source, this.aliasedComponents.get(item.getAlias()));
+		} else if (pipelines.containsKey(name)) {
+			return register(item.getAlias(), link(source, create(pipelines.get(name))));
+		} else if (terminals.containsKey(name)) {
+			return register(item.getAlias(), link(source, create(terminals.get(name))));
+		} else if (routers.containsKey(name)) {
+			return register(item.getAlias(), link(source, create(routers.get(name))));
+		} else if (flows.containsKey(name)) {
+			return register(item.getAlias(), create(source, Flow.decompose(flows.get(name).getValue())));
+		} else {
+			throw new CannotCreateDataSenderException();
+		}
+	}
+
+	/**
+	 * Internal method dedicated to the component flow creation
+	 * 
+	 * @param source
+	 *            Can be null
+	 * @param items
+	 *            The items to be used for the flow creation
+	 * @return a component (Never <code>null</code>
+	 * @throws CannotCreateComponentException
+	 * @throws CannotCreateDataSenderException
+	 * @throws ComponentConnectionRejectedException
+	 */
+	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
 		Component current = source;
 
 		for (Item item : items) {
-			final Component component;
-			final String name = item.getName();
-			if (item.asAlias()) {
-				if (aliasedComponents.containsKey(item.getAlias())) {
-					component = aliasedComponents.get(item.getAlias());
-				} else {
-					if (pipelines.containsKey(name)) {
-						component = create(pipelines.get(name));
-					} else if (terminals.containsKey(name)) {
-						component = create(terminals.get(name));
-					} else if (routers.containsKey(name)) {
-						component = create(routers.get(name));
-					} else if (flows.containsKey(name)) {
-						component = create(current, Flow.decompose(flows.get(name).getValue()));
-					} else {
-						return null;
-					}
-					if (component == null) {
-						throw new CannotCreateDataSenderException();
-					} else {
-						aliasedComponents.put(item.getAlias(), component);
-					}
-				}
-			} else {
-				if (pipelines.containsKey(name)) {
-					component = create(pipelines.get(name));
-				} else if (terminals.containsKey(name)) {
-					component = create(terminals.get(name));
-				} else if (routers.containsKey(name)) {
-					component = create(routers.get(name));
-				} else if (flows.containsKey(name)) {
-					component = create(current, Flow.decompose(flows.get(name).getValue()));
-				} else {
-					return null;
-				}
-				if (component == null) {
-					throw new CannotCreateDataSenderException();
-				}
-			}
-
-			if (current != null) {
-				componentLinkManager.connect((SourceComponent) current, (DestinationComponent) component);
-			}
-
-			current = component;
+			current = create(current, item);
 		}
 
 		if (current == null) {
