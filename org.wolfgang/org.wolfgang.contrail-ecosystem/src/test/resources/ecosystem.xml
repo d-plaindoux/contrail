@@ -4,7 +4,7 @@
 	<pipeline name='PayLoad'
 		factory='org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory' />
 	<pipeline name='Serialize'
-		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializerTransducerFactory' />
+		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory' />
 	<pipeline name='Coercion'
 		factory='org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory'>
 		<param> org.wolfgang.contrail.network.event.NETEvent </param>

@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 public class TestModelChecker extends TestCase {
 
 	public void testNominal01() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		final Terminal terminal = new Terminal();
 		terminal.setName("A");
@@ -50,7 +50,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal02() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();
@@ -68,7 +68,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal03() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();
@@ -92,7 +92,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal04() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
 			final Terminal terminal = new Terminal();
@@ -117,7 +117,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal05() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
 			final Terminal terminal = new Terminal();
@@ -142,7 +142,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal06() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
 			final Terminal terminal = new Terminal();
@@ -168,7 +168,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal07() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();
@@ -194,7 +194,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal08() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();
@@ -223,7 +223,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal09() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();
@@ -252,7 +252,7 @@ public class TestModelChecker extends TestCase {
 	}
 
 	public void testNominal10() throws JAXBException {
-		final Ecosystem ecosystem = new Ecosystem();
+		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
 			final Terminal terminal = new Terminal();

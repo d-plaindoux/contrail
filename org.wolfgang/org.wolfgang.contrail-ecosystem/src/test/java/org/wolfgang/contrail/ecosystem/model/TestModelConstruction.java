@@ -221,7 +221,7 @@ public class TestModelConstruction extends TestCase {
 				+ "<flow name='aa'>Network Logger</flow>"
 				+ "<main>Network Logger</main>"
 				+ "</ecosystem>";
-		final Ecosystem decoded = decode(Ecosystem.class, content);
+		final EcosystemModel decoded = decode(EcosystemModel.class, content);
 		decoded.validate();
 		
 		assertEquals("Network Logger", decoded.getMain());

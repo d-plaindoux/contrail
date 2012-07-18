@@ -16,39 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.payload;
-
+package org.wolfgang.contrail.ecosystem.factory;
 
 /**
- * <code>Bytes</code> contains a consistent byte array in term of coding and
- * decoding
+ * <code>EcosystemCreationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class Bytes {
+public class EcosystemCreationException extends Exception {
 
 	/**
-	 * The content
+	 * The serialVersionUID attribute
 	 */
-	private final byte[] content;
+	private static final long serialVersionUID = 7001772202066776097L;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param content
+	 * @param arg0
 	 */
-	public Bytes(byte[] content) {
-		super();
-		this.content = content;
-	}
-
-	/**
-	 * Provides the byte array
-	 * 
-	 * @return a byte array
-	 */
-	public byte[] getContent() {
-		return content;
+	EcosystemCreationException(Throwable arg0) {
+		super(arg0);
 	}
 }

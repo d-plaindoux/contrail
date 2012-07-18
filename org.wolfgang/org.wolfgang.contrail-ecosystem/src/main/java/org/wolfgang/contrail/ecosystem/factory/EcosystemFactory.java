@@ -20,7 +20,6 @@ package org.wolfgang.contrail.ecosystem.factory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.Binder;
 import org.wolfgang.contrail.ecosystem.model.Client;
-import org.wolfgang.contrail.ecosystem.model.Ecosystem;
+import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.model.Flow;
 import org.wolfgang.contrail.ecosystem.model.Flow.Item;
 import org.wolfgang.contrail.ecosystem.model.Pipeline;
@@ -126,6 +125,11 @@ public final class EcosystemFactory {
 	 */
 	private final Map<String, Flow> flows;
 
+	/**
+	 * The main component
+	 */
+	private Component mainComponent;
+
 	{
 		this.componentLinkManager = new ComponentLinkManagerImpl();
 		this.aliasedComponents = new HashMap<String, Component>();
@@ -139,14 +143,18 @@ public final class EcosystemFactory {
 	}
 
 	/**
-	 * Internal method dedicated to the component creation
+	 * Internal method dedicated to the component flow creation
 	 * 
-	 * @param name
-	 * @return
+	 * @param source
+	 *            Can be null
+	 * @param items
+	 *            The items to be used for the flow creation
+	 * @return a component (Never <code>null</code>
 	 * @throws CannotCreateComponentException
 	 * @throws CannotCreateDataSenderException
 	 * @throws ComponentConnectionRejectedException
 	 */
+	@SuppressWarnings("unchecked")
 	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
 
 		Component current = source;
@@ -192,11 +200,18 @@ public final class EcosystemFactory {
 				}
 			}
 
-			componentLinkManager.connect((SourceComponent) current, (DestinationComponent) component);
+			if (current != null) {
+				componentLinkManager.connect((SourceComponent) current, (DestinationComponent) component);
+			}
+
 			current = component;
 		}
 
-		return current;
+		if (current == null) {
+			throw new CannotCreateDataSenderException();
+		} else {
+			return current;
+		}
 	}
 
 	/**
@@ -240,7 +255,7 @@ public final class EcosystemFactory {
 				// TODO -- Log it when a logger is provided
 			}
 		}
-		
+
 		return routerComponent;
 	}
 
@@ -278,34 +293,51 @@ public final class EcosystemFactory {
 	 * @param ecosystem
 	 * @throws ClassNotFoundException
 	 */
-	public org.wolfgang.contrail.ecosystem.Ecosystem build(Ecosystem ecosystem) throws ClassNotFoundException {
-		final EcosystemImpl ecosystemImpl = new EcosystemImpl();
+	@SuppressWarnings("unchecked")
+	public org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystem) throws EcosystemCreationException {
+		try {
+			final EcosystemImpl ecosystemImpl = new EcosystemImpl();
 
-		for (Terminal terminal : ecosystem.getTerminals()) {
-			register(terminal);
+			for (Terminal terminal : ecosystem.getTerminals()) {
+				register(terminal);
+			}
+
+			for (Pipeline pipeline : ecosystem.getPipelines()) {
+				register(pipeline);
+			}
+
+			for (Router router : ecosystem.getRouters()) {
+				register(router);
+			}
+
+			for (Flow flow : ecosystem.getFlows()) {
+				register(flow);
+			}
+
+			for (Binder binder : ecosystem.getBinders()) {
+				final String name = binder.getName();
+				final Class<?> typeIn = TypeUtils.getType(binder.getTypeIn());
+				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
+
+				final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
+				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(Flow.decompose(binder.getFlow())));
+			}
+
+			final Item[] decompose = Flow.decompose(ecosystem.getMain());
+			if (decompose.length > 0) {
+				this.mainComponent = create(null, decompose);
+			}
+
+			return ecosystemImpl;
+		} catch (CannotCreateComponentException e) {
+			throw new EcosystemCreationException(e);
+		} catch (CannotCreateDataSenderException e) {
+			throw new EcosystemCreationException(e);
+		} catch (ComponentConnectionRejectedException e) {
+			throw new EcosystemCreationException(e);
+		} catch (ClassNotFoundException e) {
+			throw new EcosystemCreationException(e);
 		}
 
-		for (Pipeline pipeline : ecosystem.getPipelines()) {
-			register(pipeline);
-		}
-
-		for (Router router : ecosystem.getRouters()) {
-			register(router);
-		}
-
-		for (Flow flow : ecosystem.getFlows()) {
-			register(flow);
-		}
-
-		for (Binder binder : ecosystem.getBinders()) {
-			final String name = binder.getName();
-			final Class<?> typeIn = TypeUtils.getType(binder.getTypeIn());
-			final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
-
-			final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
-			ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(Flow.decompose(binder.getFlow())));
-		}
-
-		return ecosystemImpl;
 	}
 }

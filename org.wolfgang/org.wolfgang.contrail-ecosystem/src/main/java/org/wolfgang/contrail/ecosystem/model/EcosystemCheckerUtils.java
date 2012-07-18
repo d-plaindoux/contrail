@@ -36,7 +36,7 @@ public final class EcosystemCheckerUtils {
 	 * 
 	 * @param ecosystem
 	 */
-	private EcosystemCheckerUtils(Ecosystem ecosystem) {
+	private EcosystemCheckerUtils(EcosystemModel ecosystem) {
 		super();
 	};
 
@@ -45,7 +45,7 @@ public final class EcosystemCheckerUtils {
 	 * 
 	 * @return a string list
 	 */
-	public static List<String> getUnusedReferences(Ecosystem ecosystem) {
+	public static List<String> getUnusedReferences(EcosystemModel ecosystem) {
 		final List<String> flows = new ArrayList<String>();
 		final List<String> unusedVariables = new ArrayList<String>();
 
@@ -100,7 +100,7 @@ public final class EcosystemCheckerUtils {
 	 * 
 	 * @return a string list
 	 */
-	public static List<String> getUnknownReferences(Ecosystem ecosystem) {
+	public static List<String> getUnknownReferences(EcosystemModel ecosystem) {
 		final List<String> flows = new ArrayList<String>();
 		final List<String> boundVariables = new ArrayList<String>();
 		final List<String> unknownVariables = new ArrayList<String>();
