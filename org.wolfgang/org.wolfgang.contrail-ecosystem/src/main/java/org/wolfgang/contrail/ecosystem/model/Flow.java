@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
+import java.util.Arrays;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -52,15 +54,21 @@ public class Flow implements Validation {
 		private final String alias;
 
 		/**
+		 * The parameters
+		 */
+		private final String[] parameters;
+
+		/**
 		 * Constructor
 		 * 
 		 * @param name
 		 * @param alias
 		 */
-		private Item(String alias, String name) {
+		private Item(String alias, String name, String[] parameters) {
 			super();
 			this.alias = alias;
 			this.name = name;
+			this.parameters = parameters;
 		}
 
 		/**
@@ -68,8 +76,8 @@ public class Flow implements Validation {
 		 * 
 		 * @param name
 		 */
-		private Item(String name) {
-			this(null, name);
+		private Item(String name, String[] parameters) {
+			this(null, name, parameters);
 		}
 
 		/**
@@ -98,6 +106,22 @@ public class Flow implements Validation {
 		public boolean asAlias() {
 			return alias != null;
 		}
+
+		/**
+		 * Return the value of parameters
+		 * 
+		 * @return the parameters
+		 */
+		public String[] getParameters() {
+			return parameters;
+		}
+
+		@Override
+		public String toString() {
+			return "Item [name=" + name + ", alias=" + alias + ", parameters=" + Arrays.toString(parameters) + "]";
+		}
+		
+		
 	}
 
 	private String name;
@@ -127,12 +151,26 @@ public class Flow implements Validation {
 
 			for (int i = 0; i < items.length; i++) {
 				final String s = flows[i];
-				final int indexOf = s.indexOf('=');
-				if (indexOf > 0) {
-					items[i] = new Item(s.substring(0, indexOf), s.substring(indexOf + 1));
+				final int indexEQ = s.indexOf('=');
+
+				final String alias;
+				final String model;
+
+				if (indexEQ > 0) {
+					alias = s.substring(0, indexEQ);
+					model = s.substring(indexEQ + 1);
 				} else {
-					items[i] = new Item(s);
+					alias = null;
+					model = s;
 				}
+
+				final String[] tokens = model.split("\\(|\\)|,"); // REGEXP ?
+				assert tokens.length > 0;
+				final String name = tokens[0];
+				final String[] parameters = new String[tokens.length - 1];
+				System.arraycopy(tokens, 1, parameters, 0, parameters.length);
+
+				items[i] = new Item(alias, name, parameters);
 			}
 
 			return items;

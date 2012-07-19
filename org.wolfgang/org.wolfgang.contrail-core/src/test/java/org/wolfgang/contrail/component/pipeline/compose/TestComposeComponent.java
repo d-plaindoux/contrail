@@ -58,7 +58,7 @@ public class TestComposeComponent extends TestCase {
 			}
 		});
 
-		final ComposedPipelineComponent<byte[], byte[], String, String> composedComponent = new ComposedPipelineComponent<byte[], byte[], String, String>(pipelines);
+		final CompositionComponent<byte[], byte[], String, String> composedComponent = new CompositionComponent<byte[], byte[], String, String>(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>() {
 			@Override
@@ -84,7 +84,7 @@ public class TestComposeComponent extends TestCase {
 		final PipelineComponent[] pipelines = new PipelineComponent[] { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>());
-		final ComposedPipelineComponent<byte[], byte[], String, String> composedComponent = new ComposedPipelineComponent<byte[], byte[], String, String>(pipelines);
+		final CompositionComponent<byte[], byte[], String, String> composedComponent = new CompositionComponent<byte[], byte[], String, String>(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>());
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();

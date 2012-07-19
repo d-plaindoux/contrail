@@ -21,6 +21,8 @@ package org.wolfgang.contrail.ecosystem.factory;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
@@ -256,13 +258,11 @@ public class TestEcosystemFactory extends TestCase {
 			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
 
 			assertEquals(1, response.size());
-
 			assertEquals(message, response.get(0));
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 	}
-
 
 	public void testSample04() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample04.xml");
@@ -274,11 +274,17 @@ public class TestEcosystemFactory extends TestCase {
 			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
 			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
 
-			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
+			final int nbEventSent = 250000;
+			final FutureResponse<Integer> response = new FutureResponse<Integer>();
+			final AtomicInteger futureReference = new AtomicInteger();
+
 			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
 				@Override
 				public void receiveData(byte[] data) throws DataHandlerException {
-					futureResponse.setValue(data);
+					if (futureReference.incrementAndGet() == nbEventSent) {
+						response.setValue(nbEventSent);
+					}
+
 				}
 			};
 
@@ -290,16 +296,20 @@ public class TestEcosystemFactory extends TestCase {
 			final PayLoadTransducerFactory payload = new PayLoadTransducerFactory();
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
-			assertEquals(1, transformed.size());
-			sender.sendData(transformed.get(0));
+			long t0 = System.currentTimeMillis();
+			
+			for (int i = 0; i < nbEventSent; i++) {
+				assertEquals(1, transformed.size());
+				sender.sendData(transformed.get(0));
+			}
 
-			final byte[] received = futureResponse.get(10, TimeUnit.SECONDS);
-			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
+			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis()  - t0) +  "ms");
 
-			assertEquals(1, response.size());
-
-			assertEquals(message, response.get(0));
+			assertEquals(new Integer(nbEventSent), response.get());
+			
+			System.err.println("Receiving " + nbEventSent + " events in " + (System.currentTimeMillis()  - t0) +  "ms");
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}

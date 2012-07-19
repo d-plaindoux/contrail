@@ -16,13 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.concurrent;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+package org.wolfgang.contrail.component.pipeline.logger;
 
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -31,65 +25,39 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>ConcurrentSourcePipelineComponent</code>
+ * <code>AtomicDestinationPipelineComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ParallelSourcePipelineComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
+public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
-	 * The upstream data handler
+	 * The downstream data handler
 	 */
 	private final UpStreamDataHandler<U> upStreamDataHandler;
 
 	/**
-	 * The internal executor in charge of managing incoming connection requests
+	 * The message prefix
 	 */
-	private final ThreadPoolExecutor executor;
-
-	{
-		final ThreadGroup group = new ThreadGroup("Threaded.Source");
-		final ThreadFactory threadFactory = new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				return new Thread(group, r, "Threaded.Source.Client");
-			}
-		};
-		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
-		this.executor.allowCoreThreadTimeOut(true);
-	}
+	private final String prefix;
 
 	{
 		this.upStreamDataHandler = new UpStreamDataHandler<U>() {
 			@Override
 			public void handleData(final U data) throws DataHandlerException {
-				executor.submit(new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(data);
-						return null;
-					}
-				});
+				System.err.println("<" + prefix + "> " + data);
+				getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(data);
 			}
 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
-				try {
-					getDestinationComponentLink().getDestination().closeUpStream();
-				} finally {
-					executor.shutdown();
-				}
+				getDestinationComponentLink().getDestination().closeUpStream();
 			}
 
 			@Override
 			public void handleLost() throws DataHandlerCloseException {
-				try {
-					getDestinationComponentLink().getDestination().closeUpStream();
-				} finally {
-					executor.shutdown();
-				}
+				getDestinationComponentLink().getDestination().closeUpStream();
 			}
 		};
 	}
@@ -97,8 +65,13 @@ public class ParallelSourcePipelineComponent<U, D> extends AbstractPipelineCompo
 	/**
 	 * Constructor
 	 */
-	public ParallelSourcePipelineComponent() {
+	public LoggerSourceComponent(String[] arguments) {
 		super();
+		if (arguments.length > 0) {
+			this.prefix = arguments[0];
+		} else {
+			this.prefix = "*";
+		}
 	}
 
 	@Override

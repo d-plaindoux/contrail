@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem.factory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,8 +156,11 @@ public final class EcosystemFactory {
 	@SuppressWarnings("unchecked")
 	private Component link(final Component source, final Component destination) throws ComponentConnectionRejectedException {
 		if (source != null) {
-			// TODO -- Check the components type
-			componentLinkManager.connect((SourceComponent) source, (DestinationComponent) destination);
+			try {
+				componentLinkManager.connect((SourceComponent) source, (DestinationComponent) destination);
+			} catch (ClassCastException e) {
+				throw new ComponentConnectionRejectedException(e);
+			}
 		}
 
 		return destination;
@@ -195,16 +199,20 @@ public final class EcosystemFactory {
 
 		if (item.asAlias() && this.aliasedComponents.containsKey(item.getAlias())) {
 			return link(source, this.aliasedComponents.get(item.getAlias()));
-		} else if (pipelines.containsKey(name)) {
-			return register(item.getAlias(), link(source, create(pipelines.get(name))));
-		} else if (terminals.containsKey(name)) {
-			return register(item.getAlias(), link(source, create(terminals.get(name))));
-		} else if (routers.containsKey(name)) {
-			return register(item.getAlias(), link(source, create(routers.get(name))));
-		} else if (flows.containsKey(name)) {
-			return register(item.getAlias(), create(source, Flow.decompose(flows.get(name).getValue())));
 		} else {
-			throw new CannotCreateDataSenderException();
+			final String[] parameters = item.getParameters();
+
+			if (pipelines.containsKey(name)) {
+				return register(item.getAlias(), link(source, create(pipelines.get(name), parameters)));
+			} else if (terminals.containsKey(name)) {
+				return register(item.getAlias(), link(source, create(terminals.get(name), parameters)));
+			} else if (routers.containsKey(name)) {
+				return register(item.getAlias(), link(source, create(routers.get(name), parameters)));
+			} else if (flows.containsKey(name)) {
+				return register(item.getAlias(), create(source, Flow.decompose(flows.get(name).getValue())));
+			} else {
+				throw new CannotCreateDataSenderException();
+			}
 		}
 	}
 
@@ -239,9 +247,13 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private PipelineComponent create(Pipeline pipeline) throws CannotCreateComponentException {
+	private PipelineComponent create(Pipeline pipeline, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = pipeline.getFactory();
-		final List<String> parameters = pipeline.getParameters();
+		final List<String> parameters = new ArrayList<String>();
+		parameters.addAll(pipeline.getParameters());
+		for (String additionalParameter : additionalParameters) {
+			parameters.add(additionalParameter);
+		}
 		return PipelineFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
 	}
 
@@ -250,9 +262,13 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private TerminalComponent create(Terminal terminal) throws CannotCreateComponentException {
+	private TerminalComponent create(Terminal terminal, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = terminal.getFactory();
-		final List<String> parameters = terminal.getParameters();
+		final List<String> parameters = new ArrayList<String>();
+		parameters.addAll(terminal.getParameters());
+		for (String additionalParameter : additionalParameters) {
+			parameters.add(additionalParameter);
+		}
 		return TerminalFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
 	}
 
@@ -261,9 +277,13 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private RouterSourceComponent create(Router router) throws CannotCreateComponentException {
+	private RouterSourceComponent create(Router router, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = router.getFactory();
-		final List<String> parameters = router.getParameters();
+		final List<String> parameters = new ArrayList<String>();
+		parameters.addAll(router.getParameters());
+		for (String additionalParameter : additionalParameters) {
+			parameters.add(additionalParameter);
+		}
 		final RouterSourceComponent routerComponent = RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
 
 		for (Client client : router.getClients()) {

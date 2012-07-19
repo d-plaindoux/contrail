@@ -39,4 +39,13 @@ public class ComponentConnectionRejectedException extends Exception {
 	public ComponentConnectionRejectedException(String arg0) {
 		super(arg0);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ComponentConnectionRejectedException(Throwable arg0) {
+		super(arg0);
+	}
 }

@@ -1,22 +1,32 @@
 <?xml version='1.0'?>
 <ecosystem>
+	<pipeline name='LoggerSource'
+		factory='org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent' />
+
+	<pipeline name='LoggerDestination'
+		factory='org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent' />
+
 	<pipeline name='PayLoad'
 		factory='org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory' />
 
 	<pipeline name='Serialize'
 		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory' />
 
+	<pipeline name="Coercion"
+		factory='org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory' />
+
 	<pipeline name='ParallelSource'
-		factory='org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourcePipelineComponent' />
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent' />
 
 	<pipeline name='ParallelDestination'
-		factory='org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationPipelineComponent' />
+		factory='org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent' />
 
 	<terminal name='Tracer'
 		factory='org.wolfgang.contrail.ecosystem.factory.TestComponent' />
 
 	<flow name='Parallel'> ParallelSource ParallelDestination </flow>
-	<flow name='MainFlow'> PayLoad Parallel Serialize Tracer </flow>
+	<flow name='Logger'> LoggerSource(UP) LoggerDestination(Down)  </flow>
+	<flow name='MainFlow'> PayLoad ParallelSource Serialize ParallelDestination Coercion(java.lang.String) Tracer </flow>
 
 	<binder name='Main' typein="byte[]" typeout="byte[]">
 		MainFlow

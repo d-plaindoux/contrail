@@ -18,11 +18,8 @@
 
 package org.wolfgang.contrail.component.pipeline.concurrent;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -31,65 +28,39 @@ import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>ConcurrentDestinationPipelineComponent</code>
+ * <code>AtomicDestinationPipelineComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ParallelDestinationPipelineComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
+public class AtomicDestinationComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
 	 * The downstream data handler
 	 */
 	private final DownStreamDataHandler<D> downStreamDataHandler;
 
-	/**
-	 * The internal executor in charge of managing incoming connection requests
-	 */
-	private final ThreadPoolExecutor executor;
-
 	{
-		final ThreadGroup group = new ThreadGroup("Threaded.Destination");
-		final ThreadFactory threadFactory = new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				return new Thread(group, r, "Threaded.Destination.Client");
-			}
-		};
-		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
-		this.executor.allowCoreThreadTimeOut(true);
-	}
-
-	{
+		final Lock downstreamLock = new ReentrantLock();
 		this.downStreamDataHandler = new DownStreamDataHandler<D>() {
 			@Override
 			public void handleData(final D data) throws DataHandlerException {
-				executor.submit(new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(data);
-						return null;
-					}
-				});
+				downstreamLock.lock();
+				try {
+					getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(data);
+				} finally {
+					downstreamLock.unlock();
+				}
 			}
 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
-				try {
-					getDestinationComponentLink().getDestination().closeDownStream();
-				} finally {
-					executor.shutdown();
-				}
+				getDestinationComponentLink().getDestination().closeDownStream();
 			}
 
 			@Override
 			public void handleLost() throws DataHandlerCloseException {
-				try {
-					getDestinationComponentLink().getDestination().closeDownStream();
-				} finally {
-					executor.shutdown();
-				}
+				getDestinationComponentLink().getDestination().closeDownStream();
 			}
 		};
 	}
@@ -97,7 +68,7 @@ public class ParallelDestinationPipelineComponent<U, D> extends AbstractPipeline
 	/**
 	 * Constructor
 	 */
-	public ParallelDestinationPipelineComponent() {
+	public AtomicDestinationComponent() {
 		super();
 	}
 

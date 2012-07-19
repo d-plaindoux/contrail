@@ -32,19 +32,21 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestComponent extends TerminalComponent<String, String> {
+@SuppressWarnings("rawtypes")
+public class TestComponent extends TerminalComponent {
 
-	private static DataReceiverFactory<String, String> DATA_RECEIVER_FACTORY = new DataReceiverFactory<String, String>() {
+	private static DataReceiverFactory DATA_RECEIVER_FACTORY = new DataReceiverFactory() {
 		@Override
-		public DataReceiver<String> create(final DataSender<String> sender) {
-			return new DataReceiver<String>() {
+		public DataReceiver create(final DataSender sender) {
+			return new DataReceiver() {
 				@Override
 				public void close() throws IOException {
 					sender.close();
 				}
 
 				@Override
-				public void receiveData(String data) throws DataHandlerException {
+				@SuppressWarnings("unchecked")
+				public void receiveData(Object data) throws DataHandlerException {
 					sender.sendData(data);
 				}
 			};

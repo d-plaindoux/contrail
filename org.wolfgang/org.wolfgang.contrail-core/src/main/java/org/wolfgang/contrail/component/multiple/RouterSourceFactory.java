@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.component.multiple;
 
 import java.lang.reflect.Constructor;
-import java.net.URI;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.RouterSourceComponent;

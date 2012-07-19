@@ -38,7 +38,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComposedPipelineComponent<U1, D1, U2, D2> extends AbstractPipelineComponent<U1, D1, U2, D2> {
+public class CompositionComponent<U1, D1, U2, D2> extends AbstractPipelineComponent<U1, D1, U2, D2> {
 
 	private final UpStreamDataHandler<U1> upStreamDataHandler;
 	private final InitialComponent<U1, D1> initialComponent;
@@ -124,7 +124,7 @@ public class ComposedPipelineComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ComposedPipelineComponent(PipelineComponent[] pipelines) throws ComponentConnectionRejectedException {
+	public CompositionComponent(PipelineComponent[] pipelines) throws ComponentConnectionRejectedException {
 		super();
 
 		assert pipelines.length > 0;

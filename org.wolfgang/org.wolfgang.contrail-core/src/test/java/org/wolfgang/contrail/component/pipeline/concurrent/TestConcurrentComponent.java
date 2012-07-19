@@ -57,7 +57,7 @@ public class TestConcurrentComponent extends TestCase {
 				}
 			}
 		});
-		final ParallelSourcePipelineComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelSourcePipelineComponent<Integer, Integer>();
+		final ParallelSourceComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelSourceComponent<Integer, Integer>();
 
 		componentLinkManagerImpl.connect(initialComponent, concurrentSourcePipelineComponent);
 		componentLinkManagerImpl.connect(concurrentSourcePipelineComponent, terminalComponent);
@@ -99,7 +99,7 @@ public class TestConcurrentComponent extends TestCase {
 		});
 
 		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new DataReceiverAdapter<Integer>());
-		final ParallelDestinationPipelineComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelDestinationPipelineComponent<Integer, Integer>();
+		final ParallelDestinationComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelDestinationComponent<Integer, Integer>();
 
 		componentLinkManagerImpl.connect(initialComponent, concurrentSourcePipelineComponent);
 		componentLinkManagerImpl.connect(concurrentSourcePipelineComponent, terminalComponent);

@@ -33,7 +33,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class AtomicSourcePipelineComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
+public class AtomicSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
 	 * The upstream data handler
@@ -68,7 +68,7 @@ public class AtomicSourcePipelineComponent<U, D> extends AbstractPipelineCompone
 	/**
 	 * Constructor
 	 */
-	public AtomicSourcePipelineComponent() {
+	public AtomicSourceComponent() {
 		super();
 	}
 
