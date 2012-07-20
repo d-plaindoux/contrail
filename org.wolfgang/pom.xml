@@ -59,6 +59,7 @@
 
 	<modules>
 		<module>org.wolfgang.common</module>
+		<module>org.wolfgang.jasman</module>
 		<module>org.wolfgang.contrail-reference</module>
 		<module>org.wolfgang.contrail-core</module>
 		<module>org.wolfgang.contrail-ecosystem</module>
