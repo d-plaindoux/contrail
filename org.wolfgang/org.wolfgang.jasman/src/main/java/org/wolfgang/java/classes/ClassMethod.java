@@ -19,50 +19,30 @@
 package org.wolfgang.java.classes;
 
 /**
- * 
  * <code>ClassMethod</code>
  * 
  * @author Didier Plaindoux
- * 
  */
-public class ClassMethod {
+public interface ClassMethod {
 
-	private final ConstantPool pool;
-	private final int accessFlag;
-	private final int name;
-	private final int description;
-	private final ClassAttribute[] attributes;
+	/**
+	 * Method providing the access flag. Such flags can be interpreted using the
+	 * {@link java.lang.reflect.Modifier} class.
+	 * 
+	 * @return the access flags
+	 */
+	int getAccessFlag();
 
-	public ClassMethod(int accessFlag, ConstantPool constantPool, int name, int description, ClassAttribute[] attributes) {
-		super();
-		this.accessFlag = accessFlag;
-		this.pool = constantPool;
-		this.name = name;
-		this.description = description;
-		this.attributes = attributes;
-	}
+	/**
+	 * @return the method name
+	 */
+	String getName();
 
-	public int getAccessFlag() {
-		return accessFlag;
-	}
+	String getDescription();
 
-	public String getName() {
-		return this.pool.getAt(name).toExternal();
-	}
+	ClassAttribute[] getAttributes();
 
-	public String getDescription() {
-		return this.pool.getAt(description).toExternal();
-	}
+	ConstantPool getConstantPool();
 
-	public ClassAttribute[] getAttributes() {
-		return attributes;
-	}
-
-	public ConstantPool getConstantPool() {
-		return pool;
-	}
-
-	public String toExternal() {
-		return "METHOD <" + getName() + ">[" + getDescription() + "]";
-	}
+	String toExternal();
 }

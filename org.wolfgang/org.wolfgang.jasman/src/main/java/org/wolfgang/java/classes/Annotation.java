@@ -19,33 +19,21 @@
 package org.wolfgang.java.classes;
 
 /**
- * <code>ClassField</code>
+ * <code>Annotation</code>
  * 
  * @author Didier Plaindoux
+ * @version 1.0
  */
-public interface ClassField {
+public interface Annotation {
 
 	/**
-	 * Method providing the access flag. Such flags can be interpreted using the
-	 * {@link java.lang.reflect.Modifier} class.
-	 * 
-	 * @return the access flags
+	 * @return
 	 */
-	int getAccessFlag();
-
 	String getName();
 
-	void setName(int name);
-
-	String getDescription();
-
-	void setDescription(int description);
-
-	ClassAttribute[] getAttributes();
-
-	void setAttributes(ClassAttribute[] attributes);
-
-	ConstantPool getConstantPool();
-
+	/**
+	 * @return a string representation
+	 */
 	String toExternal();
+
 }

@@ -21,7 +21,7 @@ package org.wolfgang.java.classes;
 /**
  * <code>ConstantType</code> is used to qualify data found in a class. The
  * specific UNUSED designation has been added in order to identify unused
- * entries. Other types come from the official specification from Sun
+ * entries. Other types come from the official specification from Sun/Oracle
  * corporation.
  * 
  * @author Didier Plaindoux

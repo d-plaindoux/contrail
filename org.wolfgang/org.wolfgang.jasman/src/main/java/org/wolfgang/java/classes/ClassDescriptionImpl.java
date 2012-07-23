@@ -25,13 +25,15 @@ import java.util.Set;
 import org.wolfgang.java.classes.Constant.CLASS;
 
 /**
- * 
  * <code>ClassDescriptionImpl</code>
  * 
  * @author Didier Plaindoux
- * 
  */
 public class ClassDescriptionImpl implements ClassDescription {
+
+	/**
+	 * Attributes
+	 */
 
 	private int majorVersion;
 	private int minorVersion;
@@ -45,6 +47,9 @@ public class ClassDescriptionImpl implements ClassDescription {
 	private ClassAttribute[] attributes;
 	private long decodingTime;
 
+	/**
+	 * Constructor
+	 */
 	ClassDescriptionImpl() {
 		super();
 	}
@@ -84,7 +89,7 @@ public class ClassDescriptionImpl implements ClassDescription {
 	public void setConstantPool(ConstantPool constantPool) {
 		this.constantPool = constantPool;
 	}
-	
+
 	@Override
 	public int getAccessFlags() {
 		return accessFlags;

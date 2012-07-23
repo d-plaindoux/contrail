@@ -20,47 +20,90 @@ package org.wolfgang.java.classes;
 
 import java.io.PrintStream;
 
-
 /**
- * 
  * <code>ClassDescription</code> is the main component describing a class.
- *
+ * 
  * @author Didier Plaindoux
- *
  */
 public interface ClassDescription {
-	
+
+	/**
+	 * Method providing the access flag. Such flags can be interpreted using the
+	 * {@link java.lang.reflect.Modifier} class.
+	 * 
+	 * @return the access flags
+	 */
 	int getAccessFlags();
-	
+
+	/**
+	 * @return
+	 */
 	int getMajorVersion();
-	
+
+	/**
+	 * @return
+	 */
 	int getMinorVersion();
 
+	/**
+	 * @return
+	 */
 	ConstantPool getConstantPool();
 
+	/**
+	 * @return
+	 */
 	String getClassName();
 
+	/**
+	 * @return
+	 */
 	String getSuperClassName();
-	
+
+	/**
+	 * @return
+	 */
 	String[] getInterfacesName();
-	
+
+	/**
+	 * @return
+	 */
 	String[] getDeclaredTypes();
 
+	/**
+	 * @param name
+	 * @return
+	 * @throws DefinitionNotFound
+	 */
 	ClassField findFieldByName(String name) throws DefinitionNotFound;
-	
+
+	/**
+	 * @return
+	 */
 	ClassField[] getFields();
 
+	/**
+	 * @param name
+	 * @return
+	 * @throws DefinitionNotFound
+	 */
 	ClassMethod findMethodByName(String name) throws DefinitionNotFound;
-	
+
+	/**
+	 * @return
+	 */
 	ClassMethod[] getMethods();
 
+	/**
+	 * @return
+	 */
 	ClassAttribute[] getAttributes();
-	
+
 	// -----------------------------------------------------------------------------------------------------------------
 	// Utilities corner
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
 	long getDecodingTime();
-	
+
 	void dump(PrintStream printStream);
 }

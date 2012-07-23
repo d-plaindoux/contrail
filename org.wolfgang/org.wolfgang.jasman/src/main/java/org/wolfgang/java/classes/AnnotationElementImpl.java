@@ -19,33 +19,38 @@
 package org.wolfgang.java.classes;
 
 /**
- * <code>ClassField</code>
+ * <code>AnnotationElementImpl</code>
  * 
  * @author Didier Plaindoux
+ * @version 1.0
  */
-public interface ClassField {
+class AnnotationElementImpl implements AnnotationElement {
+
+	private final ConstantPool constantPool;
+	private final int name;
+	private final AnnotationElementValue value;
 
 	/**
-	 * Method providing the access flag. Such flags can be interpreted using the
-	 * {@link java.lang.reflect.Modifier} class.
+	 * Constructor
 	 * 
-	 * @return the access flags
+	 * @param name
+	 * @param value
 	 */
-	int getAccessFlag();
+	AnnotationElementImpl(ConstantPool constantPool, int name, AnnotationElementValue value) {
+		super();
+		this.constantPool = constantPool;
+		this.name = name;
+		this.value = value;
+	}
 
-	String getName();
+	@Override
+	public String getName() {
+		return this.constantPool.getAt(name).toExternal();
+	}
 
-	void setName(int name);
+	@Override
+	public AnnotationElementValue getValue() {
+		return this.value;
+	}
 
-	String getDescription();
-
-	void setDescription(int description);
-
-	ClassAttribute[] getAttributes();
-
-	void setAttributes(ClassAttribute[] attributes);
-
-	ConstantPool getConstantPool();
-
-	String toExternal();
 }

@@ -18,37 +18,12 @@
 
 package org.wolfgang.java.classes;
 
-import java.util.Iterator;
-
 /**
  * <code>ConstantPool</code>
  * 
  * @author Didier Plaindoux
  */
-public class ConstantPool implements Iterable<Constant> {
-
-	private final Constant[] constants;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param constants
-	 *            Identifier constants.
-	 */
-	public ConstantPool(Constant[] constants) {
-		super();
-		assert constants != null;
-		this.constants = constants;
-	}
-
-	/**
-	 * Constant pool size
-	 * 
-	 * @return an integer
-	 */
-	private int size() {
-		return this.constants.length;
-	}
+public interface ConstantPool extends Iterable<Constant> {
 
 	/**
 	 * Method used to retrieve a constant using its index. These index are given
@@ -58,32 +33,6 @@ public class ConstantPool implements Iterable<Constant> {
 	 *            The index
 	 * @return a constant (Never <code>null</code>)
 	 */
-	public Constant getAt(int index) {
-		assert index > 0;
-		assert index <= size();
-		return this.constants[index - 1];
-	}
+	Constant getAt(int index);
 
-	@Override
-	public Iterator<Constant> iterator() {
-		return new Iterator<Constant>() {
-			private int current = 1;
-			private int bound = size() + 1;
-
-			@Override
-			public boolean hasNext() {
-				return current < bound;
-			}
-
-			@Override
-			public Constant next() {
-				return getAt(current++);
-			}
-
-			@Override
-			public void remove() {
-				throw new IllegalAccessError();
-			}
-		};
-	}
 }

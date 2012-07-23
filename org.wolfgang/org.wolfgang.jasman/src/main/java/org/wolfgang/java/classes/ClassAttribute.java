@@ -18,6 +18,8 @@
 
 package org.wolfgang.java.classes;
 
+import java.io.IOException;
+
 /**
  * <code>ClassAttribute</code>
  * 
@@ -40,10 +42,10 @@ public interface ClassAttribute {
 	 * 
 	 * @author Didier Plaindoux
 	 */
-	static abstract class Abstract implements ClassAttribute {
+	abstract class Abstract implements ClassAttribute {
 
-		protected final ConstantPool pool;
 		private final int name;
+		protected final ConstantPool pool;
 
 		protected Abstract(ConstantPool pool, int name) {
 			super();
@@ -63,7 +65,7 @@ public interface ClassAttribute {
 	 * 
 	 * @author Didier Plaindoux
 	 */
-	public static class Generic extends Abstract {
+	class Generic extends Abstract {
 
 		private final byte[] value;
 
@@ -87,7 +89,7 @@ public interface ClassAttribute {
 	 * 
 	 * @author Didier Plaindoux
 	 */
-	public static class Code extends Abstract {
+	class Code extends Abstract {
 
 		private final byte[] value;
 
@@ -102,7 +104,7 @@ public interface ClassAttribute {
 
 		@Override
 		public String toExternal() {
-			return "Attribute <" + getName() + ">[(" + value.length + ") ...]";
+			return "Undecoded <" + getName() + ">[(" + value.length + ") ...]";
 		}
 	}
 
@@ -113,19 +115,19 @@ public interface ClassAttribute {
 	 * 
 	 * @author Didier Plaindoux
 	 */
-	public static class Signature extends Abstract {
+	class Signature extends Abstract {
 
 		private final int signature;
 
-		public Signature(ConstantPool pool, int name, byte[] value) {
+		public Signature(ConstantPool pool, int name, int signature) {
 			super(pool, name);
-			this.signature = ((value[0] & 0xFF) << 8) | (value[1] & 0xFF);
+			this.signature = signature;
 		}
 
 		@Override
 		public String toExternal() {
 			try {
-				return "Signature [" + pool.getAt(signature).toExternal() + "]";
+				return getName() + " [" + pool.getAt(signature).toExternal() + "]";
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "<unlink> Signature [" + signature + "]";
 			}
@@ -139,20 +141,108 @@ public interface ClassAttribute {
 	 * 
 	 * @author Didier Plaindoux
 	 */
-	public static class SourceFile extends Abstract {
+	class SourceFile extends Abstract {
 		private final int sourcefile;
 
-		public SourceFile(ConstantPool pool, int name, byte[] value) {
+		public SourceFile(ConstantPool pool, int name, int sourceFile) {
 			super(pool, name);
-			this.sourcefile = ((value[0] & 0xFF) << 8) | (value[1] & 0xFF);
+			this.sourcefile = sourceFile;
 		}
 
 		@Override
 		public String toExternal() {
 			try {
-				return "SourceFile [" + pool.getAt(sourcefile).toExternal() + "]";
+				return getName() + " [" + pool.getAt(sourcefile).toExternal() + "]";
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "<unlink> SourceFile [" + sourcefile + "]";
+			}
+
+		}
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * <code>SourceFile</code>
+	 * 
+	 * @author Didier Plaindoux
+	 */
+	class VisibleAnnotations extends Abstract {
+
+		private final Annotation[] annotations;
+
+		public VisibleAnnotations(ConstantPool pool, int name, Annotation[] annotations) throws IOException {
+			super(pool, name);
+			this.annotations = annotations;
+		}
+
+		/**
+		 * Return the value of annotations
+		 * 
+		 * @return the annotations
+		 */
+		public Annotation[] getAnnotations() {
+			return annotations;
+		}
+
+		@Override
+		public String toExternal() {
+			try {
+				final StringBuilder builder = new StringBuilder();
+				builder.append(getName()).append(" [ ");
+				for (Annotation annotation : annotations) {
+					builder.append(annotation.toExternal()).append(' ');
+				}
+				builder.append("]");
+				return builder.toString();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return "<unlink> RuntimeVisibleAnnotations [...]";
+			}
+
+		}
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * <code>SourceFile</code>
+	 * 
+	 * @author Didier Plaindoux
+	 */
+	class VisibleParametersAnnotations extends Abstract {
+
+		private final Annotation[][] parameteresAnnotations;
+
+		public VisibleParametersAnnotations(ConstantPool pool, int name, Annotation[][] parameteresAnnotations) {
+			super(pool, name);
+			this.parameteresAnnotations = parameteresAnnotations;
+		}
+
+		/**
+		 * Return the value ofannotations
+		 * 
+		 * @return the annotations
+		 */
+		public Annotation[][] getParametersAnnotations() {
+			return parameteresAnnotations;
+		}
+
+		@Override
+		public String toExternal() {
+			try {
+				final StringBuilder builder = new StringBuilder();
+				builder.append(getName()).append(" [");
+				for (Annotation[] annotations : parameteresAnnotations) {
+					builder.append("[ ");
+					for (Annotation annotation : annotations) {
+						builder.append(annotation.toExternal()).append(' ');
+					}
+					builder.append("]");
+				}
+				builder.append("]");
+				return builder.toString();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return "<unlink> RuntimeVisibleAnnotations [...]";
 			}
 
 		}

@@ -41,6 +41,16 @@ public enum AttributeType {
 	CODE,
 
 	/**
+	 * Runtime visible annotations
+	 */
+	ANNOTATION,
+
+	/**
+	 * Runtime visible annotations
+	 */
+	PARAMETER_ANNOTATION,
+
+	/**
 	 * Anything else
 	 */
 	GENERIC;
@@ -48,7 +58,8 @@ public enum AttributeType {
 	/**
 	 * Method used for internalization
 	 * 
-	 * @param name The attribute as a string
+	 * @param name
+	 *            The attribute as a string
 	 * @return an attribute type (Never <code>null</code>)
 	 */
 	public static AttributeType get(String name) {
@@ -58,6 +69,10 @@ public enum AttributeType {
 			return SOURCEFILE;
 		} else if (name.equals("Code")) {
 			return CODE;
+		} else if (name.equals("RuntimeVisibleAnnotations")) {
+			return ANNOTATION;
+		} else if (name.equals("RuntimeVisibleParameterAnnotations")) {
+			return PARAMETER_ANNOTATION;
 		} else {
 			return GENERIC;
 		}
