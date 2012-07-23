@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * <code>ClientEndPoint</code>
+ * <code>ClientReference</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

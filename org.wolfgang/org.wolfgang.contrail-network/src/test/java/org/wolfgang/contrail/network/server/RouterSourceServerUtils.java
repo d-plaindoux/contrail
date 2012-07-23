@@ -32,16 +32,16 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.network.NetworkAcceptanceComponent;
-import org.wolfgang.contrail.component.network.NetworkComponent;
-import org.wolfgang.contrail.component.network.NetworkTable;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterSourceTable;
+import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
 import org.wolfgang.contrail.connection.net.NetClient;
-import org.wolfgang.contrail.event.NetworkEvent;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -53,13 +53,13 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class NetworkRouterServerUtils extends TestCase {
+class RouterSourceServerUtils extends TestCase {
 
-	static void client(final NetworkComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
+	static void client(final RouterSourceComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
 			final DirectReference... references) throws ReferenceEntryAlreadyExistException {
-		final NetworkTable.Entry entry = new NetworkTable.Entry() {
+		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
 			@Override
-			public SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException {
+			public SourceComponent<RoutedEvent, RoutedEvent> create() throws CannotCreateComponentException {
 
 				System.err.println(component.getSelfReference() + " - Opening a client to " + this.getReferenceToUse() + " [endpoint=" + host + ":" + port + "]");
 				try {
@@ -72,8 +72,8 @@ class NetworkRouterServerUtils extends TestCase {
 					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
-					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = coercionTransducerFactory.createComponent();
+					final CoercionTransducerFactory<RoutedEvent> coercionTransducerFactory = new CoercionTransducerFactory<RoutedEvent>(RoutedEvent.class);
+					final TransducerComponent<Object, Object, RoutedEvent, RoutedEvent> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					// Create the link from the client to the network
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
@@ -116,10 +116,10 @@ class NetworkRouterServerUtils extends TestCase {
 			}
 		};
 
-		component.getNetworkTable().insert(entry, mainReference, references);
+		component.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static DataSenderFactory<byte[], byte[]> serverBinder(final NetworkComponent component, final ComponentLinkManagerImpl componentLinkManager) {
+	static DataSenderFactory<byte[], byte[]> serverBinder(final RouterSourceComponent component, final ComponentLinkManagerImpl componentLinkManager) {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
@@ -137,13 +137,13 @@ class NetworkRouterServerUtils extends TestCase {
 					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
-					final CoercionTransducerFactory<NetworkEvent> coercionTransducerFactory = new CoercionTransducerFactory<NetworkEvent>(NetworkEvent.class);
-					final TransducerComponent<Object, Object, NetworkEvent, NetworkEvent> coercionTransducer = coercionTransducerFactory.createComponent();
+					final CoercionTransducerFactory<RoutedEvent> coercionTransducerFactory = new CoercionTransducerFactory<RoutedEvent>(RoutedEvent.class);
+					final TransducerComponent<Object, Object, RoutedEvent, RoutedEvent> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 
-					final NetworkAcceptanceComponent networkAcceptanceComponent = new NetworkAcceptanceComponent();
+					final SourceAcceptanceComponent networkAcceptanceComponent = new SourceAcceptanceComponent();
 
 					componentLinkManager.connect(coercionTransducer, networkAcceptanceComponent);
 					componentLinkManager.connect(networkAcceptanceComponent, component);

@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.component.router;
 
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -45,13 +45,13 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkAcceptanceComponent extends AbstractComponent implements PipelineComponent<NetworkEvent, NetworkEvent, NetworkEvent, NetworkEvent> {
+public class SourceAcceptanceComponent extends AbstractComponent implements PipelineComponent<RoutedEvent, RoutedEvent, RoutedEvent, RoutedEvent> {
 
-	private SourceComponentLink<NetworkEvent, NetworkEvent> sourceComponentLink;
-	private DestinationComponentLink<NetworkEvent, NetworkEvent> destinationComponentLink;
-	private UpStreamDataHandler<NetworkEvent> intermediateUpStreamHandler;
+	private SourceComponentLink<RoutedEvent, RoutedEvent> sourceComponentLink;
+	private DestinationComponentLink<RoutedEvent, RoutedEvent> destinationComponentLink;
+	private UpStreamDataHandler<RoutedEvent> intermediateUpStreamHandler;
 
-	private NetworkComponent networkComponent;
+	private RouterSourceComponent networkComponent;
 
 	{
 		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
@@ -61,7 +61,7 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 	/**
 	 * Constructor
 	 */
-	public NetworkAcceptanceComponent() {
+	public SourceAcceptanceComponent() {
 		super();
 	}
 
@@ -76,18 +76,18 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 	}
 
 	@Override
-	public UpStreamDataHandler<NetworkEvent> getUpStreamDataHandler() {
+	public UpStreamDataHandler<RoutedEvent> getUpStreamDataHandler() {
 		if (intermediateUpStreamHandler == null) {
-			intermediateUpStreamHandler = new UpStreamDataHandler<NetworkEvent>() {
+			intermediateUpStreamHandler = new UpStreamDataHandler<RoutedEvent>() {
 				@Override
-				public void handleData(NetworkEvent data) throws DataHandlerException {
+				public void handleData(RoutedEvent data) throws DataHandlerException {
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
 						final DirectReference receiverReference = networkComponent.getSelfReference();
 						final ComponentLinkManager destinationComponentLinkManager = destinationComponentLink.getComponentLinkManager();
-						final SourceComponent<NetworkEvent, NetworkEvent> source = sourceComponentLink.getSource();
-						final DestinationComponent<NetworkEvent, NetworkEvent> destination = destinationComponentLink.getDestination();
+						final SourceComponent<RoutedEvent, RoutedEvent> source = sourceComponentLink.getSource();
+						final DestinationComponent<RoutedEvent, RoutedEvent> destination = destinationComponentLink.getDestination();
 
 						sourceComponentLink.dispose();
 						destinationComponentLink.dispose();
@@ -129,8 +129,8 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectionRejectedException {
-		final SourceComponent<NetworkEvent, NetworkEvent> source = handler.getSource();
+	public ComponentLink connectSource(SourceComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
+		final SourceComponent<RoutedEvent, RoutedEvent> source = handler.getSource();
 		final ComponentId componentId = source.getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
@@ -147,7 +147,7 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 	}
 
 	@Override
-	public DownStreamDataHandler<NetworkEvent> getDownStreamDataHandler() {
+	public DownStreamDataHandler<RoutedEvent> getDownStreamDataHandler() {
 		return this.sourceComponentLink.getSource().getDownStreamDataHandler();
 	}
 
@@ -157,12 +157,12 @@ public class NetworkAcceptanceComponent extends AbstractComponent implements Pip
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectionRejectedException {
-		final DestinationComponent<NetworkEvent, NetworkEvent> destination = handler.getDestination();
+	public ComponentLink connectDestination(DestinationComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
+		final DestinationComponent<RoutedEvent, RoutedEvent> destination = handler.getDestination();
 		final ComponentId componentId = destination.getComponentId();
-		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, NetworkComponent.class)) {
+		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, RouterSourceComponent.class)) {
 			this.destinationComponentLink = handler;
-			this.networkComponent = Coercion.coerce(destination, NetworkComponent.class);
+			this.networkComponent = Coercion.coerce(destination, RouterSourceComponent.class);
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {

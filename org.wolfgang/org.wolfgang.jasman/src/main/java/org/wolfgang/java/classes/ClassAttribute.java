@@ -185,6 +185,23 @@ public interface ClassAttribute {
 			return annotations;
 		}
 
+		/**
+		 * Searh for an annotation using the class name
+		 * 
+		 * @param className
+		 *            The searched class name
+		 * @return an annotation or <code>null</code>
+		 */
+		public Annotation searchByType(String className) {
+			for (Annotation annotation : annotations) {
+				if (annotation.getName().equals(className)) {
+					return annotation;
+				}
+			}
+
+			return null;
+		}
+
 		@Override
 		public String toExternal() {
 			try {

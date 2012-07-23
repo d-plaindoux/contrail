@@ -20,11 +20,13 @@ package org.wolfgang.java.classes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Inherited;
 import java.net.URL;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
 
 import junit.framework.TestCase;
 
@@ -54,7 +56,14 @@ public class TestClassReader extends TestCase {
 		try {
 			final ClassDescription classDescription = ClassReader.getClassDescription(openStream);
 
-			classDescription.dump(System.err);
+			for (ClassAttribute classAttribute : classDescription.getAttributes()) {
+				if (Coercion.canCoerce(classAttribute, VisibleAnnotations.class)) {
+					final VisibleAnnotations annotations = Coercion.coerce(classAttribute, VisibleAnnotations.class);
+					assertNotNull(annotations.searchByType(Deprecated.class.getCanonicalName()));
+					assertNotNull(annotations.searchByType(XmlRootElement.class.getCanonicalName()));
+				}
+
+			}
 		} finally {
 			openStream.close();
 		}

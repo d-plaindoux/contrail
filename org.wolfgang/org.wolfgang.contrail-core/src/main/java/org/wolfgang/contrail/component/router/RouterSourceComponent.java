@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.component.router;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +27,10 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.RouterSourceComponent;
+import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -41,23 +41,23 @@ import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolfgang.contrail.reference.DirectReference;
 
 /**
- * <code>NetwortComponent</code> is a component able to manage NetworkEvent and
- * opening route on-demand.
+ * <code>RouterSourceComponent</code> is a component able to manage NetworkEvent
+ * and opening route on-demand.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkComponent extends AbstractComponent implements DestinationComponent<NetworkEvent, NetworkEvent>, RouterSourceComponent<NetworkEvent, NetworkEvent> {
+public class RouterSourceComponent extends AbstractComponent implements DestinationComponent<RoutedEvent, RoutedEvent>, MultipleSourceComponent<RoutedEvent, RoutedEvent> {
 
 	/**
 	 * The multiplexer component
 	 */
-	private final NetworkStreamStation networkStreamStation;
+	private final StreamDataHandlerStation streamStation;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private DestinationComponentLink<NetworkEvent, NetworkEvent> destinationLink;
+	private DestinationComponentLink<RoutedEvent, RoutedEvent> destinationLink;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -67,36 +67,36 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>> sourceLinks;
+	private final Map<ComponentId, SourceComponentLink<RoutedEvent, RoutedEvent>> sourceLinks;
 
 	/**
 	 * Initialization
 	 */
 	{
 		this.sourceFilters = new HashMap<ComponentId, DirectReference>();
-		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<NetworkEvent, NetworkEvent>>();
+		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<RoutedEvent, RoutedEvent>>();
 	}
 
 	/**
 	 * Constructor
 	 */
-	NetworkComponent(NetworkTable table, DirectReference selfReference) {
+	RouterSourceComponent(RouterSourceTable table, DirectReference selfReference) {
 		this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
-		this.networkStreamStation = new NetworkStreamStation(this, selfReference, table);
+		this.streamStation = new StreamDataHandlerStation(this, selfReference, table);
 	}
 
 	/**
 	 * @return the network table
 	 */
-	public NetworkTable getNetworkTable() {
-		return this.networkStreamStation.getRouterTable();
+	public RouterSourceTable getRouterSourceTable() {
+		return this.streamStation.getRouterTable();
 	}
 
 	/**
 	 * @return the network component reference
 	 */
 	public DirectReference getSelfReference() {
-		return this.networkStreamStation.getSelfReference();
+		return this.streamStation.getSelfReference();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	 * @return the destinationLink
 	 * @throws ComponentNotConnectedException
 	 */
-	DestinationComponent<NetworkEvent, NetworkEvent> getDestination() throws ComponentNotConnectedException {
+	DestinationComponent<RoutedEvent, RoutedEvent> getDestination() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -119,7 +119,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectionRejectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationLink = handler;
@@ -151,7 +151,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		for (SourceComponentLink<NetworkEvent, NetworkEvent> source : this.sourceLinks.values()) {
+		for (SourceComponentLink<RoutedEvent, RoutedEvent> source : this.sourceLinks.values()) {
 			source.getSource().closeUpStream();
 		}
 	}
@@ -162,7 +162,7 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<NetworkEvent, NetworkEvent> handler) throws ComponentConnectedException {
+	public ComponentLink connectSource(SourceComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectedException {
 		assert handler != null;
 
 		final ComponentId componentId = handler.getSource().getComponentId();
@@ -189,13 +189,13 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	}
 
 	@Override
-	public UpStreamDataHandler<NetworkEvent> getUpStreamDataHandler() {
-		return this.networkStreamStation;
+	public UpStreamDataHandler<RoutedEvent> getUpStreamDataHandler() {
+		return this.streamStation;
 	}
 
 	@Override
-	public DownStreamDataHandler<NetworkEvent> getDownStreamDataHandler() {
-		return this.networkStreamStation;
+	public DownStreamDataHandler<RoutedEvent> getDownStreamDataHandler() {
+		return this.streamStation;
 	}
 
 	/**
@@ -213,8 +213,8 @@ public class NetworkComponent extends AbstractComponent implements DestinationCo
 	 * @return an source component
 	 * @throws ComponentNotConnectedException
 	 */
-	public SourceComponent<NetworkEvent, NetworkEvent> getSource(ComponentId componentId) throws ComponentNotConnectedException {
-		final SourceComponentLink<NetworkEvent, NetworkEvent> sourceComponentLink = this.sourceLinks.get(componentId);
+	public SourceComponent<RoutedEvent, RoutedEvent> getSource(ComponentId componentId) throws ComponentNotConnectedException {
+		final SourceComponentLink<RoutedEvent, RoutedEvent> sourceComponentLink = this.sourceLinks.get(componentId);
 
 		if (ComponentLinkFactory.isUndefined(sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());

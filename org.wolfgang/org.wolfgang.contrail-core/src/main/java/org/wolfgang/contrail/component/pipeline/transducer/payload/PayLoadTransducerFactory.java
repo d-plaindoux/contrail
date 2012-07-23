@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
+import org.wolfgang.contrail.component.annotation.ComponentPipeline;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
@@ -31,6 +32,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@ComponentPipeline("PayLoad")
 public final class PayLoadTransducerFactory implements TransducerFactory<byte[], Bytes> {
 
 	/**

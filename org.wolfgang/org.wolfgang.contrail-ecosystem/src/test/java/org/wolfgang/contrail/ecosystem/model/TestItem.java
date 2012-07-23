@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
-import org.wolfgang.contrail.ecosystem.model.Flow.Item;
-
 import junit.framework.TestCase;
+
+import org.wolfgang.contrail.ecosystem.model.Flow.Item;
 
 /**
  * <code>TestItem</code>

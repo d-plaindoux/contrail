@@ -16,21 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component;
-
-
 /**
- * The <code>MultipleSourceComponent</code> is capable to manage event from a
- * given source and sending each message to a selected destination based on
- * criterion. In addition the data can be transformed from a type S to a type D
- * or vice-versa depending if components communicate using upstream or
- * downstream network.
- * 
+ * Main package providing basic filter used for an elaboration of a router.
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RouterSourceComponent<U, D> extends DestinationComponent<U, D>, SourceComponent<U, D> {
-
-	// Nothing more
-
-}
+package org.wolfgang.contrail.component.router;

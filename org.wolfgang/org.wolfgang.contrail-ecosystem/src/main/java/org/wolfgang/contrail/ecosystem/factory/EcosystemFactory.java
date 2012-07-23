@@ -30,8 +30,8 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.RouterSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -40,7 +40,6 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalFactory;
-import org.wolfgang.contrail.component.multiple.RouterSourceFactory;
 import org.wolfgang.contrail.component.pipeline.PipelineFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
@@ -277,14 +276,17 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private RouterSourceComponent create(Router router, String[] additionalParameters) throws CannotCreateComponentException {
+	private MultipleSourceComponent create(Router router, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = router.getFactory();
 		final List<String> parameters = new ArrayList<String>();
 		parameters.addAll(router.getParameters());
 		for (String additionalParameter : additionalParameters) {
 			parameters.add(additionalParameter);
 		}
-		final RouterSourceComponent routerComponent = RouterSourceFactory.create(classLoader, factory, parameters.toArray(new String[parameters.size()]));
+		final MultipleSourceComponent routerComponent = null; // RouterSourceFactory.create(classLoader,
+																// factory,
+																// parameters.toArray(new
+																// String[parameters.size()]));
 
 		for (Client client : router.getClients()) {
 			try {

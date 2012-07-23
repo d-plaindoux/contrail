@@ -16,35 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.multiple;
+package org.wolfgang.contrail.component.annotation;
 
-import java.util.Map;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.SourceComponent;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * <code>FilteredSourceComponentSet</code> provides basic mechanism filtering
- * multiple targets.
+ * <code>ComponentPipeline</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface FilteredSourceComponents<D> {
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface ComponentPipeline {
 
-	/**
-	 * Provide the existing filters
-	 * 
-	 * @return a map of filters
-	 */
-	Map<ComponentId, DataFilter<D>> getSourceFilters();
+	String value();
 
-	/**
-	 * Provide a component using it's identifier
-	 * 
-	 * @return an source component
-	 * @throws ComponentNotConnectedException
-	 */
-	SourceComponent<?, D> getSourceComponent(ComponentId componentId) throws ComponentNotConnectedException;
 }

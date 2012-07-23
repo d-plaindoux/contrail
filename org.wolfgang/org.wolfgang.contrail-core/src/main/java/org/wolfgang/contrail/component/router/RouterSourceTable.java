@@ -16,11 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.component.router;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 import org.wolfgang.contrail.reference.ReferenceTableImpl;
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.reference.ReferenceTableImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
+public class RouterSourceTable extends ReferenceTableImpl<RouterSourceTable.Entry> {
 
 	/**
 	 * <code>Entry</code>
@@ -47,16 +47,18 @@ public class NetworkTable extends ReferenceTableImpl<NetworkTable.Entry> {
 		DirectReference getReferenceToUse();
 
 		/**
+		 * Method called whether a source component has to be created
+		 * 
 		 * @return
 		 * @throws CannotCreateComponentException
 		 */
-		SourceComponent<NetworkEvent, NetworkEvent> create() throws CannotCreateComponentException;
+		SourceComponent<RoutedEvent, RoutedEvent> create() throws CannotCreateComponentException;
 	}
 
 	/**
 	 * Constructor
 	 */
-	public NetworkTable() {
+	public RouterSourceTable() {
 		super();
 	}
 

@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.network;
+package org.wolfgang.contrail.component.router;
 
 import java.util.Map.Entry;
 
@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.event.NetworkEvent;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -44,13 +44,13 @@ import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>, UpStreamDataHandler<NetworkEvent> {
+public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEvent>, UpStreamDataHandler<RoutedEvent> {
 
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final NetworkComponent component;
-	private final NetworkTable routerTable;
+	private final RouterSourceComponent component;
+	private final RouterSourceTable routerTable;
 	private final DirectReference selfReference;
 
 	/**
@@ -60,7 +60,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public NetworkStreamStation(NetworkComponent component, DirectReference selfReference, NetworkTable routerTable) {
+	public StreamDataHandlerStation(RouterSourceComponent component, DirectReference selfReference, RouterSourceTable routerTable) {
 		super();
 		this.component = component;
 		this.selfReference = selfReference;
@@ -72,7 +72,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 	 * 
 	 * @return the routerTable
 	 */
-	NetworkTable getRouterTable() {
+	RouterSourceTable getRouterTable() {
 		return routerTable;
 	}
 
@@ -86,7 +86,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 	}
 
 	@Override
-	public void handleData(NetworkEvent data) throws DataHandlerException {
+	public void handleData(RoutedEvent data) throws DataHandlerException {
 		/**
 		 * Add the sender if the chosen route is private·
 		 */
@@ -110,7 +110,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 		 */
 		if (!data.getReferenceToDestination().hasNext()) {
 			try {
-				final DestinationComponent<NetworkEvent, NetworkEvent> destination = component.getDestination();
+				final DestinationComponent<RoutedEvent, RoutedEvent> destination = component.getDestination();
 				destination.getUpStreamDataHandler().handleData(data);
 				return;
 			} catch (ComponentNotConnectedException e) {
@@ -130,7 +130,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 			for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
 				if (nextTarget.equals(entry.getValue())) {
 					try {
-						final SourceComponent<NetworkEvent, NetworkEvent> source = component.getSource(entry.getKey());
+						final SourceComponent<RoutedEvent, RoutedEvent> source = component.getSource(entry.getKey());
 						source.getDownStreamDataHandler().handleData(data);
 						return;
 					} catch (ComponentNotConnectedException consume) {
@@ -143,7 +143,7 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 			 * Try to open a new source
 			 */
 			try {
-				final SourceComponent<NetworkEvent, NetworkEvent> source = this.createSource(nextTarget);
+				final SourceComponent<RoutedEvent, RoutedEvent> source = this.createSource(nextTarget);
 				source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
 				return;
 			} catch (CannotCreateComponentException e) {
@@ -173,9 +173,9 @@ public class NetworkStreamStation implements DownStreamDataHandler<NetworkEvent>
 	 * @return a source component (never <code>null</code>)
 	 * @throws CannotCreateComponentException
 	 */
-	private SourceComponent<NetworkEvent, NetworkEvent> createSource(DirectReference reference) throws CannotCreateComponentException {
+	private SourceComponent<RoutedEvent, RoutedEvent> createSource(DirectReference reference) throws CannotCreateComponentException {
 		try {
-			final NetworkTable.Entry retrieve = this.routerTable.retrieve(reference);
+			final RouterSourceTable.Entry retrieve = this.routerTable.retrieve(reference);
 			return retrieve.create();
 		} catch (ReferenceEntryNotFoundException e) {
 			throw new CannotCreateComponentException(e);

@@ -36,15 +36,15 @@ import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.network.NetworkComponent;
-import org.wolfgang.contrail.component.network.NetworkFactory;
+import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterSourceFactory;
+import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.RoutedEventImpl;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
-import org.wolfgang.contrail.event.NetworkEvent;
-import org.wolfgang.contrail.event.NetworkEventImpl;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -59,7 +59,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 public class TestNetworkRouterServer extends TestCase {
 
-	private static class Receiver implements DataReceiver<NetworkEvent> {
+	private static class Receiver implements DataReceiver<RoutedEvent> {
 		private final DirectReference self;
 		private final AtomicReference<FutureResponse<String>> futureResponse;
 
@@ -75,7 +75,7 @@ public class TestNetworkRouterServer extends TestCase {
 		}
 
 		@Override
-		public void receiveData(NetworkEvent data) throws DataHandlerException {
+		public void receiveData(RoutedEvent data) throws DataHandlerException {
 			try {
 				System.err.println(self + " - Setting the value " + data.getContent());
 				futureResponse.get().setValue(self + " - " + data.getContent());
@@ -99,9 +99,9 @@ public class TestNetworkRouterServer extends TestCase {
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
-		final NetworkComponent network01 = NetworkFactory.create(reference01);
+		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent01 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 
 		// ------------------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		System.err.println("Message >> 1");
 		final String content = "Hello , World from Client01!";
-		final NetworkEventImpl event01 = new NetworkEventImpl(content, reference01);
+		final RoutedEventImpl event01 = new RoutedEventImpl(content, reference01);
 		terminalComponent01.getDataSender().sendData(event01);
 		assertEquals(reference01 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 	}
@@ -126,16 +126,16 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final NetworkComponent network01 = NetworkFactory.create(reference01);
+		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 		final ComponentLinkManagerImpl manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent01 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
-		NetworkRouterServerUtils.client(network01, manager01, "localhost", 6667, reference02);
+		RouterSourceServerUtils.client(network01, manager01, "localhost", 6667, reference02);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", NetworkEvent.class, NetworkEvent.class);
-		ecosystem01.addFactory(key01, NetworkRouterServerUtils.serverBinder(network01, manager01));
+		final RegisteredUnitEcosystemKey key01 = UnitEcosystemKeyFactory.getKey("01", RoutedEvent.class, RoutedEvent.class);
+		ecosystem01.addFactory(key01, RouterSourceServerUtils.serverBinder(network01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer01 = new NetServer(6666, ecosystem01.<byte[], byte[]> getBinder(key01));
 		final ExecutorService executor01 = Executors.newSingleThreadExecutor();
@@ -144,15 +144,15 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
-		final NetworkComponent network02 = NetworkFactory.create(reference02);
+		final RouterSourceComponent network02 = RouterSourceFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		manager02.connect(network02, new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference02, futureResponse)));
-		NetworkRouterServerUtils.client(network02, manager02, "localhost", 6666, reference01);
+		manager02.connect(network02, new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference02, futureResponse)));
+		RouterSourceServerUtils.client(network02, manager02, "localhost", 6666, reference01);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02));
+		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", RoutedEvent.class, RoutedEvent.class);
+		ecosystem02.addFactory(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer(6667, ecosystem02.<byte[], byte[]> getBinder(key02));
 		final ExecutorService executor02 = Executors.newSingleThreadExecutor();
@@ -166,7 +166,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		for (int i = 0; i < 2; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
-			final NetworkEventImpl event01 = new NetworkEventImpl(content, reference02);
+			final RoutedEventImpl event01 = new RoutedEventImpl(content, reference02);
 			terminalComponent01.getDataSender().sendData(event01);
 			assertEquals(reference02 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 			futureResponse.set(new FutureResponse<String>());
@@ -194,24 +194,24 @@ public class TestNetworkRouterServer extends TestCase {
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
-		final NetworkComponent network01 = NetworkFactory.create(reference01);
+		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
-		NetworkRouterServerUtils.client(network01, manager01, "localhost", 6667, reference02);
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference01, futureResponse));
+		RouterSourceServerUtils.client(network01, manager01, "localhost", 6667, reference02);
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent01 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
-		final NetworkComponent network02 = NetworkFactory.create(reference02);
+		final RouterSourceComponent network02 = RouterSourceFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		NetworkRouterServerUtils.client(network02, manager02, "localhost", 6668, reference03);
-		manager02.connect(network02, new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference02, futureResponse)));
+		RouterSourceServerUtils.client(network02, manager02, "localhost", 6668, reference03);
+		manager02.connect(network02, new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference02, futureResponse)));
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02));
+		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", RoutedEvent.class, RoutedEvent.class);
+		ecosystem02.addFactory(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer(6667, ecosystem02.<byte[], byte[]> getBinder(key02));
 		final ExecutorService executor02 = Executors.newSingleThreadExecutor();
@@ -220,15 +220,15 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
 		// ------------------------------------------------------------------------------------------------
-		final NetworkComponent network03 = NetworkFactory.create(reference03);
+		final RouterSourceComponent network03 = RouterSourceFactory.create(reference03);
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		final ComponentLinkManagerImpl manager03 = ecosystem03.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent03 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference03, futureResponse));
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent03 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference03, futureResponse));
 		manager03.connect(network03, terminalComponent03);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key03 = UnitEcosystemKeyFactory.getKey("03", NetworkEvent.class, NetworkEvent.class);
-		ecosystem03.addFactory(key03, NetworkRouterServerUtils.serverBinder(network03, manager03));
+		final RegisteredUnitEcosystemKey key03 = UnitEcosystemKeyFactory.getKey("03", RoutedEvent.class, RoutedEvent.class);
+		ecosystem03.addFactory(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer(6668, ecosystem03.<byte[], byte[]> getBinder(key03));
 		final ExecutorService executor03 = Executors.newSingleThreadExecutor();
@@ -239,19 +239,19 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		System.err.println("Message >> 2 -> 3");
-		terminalComponent01.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
 		System.err.println("Message >> 2 -> 3");
-		terminalComponent01.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and reuse opened connections ...
 		System.err.println("Message >> 2 -> 1");
-		terminalComponent03.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client03!", reference02, reference01));
+		terminalComponent03.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client03!", reference02, reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------
@@ -276,24 +276,24 @@ public class TestNetworkRouterServer extends TestCase {
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManagerImpl manager01 = new ComponentLinkManagerImpl();
-		final NetworkComponent network01 = NetworkFactory.create(reference01);
+		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent01 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent01 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
-		NetworkRouterServerUtils.client(network01, manager01, "localhost", 6667, reference02, reference03);
+		RouterSourceServerUtils.client(network01, manager01, "localhost", 6667, reference02, reference03);
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManagerImpl manager02 = new ComponentLinkManagerImpl();
-		final NetworkComponent network02 = NetworkFactory.create(reference02);
+		final RouterSourceComponent network02 = RouterSourceFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
-		manager02.connect(network02, new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference02, futureResponse)));
-		NetworkRouterServerUtils.client(network02, manager02, "localhost", 6668, reference03);
+		manager02.connect(network02, new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference02, futureResponse)));
+		RouterSourceServerUtils.client(network02, manager02, "localhost", 6668, reference03);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", NetworkEvent.class, NetworkEvent.class);
-		ecosystem02.addFactory(key02, NetworkRouterServerUtils.serverBinder(network02, manager02));
+		final RegisteredUnitEcosystemKey key02 = UnitEcosystemKeyFactory.getKey("02", RoutedEvent.class, RoutedEvent.class);
+		ecosystem02.addFactory(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer(6667, ecosystem02.<byte[], byte[]> getBinder(key02));
 		final ExecutorService executor02 = Executors.newSingleThreadExecutor();
@@ -303,15 +303,15 @@ public class TestNetworkRouterServer extends TestCase {
 		// Component 03 definition
 		// ------------------------------------------------------------------------------------------------
 		final ComponentLinkManagerImpl manager03 = new ComponentLinkManagerImpl();
-		final NetworkComponent network03 = NetworkFactory.create(reference03);
+		final RouterSourceComponent network03 = RouterSourceFactory.create(reference03);
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<NetworkEvent, NetworkEvent> terminalComponent03 = new TerminalComponent<NetworkEvent, NetworkEvent>(new Receiver(reference03, futureResponse));
+		final TerminalComponent<RoutedEvent, RoutedEvent> terminalComponent03 = new TerminalComponent<RoutedEvent, RoutedEvent>(new Receiver(reference03, futureResponse));
 		manager03.connect(network03, terminalComponent03);
-		NetworkRouterServerUtils.client(network03, manager03, "localhost", 6667, reference02, reference01);
+		RouterSourceServerUtils.client(network03, manager03, "localhost", 6667, reference02, reference01);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key03 = UnitEcosystemKeyFactory.getKey("03", NetworkEvent.class, NetworkEvent.class);
-		ecosystem03.addFactory(key03, NetworkRouterServerUtils.serverBinder(network03, manager03));
+		final RegisteredUnitEcosystemKey key03 = UnitEcosystemKeyFactory.getKey("03", RoutedEvent.class, RoutedEvent.class);
+		ecosystem03.addFactory(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer(6668, ecosystem03.<byte[], byte[]> getBinder(key03));
 		final ExecutorService executor03 = Executors.newSingleThreadExecutor();
@@ -322,20 +322,20 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		System.err.println("Message >> 3");
-		terminalComponent01.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
 		System.err.println("Message >> 3");
-		terminalComponent01.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and Reuse already opened connections ...
 
 		System.err.println("Message >> 1");
-		terminalComponent03.getDataSender().sendData(new NetworkEventImpl("Hello , World from Client03!", reference01));
+		terminalComponent03.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client03!", reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------

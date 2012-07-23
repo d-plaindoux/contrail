@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.event;
+package org.wolfgang.contrail.component.router.event;
 
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetworkEventImpl implements NetworkEvent, Serializable {
+public class RoutedEventImpl implements RoutedEvent, Serializable {
 
 	/**
 	 * The serialVersionUID attribute
@@ -64,7 +64,7 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	 * @param destination
 	 * @param content
 	 */
-	public NetworkEventImpl(Serializable content, DirectReference... targets) {
+	public RoutedEventImpl(Serializable content, DirectReference... targets) {
 		super();
 		this.source = ReferenceFactory.emptyIndirectReference();
 		this.destination = ReferenceFactory.emptyIndirectReference();
@@ -96,7 +96,7 @@ public class NetworkEventImpl implements NetworkEvent, Serializable {
 	}
 
 	@Override
-	public NetworkEvent sentBy(DirectReference reference) {
+	public RoutedEvent sentBy(DirectReference reference) {
 		this.lastSender = reference;
 		return this;
 	}

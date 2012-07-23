@@ -16,10 +16,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.component;
+
+
 /**
- * Package providing components with multiple sources and/or multiple destination
- *
+ * The <code>MultipleSourceComponent</code> is capable to manage event from a
+ * given source and sending each message to a selected destination based on
+ * criterion. In addition the data can be transformed from a type S to a type D
+ * or vice-versa depending if components communicate using upstream or
+ * downstream network.
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.multiple;
+public interface MultipleSourceComponent<U, D> extends DestinationComponent<U, D>, SourceComponent<U, D> {
+
+	// Nothing more
+
+}

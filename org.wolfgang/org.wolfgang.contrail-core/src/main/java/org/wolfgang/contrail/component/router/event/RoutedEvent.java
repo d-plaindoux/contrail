@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -16,7 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.event;
+package org.wolfgang.contrail.component.router.event;
 
 import java.io.Serializable;
 
@@ -30,8 +31,7 @@ import org.wolfgang.contrail.reference.IndirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface NetworkEvent {
-
+public interface RoutedEvent {
 	/**
 	 * Method providing the previous reference
 	 * 
@@ -44,7 +44,7 @@ public interface NetworkEvent {
 	 * 
 	 * @return a direct reference
 	 */
-	NetworkEvent sentBy(DirectReference reference);
+	RoutedEvent sentBy(DirectReference reference);
 
 	/**
 	 * @return the target reference

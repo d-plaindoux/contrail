@@ -16,25 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.multiple;
-
 /**
- * The <code>DataFilter</code> is the basic mechanism used for data filtering
- * mechanism. This is mainly used for multiplexer, demultiplexer and router
- * components.
- * 
+ * Main package providing protocol events 
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataFilter<U> {
-
-	/**
-	 * Predicate called whether a given data must be filtered.
-	 * 
-	 * @param data
-	 *            The data to be accepted or not
-	 * @return true if the filter accept the information; false otherwise
-	 */
-	boolean accept(U data);
-
-}
+package org.wolfgang.contrail.component.router.event;

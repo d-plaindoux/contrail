@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
