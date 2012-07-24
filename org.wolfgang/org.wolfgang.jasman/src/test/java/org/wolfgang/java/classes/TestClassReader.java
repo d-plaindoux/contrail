@@ -25,10 +25,11 @@ import java.net.URL;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import junit.framework.TestCase;
+
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
-
-import junit.framework.TestCase;
+import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
 
 /**
  * <code>TestClassReader</code>
@@ -45,7 +46,7 @@ public class TestClassReader extends TestCase {
 		return 1;
 	}
 
-	public void testNominal01() throws IOException {
+	public void testAnnotations01() throws IOException {
 		final ClassLoader classLoader = TestClassReader.class.getClassLoader();
 		final URL resource = classLoader.getResource("org/wolfgang/java/classes/TestClassReader.class");
 
@@ -53,17 +54,40 @@ public class TestClassReader extends TestCase {
 
 		final InputStream openStream = resource.openStream();
 
+		Annotation deprecatedClass = null;
+		Annotation xmlClassElement = null;
+		Annotation xmlMethodAttribute = null;
+		Annotation deprecatedParameter = null;
+
 		try {
 			final ClassDescription classDescription = ClassReader.getClassDescription(openStream);
-
 			for (ClassAttribute classAttribute : classDescription.getAttributes()) {
 				if (Coercion.canCoerce(classAttribute, VisibleAnnotations.class)) {
 					final VisibleAnnotations annotations = Coercion.coerce(classAttribute, VisibleAnnotations.class);
-					assertNotNull(annotations.searchByType(Deprecated.class.getCanonicalName()));
-					assertNotNull(annotations.searchByType(XmlRootElement.class.getCanonicalName()));
+					deprecatedClass = annotations.searchByType(Deprecated.class.getCanonicalName());
+					xmlClassElement = annotations.searchByType(XmlRootElement.class.getCanonicalName());
 				}
-
 			}
+
+			for (ClassMethod classMethod : classDescription.getMethods()) {
+				for (ClassAttribute classAttribute : classMethod.getAttributes()) {
+					if (Coercion.canCoerce(classAttribute, VisibleAnnotations.class)) {
+						final VisibleAnnotations annotations = Coercion.coerce(classAttribute, VisibleAnnotations.class);
+						xmlMethodAttribute = annotations.searchByType(XmlAttribute.class.getCanonicalName());
+					} else if (Coercion.canCoerce(classAttribute, VisibleParametersAnnotations.class)) {
+						final VisibleParametersAnnotations annotations = Coercion.coerce(classAttribute, VisibleParametersAnnotations.class);
+						deprecatedParameter = annotations.searchByType(1, Deprecated.class.getCanonicalName());
+					}
+				}
+			}
+
+			assertNotNull(deprecatedClass);
+			assertNotNull(xmlClassElement);
+			assertNotNull(deprecatedParameter);
+			assertNotNull(xmlMethodAttribute);
+
+			assertNotNull(xmlMethodAttribute.findByName("name"));
+			assertNotNull(xmlMethodAttribute.findByName("namespace"));
 		} finally {
 			openStream.close();
 		}

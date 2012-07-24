@@ -34,7 +34,7 @@ public interface AnnotationElementValue {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class ObjectValue implements AnnotationElementValue {
+	public class ObjectValue implements AnnotationElementValue {
 
 		private final ConstantPool constantPool;
 		private final int value;
@@ -52,7 +52,7 @@ public interface AnnotationElementValue {
 		}
 
 		/**
-		 * Return the value ofvalue
+		 * Return the value of value
 		 * 
 		 * @return the value
 		 */
@@ -72,7 +72,7 @@ public interface AnnotationElementValue {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class EnumValue implements AnnotationElementValue {
+	public class EnumValue implements AnnotationElementValue {
 
 		private final ConstantPool constantPool;
 		private final int type;
@@ -122,7 +122,7 @@ public interface AnnotationElementValue {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class ClassValue implements AnnotationElementValue {
+	public class ClassValue implements AnnotationElementValue {
 
 		private final ConstantPool constantPool;
 		private final int value;
@@ -160,7 +160,7 @@ public interface AnnotationElementValue {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class AnnotationValue implements AnnotationElementValue {
+	public class AnnotationValue implements AnnotationElementValue {
 
 		private final Annotation annotation;
 
@@ -196,7 +196,7 @@ public interface AnnotationElementValue {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	class ArrayValue implements AnnotationElementValue {
+	public class ArrayValue implements AnnotationElementValue {
 		private final AnnotationElementValue[] values;
 
 		/**

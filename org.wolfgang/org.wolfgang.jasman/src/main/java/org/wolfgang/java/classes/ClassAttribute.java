@@ -38,6 +38,12 @@ public interface ClassAttribute {
 	String toExternal();
 
 	/**
+	 * @param visitor
+	 * @return
+	 */
+	<E> E visit(ClassAttributeVisitor<E> visitor);
+
+	/**
 	 * <code>AbstractClassAttribute</code>
 	 * 
 	 * @author Didier Plaindoux
@@ -82,6 +88,11 @@ public interface ClassAttribute {
 		public String toExternal() {
 			return "Attribute <" + getName() + ">[(" + value.length + ") ...]";
 		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
+		}
 	}
 
 	/**
@@ -105,6 +116,11 @@ public interface ClassAttribute {
 		@Override
 		public String toExternal() {
 			return "Undecoded <" + getName() + ">[(" + value.length + ") ...]";
+		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
 		}
 	}
 
@@ -132,6 +148,11 @@ public interface ClassAttribute {
 				return "<unlink> Signature [" + signature + "]";
 			}
 		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
+		}
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -157,6 +178,11 @@ public interface ClassAttribute {
 				return "<unlink> SourceFile [" + sourcefile + "]";
 			}
 
+		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
 		}
 	}
 
@@ -217,6 +243,11 @@ public interface ClassAttribute {
 			}
 
 		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
+		}
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -236,7 +267,7 @@ public interface ClassAttribute {
 		}
 
 		/**
-		 * Return the value ofannotations
+		 * Return the value o fannotations
 		 * 
 		 * @return the annotations
 		 */
@@ -262,6 +293,26 @@ public interface ClassAttribute {
 				return "<unlink> RuntimeVisibleAnnotations [...]";
 			}
 
+		}
+
+		@Override
+		public <E> E visit(ClassAttributeVisitor<E> visitor) {
+			return visitor.visit(this);
+		}
+
+		/**
+		 * @param i
+		 * @param canonicalName
+		 * @return
+		 */
+		public Annotation searchByType(int i, String className) {
+			for (Annotation annotation : parameteresAnnotations[i]) {
+				if (annotation.getName().equals(className)) {
+					return annotation;
+				}
+			}
+
+			return null;
 		}
 	}
 }

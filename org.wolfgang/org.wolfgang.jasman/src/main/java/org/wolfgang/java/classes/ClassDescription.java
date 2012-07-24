@@ -36,37 +36,37 @@ public interface ClassDescription {
 	int getAccessFlags();
 
 	/**
-	 * @return
+	 * @return the major version
 	 */
 	int getMajorVersion();
 
 	/**
-	 * @return
+	 * @return the minor version
 	 */
 	int getMinorVersion();
 
 	/**
-	 * @return
+	 * @return the constant pool
 	 */
 	ConstantPool getConstantPool();
 
 	/**
-	 * @return
+	 * @return the class name
 	 */
 	String getClassName();
 
 	/**
-	 * @return
+	 * @return the superclass name
 	 */
 	String getSuperClassName();
 
 	/**
-	 * @return
+	 * @return the interfaces name
 	 */
 	String[] getInterfacesName();
 
 	/**
-	 * @return
+	 * @return the declared types
 	 */
 	String[] getDeclaredTypes();
 
@@ -90,12 +90,12 @@ public interface ClassDescription {
 	ClassMethod findMethodByName(String name) throws DefinitionNotFound;
 
 	/**
-	 * @return
+	 * @return the methods
 	 */
 	ClassMethod[] getMethods();
 
 	/**
-	 * @return
+	 * @return the attributes
 	 */
 	ClassAttribute[] getAttributes();
 

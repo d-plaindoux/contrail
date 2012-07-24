@@ -49,13 +49,20 @@ final class AnnotationImpl implements Annotation {
 		return TypeDecoder.getType(this.constantPool.getAt(name).toExternal());
 	}
 
-	/**
-	 * Return the value of parameters
-	 * 
-	 * @return the parameters
-	 */
+	@Override
 	public AnnotationElement[] getParameters() {
 		return parameters;
+	}
+
+	@Override
+	public AnnotationElement findByName(String name) {
+		for (AnnotationElement element : parameters) {
+			if (element.getName().equals(name)) {
+				return element;
+			}
+		}
+
+		return null;
 	}
 
 	@Override

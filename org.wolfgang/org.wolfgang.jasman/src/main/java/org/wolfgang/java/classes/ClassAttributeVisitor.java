@@ -18,37 +18,49 @@
 
 package org.wolfgang.java.classes;
 
+import static org.wolfgang.java.classes.ClassAttribute.*;
+
 /**
- * <code>Annotation</code>
+ * <code>AnnotationFilter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Annotation {
+public interface ClassAttributeVisitor<E> {
 
 	/**
+	 * @param attribute
 	 * @return
 	 */
-	String getName();
+	E visit(VisibleAnnotations attribute);
 
 	/**
-	 * Return the value of parameters
-	 * 
-	 * @return the parameters
-	 */
-	AnnotationElement[] getParameters();
-
-	/**
-	 * Method called whether an annotation element must be retrieved
-	 * 
-	 * @param name
+	 * @param attribute
 	 * @return
 	 */
-	AnnotationElement findByName(String name);
+	E visit(VisibleParametersAnnotations attribute);
 
 	/**
-	 * @return a string representation
+	 * @param attribute
+	 * @return
 	 */
-	String toExternal();
+	E visit(Code attribute);
 
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	E visit(Generic attribute);
+
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	E visit(Signature attribute);
+
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	E visit(SourceFile attribute);
 }
