@@ -36,11 +36,11 @@ public class TestModelChecker extends TestCase {
 	public void testNominal01() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
-		final Terminal terminal = new Terminal();
+		final TerminalModel terminal = new TerminalModel();
 		terminal.setName("A");
 		ecosystem.add(terminal);
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("A");
 		ecosystem.add(decoded);
 
@@ -53,12 +53,12 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("A B");
 		ecosystem.add(decoded);
 
@@ -71,18 +71,18 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C", "D" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("A C B D");
 		ecosystem.add(decoded);
 
@@ -95,18 +95,18 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("A C B D");
 		ecosystem.add(decoded);
 
@@ -120,18 +120,18 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("A B D");
 		ecosystem.add(decoded);
 
@@ -145,18 +145,18 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Binder decoded = new Binder();
+		final BinderModel decoded = new BinderModel();
 		decoded.setFlow("B D");
 		ecosystem.add(decoded);
 
@@ -171,19 +171,19 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C", "D" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Router router = new Router();
-		final Client client = new Client();
+		final RouterModel router = new RouterModel();
+		final ClientModel client = new ClientModel();
 		client.setFlow("A B C D");
 
 		router.add(client);
@@ -197,20 +197,20 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C", "D" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		for (String flow : new String[] { "A C", "B D" }) {
-			final Client client = new Client();
+			final ClientModel client = new ClientModel();
 			client.setFlow(flow);
 			router.add(client);
 		}
@@ -226,20 +226,20 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C", "D" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		for (String flow : new String[] { "b A c=C", "b=B D c" }) {
-			final Client client = new Client();
+			final ClientModel client = new ClientModel();
 			client.setFlow(flow);
 			router.add(client);
 		}
@@ -255,20 +255,20 @@ public class TestModelChecker extends TestCase {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
-			final Terminal terminal = new Terminal();
+			final TerminalModel terminal = new TerminalModel();
 			terminal.setName(s);
 			ecosystem.add(terminal);
 		}
 
 		for (String s : new String[] { "C", "D" }) {
-			final Pipeline pipeline = new Pipeline();
+			final PipelineModel pipeline = new PipelineModel();
 			pipeline.setName(s);
 			ecosystem.add(pipeline);
 		}
 
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		for (String flow : new String[] { "b A c=C", "B D c" }) {
-			final Client client = new Client();
+			final ClientModel client = new ClientModel();
 			client.setFlow(flow);
 			router.add(client);
 		}

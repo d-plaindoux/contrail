@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -47,7 +47,7 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RouterSourceComponent extends AbstractComponent implements DestinationComponent<RoutedEvent, RoutedEvent>, MultipleSourceComponent<RoutedEvent, RoutedEvent> {
+public class RouterSourceComponent extends AbstractComponent implements DestinationComponent<Event, Event>, MultipleSourceComponent<Event, Event> {
 
 	/**
 	 * The multiplexer component
@@ -57,7 +57,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private DestinationComponentLink<RoutedEvent, RoutedEvent> destinationLink;
+	private DestinationComponentLink<Event, Event> destinationLink;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -67,14 +67,14 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, SourceComponentLink<RoutedEvent, RoutedEvent>> sourceLinks;
+	private final Map<ComponentId, SourceComponentLink<Event, Event>> sourceLinks;
 
 	/**
 	 * Initialization
 	 */
 	{
 		this.sourceFilters = new HashMap<ComponentId, DirectReference>();
-		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<RoutedEvent, RoutedEvent>>();
+		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<Event, Event>>();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 * @return the destinationLink
 	 * @throws ComponentNotConnectedException
 	 */
-	DestinationComponent<RoutedEvent, RoutedEvent> getDestination() throws ComponentNotConnectedException {
+	DestinationComponent<Event, Event> getDestination() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -119,7 +119,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getDestination().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationLink = handler;
@@ -151,7 +151,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		for (SourceComponentLink<RoutedEvent, RoutedEvent> source : this.sourceLinks.values()) {
+		for (SourceComponentLink<Event, Event> source : this.sourceLinks.values()) {
 			source.getSource().closeUpStream();
 		}
 	}
@@ -162,7 +162,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectedException {
+	public ComponentLink connectSource(SourceComponentLink<Event, Event> handler) throws ComponentConnectedException {
 		assert handler != null;
 
 		final ComponentId componentId = handler.getSource().getComponentId();
@@ -189,12 +189,12 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	}
 
 	@Override
-	public UpStreamDataHandler<RoutedEvent> getUpStreamDataHandler() {
+	public UpStreamDataHandler<Event> getUpStreamDataHandler() {
 		return this.streamStation;
 	}
 
 	@Override
-	public DownStreamDataHandler<RoutedEvent> getDownStreamDataHandler() {
+	public DownStreamDataHandler<Event> getDownStreamDataHandler() {
 		return this.streamStation;
 	}
 
@@ -213,8 +213,8 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 * @return an source component
 	 * @throws ComponentNotConnectedException
 	 */
-	public SourceComponent<RoutedEvent, RoutedEvent> getSource(ComponentId componentId) throws ComponentNotConnectedException {
-		final SourceComponentLink<RoutedEvent, RoutedEvent> sourceComponentLink = this.sourceLinks.get(componentId);
+	public SourceComponent<Event, Event> getSource(ComponentId componentId) throws ComponentNotConnectedException {
+		final SourceComponentLink<Event, Event> sourceComponentLink = this.sourceLinks.get(componentId);
 
 		if (ComponentLinkFactory.isUndefined(sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());

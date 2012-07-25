@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationServer extends TestCase {
 
 	public void testNominal01() {
-		final Server server = new Server();
+		final ServerModel server = new ServerModel();
 		try {
 			server.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationServer extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Server server = new Server();
+		final ServerModel server = new ServerModel();
 		try {
 			server.setFlow("A");
 			server.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationServer extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Server server = new Server();
+		final ServerModel server = new ServerModel();
 		try {
 			server.setFlow("A");
 			server.setEndpoint("ws://localhost:2666");
@@ -62,7 +62,7 @@ public class TestModelValidationServer extends TestCase {
 	}
 
 	public void testNominal04() {
-		final Server server = new Server();
+		final ServerModel server = new ServerModel();
 		try {
 			server.setFactory("a.b.c");
 			server.setFlow("A");

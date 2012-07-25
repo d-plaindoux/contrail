@@ -24,39 +24,35 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.wolfgang.common.message.MessagesProvider;
 
 /**
- * <code>Router</code>
+ * <code>Component</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-@XmlSeeAlso({ Binder.class, Client.class })
-public class Router implements Validation {
+@XmlRootElement(name = "terminal")
+public class TerminalModel implements Validation {
 
 	private String name;
 	private String factory;
-	private String self;
 	private List<String> parameters;
-	private List<Client> clients;
 
 	{
-		this.clients = new ArrayList<Client>();
+		this.parameters = new ArrayList<String>();
 	}
 
 	/**
 	 * Constructor
 	 */
-	public Router() {
+	public TerminalModel() {
 		super();
 	}
 
 	/**
-	 * Return the value ofname
+	 * Return the value of name
 	 * 
 	 * @return the name
 	 */
@@ -96,41 +92,11 @@ public class Router implements Validation {
 	}
 
 	/**
-	 * Return the value of entry
-	 * 
-	 * @return the entry
-	 */
-	@XmlElement
-	public String getSelf() {
-		return self;
-	}
-
-	/**
-	 * Set the value of entry
-	 * 
-	 * @param self
-	 *            the entry to set
-	 */
-	public void setSelf(String self) {
-		this.self = self;
-	}
-
-	/**
-	 * Set the value of clients
-	 * 
-	 * @param clients
-	 *            the clients to set
-	 */
-	public void setClients(List<Client> clients) {
-		this.clients = clients;
-	}
-
-	/**
-	 * Return the value of parameters
+	 * Return the value ofparameters
 	 * 
 	 * @return the parameters
 	 */
-	@XmlElement(name = " param")
+	@XmlElement(name = "param")
 	public List<String> getParameters() {
 		return parameters;
 	}
@@ -138,31 +104,11 @@ public class Router implements Validation {
 	/**
 	 * Set the value of parameters
 	 * 
-	 * @param parameter
+	 * @param parameters
 	 *            the parameters to set
 	 */
 	public void add(String parameter) {
 		this.parameters.add(parameter);
-	}
-
-	/**
-	 * Return the value of clients
-	 * 
-	 * @return the clients
-	 */
-	@XmlElement(name = "client")
-	public List<Client> getClients() {
-		return clients;
-	}
-
-	/**
-	 * Set the value of clients
-	 * 
-	 * @param clients
-	 *            the clients to set
-	 */
-	public void add(Client client) {
-		this.clients.add(client);
 	}
 
 	@Override
@@ -171,13 +117,6 @@ public class Router implements Validation {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
 		} else if (this.factory == null) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(name));
-		} else if (this.self == null) {
-			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "self.undefined").format(name));
-		} else {
-			for (Client client : clients) {
-				client.validate();
-			}
 		}
 	}
-
 }

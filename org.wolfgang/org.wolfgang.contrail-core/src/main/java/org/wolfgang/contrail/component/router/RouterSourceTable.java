@@ -20,7 +20,7 @@ package org.wolfgang.contrail.component.router;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 import org.wolfgang.contrail.reference.ReferenceTableImpl;
@@ -52,7 +52,7 @@ public class RouterSourceTable extends ReferenceTableImpl<RouterSourceTable.Entr
 		 * @return
 		 * @throws CannotCreateComponentException
 		 */
-		SourceComponent<RoutedEvent, RoutedEvent> create() throws CannotCreateComponentException;
+		SourceComponent<Event, Event> create() throws CannotCreateComponentException;
 	}
 
 	/**

@@ -38,7 +38,7 @@ public interface TransducerFactory<U, D> {
 	 * @version 1.0
 	 */
 	public static class Loader {
-		public static TransducerFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws CodecFactoryCreationException {
+		public static TransducerFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws TransducerFactoryCreationException {
 			try {
 				final Class<?> codec = loader.loadClass(name);
 				try {
@@ -48,7 +48,7 @@ public interface TransducerFactory<U, D> {
 					return (TransducerFactory<?, ?>) codec.newInstance();
 				}
 			} catch (Exception e) {
-				throw new CodecFactoryCreationException(e);
+				throw new TransducerFactoryCreationException(e);
 			}
 		}
 	}

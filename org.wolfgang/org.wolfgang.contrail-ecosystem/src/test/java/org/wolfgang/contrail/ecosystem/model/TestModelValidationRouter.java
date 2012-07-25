@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationRouter extends TestCase {
 
 	public void testNominal01() {
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		try {
 			router.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationRouter extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		try {
 			router.setName("A");
 			router.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationRouter extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		try {
 			router.setName("A");
 			router.setFactory("a.b.c");
@@ -62,7 +62,7 @@ public class TestModelValidationRouter extends TestCase {
 	}
 
 	public void testNominal04() {
-		final Router router = new Router();
+		final RouterModel router = new RouterModel();
 		try {
 			router.setName("A");
 			router.setFactory("a.b.c");

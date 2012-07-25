@@ -31,7 +31,7 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
@@ -46,14 +46,14 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  */
 public class TestNetworkComponent extends TestCase {
 
-	private SourceComponent<RoutedEvent, RoutedEvent> getSourceComponent() {
-		return new InitialComponent<RoutedEvent, RoutedEvent>(new DataReceiver<RoutedEvent>() {
+	private SourceComponent<Event, Event> getSourceComponent() {
+		return new InitialComponent<Event, Event>(new DataReceiver<Event>() {
 			@Override
 			public void close() throws IOException {
 			}
 
 			@Override
-			public void receiveData(RoutedEvent data) throws DataHandlerException {
+			public void receiveData(Event data) throws DataHandlerException {
 			}
 		});
 	}
@@ -62,12 +62,12 @@ public class TestNetworkComponent extends TestCase {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
-		final SourceComponent<RoutedEvent, RoutedEvent> sourceComponent = getSourceComponent();
+		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
 		networkRouterTable.insert(new RouterSourceTable.Entry() {
 			@Override
-			public SourceComponent<RoutedEvent, RoutedEvent> create() {
+			public SourceComponent<Event, Event> create() {
 				return sourceComponent;
 			}
 
@@ -84,12 +84,12 @@ public class TestNetworkComponent extends TestCase {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
-		final SourceComponent<RoutedEvent, RoutedEvent> sourceComponent = getSourceComponent();
+		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 
 		try {
 			networkRouterTable.insert(new RouterSourceTable.Entry() {
 				@Override
-				public SourceComponent<RoutedEvent, RoutedEvent> create() {
+				public SourceComponent<Event, Event> create() {
 					return sourceComponent;
 				}
 
@@ -105,7 +105,7 @@ public class TestNetworkComponent extends TestCase {
 		try {
 			networkRouterTable.insert(new RouterSourceTable.Entry() {
 				@Override
-				public SourceComponent<RoutedEvent, RoutedEvent> create() {
+				public SourceComponent<Event, Event> create() {
 					return sourceComponent;
 				}
 
@@ -124,12 +124,12 @@ public class TestNetworkComponent extends TestCase {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
-		final SourceComponent<RoutedEvent, RoutedEvent> sourceComponent = getSourceComponent();
+		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
 
 		networkRouterTable.insert(new RouterSourceTable.Entry() {
 			@Override
-			public SourceComponent<RoutedEvent, RoutedEvent> create() {
+			public SourceComponent<Event, Event> create() {
 				return sourceComponent;
 			}
 

@@ -30,8 +30,8 @@ import org.wolfgang.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Server implements Validation {
+@XmlRootElement(name = "server")
+public class ServerModel implements Validation {
 
 	private String factory;
 	private String endpoint;
@@ -40,7 +40,7 @@ public class Server implements Validation {
 	/**
 	 * Constructor
 	 */
-	public Server() {
+	public ServerModel() {
 		super();
 	}
 

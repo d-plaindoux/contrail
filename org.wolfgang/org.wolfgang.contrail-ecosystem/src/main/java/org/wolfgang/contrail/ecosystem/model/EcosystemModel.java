@@ -36,24 +36,24 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @version 1.0
  */
 @XmlRootElement(name = "ecosystem")
-@XmlSeeAlso({ Binder.class, Pipeline.class, Router.class, Terminal.class, Server.class })
+@XmlSeeAlso({ BinderModel.class, PipelineModel.class, RouterModel.class, TerminalModel.class, ServerModel.class })
 public class EcosystemModel implements Validation {
 
 	private String main;
-	private List<Flow> flows;
-	private List<Binder> binders;
-	private List<Pipeline> pipelines;
-	private List<Router> routers;
-	private List<Terminal> terminals;
-	private List<Server> servers;
+	private List<FlowModel> flows;
+	private List<BinderModel> binders;
+	private List<PipelineModel> pipelines;
+	private List<RouterModel> routers;
+	private List<TerminalModel> terminals;
+	private List<ServerModel> servers;
 
 	{
-		this.flows = new ArrayList<Flow>();
-		this.binders = new ArrayList<Binder>();
-		this.pipelines = new ArrayList<Pipeline>();
-		this.routers = new ArrayList<Router>();
-		this.terminals = new ArrayList<Terminal>();
-		this.servers = new ArrayList<Server>();
+		this.flows = new ArrayList<FlowModel>();
+		this.binders = new ArrayList<BinderModel>();
+		this.pipelines = new ArrayList<PipelineModel>();
+		this.routers = new ArrayList<RouterModel>();
+		this.terminals = new ArrayList<TerminalModel>();
+		this.servers = new ArrayList<ServerModel>();
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class EcosystemModel implements Validation {
 	 * @return the flows
 	 */
 	@XmlElement(name = "flow")
-	public List<Flow> getFlows() {
+	public List<FlowModel> getFlows() {
 		return flows;
 	}
 
@@ -99,7 +99,7 @@ public class EcosystemModel implements Validation {
 	 * @param flows
 	 *            the flows to set
 	 */
-	public void add(Flow flow) {
+	public void add(FlowModel flow) {
 		this.flows.add(flow);
 	}
 
@@ -109,7 +109,7 @@ public class EcosystemModel implements Validation {
 	 * @return the entries
 	 */
 	@XmlElement(name = "binder")
-	public List<Binder> getBinders() {
+	public List<BinderModel> getBinders() {
 		return binders;
 	}
 
@@ -119,7 +119,7 @@ public class EcosystemModel implements Validation {
 	 * @param binders
 	 *            the entries to set
 	 */
-	public void add(Binder entry) {
+	public void add(BinderModel entry) {
 		this.binders.add(entry);
 	}
 
@@ -129,7 +129,7 @@ public class EcosystemModel implements Validation {
 	 * @return the pipelines
 	 */
 	@XmlElement(name = "pipeline")
-	public List<Pipeline> getPipelines() {
+	public List<PipelineModel> getPipelines() {
 		return pipelines;
 	}
 
@@ -139,7 +139,7 @@ public class EcosystemModel implements Validation {
 	 * @param transducers
 	 *            the pipelines to set
 	 */
-	public void add(Pipeline transducer) {
+	public void add(PipelineModel transducer) {
 		this.pipelines.add(transducer);
 	}
 
@@ -149,7 +149,7 @@ public class EcosystemModel implements Validation {
 	 * @return the routers
 	 */
 	@XmlElement(name = "router")
-	public List<Router> getRouters() {
+	public List<RouterModel> getRouters() {
 		return routers;
 	}
 
@@ -159,7 +159,7 @@ public class EcosystemModel implements Validation {
 	 * @param routers
 	 *            the routers to set
 	 */
-	public void add(Router router) {
+	public void add(RouterModel router) {
 		this.routers.add(router);
 	}
 
@@ -169,7 +169,7 @@ public class EcosystemModel implements Validation {
 	 * @return the terminals
 	 */
 	@XmlElement(name = "terminal")
-	public List<Terminal> getTerminals() {
+	public List<TerminalModel> getTerminals() {
 		return terminals;
 	}
 
@@ -179,7 +179,7 @@ public class EcosystemModel implements Validation {
 	 * @param terminals
 	 *            the terminals to set
 	 */
-	public void add(Terminal terminal) {
+	public void add(TerminalModel terminal) {
 		this.terminals.add(terminal);
 	}
 
@@ -189,7 +189,7 @@ public class EcosystemModel implements Validation {
 	 * @return the servers
 	 */
 	@XmlElement(name = "server")
-	public List<Server> getServers() {
+	public List<ServerModel> getServers() {
 		return servers;
 	}
 
@@ -199,33 +199,33 @@ public class EcosystemModel implements Validation {
 	 * @param servers
 	 *            the servers to set
 	 */
-	public void add(Server server) {
+	public void add(ServerModel server) {
 		this.servers.add(server);
 	}
 
 	@Override
 	public void validate() throws ValidationException {
-		for (Terminal terminal : terminals) {
+		for (TerminalModel terminal : terminals) {
 			terminal.validate();
 		}
 
-		for (Pipeline pipeline : pipelines) {
+		for (PipelineModel pipeline : pipelines) {
 			pipeline.validate();
 		}
 
-		for (Router router : routers) {
+		for (RouterModel router : routers) {
 			router.validate();
 		}
 
-		for (Server server : servers) {
+		for (ServerModel server : servers) {
 			server.validate();
 		}
 
-		for (Binder binder : binders) {
+		for (BinderModel binder : binders) {
 			binder.validate();
 		}
 
-		for (Flow flow : flows) {
+		for (FlowModel flow : flows) {
 			flow.validate();
 		}
 	}

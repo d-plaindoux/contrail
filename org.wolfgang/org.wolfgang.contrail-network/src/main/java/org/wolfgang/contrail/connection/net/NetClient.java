@@ -20,8 +20,8 @@ package org.wolfgang.contrail.connection.net;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -30,35 +30,33 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * The <code>NetClient</code> provides a client implementation using
- * standard libraries like sockets and server sockets. The current
- * implementation don't use the new IO libraries and select mechanism. As a
- * consequence this implementation is not meant to be scalable as required for
- * modern framework like web portal. Nevertheless this can be enough for an
- * optimized network layer relaying on federation network links between
- * components particularly on presence of multiple hop network links.
+ * The <code>NetClient</code> provides a client implementation using standard
+ * libraries like sockets and server sockets. The current implementation don't
+ * use the new IO libraries and select mechanism. As a consequence this
+ * implementation is not meant to be scalable as required for modern framework
+ * like web portal. Nevertheless this can be enough for an optimized network
+ * layer relaying on federation network links between components particularly on
+ * presence of multiple hop network links.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetClient implements Closeable {
+@ContrailClient(scheme = "tcp")
+public class NetClient implements Client, Closeable {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
-
-	/**
-	 * De-multiplexer component
-	 */
-	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Network.Client");
@@ -79,9 +77,8 @@ public class NetClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetClient(DataSenderFactory<byte[], byte[]> factory) {
+	public NetClient() {
 		super();
-		this.factory = factory;
 	}
 
 	/**
@@ -91,13 +88,13 @@ public class NetClient implements Closeable {
 	 *            The server internet address
 	 * @param port
 	 *            The server port
-	 * @return 
+	 * @return
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public Future<Void> connect(InetAddress address, int port) throws IOException, CannotCreateDataSenderException {
-		final Socket client = new Socket(address, port);
+	public Future<Void> connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws IOException, CannotCreateDataSenderException {
+		final Socket client = new Socket(uri.getHost(), uri.getPort());
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
@@ -116,7 +113,7 @@ public class NetClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
+		final DataSender<byte[]> dataSender = factory.create(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

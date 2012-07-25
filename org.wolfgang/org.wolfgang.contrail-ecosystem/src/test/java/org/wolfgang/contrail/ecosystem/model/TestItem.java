@@ -20,7 +20,7 @@ package org.wolfgang.contrail.ecosystem.model;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.ecosystem.model.Flow.Item;
+import org.wolfgang.contrail.ecosystem.model.FlowModel.Item;
 
 /**
  * <code>TestItem</code>
@@ -31,7 +31,7 @@ import org.wolfgang.contrail.ecosystem.model.Flow.Item;
 public class TestItem extends TestCase {
 
 	public void testItem01() {
-		final Item[] decompose = Flow.decompose("A");
+		final Item[] decompose = FlowModel.decompose("A");
 		assertEquals(1, decompose.length);
 		assertFalse(decompose[0].asAlias());
 		assertEquals("A", decompose[0].getName());
@@ -39,7 +39,7 @@ public class TestItem extends TestCase {
 	}
 
 	public void testItem02() {
-		final Item[] decompose = Flow.decompose("A B");
+		final Item[] decompose = FlowModel.decompose("A B");
 		assertEquals(2, decompose.length);
 		assertFalse(decompose[0].asAlias());
 		assertEquals("A", decompose[0].getName());
@@ -50,7 +50,7 @@ public class TestItem extends TestCase {
 	}
 	
 	public void testItem03() {
-		final Item[] decompose = Flow.decompose("a=A");
+		final Item[] decompose = FlowModel.decompose("a=A");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
 		assertEquals("a", decompose[0].getAlias());
@@ -59,7 +59,7 @@ public class TestItem extends TestCase {
 	}	
 
 	public void testItem04() {
-		final Item[] decompose = Flow.decompose("a=A()");
+		final Item[] decompose = FlowModel.decompose("a=A()");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
 		assertEquals("a", decompose[0].getAlias());
@@ -68,7 +68,7 @@ public class TestItem extends TestCase {
 	}	
 
 	public void testItem05() {
-		final Item[] decompose = Flow.decompose("a=A(1)");
+		final Item[] decompose = FlowModel.decompose("a=A(1)");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
 		assertEquals("a", decompose[0].getAlias());
@@ -78,7 +78,7 @@ public class TestItem extends TestCase {
 	}	
 
 	public void testItem06() {
-		final Item[] decompose = Flow.decompose("a=A(1,dd)");
+		final Item[] decompose = FlowModel.decompose("a=A(1,dd)");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
 		assertEquals("a", decompose[0].getAlias());

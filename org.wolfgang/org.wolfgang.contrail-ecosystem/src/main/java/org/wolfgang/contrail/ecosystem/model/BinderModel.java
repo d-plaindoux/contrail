@@ -31,8 +31,8 @@ import org.wolfgang.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Binder implements Validation {
+@XmlRootElement(name = "binder")
+public class BinderModel implements Validation {
 
 	private String name;
 	private String flow;
@@ -42,7 +42,7 @@ public class Binder implements Validation {
 	/**
 	 * Constructor
 	 */
-	public Binder() {
+	public BinderModel() {
 		super();
 	}
 

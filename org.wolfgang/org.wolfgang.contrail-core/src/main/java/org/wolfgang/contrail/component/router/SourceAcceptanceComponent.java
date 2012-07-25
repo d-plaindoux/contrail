@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -45,11 +45,11 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class SourceAcceptanceComponent extends AbstractComponent implements PipelineComponent<RoutedEvent, RoutedEvent, RoutedEvent, RoutedEvent> {
+public class SourceAcceptanceComponent extends AbstractComponent implements PipelineComponent<Event, Event, Event, Event> {
 
-	private SourceComponentLink<RoutedEvent, RoutedEvent> sourceComponentLink;
-	private DestinationComponentLink<RoutedEvent, RoutedEvent> destinationComponentLink;
-	private UpStreamDataHandler<RoutedEvent> intermediateUpStreamHandler;
+	private SourceComponentLink<Event, Event> sourceComponentLink;
+	private DestinationComponentLink<Event, Event> destinationComponentLink;
+	private UpStreamDataHandler<Event> intermediateUpStreamHandler;
 
 	private RouterSourceComponent networkComponent;
 
@@ -76,18 +76,18 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public UpStreamDataHandler<RoutedEvent> getUpStreamDataHandler() {
+	public UpStreamDataHandler<Event> getUpStreamDataHandler() {
 		if (intermediateUpStreamHandler == null) {
-			intermediateUpStreamHandler = new UpStreamDataHandler<RoutedEvent>() {
+			intermediateUpStreamHandler = new UpStreamDataHandler<Event>() {
 				@Override
-				public void handleData(RoutedEvent data) throws DataHandlerException {
+				public void handleData(Event data) throws DataHandlerException {
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
 						final DirectReference receiverReference = networkComponent.getSelfReference();
 						final ComponentLinkManager destinationComponentLinkManager = destinationComponentLink.getComponentLinkManager();
-						final SourceComponent<RoutedEvent, RoutedEvent> source = sourceComponentLink.getSource();
-						final DestinationComponent<RoutedEvent, RoutedEvent> destination = destinationComponentLink.getDestination();
+						final SourceComponent<Event, Event> source = sourceComponentLink.getSource();
+						final DestinationComponent<Event, Event> destination = destinationComponentLink.getDestination();
 
 						sourceComponentLink.dispose();
 						destinationComponentLink.dispose();
@@ -129,8 +129,8 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
-		final SourceComponent<RoutedEvent, RoutedEvent> source = handler.getSource();
+	public ComponentLink connectSource(SourceComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
+		final SourceComponent<Event, Event> source = handler.getSource();
 		final ComponentId componentId = source.getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
@@ -147,7 +147,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public DownStreamDataHandler<RoutedEvent> getDownStreamDataHandler() {
+	public DownStreamDataHandler<Event> getDownStreamDataHandler() {
 		return this.sourceComponentLink.getSource().getDownStreamDataHandler();
 	}
 
@@ -157,8 +157,8 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<RoutedEvent, RoutedEvent> handler) throws ComponentConnectionRejectedException {
-		final DestinationComponent<RoutedEvent, RoutedEvent> destination = handler.getDestination();
+	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
+		final DestinationComponent<Event, Event> destination = handler.getDestination();
 		final ComponentId componentId = destination.getComponentId();
 		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, RouterSourceComponent.class)) {
 			this.destinationComponentLink = handler;

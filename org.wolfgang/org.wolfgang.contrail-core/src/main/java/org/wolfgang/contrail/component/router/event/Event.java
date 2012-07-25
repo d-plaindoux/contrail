@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -16,40 +17,50 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.java.classes;
+package org.wolfgang.contrail.component.router.event;
+
+import java.io.Serializable;
+
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.IndirectReference;
 
 /**
- * <code>Annotation</code>
+ * <code>NetworkEvent</code> is the basic and one possible top-level type
+ * implemented by network events.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Annotation {
-
+public interface Event {
 	/**
-	 * @return
-	 */
-	String getName();
-
-	/**
-	 * Return the value of parameters
+	 * Method providing the previous reference
 	 * 
-	 * @return the parameters
+	 * @return a direct reference
 	 */
-	AnnotationElement[] getParameters();
+	DirectReference getSender();
 
 	/**
-	 * Method called whether an annotation element must be retrieved
+	 * Method setting previous reference
 	 * 
-	 * @param name
-	 *            The element name
-	 * @return an annotation element or <code>null</code>
+	 * @return a direct reference
 	 */
-	AnnotationElement findByName(String name);
+	Event sentBy(DirectReference reference);
 
 	/**
-	 * @return a string representation
+	 * @return the target reference
 	 */
-	String toExternal();
+	IndirectReference getReferenceToDestination();
+
+	/**
+	 * @return the source reference
+	 */
+	IndirectReference getReferenceToSource();
+
+	/**
+	 * Provide the message content
+	 * 
+	 * @return a content
+	 */
+	Serializable getContent();
 
 }

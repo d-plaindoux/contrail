@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.logger;
 
-import org.wolfgang.contrail.component.annotation.ComponentPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -31,7 +31,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ComponentPipeline("LoggerSource")
+@ContrailPipeline("LoggerSource")
 public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**

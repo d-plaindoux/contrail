@@ -46,8 +46,7 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	}
 
 	@Override
-	public void insert(E element, DirectReference mainReference, DirectReference... references)
-			throws ReferenceEntryAlreadyExistException {
+	public void insert(E element, DirectReference mainReference, DirectReference... references) throws ReferenceEntryAlreadyExistException {
 		if (table.containsKey(mainReference)) {
 			throw new ReferenceEntryAlreadyExistException();
 		} else {

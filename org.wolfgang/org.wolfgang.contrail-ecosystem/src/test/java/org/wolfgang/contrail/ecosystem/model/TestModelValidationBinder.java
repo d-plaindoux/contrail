@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationBinder extends TestCase {
 
 	public void testNominal01() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.setFlow("A");
@@ -62,7 +62,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal04() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.setFlow("A");
@@ -75,7 +75,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal05() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.setFlow("A");
@@ -89,7 +89,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal06() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.setFlow("A");
@@ -103,7 +103,7 @@ public class TestModelValidationBinder extends TestCase {
 	}
 
 	public void testNominal07() {
-		final Binder binder = new Binder();
+		final BinderModel binder = new BinderModel();
 		try {
 			binder.setName("A");
 			binder.setFlow("A");

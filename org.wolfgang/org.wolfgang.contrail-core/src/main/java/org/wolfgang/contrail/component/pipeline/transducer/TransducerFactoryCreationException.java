@@ -1,5 +1,4 @@
 /*
-
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -17,50 +16,54 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.router.event;
-
-import java.io.Serializable;
-
-import org.wolfgang.contrail.reference.DirectReference;
-import org.wolfgang.contrail.reference.IndirectReference;
+package org.wolfgang.contrail.component.pipeline.transducer;
 
 /**
- * <code>NetworkEvent</code> is the basic and one possible top-level type
- * implemented by network events.
+ * <code>CodecFactoryCreationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RoutedEvent {
+public class TransducerFactoryCreationException extends Exception {
+
 	/**
-	 * Method providing the previous reference
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 3623709178771182278L;
+
+	/**
+	 * Constructor
+	 */
+	public TransducerFactoryCreationException() {
+		super();
+	}
+
+	/**
+	 * Constructor
 	 * 
-	 * @return a direct reference
+	 * @param message
+	 * @param cause
 	 */
-	DirectReference getSender();
+	public TransducerFactoryCreationException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 	/**
-	 * Method setting previous reference
+	 * Constructor
 	 * 
-	 * @return a direct reference
+	 * @param message
 	 */
-	RoutedEvent sentBy(DirectReference reference);
+	public TransducerFactoryCreationException(String message) {
+		super(message);
+	}
 
 	/**
-	 * @return the target reference
-	 */
-	IndirectReference getReferenceToDestination();
-
-	/**
-	 * @return the source reference
-	 */
-	IndirectReference getReferenceToSource();
-
-	/**
-	 * Provide the message content
+	 * Constructor
 	 * 
-	 * @return a content
+	 * @param cause
 	 */
-	Serializable getContent();
+	public TransducerFactoryCreationException(Throwable cause) {
+		super(cause);
+	}
 
 }

@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -44,7 +44,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEvent>, UpStreamDataHandler<RoutedEvent> {
+public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, UpStreamDataHandler<Event> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -86,7 +86,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEve
 	}
 
 	@Override
-	public void handleData(RoutedEvent data) throws DataHandlerException {
+	public void handleData(Event data) throws DataHandlerException {
 		/**
 		 * Add the sender if the chosen route is private·
 		 */
@@ -110,7 +110,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEve
 		 */
 		if (!data.getReferenceToDestination().hasNext()) {
 			try {
-				final DestinationComponent<RoutedEvent, RoutedEvent> destination = component.getDestination();
+				final DestinationComponent<Event, Event> destination = component.getDestination();
 				destination.getUpStreamDataHandler().handleData(data);
 				return;
 			} catch (ComponentNotConnectedException e) {
@@ -130,7 +130,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEve
 			for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
 				if (nextTarget.equals(entry.getValue())) {
 					try {
-						final SourceComponent<RoutedEvent, RoutedEvent> source = component.getSource(entry.getKey());
+						final SourceComponent<Event, Event> source = component.getSource(entry.getKey());
 						source.getDownStreamDataHandler().handleData(data);
 						return;
 					} catch (ComponentNotConnectedException consume) {
@@ -143,7 +143,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEve
 			 * Try to open a new source
 			 */
 			try {
-				final SourceComponent<RoutedEvent, RoutedEvent> source = this.createSource(nextTarget);
+				final SourceComponent<Event, Event> source = this.createSource(nextTarget);
 				source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
 				return;
 			} catch (CannotCreateComponentException e) {
@@ -173,7 +173,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<RoutedEve
 	 * @return a source component (never <code>null</code>)
 	 * @throws CannotCreateComponentException
 	 */
-	private SourceComponent<RoutedEvent, RoutedEvent> createSource(DirectReference reference) throws CannotCreateComponentException {
+	private SourceComponent<Event, Event> createSource(DirectReference reference) throws CannotCreateComponentException {
 		try {
 			final RouterSourceTable.Entry retrieve = this.routerTable.retrieve(reference);
 			return retrieve.create();

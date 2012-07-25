@@ -16,54 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer;
+package org.wolfgang.contrail.connection;
 
 /**
- * <code>CodecFactoryCreationException</code>
+ * <code>ClientFactoryCreationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CodecFactoryCreationException extends Exception {
+public class ClientFactoryCreationException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = 3623709178771182278L;
-
-	/**
-	 * Constructor
-	 */
-	public CodecFactoryCreationException() {
-		super();
-	}
+	private static final long serialVersionUID = 9180144466807471771L;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param message
-	 * @param cause
+	 * @param arg0
 	 */
-	public CodecFactoryCreationException(String message, Throwable cause) {
-		super(message, cause);
+	public ClientFactoryCreationException(Throwable arg0) {
+		super(arg0);
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public CodecFactoryCreationException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param cause
-	 */
-	public CodecFactoryCreationException(Throwable cause) {
-		super(cause);
-	}
-
 }

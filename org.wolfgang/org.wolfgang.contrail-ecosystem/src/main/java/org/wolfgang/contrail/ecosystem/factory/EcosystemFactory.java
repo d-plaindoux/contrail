@@ -18,14 +18,19 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.wolfgang.common.lang.TypeUtils;
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -41,18 +46,34 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalFactory;
 import org.wolfgang.contrail.component.pipeline.PipelineFactory;
+import org.wolfgang.contrail.component.pipeline.identity.IdentityComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterSourceFactory;
+import org.wolfgang.contrail.component.router.RouterSourceTable;
+import org.wolfgang.contrail.component.router.event.Event;
+import org.wolfgang.contrail.connection.ClientFactory;
+import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.ClientFactoryCreationException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.model.Binder;
-import org.wolfgang.contrail.ecosystem.model.Client;
+import org.wolfgang.contrail.ecosystem.model.BinderModel;
+import org.wolfgang.contrail.ecosystem.model.ClientModel;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
-import org.wolfgang.contrail.ecosystem.model.Flow;
-import org.wolfgang.contrail.ecosystem.model.Flow.Item;
-import org.wolfgang.contrail.ecosystem.model.Pipeline;
-import org.wolfgang.contrail.ecosystem.model.Router;
-import org.wolfgang.contrail.ecosystem.model.Terminal;
+import org.wolfgang.contrail.ecosystem.model.FlowModel;
+import org.wolfgang.contrail.ecosystem.model.FlowModel.Item;
+import org.wolfgang.contrail.ecosystem.model.PipelineModel;
+import org.wolfgang.contrail.ecosystem.model.RouterModel;
+import org.wolfgang.contrail.ecosystem.model.TerminalModel;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.reference.DirectReference;
+import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
+import org.wolfgang.contrail.reference.ReferenceFactory;
 
 /**
  * <code>EcosystemFactory</code>
@@ -108,22 +129,22 @@ public final class EcosystemFactory {
 	/**
 	 * Declared pipelines
 	 */
-	private final Map<String, Pipeline> pipelines;
+	private final Map<String, PipelineModel> pipelines;
 
 	/**
 	 * Declared pipelines
 	 */
-	private final Map<String, Router> routers;
+	private final Map<String, RouterModel> routers;
 
 	/**
 	 * Declared terminal
 	 */
-	private final Map<String, Terminal> terminals;
+	private final Map<String, TerminalModel> terminals;
 
 	/**
 	 * Declared terminal
 	 */
-	private final Map<String, Flow> flows;
+	private final Map<String, FlowModel> flows;
 
 	/**
 	 * The main component
@@ -134,10 +155,10 @@ public final class EcosystemFactory {
 		this.componentLinkManager = new ComponentLinkManagerImpl();
 		this.aliasedComponents = new HashMap<String, Component>();
 
-		this.pipelines = new HashMap<String, Pipeline>();
-		this.terminals = new HashMap<String, Terminal>();
-		this.routers = new HashMap<String, Router>();
-		this.flows = new HashMap<String, Flow>();
+		this.pipelines = new HashMap<String, PipelineModel>();
+		this.terminals = new HashMap<String, TerminalModel>();
+		this.routers = new HashMap<String, RouterModel>();
+		this.flows = new HashMap<String, FlowModel>();
 
 		this.classLoader = EcosystemFactory.class.getClassLoader();
 	}
@@ -208,7 +229,7 @@ public final class EcosystemFactory {
 			} else if (routers.containsKey(name)) {
 				return register(item.getAlias(), link(source, create(routers.get(name), parameters)));
 			} else if (flows.containsKey(name)) {
-				return register(item.getAlias(), create(source, Flow.decompose(flows.get(name).getValue())));
+				return register(item.getAlias(), create(source, FlowModel.decompose(flows.get(name).getValue())));
 			} else {
 				throw new CannotCreateDataSenderException();
 			}
@@ -246,7 +267,7 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private PipelineComponent create(Pipeline pipeline, String[] additionalParameters) throws CannotCreateComponentException {
+	private PipelineComponent create(PipelineModel pipeline, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = pipeline.getFactory();
 		final List<String> parameters = new ArrayList<String>();
 		parameters.addAll(pipeline.getParameters());
@@ -261,7 +282,7 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private TerminalComponent create(Terminal terminal, String[] additionalParameters) throws CannotCreateComponentException {
+	private TerminalComponent create(TerminalModel terminal, String[] additionalParameters) throws CannotCreateComponentException {
 		final String factory = terminal.getFactory();
 		final List<String> parameters = new ArrayList<String>();
 		parameters.addAll(terminal.getParameters());
@@ -276,24 +297,94 @@ public final class EcosystemFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	private MultipleSourceComponent create(Router router, String[] additionalParameters) throws CannotCreateComponentException {
-		final String factory = router.getFactory();
+	private MultipleSourceComponent create(RouterModel router, String[] additionalParameters) throws CannotCreateComponentException {
 		final List<String> parameters = new ArrayList<String>();
+
 		parameters.addAll(router.getParameters());
 		for (String additionalParameter : additionalParameters) {
 			parameters.add(additionalParameter);
 		}
-		final MultipleSourceComponent routerComponent = null; // RouterSourceFactory.create(classLoader,
-																// factory,
-																// parameters.toArray(new
-																// String[parameters.size()]));
 
-		for (Client client : router.getClients()) {
+		final DirectReference reference;
+
+		try {
+			reference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
+		} catch (NoSuchAlgorithmException e) {
+			throw new CannotCreateComponentException(e);
+		}
+
+		final RouterSourceComponent routerComponent = RouterSourceFactory.create(reference);
+
+		for (ClientModel clientModel : router.getClients()) {
 			try {
-				final URI uri = new URI(client.getEndpoint());
-				// TODO -- client.getFlow() ?
-				// Create the client ...
+				final URI uri = new URI(clientModel.getEndpoint());
+				final Item[] flow = FlowModel.decompose(clientModel.getFlow());
+
+				final DirectReference mainReference;
+				final Client client;
+
+				try {
+					mainReference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
+					client = ClientFactory.create(classLoader, uri.getScheme());
+				} catch (NoSuchAlgorithmException e) {
+					throw new CannotCreateComponentException(e);
+				} catch (ClientFactoryCreationException e) {
+					throw new CannotCreateComponentException(e);
+				}
+
+				final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
+					@Override
+					public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
+
+						System.err.println(routerComponent + " - Opening a client to " + this.getReferenceToUse() + " [endpoint=" + uri + "]");
+						try {
+
+							// Build the initial flow
+							final DestinationComponent<byte[], byte[]> initialTransducer = new IdentityComponent<byte[], byte[]>();
+							final Component terminalTransducer = EcosystemFactory.this.create(initialTransducer, flow);
+
+							
+							routerComponent.filterSource(terminalTransducer.getComponentId(), this.getReferenceToUse());
+
+							final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
+								@Override
+								public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+									// Initial component
+									final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
+									try {
+										componentLinkManager.connect(initial, initialTransducer);
+										return initial.getDataSender();
+									} catch (ComponentConnectionRejectedException e) {
+										throw new CannotCreateDataSenderException(e);
+									}
+								}
+							};
+
+							client.connect(uri, dataSenderFactory);
+
+							return (SourceComponent<Event, Event>) terminalTransducer;
+						} catch (ComponentConnectionRejectedException e) {
+							throw new CannotCreateComponentException(e);
+						} catch (UnknownHostException e) {
+							throw new CannotCreateComponentException(e);
+						} catch (IOException e) {
+							throw new CannotCreateComponentException(e);
+						} catch (CannotCreateDataSenderException e) {
+							throw new CannotCreateComponentException(e);
+						}
+					}
+
+					@Override
+					public DirectReference getReferenceToUse() {
+						return mainReference;
+					}
+				};
+
+				routerComponent.getRouterSourceTable().insert(entry, entry.getReferenceToUse());
+
 			} catch (URISyntaxException e) {
+				// TODO -- Log it when a logger is provided
+			} catch (ReferenceEntryAlreadyExistException e) {
 				// TODO -- Log it when a logger is provided
 			}
 		}
@@ -304,28 +395,28 @@ public final class EcosystemFactory {
 	/**
 	 * @param terminal
 	 */
-	private void register(Terminal terminal) {
+	private void register(TerminalModel terminal) {
 		this.terminals.put(terminal.getName(), terminal);
 	}
 
 	/**
 	 * @param pipeline
 	 */
-	private void register(Pipeline pipeline) {
+	private void register(PipelineModel pipeline) {
 		this.pipelines.put(pipeline.getName(), pipeline);
 	}
 
 	/**
 	 * @param router
 	 */
-	private void register(Router router) {
+	private void register(RouterModel router) {
 		this.routers.put(router.getName(), router);
 	}
 
 	/**
 	 * @param router
 	 */
-	private void register(Flow flow) {
+	private void register(FlowModel flow) {
 		this.flows.put(flow.getName(), flow);
 	}
 
@@ -340,32 +431,32 @@ public final class EcosystemFactory {
 		try {
 			final EcosystemImpl ecosystemImpl = new EcosystemImpl();
 
-			for (Terminal terminal : ecosystem.getTerminals()) {
+			for (TerminalModel terminal : ecosystem.getTerminals()) {
 				register(terminal);
 			}
 
-			for (Pipeline pipeline : ecosystem.getPipelines()) {
+			for (PipelineModel pipeline : ecosystem.getPipelines()) {
 				register(pipeline);
 			}
 
-			for (Router router : ecosystem.getRouters()) {
+			for (RouterModel router : ecosystem.getRouters()) {
 				register(router);
 			}
 
-			for (Flow flow : ecosystem.getFlows()) {
+			for (FlowModel flow : ecosystem.getFlows()) {
 				register(flow);
 			}
 
-			for (Binder binder : ecosystem.getBinders()) {
+			for (BinderModel binder : ecosystem.getBinders()) {
 				final String name = binder.getName();
 				final Class<?> typeIn = TypeUtils.getType(binder.getTypeIn());
 				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
 
 				final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
-				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(Flow.decompose(binder.getFlow())));
+				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(FlowModel.decompose(binder.getFlow())));
 			}
 
-			final Item[] decompose = Flow.decompose(ecosystem.getMain());
+			final Item[] decompose = FlowModel.decompose(ecosystem.getMain());
 			if (decompose.length > 0) {
 				this.mainComponent = create(null, decompose);
 			}

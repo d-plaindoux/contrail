@@ -18,36 +18,31 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.message.MessagesProvider;
 
 /**
- * <code>Component</code>
+ * <code>Client</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Terminal implements Validation {
+@XmlRootElement(name = "client")
+public class ClientModel implements Validation {
 
 	private String name;
 	private String factory;
-	private List<String> parameters;
-
-	{
-		this.parameters = new ArrayList<String>();
-	}
+	private String filter;
+	private String endpoint;
+	private String flow;
 
 	/**
 	 * Constructor
 	 */
-	public Terminal() {
+	public ClientModel() {
 		super();
 	}
 
@@ -56,7 +51,6 @@ public class Terminal implements Validation {
 	 * 
 	 * @return the name
 	 */
-	@XmlAttribute
 	public String getName() {
 		return name;
 	}
@@ -67,8 +61,12 @@ public class Terminal implements Validation {
 	 * @param name
 	 *            the name to set
 	 */
+	@XmlAttribute
 	public void setName(String name) {
 		this.name = name;
+		if (this.filter == null) {
+			this.filter = name;
+		}
 	}
 
 	/**
@@ -92,23 +90,63 @@ public class Terminal implements Validation {
 	}
 
 	/**
-	 * Return the value ofparameters
+	 * Return the value of filter
 	 * 
-	 * @return the parameters
+	 * @return the filter
 	 */
-	@XmlElement(name = "param")
-	public List<String> getParameters() {
-		return parameters;
+	@XmlAttribute
+	public String getFilter() {
+		return filter;
 	}
 
 	/**
-	 * Set the value of parameters
+	 * Set the value of filter
 	 * 
-	 * @param parameters
-	 *            the parameters to set
+	 * @param filter
+	 *            the filter to set
 	 */
-	public void add(String parameter) {
-		this.parameters.add(parameter);
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+
+	/**
+	 * Return the value of endpoint
+	 * 
+	 * @return the endpoint
+	 */
+	@XmlAttribute
+	public String getEndpoint() {
+		return endpoint;
+	}
+
+	/**
+	 * Set the value of endpoint
+	 * 
+	 * @param endpoint
+	 *            the endpoint to set
+	 */
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	/**
+	 * Return the value of flow
+	 * 
+	 * @return the flow
+	 */
+	@XmlValue
+	public String getFlow() {
+		return flow;
+	}
+
+	/**
+	 * Set the value of flow
+	 * 
+	 * @param flow
+	 *            the flow to set
+	 */
+	public void setFlow(String flow) {
+		this.flow = flow.trim();
 	}
 
 	@Override
@@ -117,6 +155,12 @@ public class Terminal implements Validation {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
 		} else if (this.factory == null) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(name));
+		} else if (this.flow == null || this.flow.trim().length() == 0) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "flow.undefined").format(name));
+		} else if (this.endpoint == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "endpoint.undefined").format(name));
+		} else if (this.filter == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "filter.undefined").format(name));
 		}
 	}
 }

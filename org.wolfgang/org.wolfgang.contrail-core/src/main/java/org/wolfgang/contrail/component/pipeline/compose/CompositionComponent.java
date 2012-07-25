@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.annotation.ComponentPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ComponentPipeline("Composition")
+@ContrailPipeline("Composition")
 public class CompositionComponent<U1, D1, U2, D2> extends AbstractPipelineComponent<U1, D1, U2, D2> {
 
 	private final UpStreamDataHandler<U1> upStreamDataHandler;

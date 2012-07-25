@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
 
-import org.wolfgang.contrail.component.annotation.ComponentPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ComponentPipeline("JAXB")
+@ContrailPipeline("JAXB")
 public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**

@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationTerminal extends TestCase {
 
 	public void testNominal01() {
-		final Terminal terminal = new Terminal();
+		final TerminalModel terminal = new TerminalModel();
 		try {
 			terminal.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationTerminal extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Terminal terminal = new Terminal();
+		final TerminalModel terminal = new TerminalModel();
 		try {
 			terminal.setName("A");
 			terminal.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationTerminal extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Terminal terminal = new Terminal();
+		final TerminalModel terminal = new TerminalModel();
 		try {
 			terminal.setName("A");
 			terminal.setFactory("a.b.c");

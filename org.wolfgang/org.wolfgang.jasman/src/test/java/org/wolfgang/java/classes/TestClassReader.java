@@ -21,6 +21,8 @@ package org.wolfgang.java.classes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,7 +39,7 @@ import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
+@XmlRootElement(name = "root")
 @Deprecated
 public class TestClassReader extends TestCase {
 
@@ -47,7 +49,7 @@ public class TestClassReader extends TestCase {
 	}
 
 	public void testAnnotations01() throws IOException {
-		final ClassLoader classLoader = TestClassReader.class.getClassLoader();
+		final ClassLoader classLoader = this.getClass().getClassLoader();
 		final URL resource = classLoader.getResource("org/wolfgang/java/classes/TestClassReader.class");
 
 		assertNotNull(resource);
@@ -83,6 +85,9 @@ public class TestClassReader extends TestCase {
 
 			assertNotNull(deprecatedClass);
 			assertNotNull(xmlClassElement);
+
+			assertNotNull(xmlClassElement.findByName("name"));
+
 			assertNotNull(deprecatedParameter);
 			assertNotNull(xmlMethodAttribute);
 

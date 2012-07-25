@@ -20,6 +20,8 @@ package org.wolfgang.contrail.network.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 
 import junit.framework.TestCase;
@@ -40,7 +42,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
 import org.wolfgang.contrail.component.router.RouterSourceComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
-import org.wolfgang.contrail.component.router.event.RoutedEvent;
+import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -59,7 +61,7 @@ class RouterSourceServerUtils extends TestCase {
 			final DirectReference... references) throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
 			@Override
-			public SourceComponent<RoutedEvent, RoutedEvent> create() throws CannotCreateComponentException {
+			public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
 
 				System.err.println(component.getSelfReference() + " - Opening a client to " + this.getReferenceToUse() + " [endpoint=" + host + ":" + port + "]");
 				try {
@@ -72,8 +74,8 @@ class RouterSourceServerUtils extends TestCase {
 					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
-					final CoercionTransducerFactory<RoutedEvent> coercionTransducerFactory = new CoercionTransducerFactory<RoutedEvent>(RoutedEvent.class);
-					final TransducerComponent<Object, Object, RoutedEvent, RoutedEvent> coercionTransducer = coercionTransducerFactory.createComponent();
+					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
+					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					// Create the link from the client to the network
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
@@ -82,7 +84,7 @@ class RouterSourceServerUtils extends TestCase {
 
 					component.filterSource(coercionTransducer.getComponentId(), this.getReferenceToUse());
 
-					final NetClient netClient = new NetClient(new DataSenderFactory<byte[], byte[]>() {
+					final DataSenderFactory<byte[], byte[]> factory = new DataSenderFactory<byte[], byte[]>() {
 						@Override
 						public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
 							// Initial component
@@ -94,9 +96,11 @@ class RouterSourceServerUtils extends TestCase {
 								throw new CannotCreateDataSenderException(e);
 							}
 						}
-					});
+					};
 
-					netClient.connect(InetAddress.getByName(host), port);
+					final NetClient netClient = new NetClient();
+
+					netClient.connect(new URI("tcp://" + host + ":" + port), factory);
 
 					return coercionTransducer;
 				} catch (ComponentConnectionRejectedException e) {
@@ -106,6 +110,8 @@ class RouterSourceServerUtils extends TestCase {
 				} catch (IOException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (CannotCreateDataSenderException e) {
+					throw new CannotCreateComponentException(e);
+				} catch (URISyntaxException e) {
 					throw new CannotCreateComponentException(e);
 				}
 			}
@@ -137,8 +143,8 @@ class RouterSourceServerUtils extends TestCase {
 					final TransducerComponent<Bytes, Bytes, Object, Object> serialisationTransducer = serializationTransducerFactory.createComponent();
 
 					// Coercion component
-					final CoercionTransducerFactory<RoutedEvent> coercionTransducerFactory = new CoercionTransducerFactory<RoutedEvent>(RoutedEvent.class);
-					final TransducerComponent<Object, Object, RoutedEvent, RoutedEvent> coercionTransducer = coercionTransducerFactory.createComponent();
+					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
+					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
 					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);

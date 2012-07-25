@@ -32,8 +32,8 @@ import org.wolfgang.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement
-public class Flow implements Validation {
+@XmlRootElement(name="flow")
+public class FlowModel implements Validation {
 
 	/**
 	 * <code>Item</code>
@@ -130,7 +130,7 @@ public class Flow implements Validation {
 	/**
 	 * Constructor
 	 */
-	public Flow() {
+	public FlowModel() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

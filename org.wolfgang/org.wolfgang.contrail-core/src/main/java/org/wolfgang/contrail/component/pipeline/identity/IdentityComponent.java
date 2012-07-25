@@ -16,40 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.java.classes;
+package org.wolfgang.contrail.component.pipeline.identity;
+
+import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>Annotation</code>
+ * <code>IdentityComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Annotation {
+public class IdentityComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
-	/**
-	 * @return
-	 */
-	String getName();
+	@Override
+	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+		return this.getDestinationComponentLink().getDestination().getUpStreamDataHandler();
+	}
 
-	/**
-	 * Return the value of parameters
-	 * 
-	 * @return the parameters
-	 */
-	AnnotationElement[] getParameters();
-
-	/**
-	 * Method called whether an annotation element must be retrieved
-	 * 
-	 * @param name
-	 *            The element name
-	 * @return an annotation element or <code>null</code>
-	 */
-	AnnotationElement findByName(String name);
-
-	/**
-	 * @return a string representation
-	 */
-	String toExternal();
+	@Override
+	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+		return this.getSourceComponentLink().getSource().getDownStreamDataHandler();
+	}
 
 }

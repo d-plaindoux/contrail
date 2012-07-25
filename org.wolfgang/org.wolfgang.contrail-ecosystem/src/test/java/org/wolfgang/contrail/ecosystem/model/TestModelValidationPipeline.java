@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationPipeline extends TestCase {
 
 	public void testNominal01() {
-		final Pipeline pipeline = new Pipeline();
+		final PipelineModel pipeline = new PipelineModel();
 		try {
 			pipeline.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationPipeline extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Pipeline pipeline = new Pipeline();
+		final PipelineModel pipeline = new PipelineModel();
 		try {
 			pipeline.setName("A");
 			pipeline.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationPipeline extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Pipeline pipeline = new Pipeline();
+		final PipelineModel pipeline = new PipelineModel();
 		try {
 			pipeline.setName("A");
 			pipeline.setFactory("a.b.c");

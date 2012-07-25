@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class TestModelValidationClient extends TestCase {
 
 	public void testNominal01() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.validate();
 			fail();
@@ -39,7 +39,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal02() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.validate();
@@ -50,7 +50,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal03() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.setFlow("A");
@@ -62,7 +62,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal04() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.setFlow("A");
@@ -76,7 +76,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal05() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.setFlow("A");
@@ -91,7 +91,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal06() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.setFactory("a.b.c");
@@ -106,7 +106,7 @@ public class TestModelValidationClient extends TestCase {
 	}
 
 	public void testNominal07() {
-		final Client client = new Client();
+		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
 			client.setFactory("a.b.c");
