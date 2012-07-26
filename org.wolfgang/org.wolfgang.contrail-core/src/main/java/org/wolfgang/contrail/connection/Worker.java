@@ -18,34 +18,24 @@
 
 package org.wolfgang.contrail.connection;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
-import java.util.concurrent.Future;
-
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
-
 /**
- * <code>Client</code>
+ * <code>Worker</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Server extends Closeable {
+public interface Worker {
 
 	/**
-	 * Method called whether a client connection must be established . For this
-	 * purpose an URI is given and the data sender factory is also used.
+	 * Predicate checking liveness of he worker
 	 * 
-	 * @param uri
-	 *            The uniform resource information
-	 * @param factory
-	 *            The data sender factory
-	 * @return a future denoting the connection liveness
-	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
+	 * @return true if the worker still alive; false otherwise
 	 */
-	Worker bind(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException;
+	boolean isActive();
+
+	/**
+	 * Stop this worker
+	 */
+	void shutdown();
 
 }

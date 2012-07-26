@@ -24,7 +24,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -38,6 +37,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -95,12 +95,12 @@ public class NetClient implements Client {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public Future<Void> connect(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+	public Worker connect(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
 			client = new Socket(uri.getHost(), uri.getPort());
-			
+
 			System.err.println("Client to " + uri + " is connected ...");
 
 		} catch (UnknownHostException e) {
@@ -127,7 +127,7 @@ public class NetClient implements Client {
 		};
 
 		final DataSender<byte[]> dataSender;
-		
+
 		try {
 			dataSender = factory.create(dataReceiver);
 		} catch (CannotCreateDataSenderException e) {
@@ -148,15 +148,14 @@ public class NetClient implements Client {
 					dataSender.close();
 					throw e;
 				}
-				
+
 				System.err.println("Client to " + uri + " has been shutdown");
-				
+
 				return null;
 			}
 		};
 
-		return new DelegatedFuture<Void>(executor.submit(reader)) {
-
+		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader)) {
 			@Override
 			public boolean cancel(boolean mayInterruptIfRunning) {
 				try {
@@ -165,7 +164,19 @@ public class NetClient implements Client {
 					// Ignore
 				}
 				return super.cancel(mayInterruptIfRunning);
-			}			
+			}
+		};
+
+		return new Worker() {
+			@Override
+			public void shutdown() {
+				delegatedFuture.cancel(true);
+			}
+
+			@Override
+			public boolean isActive() {
+				return !delegatedFuture.isCancelled() && !delegatedFuture.isDone();
+			}
 		};
 	}
 

@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -41,6 +40,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
+import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -97,7 +97,7 @@ public class NetServer implements Server {
 		super();
 	}
 
-	public Future<Void> bind(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
@@ -166,7 +166,7 @@ public class NetServer implements Server {
 			}
 		};
 
-		return new DelegatedFuture<Void>(executor.submit(server)) {
+		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(server)) {
 			@Override
 			public boolean cancel(boolean mayInterruptIfRunning) {
 				try {
@@ -175,6 +175,18 @@ public class NetServer implements Server {
 					// consume
 				}
 				return super.cancel(mayInterruptIfRunning);
+			}
+		};
+
+		return new Worker() {
+			@Override
+			public void shutdown() {
+				delegatedFuture.cancel(true);
+			}
+
+			@Override
+			public boolean isActive() {
+				return !delegatedFuture.isCancelled() && !delegatedFuture.isDone();
 			}
 		};
 	}
