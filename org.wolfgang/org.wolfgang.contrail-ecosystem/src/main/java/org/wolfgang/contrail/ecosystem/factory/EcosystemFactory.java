@@ -18,10 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.wolfgang.common.lang.TypeUtils;
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
@@ -47,17 +44,13 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.TerminalFactory;
 import org.wolfgang.contrail.component.pipeline.PipelineFactory;
 import org.wolfgang.contrail.component.pipeline.identity.IdentityComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.component.router.RouterSourceComponent;
 import org.wolfgang.contrail.component.router.RouterSourceFactory;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.event.Event;
-import org.wolfgang.contrail.connection.ClientFactory;
+import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.ClientFactory;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
@@ -149,7 +142,7 @@ public final class EcosystemFactory {
 	/**
 	 * The main component
 	 */
-	private Component mainComponent;
+	private Component mainComponent; // TODO
 
 	{
 		this.componentLinkManager = new ComponentLinkManagerImpl();
@@ -333,6 +326,7 @@ public final class EcosystemFactory {
 				}
 
 				final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
 
@@ -340,10 +334,9 @@ public final class EcosystemFactory {
 						try {
 
 							// Build the initial flow
-							final DestinationComponent<byte[], byte[]> initialTransducer = new IdentityComponent<byte[], byte[]>();
+							final PipelineComponent initialTransducer = new IdentityComponent();
 							final Component terminalTransducer = EcosystemFactory.this.create(initialTransducer, flow);
 
-							
 							routerComponent.filterSource(terminalTransducer.getComponentId(), this.getReferenceToUse());
 
 							final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
@@ -365,11 +358,11 @@ public final class EcosystemFactory {
 							return (SourceComponent<Event, Event>) terminalTransducer;
 						} catch (ComponentConnectionRejectedException e) {
 							throw new CannotCreateComponentException(e);
-						} catch (UnknownHostException e) {
-							throw new CannotCreateComponentException(e);
-						} catch (IOException e) {
-							throw new CannotCreateComponentException(e);
 						} catch (CannotCreateDataSenderException e) {
+							throw new CannotCreateComponentException(e);
+						} catch (ClassCastException e) {
+							throw new CannotCreateComponentException(e);
+						} catch (CannotCreateClientException e) {
 							throw new CannotCreateComponentException(e);
 						}
 					}

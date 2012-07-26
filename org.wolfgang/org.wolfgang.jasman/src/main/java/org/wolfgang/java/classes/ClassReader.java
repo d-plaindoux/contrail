@@ -63,22 +63,15 @@ public class ClassReader {
 	private final ClassDescriptionImpl description;
 
 	private ClassReader(InputStream in) throws IOException {
-		this.description = new ClassDescriptionImpl();
-
-		final long t0 = System.currentTimeMillis();
-
 		final StreamReader stream = new StreamReader(in);
-		try {
-			this.checkMagicHeader(stream);
-			this.getVersion(stream);
-			this.getConstantPool(stream);
-			this.getSpecifications(stream);
-			this.getFields(stream);
-			this.getMethods(stream);
-			this.getAttributes(stream);
-		} finally {
-			description.setDecodingTime(System.currentTimeMillis() - t0);
-		}
+		this.description = new ClassDescriptionImpl();
+		this.checkMagicHeader(stream);
+		this.getVersion(stream);
+		this.getConstantPool(stream);
+		this.getSpecifications(stream);
+		this.getFields(stream);
+		this.getMethods(stream);
+		this.getAttributes(stream);
 	}
 
 	public ClassDescription getDescription() {
@@ -408,14 +401,5 @@ public class ClassReader {
 		default:
 			throw new IllegalArgumentException();
 		}
-	}
-
-	// -----------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) throws IOException {
-		final String file = args[0];
-		final FileInputStream inputStream = new FileInputStream(file);
-		final ClassDescription description = ClassReader.getClassDescription(inputStream);
-		description.dump(System.out);
 	}
 }

@@ -45,22 +45,12 @@ public class ClassDescriptionImpl implements ClassDescription {
 	private ClassField[] fields;
 	private ClassMethod[] methods;
 	private ClassAttribute[] attributes;
-	private long decodingTime;
 
 	/**
 	 * Constructor
 	 */
 	ClassDescriptionImpl() {
 		super();
-	}
-
-	@Override
-	public long getDecodingTime() {
-		return decodingTime;
-	}
-
-	public void setDecodingTime(long decodingTime) {
-		this.decodingTime = decodingTime;
 	}
 
 	@Override
@@ -190,57 +180,5 @@ public class ClassDescriptionImpl implements ClassDescription {
 
 	public void setAttributes(ClassAttribute[] attributes) {
 		this.attributes = attributes;
-	}
-
-	@Override
-	public void dump(PrintStream printStream) {
-
-		final ConstantPool constantPool = this.getConstantPool();
-		int i = 0;
-		for (Constant item : constantPool) {
-			i += 1;
-			try {
-				printStream.println("\t[" + i + "] " + item.toExternal());
-			} catch (ClassCastException e) {
-				printStream.println("\t[" + i + "] <cast error> " + item.toString());
-			}
-		}
-
-		printStream.println("\t<class> " + this.getClassName());
-		printStream.println("\t<extends> " + this.getSuperClassName());
-
-		final String[] interfacesName = this.getInterfacesName();
-		for (String interfaceName : interfacesName) {
-			printStream.println("\t<implements> " + interfaceName);
-		}
-
-		printStream.println("\t<attributes>");
-		for (ClassAttribute attribute : this.getAttributes()) {
-			printStream.println("\t - " + attribute.toExternal());
-		}
-
-		printStream.println("\t<fields>");
-		final ClassField[] fields = this.getFields();
-		for (ClassField field : fields) {
-			printStream.println("\t - " + field.toExternal());
-			if ((field.getAccessFlag() & 0x1000) == 0x1000) {
-				printStream.println("\t + Synthetic");
-			}
-			for (ClassAttribute attribute : field.getAttributes()) {
-				printStream.println("\t   o " + attribute.toExternal());
-			}
-		}
-
-		printStream.println("\t<methods>");
-		final ClassMethod[] methods = this.getMethods();
-		for (ClassMethod method : methods) {
-			printStream.println("\t - " + method.toExternal());
-			if ((method.getAccessFlag() & 0x1000) == 0x1000) {
-				printStream.println("\t + Synthetic");
-			}
-			for (ClassAttribute attribute : method.getAttributes()) {
-				printStream.println("\t   o " + attribute.toExternal());
-			}
-		}
 	}
 }

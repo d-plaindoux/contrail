@@ -20,8 +20,8 @@ package org.wolfgang.contrail.network.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
@@ -33,6 +33,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -49,7 +50,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestNetworkServer extends TestCase {
 
-	public void testNominal01() throws IOException, CannotProvideComponentException {
+	public void testNominal01() throws IOException, CannotProvideComponentException, CannotCreateServerException, URISyntaxException {
 
 		// ------------------------------------------------------------------------------------------------
 		// Complex server based on ecosystem
@@ -96,15 +97,14 @@ public class TestNetworkServer extends TestCase {
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("test", byte[].class, byte[].class);
 		serverEcosystem.addFactory(key, dataSenderFactory);
 
-		final NetServer networkServer = new NetServer(2666, serverEcosystem.<byte[], byte[]> getBinder(key));
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.submit(networkServer);
+		final NetServer networkServer = new NetServer();
+		networkServer.bind(new URI("tcp://localhost:6666"), serverEcosystem.<byte[], byte[]> getBinder(key));
 
 		// ------------------------------------------------------------------------------------------------
 		// Simple socket based client
 		// ------------------------------------------------------------------------------------------------
 
-		final Socket socket = new Socket("localhost", 2666);
+		final Socket socket = new Socket("localhost", 6666);
 		final String message = "Hello, World!";
 
 		socket.getOutputStream().write(message.getBytes());
@@ -116,6 +116,5 @@ public class TestNetworkServer extends TestCase {
 
 		socket.close();
 		networkServer.close();
-		executor.shutdownNow();
 	}
 }

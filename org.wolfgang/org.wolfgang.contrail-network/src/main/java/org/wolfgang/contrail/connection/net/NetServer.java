@@ -18,21 +18,29 @@
 
 package org.wolfgang.contrail.connection.net;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -47,34 +55,21 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NetServer implements Callable<Void>, Closeable {
+public class NetServer implements Server {
+
+	/**
+	 * Active server sockets
+	 */
+	private List<ServerSocket> servers;
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
 
-	/**
-	 * The chosen inet address for the socket server
-	 */
-	private final InetAddress address;
-
-	/**
-	 * The chosen port number for the socket server
-	 */
-	private final int port;
-
-	/**
-	 * De-multiplexer component
-	 */
-	private final DataSenderFactory<byte[], byte[]> factory;
-
-	/**
-	 * The underlying server socket
-	 */
-	private ServerSocket serverSocket;
-
 	{
+		this.servers = Collections.synchronizedList(new ArrayList<ServerSocket>());
+
 		final ThreadGroup group = new ThreadGroup("Socket.Server");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
@@ -83,7 +78,8 @@ public class NetServer implements Callable<Void>, Closeable {
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(0, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
+
+		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
 		this.executor.allowCoreThreadTimeOut(true);
 	}
 
@@ -97,88 +93,102 @@ public class NetServer implements Callable<Void>, Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public NetServer(InetAddress address, int port, DataSenderFactory<byte[], byte[]> factory) {
+	public NetServer() {
 		super();
-		this.address = address;
-		this.port = port;
-		this.factory = factory;
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param port
-	 * @param binder
-	 */
-	public NetServer(int port, DataSenderFactory<byte[], byte[]> binder) {
-		this(null, port, binder);
-	}
-
-	@Override
-	public Void call() throws Exception {
-		if (serverSocket != null) {
-			throw new IllegalAccessException();
+	public Future<Void> bind(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+		final ServerSocket serverSocket;
+		try {
+			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
+			this.servers.add(serverSocket);
+		} catch (UnknownHostException e) {
+			throw new CannotCreateServerException(e);
+		} catch (IOException e) {
+			throw new CannotCreateServerException(e);
 		}
 
-		if (address != null) {
-			serverSocket = new ServerSocket(port, 0, address);
-		} else {
-			serverSocket = new ServerSocket(port, 0);
-		}
+		System.err.println("Server " + uri + " is running ...");
 
-		while (serverSocket.isBound()) {
-			final Socket client = serverSocket.accept();
+		final Callable<Void> server = new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				while (serverSocket.isBound()) {
+					final Socket client = serverSocket.accept();
 
-			// Check executor.getActiveCount() in order to prevent DoS
+					// Check executor.getActiveCount() in order to prevent DoS
 
-			final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
-				@Override
-				public void receiveData(byte[] data) throws DataHandlerException {
-					try {
-						client.getOutputStream().write(data);
-						client.getOutputStream().flush();
-					} catch (IOException e) {
-						throw new DataHandlerException(e);
-					}
-				}
-
-				@Override
-				public void close() throws IOException {
-					client.close();
-				}
-			};
-
-			final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
-
-			final Callable<Void> reader = new Callable<Void>() {
-				@Override
-				public Void call() throws Exception {
-					final byte[] buffer = new byte[1024 * 8];
-					try {
-						int len = client.getInputStream().read(buffer);
-						while (len != -1) {
-							dataSender.sendData(Arrays.copyOf(buffer, len));
-							len = client.getInputStream().read(buffer);
+					final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+						@Override
+						public void receiveData(byte[] data) throws DataHandlerException {
+							try {
+								client.getOutputStream().write(data);
+								client.getOutputStream().flush();
+							} catch (IOException e) {
+								throw new DataHandlerException(e);
+							}
 						}
-						return null;
-					} catch (Exception e) {
-						dataSender.close();
-						throw e;
-					}
+
+						@Override
+						public void close() throws IOException {
+							client.close();
+						}
+					};
+
+					final DataSender<byte[]> dataSender = factory.create(dataReceiver);
+
+					final Callable<Void> reader = new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							final byte[] buffer = new byte[1024 * 8];
+							try {
+								int len = client.getInputStream().read(buffer);
+								while (len != -1) {
+									dataSender.sendData(Arrays.copyOf(buffer, len));
+									len = client.getInputStream().read(buffer);
+								}
+								return null;
+							} catch (Exception e) {
+								dataSender.close();
+								throw e;
+							}
+						}
+					};
+
+					executor.submit(reader);
 				}
-			};
 
-			executor.submit(reader);
-		}
+				servers.remove(serverSocket);
 
-		return null;
+				System.err.println("Server " + uri + " has been shutdown");
+
+				return null;
+			}
+		};
+
+		return new DelegatedFuture<Void>(executor.submit(server)) {
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				try {
+					serverSocket.close();
+				} catch (IOException ignore) {
+					// consume
+				}
+				return super.cancel(mayInterruptIfRunning);
+			}
+		};
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (serverSocket != null) {
-			serverSocket.close();
+		for (ServerSocket server : this.servers) {
+			try {
+				server.close();
+			} catch (IOException consume) {
+				// Ignore
+			}
 		}
+
 		executor.shutdownNow();
 	}
 }

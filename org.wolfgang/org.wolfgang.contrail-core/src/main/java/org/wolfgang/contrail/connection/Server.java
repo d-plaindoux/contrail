@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Client extends Closeable {
+public interface Server extends Closeable {
 
 	/**
 	 * Method called whether a client connection must be established . For this
@@ -46,6 +46,6 @@ public interface Client extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataSenderException
 	 */
-	Future<Void> connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException;
+	Future<Void> bind(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException;
 
 }

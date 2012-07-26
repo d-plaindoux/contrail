@@ -18,10 +18,10 @@
 
 package org.wolfgang.contrail.connection.net;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -30,11 +30,13 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -51,7 +53,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @version 1.0
  */
 @ContrailClient(scheme = "tcp")
-public class NetClient implements Client, Closeable {
+public class NetClient implements Client {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -67,7 +69,7 @@ public class NetClient implements Client, Closeable {
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(0, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
+		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
 		this.executor.allowCoreThreadTimeOut(true);
 	}
 
@@ -93,8 +95,19 @@ public class NetClient implements Client, Closeable {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public Future<Void> connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws IOException, CannotCreateDataSenderException {
-		final Socket client = new Socket(uri.getHost(), uri.getPort());
+	public Future<Void> connect(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+		final Socket client;
+
+		try {
+			client = new Socket(uri.getHost(), uri.getPort());
+			
+			System.err.println("Client to " + uri + " is connected ...");
+
+		} catch (UnknownHostException e) {
+			throw new CannotCreateClientException(e);
+		} catch (IOException e) {
+			throw new CannotCreateClientException(e);
+		}
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
@@ -113,7 +126,13 @@ public class NetClient implements Client, Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = factory.create(dataReceiver);
+		final DataSender<byte[]> dataSender;
+		
+		try {
+			dataSender = factory.create(dataReceiver);
+		} catch (CannotCreateDataSenderException e) {
+			throw new CannotCreateClientException(e);
+		}
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
@@ -125,15 +144,29 @@ public class NetClient implements Client, Closeable {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
 						len = client.getInputStream().read(buffer);
 					}
-					return null;
 				} catch (Exception e) {
 					dataSender.close();
 					throw e;
 				}
+				
+				System.err.println("Client to " + uri + " has been shutdown");
+				
+				return null;
 			}
 		};
 
-		return executor.submit(reader);
+		return new DelegatedFuture<Void>(executor.submit(reader)) {
+
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				try {
+					client.close();
+				} catch (IOException consume) {
+					// Ignore
+				}
+				return super.cancel(mayInterruptIfRunning);
+			}			
+		};
 	}
 
 	@Override

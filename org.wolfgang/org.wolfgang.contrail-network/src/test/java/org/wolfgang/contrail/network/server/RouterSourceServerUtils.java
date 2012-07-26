@@ -18,11 +18,7 @@
 
 package org.wolfgang.contrail.network.server;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 
 import junit.framework.TestCase;
 
@@ -34,6 +30,9 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
+import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
+import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
@@ -43,6 +42,7 @@ import org.wolfgang.contrail.component.router.RouterSourceComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.component.router.event.Event;
+import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -57,13 +57,11 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 class RouterSourceServerUtils extends TestCase {
 
-	static void client(final RouterSourceComponent component, final ComponentLinkManager componentLinkManager, final String host, final int port, final DirectReference mainReference,
-			final DirectReference... references) throws ReferenceEntryAlreadyExistException {
+	static void client(final RouterSourceComponent component, final ComponentLinkManager componentLinkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
+			throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
 			@Override
 			public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
-
-				System.err.println(component.getSelfReference() + " - Opening a client to " + this.getReferenceToUse() + " [endpoint=" + host + ":" + port + "]");
 				try {
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
@@ -100,18 +98,12 @@ class RouterSourceServerUtils extends TestCase {
 
 					final NetClient netClient = new NetClient();
 
-					netClient.connect(new URI("tcp://" + host + ":" + port), factory);
+					netClient.connect(uri, factory);
 
 					return coercionTransducer;
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateComponentException(e);
-				} catch (UnknownHostException e) {
-					throw new CannotCreateComponentException(e);
-				} catch (IOException e) {
-					throw new CannotCreateComponentException(e);
-				} catch (CannotCreateDataSenderException e) {
-					throw new CannotCreateComponentException(e);
-				} catch (URISyntaxException e) {
+				} catch (CannotCreateClientException e) {
 					throw new CannotCreateComponentException(e);
 				}
 			}
@@ -129,11 +121,7 @@ class RouterSourceServerUtils extends TestCase {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
-
-				System.err.println(component.getSelfReference() + " - Accept a client [Entering handshake stage]");
-
 				try {
-					// Payload component
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
 					final TransducerComponent<byte[], byte[], Bytes, Bytes> payLoadTransducer = payLoadTransducerFactory.createComponent();
@@ -146,8 +134,15 @@ class RouterSourceServerUtils extends TestCase {
 					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
 					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
-					componentLinkManager.connect(payLoadTransducer, serialisationTransducer);
-					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
+					final CompositionComponent<Bytes,Bytes,Bytes,Bytes> log01 = 
+							new CompositionComponent<Bytes,Bytes,Bytes,Bytes>(new LoggerSourceComponent<Bytes,Bytes>("01.UP"), new LoggerDestinationComponent<Bytes,Bytes>("01.DOWN"));
+					componentLinkManager.connect(payLoadTransducer, log01);
+					componentLinkManager.connect(log01, serialisationTransducer);
+
+					final CompositionComponent<Object,Object,Object,Object> log02 = 
+							new CompositionComponent<Object,Object,Object,Object>(new LoggerSourceComponent<Object,Object>("02.UP"), new LoggerDestinationComponent<Object,Object>("02.DOWN"));
+					componentLinkManager.connect(serialisationTransducer, log02);
+					componentLinkManager.connect(log02, coercionTransducer);
 
 					final SourceAcceptanceComponent networkAcceptanceComponent = new SourceAcceptanceComponent();
 

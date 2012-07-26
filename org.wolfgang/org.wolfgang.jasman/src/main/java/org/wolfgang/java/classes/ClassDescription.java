@@ -18,7 +18,6 @@
 
 package org.wolfgang.java.classes;
 
-import java.io.PrintStream;
 
 /**
  * <code>ClassDescription</code> is the main component describing a class.
@@ -99,11 +98,4 @@ public interface ClassDescription {
 	 */
 	ClassAttribute[] getAttributes();
 
-	// -----------------------------------------------------------------------------------------------------------------
-	// Utilities corner
-	// -----------------------------------------------------------------------------------------------------------------
-
-	long getDecodingTime();
-
-	void dump(PrintStream printStream);
 }

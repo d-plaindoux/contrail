@@ -18,34 +18,27 @@
 
 package org.wolfgang.contrail.connection;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
-import java.util.concurrent.Future;
-
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
-
 /**
- * <code>Client</code>
+ * <code>CannotCreateClientException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Client extends Closeable {
+public class CannotCreateServerException extends Exception {
 
 	/**
-	 * Method called whether a client connection must be established . For this
-	 * purpose an URI is given and the data sender factory is also used.
-	 * 
-	 * @param uri
-	 *            The uniform resource information
-	 * @param factory
-	 *            The data sender factory
-	 * @return a future denoting the connection liveness
-	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
+	 * The serialVersionUID attribute
 	 */
-	Future<Void> connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException;
+	private static final long serialVersionUID = -3409870401919213637L;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateServerException(Throwable arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
 
 }

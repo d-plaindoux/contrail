@@ -67,7 +67,7 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	/**
 	 * Constructor
 	 */
-	public LoggerSourceComponent(String[] arguments) {
+	public LoggerSourceComponent(String... arguments) {
 		super();
 		if (arguments.length > 0) {
 			this.prefix = arguments[0];

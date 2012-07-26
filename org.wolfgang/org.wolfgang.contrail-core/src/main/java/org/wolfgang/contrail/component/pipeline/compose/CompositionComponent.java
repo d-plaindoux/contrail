@@ -126,7 +126,7 @@ public class CompositionComponent<U1, D1, U2, D2> extends AbstractPipelineCompon
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public CompositionComponent(PipelineComponent[] pipelines) throws ComponentConnectionRejectedException {
+	public CompositionComponent(PipelineComponent... pipelines) throws ComponentConnectionRejectedException {
 		super();
 
 		assert pipelines.length > 0;

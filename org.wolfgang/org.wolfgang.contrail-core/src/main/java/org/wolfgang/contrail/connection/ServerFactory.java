@@ -27,15 +27,15 @@ import java.util.Map;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ClientFactory {
+public final class ServerFactory {
 
 	private static Map<String, String> prototypes;
-	private static Map<String, Client> clients;
+	private static Map<String, Server> servers;
 
 	/**
 	 * Constructor
 	 */
-	private ClientFactory() {
+	private ServerFactory() {
 		super();
 	}
 
@@ -58,25 +58,25 @@ public final class ClientFactory {
 	 * @throws ClientFactoryCreationException
 	 */
 	@SuppressWarnings("unchecked")
-	public static Client create(ClassLoader loader, String scheme) throws ClientFactoryCreationException {
+	public static Server create(ClassLoader loader, String scheme) throws ServerFactoryCreationException {
 		try {
-			if (clients.containsKey(scheme)) {
-				return clients.get(scheme);
+			if (servers.containsKey(scheme)) {
+				return servers.get(scheme);
 			} else {
 
 				final String fromScheme = getFromScheme(scheme);
 
 				assert fromScheme != null;
 
-				final Class<Client> clientClass = (Class<Client>) loader.loadClass(fromScheme);
-				final Client client = clientClass.newInstance();
+				final Class<Server> serverClass = (Class<Server>) loader.loadClass(fromScheme);
+				final Server server = serverClass.newInstance();
 
-				clients.put(scheme, client);
+				servers.put(scheme, server);
 
-				return client;
+				return server;
 			}
 		} catch (Exception e) {
-			throw new ClientFactoryCreationException(e);
+			throw new ServerFactoryCreationException(e);
 		}
 	}
 
