@@ -126,8 +126,8 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
+		final RouterSourceComponent network01 = RouterSourceFactory.create(reference01);
 		final ComponentLinkManagerImpl manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
@@ -143,8 +143,8 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
-		final RouterSourceComponent network02 = RouterSourceFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
+		final RouterSourceComponent network02 = RouterSourceFactory.create(reference02);
 		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		manager02.connect(network02, new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse)));

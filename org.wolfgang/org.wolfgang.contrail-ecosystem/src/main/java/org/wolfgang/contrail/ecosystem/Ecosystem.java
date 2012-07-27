@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem;
 
+import java.io.Closeable;
+
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 
@@ -29,7 +31,7 @@ import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Ecosystem {
+public interface Ecosystem extends Closeable {
 
 	/**
 	 * Method called whether an component binder is required

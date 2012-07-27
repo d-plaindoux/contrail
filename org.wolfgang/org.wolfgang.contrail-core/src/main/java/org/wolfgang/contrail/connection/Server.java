@@ -21,7 +21,6 @@ package org.wolfgang.contrail.connection;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;

@@ -33,7 +33,6 @@ import org.wolfgang.common.message.MessagesProvider;
 @XmlRootElement(name = "server")
 public class ServerModel implements Validation {
 
-	private String factory;
 	private String endpoint;
 	private String flow;
 
@@ -45,32 +44,12 @@ public class ServerModel implements Validation {
 	}
 
 	/**
-	 * Return the value of factory
-	 * 
-	 * @return the factory
-	 */
-	@XmlAttribute
-	public String getFactory() {
-		return factory;
-	}
-
-	/**
-	 * Set the value of factory
-	 * 
-	 * @param factory
-	 *            the factory to set
-	 */
-	public void setFactory(String factory) {
-		this.factory = factory;
-	}
-
-	/**
 	 * Return the value of endpoint
 	 * 
 	 * @return the endpoint
 	 */
 	@XmlAttribute
-	String getEndpoint() {
+	public String getEndpoint() {
 		return endpoint;
 	}
 
@@ -80,7 +59,7 @@ public class ServerModel implements Validation {
 	 * @param endpoint
 	 *            the endpoint to set
 	 */
-	void setEndpoint(String endpoint) {
+	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
 
@@ -90,7 +69,7 @@ public class ServerModel implements Validation {
 	 * @return the flow
 	 */
 	@XmlValue
-	String getFlow() {
+	public String getFlow() {
 		return flow;
 	}
 
@@ -100,7 +79,7 @@ public class ServerModel implements Validation {
 	 * @param flow
 	 *            the flow to set
 	 */
-	void setFlow(String flow) {
+	public void setFlow(String flow) {
 		this.flow = flow.trim();
 	}
 
@@ -108,8 +87,6 @@ public class ServerModel implements Validation {
 	public void validate() throws ValidationException {
 		if (this.endpoint == null) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "endpoint.server.undefined").format());
-		} else if (this.factory == null) {
-			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "factory.undefined").format(endpoint));
 		} else if (this.flow == null || this.flow.trim().length() == 0) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "flow.undefined").format(endpoint));
 		}

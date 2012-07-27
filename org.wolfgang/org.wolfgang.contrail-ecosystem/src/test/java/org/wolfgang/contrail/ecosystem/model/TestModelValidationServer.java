@@ -49,22 +49,9 @@ public class TestModelValidationServer extends TestCase {
 		}
 	}
 
-	public void testNominal03() {
-		final ServerModel server = new ServerModel();
-		try {
-			server.setFlow("A");
-			server.setEndpoint("ws://localhost:2666");
-			server.validate();
-			fail();
-		} catch (ValidationException e) {
-			// OK
-		}
-	}
-
 	public void testNominal04() {
 		final ServerModel server = new ServerModel();
 		try {
-			server.setFactory("a.b.c");
 			server.setFlow("A");
 			server.setEndpoint("ws://localhost:2666");
 			server.validate();

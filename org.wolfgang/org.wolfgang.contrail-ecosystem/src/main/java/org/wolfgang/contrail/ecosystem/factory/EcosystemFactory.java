@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
@@ -49,9 +50,14 @@ import org.wolfgang.contrail.component.router.RouterSourceFactory;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
+import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactory;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
+import org.wolfgang.contrail.connection.Server;
+import org.wolfgang.contrail.connection.ServerFactory;
+import org.wolfgang.contrail.connection.ServerFactoryCreationException;
+import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.BinderModel;
@@ -61,6 +67,7 @@ import org.wolfgang.contrail.ecosystem.model.FlowModel;
 import org.wolfgang.contrail.ecosystem.model.FlowModel.Item;
 import org.wolfgang.contrail.ecosystem.model.PipelineModel;
 import org.wolfgang.contrail.ecosystem.model.RouterModel;
+import org.wolfgang.contrail.ecosystem.model.ServerModel;
 import org.wolfgang.contrail.ecosystem.model.TerminalModel;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -105,7 +112,17 @@ public final class EcosystemFactory {
 	}
 
 	/**
-	 * 
+	 * Server factory
+	 */
+	private final ServerFactory serverFactory;
+
+	/**
+	 * Client factory
+	 */
+	private final ClientFactory clientFactory;
+
+	/**
+	 * The embedded component link manager
 	 */
 	private final ComponentLinkManager componentLinkManager;
 
@@ -145,6 +162,9 @@ public final class EcosystemFactory {
 	private Component mainComponent; // TODO
 
 	{
+		this.serverFactory = new ServerFactory();
+		this.clientFactory = new ClientFactory();
+
 		this.componentLinkManager = new ComponentLinkManagerImpl();
 		this.aliasedComponents = new HashMap<String, Component>();
 
@@ -318,7 +338,7 @@ public final class EcosystemFactory {
 
 				try {
 					mainReference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
-					client = ClientFactory.create(classLoader, uri.getScheme());
+					client = this.clientFactory.create(classLoader, uri.getScheme());
 				} catch (NoSuchAlgorithmException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ClientFactoryCreationException e) {
@@ -385,6 +405,48 @@ public final class EcosystemFactory {
 		return routerComponent;
 	}
 
+	private Worker create(ServerModel serverModel) throws CannotCreateComponentException {
+		final Server server;
+
+		try {
+			final URI uri = new URI(serverModel.getEndpoint());
+			server = this.serverFactory.create(classLoader, uri.getScheme());
+
+			// Build the initial flow
+			final Item[] flow = FlowModel.decompose(serverModel.getFlow());
+
+			final PipelineComponent initialTransducer = new IdentityComponent();
+			final Component terminalTransducer = create(initialTransducer, flow);
+
+			final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
+				@SuppressWarnings("unchecked")
+				@Override
+				public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+					// Initial component
+					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
+					try {
+						componentLinkManager.connect(initial, initialTransducer);
+						return initial.getDataSender();
+					} catch (ComponentConnectionRejectedException e) {
+						throw new CannotCreateDataSenderException(e);
+					}
+				}
+			};
+
+			return server.bind(uri, dataSenderFactory);
+		} catch (ServerFactoryCreationException e) {
+			throw new CannotCreateComponentException(e);
+		} catch (URISyntaxException e) {
+			throw new CannotCreateComponentException(e);
+		} catch (CannotCreateServerException e) {
+			throw new CannotCreateComponentException(e);
+		} catch (CannotCreateDataSenderException e) {
+			throw new CannotCreateComponentException(e);
+		} catch (ComponentConnectionRejectedException e) {
+			throw new CannotCreateComponentException(e);
+		}
+	}
+
 	/**
 	 * @param terminal
 	 */
@@ -414,6 +476,24 @@ public final class EcosystemFactory {
 	}
 
 	/**
+	 * Return the value of the server factory
+	 * 
+	 * @return the serverFactory
+	 */
+	public ServerFactory getServerFactory() {
+		return serverFactory;
+	}
+
+	/**
+	 * Return the value of the client factory
+	 * 
+	 * @return the clientFactory
+	 */
+	public ClientFactory getClientFactory() {
+		return clientFactory;
+	}
+
+	/**
 	 * Main method called whether an ecosystem must be created
 	 * 
 	 * @param ecosystem
@@ -422,7 +502,12 @@ public final class EcosystemFactory {
 	@SuppressWarnings("unchecked")
 	public org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystem) throws EcosystemCreationException {
 		try {
-			final EcosystemImpl ecosystemImpl = new EcosystemImpl();
+			final EcosystemImpl ecosystemImpl = new EcosystemImpl() {
+				public void close() throws IOException {
+					clientFactory.close();
+					serverFactory.close();
+				}
+			};
 
 			for (TerminalModel terminal : ecosystem.getTerminals()) {
 				register(terminal);
@@ -438,6 +523,10 @@ public final class EcosystemFactory {
 
 			for (FlowModel flow : ecosystem.getFlows()) {
 				register(flow);
+			}
+
+			for (ServerModel server : ecosystem.getServers()) {
+				create(server); // Catch the worker
 			}
 
 			for (BinderModel binder : ecosystem.getBinders()) {

@@ -61,40 +61,10 @@ public class TestModelValidationClient extends TestCase {
 		}
 	}
 
-	public void testNominal04() {
-		final ClientModel client = new ClientModel();
-		try {
-			client.setName("A");
-			client.setFlow("A");
-			client.setEndpoint("ws://localhost:2666");
-			client.validate();
-
-			fail();
-		} catch (ValidationException e) {
-			// OK
-		}
-	}
-
-	public void testNominal05() {
-		final ClientModel client = new ClientModel();
-		try {
-			client.setName("A");
-			client.setFlow("A");
-			client.setEndpoint("ws://localhost:2666");
-			client.setFilter("B");
-			client.validate();
-
-			fail();
-		} catch (ValidationException e) {
-			// OK
-		}
-	}
-
 	public void testNominal06() {
 		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
-			client.setFactory("a.b.c");
 			client.setFlow("A");
 			client.setEndpoint("ws://localhost:2666");
 			client.validate();
@@ -109,7 +79,6 @@ public class TestModelValidationClient extends TestCase {
 		final ClientModel client = new ClientModel();
 		try {
 			client.setName("A");
-			client.setFactory("a.b.c");
 			client.setFlow("A");
 			client.setEndpoint("ws://localhost:2666");
 			client.setFilter("B");

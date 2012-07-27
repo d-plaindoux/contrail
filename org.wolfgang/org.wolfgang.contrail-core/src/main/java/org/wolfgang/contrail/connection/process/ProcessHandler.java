@@ -18,19 +18,23 @@
 
 package org.wolfgang.contrail.connection.process;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.Server;
+import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -41,7 +45,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ProcessHandler implements Closeable {
+public class ProcessHandler implements Server {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -126,5 +130,71 @@ public class ProcessHandler implements Closeable {
 	@Override
 	public void close() throws IOException {
 		executor.shutdownNow();
+	}
+
+	@Override
+	public Worker bind(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+
+		final InputStream input = System.in;
+		final OutputStream output = System.out;
+
+		// TODO -- System.setIn(?);
+		// TODO -- System.setOut(?);
+
+		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+			@Override
+			public void receiveData(byte[] data) throws DataHandlerException {
+				try {
+					output.write(data);
+					output.flush();
+				} catch (IOException e) {
+					throw new DataHandlerException(e);
+				}
+			}
+
+			@Override
+			public void close() throws IOException {
+				System.exit(0); // End of the process
+			}
+		};
+
+		final DataSender<byte[]> dataSender;
+		try {
+			dataSender = factory.create(dataReceiver);
+		} catch (CannotCreateDataSenderException e) {
+			throw new CannotCreateServerException(e);
+		}
+
+		final Callable<Void> reader = new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				try {
+					final byte[] buffer = new byte[1024 * 8];
+					int len;
+					while ((len = input.read(buffer)) != -1) {
+						dataSender.sendData(Arrays.copyOf(buffer, len));
+					}
+					return null;
+				} catch (Exception e) {
+					dataSender.close();
+					throw e;
+				}
+			}
+		};
+
+		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader));
+
+		return new Worker() {
+			@Override
+			public void shutdown() {
+				delegatedFuture.cancel(true);
+				System.exit(0);
+			}
+
+			@Override
+			public boolean isActive() {
+				return true;
+			}
+		};
 	}
 }

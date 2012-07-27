@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<terminal name='Tracer'
+		factory='org.wolfgang.contrail.network.ecosystem.TestComponent' />
+
+	<server endpoint="tcp://localhost:6666">
+		Tracer
+	</server>
+</ecosystem>

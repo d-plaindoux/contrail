@@ -23,7 +23,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
- * 
  * <code>UUIDUtils</code> provides basic function for uuid generation from a
  * string using MD5 digest
  * 

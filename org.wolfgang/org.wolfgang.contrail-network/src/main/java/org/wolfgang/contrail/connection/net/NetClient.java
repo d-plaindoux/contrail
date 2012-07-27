@@ -19,10 +19,13 @@
 package org.wolfgang.contrail.connection.net;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -56,11 +59,18 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 public class NetClient implements Client {
 
 	/**
+	 * Active server sockets
+	 */
+	private List<Socket> clients;
+
+	/**
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
 
 	{
+		this.clients = new ArrayList<Socket>();
+
 		final ThreadGroup group = new ThreadGroup("Network.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
 			@Override
@@ -100,9 +110,7 @@ public class NetClient implements Client {
 
 		try {
 			client = new Socket(uri.getHost(), uri.getPort());
-
-			System.err.println("Client to " + uri + " is connected ...");
-
+			this.clients.add(client);
 		} catch (UnknownHostException e) {
 			throw new CannotCreateClientException(e);
 		} catch (IOException e) {
@@ -127,10 +135,14 @@ public class NetClient implements Client {
 		};
 
 		final DataSender<byte[]> dataSender;
-
 		try {
 			dataSender = factory.create(dataReceiver);
 		} catch (CannotCreateDataSenderException e) {
+			try {
+				dataReceiver.close();
+			} catch (IOException consume) {
+				// Ignore
+			}
 			throw new CannotCreateClientException(e);
 		}
 
@@ -144,12 +156,11 @@ public class NetClient implements Client {
 						dataSender.sendData(Arrays.copyOf(buffer, len));
 						len = client.getInputStream().read(buffer);
 					}
-				} catch (Exception e) {
+				} finally {
 					dataSender.close();
-					throw e;
+					client.close();
+					clients.remove(client);
 				}
-
-				System.err.println("Client to " + uri + " has been shutdown");
 
 				return null;
 			}
@@ -182,6 +193,14 @@ public class NetClient implements Client {
 
 	@Override
 	public void close() throws IOException {
+		for (Socket client : this.clients) {
+			try {
+				client.close();
+			} catch (IOException consume) {
+				// Ignore
+			}
+		}
+
 		executor.shutdownNow();
 	}
 }

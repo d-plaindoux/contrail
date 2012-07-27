@@ -18,20 +18,23 @@
 
 package org.wolfgang.contrail.connection.process;
 
-import java.io.Closeable;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.connection.CannotCreateClientException;
+import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -42,17 +45,12 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ProcessClient implements Closeable {
+public class ProcessClient implements Client {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
 	 */
 	private final ThreadPoolExecutor executor;
-
-	/**
-	 * The data sender factory
-	 */
-	private final DataSenderFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("Process.Client");
@@ -63,7 +61,7 @@ public class ProcessClient implements Closeable {
 			}
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(0, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
+		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
 		this.executor.allowCoreThreadTimeOut(true);
 	}
 
@@ -73,22 +71,24 @@ public class ProcessClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessClient(DataSenderFactory<byte[], byte[]> factory) {
+	public ProcessClient() {
 		super();
-		this.factory = factory;
 	}
 
-	/**
-	 * Method called whether a client connection must be performed
-	 * 
-	 * @param command
-	 *            The command to be executed
-	 * @return
-	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
-	 */
-	public Future<Void> connect(String[] command) throws IOException, CannotCreateDataSenderException {
-		final Process client = Runtime.getRuntime().exec(command);
+	@Override
+	public void close() throws IOException {
+		executor.shutdownNow();
+	}
+
+	@Override
+	public Worker connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+		final Process client;
+		try {
+			// TODO for the SSH
+			client = Runtime.getRuntime().exec(uri.getPath());
+		} catch (IOException e) {
+			throw new CannotCreateClientException(e);
+		}
 
 		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
 			@Override
@@ -107,7 +107,17 @@ public class ProcessClient implements Closeable {
 			}
 		};
 
-		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
+		final DataSender<byte[]> dataSender;
+		try {
+			dataSender = factory.create(dataReceiver);
+		} catch (CannotCreateDataSenderException e) {
+			try {
+				dataReceiver.close();
+			} catch (IOException consume) {
+				// Ignore
+			}
+			throw new CannotCreateClientException(e);
+		}
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
@@ -126,11 +136,27 @@ public class ProcessClient implements Closeable {
 			}
 		};
 
-		return executor.submit(reader);
-	}
+		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader));
 
-	@Override
-	public void close() throws IOException {
-		executor.shutdownNow();
+		return new Worker() {
+			@Override
+			public void shutdown() {
+				try {
+					client.destroy();
+				} finally {
+					delegatedFuture.cancel(true);
+				}
+			}
+
+			@Override
+			public boolean isActive() {
+				try {
+					client.exitValue();
+					return false;
+				} catch (IllegalThreadStateException e) {
+					return true;
+				}
+			}
+		};
 	}
 }

@@ -46,7 +46,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestComponentEcosystem extends TestCase {
 
-	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataSenderException, DataHandlerException {
+	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataSenderException, DataHandlerException, IOException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
@@ -105,5 +105,7 @@ public class TestComponentEcosystem extends TestCase {
 		createInitial.sendData(message);
 
 		assertEquals(message, stringReference.get());
+
+		integrator.close();
 	}
 }

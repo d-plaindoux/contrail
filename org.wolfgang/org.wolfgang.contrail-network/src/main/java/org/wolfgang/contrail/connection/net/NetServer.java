@@ -108,61 +108,62 @@ public class NetServer implements Server {
 			throw new CannotCreateServerException(e);
 		}
 
-		System.err.println("Server " + uri + " is running ...");
-
 		final Callable<Void> server = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				while (serverSocket.isBound()) {
-					final Socket client = serverSocket.accept();
+				try {
+					while (serverSocket.isBound()) {
+						final Socket client = serverSocket.accept();
 
-					// Check executor.getActiveCount() in order to prevent DoS
+						// Check executor.getActiveCount() in order to prevent
+						// DoS
 
-					final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
-						@Override
-						public void receiveData(byte[] data) throws DataHandlerException {
-							try {
-								client.getOutputStream().write(data);
-								client.getOutputStream().flush();
-							} catch (IOException e) {
-								throw new DataHandlerException(e);
-							}
-						}
-
-						@Override
-						public void close() throws IOException {
-							client.close();
-						}
-					};
-
-					final DataSender<byte[]> dataSender = factory.create(dataReceiver);
-
-					final Callable<Void> reader = new Callable<Void>() {
-						@Override
-						public Void call() throws Exception {
-							final byte[] buffer = new byte[1024 * 8];
-							try {
-								int len = client.getInputStream().read(buffer);
-								while (len != -1) {
-									dataSender.sendData(Arrays.copyOf(buffer, len));
-									len = client.getInputStream().read(buffer);
+						final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+							@Override
+							public void receiveData(byte[] data) throws DataHandlerException {
+								try {
+									client.getOutputStream().write(data);
+									client.getOutputStream().flush();
+								} catch (IOException e) {
+									throw new DataHandlerException(e);
 								}
-								return null;
-							} catch (Exception e) {
-								dataSender.close();
-								throw e;
 							}
-						}
-					};
 
-					executor.submit(reader);
+							@Override
+							public void close() throws IOException {
+								client.close();
+							}
+						};
+
+						final DataSender<byte[]> dataSender = factory.create(dataReceiver);
+
+						final Callable<Void> reader = new Callable<Void>() {
+							@Override
+							public Void call() throws Exception {
+								final byte[] buffer = new byte[1024 * 8];
+								try {
+									int len = client.getInputStream().read(buffer);
+									while (len != -1) {
+										dataSender.sendData(Arrays.copyOf(buffer, len));
+										len = client.getInputStream().read(buffer);
+									}
+									return null;
+								} catch (Exception e) {
+									dataSender.close();
+									throw e;
+								}
+							}
+						};
+
+						executor.submit(reader);
+					}
+
+					return null;
+
+				} finally {
+					servers.remove(serverSocket);
+					serverSocket.close();
 				}
-
-				servers.remove(serverSocket);
-
-				System.err.println("Server " + uri + " has been shutdown");
-
-				return null;
 			}
 		};
 

@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.connection;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,23 +30,40 @@ import java.util.Map;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ServerFactory {
+public final class ServerFactory implements Closeable {
 
-	private static Map<String, String> prototypes;
-	private static Map<String, Server> servers;
+	private Map<String, String> prototypes;
+	private Map<String, Server> servers;
+
+	{
+		this.prototypes = new HashMap<String, String>();
+		this.servers = new HashMap<String, Server>();
+	}
 
 	/**
 	 * Constructor
 	 */
-	private ServerFactory() {
+	public ServerFactory() {
 		super();
+	}
+
+	/**
+	 * Method called whether a given scheme must be registered
+	 * 
+	 * @param scheme
+	 *            The scheme
+	 * @param className
+	 *            The corresponding class name
+	 */
+	public void declareScheme(String scheme, String className) {
+		prototypes.put(scheme, className);
 	}
 
 	/**
 	 * @param scheme
 	 * @return
 	 */
-	private static String getFromScheme(String scheme) {
+	private String getFromScheme(String scheme) {
 		return prototypes.get(scheme);
 	}
 
@@ -58,7 +78,7 @@ public final class ServerFactory {
 	 * @throws ClientFactoryCreationException
 	 */
 	@SuppressWarnings("unchecked")
-	public static Server create(ClassLoader loader, String scheme) throws ServerFactoryCreationException {
+	public Server create(ClassLoader loader, String scheme) throws ServerFactoryCreationException {
 		try {
 			if (servers.containsKey(scheme)) {
 				return servers.get(scheme);
@@ -80,4 +100,10 @@ public final class ServerFactory {
 		}
 	}
 
+	@Override
+	public void close() throws IOException {
+		for (Server server : this.servers.values()) {
+			server.close();
+		}
+	}
 }

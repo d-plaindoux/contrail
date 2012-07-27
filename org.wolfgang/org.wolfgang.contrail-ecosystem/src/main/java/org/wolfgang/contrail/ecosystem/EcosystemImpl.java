@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem;
 
 import static org.wolfgang.common.message.MessagesProvider.message;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +38,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class EcosystemImpl implements Ecosystem {
+public class EcosystemImpl implements Ecosystem {
 
 	/**
 	 * Initial component integration triggers
@@ -52,6 +53,14 @@ public final class EcosystemImpl implements Ecosystem {
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, DataSenderFactory<?, ?>>();
 		this.linkManager = new ComponentLinkManagerImpl();
+	}
+
+	/**
+	 * Constructor
+	 */
+	public EcosystemImpl() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -105,5 +114,10 @@ public final class EcosystemImpl implements Ecosystem {
 
 		final Message message = message("org/wolfgang/contrail/ecosystem", "dataflow.factory.not.found");
 		throw new CannotProvideComponentException(message.format(filter));
+	}
+
+	@Override
+	public void close() throws IOException {
+		// Nothing to do
 	}
 }

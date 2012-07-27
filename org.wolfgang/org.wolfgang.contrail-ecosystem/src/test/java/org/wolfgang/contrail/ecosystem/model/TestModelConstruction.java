@@ -71,7 +71,6 @@ public class TestModelConstruction extends TestCase {
 		final ClientModel decoded = decode(ClientModel.class, content);
 		decoded.validate();
 
-		assertEquals("a", decoded.getFactory());
 		assertEquals("A.B", decoded.getName());
 		assertEquals("A.*", decoded.getFilter());
 		assertEquals("tcp://localhost:6666", decoded.getEndpoint());
@@ -103,7 +102,6 @@ public class TestModelConstruction extends TestCase {
 
 		final ClientModel client = decoded.getClients().get(0);
 		assertEquals("A.B", client.getName());
-		assertEquals("a", client.getFactory());
 		assertEquals("A.*", client.getFilter());
 		assertEquals("tcp://localhost:6666", client.getEndpoint());
 		assertEquals("PayLoad Serialize Coercion NetworkRoute", client.getFlow());
