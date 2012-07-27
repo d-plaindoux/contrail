@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface ContrailPipeline {
 
-	String value();
+	String name();
 
 }

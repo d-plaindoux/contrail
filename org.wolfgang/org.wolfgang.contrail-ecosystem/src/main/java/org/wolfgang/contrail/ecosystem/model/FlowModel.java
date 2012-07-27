@@ -32,7 +32,7 @@ import org.wolfgang.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name="flow")
+@XmlRootElement(name = "flow")
 public class FlowModel implements Validation {
 
 	/**
@@ -120,8 +120,7 @@ public class FlowModel implements Validation {
 		public String toString() {
 			return "Item [name=" + name + ", alias=" + alias + ", parameters=" + Arrays.toString(parameters) + "]";
 		}
-		
-		
+
 	}
 
 	private String name;
@@ -146,7 +145,7 @@ public class FlowModel implements Validation {
 		if (flow == null) {
 			return new Item[0];
 		} else {
-			final String[] flows = flow.split("\\s+");
+			final String[] flows = flow.trim().split("\\s+");
 			final Item[] items = new Item[flows.length];
 
 			for (int i = 0; i < items.length; i++) {

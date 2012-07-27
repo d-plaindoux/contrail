@@ -32,11 +32,11 @@ import java.util.Map;
  */
 public final class ClientFactory implements Closeable {
 
-	private Map<String, String> prototypes;
+	private Map<String, Class<?>> prototypes;
 	private Map<String, Client> clients;
 
 	{
-		this.prototypes = new HashMap<String, String>();
+		this.prototypes = new HashMap<String, Class<?>>();
 		this.clients = new HashMap<String, Client>();
 	}
 
@@ -52,18 +52,18 @@ public final class ClientFactory implements Closeable {
 	 * 
 	 * @param scheme
 	 *            The scheme
-	 * @param className
-	 *            The corresponding class name
+	 * @param aClass
+	 *            The corresponding class
 	 */
-	public void declareScheme(String scheme, String className) {
-		prototypes.put(scheme, className);
+	public void declareScheme(String scheme, Class<?> aClass) {
+		prototypes.put(scheme, aClass);
 	}
 
 	/**
 	 * @param scheme
 	 * @return
 	 */
-	private String getFromScheme(String scheme) {
+	private Class<?> getFromScheme(String scheme) {
 		return prototypes.get(scheme);
 	}
 
@@ -77,18 +77,15 @@ public final class ClientFactory implements Closeable {
 	 * @return
 	 * @throws ClientFactoryCreationException
 	 */
-	@SuppressWarnings("unchecked")
-	public Client create(ClassLoader loader, String scheme) throws ClientFactoryCreationException {
+	public Client create(String scheme) throws ClientFactoryCreationException {
 		try {
 			if (clients.containsKey(scheme)) {
 				return clients.get(scheme);
 			} else {
+				final Class<Client> clientClass = (Class<Client>) getFromScheme(scheme);
 
-				final String fromScheme = getFromScheme(scheme);
+				assert clientClass != null;
 
-				assert fromScheme != null;
-
-				final Class<Client> clientClass = (Class<Client>) loader.loadClass(fromScheme);
 				final Client client = clientClass.newInstance();
 
 				clients.put(scheme, client);

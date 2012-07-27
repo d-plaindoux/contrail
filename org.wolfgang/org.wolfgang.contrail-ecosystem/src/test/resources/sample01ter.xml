@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<requires>
+		Tracer=org.wolfgang.contrail.ecosystem.factory.TestComponent
+	</requires>
+
+	<binder name='Main' typein="String" typeout="String">
+		Tracer
+	</binder>
+</ecosystem>

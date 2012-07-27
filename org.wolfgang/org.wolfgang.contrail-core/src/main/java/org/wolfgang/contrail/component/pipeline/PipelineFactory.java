@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component.pipeline;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.PipelineComponent;
@@ -60,6 +61,8 @@ public final class PipelineFactory {
 					return (PipelineComponent) component.newInstance();
 				}
 			}
+		} catch (InvocationTargetException e) {
+			throw new CannotCreateComponentException(e.getCause());
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}

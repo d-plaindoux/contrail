@@ -31,7 +31,9 @@
 		TCPEvent
 	</binder>
 
-	<server endpoint='tcp://localhost:6667'> TCPEvent </server>
+	<server endpoint='tcp://localhost:6667'>
+		TCPEvent
+	</server>
 
 	<main> NS=NETStation Logger </main>
 </ecosystem>

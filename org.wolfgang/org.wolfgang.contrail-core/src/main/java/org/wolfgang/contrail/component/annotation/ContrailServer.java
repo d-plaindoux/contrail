@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface ContrailServer {
 
-	String value();
+	String scheme();
 
 }

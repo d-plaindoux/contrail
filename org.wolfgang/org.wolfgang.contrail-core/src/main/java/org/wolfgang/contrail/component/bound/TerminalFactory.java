@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component.bound;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 
@@ -47,6 +48,8 @@ public class TerminalFactory {
 			} catch (NoSuchMethodException e) {
 				return (TerminalComponent) component.newInstance();
 			}
+		} catch (InvocationTargetException e) {
+			throw new CannotCreateComponentException(e.getCause());
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}

@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("PayLoad")
+@ContrailPipeline(name = "PayLoad")
 public final class PayLoadTransducerFactory implements TransducerFactory<byte[], Bytes> {
 
 	/**

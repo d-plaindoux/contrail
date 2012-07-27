@@ -18,7 +18,6 @@
 
 package org.wolfgang.java.classes;
 
-import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -29,9 +29,8 @@ flow TCPEvent {
 	
 router NETStation A.A {
 	client A.B {
-		endpoint {
-			tcp://localhost:6666
-		}
+		tcp://localhost:6666
+
 		flow {
 			TCPEvent
 		}
@@ -39,9 +38,8 @@ router NETStation A.A {
 }
 
 binder NetHook byte[]*byte[] { 
-	<binder name='NETHook' typein="byte[]" typeout="byte[]">
-		TCPEvent
-	</binder>
+	TCPEvent
+}
 
 	<server endpoint='tcp://localhost:6667'> TCPEvent </server>
 

@@ -37,7 +37,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("ParallelDestination")
+@ContrailPipeline(name = "ParallelDestination")
 public class ParallelDestinationComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**

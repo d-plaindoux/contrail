@@ -22,16 +22,22 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.connection.net.NetServer;
+import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
+import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
+import org.wolfgang.contrail.ecosystem.key.NamedUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
+import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
  * <code>TestNetworkEcosystem</code>
@@ -42,16 +48,11 @@ import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 public class TestNetworkEcosystem extends TestCase {
 
 	public void testNominal01() {
-		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
-
-		assertNotNull(resource);
 
 		try {
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			ecosystemFactory.getServerFactory().declareScheme("tcp", NetServer.class.getCanonicalName());
-
+			final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final Socket socket = new Socket("localhost", 6666);
 			final String message = "Hello, World!";
@@ -64,33 +65,64 @@ public class TestNetworkEcosystem extends TestCase {
 			assertEquals(message, new String(buffer, 0, len));
 
 			socket.close();
-			
+
 			ecosystem.close();
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 	}
 
-	public void testNominal02() throws JAXBException, IOException, EcosystemCreationException {
+	public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
+
 		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
+		final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+		final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
-		assertNotNull(resource);
-
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			ecosystemFactory.getServerFactory().declareScheme("tcp", NetServer.class.getCanonicalName());
-
-			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
-
-			
 		try {
 			new Socket("localhost", 6667);
 			fail();
 		} catch (SocketException e) {
-			// OK			
+			// OK
 		} finally {
 			ecosystem.close();
 		}
 	}
 
+	public void testNominal02() {
+
+		try {
+			final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
+			final Ecosystem ecosystem01 = EcosystemFactory.build(EcosystemModel.decode(resource01.openStream()));
+
+			final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02.xml");
+			final Ecosystem ecosystem02 = EcosystemFactory.build(EcosystemModel.decode(resource02.openStream()));
+
+			// ----------------------------------------------------------------------------------------------------
+
+			final FutureResponse<String> response = new FutureResponse<String>();
+			final DataReceiverAdapter<byte[]> receiver = new DataReceiverAdapter<byte[]>() {
+				@Override
+				public void receiveData(byte[] data) throws DataHandlerException {
+					response.setValue(new String(data));
+				}
+			};
+
+			// ----------------------------------------------------------------------------------------------------
+
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem02.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSender<byte[]> sender = binder.create(receiver);
+
+			final String message = "Hello, World!";
+
+			sender.sendData(message.getBytes());
+
+			assertEquals(message, response.get(10, TimeUnit.SECONDS));
+
+			ecosystem01.close();
+			ecosystem02.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

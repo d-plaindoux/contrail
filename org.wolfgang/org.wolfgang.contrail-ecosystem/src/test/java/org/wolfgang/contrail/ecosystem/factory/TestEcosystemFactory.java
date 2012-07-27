@@ -52,8 +52,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -75,6 +74,66 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	public void testSample01bis() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01bis.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+
+			final FutureResponse<String> futureResponse = new FutureResponse<String>();
+			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
+				@Override
+				public void receiveData(String data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSender<String> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			sender.sendData(message);
+
+			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	public void testSample01ter() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01ter.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+
+			final FutureResponse<String> futureResponse = new FutureResponse<String>();
+			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
+				@Override
+				public void receiveData(String data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSender<String> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			sender.sendData(message);
+
+			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
 	public void testSample01WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01WithFlow.xml");
 
@@ -82,8 +141,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -112,8 +170,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
 			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
@@ -151,8 +208,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
 			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
@@ -191,8 +247,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
 			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
@@ -231,8 +286,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
 			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
@@ -270,8 +324,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final EcosystemFactory ecosystemFactory = new EcosystemFactory();
-			final Ecosystem ecosystem = ecosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
 
 			final int nbEventSent = 250000;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
@@ -296,17 +349,17 @@ public class TestEcosystemFactory extends TestCase {
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
 			long t0 = System.currentTimeMillis();
-			
+
 			for (int i = 0; i < nbEventSent; i++) {
 				assertEquals(1, transformed.size());
 				sender.sendData(transformed.get(0));
 			}
 
-			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis()  - t0) +  "ms");
+			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
 
 			assertEquals(new Integer(nbEventSent), response.get());
-			
-			System.err.println("Receiving " + nbEventSent + " events in " + (System.currentTimeMillis()  - t0) +  "ms");
+
+			System.err.println("Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

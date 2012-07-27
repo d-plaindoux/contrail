@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("JAXB")
+@ContrailPipeline(name = "JAXB")
 public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**

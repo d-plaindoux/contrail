@@ -31,7 +31,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("LoggerSource")
+@ContrailPipeline(name = "LoggerSource")
 public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**

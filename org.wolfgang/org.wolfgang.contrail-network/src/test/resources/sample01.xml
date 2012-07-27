@@ -1,5 +1,9 @@
 <?xml version='1.0'?>
 <ecosystem>
+	<requires>
+		org.wolfgang.contrail.connection.net.NetServer
+	</requires>
+
 	<terminal name='Tracer'
 		factory='org.wolfgang.contrail.network.ecosystem.TestComponent' />
 

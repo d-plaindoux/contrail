@@ -18,7 +18,12 @@
 
 package org.wolfgang.java.classes;
 
-import static org.wolfgang.java.classes.ClassAttribute.*;
+import org.wolfgang.java.classes.ClassAttribute.Code;
+import org.wolfgang.java.classes.ClassAttribute.Generic;
+import org.wolfgang.java.classes.ClassAttribute.Signature;
+import org.wolfgang.java.classes.ClassAttribute.SourceFile;
+import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
+import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
 
 /**
  * <code>AnnotationFilter</code>

@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.wolfgang.common.lang.TypeUtils;
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
@@ -36,6 +38,11 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.annotation.ContrailClient;
+import org.wolfgang.contrail.component.annotation.ContrailInitial;
+import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailServer;
+import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -84,7 +91,8 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 @SuppressWarnings("rawtypes")
 public final class EcosystemFactory {
 
-	private class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
+	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
+		private final EcosystemFactory ecosystemFactory;
 		private final Item[] items;
 
 		/**
@@ -92,8 +100,9 @@ public final class EcosystemFactory {
 		 * 
 		 * @param items
 		 */
-		private DataSenderFactoryImpl(Item[] items) {
+		private DataSenderFactoryImpl(EcosystemFactory ecosystemFactorie, Item[] items) {
 			super();
+			this.ecosystemFactory = ecosystemFactorie;
 			this.items = items;
 		}
 
@@ -101,7 +110,7 @@ public final class EcosystemFactory {
 		public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
-				EcosystemFactory.this.create(initialComponent, items);
+				ecosystemFactory.create(initialComponent, items);
 				return initialComponent.getDataSender();
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataSenderException(e);
@@ -177,6 +186,13 @@ public final class EcosystemFactory {
 	}
 
 	/**
+	 * Constructor
+	 */
+	private EcosystemFactory() {
+		super();
+	}
+
+	/**
 	 * Method called when a link must be established between two components
 	 * 
 	 * @param source
@@ -244,7 +260,8 @@ public final class EcosystemFactory {
 			} else if (flows.containsKey(name)) {
 				return register(item.getAlias(), create(source, FlowModel.decompose(flows.get(name).getValue())));
 			} else {
-				throw new CannotCreateDataSenderException();
+				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "value.unknown");
+				throw new CannotCreateDataSenderException(message.format(name));
 			}
 		}
 	}
@@ -338,7 +355,7 @@ public final class EcosystemFactory {
 
 				try {
 					mainReference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
-					client = this.clientFactory.create(classLoader, uri.getScheme());
+					client = this.clientFactory.create(uri.getScheme());
 				} catch (NoSuchAlgorithmException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ClientFactoryCreationException e) {
@@ -410,7 +427,7 @@ public final class EcosystemFactory {
 
 		try {
 			final URI uri = new URI(serverModel.getEndpoint());
-			server = this.serverFactory.create(classLoader, uri.getScheme());
+			server = this.serverFactory.create(uri.getScheme());
 
 			// Build the initial flow
 			final Item[] flow = FlowModel.decompose(serverModel.getFlow());
@@ -480,7 +497,7 @@ public final class EcosystemFactory {
 	 * 
 	 * @return the serverFactory
 	 */
-	public ServerFactory getServerFactory() {
+	private ServerFactory getServerFactory() {
 		return serverFactory;
 	}
 
@@ -489,8 +506,65 @@ public final class EcosystemFactory {
 	 * 
 	 * @return the clientFactory
 	 */
-	public ClientFactory getClientFactory() {
+	private ClientFactory getClientFactory() {
 		return clientFactory;
+	}
+
+	/**
+	 * @param loader
+	 * @param factory
+	 */
+	private void revolve(EcosystemModel ecosystemModel) {
+		if (ecosystemModel.getRequires() != null) {
+			for (Item item : FlowModel.decompose(ecosystemModel.getRequires())) {
+				try {
+					final Class<?> aClass = classLoader.loadClass(item.getName());
+					if (aClass.isAnnotationPresent(ContrailClient.class)) {
+						final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
+						this.getClientFactory().declareScheme(annotation.scheme(), aClass);
+					} else if (aClass.isAnnotationPresent(ContrailServer.class)) {
+						final ContrailServer annotation = aClass.getAnnotation(ContrailServer.class);
+						this.getServerFactory().declareScheme(annotation.scheme(), aClass);
+					} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
+						final ContrailPipeline annotation = aClass.getAnnotation(ContrailPipeline.class);
+						final String name;
+						if (item.asAlias()) {
+							name = item.getAlias();
+						} else {
+							name = annotation.name();
+						}
+						final PipelineModel model = new PipelineModel();
+						model.setName(name);
+						model.setFactory(item.getName());
+						for (String parameter : item.getParameters()) {
+							model.add(parameter);
+						}
+						ecosystemModel.add(model);
+					} else if (aClass.isAnnotationPresent(ContrailTerminal.class)) {
+						final ContrailTerminal annotation = aClass.getAnnotation(ContrailTerminal.class);
+						final String name;
+						if (item.asAlias()) {
+							name = item.getAlias();
+						} else {
+							name = annotation.name();
+						}
+						final TerminalModel model = new TerminalModel();
+						model.setName(name);
+						model.setFactory(item.getName());
+						for (String parameter : item.getParameters()) {
+							model.add(parameter);
+						}
+						ecosystemModel.add(model);
+					} else if (aClass.isAnnotationPresent(ContrailInitial.class)) {
+						// TODO
+					}
+				} catch (ClassNotFoundException ignore) {
+					// Consume
+				}
+			}
+
+			ecosystemModel.setRequires(null); // Work done once only
+		}
 	}
 
 	/**
@@ -500,33 +574,38 @@ public final class EcosystemFactory {
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystem) throws EcosystemCreationException {
+	public static org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystem) throws EcosystemCreationException {
+
+		final EcosystemFactory ecosystemFactory = new EcosystemFactory();
+
+		ecosystemFactory.revolve(ecosystem);
+
 		try {
 			final EcosystemImpl ecosystemImpl = new EcosystemImpl() {
 				public void close() throws IOException {
-					clientFactory.close();
-					serverFactory.close();
+					ecosystemFactory.clientFactory.close();
+					ecosystemFactory.serverFactory.close();
 				}
 			};
 
 			for (TerminalModel terminal : ecosystem.getTerminals()) {
-				register(terminal);
+				ecosystemFactory.register(terminal);
 			}
 
 			for (PipelineModel pipeline : ecosystem.getPipelines()) {
-				register(pipeline);
+				ecosystemFactory.register(pipeline);
 			}
 
 			for (RouterModel router : ecosystem.getRouters()) {
-				register(router);
+				ecosystemFactory.register(router);
 			}
 
 			for (FlowModel flow : ecosystem.getFlows()) {
-				register(flow);
+				ecosystemFactory.register(flow);
 			}
 
 			for (ServerModel server : ecosystem.getServers()) {
-				create(server); // Catch the worker
+				ecosystemFactory.create(server); // Catch the worker
 			}
 
 			for (BinderModel binder : ecosystem.getBinders()) {
@@ -535,12 +614,12 @@ public final class EcosystemFactory {
 				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
 
 				final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
-				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(FlowModel.decompose(binder.getFlow())));
+				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
 			}
 
 			final Item[] decompose = FlowModel.decompose(ecosystem.getMain());
 			if (decompose.length > 0) {
-				this.mainComponent = create(null, decompose);
+				ecosystemFactory.mainComponent = ecosystemFactory.create(null, decompose);
 			}
 
 			return ecosystemImpl;

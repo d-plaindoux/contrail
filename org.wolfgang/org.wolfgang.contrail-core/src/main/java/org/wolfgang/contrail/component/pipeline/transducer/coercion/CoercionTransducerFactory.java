@@ -32,7 +32,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("Coercion")
+@ContrailPipeline(name = "Coercion")
 public final class CoercionTransducerFactory<T> implements TransducerFactory<Object, T> {
 
 	/**

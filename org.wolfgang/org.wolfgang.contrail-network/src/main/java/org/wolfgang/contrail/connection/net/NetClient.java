@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.connection.net;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.UnknownHostException;

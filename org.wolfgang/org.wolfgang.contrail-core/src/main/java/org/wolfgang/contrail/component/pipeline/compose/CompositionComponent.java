@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("Composition")
+@ContrailPipeline(name = "Composition")
 public class CompositionComponent<U1, D1, U2, D2> extends AbstractPipelineComponent<U1, D1, U2, D2> {
 
 	private final UpStreamDataHandler<U1> upStreamDataHandler;

@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline("Serialization")
+@ContrailPipeline(name = "Serialization")
 public final class SerializationTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**

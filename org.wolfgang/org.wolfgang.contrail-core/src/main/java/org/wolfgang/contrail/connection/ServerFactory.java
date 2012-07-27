@@ -32,11 +32,11 @@ import java.util.Map;
  */
 public final class ServerFactory implements Closeable {
 
-	private Map<String, String> prototypes;
+	private Map<String, Class<?>> prototypes;
 	private Map<String, Server> servers;
 
 	{
-		this.prototypes = new HashMap<String, String>();
+		this.prototypes = new HashMap<String, Class<?>>();
 		this.servers = new HashMap<String, Server>();
 	}
 
@@ -55,7 +55,7 @@ public final class ServerFactory implements Closeable {
 	 * @param className
 	 *            The corresponding class name
 	 */
-	public void declareScheme(String scheme, String className) {
+	public void declareScheme(String scheme, Class<?> className) {
 		prototypes.put(scheme, className);
 	}
 
@@ -63,7 +63,7 @@ public final class ServerFactory implements Closeable {
 	 * @param scheme
 	 * @return
 	 */
-	private String getFromScheme(String scheme) {
+	private Class<?> getFromScheme(String scheme) {
 		return prototypes.get(scheme);
 	}
 
@@ -77,18 +77,16 @@ public final class ServerFactory implements Closeable {
 	 * @return
 	 * @throws ClientFactoryCreationException
 	 */
-	@SuppressWarnings("unchecked")
-	public Server create(ClassLoader loader, String scheme) throws ServerFactoryCreationException {
+	public Server create(String scheme) throws ServerFactoryCreationException {
 		try {
 			if (servers.containsKey(scheme)) {
 				return servers.get(scheme);
 			} else {
 
-				final String fromScheme = getFromScheme(scheme);
+				final Class<Server> serverClass = (Class<Server>) getFromScheme(scheme);
 
-				assert fromScheme != null;
+				assert serverClass != null;
 
-				final Class<Server> serverClass = (Class<Server>) loader.loadClass(fromScheme);
 				final Server server = serverClass.newInstance();
 
 				servers.put(scheme, server);

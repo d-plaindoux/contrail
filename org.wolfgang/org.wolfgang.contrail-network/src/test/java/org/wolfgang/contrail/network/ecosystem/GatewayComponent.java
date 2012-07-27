@@ -16,16 +16,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.factory;
+package org.wolfgang.contrail.network.ecosystem;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.connection.CannotCreateClientException;
 
 /**
  * <code>TestComponent</code>
@@ -33,35 +30,28 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
-@ContrailTerminal(name = "Test")
-public class TestComponent extends TerminalComponent {
+@ContrailTerminal(name = "GateWay")
+public class GatewayComponent extends TerminalComponent<byte[], byte[]> {
 
-	private static DataReceiverFactory DATA_RECEIVER_FACTORY = new DataReceiverFactory() {
-		@Override
-		public DataReceiver create(final DataSender sender) {
-			return new DataReceiver() {
-				@Override
-				public void close() throws IOException {
-					sender.close();
-				}
-
-				@Override
-				@SuppressWarnings("unchecked")
-				public void receiveData(Object data) throws DataHandlerException {
-					sender.sendData(data);
-				}
-			};
-		}
-	};
+	/**
+	 * Constructor
+	 * 
+	 * @param args
+	 * @throws URISyntaxException
+	 * @throws CannotCreateClientException
+	 */
+	public GatewayComponent(String... args) throws URISyntaxException, CannotCreateClientException {
+		this(new GatewayReceiver(args));
+	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param receiver
 	 */
-	public TestComponent() {
-		super(DATA_RECEIVER_FACTORY);
+	private GatewayComponent(GatewayReceiver receiver) {
+		super(receiver);
+		receiver.setComponentSender(this.getDataSender());
 	}
 
 }
