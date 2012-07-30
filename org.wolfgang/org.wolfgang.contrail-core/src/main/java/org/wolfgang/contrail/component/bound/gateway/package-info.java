@@ -16,23 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.factory;
-
-import org.wolfgang.contrail.connection.ConnectionFactory;
-
 /**
- * <code>EcosystemFactory</code>
- * 
+ * <code>package-info</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemFactory extends ConnectionFactory {
-
-	/**
-	 * Provides the current class loader
-	 * 
-	 * @return a class loader
-	 */
-	ClassLoader getClassLoader();
-
-}
+package org.wolfgang.contrail.component.bound.gateway;

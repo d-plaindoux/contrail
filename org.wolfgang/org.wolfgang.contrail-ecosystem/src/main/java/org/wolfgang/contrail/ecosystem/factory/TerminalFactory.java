@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.connection.ConnectionFactory;
 
 /**
  * <code>TerminalFactory</code>
@@ -44,7 +45,7 @@ public class TerminalFactory {
 		try {
 			final Class<?> component = ecosystemFactory.getClassLoader().loadClass(factoryName);
 			try {
-				final Constructor<?> constructor = component.getConstructor(EcosystemFactory.class, String[].class);
+				final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
 				return (TerminalComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
 			} catch (NoSuchMethodException e1) {
 				try {

@@ -352,7 +352,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 
 				try {
 					mainReference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
-					client = this.clientFactory.create(uri.getScheme());
+					client = this.clientFactory.get(uri.getScheme());
 				} catch (NoSuchAlgorithmException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ClientFactoryCreationException e) {
@@ -424,7 +424,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 
 		try {
 			final URI uri = new URI(serverModel.getEndpoint());
-			server = this.serverFactory.create(uri.getScheme());
+			server = this.serverFactory.get(uri.getScheme());
 
 			// Build the initial flow
 			final Item[] flow = FlowModel.decompose(serverModel.getFlow());

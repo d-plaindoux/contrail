@@ -77,7 +77,8 @@ public final class ServerFactory implements Closeable {
 	 * @return
 	 * @throws ClientFactoryCreationException
 	 */
-	public Server create(String scheme) throws ServerFactoryCreationException {
+	@SuppressWarnings("unchecked")
+	public Server get(String scheme) throws ServerFactoryCreationException {
 		try {
 			if (servers.containsKey(scheme)) {
 				return servers.get(scheme);

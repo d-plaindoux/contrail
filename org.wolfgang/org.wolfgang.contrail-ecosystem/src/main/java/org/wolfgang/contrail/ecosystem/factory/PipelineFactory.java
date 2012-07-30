@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
+import org.wolfgang.contrail.connection.ConnectionFactory;
 
 /**
  * <code>PipelineFactory</code>
@@ -55,7 +56,7 @@ public final class PipelineFactory {
 				return factory.createComponent();
 			} else {
 				try {
-					final Constructor<?> constructor = component.getConstructor(EcosystemFactory.class, String[].class);
+					final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
 					return (PipelineComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
 				} catch (NoSuchMethodException e1) {
 					try {

@@ -77,7 +77,8 @@ public final class ClientFactory implements Closeable {
 	 * @return
 	 * @throws ClientFactoryCreationException
 	 */
-	public Client create(String scheme) throws ClientFactoryCreationException {
+	@SuppressWarnings("unchecked")
+	public Client get(String scheme) throws ClientFactoryCreationException {
 		try {
 			if (clients.containsKey(scheme)) {
 				return clients.get(scheme);
