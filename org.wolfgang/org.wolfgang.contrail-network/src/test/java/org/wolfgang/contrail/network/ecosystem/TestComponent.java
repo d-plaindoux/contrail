@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.ecosystem;
 
 import java.io.IOException;
 
+import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -33,6 +34,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
+@ContrailTerminal(name = "Test")
 public class TestComponent extends TerminalComponent {
 
 	private static DataReceiverFactory DATA_RECEIVER_FACTORY = new DataReceiverFactory() {

@@ -27,7 +27,9 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
-import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.ClientFactoryCreationException;
+import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -36,8 +38,6 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-
-@SuppressWarnings("rawtypes")
 public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]> {
 
 	protected DataReceiver<byte[]> clientReceiver;
@@ -49,17 +49,17 @@ public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]>
 	 * @param args
 	 * @throws URISyntaxException
 	 * @throws CannotCreateClientException
+	 * @throws ClientFactoryCreationException
 	 */
-	public GatewayReceiver(String[] args) throws URISyntaxException, CannotCreateClientException {
+	public GatewayReceiver(EcosystemFactory factory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
 		super();
 
 		assert args.length == 1;
 
 		final URI uri = new URI(args[0]);
+		final Client client = factory.getClientFactory().create(uri.getScheme());
 
-		final NetClient netClient = new NetClient(); // TODO -- must be closed
-
-		netClient.connect(uri, new DataSenderFactory<byte[], byte[]>() {
+		client.connect(uri, new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
 				GatewayReceiver.this.clientReceiver = component;

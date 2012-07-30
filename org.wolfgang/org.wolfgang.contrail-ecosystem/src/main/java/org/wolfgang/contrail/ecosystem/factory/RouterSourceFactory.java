@@ -18,36 +18,31 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
-import org.wolfgang.contrail.connection.ClientFactory;
-import org.wolfgang.contrail.connection.ServerFactory;
+import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterSourceTable;
+import org.wolfgang.contrail.reference.DirectReference;
 
 /**
- * <code>EcosystemFactory</code>
+ * <code>RouterSourceFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemFactory {
+public final class RouterSourceFactory {
 
 	/**
-	 * Provides the current class loader
-	 * 
-	 * @return a class loader
+	 * Constructor
 	 */
-	ClassLoader getClassLoader();
+	private RouterSourceFactory() {
+		// Prevent useless creation
+	}
 
 	/**
-	 * Return the value of the server factory
+	 * Method called whether a network router is required.
 	 * 
-	 * @return the serverFactory
+	 * @return a network router component
 	 */
-	ServerFactory getServerFactory();
-
-	/**
-	 * Return the value of the client factory
-	 * 
-	 * @return the clientFactory
-	 */
-	ClientFactory getClientFactory();
-
+	public static RouterSourceComponent create(DirectReference selfReference) {
+		return new RouterSourceComponent(new RouterSourceTable(), selfReference);
+	}
 }

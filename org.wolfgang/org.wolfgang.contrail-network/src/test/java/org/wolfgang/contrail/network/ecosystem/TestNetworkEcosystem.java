@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
-import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
+import org.wolfgang.contrail.ecosystem.factory.EcosystemFactoryImpl;
 import org.wolfgang.contrail.ecosystem.key.NamedUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -52,7 +52,7 @@ public class TestNetworkEcosystem extends TestCase {
 		try {
 			final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final Socket socket = new Socket("localhost", 6666);
 			final String message = "Hello, World!";
@@ -76,7 +76,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
 		final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-		final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+		final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 		try {
 			new Socket("localhost", 6667);
@@ -92,10 +92,10 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 			final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
-			final Ecosystem ecosystem01 = EcosystemFactory.build(EcosystemModel.decode(resource01.openStream()));
+			final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(EcosystemModel.decode(resource01.openStream()));
 
 			final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02.xml");
-			final Ecosystem ecosystem02 = EcosystemFactory.build(EcosystemModel.decode(resource02.openStream()));
+			final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(EcosystemModel.decode(resource02.openStream()));
 
 			// ----------------------------------------------------------------------------------------------------
 

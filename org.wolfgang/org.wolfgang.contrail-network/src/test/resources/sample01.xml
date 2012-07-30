@@ -2,10 +2,8 @@
 <ecosystem>
 	<declare>
 		org.wolfgang.contrail.connection.net.NetServer
+		Tracer=org.wolfgang.contrail.network.ecosystem.TestComponent
 	</declare>
-
-	<terminal name='Tracer'
-		factory='org.wolfgang.contrail.network.ecosystem.TestComponent' />
 
 	<server endpoint="tcp://localhost:6666">
 		Tracer

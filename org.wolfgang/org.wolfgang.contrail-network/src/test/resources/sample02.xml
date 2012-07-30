@@ -2,6 +2,7 @@
 <ecosystem>
 
 	<declare>
+		org.wolfgang.contrail.connection.net.NetClient
 		Gateway=org.wolfgang.contrail.network.ecosystem.GatewayComponent(tcp://localhost:6666)
 	</declare>
 

@@ -52,7 +52,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -81,7 +81,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -111,7 +111,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -141,7 +141,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
 			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
@@ -170,7 +170,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
 			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
@@ -208,7 +208,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
 			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
@@ -247,7 +247,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
 			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
@@ -286,7 +286,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
 			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
@@ -324,7 +324,7 @@ public class TestEcosystemFactory extends TestCase {
 
 		try {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactory.build(decoded);
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
 
 			final int nbEventSent = 250000;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();

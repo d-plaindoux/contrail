@@ -80,7 +80,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	/**
 	 * Constructor
 	 */
-	RouterSourceComponent(RouterSourceTable table, DirectReference selfReference) {
+	public RouterSourceComponent(RouterSourceTable table, DirectReference selfReference) {
 		this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		this.streamStation = new StreamDataHandlerStation(this, selfReference, table);
 	}

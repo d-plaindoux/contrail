@@ -23,6 +23,8 @@ import java.net.URISyntaxException;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
+import org.wolfgang.contrail.connection.ClientFactoryCreationException;
+import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
 
 /**
  * <code>TestComponent</code>
@@ -39,9 +41,10 @@ public class GatewayComponent extends TerminalComponent<byte[], byte[]> {
 	 * @param args
 	 * @throws URISyntaxException
 	 * @throws CannotCreateClientException
+	 * @throws ClientFactoryCreationException 
 	 */
-	public GatewayComponent(String... args) throws URISyntaxException, CannotCreateClientException {
-		this(new GatewayReceiver(args));
+	public GatewayComponent(EcosystemFactory ecosystemFactory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
+		this(new GatewayReceiver(ecosystemFactory, args));
 	}
 
 	/**
