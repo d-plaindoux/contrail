@@ -3,11 +3,11 @@
 
 	<pipeline name='Serialize'
 		factory='org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory' />
-	<terminal name='Tracer'
-		factory='org.wolfgang.contrail.ecosystem.factory.TestComponent' />
+	<terminal name='Echo'
+		factory='org.wolfgang.contrail.ecosystem.factory.EchoComponent' />
 
 	<flow name="MainFlow">
-		Serialize Tracer
+		Serialize Echo
 	</flow>
 
 	<binder name='Main'

@@ -2,10 +2,10 @@
 <ecosystem>
 	<declare>
 		org.wolfgang.contrail.connection.net.NetServer
-		Tracer=org.wolfgang.contrail.network.ecosystem.TestComponent
+		Echo=org.wolfgang.contrail.network.ecosystem.EchoComponent
 	</declare>
 
 	<server endpoint="tcp://localhost:6666">
-		Tracer
+		Echo
 	</server>
 </ecosystem>

@@ -35,7 +35,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 @SuppressWarnings("rawtypes")
 @ContrailTerminal(name = "Test")
-public class TestComponent extends TerminalComponent {
+public class EchoComponent extends TerminalComponent {
 
 	private static DataReceiverFactory DATA_RECEIVER_FACTORY = new DataReceiverFactory() {
 		@Override
@@ -60,7 +60,7 @@ public class TestComponent extends TerminalComponent {
 	 * 
 	 * @param receiver
 	 */
-	public TestComponent() {
+	public EchoComponent() {
 		super(DATA_RECEIVER_FACTORY);
 	}
 

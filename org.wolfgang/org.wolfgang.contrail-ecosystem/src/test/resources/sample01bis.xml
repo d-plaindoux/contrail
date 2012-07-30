@@ -2,7 +2,7 @@
 <ecosystem>
 	<declare>
 		<!-- Implicit name Test -->
-		org.wolfgang.contrail.ecosystem.factory.TestComponent
+		org.wolfgang.contrail.ecosystem.factory.EchoComponent
 	</declare>
 
 	<binder name='Main' typein="String" typeout="String">
