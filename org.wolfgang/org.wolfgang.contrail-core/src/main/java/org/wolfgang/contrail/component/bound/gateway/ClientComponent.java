@@ -20,8 +20,10 @@ package org.wolfgang.contrail.component.bound.gateway;
 
 import java.net.URISyntaxException;
 
+import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
 import org.wolfgang.contrail.connection.ConnectionFactory;
@@ -32,8 +34,9 @@ import org.wolfgang.contrail.connection.ConnectionFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailTerminal(name = "GateWay")
-public class GatewayComponent extends TerminalComponent<byte[], byte[]> {
+@ContrailTerminal(name = "Destination.Client")
+@ContrailDownType(in = Bytes.class, out = Bytes.class)
+public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 
 	/**
 	 * Constructor
@@ -43,8 +46,8 @@ public class GatewayComponent extends TerminalComponent<byte[], byte[]> {
 	 * @throws CannotCreateClientException
 	 * @throws ClientFactoryCreationException
 	 */
-	public GatewayComponent(ConnectionFactory connectionFactory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
-		this(new GatewayReceiver(connectionFactory, args));
+	public ClientComponent(ConnectionFactory connectionFactory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
+		this(new ClientReceiver(connectionFactory, args));
 	}
 
 	/**
@@ -52,7 +55,7 @@ public class GatewayComponent extends TerminalComponent<byte[], byte[]> {
 	 * 
 	 * @param receiver
 	 */
-	private GatewayComponent(GatewayReceiver receiver) {
+	private ClientComponent(ClientReceiver receiver) {
 		super(receiver);
 		receiver.setComponentSender(this.getDataSender());
 	}

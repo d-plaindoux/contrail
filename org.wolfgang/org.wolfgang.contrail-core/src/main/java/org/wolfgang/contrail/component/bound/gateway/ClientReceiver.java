@@ -38,7 +38,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]> {
+public class ClientReceiver implements DataReceiver<byte[]> {
 
 	protected DataReceiver<byte[]> clientReceiver;
 	protected DataSender<byte[]> componentSender;
@@ -51,7 +51,7 @@ public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]>
 	 * @throws CannotCreateClientException
 	 * @throws ClientFactoryCreationException
 	 */
-	GatewayReceiver(ConnectionFactory factory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
+	ClientReceiver(ConnectionFactory factory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
 		super();
 
 		assert args.length == 1;
@@ -62,8 +62,19 @@ public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]>
 		client.connect(uri, new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
-				GatewayReceiver.this.clientReceiver = component;
-				return GatewayReceiver.this;
+				setComponentReceiver(component);
+
+				return new DataSender<byte[]>() {
+					@Override
+					public void close() throws IOException {
+						componentSender.close();
+					}
+
+					@Override
+					public void sendData(byte[] data) throws DataHandlerException {
+						componentSender.sendData(data);
+					}
+				};
 			}
 		});
 	}
@@ -71,22 +82,26 @@ public class GatewayReceiver implements DataReceiver<byte[]>, DataSender<byte[]>
 	@Override
 	public void close() throws IOException {
 		clientReceiver.close();
-		componentSender.close();
 	}
 
 	/**
-	 * Set the value of componentSender
+	 * Set the value of component Receiver
 	 * 
 	 * @param componentSender
-	 *            the componentSender to set
+	 *            the component receiver to set
+	 */
+	void setComponentReceiver(DataReceiver<byte[]> componentReceiver) {
+		this.clientReceiver = componentReceiver;
+	}
+
+	/**
+	 * Set the value of component Sender
+	 * 
+	 * @param componentSender
+	 *            the component sender to set
 	 */
 	void setComponentSender(DataSender<byte[]> componentSender) {
 		this.componentSender = componentSender;
-	}
-
-	@Override
-	public void sendData(byte[] data) throws DataHandlerException {
-		componentSender.sendData(data);
 	}
 
 	@Override

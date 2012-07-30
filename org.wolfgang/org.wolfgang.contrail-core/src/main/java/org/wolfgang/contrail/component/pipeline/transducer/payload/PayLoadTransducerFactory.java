@@ -18,7 +18,9 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
+import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
@@ -33,6 +35,8 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @version 1.0
  */
 @ContrailPipeline(name = "PayLoad")
+@ContrailUpType(in = byte[].class, out = byte[].class)
+@ContrailDownType(in = Bytes.class, out = Bytes.class)
 public final class PayLoadTransducerFactory implements TransducerFactory<byte[], Bytes> {
 
 	/**

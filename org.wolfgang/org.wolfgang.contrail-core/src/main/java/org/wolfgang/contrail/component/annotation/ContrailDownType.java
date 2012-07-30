@@ -32,12 +32,10 @@ import java.lang.annotation.Target;
  */
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface ContrailServer {
+public @interface ContrailDownType {
 
-	String scheme();
+	Class<?> in();
 
-	Class<?> in() default Object.class;
-
-	Class<?> out() default Object.class;
+	Class<?> out();
 
 }

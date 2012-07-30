@@ -3,10 +3,10 @@
 
 	<declare>
 		org.wolfgang.contrail.connection.net.NetClient
-		Gateway=org.wolfgang.contrail.component.bound.gateway.GatewayComponent
+		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
 	</declare>
 
 	<binder name='Main' typein="byte[]" typeout="byte[]">
-		Gateway(tcp://localhost:6666)
+		Client(tcp://localhost:6666)
 	</binder>
 </ecosystem>

@@ -3,6 +3,7 @@
 	<declare>
 		org.wofgang.contrail.connection.net.NetClient
 		org.wofgang.contrail.connection.net.NetServer
+
 		PayLoad=org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
 		Coercion=org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
 		Serialization=org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
@@ -11,23 +12,27 @@
 		ClientConnector=org.wolfgang.contrail.component.router.SourceAcceptanceComponent
 		Logger=org.wolfgang.contrail.bound.LoggerComponent
 		NetEvent=org.wolfgang.contrail.component.router.event.Event
+		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
+		Server=org.wolfgang.contrail.component.bound.gateway.ServerComponent
 	</declare>
 
+	<flow name="SharedStation"> NS=NetStation </flow>
 	<flow name="Coercion.Event"> Coercion(NetEvent) </flow>
 	<flow name='Parallel'> ParallelSource ParallelDestination </flow>
-	<flow name='Event'> Parallel Coercion.Event ClientConnector NS </flow>
+	<flow name='Event'> Parallel Coercion.Event ClientConnector SharedStation
+	</flow>
 	<flow name='TCPEvent'> PayLoad Serialization Event </flow>
 
 	<router name='NETStation'>
-		<self name='A.A' />
+		<reference name='A.A' />
 
 		<!-- NET Socket Client -->
-		<client name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>
-			TCPEvent
-		</client>
+		<entry name='A.B' filter='A.*'>
+			Client(tcp://localhost:6666) TCPEvent
+		</entry>
 	</router>
 
-	<binder name='NETHook' typein="byte[]" typeout="byte[]">
+	<binder name='NETHook'>
 		TCPEvent
 	</binder>
 
@@ -35,5 +40,4 @@
 		TCPEvent
 	</server>
 
-	<main> NS=NETStation Logger </main>
 </ecosystem>

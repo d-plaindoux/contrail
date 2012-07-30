@@ -61,4 +61,5 @@ public interface DestinationComponent<U, D> extends Component {
 	 *             if the connection cannot be performed
 	 */
 	ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
+
 }

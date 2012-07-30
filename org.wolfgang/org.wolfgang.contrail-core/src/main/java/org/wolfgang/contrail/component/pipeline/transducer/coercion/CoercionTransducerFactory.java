@@ -20,6 +20,7 @@
 package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
@@ -33,6 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @version 1.0
  */
 @ContrailPipeline(name = "Coercion")
+@ContrailUpType(in = Object.class, out = Object.class)
 public final class CoercionTransducerFactory<T> implements TransducerFactory<Object, T> {
 
 	/**

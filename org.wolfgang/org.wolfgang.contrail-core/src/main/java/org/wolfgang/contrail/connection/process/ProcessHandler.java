@@ -28,6 +28,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
+import org.wolfgang.contrail.component.annotation.ContrailServer;
+import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -45,6 +47,8 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@ContrailServer(scheme = "ssh")
+@ContrailUpType(in = byte[].class, out = byte[].class)
 public class ProcessHandler implements Server {
 
 	/**

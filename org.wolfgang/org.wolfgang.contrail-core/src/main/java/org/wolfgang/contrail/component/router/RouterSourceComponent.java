@@ -29,6 +29,8 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.annotation.ContrailDownType;
+import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -47,6 +49,8 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@ContrailUpType(in = Event.class, out = Event.class)
+@ContrailDownType(in = Event.class, out = Event.class)
 public class RouterSourceComponent extends AbstractComponent implements DestinationComponent<Event, Event>, MultipleSourceComponent<Event, Event> {
 
 	/**

@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<ecosystem>
+
+	<declare>
+		<!-- Basic client/server -->
+		org.wolfgang.contrail.connection.net.NetClient
+		org.wolfgang.contrail.connection.net.NetServer
+
+		<!-- Declared components -->
+		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
+		Server=org.wolfgang.contrail.component.bound.gateway.ServerComponent
+	</declare>
+
+	<main>
+		Server(tcp://localhost:6665) Client(tcp://localhost:6666)
+	</main>
+</ecosystem>
