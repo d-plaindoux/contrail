@@ -515,8 +515,8 @@ public final class EcosystemFactory {
 	 * @param factory
 	 */
 	private void revolve(EcosystemModel ecosystemModel) {
-		if (ecosystemModel.getRequires() != null) {
-			for (Item item : FlowModel.decompose(ecosystemModel.getRequires())) {
+		if (ecosystemModel.getDeclaration() != null) {
+			for (Item item : FlowModel.decompose(ecosystemModel.getDeclaration())) {
 				try {
 					final Class<?> aClass = classLoader.loadClass(item.getName());
 					if (aClass.isAnnotationPresent(ContrailClient.class)) {
@@ -563,7 +563,7 @@ public final class EcosystemFactory {
 				}
 			}
 
-			ecosystemModel.setRequires(null); // Work done once only
+			ecosystemModel.setDeclaration(null); // Work done once only
 		}
 	}
 

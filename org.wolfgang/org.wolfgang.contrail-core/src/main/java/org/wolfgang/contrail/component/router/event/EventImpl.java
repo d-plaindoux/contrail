@@ -30,7 +30,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RoutedEventImpl implements Event, Serializable {
+public class EventImpl implements Event, Serializable {
 
 	/**
 	 * The serialVersionUID attribute
@@ -64,7 +64,7 @@ public class RoutedEventImpl implements Event, Serializable {
 	 * @param destination
 	 * @param content
 	 */
-	public RoutedEventImpl(Serializable content, DirectReference... targets) {
+	public EventImpl(Serializable content, DirectReference... targets) {
 		super();
 		this.source = ReferenceFactory.emptyIndirectReference();
 		this.destination = ReferenceFactory.emptyIndirectReference();

@@ -39,7 +39,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.router.RouterSourceComponent;
 import org.wolfgang.contrail.component.router.RouterSourceFactory;
 import org.wolfgang.contrail.component.router.event.Event;
-import org.wolfgang.contrail.component.router.event.RoutedEventImpl;
+import org.wolfgang.contrail.component.router.event.EventImpl;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
@@ -110,7 +110,7 @@ public class TestNetworkRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 
 		final String content = "Hello , World from Client01!";
-		final RoutedEventImpl event01 = new RoutedEventImpl(content, reference01);
+		final EventImpl event01 = new EventImpl(content, reference01);
 		terminalComponent01.getDataSender().sendData(event01);
 		assertEquals(reference01 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 	}
@@ -162,7 +162,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 		for (int i = 0; i < 2; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
-			final RoutedEventImpl event01 = new RoutedEventImpl(content, reference02);
+			final EventImpl event01 = new EventImpl(content, reference02);
 			terminalComponent01.getDataSender().sendData(event01);
 			assertEquals(reference02 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 			futureResponse.set(new FutureResponse<String>());
@@ -229,17 +229,17 @@ public class TestNetworkRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
-		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and reuse opened connections ...
-		terminalComponent03.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client03!", reference02, reference01));
+		terminalComponent03.getDataSender().sendData(new EventImpl("Hello , World from Client03!", reference02, reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------
@@ -304,18 +304,18 @@ public class TestNetworkRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
-		terminalComponent01.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and Reuse already opened connections ...
 
-		terminalComponent03.getDataSender().sendData(new RoutedEventImpl("Hello , World from Client03!", reference01));
+		terminalComponent03.getDataSender().sendData(new EventImpl("Hello , World from Client03!", reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------

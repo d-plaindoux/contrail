@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<requires>
+	<declare>
 		org.wofgang.contrail.connection.net.NetClient
 		org.wofgang.contrail.connection.net.NetServer
 		PayLoad=org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
@@ -11,7 +11,7 @@
 		ClientConnector=org.wolfgang.contrail.component.router.SourceAcceptanceComponent
 		Logger=org.wolfgang.contrail.bound.LoggerComponent
 		NetEvent=org.wolfgang.contrail.component.router.event.Event
-	</requires>
+	</declare>
 
 	<flow name="Coercion.Event"> Coercion(NetEvent) </flow>
 	<flow name='Parallel'> ParallelSource ParallelDestination </flow>

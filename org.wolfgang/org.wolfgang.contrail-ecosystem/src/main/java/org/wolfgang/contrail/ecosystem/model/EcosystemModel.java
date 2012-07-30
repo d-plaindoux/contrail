@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 public class EcosystemModel implements Validation {
 
 	private String main;
-	private String requires;
+	private String declare;
 	private List<FlowModel> flows;
 	private List<BinderModel> binders;
 	private List<PipelineModel> pipelines;
@@ -85,23 +85,23 @@ public class EcosystemModel implements Validation {
 	}
 
 	/**
-	 * Return the value ofrequires
+	 * Return the value of declare
 	 * 
 	 * @return the requires
 	 */
-	@XmlElement
-	public String getRequires() {
-		return requires;
+	@XmlElement(name = "declare")
+	public String getDeclaration() {
+		return declare;
 	}
 
 	/**
-	 * Set the value of requires
+	 * Set the value of declare
 	 * 
-	 * @param requires
-	 *            the requires to set
+	 * @param declare
+	 *            the declare to set
 	 */
-	public void setRequires(String requires) {
-		this.requires = requires;
+	public void setDeclaration(String declare) {
+		this.declare = declare;
 	}
 
 	/**

@@ -1,9 +1,9 @@
 <?xml version='1.0'?>
 <ecosystem>
 
-	<requires>
+	<declare>
 		Gateway=org.wolfgang.contrail.network.ecosystem.GatewayComponent(tcp://localhost:6666)
-	</requires>
+	</declare>
 
 	<binder name='Main' typein="byte[]" typeout="byte[]">
 		Gateway

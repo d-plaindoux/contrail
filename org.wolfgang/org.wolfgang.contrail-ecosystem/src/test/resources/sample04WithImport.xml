@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<import file='org/wolfgang/contrail/component.xml' />
+
+	<declare>
+		Test=org.wolfgang.contrail.ecosystem.factory.TestComponent
+	</declare>
+
+	<flow name='ParallelSerializer'>
+		ParallelSource Serialize ParallelDestination
+	</flow>
+
+	<flow name='MainFlow'>
+		PayLoad ParallelSerializer Coercion(java.lang.String) Test
+	</flow>
+
+	<binder name='Main' typein="byte[]" typeout="byte[]">
+		MainFlow
+	</binder>
+</ecosystem>
