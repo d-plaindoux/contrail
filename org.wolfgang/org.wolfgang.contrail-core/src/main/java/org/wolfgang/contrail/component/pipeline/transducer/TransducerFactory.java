@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer;
 
-import java.lang.reflect.Constructor;
-
-
 /**
  * <code>CodecFactory</code> is the main interface used for encoder and decoder
  * creation.
@@ -29,29 +26,6 @@ import java.lang.reflect.Constructor;
  * @version 1.0
  */
 public interface TransducerFactory<U, D> {
-
-	/**
-	 * <code>Loader</code> is dedicated to CoDec creation. This creation is done
-	 * using parameters if defined otherwise default constructor is invoked.
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	public static class Loader {
-		public static TransducerFactory<?, ?> load(ClassLoader loader, String name, String[] parameters) throws TransducerFactoryCreationException {
-			try {
-				final Class<?> codec = loader.loadClass(name);
-				try {
-					final Constructor<?> constructor = codec.getConstructor(String[].class);
-					return (TransducerFactory<?, ?>) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e) {
-					return (TransducerFactory<?, ?>) codec.newInstance();
-				}
-			} catch (Exception e) {
-				throw new TransducerFactoryCreationException(e);
-			}
-		}
-	}
 
 	/**
 	 * Method providing the decoder
