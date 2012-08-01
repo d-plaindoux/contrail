@@ -141,6 +141,7 @@ public class FlowModel implements Validation {
 	 *            The definition
 	 * @return a string array (Never <code>null</code>)
 	 */
+	// TODO -- Review this code
 	public static Item[] decompose(String flow) {
 		if (flow == null) {
 			return new Item[0];

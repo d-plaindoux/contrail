@@ -1,17 +1,17 @@
-<?xml version='1.0'?>
-<ecosystem>
+// Client/Server connectors
+import org.wolfgang.contrail.connection.net.NetClient
+import org.wolfgang.contrail.connection.net.NetServer
 
-	<declare>
-		<!-- Basic client/server -->
-		org.wolfgang.contrail.connection.net.NetClient
-		org.wolfgang.contrail.connection.net.NetServer
+// Client/Server components
+import as Client org.wolfgang.contrail.component.bound.gateway.ClientComponent
+import as Server org.wolfgang.contrail.component.bound.gateway.ServerComponent
 
-		<!-- Declared components -->
-		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
-		Server=org.wolfgang.contrail.component.bound.gateway.ServerComponent
-	</declare>
+// Logger components
+import as LogSrc org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent
+import as LogDst org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent
 
-	<main>
-		Server(tcp://localhost:6665) Client(tcp://localhost:6666)
-	</main>
-</ecosystem>
+define Logger     { LogSrc + LogDst }
+define ClientFlow { uri | Logger <> Client uri }
+define ServerFlow { Server "tcp://localhost:6665" { b | b <> ClientFlow "tcp://localhost:6666" } }
+
+start { ServerFlow } 

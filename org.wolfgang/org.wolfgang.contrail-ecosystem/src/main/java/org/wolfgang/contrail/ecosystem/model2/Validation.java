@@ -16,10 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.ecosystem.model2;
+
 /**
- * Main package providing a connection facility used to interconnect frameworks. 
- *
+ * <code>Validation</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.connection;
+public interface Validation {
+
+	void validate() throws ValidationException;
+
+}

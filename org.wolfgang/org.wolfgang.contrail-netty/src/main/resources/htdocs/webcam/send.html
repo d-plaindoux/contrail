@@ -16,14 +16,26 @@
       var videoSource = document.getElementsByTagName('video')[0];
       var heading = document.getElementsByTagName('h1')[0];
       
-      if(navigator.getUserMedia) {
-        function successCallback( stream ) {
+      if(navigator.getUserMedia) {					// For OPERA 12
+	    function successCallback( stream ) {
           videoSource.src = stream;
-        };
-        function errorCallback( error ) {
+    	};
+      
+      	function errorCallback( error ) {
           heading.textContent = "An error occurred: [CODE " + error.code + "]";
-        };
+      	};
+      	
         navigator.getUserMedia('video', successCallback, errorCallback);
+      } else if (navigator.webkitGetUserMedia) { 	// For CHROME 12 
+	    function successCallback( stream ) {
+          videoSource.src = stream;
+    	};
+      
+      	function errorCallback( error ) {
+          heading.textContent = "An error occurred: [CODE " + error.code + "]";
+      	};
+
+        navigator.webkitGetUserMedia('video', successCallback, errorCallback);
       } else {
         heading.textContent = "Native web camera streaming is not supported in this browser!";
       };

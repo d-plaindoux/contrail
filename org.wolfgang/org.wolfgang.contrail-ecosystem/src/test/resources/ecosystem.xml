@@ -1,43 +1,106 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<declare>
-		org.wofgang.contrail.connection.net.NetClient
-		org.wofgang.contrail.connection.net.NetServer
+	<import>org.wofgang.contrail.connection.net.NetClient</import>
+	<import>org.wofgang.contrail.connection.net.NetServer</import>
+	<import as="PayLoad">
+		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
+	</import>
+	<import as="Coercion">
+		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
+	</import>
+	<import as="Serialization">
+		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
+	</import>
+	<import as="ParallelSource">
+		org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
+	</import>
+	<import as="ParallelDestination">
+		org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
+	</import>
+	<import as="NetEvent">
+		org.wolfgang.contrail.component.router.event.Event
+	</import>
+	<import as="Client">
+		org.wolfgang.contrail.component.bound.gateway.ClientComponent
+	</import>
+	<import as="Server">
+		org.wolfgang.contrail.component.bound.gateway.ServerComponent
+	</import>
 
-		PayLoad=org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
-		Coercion=org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
-		Serialization=org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
-		ParallelSource=org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
-		ParallelDestination=org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
-		ClientConnector=org.wolfgang.contrail.component.router.SourceAcceptanceComponent
-		Logger=org.wolfgang.contrail.bound.LoggerComponent
-		NetEvent=org.wolfgang.contrail.component.router.event.Event
-		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
-		Server=org.wolfgang.contrail.component.bound.gateway.ServerComponent
-	</declare>
+	<define name="SharedStation">
+		<ref as="NS">NetStation</ref>
+	</define>
 
-	<flow name="SharedStation"> NS=NetStation </flow>
-	<flow name="Coercion.Event"> Coercion(NetEvent) </flow>
-	<flow name='Parallel'> ParallelSource ParallelDestination </flow>
-	<flow name='Event'> Parallel Coercion.Event ClientConnector SharedStation
-	</flow>
-	<flow name='TCPEvent'> PayLoad Serialization Event </flow>
+	<define name="CoercionEvent">
+		<apply>
+			<ref>Coercion</ref>
+			<ref>NetEvent</ref>
+		</apply>
+	</define>
 
-	<router name='NETStation'>
-		<reference name='A.A' />
+	<define name='Parallel'>
+		<ref>ParallelSource</ref>
+		<ref>ParallelDestination</ref>
+	</define>
 
-		<!-- NET Socket Client -->
-		<entry name='A.B' filter='A.*'>
-			Client(tcp://localhost:6666) TCPEvent
-		</entry>
-	</router>
+	<define name='Event'>
+		<ref>Parallel</ref>
+		<ref>CoercionEvent</ref>
+	</define>
+
+	<define name='TCPEvent'>
+		<ref>PayLoad</ref>
+		<ref>Serialization</ref>
+		<ref>Event</ref>
+	</define>
+
+	<define name="TCPClient">
+		<function vars="uri">
+			<apply>
+				<ref>reverse</ref>
+				<ref>TCPEvent</ref>
+			</apply>
+			<apply>
+				<ref>Client</ref>
+				<ref>uri</ref>
+			</apply>
+		</function>
+	</define>
+
+	<define name='NetStation'>
+		<router handle="...">
+			<case target='A.A'>
+				<ref>Something</ref>
+			</case>
+			<case target='A.B'>
+				<apply>
+					<ref>TCPClient</ref>
+					<atom>tcp://localhost:6667</atom>
+				</apply>
+			</case>
+			<default>
+				<apply>
+					<ref>TCPClient</ref>
+					<string>tcp://localhost:6668</string>
+				</apply>
+			</default>
+		</router>
+	</define>
 
 	<binder name='NETHook'>
-		TCPEvent
+		<ref>TCPEvent</ref>
 	</binder>
 
-	<server endpoint='tcp://localhost:6667'>
-		TCPEvent
-	</server>
+	<start>
+		<apply>
+			<ref>Server</ref>
+			<atom>tcp://localhost:6666</atom>
+			<function vars="b">
+				<ref>b</ref>
+				<ref>TCPEvent</ref>
+				<ref>SharedStation</ref>
+			</function>
+		</apply>
+	</start>
 
 </ecosystem>
