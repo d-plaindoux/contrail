@@ -16,12 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
-
-import org.wolfgang.common.message.MessagesProvider;
 
 /**
  * <code>Function</code>
@@ -29,43 +26,32 @@ import org.wolfgang.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "ref")
-public class Reference implements Expression, Validation {
-
-	private String value;
-
+@XmlRootElement(name = "apply")
+public class Apply extends ContentExpressions implements Expression, Validation {
 	/**
 	 * Constructor
 	 */
-	public Reference() {
+	public Apply() {
 		super();
 	}
 
-	/**
-	 * Return the value of reference
-	 * 
-	 * @return the reference
-	 */
-	@XmlValue
-	public String getValue() {
-		return value;
-	}
+	@Override
+	public void add(Expression expression) {
+		if (this.getExpressions().size() == 2) {
+			final Apply apply = new Apply();
+			apply.add(this.getExpressions().remove(0));
+			apply.add(this.getExpressions().remove(0));
 
-	/**
-	 * Set the value of reference
-	 * 
-	 * @param value
-	 *            the reference to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
+			super.add(apply);
+			super.add(expression);
+		} else {
+			super.add(expression);
+		}
 	}
 
 	@Override
 	public void validate() throws ValidationException {
-		if (value == null || value.trim().length() == 0) {
-			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "value.undefined").format());
-		}
+		// TODO Auto-generated method stub
 	}
 
 	@Override

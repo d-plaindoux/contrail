@@ -67,13 +67,9 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	/**
 	 * Constructor
 	 */
-	public LoggerDestinationComponent(String... arguments) {
+	public LoggerDestinationComponent(String prefix) {
 		super();
-		if (arguments.length > 0) {
-			this.prefix = arguments[0];
-		} else {
-			this.prefix = "*";
-		}
+		this.prefix = prefix;
 	}
 
 	@Override

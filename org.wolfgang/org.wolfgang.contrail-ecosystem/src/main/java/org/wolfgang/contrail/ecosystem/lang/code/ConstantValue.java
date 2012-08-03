@@ -16,10 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.ecosystem.lang.code;
+
 /**
- * <code>package-info</code>
- *
+ * <code>ConstantValue</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.ecosystem.lang;
+public class ConstantValue implements CodeValue {
+	private final String value;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param value
+	 */
+	public ConstantValue(String value) {
+		super();
+		this.value = value;
+	}
+
+	/**
+	 * Return the value of value
+	 * 
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+}

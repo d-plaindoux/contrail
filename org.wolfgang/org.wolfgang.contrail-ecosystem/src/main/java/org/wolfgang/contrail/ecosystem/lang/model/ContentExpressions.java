@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 import java.util.ArrayList;
 import java.util.List;

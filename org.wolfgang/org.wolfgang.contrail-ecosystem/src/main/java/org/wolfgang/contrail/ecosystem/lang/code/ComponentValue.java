@@ -16,38 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.code;
+
+import java.util.Map;
+
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 
 /**
- * <code>ValidationException</code>
+ * <code>ComponentValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ValidationException extends Exception {
-
-	/**
-	 * The serialVersionUID attribute
-	 */
-	private static final long serialVersionUID = -4318321767475806832L;
+public class ComponentValue implements CodeValue {
+	private final Map<String, CodeValue> environement;
+	private final ImportEntry<?> entry;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param arg0
+	 * @param environement
+	 * @param entry
 	 */
-	ValidationException(String arg0) {
-		super(arg0);
+	public ComponentValue(Map<String, CodeValue> environement, ImportEntry<?> entry) {
+		super();
+		this.environement = environement;
+		this.entry = entry;
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param format
-	 * @param e
-	 */
-	ValidationException(String format, Throwable e) {
-		super(format, e);
+	public Component getComponent() throws CannotCreateComponentException {
+		// TODO How can we catch the parameters
+		return entry.create(null);
 	}
-
 }

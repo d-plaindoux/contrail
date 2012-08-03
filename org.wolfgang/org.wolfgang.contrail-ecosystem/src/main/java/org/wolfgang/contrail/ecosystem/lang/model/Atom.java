@@ -16,77 +16,60 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.message.MessagesProvider;
 
 /**
- * <code>Import</code>
+ * <code>Atom</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "import")
-public class Import implements Validation {
+@XmlRootElement(name = "atom")
+public class Atom implements Expression, Validation {
 
-	private String alias;
-	private String element;
+	private String value;
 
 	/**
 	 * Constructor
 	 */
-	public Import() {
+	public Atom() {
 		super();
 	}
 
 	/**
-	 * Return the value of alias
+	 * Return the value of reference
 	 * 
-	 * @return the alias
-	 */
-	@XmlAttribute(name = "as")
-	public String getAlias() {
-		return alias;
-	}
-
-	/**
-	 * Set the value of alias
-	 * 
-	 * @param alias
-	 *            the alias to set
-	 */
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-
-	/**
-	 * Return the value of element
-	 * 
-	 * @return the element
+	 * @return the reference
 	 */
 	@XmlValue
-	public String getElement() {
-		return element;
+	public String getValue() {
+		return value;
 	}
 
 	/**
-	 * Set the value of element
+	 * Set the value of reference
 	 * 
-	 * @param element
-	 *            the element to set
+	 * @param value
+	 *            the reference to set
 	 */
-	public void setElement(String element) {
-		this.element = element;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	@Override
 	public void validate() throws ValidationException {
-		if (element == null) {
-			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "endpoint.server.undefined").format());
+		if (value == null || value.trim().length() == 0) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "value.undefined").format());
 		}
+	}
+
+	@Override
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
 	}
 }

@@ -16,27 +16,26 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
-
-import javax.xml.bind.annotation.XmlRootElement;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 /**
- * <code>Function</code>
+ * <code>Expression</code> is the main type used for the Ecosystem AST
+ * representation.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "start")
-public class Starter extends ContentExpressions implements Validation {
-	/**
-	 * Constructor
-	 */
-	public Starter() {
-		super();
-	}
+public interface Expression {
 
-	@Override
-	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-	}
+	/**
+	 * Method called whether an expression is visited
+	 * 
+	 * @param visitor
+	 *            The visitor
+	 * @return a value
+	 * @throws E
+	 *             if any problem occurs
+	 */
+	<T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E;
+
 }

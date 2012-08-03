@@ -16,22 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
-
 /**
- * <code>ExpressionVisitor</code>
- * 
+ * <code>package-info</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ExpressionVisitor<T, E extends Exception> {
-
-	T visit(Reference expression) throws E;
-
-	T visit(Atom expression) throws E;
-
-	T visit(Apply expression) throws E;
-
-	T visit(Function expression) throws E;
-
-}
+package org.wolfgang.contrail.ecosystem.lang.code;

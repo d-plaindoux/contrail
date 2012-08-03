@@ -23,4 +23,4 @@
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;

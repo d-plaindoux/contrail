@@ -16,26 +16,22 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 /**
- * <code>Expression</code> is the main type used for the Ecosystem AST
- * representation.
+ * <code>ExpressionVisitor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Expression {
+public interface ExpressionVisitor<T, E extends Exception> {
 
-	/**
-	 * Method called whether an expression is visited
-	 * 
-	 * @param visitor
-	 *            The visitor
-	 * @return a value
-	 * @throws E
-	 *             if any problem occurs
-	 */
-	<T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E;
+	T visit(Reference expression) throws E;
+
+	T visit(Atom expression) throws E;
+
+	T visit(Apply expression) throws E;
+
+	T visit(Function expression) throws E;
 
 }

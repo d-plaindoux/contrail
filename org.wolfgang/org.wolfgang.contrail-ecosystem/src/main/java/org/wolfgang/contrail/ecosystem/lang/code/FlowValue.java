@@ -16,16 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.code;
 
 /**
- * <code>Validation</code>
+ * <code>FlowValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Validation {
+public class FlowValue implements CodeValue {
+	private final CodeValue[] values;
 
-	void validate() throws ValidationException;
+	/**
+	 * Constructor
+	 * 
+	 * @param values
+	 */
+	public FlowValue(CodeValue[] values) {
+		super();
+		this.values = values;
+	}
 
+	/**
+	 * Return the value of values
+	 * 
+	 * @return the values
+	 */
+	public CodeValue[] getValues() {
+		return values;
+	}
 }

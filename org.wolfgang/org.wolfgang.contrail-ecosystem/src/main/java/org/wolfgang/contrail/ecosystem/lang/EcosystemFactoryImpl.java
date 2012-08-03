@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.factory;
+package org.wolfgang.contrail.ecosystem.lang;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,24 +43,28 @@ import org.wolfgang.contrail.connection.ClientFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.ServerFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.lang.ClosureValue;
-import org.wolfgang.contrail.ecosystem.lang.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.ComponentValue;
-import org.wolfgang.contrail.ecosystem.lang.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.FlowValue;
-import org.wolfgang.contrail.ecosystem.lang.ImportEntry;
-import org.wolfgang.contrail.ecosystem.model2.Apply;
-import org.wolfgang.contrail.ecosystem.model2.Atom;
-import org.wolfgang.contrail.ecosystem.model2.Bind;
-import org.wolfgang.contrail.ecosystem.model2.Definition;
-import org.wolfgang.contrail.ecosystem.model2.EcosystemModel;
-import org.wolfgang.contrail.ecosystem.model2.Expression;
-import org.wolfgang.contrail.ecosystem.model2.ExpressionVisitor;
-import org.wolfgang.contrail.ecosystem.model2.Function;
-import org.wolfgang.contrail.ecosystem.model2.Import;
-import org.wolfgang.contrail.ecosystem.model2.Reference;
-import org.wolfgang.contrail.ecosystem.model2.Starter;
+import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ImportEntry;
+import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
+import org.wolfgang.contrail.ecosystem.lang.delta.PipelineFactory;
+import org.wolfgang.contrail.ecosystem.lang.delta.TerminalFactory;
+import org.wolfgang.contrail.ecosystem.lang.model.Apply;
+import org.wolfgang.contrail.ecosystem.lang.model.Atom;
+import org.wolfgang.contrail.ecosystem.lang.model.Bind;
+import org.wolfgang.contrail.ecosystem.lang.model.Definition;
+import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
+import org.wolfgang.contrail.ecosystem.lang.model.Function;
+import org.wolfgang.contrail.ecosystem.lang.model.Import;
+import org.wolfgang.contrail.ecosystem.lang.model.Reference;
+import org.wolfgang.contrail.ecosystem.lang.model.Starter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -71,10 +75,10 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-public final class EcosystemFactoryImpl2 implements EcosystemFactory {
+public final class EcosystemFactoryImpl implements EcosystemFactory {
 
 	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
-		private final EcosystemFactoryImpl2 factory;
+		private final EcosystemFactoryImpl factory;
 		private final CodeValue flow;
 
 		/**
@@ -82,7 +86,7 @@ public final class EcosystemFactoryImpl2 implements EcosystemFactory {
 		 * 
 		 * @param items
 		 */
-		private DataSenderFactoryImpl(EcosystemFactoryImpl2 factory, CodeValue flow) {
+		private DataSenderFactoryImpl(EcosystemFactoryImpl factory, CodeValue flow) {
 			super();
 			this.factory = factory;
 			this.flow = flow;
@@ -110,7 +114,7 @@ public final class EcosystemFactoryImpl2 implements EcosystemFactory {
 	 */
 	private static class Interpret implements ExpressionVisitor<CodeValue, Exception> {
 
-		private final EcosystemFactoryImpl2 factory;
+		private final EcosystemFactoryImpl factory;
 		private final Map<String, CodeValue> environment;
 
 		/**
@@ -118,7 +122,7 @@ public final class EcosystemFactoryImpl2 implements EcosystemFactory {
 		 * 
 		 * @param environement
 		 */
-		private Interpret(EcosystemFactoryImpl2 factory, Map<String, CodeValue> environement) {
+		private Interpret(EcosystemFactoryImpl factory, Map<String, CodeValue> environement) {
 			super();
 			this.factory = factory;
 			this.environment = environement;
@@ -305,7 +309,7 @@ public final class EcosystemFactoryImpl2 implements EcosystemFactory {
 	/**
 	 * Constructor
 	 */
-	private EcosystemFactoryImpl2() {
+	private EcosystemFactoryImpl() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -409,7 +413,7 @@ public final class EcosystemFactoryImpl2 implements EcosystemFactory {
 	 */
 	public static org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystemModel) throws Exception {
 
-		final EcosystemFactoryImpl2 factory = new EcosystemFactoryImpl2();
+		final EcosystemFactoryImpl factory = new EcosystemFactoryImpl();
 
 		// Check and load importations
 		factory.loadImportations(ecosystemModel);

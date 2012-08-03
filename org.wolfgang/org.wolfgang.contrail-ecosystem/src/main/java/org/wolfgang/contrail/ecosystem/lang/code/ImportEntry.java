@@ -1,4 +1,4 @@
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.ecosystem.lang.code;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;

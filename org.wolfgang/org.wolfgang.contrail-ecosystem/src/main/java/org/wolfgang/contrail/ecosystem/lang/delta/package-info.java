@@ -16,14 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
-
 /**
- * <code>ImportEntry</code>
- * 
+ * <code>package-info</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface CodeValue {
-	// Nothing
-}
+package org.wolfgang.contrail.ecosystem.lang.delta;

@@ -16,60 +16,77 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.message.MessagesProvider;
 
 /**
- * <code>Atom</code>
+ * <code>Import</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "atom")
-public class Atom implements Expression, Validation {
+@XmlRootElement(name = "import")
+public class Import implements Validation {
 
-	private String value;
+	private String alias;
+	private String element;
 
 	/**
 	 * Constructor
 	 */
-	public Atom() {
+	public Import() {
 		super();
 	}
 
 	/**
-	 * Return the value of reference
+	 * Return the value of alias
 	 * 
-	 * @return the reference
+	 * @return the alias
 	 */
-	@XmlValue
-	public String getValue() {
-		return value;
+	@XmlAttribute(name = "as")
+	public String getAlias() {
+		return alias;
 	}
 
 	/**
-	 * Set the value of reference
+	 * Set the value of alias
 	 * 
-	 * @param value
-	 *            the reference to set
+	 * @param alias
+	 *            the alias to set
 	 */
-	public void setValue(String value) {
-		this.value = value;
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	/**
+	 * Return the value of element
+	 * 
+	 * @return the element
+	 */
+	@XmlValue
+	public String getElement() {
+		return element;
+	}
+
+	/**
+	 * Set the value of element
+	 * 
+	 * @param element
+	 *            the element to set
+	 */
+	public void setElement(String element) {
+		this.element = element;
 	}
 
 	@Override
 	public void validate() throws ValidationException {
-		if (value == null || value.trim().length() == 0) {
-			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "value.undefined").format());
+		if (element == null) {
+			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "endpoint.server.undefined").format());
 		}
-	}
-
-	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return visitor.visit(this);
 	}
 }

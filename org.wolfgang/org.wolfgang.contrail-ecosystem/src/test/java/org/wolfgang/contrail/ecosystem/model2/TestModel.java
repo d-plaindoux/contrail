@@ -27,6 +27,13 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
+import org.wolfgang.contrail.ecosystem.lang.model.Apply;
+import org.wolfgang.contrail.ecosystem.lang.model.Atom;
+import org.wolfgang.contrail.ecosystem.lang.model.Definition;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Function;
+import org.wolfgang.contrail.ecosystem.lang.model.Reference;
+
 /**
  * <code>TestModel</code>
  * 

@@ -16,9 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
-
-import java.util.List;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,36 +26,17 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "apply")
-public class Apply extends ContentExpressions implements Expression, Validation {
+@XmlRootElement(name = "start")
+public class Starter extends ContentExpressions implements Validation {
 	/**
 	 * Constructor
 	 */
-	public Apply() {
+	public Starter() {
 		super();
-	}
-
-	@Override
-	public void add(Expression expression) {
-		if (this.getExpressions().size() == 2) {
-			final Apply apply = new Apply();
-			apply.add(this.getExpressions().remove(0));
-			apply.add(this.getExpressions().remove(0));
-
-			super.add(apply);
-			super.add(expression);
-		} else {
-			super.add(expression);
-		}
 	}
 
 	@Override
 	public void validate() throws ValidationException {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return visitor.visit(this);
 	}
 }

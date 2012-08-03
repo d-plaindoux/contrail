@@ -16,33 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
 /**
- * <code>FlowValue</code>
+ * <code>ValidationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FlowValue implements CodeValue {
-	private final CodeValue[] values;
+public class ValidationException extends Exception {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -4318321767475806832L;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param values
+	 * @param arg0
 	 */
-	public FlowValue(CodeValue[] values) {
-		super();
-		this.values = values;
+	ValidationException(String arg0) {
+		super(arg0);
 	}
 
 	/**
-	 * Return the value of values
+	 * Constructor
 	 * 
-	 * @return the values
+	 * @param format
+	 * @param e
 	 */
-	public CodeValue[] getValues() {
-		return values;
+	ValidationException(String format, Throwable e) {
+		super(format, e);
 	}
+
 }
