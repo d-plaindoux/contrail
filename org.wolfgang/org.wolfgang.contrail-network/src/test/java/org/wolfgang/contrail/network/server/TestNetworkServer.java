@@ -95,7 +95,7 @@ public class TestNetworkServer extends TestCase {
 		};
 
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("test", byte[].class, byte[].class);
-		serverEcosystem.addFactory(key, dataSenderFactory);
+		serverEcosystem.addBinder(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer();
 		networkServer.bind(new URI("tcp://localhost:6666"), serverEcosystem.<byte[], byte[]> getBinder(key));

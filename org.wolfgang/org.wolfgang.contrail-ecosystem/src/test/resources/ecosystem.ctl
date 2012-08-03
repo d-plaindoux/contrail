@@ -13,8 +13,8 @@ import as Server org.wolfgang.contrail.component.bound.gateway.ServerComponent
 define Parallel  { ParallelSource + ParallelDestination }
 define NetEvent  { Parallel <> Coercion Event }
 define TCPEvent  { PayLoad <> Serialization <> NetEvent }
-define TCPClient uri => reverse TCPEvent <> Client[uri] }
-define TCPServer uri => factory => reverse TCPEvent <> Server[uri,factory] }
+define TCPClient { uri | reverse TCPEvent <> Client[uri] }
+define TCPServer { uri | factory | reverse TCPEvent <> Server[uri,factory] }
 
 define NetStation router<StreamDataHandlerStation> [
 	case 'A.A' {

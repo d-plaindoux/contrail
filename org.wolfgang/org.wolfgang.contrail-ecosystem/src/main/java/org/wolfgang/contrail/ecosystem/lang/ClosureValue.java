@@ -16,48 +16,49 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
+package org.wolfgang.contrail.ecosystem.lang;
 
-import java.util.List;
+import java.util.Map;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.wolfgang.contrail.ecosystem.model2.Function;
 
 /**
- * <code>Function</code>
+ * <code>ClosureValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "apply")
-public class Apply extends ContentExpressions implements Expression, Validation {
+public class ClosureValue implements CodeValue {
+	private final Map<String, CodeValue> environment;
+	private final Function function;
+
 	/**
 	 * Constructor
+	 * 
+	 * @param function
+	 * @param environement
 	 */
-	public Apply() {
+	public ClosureValue(Function function, Map<String, CodeValue> environement) {
 		super();
+		this.function = function;
+		this.environment = environement;
 	}
 
-	@Override
-	public void add(Expression expression) {
-		if (this.getExpressions().size() == 2) {
-			final Apply apply = new Apply();
-			apply.add(this.getExpressions().remove(0));
-			apply.add(this.getExpressions().remove(0));
-
-			super.add(apply);
-			super.add(expression);
-		} else {
-			super.add(expression);
-		}
+	/**
+	 * Return the value of environment
+	 * 
+	 * @return the environment
+	 */
+	public Map<String, CodeValue> getEnvironment() {
+		return environment;
 	}
 
-	@Override
-	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return visitor.visit(this);
+	/**
+	 * Return the value of function
+	 * 
+	 * @return the function
+	 */
+	public Function getFunction() {
+		return function;
 	}
 }

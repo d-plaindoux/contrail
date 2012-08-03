@@ -82,7 +82,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		integrator.addFactory(UnitEcosystemKeyFactory.getKey("test", String.class, String.class), destinationComponentFactory);
+		integrator.addBinder(UnitEcosystemKeyFactory.getKey("test", String.class, String.class), destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 

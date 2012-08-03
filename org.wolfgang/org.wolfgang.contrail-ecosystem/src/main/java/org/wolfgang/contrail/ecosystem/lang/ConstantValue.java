@@ -16,48 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model2;
-
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlRootElement;
+package org.wolfgang.contrail.ecosystem.lang;
 
 /**
- * <code>Function</code>
+ * <code>ConstantValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@XmlRootElement(name = "apply")
-public class Apply extends ContentExpressions implements Expression, Validation {
+public class ConstantValue implements CodeValue {
+	private final String value;
+
 	/**
 	 * Constructor
+	 * 
+	 * @param value
 	 */
-	public Apply() {
+	public ConstantValue(String value) {
 		super();
+		this.value = value;
 	}
 
-	@Override
-	public void add(Expression expression) {
-		if (this.getExpressions().size() == 2) {
-			final Apply apply = new Apply();
-			apply.add(this.getExpressions().remove(0));
-			apply.add(this.getExpressions().remove(0));
-
-			super.add(apply);
-			super.add(expression);
-		} else {
-			super.add(expression);
-		}
-	}
-
-	@Override
-	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return visitor.visit(this);
+	/**
+	 * Return the value of value
+	 * 
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
 	}
 }

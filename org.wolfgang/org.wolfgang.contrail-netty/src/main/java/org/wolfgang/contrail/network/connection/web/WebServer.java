@@ -116,7 +116,7 @@ public final class WebServer extends NIOServer {
 		};
 
 		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("web.socket", String.class, String.class);
-		ecosystem.addFactory(key, destinationComponentFactory);
+		ecosystem.addBinder(key, destinationComponentFactory);
 
 		new WebServer("localhost", port, ecosystem.<String, String> getBinder(key)).call();
 	}

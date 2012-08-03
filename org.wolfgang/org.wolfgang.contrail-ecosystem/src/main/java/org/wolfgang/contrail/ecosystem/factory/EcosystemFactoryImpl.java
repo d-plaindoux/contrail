@@ -593,7 +593,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
 
 				final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
-				ecosystemImpl.addFactory(key, new DataSenderFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
+				ecosystemImpl.addBinder(key, new DataSenderFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
 			}
 
 			final Item[] decompose = FlowModel.decompose(ecosystem.getMain());

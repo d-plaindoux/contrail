@@ -84,7 +84,7 @@ public class EcosystemImpl implements Ecosystem {
 	 *            The factory
 	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addFactory(RegisteredUnitEcosystemKey ecosystemKey, DataSenderFactory<U, D> factory) {
+	public <U, D> boolean addBinder(RegisteredUnitEcosystemKey ecosystemKey, DataSenderFactory<U, D> factory) {
 		if (this.hooks.containsKey(ecosystemKey)) {
 			return false;
 		} else {
