@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "function")
 public class Function extends ContentExpressions implements Expression, Validation {
 
-	private String parameters;
+	private String parameter;
 
 	/**
 	 * Constructor
@@ -44,9 +44,9 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 * 
 	 * @return the parameters
 	 */
-	@XmlAttribute(name = "vars")
-	public String getParameters() {
-		return parameters;
+	@XmlAttribute(name = "var")
+	public String getParameter() {
+		return parameter;
 	}
 
 	/**
@@ -55,8 +55,8 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public void setParameters(String parameters) {
-		this.parameters = parameters;
+	public void setParameter(String parameter) {
+		this.parameter = parameter.trim();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class Function extends ContentExpressions implements Expression, Validati
 	}
 
 	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor visitor) throws E {
-		return visitor.<T, E> visit(this);
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
 	}
 }

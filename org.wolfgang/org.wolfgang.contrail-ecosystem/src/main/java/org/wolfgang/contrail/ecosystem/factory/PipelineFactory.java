@@ -42,6 +42,38 @@ public final class PipelineFactory {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
+	public static PipelineComponent create(EcosystemFactory ecosystemFactory, Class component, String[] parameters) throws CannotCreateComponentException {
+		try {
+			if (TransducerFactory.class.isAssignableFrom(component)) {
+				TransducerFactory factory = null;
+				try {
+					final Constructor<?> constructor = component.getConstructor(String[].class);
+					factory = (TransducerFactory) constructor.newInstance(new Object[] { parameters });
+				} catch (NoSuchMethodException e) {
+					factory = (TransducerFactory) component.newInstance();
+				}
+				return factory.createComponent();
+			} else {
+				try {
+					final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
+					return (PipelineComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
+				} catch (NoSuchMethodException e1) {
+					try {
+						final Constructor<?> constructor = component.getConstructor(String[].class);
+						return (PipelineComponent) constructor.newInstance(new Object[] { parameters });
+					} catch (NoSuchMethodException e2) {
+						return (PipelineComponent) component.newInstance();
+					}
+				}
+			}
+		} catch (InvocationTargetException e) {
+			throw new CannotCreateComponentException(e.getCause());
+		} catch (Exception e) {
+			throw new CannotCreateComponentException(e);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes" })
 	public static PipelineComponent create(EcosystemFactory ecosystemFactory, String factoryName, String[] parameters) throws CannotCreateComponentException {
 		try {
 			final Class<?> component = ecosystemFactory.getClassLoader().loadClass(factoryName);

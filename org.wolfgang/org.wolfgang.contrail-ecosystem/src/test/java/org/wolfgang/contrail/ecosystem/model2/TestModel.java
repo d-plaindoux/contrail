@@ -57,41 +57,32 @@ public class TestModel extends TestCase {
 		assertEquals("Value", decoded.getValue());
 	}
 
-	public void testApply01() throws JAXBException, IOException {
-		final Apply decoded = decode("<apply><atom>Value</atom></apply>", Apply.class);
-		assertEquals(1, decoded.getExpressions().size());
-		final Expression actual = decoded.getExpressions().get(0);
-		assertEquals(Atom.class, actual.getClass());
-		assertEquals("Value", ((Atom) actual).getValue());
-	}
-
-	public void testApply02() throws JAXBException, IOException {
-		final Apply decoded = decode("<apply><ref>Ref</ref><atom>Value</atom></apply>", Apply.class);
+	public void testApply() throws JAXBException, IOException {
+		final Apply decoded = decode("<apply><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
 		assertEquals(2, decoded.getExpressions().size());
 		final Expression actual0 = decoded.getExpressions().get(0);
 		assertEquals(Reference.class, actual0.getClass());
-		assertEquals("Ref", ((Reference) actual0).getValue());
+		assertEquals("Value0", ((Reference) actual0).getValue());
 		final Expression actual1 = decoded.getExpressions().get(1);
 		assertEquals(Atom.class, actual1.getClass());
-		assertEquals("Value", ((Atom) actual1).getValue());
+		assertEquals("Value1", ((Atom) actual1).getValue());
 	}
 
 	public void testFunction() throws JAXBException, IOException {
-		final Function decoded = decode("<function vars='a,b'><atom>Value</atom></function>", Function.class);
-		assertEquals("a,b", decoded.getParameters());
-		assertEquals(1, decoded.getExpressions().size());
+		final Function decoded = decode("<function var='a'><atom>Value</atom></function>", Function.class);
+		assertEquals("a", decoded.getParameter());
 		final Expression actual = decoded.getExpressions().get(0);
 		assertEquals(Atom.class, actual.getClass());
 		assertEquals("Value", ((Atom) actual).getValue());
 	}
 
 	public void testDefine() throws JAXBException, IOException {
-		final Definition decoded = decode("<define name='test'><function vars='a,b'><atom>Value</atom></function></define>", Definition.class);
+		final Definition decoded = decode("<define name='test'><function var='a'><atom>Value</atom></function></define>", Definition.class);
 		assertEquals("test", decoded.getName());
 		assertEquals(1, decoded.getExpressions().size());
 		assertEquals(Function.class, decoded.getExpressions().get(0).getClass());
 		final Function function = (Function) decoded.getExpressions().get(0);
-		assertEquals("a,b", function.getParameters());
+		assertEquals("a", function.getParameter());
 		assertEquals(1, function.getExpressions().size());
 		final Expression actual = function.getExpressions().get(0);
 		assertEquals(Atom.class, actual.getClass());

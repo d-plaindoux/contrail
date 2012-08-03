@@ -60,6 +60,7 @@ public class EchoComponent extends TerminalComponent {
 	 * 
 	 * @param receiver
 	 */
+	@SuppressWarnings("unchecked")
 	public EchoComponent() {
 		super(DATA_RECEIVER_FACTORY);
 	}

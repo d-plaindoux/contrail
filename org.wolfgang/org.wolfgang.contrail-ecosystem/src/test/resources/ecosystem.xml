@@ -68,7 +68,7 @@
 	</define>
 
 	<define name='NetStation'>
-		<router handle="...">
+		<switch filter="...">
 			<case target='A.A'>
 				<ref>Something</ref>
 			</case>
@@ -84,7 +84,7 @@
 					<string>tcp://localhost:6668</string>
 				</apply>
 			</default>
-		</router>
+		</switch>
 	</define>
 
 	<binder name='NETHook'>

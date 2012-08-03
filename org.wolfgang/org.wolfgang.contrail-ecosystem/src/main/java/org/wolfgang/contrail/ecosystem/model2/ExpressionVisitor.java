@@ -24,14 +24,14 @@ package org.wolfgang.contrail.ecosystem.model2;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ExpressionVisitor {
+public interface ExpressionVisitor<T, E extends Exception> {
 
-	<T, E extends Exception> T visit(Reference expression) throws E;
+	T visit(Reference expression) throws E;
 
-	<T, E extends Exception> T visit(Atom expression) throws E;
+	T visit(Atom expression) throws E;
 
-	<T, E extends Exception> T visit(Apply expression) throws E;
+	T visit(Apply expression) throws E;
 
-	<T, E extends Exception> T visit(Function expression) throws E;
+	T visit(Function expression) throws E;
 
 }

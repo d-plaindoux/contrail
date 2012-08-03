@@ -65,7 +65,7 @@ public class Definition extends ContentExpressions implements Validation {
 	public void validate() throws ValidationException {
 		if (name == null) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "name.undefined").format());
-		} else if (expressions.size() == 0) {
+		} else if (this.getExpressions().size() == 0) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "expression.undefined").format(name));
 		}
 	}

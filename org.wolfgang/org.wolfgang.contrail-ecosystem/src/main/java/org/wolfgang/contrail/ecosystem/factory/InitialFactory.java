@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.ConnectionFactory;
 
 /**
@@ -31,7 +31,7 @@ import org.wolfgang.contrail.connection.ConnectionFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalFactory {
+public class InitialFactory {
 
 	/**
 	 * @param classLoader
@@ -41,17 +41,17 @@ public class TerminalFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(EcosystemFactory ecosystemFactory, Class<?> component, String[] parameters) throws CannotCreateComponentException {
+	public static InitialComponent create(EcosystemFactory ecosystemFactory, Class<?> component, String[] parameters) throws CannotCreateComponentException {
 		try {
 			try {
 				final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
-				return (TerminalComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
+				return (InitialComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
 			} catch (NoSuchMethodException e1) {
 				try {
 					final Constructor<?> constructor = component.getConstructor(String[].class);
-					return (TerminalComponent) constructor.newInstance(new Object[] { parameters });
+					return (InitialComponent) constructor.newInstance(new Object[] { parameters });
 				} catch (NoSuchMethodException e2) {
-					return (TerminalComponent) component.newInstance();
+					return (InitialComponent) component.newInstance();
 				}
 			}
 		} catch (InvocationTargetException e) {
@@ -59,36 +59,5 @@ public class TerminalFactory {
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}
-
-	}
-
-	/**
-	 * @param classLoader
-	 * @param factoryName
-	 * @param array
-	 * @return
-	 * @throws CannotCreateComponentException
-	 */
-	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(EcosystemFactory ecosystemFactory, String factoryName, String[] parameters) throws CannotCreateComponentException {
-		try {
-			final Class<?> component = ecosystemFactory.getClassLoader().loadClass(factoryName);
-			try {
-				final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
-				return (TerminalComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
-			} catch (NoSuchMethodException e1) {
-				try {
-					final Constructor<?> constructor = component.getConstructor(String[].class);
-					return (TerminalComponent) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e2) {
-					return (TerminalComponent) component.newInstance();
-				}
-			}
-		} catch (InvocationTargetException e) {
-			throw new CannotCreateComponentException(e.getCause());
-		} catch (Exception e) {
-			throw new CannotCreateComponentException(e);
-		}
-
 	}
 }

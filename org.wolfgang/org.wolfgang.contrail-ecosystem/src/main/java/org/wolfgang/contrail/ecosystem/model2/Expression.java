@@ -36,6 +36,6 @@ public interface Expression {
 	 * @throws E
 	 *             if any problem occurs
 	 */
-	<T, E extends Exception> T visit(ExpressionVisitor visitor) throws E;
+	<T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E;
 
 }

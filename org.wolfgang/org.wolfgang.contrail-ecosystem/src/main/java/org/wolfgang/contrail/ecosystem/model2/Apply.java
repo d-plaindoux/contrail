@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.model2;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,12 +38,24 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 	}
 
 	@Override
+	public void add(Expression expression) {
+		if (this.getExpressions().size() == 2) {
+			final Apply apply = new Apply();
+			apply.add(this.getExpressions().remove(0));
+			apply.add(this.getExpressions().remove(0));
+
+			super.add(apply);
+			super.add(expression);
+		}
+	}
+
+	@Override
 	public void validate() throws ValidationException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor visitor) throws E {
-		return visitor.<T,E>visit(this);
-	}	
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }

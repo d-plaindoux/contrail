@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<import as='Echo'>
+		org.wolfgang.contrail.ecosystem.factory.EchoComponent
+	</import>
+
+	<binder name='Main' typein="String" typeout="String">
+		<ref>Echo</ref>
+	</binder>
+</ecosystem>

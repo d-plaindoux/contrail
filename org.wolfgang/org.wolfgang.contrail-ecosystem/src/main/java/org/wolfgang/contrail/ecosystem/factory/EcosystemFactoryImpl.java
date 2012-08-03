@@ -629,5 +629,4 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 	public ClientFactory getClientFactory() {
 		return clientFactory;
 	}
-
 }

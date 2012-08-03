@@ -69,7 +69,7 @@ public class Atom implements Expression, Validation {
 	}
 
 	@Override
-	public <T, E extends Exception> T visit(ExpressionVisitor visitor) throws E {
-		return visitor.<T, E> visit(this);
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
 	}
 }
