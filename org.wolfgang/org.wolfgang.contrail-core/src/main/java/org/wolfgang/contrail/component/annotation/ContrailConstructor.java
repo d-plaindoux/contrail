@@ -16,38 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.code;
+package org.wolfgang.contrail.component.annotation;
 
-import java.util.Map;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * <code>ComponentValue</code>
+ * <code>ComponentPipeline</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentValue implements CodeValue {
-	private final Map<String, CodeValue> environement;
-	private final EcosystemImportation<?> entry;
+@Target(CONSTRUCTOR)
+@Retention(RUNTIME)
+public @interface ContrailConstructor {
 
-	/**
-	 * Constructor
-	 * 
-	 * @param environement
-	 * @param entry
-	 */
-	public ComponentValue(Map<String, CodeValue> environement, EcosystemImportation<?> entry) {
-		super();
-		this.environement = environement;
-		this.entry = entry;
-	}
+	String[] arguments();
 
-	public Component getComponent() throws CannotCreateComponentException {
-		// TODO How can we catch the parameters
-		return entry.create(null);
-	}
 }

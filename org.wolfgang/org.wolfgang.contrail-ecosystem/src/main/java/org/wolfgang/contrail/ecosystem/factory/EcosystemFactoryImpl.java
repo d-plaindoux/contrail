@@ -58,6 +58,7 @@ import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactory;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.ServerFactory;
 import org.wolfgang.contrail.connection.ServerFactoryCreationException;
@@ -86,7 +87,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-public final class EcosystemFactoryImpl implements EcosystemFactory {
+public final class EcosystemFactoryImpl implements ContextFactory {
 
 	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 		private final EcosystemFactoryImpl ecosystemFactory;

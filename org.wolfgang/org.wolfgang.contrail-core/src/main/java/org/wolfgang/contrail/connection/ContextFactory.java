@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2012 D. Plaindoux.
+$ * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -16,23 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.factory;
-
-import org.wolfgang.contrail.connection.ConnectionFactory;
+package org.wolfgang.contrail.connection;
 
 /**
- * <code>EcosystemFactory</code>
+ * <code>ConnectionFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemFactory extends ConnectionFactory {
+public interface ContextFactory {
 
 	/**
-	 * Provides the current class loader
+	 * The class loader
 	 * 
 	 * @return a class loader
 	 */
 	ClassLoader getClassLoader();
+
+	/**
+	 * Return the value of the server factory
+	 * 
+	 * @return the serverFactory
+	 */
+	ServerFactory getServerFactory();
+
+	/**
+	 * Return the value of the client factory
+	 * 
+	 * @return the clientFactory
+	 */
+	ClientFactory getClientFactory();
 
 }

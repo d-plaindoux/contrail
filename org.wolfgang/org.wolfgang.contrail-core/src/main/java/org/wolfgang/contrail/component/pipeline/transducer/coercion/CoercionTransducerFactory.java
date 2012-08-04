@@ -19,11 +19,13 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
+import org.wolfgang.contrail.connection.ContextFactory;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
@@ -47,10 +49,10 @@ public final class CoercionTransducerFactory<T> implements TransducerFactory<Obj
 	 * 
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings({ "static-access", "unchecked" })
-	public CoercionTransducerFactory(String... types) throws ClassNotFoundException {
-		assert types.length == 1;
-		this.coercionType = (Class<T>) this.getClass().forName(types[0]);
+	@SuppressWarnings("unchecked")
+	@ContrailConstructor(arguments = { "type" })
+	public CoercionTransducerFactory(ContextFactory factory, String[] type) throws ClassNotFoundException {
+		this.coercionType = (Class<T>) factory.getClassLoader().loadClass(type[0]);
 	}
 
 	/**

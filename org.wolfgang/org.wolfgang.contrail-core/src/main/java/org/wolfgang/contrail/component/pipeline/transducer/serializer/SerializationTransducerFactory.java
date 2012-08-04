@@ -19,6 +19,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
@@ -48,6 +49,7 @@ public final class SerializationTransducerFactory implements TransducerFactory<B
 	/**
 	 * Constructor
 	 */
+	@ContrailConstructor(arguments = {})
 	public SerializationTransducerFactory() {
 		this.types = new Class[0];
 	}

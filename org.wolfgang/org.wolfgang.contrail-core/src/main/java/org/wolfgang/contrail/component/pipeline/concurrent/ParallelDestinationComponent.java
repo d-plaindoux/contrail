@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
@@ -99,6 +100,7 @@ public class ParallelDestinationComponent<U, D> extends AbstractPipelineComponen
 	/**
 	 * Constructor
 	 */
+	@ContrailConstructor(arguments = {})
 	public ParallelDestinationComponent() {
 		super();
 	}

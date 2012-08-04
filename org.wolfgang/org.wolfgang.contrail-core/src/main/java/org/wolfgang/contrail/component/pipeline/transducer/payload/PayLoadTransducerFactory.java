@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
@@ -42,6 +43,7 @@ public final class PayLoadTransducerFactory implements TransducerFactory<byte[],
 	/**
 	 * Constructor
 	 */
+	@ContrailConstructor(arguments = {})
 	public PayLoadTransducerFactory() {
 		// Prevent useless object creation
 	}

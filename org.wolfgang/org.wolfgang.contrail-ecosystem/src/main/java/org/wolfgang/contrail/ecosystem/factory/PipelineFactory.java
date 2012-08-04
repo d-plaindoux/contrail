@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
-import org.wolfgang.contrail.connection.ConnectionFactory;
+import org.wolfgang.contrail.connection.ContextFactory;
 
 /**
  * <code>PipelineFactory</code>
@@ -42,54 +42,27 @@ public final class PipelineFactory {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(EcosystemFactory ecosystemFactory, Class component, String[] parameters) throws CannotCreateComponentException {
+	public static PipelineComponent create(ContextFactory contextFactory, String factoryName, String[] parameters) throws CannotCreateComponentException {
 		try {
+			final Class<?> component = contextFactory.getClassLoader().loadClass(factoryName);
 			if (TransducerFactory.class.isAssignableFrom(component)) {
 				TransducerFactory factory = null;
 				try {
-					final Constructor<?> constructor = component.getConstructor(String[].class);
-					factory = (TransducerFactory) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e) {
-					factory = (TransducerFactory) component.newInstance();
-				}
-				return factory.createComponent();
-			} else {
-				try {
-					final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
-					return (PipelineComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
+					final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);
+					factory = (TransducerFactory) constructor.newInstance(new Object[] { contextFactory, parameters });
 				} catch (NoSuchMethodException e1) {
 					try {
 						final Constructor<?> constructor = component.getConstructor(String[].class);
-						return (PipelineComponent) constructor.newInstance(new Object[] { parameters });
-					} catch (NoSuchMethodException e2) {
-						return (PipelineComponent) component.newInstance();
+						factory = (TransducerFactory) constructor.newInstance(new Object[] { parameters });
+					} catch (NoSuchMethodException e) {
+						factory = (TransducerFactory) component.newInstance();
 					}
-				}
-			}
-		} catch (InvocationTargetException e) {
-			throw new CannotCreateComponentException(e.getCause());
-		} catch (Exception e) {
-			throw new CannotCreateComponentException(e);
-		}
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(EcosystemFactory ecosystemFactory, String factoryName, String[] parameters) throws CannotCreateComponentException {
-		try {
-			final Class<?> component = ecosystemFactory.getClassLoader().loadClass(factoryName);
-			if (TransducerFactory.class.isAssignableFrom(component)) {
-				TransducerFactory factory = null;
-				try {
-					final Constructor<?> constructor = component.getConstructor(String[].class);
-					factory = (TransducerFactory) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e) {
-					factory = (TransducerFactory) component.newInstance();
 				}
 				return factory.createComponent();
 			} else {
 				try {
-					final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
-					return (PipelineComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
+					final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);
+					return (PipelineComponent) constructor.newInstance(new Object[] { contextFactory, parameters });
 				} catch (NoSuchMethodException e1) {
 					try {
 						final Constructor<?> constructor = component.getConstructor(String[].class);

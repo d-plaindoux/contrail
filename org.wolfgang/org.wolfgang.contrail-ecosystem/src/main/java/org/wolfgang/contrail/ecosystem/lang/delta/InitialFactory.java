@@ -23,8 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.connection.ConnectionFactory;
-import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
+import org.wolfgang.contrail.connection.ContextFactory;
 
 /**
  * <code>TerminalFactory</code>
@@ -42,10 +41,10 @@ public class InitialFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static InitialComponent create(EcosystemFactory ecosystemFactory, Class<?> component, String[] parameters) throws CannotCreateComponentException {
+	public static InitialComponent create(ContextFactory ecosystemFactory, Class<?> component, String[] parameters) throws CannotCreateComponentException {
 		try {
 			try {
-				final Constructor<?> constructor = component.getConstructor(ConnectionFactory.class, String[].class);
+				final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);
 				return (InitialComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
 			} catch (NoSuchMethodException e1) {
 				try {

@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.wolfgang.common.lang.TypeUtils;
@@ -40,30 +39,20 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactory;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.ServerFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
-import org.wolfgang.contrail.ecosystem.factory.EcosystemFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ImportEntry;
 import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
 import org.wolfgang.contrail.ecosystem.lang.delta.PipelineFactory;
 import org.wolfgang.contrail.ecosystem.lang.delta.TerminalFactory;
-import org.wolfgang.contrail.ecosystem.lang.model.Apply;
-import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Bind;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
-import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
-import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.Import;
-import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 import org.wolfgang.contrail.ecosystem.lang.model.Starter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -75,7 +64,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-public final class EcosystemFactoryImpl implements EcosystemFactory {
+public final class EcosystemFactoryImpl implements ContextFactory {
 
 	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 		private final EcosystemFactoryImpl factory;
@@ -107,92 +96,13 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 	}
 
 	/**
-	 * <code>Interpret</code>
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private static class Interpret implements ExpressionVisitor<CodeValue, Exception> {
-
-		private final EcosystemFactoryImpl factory;
-		private final Map<String, CodeValue> environment;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param environement
-		 */
-		private Interpret(EcosystemFactoryImpl factory, Map<String, CodeValue> environement) {
-			super();
-			this.factory = factory;
-			this.environment = environement;
-		}
-
-		public CodeValue visit(final List<Expression> expressions) throws Exception {
-			final CodeValue[] values = new CodeValue[expressions.size()];
-			final Interpret interpret = new Interpret(factory, environment);
-			for (int i = 0; i < values.length; i++) {
-				values[i] = expressions.get(i).visit(interpret);
-			}
-			if (values.length == 1) {
-				return values[0];
-			} else {
-				return new FlowValue(values);
-			}
-		}
-
-		@Override
-		public CodeValue visit(final Reference expression) throws Exception {
-			if (factory.importations.containsKey(expression.getValue())) {
-				return new ComponentValue(environment, factory.importations.get(expression.getValue()));
-			} else {
-				return null; // TODO
-			}
-		}
-
-		@Override
-		public CodeValue visit(Atom expression) throws CannotCreateComponentException {
-			return new ConstantValue(expression.getValue());
-		}
-
-		@Override
-		public CodeValue visit(Apply expression) throws Exception {
-			assert expression.getExpressions().size() == 2;
-
-			final Expression argument0 = expression.getExpressions().get(0);
-			final Expression argument1 = expression.getExpressions().get(1);
-
-			if (argument0 instanceof Function) {
-				final Function function = (Function) argument0;
-				final CodeValue result = argument1.visit(this);
-
-				final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
-				newEnvironment.putAll(environment);
-				newEnvironment.put(function.getParameter(), result);
-
-				final Interpret interpret = new Interpret(factory, newEnvironment);
-				return interpret.visit(function.getExpressions());
-			} else {
-				throw new Exception("Evalutation Error : TODO : Waiting for a function");
-			}
-		}
-
-		@Override
-		public CodeValue visit(Function expression) throws Exception {
-			final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
-			newEnvironment.putAll(environment);
-			return new ClosureValue(expression, newEnvironment);
-		}
-	}
-
-	/**
 	 * <code>PipelineImportEntry</code>
 	 * 
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	private static class PipelineImportEntry implements ImportEntry<PipelineComponent> {
-		private final EcosystemFactory factory;
+	private static class PipelineImportEntry implements EcosystemImportation<PipelineComponent> {
+		private final ContextFactory factory;
 		private final Class<?> component;
 
 		/**
@@ -200,7 +110,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 		 * 
 		 * @param component
 		 */
-		private PipelineImportEntry(EcosystemFactory factory, Class component) {
+		private PipelineImportEntry(ContextFactory factory, Class component) {
 			super();
 			this.factory = factory;
 			this.component = component;
@@ -218,8 +128,8 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	private static class InitialImportEntry implements ImportEntry<InitialComponent> {
-		private final EcosystemFactory factory;
+	private static class InitialImportEntry implements EcosystemImportation<InitialComponent> {
+		private final ContextFactory factory;
 		private final Class<?> component;
 
 		/**
@@ -227,7 +137,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 		 * 
 		 * @param component
 		 */
-		private InitialImportEntry(EcosystemFactory factory, Class component) {
+		private InitialImportEntry(ContextFactory factory, Class component) {
 			super();
 			this.factory = factory;
 			this.component = component;
@@ -245,8 +155,8 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	private static class TerminaImportEntry implements ImportEntry<TerminalComponent> {
-		private final EcosystemFactory factory;
+	private static class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
+		private final ContextFactory factory;
 		private final Class<?> component;
 
 		/**
@@ -254,7 +164,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 		 * 
 		 * @param component
 		 */
-		private TerminaImportEntry(EcosystemFactory factory, Class component) {
+		private TerminaImportEntry(ContextFactory factory, Class component) {
 			super();
 			this.factory = factory;
 			this.component = component;
@@ -269,7 +179,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 	/**
 	 * Importations
 	 */
-	private final Map<String, ImportEntry<?>> importations;
+	final Map<String, EcosystemImportation<?>> importations;
 
 	/**
 	 * Importations
@@ -302,7 +212,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 		this.componentLinkManager = new ComponentLinkManagerImpl();
 		this.classLoader = EcosystemFactoryImpl.class.getClassLoader();
 
-		this.importations = new HashMap<String, ImportEntry<?>>();
+		this.importations = new HashMap<String, EcosystemImportation<?>>();
 		this.definitions = new HashMap<String, CodeValue>();
 	}
 
@@ -397,6 +307,8 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 					} else {
 						// TODO -- LOG ERROR
 					}
+				} else if (importation.getAlias() != null) {
+					this.definitions.put(importation.getAlias(), new ConstantValue(importation.getElement()));
 				}
 			} catch (ClassNotFoundException ignore) {
 				// Consume
@@ -418,7 +330,7 @@ public final class EcosystemFactoryImpl implements EcosystemFactory {
 		// Check and load importations
 		factory.loadImportations(ecosystemModel);
 
-		final Interpret interpret = new Interpret(factory, new HashMap<String, CodeValue>());
+		final EcosystemCompiler interpret = new EcosystemCompiler(factory, new HashMap<String, CodeValue>());
 
 		// Check on load definitions
 		for (Definition definition : ecosystemModel.getDefinitions()) {

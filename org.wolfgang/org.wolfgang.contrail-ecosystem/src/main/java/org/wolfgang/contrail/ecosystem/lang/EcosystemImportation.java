@@ -1,4 +1,4 @@
-package org.wolfgang.contrail.ecosystem.lang.code;
+package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
@@ -9,7 +9,7 @@ import org.wolfgang.contrail.component.Component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ImportEntry<T extends Component> {
+public interface EcosystemImportation<T extends Component> {
 
 	/**
 	 * Hook to invoke underlying factories

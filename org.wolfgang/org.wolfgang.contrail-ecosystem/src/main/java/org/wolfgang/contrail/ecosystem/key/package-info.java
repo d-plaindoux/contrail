@@ -17,10 +17,10 @@
  */
 
 /**
- * This package provides the library used to create system object like component. 
- * This is done using delta-rule approach design in most language.
+ * An Ecosystem is a predefined and reactive component able to provided 
+ * data sender for initial and terminal component on-demand. 
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.key;

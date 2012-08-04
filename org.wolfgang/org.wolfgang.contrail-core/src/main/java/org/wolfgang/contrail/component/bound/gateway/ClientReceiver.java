@@ -29,7 +29,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
-import org.wolfgang.contrail.connection.ConnectionFactory;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -51,12 +51,10 @@ public class ClientReceiver implements DataReceiver<byte[]> {
 	 * @throws CannotCreateClientException
 	 * @throws ClientFactoryCreationException
 	 */
-	ClientReceiver(ConnectionFactory factory, String... args) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
+	ClientReceiver(ContextFactory factory, String reference) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
 		super();
 
-		assert args.length == 1;
-
-		final URI uri = new URI(args[0]);
+		final URI uri = new URI(reference);
 		final Client client = factory.getClientFactory().get(uri.getScheme());
 
 		client.connect(uri, new DataSenderFactory<byte[], byte[]>() {
