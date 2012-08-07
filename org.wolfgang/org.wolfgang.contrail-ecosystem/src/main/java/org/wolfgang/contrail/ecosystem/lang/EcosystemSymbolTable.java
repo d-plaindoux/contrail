@@ -16,10 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.ecosystem.lang;
+
 /**
- * <code>package-info</code>
- *
+ * <code>EcosystemSymbolTable</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.ecosystem.model2;
+public interface EcosystemSymbolTable {
+
+	boolean hasImportation(String name);
+
+	EcosystemImportation<?> getImportation(String name);
+
+}

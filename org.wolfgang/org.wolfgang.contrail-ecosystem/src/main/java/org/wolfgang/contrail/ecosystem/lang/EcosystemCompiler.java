@@ -43,23 +43,23 @@ import org.wolfgang.contrail.ecosystem.lang.model.Reference;
  */
 class EcosystemCompiler implements ExpressionVisitor<CodeValue, Exception> {
 
-	private final EcosystemFactoryImpl factory;
+	private final EcosystemSymbolTable symbolTable;
 	private final Map<String, CodeValue> environment;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param environement
+	 * @param environment
 	 */
-	EcosystemCompiler(EcosystemFactoryImpl factory, Map<String, CodeValue> environement) {
+	EcosystemCompiler(EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
 		super();
-		this.factory = factory;
-		this.environment = environement;
+		this.symbolTable = factory;
+		this.environment = environment;
 	}
 
 	public CodeValue visit(final List<Expression> expressions) throws Exception {
 		final CodeValue[] values = new CodeValue[expressions.size()];
-		final EcosystemCompiler interpret = new EcosystemCompiler(factory, environment);
+		final EcosystemCompiler interpret = new EcosystemCompiler(symbolTable, environment);
 		for (int i = 0; i < values.length; i++) {
 			values[i] = expressions.get(i).visit(interpret);
 		}
@@ -72,8 +72,8 @@ class EcosystemCompiler implements ExpressionVisitor<CodeValue, Exception> {
 
 	@Override
 	public CodeValue visit(final Reference expression) throws Exception {
-		if (factory.importations.containsKey(expression.getValue())) {
-			return new ComponentValue(environment, factory.importations.get(expression.getValue()));
+		if (symbolTable.hasImportation(expression.getValue())) {
+			return new ComponentValue(environment, symbolTable.getImportation(expression.getValue()));
 		} else {
 			return null; // TODO
 		}
@@ -86,10 +86,8 @@ class EcosystemCompiler implements ExpressionVisitor<CodeValue, Exception> {
 
 	@Override
 	public CodeValue visit(Apply expression) throws Exception {
-		assert expression.getExpressions().size() == 2;
-
-		final Expression argument0 = expression.getExpressions().get(0);
-		final Expression argument1 = expression.getExpressions().get(1);
+		final Expression argument0 = expression.getFunction();
+		final Expression argument1 = expression.getParameter();
 
 		if (argument0 instanceof Function) {
 			final Function function = (Function) argument0;
@@ -97,10 +95,11 @@ class EcosystemCompiler implements ExpressionVisitor<CodeValue, Exception> {
 
 			final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
 			newEnvironment.putAll(environment);
-			newEnvironment.put(function.getParameter(), result);
+			final String parameterName = function.getParameter(expression.getBinding());
+			newEnvironment.put(parameterName, result);
 
-			final EcosystemCompiler interpret = new EcosystemCompiler(factory, newEnvironment);
-			return interpret.visit(function.getExpressions());
+			final EcosystemCompiler interpret = new EcosystemCompiler(symbolTable, newEnvironment);
+			return interpret.visit(function.apply(parameterName));
 		} else {
 			throw new Exception("Evalutation Error : TODO : Waiting for a function");
 		}

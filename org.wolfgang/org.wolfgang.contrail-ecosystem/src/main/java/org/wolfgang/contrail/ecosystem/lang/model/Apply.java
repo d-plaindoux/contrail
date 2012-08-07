@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,6 +29,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "apply")
 public class Apply extends ContentExpressions implements Expression, Validation {
+
+	private String binding;
+
 	/**
 	 * Constructor
 	 */
@@ -35,23 +39,46 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 		super();
 	}
 
-	@Override
-	public void add(Expression expression) {
-		if (this.getExpressions().size() == 2) {
-			final Apply apply = new Apply();
-			apply.add(this.getExpressions().remove(0));
-			apply.add(this.getExpressions().remove(0));
+	/**
+	 * Return the value of binding
+	 * 
+	 * @return the binding
+	 */
+	@XmlAttribute(name = "bind")
+	public String getBinding() {
+		return binding;
+	}
 
-			super.add(apply);
-			super.add(expression);
-		} else {
-			super.add(expression);
-		}
+	/**
+	 * Set the value of binding
+	 * 
+	 * @param binding
+	 *            the binding to set
+	 */
+	public void setBinding(String binding) {
+		this.binding = binding;
+	}
+
+	/**
+	 * @return The functional part of the apply
+	 */
+	public Expression getFunction() {
+		return this.expressions.get(0);
+	}
+
+	/**
+	 * @return the parameter part of the apply
+	 */
+	public Expression getParameter() {
+		return this.expressions.get(1);
 	}
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
+		if (this.expressions.size() != 2) {
+			throw new ValidationException("TODO");
+			/** TODO */
+		}
 	}
 
 	@Override

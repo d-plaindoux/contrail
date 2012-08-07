@@ -20,10 +20,12 @@ package org.wolfgang.contrail.ecosystem.lang.delta;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 
 /**
  * <code>TerminalFactory</code>
@@ -41,7 +43,7 @@ public class TerminalFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(ContextFactory ecosystemFactory, Class<?> component, String[] parameters) throws CannotCreateComponentException {
+	public static TerminalComponent create(ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> parameters) throws CannotCreateComponentException {
 		try {
 			try {
 				final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);

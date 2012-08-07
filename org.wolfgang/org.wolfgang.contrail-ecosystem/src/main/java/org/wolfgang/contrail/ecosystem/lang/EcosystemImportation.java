@@ -1,7 +1,10 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.util.Map;
+
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 
 /**
  * <code>ImportEntry</code>
@@ -18,5 +21,5 @@ public interface EcosystemImportation<T extends Component> {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	T create(String... parameters) throws CannotCreateComponentException;
+	T create(Map<String, CodeValue> parameters) throws CannotCreateComponentException;
 }

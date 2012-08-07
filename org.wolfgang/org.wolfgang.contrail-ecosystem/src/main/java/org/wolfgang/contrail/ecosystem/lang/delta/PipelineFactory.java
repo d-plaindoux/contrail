@@ -20,11 +20,13 @@ package org.wolfgang.contrail.ecosystem.lang.delta;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 
 /**
  * <code>PipelineFactory</code>
@@ -42,7 +44,7 @@ public final class PipelineFactory {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(ContextFactory ecosystemFactory, Class component, String[] parameters) throws CannotCreateComponentException {
+	public static PipelineComponent create(ContextFactory ecosystemFactory, Class component, Map<String,CodeValue> parameters) throws CannotCreateComponentException {
 		try {
 			if (TransducerFactory.class.isAssignableFrom(component)) {
 				TransducerFactory factory = null;

@@ -16,14 +16,16 @@ define NetEvent  { Parallel <> Coercion Event }
 define TCPEvent  { PayLoad <> Serialization <> NetEvent }
 define TCPClient { uri | reverse TCPEvent <> Client uri;uri }
 
-define NetStation { 
-    [ A.A =>  [ Service  => { ServiceAgent  } 
-              | Transfer => { TransferAgent } 
-              | _        => { /** lambda */ } 
-              ]  
-	| A.B => { TCPClient uri:"tcp://localhost:6667" }
-	| _   => { TCPClient uri:"tcp://localhost:6668" }
-	] 
+define NetStation {     
+    router self:A.A routes:[ 
+                | A.A => router [ 
+                         | Service  => { ServiceAgent  } 
+			             | Transfer => { TransferAgent } 
+			             | _        => { /** lambda */ } 
+			             ]  
+				| A.B => { TCPClient uri:"tcp://localhost:6667" }
+				| _   => { TCPClient uri:"tcp://localhost:6668" }
+				] 
 }
 
-start { Server ri:"tcp://localhost:6666" factory:{ bind | bind <> TCPEvent <> NetStation } <> Logger }
+start { Server ri:"tcp://localhost:6666" factory:{ bind | bind <> TCPEvent <> NetStation } <> Manager }

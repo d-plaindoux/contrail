@@ -18,16 +18,19 @@
 
 package org.wolfgang.contrail.component;
 
+
 /**
- * The <code>RouterComponent</code> is capable to manage multiple sources and
- * destinations streams depending on the data. This component is the most
- * general and complex able to manage data based on a N-to-M architecture.
+ * The <code>MultipleSourceComponent</code> is capable to manage event from a
+ * given source and sending each message to a selected destination based on
+ * criterion. In addition the data can be transformed from a type S to a type D
+ * or vice-versa depending if components communicate using upstream or
+ * downstream network.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface RouterComponent<S, D> extends RouterDestinationComponent<S, D>, MultipleSourceComponent<S, D> {
+public interface MultipleDestinationComponent<U, D> extends DestinationComponent<U, D>, SourceComponent<U, D> {
 
-	// No specific behaviors
+	// Nothing more
 
 }

@@ -47,7 +47,6 @@ public class ComponentValue implements CodeValue {
 	}
 
 	public Component getComponent() throws CannotCreateComponentException {
-		// TODO How can we catch the parameters
-		return entry.create(null);
+		return entry.create(environement);
 	}
 }

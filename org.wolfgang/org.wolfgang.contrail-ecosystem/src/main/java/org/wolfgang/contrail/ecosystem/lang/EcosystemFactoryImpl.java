@@ -20,8 +20,12 @@ package org.wolfgang.contrail.ecosystem.lang;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.wolfgang.common.lang.TypeUtils;
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -64,7 +68,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-public final class EcosystemFactoryImpl implements ContextFactory {
+public final class EcosystemFactoryImpl implements EcosystemSymbolTable, ContextFactory {
 
 	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 		private final EcosystemFactoryImpl factory;
@@ -117,7 +121,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		@Override
-		public PipelineComponent create(String... parameters) throws CannotCreateComponentException {
+		public PipelineComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
 			return PipelineFactory.create(factory, component, parameters);
 		}
 	}
@@ -144,7 +148,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		@Override
-		public InitialComponent create(String... parameters) throws CannotCreateComponentException {
+		public InitialComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
 			return InitialFactory.create(factory, component, parameters);
 		}
 	}
@@ -171,7 +175,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		@Override
-		public TerminalComponent create(String... parameters) throws CannotCreateComponentException {
+		public TerminalComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
 			return TerminalFactory.create(factory, component, parameters);
 		}
 	}
@@ -179,7 +183,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	/**
 	 * Importations
 	 */
-	final Map<String, EcosystemImportation<?>> importations;
+	private final Map<String, EcosystemImportation<?>> importations;
 
 	/**
 	 * Importations
@@ -221,7 +225,6 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	 */
 	private EcosystemFactoryImpl() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -250,27 +253,29 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	 * @param loader
 	 * @param factory
 	 */
-	private void loadImportations(EcosystemModel ecosystemModel) {
+	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
 		for (Import importation : ecosystemModel.getImportations()) {
 			try {
 				final Class<?> aClass = classLoader.loadClass(importation.getElement());
+				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "incompatible.type");
+
 				if (aClass.isAnnotationPresent(ContrailClient.class)) {
 					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
 					if (Client.class.isAssignableFrom(aClass)) {
 						this.getClientFactory().declareScheme(annotation.scheme(), aClass);
 					} else {
-						// TODO -- LOG ERROR
+						logger.log(Level.WARNING, message.format(Client.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailServer.class)) {
 					final ContrailServer annotation = aClass.getAnnotation(ContrailServer.class);
 					if (Server.class.isAssignableFrom(aClass)) {
 						this.getServerFactory().declareScheme(annotation.scheme(), aClass);
 					} else {
-						// TODO -- LOG ERROR
+						logger.log(Level.WARNING, message.format(Server.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
 					final ContrailPipeline annotation = aClass.getAnnotation(ContrailPipeline.class);
-					if (PipelineFactory.class.isAssignableFrom(aClass)) {
+					if (PipelineComponent.class.isAssignableFrom(aClass)) {
 						final String name;
 						if (importation.getAlias() != null) {
 							name = importation.getAlias();
@@ -279,11 +284,11 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 						}
 						this.importations.put(name, new PipelineImportEntry(this, aClass));
 					} else {
-						// TODO -- LOG ERROR
+						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailTerminal.class)) {
 					final ContrailTerminal annotation = aClass.getAnnotation(ContrailTerminal.class);
-					if (TerminalFactory.class.isAssignableFrom(aClass)) {
+					if (TerminalComponent.class.isAssignableFrom(aClass)) {
 						final String name;
 						if (importation.getAlias() != null) {
 							name = importation.getAlias();
@@ -292,11 +297,11 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 						}
 						this.importations.put(name, new TerminaImportEntry(this, aClass));
 					} else {
-						// TODO -- LOG ERROR
+						logger.log(Level.WARNING, message.format(TerminalComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailInitial.class)) {
 					final ContrailInitial annotation = aClass.getAnnotation(ContrailInitial.class);
-					if (TerminalFactory.class.isAssignableFrom(aClass)) {
+					if (InitialComponent.class.isAssignableFrom(aClass)) {
 						final String name;
 						if (importation.getAlias() != null) {
 							name = importation.getAlias();
@@ -305,13 +310,14 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 						}
 						this.importations.put(name, new InitialImportEntry(this, aClass));
 					} else {
-						// TODO -- LOG ERROR
+						logger.log(Level.WARNING, message.format(InitialComponent.class, importation.getElement()));
 					}
 				} else if (importation.getAlias() != null) {
 					this.definitions.put(importation.getAlias(), new ConstantValue(importation.getElement()));
 				}
 			} catch (ClassNotFoundException ignore) {
-				// Consume
+				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+				logger.log(Level.WARNING, message.format(importation.getElement()));
 			}
 		}
 	}
@@ -323,12 +329,13 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	 * @throws Exception
 	 * @throws ClassNotFoundException
 	 */
-	public static org.wolfgang.contrail.ecosystem.Ecosystem build(EcosystemModel ecosystemModel) throws Exception {
+	@SuppressWarnings("unchecked")
+	public static org.wolfgang.contrail.ecosystem.Ecosystem build(Logger logger, EcosystemModel ecosystemModel) throws Exception {
 
 		final EcosystemFactoryImpl factory = new EcosystemFactoryImpl();
 
 		// Check and load importations
-		factory.loadImportations(ecosystemModel);
+		factory.loadImportations(logger, ecosystemModel);
 
 		final EcosystemCompiler interpret = new EcosystemCompiler(factory, new HashMap<String, CodeValue>());
 
@@ -337,6 +344,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			factory.definitions.put(definition.getName(), interpret.visit(definition.getExpressions()));
 		}
 
+		// Create the ecosystem implementation
 		final EcosystemImpl ecosystemImpl = new EcosystemImpl();
 
 		// Create and Load the binders
@@ -372,6 +380,16 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	@Override
 	public ClientFactory getClientFactory() {
 		return clientFactory;
+	}
+
+	@Override
+	public boolean hasImportation(String name) {
+		return this.importations.containsKey(name);
+	}
+
+	@Override
+	public EcosystemImportation<?> getImportation(String name) {
+		return this.importations.get(name);
 	}
 
 }

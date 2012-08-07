@@ -18,7 +18,11 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,7 +34,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "function")
 public class Function extends ContentExpressions implements Expression, Validation {
 
-	private String parameter;
+	/**
+	 * Parameters
+	 */
+	private List<String> parameters;
+
+	{
+		this.parameters = new ArrayList<String>();
+	}
 
 	/**
 	 * Constructor
@@ -44,9 +55,9 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 * 
 	 * @return the parameters
 	 */
-	@XmlAttribute(name = "var")
-	public String getParameter() {
-		return parameter;
+	@XmlElement(name = "var")
+	public List<String> getParameters() {
+		return parameters;
 	}
 
 	/**
@@ -55,8 +66,47 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public void setParameter(String parameter) {
-		this.parameter = parameter.trim();
+	public void add(String parameter) {
+		this.parameters.add(parameter.trim());
+	}
+
+	/**
+	 * Return the value of parameters
+	 * 
+	 * @return the parameters
+	 */
+	public String getParameter(String name) {
+		if (name == null) {
+			return this.parameters.get(0);
+		} else if (this.parameters.contains(name)) {
+			return name;
+		} else {
+			throw new RuntimeException();
+			/** TODO */
+		}
+	}
+
+	/**
+	 * Method called whether a parameter has been applied
+	 * 
+	 * @param name
+	 *            The applied parameter
+	 * @return the expression list
+	 */
+	public List<Expression> apply(String name) {
+		assert this.parameters.contains(name);
+
+		if (this.parameters.size() == 1) {
+			return this.getExpressions();
+		} else {
+			final List<String> remaining = new ArrayList<String>();
+			remaining.addAll(this.parameters);
+			remaining.remove(name);
+			final Function result = new Function();
+			result.parameters = remaining;
+			result.expressions = this.expressions;
+			return Arrays.<Expression> asList(result);
+		}
 	}
 
 	@Override

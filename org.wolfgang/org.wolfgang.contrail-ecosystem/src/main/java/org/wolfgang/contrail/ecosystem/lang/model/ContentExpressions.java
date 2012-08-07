@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlElements;
  */
 public abstract class ContentExpressions implements Validation {
 
-	private List<Expression> expressions;
+	protected List<Expression> expressions;
 
 	{
 		this.expressions = new ArrayList<Expression>();
