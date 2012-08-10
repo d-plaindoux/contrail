@@ -23,9 +23,13 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
+import org.wolfgang.contrail.ecosystem.lang.model.Function;
+import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 
 /**
  * <code>TestCodeValue</code>
@@ -49,14 +53,165 @@ public class TestCodeValue extends TestCase {
 
 	}
 
-	public void testAtom() throws CannotCreateComponentException {
+	public void testAtom() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCompiler ecosystemCompiler = new EcosystemCompiler(factory, environment);
-		
+		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
+
 		final Atom expression = new Atom();
 		expression.setValue("Hello, World!");
+
+		final CodeValue interpreted = ecosystemCompiler.visit(expression);
+
+		assertEquals(ConstantValue.class, interpreted.getClass());
+	}
+
+	public void testFunction() throws EcosystemInterpretationException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var1");
+
+		final Reference reference = new Reference();
+		reference.setValue("var1");
 		
-		final CodeValue visit = ecosystemCompiler.visit(expression);
+		expression.add(reference);
+
+		final CodeValue interpreted = ecosystemCompiler.visit(expression);
+
+		assertEquals(ClosureValue.class, interpreted.getClass());
+	}
+
+	public void testApply01() throws EcosystemInterpretationException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var1");
+
+		final Reference reference = new Reference();
+		reference.setValue("var1");
+
+		expression.add(reference);
+
+		final Atom atom = new Atom();
+		final String value = "Hello, World!";
+		atom.setValue(value);
+
+		final Apply apply = new Apply();
+		apply.add(expression);
+		apply.add(atom);
+
+		final CodeValue interpreted = ecosystemInterpreter.visit(apply);
+
+		assertEquals(ConstantValue.class, interpreted.getClass());
+		assertEquals(value, ((ConstantValue) interpreted).getValue());
+	}
+
+	public void testApply02() throws EcosystemInterpretationException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var0");
+		expression.add("var1");
+
+		final Reference reference1 = new Reference();
+		reference1.setValue("var1");
+
+		expression.add(reference1);
+
+		final Atom atom1 = new Atom();
+		final String value = "Hello, World!";
+		atom1.setValue(value);
+
+		final Atom atom2 = new Atom();
+		atom2.setValue("unbound");
+
+		final Apply apply1 = new Apply();
+		apply1.setBinding("var1");
+		apply1.add(expression);
+		apply1.add(atom1);
+
+		final CodeValue interpreted1 = ecosystemInterpreter.visit(apply1);
+
+		assertEquals(ClosureValue.class, interpreted1.getClass());
+	}
+
+	public void testApply03() throws EcosystemInterpretationException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var0");
+		expression.add("var1");
+
+		final Reference reference1 = new Reference();
+		reference1.setValue("var1");
+
+		expression.add(reference1);
+
+		final Atom atom1 = new Atom();
+		final String value = "Hello, World!";
+		atom1.setValue(value);
+
+		final Atom atom2 = new Atom();
+		atom2.setValue("unbound");
+
+		final Apply apply1 = new Apply();
+		apply1.setBinding("var1");
+		apply1.add(expression);
+		apply1.add(atom1);
+
+		final Apply apply2 = new Apply();
+		apply2.setBinding("var0");
+		apply2.add(apply1);
+		apply2.add(atom2);
+
+		final CodeValue interpreted2 = ecosystemInterpreter.visit(apply2);
+
+		assertEquals(ConstantValue.class, interpreted2.getClass());
+		assertEquals(value, ((ConstantValue) interpreted2).getValue());
+	}
+
+
+	public void testApply04() throws EcosystemInterpretationException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var0");
+		expression.add("var1");
+
+		final Reference reference1 = new Reference();
+		reference1.setValue("var1");
+
+		expression.add(reference1);
+
+		final Atom atom1 = new Atom();
+		atom1.setValue("unbound");
+
+		final Atom atom2 = new Atom();
+		final String value = "Hello, World!";
+		atom2.setValue(value);
+
+		final Apply apply1 = new Apply();
+		apply1.add(expression);
+		apply1.add(atom1);
+
+		final Apply apply2 = new Apply();
+		apply2.add(apply1);
+		apply2.add(atom2);
+
+		final CodeValue interpreted2 = ecosystemInterpreter.visit(apply2);
+
+		assertEquals(ConstantValue.class, interpreted2.getClass());
+		assertEquals(value, ((ConstantValue) interpreted2).getValue());
 	}
 }

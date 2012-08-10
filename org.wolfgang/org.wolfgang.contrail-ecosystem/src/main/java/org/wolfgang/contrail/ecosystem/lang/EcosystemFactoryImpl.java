@@ -337,7 +337,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 		// Check and load importations
 		factory.loadImportations(logger, ecosystemModel);
 
-		final EcosystemCompiler interpret = new EcosystemCompiler(factory, new HashMap<String, CodeValue>());
+		final EcosystemInterpreter interpret = new EcosystemInterpreter(factory, new HashMap<String, CodeValue>());
 
 		// Check on load definitions
 		for (Definition definition : ecosystemModel.getDefinitions()) {

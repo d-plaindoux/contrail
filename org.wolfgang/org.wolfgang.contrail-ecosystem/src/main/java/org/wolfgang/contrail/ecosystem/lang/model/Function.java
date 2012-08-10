@@ -81,7 +81,7 @@ public class Function extends ContentExpressions implements Expression, Validati
 		} else if (this.parameters.contains(name)) {
 			return name;
 		} else {
-			throw new RuntimeException();
+			throw new RuntimeException("Parameter " + name + " not found");
 			/** TODO */
 		}
 	}
