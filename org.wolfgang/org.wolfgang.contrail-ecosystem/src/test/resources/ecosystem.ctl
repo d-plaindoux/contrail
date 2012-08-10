@@ -28,4 +28,4 @@ define NetStation {
 				] 
 }
 
-start { Server ri:"tcp://localhost:6666" factory:{ bind | bind <> TCPEvent <> NetStation } <> Manager }
+start { Server uri:"tcp://localhost:6666" factory:{ bind | bind <> TCPEvent <> NetStation } <> Manager }

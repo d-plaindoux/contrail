@@ -92,9 +92,11 @@
 	</binder>
 
 	<start>
-		<apply>
-			<ref>Server</ref>
-			<atom>tcp://localhost:6666</atom>
+		<apply bind="factory">
+			<apply bind="uri">
+				<ref>Server</ref>
+				<atom>tcp://localhost:6666</atom>
+			</apply>
 			<function vars="b">
 				<ref>b</ref>
 				<ref>TCPEvent</ref>
