@@ -30,27 +30,17 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class EventImpl implements Event, Serializable {
+public class MessageImpl extends EventImpl implements Message {
 
 	/**
 	 * The serialVersionUID attribute
 	 */
-	private static final long serialVersionUID = 1887763768371792297L;
+	private static final long serialVersionUID = -3548456774165827840L;
 
 	/**
-	 * The last component which sent the event
+	 * The source
 	 */
-	public DirectReference lastSender;
-
-	/**
-	 * The target
-	 */
-	private final IndirectReference destination;
-
-	/**
-	 * The content
-	 */
-	private final Serializable content;
+	private final IndirectReference source;
 
 	/**
 	 * Constructor
@@ -59,44 +49,23 @@ public class EventImpl implements Event, Serializable {
 	 * @param destination
 	 * @param content
 	 */
-	public EventImpl(Serializable content, DirectReference... targets) {
-		super();
-		this.destination = ReferenceFactory.emptyIndirectReference();
-		for (int i = targets.length; i > 0; i--) {
-			this.destination.addFirst(targets[i - 1]);
-		}
-		this.content = content;
-		this.lastSender = null;
+	public MessageImpl(Serializable content, DirectReference... targets) {
+		super(content, targets);
+		this.source = ReferenceFactory.emptyIndirectReference();
 	}
 
 	@Override
-	public IndirectReference getReferenceToDestination() {
-		return this.destination;
-	}
-
-	@Override
-	public Serializable getContent() {
-		return this.content;
-	}
-
-	@Override
-	public DirectReference getSender() {
-		return lastSender;
-	}
-
-	@Override
-	public Event sentBy(DirectReference reference) {
-		this.lastSender = reference;
-		return this;
+	public IndirectReference getReferenceToSource() {
+		return this.source;
 	}
 
 	@Override
 	public String toString() {
-		return "Event [destination=" + destination + "]";
+		return "Message [source=" + source + "], " + super.toString();
 	}
 
 	@Override
 	public void handledBy(DirectReference sender) {
-		// Nothing
+		this.source.addFirst(sender);
 	}
 }

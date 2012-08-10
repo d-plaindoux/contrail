@@ -19,9 +19,6 @@
 
 package org.wolfgang.contrail.component.router.event;
 
-import java.io.Serializable;
-
-import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.IndirectReference;
 
 /**
@@ -31,39 +28,11 @@ import org.wolfgang.contrail.reference.IndirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Event {
-	/**
-	 * Method providing the previous reference
-	 * 
-	 * @return a direct reference
-	 */
-	DirectReference getSender();
+public interface Message extends Event {
 
 	/**
-	 * Method setting previous reference
-	 * 
-	 * @return a direct reference
+	 * @return the source reference
 	 */
-	Event sentBy(DirectReference reference);
-
-	/**
-	 * @return the target reference
-	 */
-	IndirectReference getReferenceToDestination();
-
-	/**
-	 * Provide the message content
-	 * 
-	 * @return a content
-	 */
-	Serializable getContent();
-
-	/**
-	 * Notify the event each time it's handled by a given component
-	 * 
-	 * @param sender
-	 *            a reference
-	 */
-	void handledBy(DirectReference sender);
+	IndirectReference getReferenceToSource();
 
 }

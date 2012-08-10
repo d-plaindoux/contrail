@@ -92,7 +92,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, U
 		 */
 		final DirectReference sender = data.getSender();
 		if (sender != null && !this.routerTable.exist(sender)) {
-			data.getReferenceToSource().addFirst(sender);
+			data.handledBy(sender);
 		}
 
 		/**

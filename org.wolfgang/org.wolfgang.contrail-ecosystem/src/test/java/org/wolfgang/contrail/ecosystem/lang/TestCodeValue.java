@@ -76,7 +76,7 @@ public class TestCodeValue extends TestCase {
 
 		final Reference reference = new Reference();
 		reference.setValue("var1");
-		
+
 		expression.add(reference);
 
 		final CodeValue interpreted = ecosystemCompiler.visit(expression);
@@ -125,8 +125,8 @@ public class TestCodeValue extends TestCase {
 
 		expression.add(reference1);
 
-		final Atom atom1 = new Atom();
 		final String value = "Hello, World!";
+		final Atom atom1 = new Atom();
 		atom1.setValue(value);
 
 		final Atom atom2 = new Atom();
@@ -156,8 +156,8 @@ public class TestCodeValue extends TestCase {
 
 		expression.add(reference1);
 
-		final Atom atom1 = new Atom();
 		final String value = "Hello, World!";
+		final Atom atom1 = new Atom();
 		atom1.setValue(value);
 
 		final Atom atom2 = new Atom();
@@ -179,7 +179,6 @@ public class TestCodeValue extends TestCase {
 		assertEquals(value, ((ConstantValue) interpreted2).getValue());
 	}
 
-
 	public void testApply04() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
@@ -197,8 +196,8 @@ public class TestCodeValue extends TestCase {
 		final Atom atom1 = new Atom();
 		atom1.setValue("unbound");
 
-		final Atom atom2 = new Atom();
 		final String value = "Hello, World!";
+		final Atom atom2 = new Atom();
 		atom2.setValue(value);
 
 		final Apply apply1 = new Apply();
