@@ -29,6 +29,8 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestModel</code>
  * 
@@ -55,6 +57,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testEntry() throws JAXBException, ValidationException {
 		final String content = "<binder name='A.A' typein='String' typeout='String'> Logger </binder>";
 		final BinderModel decoded = decode(BinderModel.class, content);
@@ -66,6 +69,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testClient() throws JAXBException, ValidationException {
 		final String content = "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'> " + "PayLoad Serialize Coercion NetworkRoute " + "</client>";
 		final ClientModel decoded = decode(ClientModel.class, content);
@@ -79,9 +83,9 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testRouter01() throws JAXBException, ValidationException {
-		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
-				+ "</router>";
+		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>" + "</router>";
 		final RouterModel decoded = decode(RouterModel.class, content);
 		decoded.validate();
 
@@ -90,6 +94,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals(0, decoded.getClients().size());
 	}
 
+	@Test
 	public void testRouter02() throws JAXBException, ValidationException {
 		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
 				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>" + "</router>";
@@ -107,6 +112,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals("PayLoad Serialize Coercion NetworkRoute", client.getFlow());
 	}
 
+	@Test
 	public void testRouter03() throws JAXBException {
 		final String content = "<router name='NetworkRoute'	factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
 				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>PayLoad Serialize Coercion NetworkRoute</client>"
@@ -131,6 +137,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testServer() throws JAXBException {
 		final String content = "<server endpoint='tcp://localhost:6667'> PayLoad Serialize Coercion NetworkRoute </server>";
 		final ServerModel decoded = decode(ServerModel.class, content);
@@ -140,6 +147,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testTransducer01() throws JAXBException {
 		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'/>";
 		final PipelineModel decoded = decode(PipelineModel.class, content);
@@ -148,6 +156,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals(0, decoded.getParameters().size());
 	}
 
+	@Test
 	public void testTransducer02() throws JAXBException, ValidationException {
 		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'>" + "<param>NetEvent</param> " + "</pipeline>";
 		final PipelineModel decoded = decode(PipelineModel.class, content);
@@ -158,6 +167,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals(Arrays.asList("NetEvent"), decoded.getParameters());
 	}
 
+	@Test
 	public void testTransducer03() throws JAXBException, ValidationException {
 		final String content = "<pipeline name='Coercion' factory='org.wolfgang.contrail.codec.coercion.CoercionTransducerFactory'> " + "<param>NetEvent1</param> " + "<param>NetEvent2</param> "
 				+ "</pipeline>";
@@ -171,6 +181,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testTerminal01() throws JAXBException, ValidationException {
 		final String content = "<terminal name='Logger' factory='org.wolfgang.contrail.bound.Logger'> </terminal>";
 		final TerminalModel decoded = decode(TerminalModel.class, content);
@@ -181,6 +192,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals(0, decoded.getParameters().size());
 	}
 
+	@Test
 	public void testTerminal02() throws JAXBException, ValidationException {
 		final String content = "<terminal name='Logger' factory='org.wolfgang.contrail.bound.Logger'> " + "<param>NetEvent</param> " + "</terminal>";
 		final TerminalModel decoded = decode(TerminalModel.class, content);
@@ -191,6 +203,7 @@ public class TestModelConstruction extends TestCase {
 		assertEquals(Arrays.asList("NetEvent"), decoded.getParameters());
 	}
 
+	@Test
 	public void testTerminal03() throws JAXBException, ValidationException {
 		final String content = "<terminal name='Logger' factory='org.wolfgang.contrail.bound.Logger'> " + "<param>NetEvent1</param> " + "<param>NetEvent2</param> " + "</terminal>";
 		final TerminalModel decoded = decode(TerminalModel.class, content);
@@ -203,6 +216,7 @@ public class TestModelConstruction extends TestCase {
 
 	// ------------------------------
 
+	@Test
 	public void testEcosystem() throws JAXBException, ValidationException {
 		final String content = "<ecosystem><pipeline name='PayLoad' factory='org.wolfgang.contrail.codec.payload.PayLoadTransducerFactory' />"
 				+ "<pipeline name='Serialize' factory='org.wolfgang.contrail.codec.serializer.SerializerTransducerFactory'/>"
@@ -211,17 +225,14 @@ public class TestModelConstruction extends TestCase {
 				+ "<router name='NetworkRoute' factory='org.wolfgang.contrail.network.component.NetworkFactory' singleton='yes'>" + "<self name='A.A'/>"
 				+ "<client factory='a' name='A.B' filter='A.*' endpoint='tcp://localhost:6666'>" + "PayLoad Serialize Coercion NetworkRoute" + "</client>"
 				+ "<client factory='a' name='A.C' filter='A.*' endpoint='ws://localhost:6668'>" + "JSon Coercion NetworkRoute </client></router>"
-				+ "<binder name='NetHook' typein='String' typeout='String'>PayLoad Serialize Coercion NetworkRoute</binder>" 
+				+ "<binder name='NetHook' typein='String' typeout='String'>PayLoad Serialize Coercion NetworkRoute</binder>"
 				+ "<binder name='WebHook' typein='String' typeout='String'>JSon Coercion NetworkRoute</binder>"
 				+ "<server factory='a' endpoint='tcp://localhost:6667'>PayLoad Serialize Coercion NetworkRoute</server>"
-				+ "<server factory='a' endpoint='ws://localhost:6667'>JSon Coercion NetworkRoute</server>" 
-				+ "<flow name='bb'>Network Logger</flow>"
-				+ "<flow name='aa'>Network Logger</flow>"
-				+ "<main>Network Logger</main>"
-				+ "</ecosystem>";
+				+ "<server factory='a' endpoint='ws://localhost:6667'>JSon Coercion NetworkRoute</server>" + "<flow name='bb'>Network Logger</flow>" + "<flow name='aa'>Network Logger</flow>"
+				+ "<main>Network Logger</main>" + "</ecosystem>";
 		final EcosystemModel decoded = decode(EcosystemModel.class, content);
 		decoded.validate();
-		
+
 		assertEquals("Network Logger", decoded.getMain());
 		assertEquals(2, decoded.getBinders().size());
 		assertEquals(3, decoded.getPipelines().size());

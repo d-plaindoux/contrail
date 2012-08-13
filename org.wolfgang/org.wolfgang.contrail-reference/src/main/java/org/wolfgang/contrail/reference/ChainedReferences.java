@@ -46,9 +46,11 @@ final class ChainedReferences implements IndirectReference, Serializable {
 
 	/**
 	 * Constructor
+	 * 
+	 * @param references
 	 */
-	ChainedReferences() {
-		// Nothing special
+	ChainedReferences(DirectReference... references) {
+		this.references.addAll(Arrays.asList(references));
 	}
 
 	@Override
@@ -90,4 +92,33 @@ final class ChainedReferences implements IndirectReference, Serializable {
 		return Arrays.toString(references.toArray(new DirectReference[references.size()]));
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((references == null) ? 0 : references.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ChainedReferences)) {
+			return false;
+		}
+		ChainedReferences other = (ChainedReferences) obj;
+		if (references == null) {
+			if (other.references != null) {
+				return false;
+			}
+		} else if (!references.equals(other.references)) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -22,6 +22,8 @@ import java.lang.reflect.Array;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestTypes</code>
  * 
@@ -30,7 +32,7 @@ import junit.framework.TestCase;
  */
 public class TestTypes extends TestCase {
 
-	public void testSingleType() {
+	@Test public void testSingleType() {
 		assertEquals(Byte.TYPE.getName(), TypeDecoder.getType("B"));
 		assertEquals(Character.TYPE.getName(), TypeDecoder.getType("C"));
 		assertEquals(Double.TYPE.getName(), TypeDecoder.getType("D"));
@@ -44,6 +46,7 @@ public class TestTypes extends TestCase {
 		assertEquals(Array.class.getName(), TypeDecoder.getType("[Lfoo/bar/Baz;"));
 	}
 
+	@Test
 	public void testMethodType() {
 		final String type = "(Lfoo/Bar$1;ILfoo/Baz$2;)V";
 		assertEquals(Void.TYPE.getName(), TypeDecoder.getMethodResult(type));

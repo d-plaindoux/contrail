@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
@@ -39,6 +40,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestConcurrentComponent extends TestCase {
 
+	@Test
 	public void testConcurrent01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
@@ -80,6 +82,7 @@ public class TestConcurrentComponent extends TestCase {
 		assertEquals(total1, total2);
 	}
 
+	@Test
 	public void testConcurrent02() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();

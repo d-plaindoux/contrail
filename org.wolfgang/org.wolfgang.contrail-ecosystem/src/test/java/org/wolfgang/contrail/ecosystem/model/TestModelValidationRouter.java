@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.model;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestModelValidationRouter extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final RouterModel router = new RouterModel();
 		try {
@@ -38,6 +41,7 @@ public class TestModelValidationRouter extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final RouterModel router = new RouterModel();
 		try {
@@ -49,6 +53,7 @@ public class TestModelValidationRouter extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		final RouterModel router = new RouterModel();
 		try {
@@ -61,6 +66,7 @@ public class TestModelValidationRouter extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal04() {
 		final RouterModel router = new RouterModel();
 		try {

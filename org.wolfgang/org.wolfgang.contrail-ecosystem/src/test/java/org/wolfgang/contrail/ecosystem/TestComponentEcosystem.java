@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -46,6 +47,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestComponentEcosystem extends TestCase {
 
+	@Test
 	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataSenderException, DataHandlerException, IOException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();

@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
@@ -42,6 +43,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestConnectionComponent extends TestCase {
 
+	@Test
 	public void testNominal01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -60,6 +62,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testNominal02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -78,6 +81,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testNominal03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -97,6 +101,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -120,6 +125,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -143,6 +149,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -166,6 +173,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed04() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -189,6 +197,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -212,6 +221,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testUpStreamClosed06() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -235,6 +245,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testFailure01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -257,6 +268,7 @@ public class TestConnectionComponent extends TestCase {
 		terminalConnection.dispose();
 	}
 
+	@Test
 	public void testFailure02() {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -269,6 +281,7 @@ public class TestConnectionComponent extends TestCase {
 		}
 	}
 
+	@Test
 	public void testFailure03() {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -280,6 +293,7 @@ public class TestConnectionComponent extends TestCase {
 		}
 	}
 
+	@Test
 	public void testFailure04() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());
@@ -299,6 +313,7 @@ public class TestConnectionComponent extends TestCase {
 		initialConnection.dispose();
 	}
 
+	@Test
 	public void testFailure05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(),
 				new IntegerToString());

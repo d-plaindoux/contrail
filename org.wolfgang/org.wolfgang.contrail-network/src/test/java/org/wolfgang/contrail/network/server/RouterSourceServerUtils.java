@@ -41,9 +41,9 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
 import org.wolfgang.contrail.component.router.RouterSourceComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
-import org.wolfgang.contrail.component.router.event.Event;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;

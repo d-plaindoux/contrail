@@ -25,6 +25,8 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestModel</code>
  * 
@@ -33,7 +35,7 @@ import junit.framework.TestCase;
  */
 public class TestModelChecker extends TestCase {
 
-	public void testNominal01() throws JAXBException {
+	@Test public void testNominal01() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		final TerminalModel terminal = new TerminalModel();
@@ -49,7 +51,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
-	public void testNominal02() throws JAXBException {
+	@Test public void testNominal02() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
@@ -67,7 +69,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
-	public void testNominal03() throws JAXBException {
+	@Test public void testNominal03() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
@@ -91,7 +93,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
-	public void testNominal04() throws JAXBException {
+	@Test public void testNominal04() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
@@ -116,7 +118,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(Arrays.asList("B", "D"), freeVariables);
 	}
 
-	public void testNominal05() throws JAXBException {
+	@Test public void testNominal05() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
@@ -141,7 +143,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(Arrays.asList("C"), unusedVariables);
 	}
 
-	public void testNominal06() throws JAXBException {
+	@Test public void testNominal06() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A" }) {
@@ -167,7 +169,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(Arrays.asList("C", "A"), unusedVariables);
 	}
 
-	public void testNominal07() throws JAXBException {
+	@Test public void testNominal07() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
@@ -193,7 +195,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
-	public void testNominal08() throws JAXBException {
+	@Test public void testNominal08() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
@@ -222,7 +224,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
-	public void testNominal09() throws JAXBException {
+	@Test public void testNominal09() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 
 		for (String s : new String[] { "A", "B" }) {
@@ -251,6 +253,7 @@ public class TestModelChecker extends TestCase {
 		assertEquals(0, freeVariables.size());
 	}
 
+	@Test
 	public void testNominal10() throws JAXBException {
 		final EcosystemModel ecosystem = new EcosystemModel();
 

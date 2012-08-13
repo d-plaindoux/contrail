@@ -16,10 +16,34 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.java.classes;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import junit.framework.TestCase;
+
+import org.junit.Test;
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
+import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
+
 /**
- * Main package providing protocol events 
- *
+ * <code>TestClassReader</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.router.event;
+@XmlRootElement(name = "root")
+@Deprecated
+public class SampleClass extends TestCase {
+
+	@XmlAttribute(name = "toto", namespace = "titi")
+	public int f(int j, @Deprecated int i) {
+		return 1;
+	}
+}

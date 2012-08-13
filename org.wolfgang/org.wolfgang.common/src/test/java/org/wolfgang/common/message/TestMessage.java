@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.message;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestMessage extends TestCase {
 
+	@Test
 	public void testMessage01() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message");
@@ -38,6 +41,7 @@ public class TestMessage extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMessage02() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.with.args");
@@ -48,6 +52,7 @@ public class TestMessage extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMessage03() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/undef", "message.undefined");
@@ -58,6 +63,7 @@ public class TestMessage extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMessage04() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.undefined");

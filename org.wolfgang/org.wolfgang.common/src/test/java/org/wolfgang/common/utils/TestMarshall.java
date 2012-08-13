@@ -20,6 +20,8 @@ package org.wolfgang.common.utils;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -30,10 +32,12 @@ import junit.framework.TestCase;
  */
 public class TestMarshall extends TestCase {
 
+	@Test
 	public void testInteger() throws IOException {
 		assertEquals(12, Marshall.bytesToInt(Marshall.intToBytes(12)));
 	}
 
+	@Test
 	public void testIntegerFailure() {
 		try {
 			assertEquals(12,  Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
@@ -43,6 +47,7 @@ public class TestMarshall extends TestCase {
 		}
 	}
 
+	@Test
 	public void testObject() throws IOException, ClassNotFoundException {
 		assertEquals("Hello, World!", Marshall.bytesToObject(Marshall.objectToBytes("Hello, World!")));
 	}

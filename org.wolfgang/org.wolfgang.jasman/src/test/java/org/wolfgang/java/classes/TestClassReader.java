@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
 import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
@@ -46,9 +47,10 @@ public class TestClassReader extends TestCase {
 		return 1;
 	}
 
+	@Test
 	public void testAnnotations01() throws IOException {
 		final ClassLoader classLoader = this.getClass().getClassLoader();
-		final URL resource = classLoader.getResource("org/wolfgang/java/classes/TestClassReader.class");
+		final URL resource = classLoader.getResource("org/wolfgang/java/classes/SampleClass.class");
 
 		assertNotNull(resource);
 

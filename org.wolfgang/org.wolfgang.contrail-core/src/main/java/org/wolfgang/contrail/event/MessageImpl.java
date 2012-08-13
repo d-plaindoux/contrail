@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.router.event;
+package org.wolfgang.contrail.event;
 
 import java.io.Serializable;
 
@@ -51,7 +51,7 @@ public class MessageImpl extends EventImpl implements Message {
 	 */
 	public MessageImpl(Serializable content, DirectReference... targets) {
 		super(content, targets);
-		this.source = ReferenceFactory.emptyIndirectReference();
+		this.source = ReferenceFactory.indirectReference();
 	}
 
 	@Override

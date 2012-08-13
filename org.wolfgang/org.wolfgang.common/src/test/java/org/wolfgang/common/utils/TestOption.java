@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.utils;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,21 +30,25 @@ import junit.framework.TestCase;
  */
 public class TestOption extends TestCase {
 
+	@Test
 	public void testOption01() {
 		final Option<Integer> option = Option.none();
 		assertEquals(Option.Kind.None, option.getKind());
 	}
 
+	@Test
 	public void testOption02() {
 		final Option<Integer> option = Option.some(1);
 		assertEquals(Option.Kind.Some, option.getKind());
 	}
 
+	@Test
 	public void testOption03() {
 		final Option<Integer> option = Option.some(1);
 		assertEquals(new Integer(1), option.getValue());
 	}
 
+	@Test
 	public void testOption04() {
 		final Option<Integer> option = Option.none();
 		try {

@@ -28,6 +28,7 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -47,7 +48,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestNetworkEcosystem extends TestCase {
 
-	public void testNominal01() {
+	@Test public void testNominal01() {
 
 		try {
 			final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
@@ -72,7 +73,7 @@ public class TestNetworkEcosystem extends TestCase {
 		}
 	}
 
-	public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
+	@Test public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
 
 		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
 		final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
@@ -88,6 +89,7 @@ public class TestNetworkEcosystem extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 
 		try {

@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.IndirectReference;
@@ -36,6 +37,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  */
 public class TestReference extends TestCase {
 
+	@Test
 	public void testNominal01() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 
@@ -45,6 +47,7 @@ public class TestReference extends TestCase {
 		assertEquals(reference01, reference02);
 	}
 
+	@Test
 	public void testNominal02() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 
@@ -54,6 +57,7 @@ public class TestReference extends TestCase {
 		assertEquals(reference01, reference02);
 	}
 
+	@Test
 	public void testFailure01() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
 
@@ -63,17 +67,18 @@ public class TestReference extends TestCase {
 		assertNotSame(reference01, reference02);
 	}
 
+	@Test
 	public void testNominal03() throws NoSuchAlgorithmException {
 		final DirectReference reference01 = ReferenceFactory.createServerReference(UUID.randomUUID());
 		final DirectReference reference02 = ReferenceFactory.createServerReference(UUID.randomUUID());
-		final IndirectReference indirectReference = ReferenceFactory.emptyIndirectReference();
+		final IndirectReference indirectReference = ReferenceFactory.indirectReference();
 
 		indirectReference.addFirst(reference02);
 		indirectReference.addFirst(reference01);
-		
+
 		assertEquals(reference01, indirectReference.getNext());
 		indirectReference.removeNext();
-		
+
 		assertEquals(reference02, indirectReference.getNext());
 	}
 }

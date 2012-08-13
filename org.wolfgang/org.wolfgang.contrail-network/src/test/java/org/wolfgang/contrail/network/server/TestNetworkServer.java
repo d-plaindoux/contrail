@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -50,6 +51,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestNetworkServer extends TestCase {
 
+	@Test
 	public void testNominal01() throws IOException, CannotProvideComponentException, CannotCreateServerException, URISyntaxException {
 
 		// ------------------------------------------------------------------------------------------------

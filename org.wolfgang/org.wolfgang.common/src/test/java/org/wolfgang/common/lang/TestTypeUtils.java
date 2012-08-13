@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.lang;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestTypeUtils extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		try {
 			assertEquals(String.class, TypeUtils.getType("java.lang.String"));
@@ -36,6 +39,7 @@ public class TestTypeUtils extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		try {
 			assertEquals(String.class, TypeUtils.getType("String"));
@@ -44,6 +48,7 @@ public class TestTypeUtils extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		try {
 			assertEquals(byte[].class, TypeUtils.getType("byte[]"));
@@ -52,6 +57,7 @@ public class TestTypeUtils extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal04() {
 		try {
 			assertEquals(long.class, TypeUtils.getType("long"));
@@ -60,6 +66,7 @@ public class TestTypeUtils extends TestCase {
 		}
 	}
 
+	@Test
 	public void testFailure01() {
 		try {
 			TypeUtils.getType("titi");

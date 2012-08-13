@@ -20,6 +20,8 @@ package org.wolfgang.contrail.ecosystem.model;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestModel</code>
  * 
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestModelValidationClient extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final ClientModel client = new ClientModel();
 		try {
@@ -38,6 +41,7 @@ public class TestModelValidationClient extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final ClientModel client = new ClientModel();
 		try {
@@ -49,6 +53,7 @@ public class TestModelValidationClient extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		final ClientModel client = new ClientModel();
 		try {
@@ -61,6 +66,7 @@ public class TestModelValidationClient extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal06() {
 		final ClientModel client = new ClientModel();
 		try {
@@ -75,6 +81,7 @@ public class TestModelValidationClient extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal07() {
 		final ClientModel client = new ClientModel();
 		try {

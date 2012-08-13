@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.utils;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -27,6 +29,7 @@ import junit.framework.TestCase;
  */
 public class TestCoercion extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final Object object = new Integer(1);
 		assertTrue(Coercion.canCoerce(object, Integer.class));
@@ -37,6 +40,7 @@ public class TestCoercion extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final Object object = new Integer(1);
 		assertTrue(Coercion.canCoerce(object, Number.class));

@@ -52,8 +52,8 @@ public final class ReferenceFactory {
 	/**
 	 * @return a chain of end-points
 	 */
-	public static IndirectReference emptyIndirectReference() {
-		return new ChainedReferences();
+	public static IndirectReference indirectReference(DirectReference... references) {
+		return new ChainedReferences(references);
 	}
 
 }

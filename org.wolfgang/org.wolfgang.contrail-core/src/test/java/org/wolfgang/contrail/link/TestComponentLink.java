@@ -20,6 +20,7 @@ package org.wolfgang.contrail.link;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 
@@ -31,6 +32,7 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
  */
 public class TestComponentLink extends TestCase {
 
+	@Test
 	public void testLink01() {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
@@ -42,6 +44,7 @@ public class TestComponentLink extends TestCase {
 		}
 	}
 
+	@Test
 	public void testLink02() {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
@@ -58,6 +61,7 @@ public class TestComponentLink extends TestCase {
 		}
 	}
 
+	@Test
 	public void testLink03() {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
@@ -81,6 +85,7 @@ public class TestComponentLink extends TestCase {
 		}
 	}
 
+	@Test
 	public void testLink04() {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {

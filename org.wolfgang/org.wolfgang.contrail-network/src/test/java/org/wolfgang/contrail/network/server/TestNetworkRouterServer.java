@@ -32,13 +32,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.router.RouterSourceComponent;
-import org.wolfgang.contrail.component.router.event.Event;
-import org.wolfgang.contrail.component.router.event.EventImpl;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
@@ -46,6 +45,8 @@ import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.factory.RouterSourceFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
+import org.wolfgang.contrail.event.Event;
+import org.wolfgang.contrail.event.EventImpl;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -88,6 +89,7 @@ public class TestNetworkRouterServer extends TestCase {
 
 	// ---------------------------------------------------------------------------
 
+	@Test
 	public void testNominal01Direct() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
 			DataHandlerException, InterruptedException, ExecutionException, TimeoutException {
 
@@ -115,6 +117,7 @@ public class TestNetworkRouterServer extends TestCase {
 		assertEquals(reference01 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 	}
 
+	@Test
 	public void testNominal02Relay() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
 			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
 
@@ -174,6 +177,7 @@ public class TestNetworkRouterServer extends TestCase {
 		networkServer02.close();
 	}
 
+	@Test
 	public void testNominal03ComplexPath() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
 			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
 
@@ -248,6 +252,7 @@ public class TestNetworkRouterServer extends TestCase {
 		networkServer03.close();
 	}
 
+	@Test
 	public void testNominal03Transitive() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
 			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
 

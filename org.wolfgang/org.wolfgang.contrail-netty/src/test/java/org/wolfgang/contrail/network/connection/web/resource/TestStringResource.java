@@ -26,6 +26,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.junit.Test;
 
 /**
  * <code>TestResource</code>
@@ -35,6 +36,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  */
 public class TestStringResource extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final Resource resource = new StringResourceImpl("This is a ${simple} test with some ${meta.variables}");
 		final Collection<String> freeVariables = resource.getFreeVariables();
@@ -43,12 +45,13 @@ public class TestStringResource extends TestCase {
 		assertTrue(freeVariables.contains("meta.variables"));
 	}
 
+	@Test
 	public void testNominal02() throws IOException {
 		final Resource resource = new StringResourceImpl("Hello, ${who}!");
 		final Map<String, String> variables = new HashMap<String, String>();
 		variables.put("who", "World");
 
-		final ChannelBuffer content = resource.getContent(variables);		
+		final ChannelBuffer content = resource.getContent(variables);
 		assertEquals("Hello, World!", new String(content.array()));
 	}
 }

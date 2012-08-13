@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -45,6 +46,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestEcosystemFactory extends TestCase {
 
+	@Test
 	public void testSample01() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01.xml");
 
@@ -74,6 +76,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample01bis() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01bis.xml");
 
@@ -104,6 +107,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample01ter() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01ter.xml");
 
@@ -134,6 +138,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample01WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01WithFlow.xml");
 
@@ -163,6 +168,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample02() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02.xml");
 
@@ -201,6 +207,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample02WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02WithFlow.xml");
 
@@ -240,6 +247,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample03() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03.xml");
 
@@ -279,6 +287,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample03WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03WithFlow.xml");
 
@@ -317,6 +326,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSample04() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample04.xml");
 

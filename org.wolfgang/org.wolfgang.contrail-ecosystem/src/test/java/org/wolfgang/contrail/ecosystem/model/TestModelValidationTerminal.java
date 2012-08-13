@@ -20,6 +20,8 @@ package org.wolfgang.contrail.ecosystem.model;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestModel</code>
  * 
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestModelValidationTerminal extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final TerminalModel terminal = new TerminalModel();
 		try {
@@ -38,6 +41,7 @@ public class TestModelValidationTerminal extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final TerminalModel terminal = new TerminalModel();
 		try {
@@ -49,6 +53,7 @@ public class TestModelValidationTerminal extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		final TerminalModel terminal = new TerminalModel();
 		try {

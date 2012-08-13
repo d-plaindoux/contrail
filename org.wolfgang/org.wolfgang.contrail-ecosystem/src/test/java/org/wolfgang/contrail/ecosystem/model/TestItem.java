@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem.model;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.ecosystem.model.FlowModel.Item;
 
 /**
@@ -30,7 +31,7 @@ import org.wolfgang.contrail.ecosystem.model.FlowModel.Item;
  */
 public class TestItem extends TestCase {
 
-	public void testItem01() {
+	@Test public void testItem01() {
 		final Item[] decompose = FlowModel.decompose("A");
 		assertEquals(1, decompose.length);
 		assertFalse(decompose[0].asAlias());
@@ -38,7 +39,7 @@ public class TestItem extends TestCase {
 		assertEquals(0, decompose[0].getParameters().length);
 	}
 
-	public void testItem02() {
+	@Test public void testItem02() {
 		final Item[] decompose = FlowModel.decompose("A B");
 		assertEquals(2, decompose.length);
 		assertFalse(decompose[0].asAlias());
@@ -49,7 +50,7 @@ public class TestItem extends TestCase {
 		assertEquals(0, decompose[1].getParameters().length);
 	}
 	
-	public void testItem03() {
+	@Test public void testItem03() {
 		final Item[] decompose = FlowModel.decompose("a=A");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
@@ -58,7 +59,7 @@ public class TestItem extends TestCase {
 		assertEquals(0, decompose[0].getParameters().length);
 	}	
 
-	public void testItem04() {
+	@Test public void testItem04() {
 		final Item[] decompose = FlowModel.decompose("a=A()");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
@@ -67,7 +68,7 @@ public class TestItem extends TestCase {
 		assertEquals(0, decompose[0].getParameters().length);
 	}	
 
-	public void testItem05() {
+	@Test public void testItem05() {
 		final Item[] decompose = FlowModel.decompose("a=A(1)");
 		assertEquals(1, decompose.length);
 		assertTrue(decompose[0].asAlias());
@@ -77,6 +78,7 @@ public class TestItem extends TestCase {
 		assertEquals("1", decompose[0].getParameters()[0]);
 	}	
 
+	@Test
 	public void testItem06() {
 		final Item[] decompose = FlowModel.decompose("a=A(1,dd)");
 		assertEquals(1, decompose.length);

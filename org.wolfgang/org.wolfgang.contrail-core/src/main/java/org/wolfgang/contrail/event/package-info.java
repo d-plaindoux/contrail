@@ -16,30 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.utils;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
-
-import org.junit.Test;
-
-import junit.framework.TestCase;
-
 /**
- * <code>TestUUDI</code>
- * 
+ * Main package providing protocol events 
+ *
  * @author Didier Plaindoux
- * @verision 1.0
+ * @version 1.0
  */
-public class TestUUDI extends TestCase {
-
-	@Test
-	public void testUUDI01() throws NoSuchAlgorithmException {
-		
-		final UUID uuid1 = UUIDUtils.digestBased("test");
-		final UUID uuid2 = UUIDUtils.digestBased("test");
-
-		assertEquals(uuid1, uuid2);
-	}
-
-}
+package org.wolfgang.contrail.event;

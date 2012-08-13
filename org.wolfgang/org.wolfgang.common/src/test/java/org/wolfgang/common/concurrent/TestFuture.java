@@ -22,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -32,6 +34,7 @@ import junit.framework.TestCase;
  */
 public class TestFuture extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 		final String value = "Hello, World!";
@@ -45,6 +48,7 @@ public class TestFuture extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 		final Throwable value = new Throwable();
@@ -59,6 +63,7 @@ public class TestFuture extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 		try {
@@ -73,6 +78,7 @@ public class TestFuture extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal04() {
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 		final String value = "Hello, World!";
@@ -99,6 +105,7 @@ public class TestFuture extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal05() {
 		final FutureResponse<String> futureResponse = new FutureResponse<String>();
 		final Throwable value = new Throwable();

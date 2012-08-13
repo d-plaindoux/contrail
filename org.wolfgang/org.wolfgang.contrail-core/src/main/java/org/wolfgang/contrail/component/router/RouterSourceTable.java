@@ -20,7 +20,7 @@ package org.wolfgang.contrail.component.router;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.router.event.Event;
+import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 import org.wolfgang.contrail.reference.ReferenceTableImpl;

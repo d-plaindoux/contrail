@@ -23,6 +23,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
@@ -53,7 +54,7 @@ public class TestCodeValue extends TestCase {
 
 	}
 
-	public void testAtom() throws EcosystemInterpretationException {
+	@Test public void testAtom() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
@@ -66,7 +67,7 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ConstantValue.class, interpreted.getClass());
 	}
 
-	public void testFunction() throws EcosystemInterpretationException {
+	@Test public void testFunction() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
@@ -84,7 +85,7 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted.getClass());
 	}
 
-	public void testApply01() throws EcosystemInterpretationException {
+	@Test public void testApply01() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
@@ -111,7 +112,7 @@ public class TestCodeValue extends TestCase {
 		assertEquals(value, ((ConstantValue) interpreted).getValue());
 	}
 
-	public void testApply02() throws EcosystemInterpretationException {
+	@Test public void testApply02() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
@@ -142,7 +143,7 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted1.getClass());
 	}
 
-	public void testApply03() throws EcosystemInterpretationException {
+	@Test public void testApply03() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
@@ -179,6 +180,7 @@ public class TestCodeValue extends TestCase {
 		assertEquals(value, ((ConstantValue) interpreted2).getValue());
 	}
 
+	@Test
 	public void testApply04() throws EcosystemInterpretationException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();

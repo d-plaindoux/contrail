@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
@@ -66,6 +67,7 @@ public class TestFileClient extends TestCase {
 		return builder.toString();
 	}
 
+	@Test
 	public void testNominal01() throws IOException, CannotCreateDataSenderException, InterruptedException, ExecutionException {
 		final File input = new File("src/test/Sample.txt");
 		final File output = new File("src/test/Sample.txt.out");
@@ -119,6 +121,7 @@ public class TestFileClient extends TestCase {
 		output.delete();
 	}
 
+	@Test
 	public void testNominal02() throws IOException, CannotCreateDataSenderException, InterruptedException, ExecutionException, DataHandlerException {
 		final File input = new File("src/test/Sample.txt");
 		final File output = new File("src/test/Sample.txt.out");

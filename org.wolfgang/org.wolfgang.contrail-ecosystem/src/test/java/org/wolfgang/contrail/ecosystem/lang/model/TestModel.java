@@ -27,13 +27,7 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
-import org.wolfgang.contrail.ecosystem.lang.model.Apply;
-import org.wolfgang.contrail.ecosystem.lang.model.Atom;
-import org.wolfgang.contrail.ecosystem.lang.model.Definition;
-import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.Function;
-import org.wolfgang.contrail.ecosystem.lang.model.Reference;
-import org.wolfgang.contrail.ecosystem.lang.model.ValidationException;
+import org.junit.Test;
 
 /**
  * <code>TestModel</code>
@@ -55,17 +49,20 @@ public class TestModel extends TestCase {
 		}
 	}
 
+	@Test
 	public void testReference() throws JAXBException, IOException, ValidationException {
 		final Reference decoded = decode("<ref>Value</ref>", Reference.class);
 		decoded.validate();
 		assertEquals("Value", decoded.getValue());
 	}
 
+	@Test
 	public void testAtom() throws JAXBException, IOException {
 		final Atom decoded = decode("<atom>Value</atom>", Atom.class);
 		assertEquals("Value", decoded.getValue());
 	}
 
+	@Test
 	public void testApply() throws JAXBException, IOException, ValidationException {
 		final Apply decoded = decode("<apply><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
 		decoded.validate();
@@ -78,6 +75,7 @@ public class TestModel extends TestCase {
 		assertEquals("Value1", ((Atom) actual1).getValue());
 	}
 
+	@Test
 	public void testFunction() throws JAXBException, IOException, ValidationException {
 		final Function decoded = decode("<function><var>a</var><atom>Value</atom></function>", Function.class);
 		decoded.validate();
@@ -87,6 +85,7 @@ public class TestModel extends TestCase {
 		assertEquals("Value", ((Atom) actual).getValue());
 	}
 
+	@Test
 	public void testDefine() throws JAXBException, IOException, ValidationException {
 		final Definition decoded = decode("<define name='test'><function><var>a</var><atom>Value</atom></function></define>", Definition.class);
 		decoded.validate();

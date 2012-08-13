@@ -18,6 +18,8 @@
 
 package org.wolfgang.common.utils;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestPair extends TestCase {
 
+	@Test
 	public void testPair01() {
 		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
 		assertEquals(pair1, pair1);

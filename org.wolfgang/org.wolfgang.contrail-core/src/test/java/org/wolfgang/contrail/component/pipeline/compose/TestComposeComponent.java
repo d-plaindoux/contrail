@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
@@ -43,6 +44,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComposeComponent extends TestCase {
 
 	@SuppressWarnings("rawtypes")
+	@Test
 	public void testCompose01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
@@ -78,6 +80,7 @@ public class TestComposeComponent extends TestCase {
 	}
 
 	@SuppressWarnings("rawtypes")
+	@Test
 	public void testFailure01() throws ComponentConnectionRejectedException {
 		final String source = new String("Hello, World!");
 

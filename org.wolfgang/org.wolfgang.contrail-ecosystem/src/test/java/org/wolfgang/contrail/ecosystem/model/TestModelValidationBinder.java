@@ -20,6 +20,8 @@ package org.wolfgang.contrail.ecosystem.model;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * <code>TestModel</code>
  * 
@@ -28,6 +30,7 @@ import junit.framework.TestCase;
  */
 public class TestModelValidationBinder extends TestCase {
 
+	@Test
 	public void testNominal01() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -38,6 +41,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal02() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -49,6 +53,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal03() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -61,6 +66,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal04() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -74,6 +80,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal05() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -88,6 +95,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal06() {
 		final BinderModel binder = new BinderModel();
 		try {
@@ -102,6 +110,7 @@ public class TestModelValidationBinder extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNominal07() {
 		final BinderModel binder = new BinderModel();
 		try {
