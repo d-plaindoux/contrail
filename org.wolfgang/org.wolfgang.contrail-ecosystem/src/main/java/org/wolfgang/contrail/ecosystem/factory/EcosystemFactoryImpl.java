@@ -336,7 +336,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		final DirectReference reference;
 
 		try {
-			reference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
+			reference = ReferenceFactory.directReference(UUIDUtils.digestBased(router.getSelf()));
 		} catch (NoSuchAlgorithmException e) {
 			throw new CannotCreateComponentException(e);
 		}
@@ -352,7 +352,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 				final Client client;
 
 				try {
-					mainReference = ReferenceFactory.createServerReference(UUIDUtils.digestBased(router.getSelf()));
+					mainReference = ReferenceFactory.directReference(UUIDUtils.digestBased(router.getSelf()));
 					client = this.clientFactory.get(uri.getScheme());
 				} catch (NoSuchAlgorithmException e) {
 					throw new CannotCreateComponentException(e);

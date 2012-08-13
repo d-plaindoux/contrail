@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.network.server;
 
-import static org.wolfgang.contrail.reference.ReferenceFactory.createClientReference;
+import static org.wolfgang.contrail.reference.ReferenceFactory.directReference;
 
 import java.io.IOException;
 import java.net.URI;
@@ -96,7 +96,7 @@ public class TestNetworkRouterServer extends TestCase {
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 
 		// ------------------------------------------------------------------------------------------------
-		final DirectReference reference01 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+		final DirectReference reference01 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
@@ -123,8 +123,8 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
-		final DirectReference reference01 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-		final DirectReference reference02 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+		final DirectReference reference01 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+		final DirectReference reference02 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
@@ -183,9 +183,9 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
-		final DirectReference reference01 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-		final DirectReference reference02 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
-		final DirectReference reference03 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+		final DirectReference reference01 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+		final DirectReference reference02 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+		final DirectReference reference03 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000003"));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
@@ -258,9 +258,9 @@ public class TestNetworkRouterServer extends TestCase {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
-		final DirectReference reference01 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-		final DirectReference reference02 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
-		final DirectReference reference03 = createClientReference(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+		final DirectReference reference01 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+		final DirectReference reference02 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+		final DirectReference reference03 = directReference(UUID.fromString("00000000-0000-0000-0000-000000000003"));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition

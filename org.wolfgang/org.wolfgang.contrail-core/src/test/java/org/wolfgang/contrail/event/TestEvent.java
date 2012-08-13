@@ -48,7 +48,7 @@ public class TestEvent extends TestCase {
 	public void testEvent02() throws NoSuchAlgorithmException {
 		final String message = "Hello,  World!";
 		final EventImpl event = new EventImpl(message);
-		final DirectReference reference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("test"));
+		final DirectReference reference = ReferenceFactory.directReference(UUIDUtils.digestBased("test"));
 		event.sentBy(reference);
 		assertEquals(reference, event.getSender());
 	}
@@ -56,8 +56,8 @@ public class TestEvent extends TestCase {
 	@Test
 	public void testEvent03() throws NoSuchAlgorithmException {
 		final String message = "Hello,  World!";
-		final DirectReference step0 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step0"));
-		final DirectReference step1 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step1"));
+		final DirectReference step0 = ReferenceFactory.directReference(UUIDUtils.digestBased("step0"));
+		final DirectReference step1 = ReferenceFactory.directReference(UUIDUtils.digestBased("step1"));
 		final IndirectReference path = ReferenceFactory.indirectReference(step0, step1);
 		final EventImpl event = new EventImpl(message, step0, step1);
 		assertEquals(path, event.getReferenceToDestination());
@@ -74,7 +74,7 @@ public class TestEvent extends TestCase {
 	public void testMessage02() throws NoSuchAlgorithmException {
 		final String message = "Hello,  World!";
 		final EventImpl event = new MessageImpl(message);
-		final DirectReference reference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("test"));
+		final DirectReference reference = ReferenceFactory.directReference(UUIDUtils.digestBased("test"));
 		event.sentBy(reference);
 		assertEquals(reference, event.getSender());
 	}
@@ -82,8 +82,8 @@ public class TestEvent extends TestCase {
 	@Test
 	public void testMessage03() throws NoSuchAlgorithmException {
 		final String message = "Hello,  World!";
-		final DirectReference step0 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step0"));
-		final DirectReference step1 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step1"));
+		final DirectReference step0 = ReferenceFactory.directReference(UUIDUtils.digestBased("step0"));
+		final DirectReference step1 = ReferenceFactory.directReference(UUIDUtils.digestBased("step1"));
 		final IndirectReference path = ReferenceFactory.indirectReference(step0, step1);
 		final EventImpl event = new MessageImpl(message, step0, step1);
 		assertEquals(path, event.getReferenceToDestination());
@@ -92,8 +92,8 @@ public class TestEvent extends TestCase {
 	@Test
 	public void testMessage04() throws NoSuchAlgorithmException {
 		final String message = "Hello,  World!";
-		final DirectReference step0 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step0"));
-		final DirectReference step1 = ReferenceFactory.createClientReference(UUIDUtils.digestBased("step1"));
+		final DirectReference step0 = ReferenceFactory.directReference(UUIDUtils.digestBased("step0"));
+		final DirectReference step1 = ReferenceFactory.directReference(UUIDUtils.digestBased("step1"));
 		final IndirectReference path = ReferenceFactory.indirectReference(step0, step1);
 		final MessageImpl event = new MessageImpl(message, step0, step1);
 		event.handledBy(step1);

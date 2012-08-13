@@ -39,38 +39,18 @@ public class TestReference extends TestCase {
 
 	@Test
 	public void testNominal01() throws NoSuchAlgorithmException {
-		final UUID identifier = UUIDUtils.digestBased("Client");
+		final UUID identifier = UUIDUtils.digestBased("Reference");
 
-		final DirectReference reference01 = ReferenceFactory.createClientReference(identifier);
-		final DirectReference reference02 = ReferenceFactory.createClientReference(identifier);
-
-		assertEquals(reference01, reference02);
-	}
-
-	@Test
-	public void testNominal02() throws NoSuchAlgorithmException {
-		final UUID identifier = UUIDUtils.digestBased("Client");
-
-		final DirectReference reference01 = ReferenceFactory.createServerReference(identifier);
-		final DirectReference reference02 = ReferenceFactory.createServerReference(identifier);
+		final DirectReference reference01 = ReferenceFactory.directReference(identifier);
+		final DirectReference reference02 = ReferenceFactory.directReference(identifier);
 
 		assertEquals(reference01, reference02);
-	}
-
-	@Test
-	public void testFailure01() throws NoSuchAlgorithmException {
-		final UUID identifier = UUIDUtils.digestBased("Client");
-
-		final DirectReference reference01 = ReferenceFactory.createServerReference(identifier);
-		final DirectReference reference02 = ReferenceFactory.createClientReference(identifier);
-
-		assertNotSame(reference01, reference02);
 	}
 
 	@Test
 	public void testNominal03() throws NoSuchAlgorithmException {
-		final DirectReference reference01 = ReferenceFactory.createServerReference(UUID.randomUUID());
-		final DirectReference reference02 = ReferenceFactory.createServerReference(UUID.randomUUID());
+		final DirectReference reference01 = ReferenceFactory.directReference(UUID.randomUUID());
+		final DirectReference reference02 = ReferenceFactory.directReference(UUID.randomUUID());
 		final IndirectReference indirectReference = ReferenceFactory.indirectReference();
 
 		indirectReference.addFirst(reference02);

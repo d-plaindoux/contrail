@@ -62,7 +62,7 @@ public class TestNetworkComponent extends TestCase {
 	@Test
 	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryNotFoundException, ReferenceEntryAlreadyExistException, CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
-		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
+		final DirectReference clientReference = ReferenceFactory.directReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
 		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
@@ -85,7 +85,7 @@ public class TestNetworkComponent extends TestCase {
 	@Test
 	public void testFailure01() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
-		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
+		final DirectReference clientReference = ReferenceFactory.directReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
 		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 
@@ -126,7 +126,7 @@ public class TestNetworkComponent extends TestCase {
 	@Test
 	public void testFailure02() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, CannotCreateComponentException {
 		final UUID identifier = UUIDUtils.digestBased("Client");
-		final DirectReference clientReference = ReferenceFactory.createClientReference(identifier);
+		final DirectReference clientReference = ReferenceFactory.directReference(identifier);
 		final RouterSourceTable networkRouterTable = new RouterSourceTable();
 		final SourceComponent<Event, Event> sourceComponent = getSourceComponent();
 		final ComponentId componentId = sourceComponent.getComponentId();
@@ -143,7 +143,7 @@ public class TestNetworkComponent extends TestCase {
 			}
 		}, clientReference);
 
-		final DirectReference somebodyReference = ReferenceFactory.createClientReference(UUIDUtils.digestBased("Somebody"));
+		final DirectReference somebodyReference = ReferenceFactory.directReference(UUIDUtils.digestBased("Somebody"));
 		try {
 			assertEquals(componentId, networkRouterTable.retrieve(somebodyReference).create().getComponentId());
 			fail();

@@ -38,15 +38,8 @@ public final class ReferenceFactory {
 	/**
 	 * @return a client end-point
 	 */
-	public static DirectReference createClientReference(UUID identifier) {
-		return new ClientReference(identifier);
-	}
-
-	/**
-	 * @return a server end-point
-	 */
-	public static DirectReference createServerReference(UUID identifier) {
-		return new ServerReference(identifier);
+	public static DirectReference directReference(UUID identifier) {
+		return new IdentifiedReference(identifier);
 	}
 
 	/**
