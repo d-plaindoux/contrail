@@ -22,17 +22,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
-import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.event.Event;
+import org.wolfgang.contrail.handler.DataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -51,7 +50,7 @@ import org.wolfgang.contrail.reference.DirectReference;
  */
 @ContrailUpType(in = Event.class, out = Event.class)
 @ContrailDownType(in = Event.class, out = Event.class)
-public class RouterSourceComponent extends AbstractComponent implements DestinationComponent<Event, Event>, MultipleSourceComponent<Event, Event> {
+public class RouterSourceComponent extends AbstractComponent implements MultipleDestinationComponent<Event, Event>, MultipleSourceComponent<Event, Event> {
 
 	/**
 	 * The multiplexer component
@@ -61,12 +60,12 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private DestinationComponentLink<Event, Event> destinationLink;
+	private final Map<ComponentId, DirectReference> filters;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
 	 */
-	private final Map<ComponentId, DirectReference> sourceFilters;
+	private Map<ComponentId, DestinationComponentLink<Event, Event>> destinationLinks;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -77,15 +76,15 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 * Initialization
 	 */
 	{
-		this.sourceFilters = new HashMap<ComponentId, DirectReference>();
+		this.filters = new HashMap<ComponentId, DirectReference>();
 		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<Event, Event>>();
+		this.destinationLinks = new HashMap<ComponentId, DestinationComponentLink<Event, Event>>();
 	}
 
 	/**
 	 * Constructor
 	 */
 	public RouterSourceComponent(RouterSourceTable table, DirectReference selfReference) {
-		this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
 		this.streamStation = new StreamDataHandlerStation(this, selfReference, table);
 	}
 
@@ -103,30 +102,18 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 		return this.streamStation.getSelfReference();
 	}
 
-	/**
-	 * Return the value ofdestinationLink
-	 * 
-	 * @return the destinationLink
-	 * @throws ComponentNotConnectedException
-	 */
-	DestinationComponent<Event, Event> getDestination() throws ComponentNotConnectedException {
-		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		} else {
-			return destinationLink.getDestination();
-		}
-	}
-
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return ComponentLinkFactory.isUndefined(this.destinationLink);
+		return !this.destinationLinks.containsKey(componentId);
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectedException {
+		assert handler != null;
+
 		final ComponentId componentId = handler.getDestination().getComponentId();
-		if (this.acceptDestination(componentId)) {
-			this.destinationLink = handler;
+		if (this.acceptSource(componentId)) {
+			this.destinationLinks.put(componentId, handler);
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -139,24 +126,11 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (ComponentLinkFactory.isUndefined(this.destinationLink)) {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
+		if (this.destinationLinks.containsKey(componentId)) {
+			this.destinationLinks.remove(componentId);
+			this.filters.remove(componentId);
 		} else {
-			this.destinationLink = ComponentLinkFactory.undefDestinationComponentLink();
-		}
-	}
-
-	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
-		if (!ComponentLinkFactory.isUndefined(this.destinationLink)) {
-			this.destinationLink.getDestination().closeUpStream();
-		}
-	}
-
-	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
-		for (SourceComponentLink<Event, Event> source : this.sourceLinks.values()) {
-			source.getSource().closeUpStream();
+			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 
@@ -186,7 +160,7 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	private void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
 		if (this.sourceLinks.containsKey(componentId)) {
 			this.sourceLinks.remove(componentId);
-			this.sourceFilters.remove(componentId);
+			this.filters.remove(componentId);
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -207,8 +181,8 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 * 
 	 * @return a map of filters
 	 */
-	public Map<ComponentId, DirectReference> getSourceFilters() {
-		return this.sourceFilters;
+	public Map<ComponentId, DirectReference> getFilters() {
+		return this.filters;
 	}
 
 	/**
@@ -217,14 +191,20 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 * @return an source component
 	 * @throws ComponentNotConnectedException
 	 */
-	public SourceComponent<Event, Event> getSource(ComponentId componentId) throws ComponentNotConnectedException {
+	DataHandler<Event> getDataHander(ComponentId componentId) throws ComponentNotConnectedException {
+		final DestinationComponentLink<Event, Event> destinationComponentLink = this.destinationLinks.get(componentId);
+
+		if (!ComponentLinkFactory.isUndefined(destinationComponentLink)) {
+			return destinationComponentLink.getDestination().getUpStreamDataHandler();
+		}
+
 		final SourceComponentLink<Event, Event> sourceComponentLink = this.sourceLinks.get(componentId);
 
-		if (ComponentLinkFactory.isUndefined(sourceComponentLink)) {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		} else {
-			return sourceComponentLink.getSource();
+		if (!ComponentLinkFactory.isUndefined(sourceComponentLink)) {
+			return sourceComponentLink.getSource().getDownStreamDataHandler();
 		}
+
+		throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 	}
 
 	/**
@@ -238,15 +218,29 @@ public class RouterSourceComponent extends AbstractComponent implements Destinat
 	 *            The filter (can be <code>null</code>)
 	 * @throws ComponentConnectedException
 	 */
-	public void filterSource(ComponentId componentId, DirectReference filter) throws ComponentConnectedException {
+	public void filter(ComponentId componentId, DirectReference filter) throws ComponentConnectedException {
 		assert componentId != null;
 
-		if (!this.sourceLinks.containsKey(componentId)) {
+		if (!this.sourceLinks.containsKey(componentId) && !this.destinationLinks.containsKey(componentId)) {
 			throw new ComponentConnectedException(NOT_YET_CONNECTED.format());
 		} else if (filter == null) {
-			this.sourceFilters.remove(componentId);
+			this.filters.remove(componentId);
 		} else {
-			this.sourceFilters.put(componentId, filter);
+			this.filters.put(componentId, filter);
+		}
+	}
+
+	@Override
+	public void closeUpStream() throws DataHandlerCloseException {
+		for (DestinationComponentLink<Event, Event> source : this.destinationLinks.values()) {
+			source.getDestination().closeUpStream();
+		}
+	}
+
+	@Override
+	public void closeDownStream() throws DataHandlerCloseException {
+		for (SourceComponentLink<Event, Event> source : this.sourceLinks.values()) {
+			source.getSource().closeUpStream();
 		}
 	}
 }

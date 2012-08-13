@@ -97,7 +97,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 						if (senderReference == null || senderReference.equals(receiverReference)) {
 							source.closeDownStream();
 						} else {
-							networkComponent.filterSource(source.getComponentId(), senderReference);
+							networkComponent.filter(source.getComponentId(), senderReference);
 						}
 
 						// Re-send the event to the network component

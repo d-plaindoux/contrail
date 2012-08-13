@@ -27,7 +27,7 @@ package org.wolfgang.contrail.handler;
  * @author Didier Plaindoux
  * @version 1.0@
  */
-interface DataHandler<D> {
+public interface DataHandler<D> {
 		
 	/**
 	 * Method called whether a data has to be managed

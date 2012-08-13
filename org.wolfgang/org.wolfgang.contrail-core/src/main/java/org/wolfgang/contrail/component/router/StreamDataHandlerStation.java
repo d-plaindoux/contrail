@@ -28,6 +28,7 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.event.Event;
+import org.wolfgang.contrail.handler.DataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -106,51 +107,48 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, U
 		}
 
 		/**
-		 * Are we in the targeted network component ?
+		 * Take the next entry ...
 		 */
-		if (!data.getReferenceToDestination().hasNext()) {
-			try {
-				final DestinationComponent<Event, Event> destination = component.getDestination();
-				destination.getUpStreamDataHandler().handleData(data);
-				return;
-			} catch (ComponentNotConnectedException e) {
-				throw new DataHandlerException();
-			}
+		final DirectReference nextTarget;
+		if (data.getReferenceToDestination().hasNext()) {
+			nextTarget = this.getRouterTable().getDirectTarget(data.getReferenceToDestination().getNext());
 		} else {
-			/**
-			 * Pickup the next and may be intermediate target
-			 */
-			final DirectReference nextTarget = this.getRouterTable().getDirectTarget(data.getReferenceToDestination().getNext());
+			// TODO
+			nextTarget = this.selfReference;
+		}
 
-			data.sentBy(this.selfReference);
+		/**
+		 * Pickup the next and may be intermediate target
+		 */
 
-			/**
-			 * Use an already open source
-			 */
-			for (Entry<ComponentId, DirectReference> entry : component.getSourceFilters().entrySet()) {
-				if (nextTarget.equals(entry.getValue())) {
-					try {
-						final SourceComponent<Event, Event> source = component.getSource(entry.getKey());
-						source.getDownStreamDataHandler().handleData(data);
-						return;
-					} catch (ComponentNotConnectedException consume) {
-						// Ignore
-					}
+		data.sentBy(this.selfReference);
+
+		/**
+		 * Use an already open source
+		 */
+		for (Entry<ComponentId, DirectReference> entry : component.getFilters().entrySet()) {
+			if (nextTarget.equals(entry.getValue())) {
+				try {
+					component.getDataHander(entry.getKey()).handleData(data);
+					return;
+				} catch (ComponentNotConnectedException consume) {
+					// Ignore
 				}
 			}
-
-			/**
-			 * Try to open a new source
-			 */
-			try {
-				final SourceComponent<Event, Event> source = this.createSource(nextTarget);
-				source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
-				return;
-			} catch (CannotCreateComponentException e) {
-				final Message message = MessagesProvider.message("org/wolfgang/contrail/network/message", "route.entry.not.defined");
-				throw new DataHandlerException(message.format(nextTarget, selfReference), e);
-			}
 		}
+
+		/**
+		 * Try to open a new source
+		 */
+		try {
+			final SourceComponent<Event, Event> source = this.createSource(nextTarget);
+			source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
+			return;
+		} catch (CannotCreateComponentException e) {
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/network/message", "route.entry.not.defined");
+			throw new DataHandlerException(message.format(nextTarget, selfReference), e);
+		}
+
 	}
 
 	@Override

@@ -372,7 +372,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 							final PipelineComponent initialTransducer = new IdentityComponent();
 							final Component terminalTransducer = EcosystemFactoryImpl.this.create(initialTransducer, flow);
 
-							routerComponent.filterSource(terminalTransducer.getComponentId(), this.getReferenceToUse());
+							routerComponent.filter(terminalTransducer.getComponentId(), this.getReferenceToUse());
 
 							final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
 								@Override

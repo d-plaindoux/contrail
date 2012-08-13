@@ -80,7 +80,7 @@ class RouterSourceServerUtils extends TestCase {
 					componentLinkManager.connect(serialisationTransducer, coercionTransducer);
 					componentLinkManager.connect(coercionTransducer, component);
 
-					component.filterSource(coercionTransducer.getComponentId(), this.getReferenceToUse());
+					component.filter(coercionTransducer.getComponentId(), this.getReferenceToUse());
 
 					final DataSenderFactory<byte[], byte[]> factory = new DataSenderFactory<byte[], byte[]>() {
 						@Override
@@ -134,13 +134,13 @@ class RouterSourceServerUtils extends TestCase {
 					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
 					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
-					final CompositionComponent<Bytes,Bytes,Bytes,Bytes> log01 = 
-							new CompositionComponent<Bytes,Bytes,Bytes,Bytes>(new LoggerSourceComponent<Bytes,Bytes>("01.UP"), new LoggerDestinationComponent<Bytes,Bytes>("01.DOWN"));
+					final CompositionComponent<Bytes, Bytes, Bytes, Bytes> log01 = new CompositionComponent<Bytes, Bytes, Bytes, Bytes>(new LoggerSourceComponent<Bytes, Bytes>("01.UP"),
+							new LoggerDestinationComponent<Bytes, Bytes>("01.DOWN"));
 					componentLinkManager.connect(payLoadTransducer, log01);
 					componentLinkManager.connect(log01, serialisationTransducer);
 
-					final CompositionComponent<Object,Object,Object,Object> log02 = 
-							new CompositionComponent<Object,Object,Object,Object>(new LoggerSourceComponent<Object,Object>("02.UP"), new LoggerDestinationComponent<Object,Object>("02.DOWN"));
+					final CompositionComponent<Object, Object, Object, Object> log02 = new CompositionComponent<Object, Object, Object, Object>(new LoggerSourceComponent<Object, Object>("02.UP"),
+							new LoggerDestinationComponent<Object, Object>("02.DOWN"));
 					componentLinkManager.connect(serialisationTransducer, log02);
 					componentLinkManager.connect(log02, coercionTransducer);
 

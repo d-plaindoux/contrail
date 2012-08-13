@@ -89,11 +89,15 @@ public final class ComponentLinkFactory {
 	 */
 	public static boolean isUndefined(SourceComponentLink<?, ?> componentLink) {
 		try {
-			componentLink.getSource();
-			return false;
+			if (componentLink != null) {
+				componentLink.getSource();
+				return false;
+			}
 		} catch (IllegalAccessError e) {
-			return true;
+			// Ignore
 		}
+		
+		return true;
 	}
 
 	/**
@@ -102,11 +106,15 @@ public final class ComponentLinkFactory {
 	 */
 	public static boolean isUndefined(DestinationComponentLink<?, ?> componentLink) {
 		try {
-			componentLink.getDestination();
-			return false;
+			if (componentLink != null) {
+				componentLink.getDestination();
+				return false;
+			}
 		} catch (IllegalAccessError e) {
-			return true;
+			// Ignore
 		}
+
+		return true;
 	}
 
 }
