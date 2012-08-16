@@ -95,13 +95,6 @@ public class RouterSourceComponent extends AbstractComponent implements Multiple
 		return this.streamStation.getRouterTable();
 	}
 
-	/**
-	 * @return the network component reference
-	 */
-	public DirectReference getSelfReference() {
-		return this.streamStation.getSelfReference();
-	}
-
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
 		return !this.destinationLinks.containsKey(componentId);

@@ -15,18 +15,18 @@ define Parallel  { ParallelSource + ParallelDestination }
 define NetEvent  { Parallel <> Coercion Event }
 define TCPEvent  { PayLoad <> Serialization <> NetEvent }
 define TCPClient { uri | reverse TCPEvent <> Client uri;uri }
-define TCPServer { uri | Server uri:uri factory:{ TCPEvent <> NetStation } <> Manager }
+define TCPServer { uri | Server uri:uri factory:{ TCPEvent <> NetStation as $mainStation } <> Manager }
 
-define NetStation {     
-    router [ 
-           | A.A => router [ 
-                           | Service  => { ServiceAgent  } 
-			               | Transfer => { TransferAgent } 
-			               | _        => { /** lambda */ } 
-			               ]  
-		   | A.B => { TCPClient "tcp://localhost:6667" }
-		   | _   => { TCPClient "tcp://localhost:6668" }
-		   ] 
+define NetStation {
+    switch [ 
+    | A.A => switch [ 
+             | Service  => { ServiceAgent  } 
+			 | Transfer => { TransferAgent } 
+			 | _        => { /* lambda */  } 
+			 ]  
+	| A.B => { TCPClient "tcp://localhost:6667" }
+	| _   => { TCPClient "tcp://localhost:6668" }
+	] 
 }
 
 start { TCPServer "tcp://localhost:6666"  }

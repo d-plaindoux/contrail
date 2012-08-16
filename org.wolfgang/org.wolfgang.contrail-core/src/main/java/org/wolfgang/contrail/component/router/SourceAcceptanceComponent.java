@@ -84,7 +84,6 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
-						final DirectReference receiverReference = networkComponent.getSelfReference();
 						final ComponentLinkManager destinationComponentLinkManager = destinationComponentLink.getComponentLinkManager();
 						final SourceComponent<Event, Event> source = sourceComponentLink.getSource();
 						final DestinationComponent<Event, Event> destination = destinationComponentLink.getDestination();
@@ -94,7 +93,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 
 						destinationComponentLinkManager.connect(source, destination);
 
-						if (senderReference == null || senderReference.equals(receiverReference)) {
+						if (senderReference == null) {
 							source.closeDownStream();
 						} else {
 							networkComponent.filter(source.getComponentId(), senderReference);

@@ -37,10 +37,10 @@ import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 
 /**
- * A <code>NetworkRouterStreamDataHandler</code> is able to manage information
- * using filters owned buy each filtered upstream destination component linked
- * to the multiplexer component. The data is a network event in this case and
- * the management is done using a dedicated network router.
+ * A <code>StreamDataHandlerStation</code> is able to manage information using
+ * filters owned buy each filtered upstream destination component linked to the
+ * multiplexer component. The data is a network event in this case and the
+ * management is done using a dedicated network router.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -77,15 +77,6 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, U
 		return routerTable;
 	}
 
-	/**
-	 * Return the value of selfReference
-	 * 
-	 * @return the selfReference
-	 */
-	DirectReference getSelfReference() {
-		return selfReference;
-	}
-
 	@Override
 	public void handleData(Event data) throws DataHandlerException {
 		/**
@@ -101,13 +92,13 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, U
 		 */
 		if (data.getReferenceToDestination().hasNext()) {
 			final DirectReference currentTarget = data.getReferenceToDestination().getNext();
-			if (currentTarget.equals(this.getSelfReference())) {
+			if (currentTarget.equals(this.selfReference)) {
 				data.getReferenceToDestination().removeNext();
 			}
 		}
 
 		/**
-		 * Take the next entry ...
+		 * Take the next entry if possible ...
 		 */
 		final DirectReference nextTarget;
 		if (data.getReferenceToDestination().hasNext()) {
@@ -142,7 +133,7 @@ public class StreamDataHandlerStation implements DownStreamDataHandler<Event>, U
 		 */
 		try {
 			final SourceComponent<Event, Event> source = this.createSource(nextTarget);
-			source.getDownStreamDataHandler().handleData(data.sentBy(this.getSelfReference()));
+			source.getDownStreamDataHandler().handleData(data.sentBy(this.selfReference));
 			return;
 		} catch (CannotCreateComponentException e) {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/network/message", "route.entry.not.defined");
