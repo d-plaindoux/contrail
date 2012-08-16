@@ -144,10 +144,10 @@ class RouterSourceServerUtils extends TestCase {
 					componentLinkManager.connect(serialisationTransducer, log02);
 					componentLinkManager.connect(log02, coercionTransducer);
 
-					final SourceAcceptanceComponent networkAcceptanceComponent = new SourceAcceptanceComponent();
+					final SourceAcceptanceComponent acceptanceComponent = new SourceAcceptanceComponent();
 
-					componentLinkManager.connect(coercionTransducer, networkAcceptanceComponent);
-					componentLinkManager.connect(networkAcceptanceComponent, component);
+					componentLinkManager.connect(coercionTransducer, acceptanceComponent);
+					componentLinkManager.connect(acceptanceComponent, component);
 
 					// Initial component
 

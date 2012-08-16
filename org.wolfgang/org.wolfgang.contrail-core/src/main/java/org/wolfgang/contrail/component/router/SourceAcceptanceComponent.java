@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.router;
 
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -50,7 +51,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	private SourceComponentLink<Event, Event> sourceComponentLink;
 	private DestinationComponentLink<Event, Event> destinationComponentLink;
 	private UpStreamDataHandler<Event> intermediateUpStreamHandler;
-
+	
 	private RouterSourceComponent networkComponent;
 
 	{
@@ -170,7 +171,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 			};
 		} else {
 			// TODO - Add a specific message
-			throw new ComponentConnectionRejectedException("TODO");
+			throw new ComponentConnectionRejectedException(MessagesProvider.message("org.wolfgang.contrail.message", "destination.not.a.router").format());
 		}
 	}
 
