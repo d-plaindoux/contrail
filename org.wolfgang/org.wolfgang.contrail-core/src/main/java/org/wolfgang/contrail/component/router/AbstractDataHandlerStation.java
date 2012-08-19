@@ -88,7 +88,7 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 		 * Add the sender if the chosen route is private·
 		 */
 		final DirectReference sender = data.getSender();
-		
+
 		if (sender != null && !this.routerTable.exist(sender)) {
 			data.handledBy(sender);
 		}
@@ -104,7 +104,6 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 		for (Entry<ComponentId, DirectReference> entry : component.getFilters().entrySet()) {
 			if (nextTarget.equals(entry.getValue())) {
 				try {
-					System.err.println("<REUSE> active route to " + nextTarget + " in " + this.toString());
 					component.getDataHander(entry.getKey()).handleData(data);
 					return;
 				} catch (ComponentNotConnectedException consume) {
@@ -118,7 +117,6 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 		 */
 		try {
 			final SourceComponent<Event, Event> source = this.createSource(nextTarget);
-			System.err.println("<ADD> active route to " + nextTarget + " in " + this.toString());
 			source.getDownStreamDataHandler().handleData(data);
 			return;
 		} catch (CannotCreateComponentException e) {

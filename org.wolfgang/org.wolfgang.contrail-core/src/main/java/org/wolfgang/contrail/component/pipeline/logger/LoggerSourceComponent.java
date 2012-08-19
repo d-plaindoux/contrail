@@ -46,6 +46,8 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 
 	{
 		this.upStreamDataHandler = new UpStreamDataHandler<U>() {
+			private boolean open = true;
+
 			@Override
 			public void handleData(final U data) throws DataHandlerException {
 				System.err.println("<" + prefix + "> " + data);
@@ -54,12 +56,18 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
-				getDestinationComponentLink().getDestination().closeUpStream();
+				if (open) {
+					open = false;
+					getDestinationComponentLink().getDestination().closeUpStream();
+				}
 			}
 
 			@Override
 			public void handleLost() throws DataHandlerCloseException {
-				getDestinationComponentLink().getDestination().closeUpStream();
+				if (open) {
+					open = false;
+					getDestinationComponentLink().getDestination().closeUpStream();
+				}
 			}
 		};
 	}
