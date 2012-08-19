@@ -11,22 +11,22 @@ import as ParallelDestination org.wolfgang.contrail.component.pipeline.concurren
 import as Client(uri) org.wolfgang.contrail.component.bound.gateway.ClientComponent
 import as Server(uri factory) org.wolfgang.contrail.component.bound.gateway.ServerComponent 
 
-define Parallel  { ParallelSource + ParallelDestination }
+define Parallel  { ParallelSource <> ParallelDestination }
 define NetEvent  { Parallel <> Coercion Event }
 define TCPEvent  { PayLoad <> Serialization <> NetEvent }
-define TCPClient { uri | reverse TCPEvent <> Client uri;uri }
-define TCPServer { uri | Server uri:uri factory:{ TCPEvent <> NetStation as mainStation } <> Manager }
+define TCPClient { uri | reverse TCPEvent <> Client uri=uri }
+define TCPServer { uri | Server uri=uri factory={ TCPEvent <> NetStation } <> Manager }
 
 define NetStation {
-    router id:A.A [ 
-    | A.A => switch [ 
+    router id=A.A [ 
+	| A.B => { TCPClient tcp://localhost:6667 }
+	| A.C => { TCPClient tcp://localhost:6668 }
+    | switch [ 
              | Service  => { ServiceAgent  } 
 			 | Transfer => { TransferAgent } 
-			 | _        => { /* lambda */  } 
+			 | { /* lambda */  } 
 			 ]  
-	| A.B => { TCPClient "tcp://localhost:6667" }
-	| _   => { TCPClient "tcp://localhost:6668" }
 	]
 }
 
-start { TCPServer "tcp://localhost:6666"  }
+start { TCPServer tcp://localhost:6666  }

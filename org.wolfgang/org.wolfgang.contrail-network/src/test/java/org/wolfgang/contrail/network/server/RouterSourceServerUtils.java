@@ -38,7 +38,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
-import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
@@ -57,7 +57,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 class RouterSourceServerUtils extends TestCase {
 
-	static void client(final RouterSourceComponent component, final ComponentLinkManager componentLinkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
+	static void client(final RouterComponent component, final ComponentLinkManager componentLinkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
 			throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
 			@Override
@@ -117,7 +117,7 @@ class RouterSourceServerUtils extends TestCase {
 		component.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static DataSenderFactory<byte[], byte[]> serverBinder(final RouterSourceComponent component, final ComponentLinkManagerImpl componentLinkManager) {
+	static DataSenderFactory<byte[], byte[]> serverBinder(final RouterComponent component, final ComponentLinkManagerImpl componentLinkManager) {
 		return new DataSenderFactory<byte[], byte[]>() {
 			@Override
 			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {

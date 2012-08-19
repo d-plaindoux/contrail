@@ -52,7 +52,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	private DestinationComponentLink<Event, Event> destinationComponentLink;
 	private UpStreamDataHandler<Event> intermediateUpStreamHandler;
 	
-	private RouterSourceComponent networkComponent;
+	private RouterComponent networkComponent;
 
 	{
 		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
@@ -160,9 +160,9 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
 		final DestinationComponent<Event, Event> destination = handler.getDestination();
 		final ComponentId componentId = destination.getComponentId();
-		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, RouterSourceComponent.class)) {
+		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, RouterComponent.class)) {
 			this.destinationComponentLink = handler;
-			this.networkComponent = Coercion.coerce(destination, RouterSourceComponent.class);
+			this.networkComponent = Coercion.coerce(destination, RouterComponent.class);
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {

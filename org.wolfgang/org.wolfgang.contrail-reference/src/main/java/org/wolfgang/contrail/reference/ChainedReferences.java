@@ -54,27 +54,26 @@ final class ChainedReferences implements IndirectReference, Serializable {
 	}
 
 	@Override
-	public DirectReference getNext() {
-		assert this.hasNext();
+	public DirectReference getCurrent() {
+		assert this.references.size() > 0;
 		return this.references.get(0);
 	}
 
 	@Override
-	public IndirectReference removeNext() {
-		assert this.hasNext();
+	public IndirectReference removeCurrent() {
+		assert this.references.size() > 0;
 		this.references.remove(0);
 		return this;
 	}
 
 	@Override
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		return this.references.size() > 0;
+		return this.references.size() > 1;
 	}
 
 	@Override
 	public IndirectReference addFirst(DirectReference reference) {
-		if (this.hasNext() && this.getNext().equals(reference)) {
+		if (this.references.size() > 0 && this.getCurrent().equals(reference)) {
 			// Already pushed so forget it ...
 		} else {
 			this.references.add(0, reference);

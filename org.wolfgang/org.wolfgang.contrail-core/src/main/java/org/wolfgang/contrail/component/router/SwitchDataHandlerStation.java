@@ -16,57 +16,43 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.event;
+package org.wolfgang.contrail.component.router;
 
-import java.io.Serializable;
-
+import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.reference.DirectReference;
-import org.wolfgang.contrail.reference.IndirectReference;
-import org.wolfgang.contrail.reference.ReferenceFactory;
 
 /**
- * <code>NetworkEventImpl</code>
+ * A <code>StreamDataHandlerStation</code> is able to manage information using
+ * filters owned buy each filtered upstream destination component linked to the
+ * multiplexer component. The data is a network event in this case and the
+ * management is done using a dedicated network router.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class MessageImpl extends EventImpl implements Message {
-
-	/**
-	 * The serialVersionUID attribute
-	 */
-	private static final long serialVersionUID = -3548456774165827840L;
-
-	/**
-	 * The source
-	 */
-	private final IndirectReference source;
+public class SwitchDataHandlerStation extends AbstractDataHandlerStation {
 
 	/**
 	 * Constructor
 	 * 
-	 * @param source
-	 * @param destination
-	 * @param content
+	 * @param component
+	 * @param selfReference
+	 * @param routerTable
 	 */
-	public MessageImpl(Serializable content, DirectReference... targets) {
-		super(content, targets);
-		this.source = ReferenceFactory.indirectReference();
+	public SwitchDataHandlerStation(RouterComponent component, RouterSourceTable routerTable) {
+		super(component, routerTable);
 	}
 
 	@Override
-	public IndirectReference getReferenceToSource() {
-		return this.source;
+	protected DirectReference getNextTarget(Event data) {
+		if (data.getReferenceToDestination().hasNext()) {
+			data.getReferenceToDestination().removeCurrent();
+		}
+		return data.getReferenceToDestination().getCurrent();
 	}
 
 	@Override
 	public String toString() {
-		return "Message [source=" + source + "], " + super.toString();
-	}
-
-	@Override
-	public void handledBy(DirectReference sender) {
-		super.handledBy(sender);
-		this.source.addFirst(sender);
+		return "switch";
 	}
 }

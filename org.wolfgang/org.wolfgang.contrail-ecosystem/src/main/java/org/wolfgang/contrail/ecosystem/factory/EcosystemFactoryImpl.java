@@ -50,7 +50,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.identity.IdentityComponent;
-import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
@@ -341,7 +341,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			throw new CannotCreateComponentException(e);
 		}
 
-		final RouterSourceComponent routerComponent = RouterSourceFactory.create(reference);
+		final RouterComponent routerComponent = RouterSourceFactory.create(reference);
 
 		for (ClientModel clientModel : router.getClients()) {
 			try {

@@ -56,9 +56,9 @@ public class TestReference extends TestCase {
 		indirectReference.addFirst(reference02);
 		indirectReference.addFirst(reference01);
 
-		assertEquals(reference01, indirectReference.getNext());
-		indirectReference.removeNext();
+		assertEquals(reference01, indirectReference.getCurrent());
+		indirectReference.removeCurrent();
 
-		assertEquals(reference02, indirectReference.getNext());
+		assertEquals(reference02, indirectReference.getCurrent());
 	}
 }

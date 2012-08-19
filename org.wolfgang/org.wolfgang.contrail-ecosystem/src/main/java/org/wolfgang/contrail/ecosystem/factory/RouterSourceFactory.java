@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.factory;
 
-import org.wolfgang.contrail.component.router.RouterSourceComponent;
+import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.reference.DirectReference;
 
@@ -42,7 +42,7 @@ public final class RouterSourceFactory {
 	 * 
 	 * @return a network router component
 	 */
-	public static RouterSourceComponent create(DirectReference selfReference) {
-		return new RouterSourceComponent(new RouterSourceTable(), selfReference);
+	public static RouterComponent create(DirectReference selfReference) {
+		return new RouterComponent(new RouterSourceTable(), selfReference);
 	}
 }

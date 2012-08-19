@@ -196,7 +196,9 @@ public class NetServer implements Server {
 
 	@Override
 	public void close() throws IOException {
-		for (ServerSocket server : this.servers) {
+		final ServerSocket[] allServers = servers.toArray(new ServerSocket[servers.size()]);
+		
+		for (ServerSocket server : allServers) {
 			try {
 				server.close();
 			} catch (IOException consume) {

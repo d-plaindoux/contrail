@@ -32,7 +32,7 @@ public interface IndirectReference extends Reference {
 	 * @param reference
 	 *            The new added direct reference
 	 */
-	DirectReference getNext();
+	DirectReference getCurrent();
 
 	/**
 	 * Method called whether a simple end point must be added as fist reference
@@ -40,7 +40,7 @@ public interface IndirectReference extends Reference {
 	 * @param reference
 	 *            The new added direct reference
 	 */
-	IndirectReference removeNext();
+	IndirectReference removeCurrent();
 
 	/**
 	 * @return
