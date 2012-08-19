@@ -45,4 +45,10 @@ public class FlowValue implements CodeValue {
 	public CodeValue[] getValues() {
 		return values;
 	}
+
+
+	@Override
+	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }

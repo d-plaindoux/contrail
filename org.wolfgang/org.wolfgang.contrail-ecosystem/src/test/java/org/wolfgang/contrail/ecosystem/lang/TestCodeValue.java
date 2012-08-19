@@ -41,7 +41,6 @@ import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 public class TestCodeValue extends TestCase {
 
 	private static class TestSymbolTable implements EcosystemSymbolTable {
-
 		@Override
 		public boolean hasImportation(String name) {
 			return false;
@@ -51,7 +50,6 @@ public class TestCodeValue extends TestCase {
 		public EcosystemImportation<?> getImportation(String name) {
 			return null;
 		}
-
 	}
 
 	@Test public void testAtom() throws EcosystemInterpretationException {

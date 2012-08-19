@@ -61,4 +61,9 @@ public class ClosureValue implements CodeValue {
 	public Function getFunction() {
 		return function;
 	}
+
+	@Override
+	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }

@@ -241,6 +241,8 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 */
 	private Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
 		Component current = source;
+		
+		
 
 		if (current == null) {
 			throw new CannotCreateDataSenderException();

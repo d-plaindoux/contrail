@@ -45,4 +45,9 @@ public class ConstantValue implements CodeValue {
 	public String getValue() {
 		return value;
 	}
+
+	@Override
+	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }

@@ -19,22 +19,18 @@
 package org.wolfgang.contrail.ecosystem.lang.code;
 
 /**
- * <code>ImportEntry</code>
- * 
+ * <code>CodeValueVisitor</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface CodeValue {
+public interface CodeValueVisitor<T, E extends Exception> {
+	
+	T visit(ClosureValue value) throws E;
 
-	/**
-	 * Method called whether an expression is visited
-	 * 
-	 * @param visitor
-	 *            The visitor
-	 * @return a value
-	 * @throws E
-	 *             if any problem occurs
-	 */
-	<T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E;
+	T visit(ComponentValue value) throws E;
 
+	T visit(ConstantValue value) throws E;
+
+	T visit(FlowValue value) throws E;
 }

@@ -49,4 +49,9 @@ public class ComponentValue implements CodeValue {
 	public Component getComponent() throws CannotCreateComponentException {
 		return entry.create(environement);
 	}
+
+	@Override
+	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }
