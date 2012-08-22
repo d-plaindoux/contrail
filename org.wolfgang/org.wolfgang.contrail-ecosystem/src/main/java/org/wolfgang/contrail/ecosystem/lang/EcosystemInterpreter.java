@@ -50,6 +50,15 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 	 * 
 	 * @param environment
 	 */
+	EcosystemInterpreter(EcosystemSymbolTable factory) {
+		this(factory, new HashMap<String, CodeValue>());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param environment
+	 */
 	EcosystemInterpreter(EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
 		super();
 		this.symbolTable = factory;
@@ -59,11 +68,11 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 	public CodeValue visit(final List<Expression> expressions) throws EcosystemInterpretationException {
 		final CodeValue[] values = new CodeValue[expressions.size()];
 		final EcosystemInterpreter interpret = new EcosystemInterpreter(symbolTable, environment);
-		
+
 		for (int i = 0; i < values.length; i++) {
 			values[i] = expressions.get(i).visit(interpret);
 		}
-		
+
 		if (values.length == 1) {
 			return values[0];
 		} else {

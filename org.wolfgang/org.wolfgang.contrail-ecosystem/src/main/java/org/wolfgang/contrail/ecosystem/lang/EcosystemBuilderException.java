@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem.lang;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class EcosystemInterpretationException extends Exception {
+public class EcosystemBuilderException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -36,7 +36,7 @@ public class EcosystemInterpretationException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	EcosystemInterpretationException(String arg0) {
+	EcosystemBuilderException(String arg0) {
 		super(arg0);
 	}
 
@@ -45,7 +45,7 @@ public class EcosystemInterpretationException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	EcosystemInterpretationException(Throwable arg0) {
+	EcosystemBuilderException(Throwable arg0) {
 		super(arg0);
 	}
 

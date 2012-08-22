@@ -93,7 +93,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 				return initialComponent.getDataSender();
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataSenderException(e);
-			} catch (ComponentConnectionRejectedException e) {
+			} catch (EcosystemBuilderException e) {
 				throw new CannotCreateDataSenderException(e);
 			}
 		}
@@ -203,7 +203,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	/**
 	 * The embedded component link manager
 	 */
-	private final ComponentLinkManager componentLinkManager;
+	private final ComponentLinkManager linkManager;
 
 	/**
 	 * The class loader to use when components must be created
@@ -213,7 +213,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	{
 		this.serverFactory = new ServerFactory();
 		this.clientFactory = new ClientFactory();
-		this.componentLinkManager = new ComponentLinkManagerImpl();
+		this.linkManager = new ComponentLinkManagerImpl();
 		this.classLoader = EcosystemFactoryImpl.class.getClassLoader();
 
 		this.importations = new HashMap<String, EcosystemImportation<?>>();
@@ -234,18 +234,16 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 *            Can be null
 	 * @param items
 	 *            The items to be used for the flow creation
-	 * @return a component (Never <code>null</code>
+	 * @return a component (Never <code>null</code>)
 	 * @throws CannotCreateComponentException
-	 * @throws CannotCreateDataSenderException
-	 * @throws ComponentConnectionRejectedException
+	 * @throws EcosystemBuilderException
 	 */
-	private Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
-		Component current = source;
-		
-		
-
+	private Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
+		final EcosystemInterpreter interpret = new EcosystemInterpreter(this);
+		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(interpret, linkManager, source);
+		final Component current = value.visit(builder);
 		if (current == null) {
-			throw new CannotCreateDataSenderException();
+			throw new CannotCreateComponentException(MessagesProvider.message("org/wolfgang/contrail/ecosystem", "no.component").format());
 		} else {
 			return current;
 		}
@@ -339,7 +337,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 		// Check and load importations
 		factory.loadImportations(logger, ecosystemModel);
 
-		final EcosystemInterpreter interpret = new EcosystemInterpreter(factory, new HashMap<String, CodeValue>());
+		final EcosystemInterpreter interpret = new EcosystemInterpreter(factory);
 
 		// Check on load definitions
 		for (Definition definition : ecosystemModel.getDefinitions()) {
