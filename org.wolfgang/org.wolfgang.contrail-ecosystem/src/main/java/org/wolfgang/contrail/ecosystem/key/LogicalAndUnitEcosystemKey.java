@@ -34,7 +34,7 @@ public class LogicalAndUnitEcosystemKey implements UnitEcosystemKey {
 	 * @param left
 	 * @param right
 	 */
-	public LogicalAndUnitEcosystemKey(UnitEcosystemKey left, UnitEcosystemKey right) {
+	LogicalAndUnitEcosystemKey(UnitEcosystemKey left, UnitEcosystemKey right) {
 		super();
 		this.left = left;
 		this.right = right;
@@ -45,5 +45,4 @@ public class LogicalAndUnitEcosystemKey implements UnitEcosystemKey {
 		return left.filteredBy(ecosystemKey) && right.filteredBy(ecosystemKey);
 	}
 
-	
 }

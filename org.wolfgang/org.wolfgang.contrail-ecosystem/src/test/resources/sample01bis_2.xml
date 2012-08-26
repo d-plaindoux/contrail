@@ -1,10 +1,10 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import as='Echo'>
+	<import>
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 
 	<binder name='Main' in="String" out="String">
-		<ref>Echo</ref>
+		<ref>Test</ref>
 	</binder>
 </ecosystem>

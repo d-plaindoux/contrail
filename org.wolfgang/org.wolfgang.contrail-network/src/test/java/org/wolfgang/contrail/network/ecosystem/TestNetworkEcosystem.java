@@ -36,6 +36,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemFactoryImpl;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.NamedUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -111,7 +112,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 			// ----------------------------------------------------------------------------------------------------
 
-			final DataSenderFactory<byte[], byte[]> binder = ecosystem02.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem02.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<byte[]> sender = binder.create(receiver);
 
 			final String message = "Hello, World!";

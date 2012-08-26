@@ -24,7 +24,7 @@ package org.wolfgang.contrail.ecosystem.key;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class UnitEcosystemKeyFactory {
+public final class EcosystemKeyFactory {
 
 	/**
 	 * @param name
@@ -32,7 +32,7 @@ public final class UnitEcosystemKeyFactory {
 	 * @param downstream
 	 * @return
 	 */
-	public static RegisteredUnitEcosystemKey getKey(String name, Class<?> upstream, Class<?> downstream) {
+	public static RegisteredUnitEcosystemKey key(String name, Class<?> upstream, Class<?> downstream) {
 		return new RegisteredUnitEcosystemKey(name, upstream, downstream);
 	}
 

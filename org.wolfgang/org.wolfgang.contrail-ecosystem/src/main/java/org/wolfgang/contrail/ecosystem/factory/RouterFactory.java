@@ -16,24 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.annotation;
+package org.wolfgang.contrail.ecosystem.factory;
 
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.wolfgang.contrail.component.router.RouterComponent;
+import org.wolfgang.contrail.component.router.RouterSourceTable;
+import org.wolfgang.contrail.reference.DirectReference;
 
 /**
- * <code>ComponentPipeline</code>
+ * <code>RouterSourceFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(CONSTRUCTOR)
-@Retention(RUNTIME)
-public @interface ContrailConstructor {
+public final class RouterFactory {
 
-	ContrailArgument[] value();
+	/**
+	 * Constructor
+	 */
+	private RouterFactory() {
+		// Prevent useless creation
+	}
 
+	/**
+	 * Method called whether a network router is required.
+	 * 
+	 * @return a network router component
+	 */
+	public static RouterComponent create(DirectReference selfReference) {
+		return new RouterComponent(new RouterSourceTable(), selfReference);
+	}
 }

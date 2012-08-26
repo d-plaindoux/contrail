@@ -49,7 +49,7 @@ public final class SerializationTransducerFactory implements TransducerFactory<B
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor(arguments = {})
+	@ContrailConstructor({})
 	public SerializationTransducerFactory() {
 		this.types = new Class[0];
 	}

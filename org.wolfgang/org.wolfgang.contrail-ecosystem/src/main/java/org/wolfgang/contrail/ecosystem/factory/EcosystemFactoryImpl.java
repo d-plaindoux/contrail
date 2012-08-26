@@ -63,6 +63,7 @@ import org.wolfgang.contrail.connection.ServerFactory;
 import org.wolfgang.contrail.connection.ServerFactoryCreationException;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.BinderModel;
 import org.wolfgang.contrail.ecosystem.model.ClientModel;
@@ -341,7 +342,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			throw new CannotCreateComponentException(e);
 		}
 
-		final RouterComponent routerComponent = RouterSourceFactory.create(reference);
+		final RouterComponent routerComponent = RouterFactory.create(reference);
 
 		for (ClientModel clientModel : router.getClients()) {
 			try {
@@ -593,7 +594,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 				final Class<?> typeIn = TypeUtils.getType(binder.getTypeIn());
 				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
 
-				final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(name, typeIn, typeOut);
+				final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(name, typeIn, typeOut);
 				ecosystemImpl.addBinder(key, new DataSenderFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
 			}
 

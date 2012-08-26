@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -84,7 +84,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		integrator.addBinder(UnitEcosystemKeyFactory.getKey("test", String.class, String.class), destinationComponentFactory);
+		integrator.addBinder(EcosystemKeyFactory.key("test", String.class, String.class), destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 
@@ -100,7 +100,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final UnitEcosystemKey namedKey = UnitEcosystemKeyFactory.named("test");
+		final UnitEcosystemKey namedKey = EcosystemKeyFactory.named("test");
 		final DataSender<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
 		final String message = "Hello, World!";
 

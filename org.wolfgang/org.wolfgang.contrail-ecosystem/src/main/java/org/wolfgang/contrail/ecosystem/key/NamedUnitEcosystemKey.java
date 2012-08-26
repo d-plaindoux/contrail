@@ -39,7 +39,7 @@ public class NamedUnitEcosystemKey implements UnitEcosystemKey {
 	 * @param downstream
 	 *            The downstream class type
 	 */
-	public NamedUnitEcosystemKey(String name) {
+	NamedUnitEcosystemKey(String name) {
 		super();
 		this.name = name;
 	}

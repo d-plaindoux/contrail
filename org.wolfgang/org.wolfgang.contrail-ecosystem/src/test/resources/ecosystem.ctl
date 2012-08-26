@@ -21,10 +21,10 @@ define NetStation {
     router id=A.A [ 
 	| A.B => { TCPClient tcp://localhost:6667 }
 	| A.C => { TCPClient tcp://localhost:6668 }
-    | switch [ 
+    | _   => switch [ 
              | Service  => { ServiceAgent  } 
 			 | Transfer => { TransferAgent } 
-			 | { /* lambda */  } 
+			 | _        => { /* lambda */  } 
 			 ]  
 	]
 }

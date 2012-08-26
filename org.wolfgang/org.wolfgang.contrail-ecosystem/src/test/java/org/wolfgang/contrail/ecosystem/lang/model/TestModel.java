@@ -63,9 +63,24 @@ public class TestModel extends TestCase {
 	}
 
 	@Test
-	public void testApply() throws JAXBException, IOException, ValidationException {
+	public void testApply01() throws JAXBException, IOException, ValidationException {
 		final Apply decoded = decode("<apply><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
 		decoded.validate();
+		assertNull(decoded.getBinding());
+		assertEquals(2, decoded.getExpressions().size());
+		final Expression actual0 = decoded.getExpressions().get(0);
+		assertEquals(Reference.class, actual0.getClass());
+		assertEquals("Value0", ((Reference) actual0).getValue());
+		final Expression actual1 = decoded.getExpressions().get(1);
+		assertEquals(Atom.class, actual1.getClass());
+		assertEquals("Value1", ((Atom) actual1).getValue());
+	}
+
+	@Test
+	public void testApply02() throws JAXBException, IOException, ValidationException {
+		final Apply decoded = decode("<apply bind='param1'><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
+		decoded.validate();
+		assertEquals(decoded.getBinding(), "param1");
 		assertEquals(2, decoded.getExpressions().size());
 		final Expression actual0 = decoded.getExpressions().get(0);
 		assertEquals(Reference.class, actual0.getClass());

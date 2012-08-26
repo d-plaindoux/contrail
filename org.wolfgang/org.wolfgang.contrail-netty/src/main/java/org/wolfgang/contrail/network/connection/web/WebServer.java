@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
@@ -115,7 +115,7 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("web.socket", String.class, String.class);
+		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("web.socket", String.class, String.class);
 		ecosystem.addBinder(key, destinationComponentFactory);
 
 		new WebServer("localhost", port, ecosystem.<String, String> getBinder(key)).call();

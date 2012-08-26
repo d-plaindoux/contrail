@@ -43,7 +43,7 @@ public final class PayLoadTransducerFactory implements TransducerFactory<byte[],
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor(arguments = {})
+	@ContrailConstructor({})
 	public PayLoadTransducerFactory() {
 		// Prevent useless object creation
 	}

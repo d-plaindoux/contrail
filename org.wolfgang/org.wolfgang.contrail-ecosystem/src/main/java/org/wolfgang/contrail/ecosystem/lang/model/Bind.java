@@ -69,7 +69,7 @@ public class Bind extends ContentExpressions implements Validation {
 	 * 
 	 * @return the typeIn
 	 */
-	@XmlAttribute(name = "typein")
+	@XmlAttribute(name = "in")
 	public String getTypeIn() {
 		return typeIn;
 	}
@@ -89,7 +89,7 @@ public class Bind extends ContentExpressions implements Validation {
 	 * 
 	 * @return the typeOut
 	 */
-	@XmlAttribute(name = "typeout")
+	@XmlAttribute(name = "out")
 	public String getTypeOut() {
 		return typeOut;
 	}

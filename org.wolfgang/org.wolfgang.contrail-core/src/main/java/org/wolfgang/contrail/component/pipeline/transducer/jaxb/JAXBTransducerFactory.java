@@ -18,7 +18,11 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
 
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
+import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
@@ -33,6 +37,8 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @version 1.0
  */
 @ContrailPipeline(name = "JAXB")
+@ContrailUpType(in = Bytes.class, out = Bytes.class)
+@ContrailDownType(in = Object.class, out = Object.class)
 public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**
@@ -46,6 +52,7 @@ public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Obj
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("static-access")
+	@ContrailConstructor(@ContrailArgument(name = "types", type = "String[]"))
 	public JAXBTransducerFactory(String... types) throws ClassNotFoundException {
 		this.types = new Class[types.length];
 		for (int i = 0; i < types.length; i++) {

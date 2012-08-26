@@ -32,7 +32,7 @@ public class LogicalTrueEcosystemKey implements UnitEcosystemKey {
 	 * @param left
 	 * @param right
 	 */
-	public LogicalTrueEcosystemKey() {
+	LogicalTrueEcosystemKey() {
 		super();
 	}
 

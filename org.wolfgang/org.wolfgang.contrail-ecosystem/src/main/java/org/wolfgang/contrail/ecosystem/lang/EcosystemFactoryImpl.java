@@ -28,7 +28,6 @@ import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailInitial;
@@ -47,6 +46,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.ServerFactory;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
@@ -70,6 +70,13 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 @SuppressWarnings("rawtypes")
 public final class EcosystemFactoryImpl implements EcosystemSymbolTable, ContextFactory {
 
+	/**
+	 * <code>DataSenderFactoryImpl</code> is dedicated to the binder mechanism
+	 * creation
+	 * 
+	 * @author Didier Plaindoux
+	 * @version 1.0
+	 */
 	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 		private final EcosystemFactoryImpl factory;
 		private final CodeValue flow;
@@ -250,6 +257,9 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	}
 
 	/**
+	 * Method called whether an ecosystem importation set must be managed. This
+	 * management is done using annotations.
+	 * 
 	 * @param loader
 	 * @param factory
 	 */
@@ -317,7 +327,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 				}
 			} catch (ClassNotFoundException ignore) {
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-				logger.log(Level.WARNING, message.format(importation.getElement()));
+				logger.log(Level.WARNING, message.format(importation.getElement(), ignore.getClass().getSimpleName()));
 			}
 		}
 	}
@@ -351,7 +361,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 		for (Bind bind : ecosystemModel.getBinders()) {
 			final Class<?> typeIn = TypeUtils.getType(bind.getTypeIn());
 			final Class<?> typeOut = TypeUtils.getType(bind.getTypeOut());
-			final RegisteredUnitEcosystemKey key = new RegisteredUnitEcosystemKey(bind.getName(), typeIn, typeOut);
+			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
 			final CodeValue flow = interpret.visit(bind.getExpressions());
 			ecosystemImpl.addBinder(key, new DataSenderFactoryImpl(factory, flow));
 		}

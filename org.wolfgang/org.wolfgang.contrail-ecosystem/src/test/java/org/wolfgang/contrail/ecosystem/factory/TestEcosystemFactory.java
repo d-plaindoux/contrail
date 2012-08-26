@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.key.NamedUnitEcosystemKey;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -64,7 +64,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<String> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -94,7 +94,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<String> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -125,7 +125,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<String> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -156,7 +156,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<String, String> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<String> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -186,7 +186,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<Bytes> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -225,7 +225,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<Bytes> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -265,7 +265,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<byte[]> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -305,7 +305,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<byte[]> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";
@@ -350,7 +350,7 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			};
 
-			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(new NamedUnitEcosystemKey("Main"));
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final DataSender<byte[]> sender = binder.create(dataReceiver);
 
 			final String message = "Hello, World!";

@@ -39,7 +39,7 @@ import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKeyFactory;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -96,7 +96,7 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		final RegisteredUnitEcosystemKey key = UnitEcosystemKeyFactory.getKey("test", byte[].class, byte[].class);
+		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("test", byte[].class, byte[].class);
 		serverEcosystem.addBinder(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer();

@@ -24,6 +24,10 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpreter;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTable;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;

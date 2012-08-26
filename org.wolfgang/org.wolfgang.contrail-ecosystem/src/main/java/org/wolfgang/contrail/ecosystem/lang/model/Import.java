@@ -80,7 +80,8 @@ public class Import implements Validation {
 	 *            the element to set
 	 */
 	public void setElement(String element) {
-		this.element = element;
+		assert element != null;
+		this.element = element.trim();
 	}
 
 	@Override

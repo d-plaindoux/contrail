@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.bound.gateway;
 
 import java.net.URISyntaxException;
 
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
@@ -47,7 +48,7 @@ public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 	 * @throws CannotCreateClientException
 	 * @throws ClientFactoryCreationException
 	 */
-	@ContrailConstructor(arguments = { "uri" })
+	@ContrailConstructor({ @ContrailArgument(name = "uri") })
 	public ClientComponent(ContextFactory connectionFactory, String[] uri) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
 		this(new ClientReceiver(connectionFactory, uri[0]));
 	}

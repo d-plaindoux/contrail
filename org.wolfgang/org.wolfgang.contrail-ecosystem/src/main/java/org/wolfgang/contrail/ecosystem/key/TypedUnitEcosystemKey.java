@@ -44,7 +44,7 @@ public class TypedUnitEcosystemKey implements UnitEcosystemKey {
 	 * @param downstream
 	 *            The downstream class type
 	 */
-	public TypedUnitEcosystemKey(Class<?> upstream, Class<?> downstream) {
+	TypedUnitEcosystemKey(Class<?> upstream, Class<?> downstream) {
 		super();
 		this.upstream = upstream;
 		this.downstream = downstream;

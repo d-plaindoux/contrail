@@ -18,10 +18,15 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <code>EcosystemModel</code>
@@ -29,6 +34,7 @@ import javax.xml.bind.annotation.XmlElement;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@XmlRootElement(name = "ecosystem")
 public class EcosystemModel {
 
 	/**
@@ -110,7 +116,7 @@ public class EcosystemModel {
 	 * 
 	 * @return the binders
 	 */
-	@XmlElement(name = "bind")
+	@XmlElement(name = "binder")
 	public List<Bind> getBinders() {
 		return binders;
 	}
@@ -145,4 +151,18 @@ public class EcosystemModel {
 		this.starters.add(starter);
 	}
 
+	/**
+	 * Method called to decode a ecosystem
+	 * 
+	 * @param stream
+	 *            The input stream containing the ecosystem definition
+	 * @return an ecosystem (Never <code>null</code>)
+	 * @throws JAXBException
+	 *             throws if the ecosystem cannot be decoded
+	 */
+	public static EcosystemModel decode(InputStream stream) throws JAXBException {
+		final JAXBContext context = JAXBContext.newInstance(EcosystemModel.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		return (EcosystemModel) unmarshaller.unmarshal(stream);
+	}
 }
