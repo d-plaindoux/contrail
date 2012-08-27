@@ -17,9 +17,9 @@ public interface EcosystemImportation<T extends Component> {
 	/**
 	 * Hook to invoke underlying factories
 	 * 
-	 * @param parameters
+	 * @param environment
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	T create(Map<String, CodeValue> parameters) throws CannotCreateComponentException;
+	T create(Map<String, CodeValue> environment) throws CannotCreateComponentException;
 }

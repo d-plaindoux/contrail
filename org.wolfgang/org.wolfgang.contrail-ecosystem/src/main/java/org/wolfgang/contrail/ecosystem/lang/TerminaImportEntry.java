@@ -49,7 +49,7 @@ class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
 	}
 
 	@Override
-	public TerminalComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-		return TerminalFactory.create(factory, component, parameters);
+	public TerminalComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
+		return TerminalFactory.create(factory, component, environment);
 	}
 }

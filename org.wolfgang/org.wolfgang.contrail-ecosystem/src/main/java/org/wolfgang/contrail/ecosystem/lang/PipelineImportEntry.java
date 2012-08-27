@@ -49,7 +49,7 @@ class PipelineImportEntry implements EcosystemImportation<PipelineComponent> {
 	}
 
 	@Override
-	public PipelineComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-		return PipelineFactory.create(factory, component, parameters);
+	public PipelineComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
+		return PipelineFactory.create(factory, component, environment);
 	}
 }
