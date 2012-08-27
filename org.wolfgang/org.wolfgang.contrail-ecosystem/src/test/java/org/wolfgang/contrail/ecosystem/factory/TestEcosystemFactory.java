@@ -45,36 +45,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @version 1.0
  */
 public class TestEcosystemFactory extends TestCase {
-	@Test
-	public void testSample01WithFlow() {
-		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01WithFlow.xml");
-
-		assertNotNull(resource);
-
-		try {
-			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
-
-			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DataReceiverAdapter<String> dataReceiver = new DataReceiverAdapter<String>() {
-				@Override
-				public void receiveData(String data) throws DataHandlerException {
-					futureResponse.setValue(data);
-				}
-			};
-
-			final DataSenderFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final DataSender<String> sender = binder.create(dataReceiver);
-
-			final String message = "Hello, World!";
-			sender.sendData(message);
-
-			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}
-
+	
 	@Test
 	public void testSample02() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02.xml");
