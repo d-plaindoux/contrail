@@ -1,9 +1,0 @@
-<?xml version='1.0'?>
-<ecosystem>
-	<terminal name='Echo'
-		factory='org.wolfgang.contrail.ecosystem.factory.EchoComponent' />
-
-	<binder name='Main' typein="String" typeout="String">
-		Echo
-	</binder>
-</ecosystem>
