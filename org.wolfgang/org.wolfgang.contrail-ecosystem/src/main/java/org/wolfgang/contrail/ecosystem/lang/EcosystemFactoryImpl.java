@@ -34,10 +34,6 @@ import org.wolfgang.contrail.component.annotation.ContrailInitial;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.Client;
@@ -50,9 +46,6 @@ import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
-import org.wolfgang.contrail.ecosystem.lang.delta.PipelineFactory;
-import org.wolfgang.contrail.ecosystem.lang.delta.TerminalFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.Bind;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -69,123 +62,6 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 @SuppressWarnings("rawtypes")
 public final class EcosystemFactoryImpl implements EcosystemSymbolTable, ContextFactory {
-
-	/**
-	 * <code>DataSenderFactoryImpl</code> is dedicated to the binder mechanism
-	 * creation
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
-		private final EcosystemFactoryImpl factory;
-		private final CodeValue flow;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param items
-		 */
-		private DataSenderFactoryImpl(EcosystemFactoryImpl factory, CodeValue flow) {
-			super();
-			this.factory = factory;
-			this.flow = flow;
-		}
-
-		@Override
-		public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
-			try {
-				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
-				factory.create(initialComponent, flow);
-				return initialComponent.getDataSender();
-			} catch (CannotCreateComponentException e) {
-				throw new CannotCreateDataSenderException(e);
-			} catch (EcosystemBuilderException e) {
-				throw new CannotCreateDataSenderException(e);
-			}
-		}
-	}
-
-	/**
-	 * <code>PipelineImportEntry</code>
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private static class PipelineImportEntry implements EcosystemImportation<PipelineComponent> {
-		private final ContextFactory factory;
-		private final Class<?> component;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param component
-		 */
-		private PipelineImportEntry(ContextFactory factory, Class component) {
-			super();
-			this.factory = factory;
-			this.component = component;
-		}
-
-		@Override
-		public PipelineComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-			return PipelineFactory.create(factory, component, parameters);
-		}
-	}
-
-	/**
-	 * <code>TerminalImportEntry</code>
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private static class InitialImportEntry implements EcosystemImportation<InitialComponent> {
-		private final ContextFactory factory;
-		private final Class<?> component;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param component
-		 */
-		private InitialImportEntry(ContextFactory factory, Class component) {
-			super();
-			this.factory = factory;
-			this.component = component;
-		}
-
-		@Override
-		public InitialComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-			return InitialFactory.create(factory, component, parameters);
-		}
-	}
-
-	/**
-	 * <code>TerminalImportEntry</code>
-	 * 
-	 * @author Didier Plaindoux
-	 * @version 1.0
-	 */
-	private static class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
-		private final ContextFactory factory;
-		private final Class<?> component;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param component
-		 */
-		private TerminaImportEntry(ContextFactory factory, Class component) {
-			super();
-			this.factory = factory;
-			this.component = component;
-		}
-
-		@Override
-		public TerminalComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-			return TerminalFactory.create(factory, component, parameters);
-		}
-	}
 
 	/**
 	 * Importations
@@ -217,6 +93,11 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 */
 	private final ClassLoader classLoader;
 
+	/**
+	 * The code interpreter
+	 */
+	private final EcosystemInterpreter interpreter;
+
 	{
 		this.serverFactory = new ServerFactory();
 		this.clientFactory = new ClientFactory();
@@ -225,6 +106,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 
 		this.importations = new HashMap<String, EcosystemImportation<?>>();
 		this.definitions = new HashMap<String, CodeValue>();
+		this.interpreter = new EcosystemInterpreter(this, definitions);
 	}
 
 	/**
@@ -245,9 +127,8 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 * @throws CannotCreateComponentException
 	 * @throws EcosystemBuilderException
 	 */
-	private Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
-		final EcosystemInterpreter interpret = new EcosystemInterpreter(this);
-		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(interpret, linkManager, source);
+	Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
+		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(this.interpreter, linkManager, source);
 		final Component current = value.visit(builder);
 		if (current == null) {
 			throw new CannotCreateComponentException(MessagesProvider.message("org/wolfgang/contrail/ecosystem", "no.component").format());
@@ -340,18 +221,14 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public static org.wolfgang.contrail.ecosystem.Ecosystem build(Logger logger, EcosystemModel ecosystemModel) throws Exception {
-
-		final EcosystemFactoryImpl factory = new EcosystemFactoryImpl();
+	private org.wolfgang.contrail.ecosystem.Ecosystem buildEcosystem(Logger logger, EcosystemModel ecosystemModel) throws Exception {
 
 		// Check and load importations
-		factory.loadImportations(logger, ecosystemModel);
-
-		final EcosystemInterpreter interpret = new EcosystemInterpreter(factory);
+		this.loadImportations(logger, ecosystemModel);
 
 		// Check on load definitions
 		for (Definition definition : ecosystemModel.getDefinitions()) {
-			factory.definitions.put(definition.getName(), interpret.visit(definition.getExpressions()));
+			this.definitions.put(definition.getName(), this.interpreter.visit(definition.getExpressions()));
 		}
 
 		// Create the ecosystem implementation
@@ -362,14 +239,14 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			final Class<?> typeIn = TypeUtils.getType(bind.getTypeIn());
 			final Class<?> typeOut = TypeUtils.getType(bind.getTypeOut());
 			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
-			final CodeValue flow = interpret.visit(bind.getExpressions());
-			ecosystemImpl.addBinder(key, new DataSenderFactoryImpl(factory, flow));
+			final CodeValue flow = this.interpreter.visit(bind.getExpressions());
+			ecosystemImpl.addBinder(key, new BinderDataSenderFactoryImpl(this, flow));
 		}
 
 		// Create and Start the starters
 		for (Starter starter : ecosystemModel.getStarters()) {
-			final CodeValue flow = interpret.visit(starter.getExpressions());
-			factory.create(null, flow);
+			final CodeValue flow = this.interpreter.visit(starter.getExpressions());
+			this.create(null, flow);
 		}
 
 		return ecosystemImpl;
@@ -402,4 +279,16 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 		return this.importations.get(name);
 	}
 
+	// Static method
+
+	/**
+	 * Main method called whether an ecosystem must be created
+	 * 
+	 * @param ecosystemModel
+	 * @throws Exception
+	 * @throws ClassNotFoundException
+	 */
+	public static org.wolfgang.contrail.ecosystem.Ecosystem build(Logger logger, EcosystemModel ecosystemModel) throws Exception {
+		return new EcosystemFactoryImpl().buildEcosystem(logger, ecosystemModel);
+	}
 }

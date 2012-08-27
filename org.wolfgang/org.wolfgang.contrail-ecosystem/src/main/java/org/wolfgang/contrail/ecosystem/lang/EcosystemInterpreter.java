@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
@@ -89,7 +91,8 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 		} else if (environment.containsKey(name)) {
 			return environment.get(name);
 		} else {
-			throw new EcosystemInterpretationException("Error : TODO : Reference not found " + name);
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "definition.not.found");
+			throw new EcosystemInterpretationException(message.format(name));
 		}
 	}
 
@@ -110,7 +113,8 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 			closure.getEnvironment().put(parameterName, result);
 			return new EcosystemInterpreter(symbolTable, closure.getEnvironment()).visit(applied);
 		} else {
-			throw new EcosystemInterpretationException("Error : TODO : Waiting for a function");
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
+			throw new EcosystemInterpretationException(message.format());
 		}
 	}
 

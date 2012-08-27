@@ -18,18 +18,38 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.util.Map;
+
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
 
 /**
- * <code>EcosystemSymbolTable</code>
+ * <code>TerminalImportEntry</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemSymbolTable {
+@SuppressWarnings("rawtypes")
+class InitialImportEntry implements EcosystemImportation<InitialComponent> {
+	private final ContextFactory factory;
+	private final Class<?> component;
 
-	boolean hasImportation(String name);
+	/**
+	 * Constructor
+	 * 
+	 * @param component
+	 */
+	InitialImportEntry(ContextFactory factory, Class component) {
+		super();
+		this.factory = factory;
+		this.component = component;
+	}
 
-	EcosystemImportation<?> getImportation(String name);
-	
+	@Override
+	public InitialComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
+		return InitialFactory.create(factory, component, parameters);
+	}
 }
