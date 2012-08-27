@@ -16,18 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.ecosystem.lang.model;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <code>EcosystemSymbolTable</code>
+ * <code>Function</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemSymbolTable {
+@XmlRootElement(name = "flow")
+public class Flow extends ContentExpressions implements Expression, Validation {
 
-	boolean hasImportation(String name);
+	/**
+	 * Constructor
+	 */
+	public Flow() {
+		super();
+	}
 
-	EcosystemImportation<?> getImportation(String name);
+	@Override
+	public void validate() throws ValidationException {
+		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
 }

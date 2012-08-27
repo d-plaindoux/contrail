@@ -21,20 +21,20 @@ package org.wolfgang.contrail.ecosystem.lang;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
-import org.wolfgang.contrail.ecosystem.lang.delta.TerminalComponentFactory;
+import org.wolfgang.contrail.ecosystem.lang.delta.TransducerComponentFactory;
 
 /**
- * <code>TerminalImportEntry</code>
+ * <code>PipelineImportEntry</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
+class TransducerImportEntry implements EcosystemImportation<PipelineComponent> {
 	private final CodeValueVisitor visitor;
 	private final ContextFactory factory;
 	private final Class<?> component;
@@ -44,7 +44,7 @@ class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
 	 * 
 	 * @param component
 	 */
-	TerminaImportEntry(CodeValueVisitor visitor, ContextFactory factory, Class component) {
+	TransducerImportEntry(CodeValueVisitor visitor, ContextFactory factory, Class component) {
 		super();
 		this.visitor = visitor;
 		this.factory = factory;
@@ -52,7 +52,7 @@ class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
 	}
 
 	@Override
-	public TerminalComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return TerminalComponentFactory.create(visitor, factory, component, environment);
+	public PipelineComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
+		return TransducerComponentFactory.create(visitor, factory, component, environment);
 	}
 }

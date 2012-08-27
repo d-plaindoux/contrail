@@ -34,8 +34,10 @@ import org.wolfgang.contrail.component.annotation.ContrailInitial;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
+import org.wolfgang.contrail.component.annotation.ContrailTransducer;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactory;
 import org.wolfgang.contrail.connection.ContextFactory;
@@ -46,6 +48,7 @@ import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.ParameterCodeConverter;
 import org.wolfgang.contrail.ecosystem.lang.model.Bind;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -149,6 +152,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			try {
 				final Class<?> aClass = classLoader.loadClass(importation.getElement());
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "incompatible.type");
+				final ParameterCodeConverter codeConverter = new ParameterCodeConverter(new EcosystemComponentBuilder(this.interpreter, linkManager, null));
 
 				if (aClass.isAnnotationPresent(ContrailClient.class)) {
 					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
@@ -173,7 +177,20 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new PipelineImportEntry(this, aClass));
+						this.importations.put(name, new PipelineImportEntry(codeConverter, this, aClass));
+					} else {
+						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
+					}
+				} else if (aClass.isAnnotationPresent(ContrailTransducer.class)) {
+					final ContrailTransducer annotation = aClass.getAnnotation(ContrailTransducer.class);
+					if (TransducerFactory.class.isAssignableFrom(aClass)) {
+						final String name;
+						if (importation.getAlias() != null) {
+							name = importation.getAlias();
+						} else {
+							name = annotation.name();
+						}
+						this.importations.put(name, new TransducerImportEntry(codeConverter, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
@@ -186,7 +203,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new TerminaImportEntry(this, aClass));
+						this.importations.put(name, new TerminaImportEntry(codeConverter, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(TerminalComponent.class, importation.getElement()));
 					}
@@ -199,7 +216,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new InitialImportEntry(this, aClass));
+						this.importations.put(name, new InitialImportEntry(codeConverter, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(InitialComponent.class, importation.getElement()));
 					}

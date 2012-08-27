@@ -14,7 +14,7 @@
 	<binder name='Main' in="String" out="String">
 		<apply>
 			<ref>Test</ref>
-			<atom>RESENT|</atom>
+			<atom>RESENT </atom>
 		</apply>
 	</binder>
 </ecosystem>

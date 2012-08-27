@@ -33,6 +33,7 @@ import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
+import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 
@@ -107,6 +108,11 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
 			throw new EcosystemInterpretationException(message.format());
 		}
+	}
+
+	@Override
+	public CodeValue visit(Flow expression) throws EcosystemInterpretationException {
+		return this.visit(expression.getExpressions());
 	}
 
 	@Override

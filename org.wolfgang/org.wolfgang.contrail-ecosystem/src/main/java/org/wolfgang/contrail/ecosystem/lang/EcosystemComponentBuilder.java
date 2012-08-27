@@ -37,9 +37,9 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class EcosystemComponentBuilder implements CodeValueVisitor<Component, EcosystemBuilderException> {
+public class EcosystemComponentBuilder implements CodeValueVisitor<Component, EcosystemBuilderException> {
 
-	private final EcosystemInterpreter interpret;
+	// private final EcosystemInterpreter interpret;
 	private final ComponentLinkManager linkManager;
 
 	private Component current;
@@ -51,7 +51,7 @@ class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ecosystem
 	 */
 	EcosystemComponentBuilder(EcosystemInterpreter interpret, ComponentLinkManager linkManager, Component current) {
 		super();
-		this.interpret = interpret;
+		// this.interpret = interpret;
 		this.linkManager = linkManager;
 		this.current = current;
 	}

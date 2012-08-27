@@ -43,6 +43,7 @@ import org.wolfgang.contrail.component.annotation.ContrailInitial;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
+import org.wolfgang.contrail.component.annotation.ContrailTransducer;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -508,6 +509,21 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 						this.getServerFactory().declareScheme(annotation.scheme(), aClass);
 					} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
 						final ContrailPipeline annotation = aClass.getAnnotation(ContrailPipeline.class);
+						final String name;
+						if (item.asAlias()) {
+							name = item.getAlias();
+						} else {
+							name = annotation.name();
+						}
+						final PipelineModel model = new PipelineModel();
+						model.setName(name);
+						model.setFactory(item.getName());
+						for (String parameter : item.getParameters()) {
+							model.add(parameter);
+						}
+						ecosystemModel.add(model);
+					} else if (aClass.isAnnotationPresent(ContrailTransducer.class)) {
+						final ContrailTransducer annotation = aClass.getAnnotation(ContrailTransducer.class);
 						final String name;
 						if (item.asAlias()) {
 							name = item.getAlias();

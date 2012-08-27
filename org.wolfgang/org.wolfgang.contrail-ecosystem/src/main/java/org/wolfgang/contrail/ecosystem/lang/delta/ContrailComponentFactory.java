@@ -26,9 +26,9 @@ import java.util.Map;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 
 /**
@@ -37,7 +37,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalFactory {
+class ContrailComponentFactory {
 
 	/**
 	 * Method providing the constructor defined
@@ -74,8 +74,8 @@ public class TerminalFactory {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> T create(CodeValueVisitor converter, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
 			final Constructor<?> constructor = getDeclaredConstructor(component);
 			final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
@@ -87,13 +87,13 @@ public class TerminalFactory {
 				final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
 				if (environment.containsKey(annotation.value())) {
 					final CodeValue codeValue = environment.get(annotation.value());
-					parameters[i] = codeValue.visit(new ParameterCodeConverter());
+					parameters[i] = codeValue.visit(converter);
 				} else {
 					parameters[i] = null;
 				}
 			}
 
-			return (TerminalComponent) constructor.newInstance(parameters);
+			return (T) constructor.newInstance(parameters);
 		} catch (InvocationTargetException e) {
 			throw new CannotCreateComponentException(e.getCause());
 		} catch (Exception e) {

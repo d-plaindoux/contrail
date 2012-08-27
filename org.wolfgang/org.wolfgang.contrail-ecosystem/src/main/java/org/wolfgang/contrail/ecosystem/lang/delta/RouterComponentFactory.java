@@ -28,12 +28,12 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class RouterSourceFactory {
+public final class RouterComponentFactory {
 
 	/**
 	 * Constructor
 	 */
-	private RouterSourceFactory() {
+	private RouterComponentFactory() {
 		// Prevent useless creation
 	}
 

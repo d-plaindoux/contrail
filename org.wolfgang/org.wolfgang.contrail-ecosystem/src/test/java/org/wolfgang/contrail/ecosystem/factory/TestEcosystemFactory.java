@@ -46,46 +46,6 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestEcosystemFactory extends TestCase {
 	
-	@Test
-	public void testSample02() {
-		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02.xml");
-
-		assertNotNull(resource);
-
-		try {
-			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
-
-			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
-				@Override
-				public void receiveData(Bytes data) throws DataHandlerException {
-					futureResponse.setValue(data);
-				}
-			};
-
-			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final DataSender<Bytes> sender = binder.create(dataReceiver);
-
-			final String message = "Hello, World!";
-			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
-			final List<Bytes> transformed = serialization.getEncoder().transform(message);
-
-			assertEquals(1, transformed.size());
-			sender.sendData(transformed.get(0));
-
-			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
-			final List<Object> response = serialization.getDecoder().transform(received);
-
-			assertEquals(1, response.size());
-
-			assertEquals(message, response.get(0));
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
 	public void testSample02WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02WithFlow.xml");
 
@@ -125,7 +85,6 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
 	public void testSample03() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03.xml");
 
@@ -165,7 +124,6 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
 	public void testSample03WithFlow() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03WithFlow.xml");
 
@@ -204,7 +162,6 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
 	public void testSample04() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample04.xml");
 

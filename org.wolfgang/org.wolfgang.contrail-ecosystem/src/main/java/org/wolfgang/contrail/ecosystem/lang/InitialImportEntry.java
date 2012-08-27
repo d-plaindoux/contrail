@@ -24,7 +24,8 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
+import org.wolfgang.contrail.ecosystem.lang.delta.InitialComponentFactory;
 
 /**
  * <code>TerminalImportEntry</code>
@@ -36,20 +37,22 @@ import org.wolfgang.contrail.ecosystem.lang.delta.InitialFactory;
 class InitialImportEntry implements EcosystemImportation<InitialComponent> {
 	private final ContextFactory factory;
 	private final Class<?> component;
+	private final CodeValueVisitor visitor;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param component
 	 */
-	InitialImportEntry(ContextFactory factory, Class component) {
+	InitialImportEntry(CodeValueVisitor visitor, ContextFactory factory, Class component) {
 		super();
+		this.visitor = visitor;
 		this.factory = factory;
 		this.component = component;
 	}
 
 	@Override
 	public InitialComponent create(Map<String, CodeValue> parameters) throws CannotCreateComponentException {
-		return InitialFactory.create(factory, component, parameters);
+		return InitialComponentFactory.create(visitor, factory, component, parameters);
 	}
 }

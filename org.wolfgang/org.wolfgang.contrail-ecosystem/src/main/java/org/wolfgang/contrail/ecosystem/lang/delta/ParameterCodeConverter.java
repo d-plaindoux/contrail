@@ -18,13 +18,26 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
+import org.wolfgang.contrail.ecosystem.lang.EcosystemComponentBuilder;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 
-class ParameterCodeConverter implements CodeValueVisitor<Object, Exception> {
+public class ParameterCodeConverter implements CodeValueVisitor<Object, Exception> {
+
+	private final EcosystemComponentBuilder builder;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param builder
+	 */
+	public ParameterCodeConverter(EcosystemComponentBuilder builder) {
+		super();
+		this.builder = builder;
+	}
 
 	@Override
 	public Object visit(ClosureValue value) throws Exception {
@@ -33,7 +46,7 @@ class ParameterCodeConverter implements CodeValueVisitor<Object, Exception> {
 
 	@Override
 	public Object visit(ComponentValue value) throws Exception {
-		return value.getComponent();
+		return builder.visit(value);
 	}
 
 	@Override
@@ -43,6 +56,6 @@ class ParameterCodeConverter implements CodeValueVisitor<Object, Exception> {
 
 	@Override
 	public Object visit(FlowValue value) throws Exception {
-		return null;
+		return builder.visit(value);
 	}
 }

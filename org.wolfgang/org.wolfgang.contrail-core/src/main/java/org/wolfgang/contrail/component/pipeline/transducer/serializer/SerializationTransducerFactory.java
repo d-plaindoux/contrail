@@ -22,6 +22,7 @@ package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.annotation.ContrailTransducer;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -36,7 +37,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline(name = "Serialization")
+@ContrailTransducer(name = "Serialization")
 @ContrailUpType(in = Bytes.class, out = Bytes.class)
 @ContrailDownType(in = Object.class, out = Object.class)
 public final class SerializationTransducerFactory implements TransducerFactory<Bytes, Object> {

@@ -52,6 +52,7 @@ public abstract class ContentExpressions implements Validation {
 	 */
 	@XmlElements(value = { 
 			@XmlElement(type = Function.class, name = "function"), 
+			@XmlElement(type = Flow.class, name = "flow"), 
 			@XmlElement(type = Apply.class, name = "apply"),
 			@XmlElement(type = Reference.class, name = "ref"), 
 			@XmlElement(type = Atom.class, name = "atom") 

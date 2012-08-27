@@ -16,18 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.component.annotation;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * <code>EcosystemSymbolTable</code>
+ * <code>ComponentPipeline</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemSymbolTable {
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface ContrailTransducer {
 
-	boolean hasImportation(String name);
-
-	EcosystemImportation<?> getImportation(String name);
+	String name();
 
 }

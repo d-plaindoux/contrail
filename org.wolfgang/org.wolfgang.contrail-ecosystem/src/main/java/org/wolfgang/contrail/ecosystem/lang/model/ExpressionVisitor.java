@@ -32,6 +32,8 @@ public interface ExpressionVisitor<T, E extends Exception> {
 
 	T visit(Apply expression) throws E;
 
+	T visit(Flow expression) throws E;
+
 	T visit(Function expression) throws E;
 
 }

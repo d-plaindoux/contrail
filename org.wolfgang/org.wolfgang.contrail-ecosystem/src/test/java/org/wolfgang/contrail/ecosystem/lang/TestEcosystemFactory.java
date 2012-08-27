@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -29,6 +30,8 @@ import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
+import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -159,11 +162,132 @@ public class TestEcosystemFactory extends TestCase {
 			final String message = "Hello, World!";
 			sender.sendData(message);
 
-			assertEquals("RESENT|" + message, futureResponse.get(10, TimeUnit.SECONDS));
+			assertEquals("RESENT " + message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 
+	@Test
+	public void testSample03() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03_2.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
+
+			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
+			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
+				@Override
+				public void receiveData(Bytes data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
+			final DataSender<Bytes> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
+			final List<Bytes> transformed = serialization.getEncoder().transform(message);
+
+			assertEquals(1, transformed.size());
+			sender.sendData(transformed.get(0));
+
+			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
+			final List<Object> response = serialization.getDecoder().transform(received);
+
+			assertEquals(1, response.size());
+
+			assertEquals(message, response.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+
+	@Test
+	public void testSample03bis() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03bis_2.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
+
+			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
+			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
+				@Override
+				public void receiveData(Bytes data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
+			final DataSender<Bytes> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
+			final List<Bytes> transformed = serialization.getEncoder().transform(message);
+
+			assertEquals(1, transformed.size());
+			sender.sendData(transformed.get(0));
+
+			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
+			final List<Object> response = serialization.getDecoder().transform(received);
+
+			assertEquals(1, response.size());
+
+			assertEquals("RESENT " + message, response.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+
+	@Test
+	public void testSample03ter() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03ter_2.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
+
+			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
+			final DataReceiverAdapter<Bytes> dataReceiver = new DataReceiverAdapter<Bytes>() {
+				@Override
+				public void receiveData(Bytes data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
+			final DataSender<Bytes> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
+			final List<Bytes> transformed = serialization.getEncoder().transform(message);
+
+			assertEquals(1, transformed.size());
+			sender.sendData(transformed.get(0));
+
+			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
+			final List<Object> response = serialization.getDecoder().transform(received);
+
+			assertEquals(1, response.size());
+
+			assertEquals("RESENT-3 " + message, response.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

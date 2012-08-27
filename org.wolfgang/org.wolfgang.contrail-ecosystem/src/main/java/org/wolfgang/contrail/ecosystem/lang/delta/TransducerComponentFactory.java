@@ -18,46 +18,35 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 
 /**
- * <code>TerminalFactory</code>
+ * <code>PipelineFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialFactory {
+public final class TransducerComponentFactory {
 
 	/**
-	 * @param classLoader
-	 * @param factoryName
-	 * @param array
-	 * @return
-	 * @throws CannotCreateComponentException
+	 * Constructor
 	 */
-	@SuppressWarnings("rawtypes")
-	public static InitialComponent create(ContextFactory ecosystemFactory, Class<?> component, Map<String,CodeValue> parameters) throws CannotCreateComponentException {
+	private TransducerComponentFactory() {
+		super();
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	public static PipelineComponent create(CodeValueVisitor converter, ContextFactory ecosystemFactory, Class component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			try {
-				final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);
-				return (InitialComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
-			} catch (NoSuchMethodException e1) {
-				try {
-					final Constructor<?> constructor = component.getConstructor(String[].class);
-					return (InitialComponent) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e2) {
-					return (InitialComponent) component.newInstance();
-				}
-			}
-		} catch (InvocationTargetException e) {
-			throw new CannotCreateComponentException(e.getCause());
+			final TransducerFactory factory = ContrailComponentFactory.<TransducerFactory> create(converter, ecosystemFactory, component, environment);
+			return factory.createComponent();
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}
