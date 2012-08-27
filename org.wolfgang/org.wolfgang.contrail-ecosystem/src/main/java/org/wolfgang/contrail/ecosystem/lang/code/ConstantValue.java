@@ -25,14 +25,14 @@ package org.wolfgang.contrail.ecosystem.lang.code;
  * @version 1.0
  */
 public class ConstantValue implements CodeValue {
-	private final String value;
+	private final Object value;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param value
 	 */
-	public ConstantValue(String value) {
+	public ConstantValue(Object value) {
 		super();
 		this.value = value;
 	}
@@ -42,7 +42,7 @@ public class ConstantValue implements CodeValue {
 	 * 
 	 * @return the value
 	 */
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 

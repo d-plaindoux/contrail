@@ -20,6 +20,8 @@ package org.wolfgang.contrail.ecosystem.lang;
 
 import java.io.IOException;
 
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
@@ -37,7 +39,19 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 @ContrailTerminal(name = "Test")
 public class EchoComponent extends TerminalComponent {
 
-	private static DataReceiverFactory DATA_RECEIVER_FACTORY = new DataReceiverFactory() {
+	private static class LocalDataReceiverFactory implements DataReceiverFactory {
+		private final String name;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param name
+		 */
+		LocalDataReceiverFactory(String name) {
+			super();
+			this.name = name;
+		}
+
 		@Override
 		public DataReceiver create(final DataSender sender) {
 			return new DataReceiver() {
@@ -49,7 +63,11 @@ public class EchoComponent extends TerminalComponent {
 				@Override
 				@SuppressWarnings("unchecked")
 				public void receiveData(Object data) throws DataHandlerException {
-					sender.sendData(data);
+					if (name != null) {
+						sender.sendData(name + data);
+					} else {
+						sender.sendData(data);
+					}
 				}
 			};
 		}
@@ -61,8 +79,9 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 */
 	@SuppressWarnings("unchecked")
-	public EchoComponent() {
-		super(DATA_RECEIVER_FACTORY);
+	@ContrailConstructor
+	public EchoComponent(@ContrailArgument("name") String name) {
+		super(new LocalDataReceiverFactory(name));
 	}
 
 }

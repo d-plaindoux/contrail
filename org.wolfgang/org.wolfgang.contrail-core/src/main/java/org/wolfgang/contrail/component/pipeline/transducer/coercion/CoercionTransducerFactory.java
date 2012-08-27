@@ -21,7 +21,6 @@ package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailDownType;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailUpType;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
@@ -52,8 +51,8 @@ public final class CoercionTransducerFactory<T> implements TransducerFactory<Obj
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	@ContrailConstructor(@ContrailArgument(name = "type"))
-	public CoercionTransducerFactory(ContextFactory factory, String type) throws ClassNotFoundException {
+	@ContrailConstructor()
+	public CoercionTransducerFactory(ContextFactory factory, @ContrailArgument("type") String type) throws ClassNotFoundException {
 		this.coercionType = (Class<T>) factory.getClassLoader().loadClass(type);
 	}
 

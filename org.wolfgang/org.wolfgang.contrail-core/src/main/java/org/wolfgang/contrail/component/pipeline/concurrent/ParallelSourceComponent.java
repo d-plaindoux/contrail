@@ -100,7 +100,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor(value = {})
+	@ContrailConstructor
 	public ParallelSourceComponent() {
 		super();
 	}

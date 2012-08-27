@@ -100,7 +100,7 @@ public class ParallelDestinationComponent<U, D> extends AbstractPipelineComponen
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor(value = {})
+	@ContrailConstructor
 	public ParallelDestinationComponent() {
 		super();
 	}

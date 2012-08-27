@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component.annotation;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
@@ -30,11 +30,10 @@ import java.lang.annotation.Target;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(ANNOTATION_TYPE)
+@Target(PARAMETER)
 @Retention(RUNTIME)
 public @interface ContrailArgument {
 
-	String name();
-	String type() default "String";
-
+	String value();
+	
 }

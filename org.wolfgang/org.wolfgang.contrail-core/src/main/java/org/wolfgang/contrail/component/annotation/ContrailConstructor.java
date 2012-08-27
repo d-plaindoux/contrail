@@ -33,7 +33,4 @@ import java.lang.annotation.Target;
 @Target(CONSTRUCTOR)
 @Retention(RUNTIME)
 public @interface ContrailConstructor {
-
-	ContrailArgument[] value();
-
 }

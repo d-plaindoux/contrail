@@ -52,15 +52,6 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 	 * 
 	 * @param environment
 	 */
-	EcosystemInterpreter(EcosystemSymbolTable factory) {
-		this(factory, new HashMap<String, CodeValue>());
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param environment
-	 */
 	EcosystemInterpreter(EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
 		super();
 		this.symbolTable = factory;

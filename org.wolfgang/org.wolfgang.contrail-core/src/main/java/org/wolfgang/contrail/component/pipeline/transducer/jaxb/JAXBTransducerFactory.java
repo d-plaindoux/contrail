@@ -52,8 +52,8 @@ public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Obj
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("static-access")
-	@ContrailConstructor(@ContrailArgument(name = "types", type = "String[]"))
-	public JAXBTransducerFactory(String... types) throws ClassNotFoundException {
+	@ContrailConstructor
+	public JAXBTransducerFactory(@ContrailArgument("types") String... types) throws ClassNotFoundException {
 		this.types = new Class[types.length];
 		for (int i = 0; i < types.length; i++) {
 			this.types[i] = this.getClass().forName(types[i]);

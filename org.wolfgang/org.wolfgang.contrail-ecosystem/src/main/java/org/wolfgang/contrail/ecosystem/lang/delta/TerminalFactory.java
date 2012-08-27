@@ -18,14 +18,18 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 
 /**
  * <code>TerminalFactory</code>
@@ -36,6 +40,34 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 public class TerminalFactory {
 
 	/**
+	 * Method providing the constructor defined
+	 * 
+	 * @param component
+	 *            The class
+	 * @return a constructor (Never <code>null</code>)
+	 */
+	private static Constructor<?> getDeclaredConstructor(Class<?> component) {
+		final Constructor<?>[] constructors = component.getConstructors();
+		for (Constructor<?> constructor : constructors) {
+			if (constructor.isAnnotationPresent(ContrailConstructor.class)) {
+				return constructor;
+			}
+		}
+
+		throw new NoSuchMethodError("TODO: Constructor Definition not found");
+	}
+
+	private static ContrailArgument getDeclaredParameter(Annotation[] parameterTypes) {
+		for (Annotation annotation : parameterTypes) {
+			if (ContrailArgument.class.isAssignableFrom(annotation.annotationType())) {
+				return (ContrailArgument) annotation;
+			}
+		}
+
+		throw new NoSuchMethodError("TODO: Constructor Parameter Definition not found");
+	}
+
+	/**
 	 * @param classLoader
 	 * @param factoryName
 	 * @param array
@@ -43,19 +75,25 @@ public class TerminalFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> parameters) throws CannotCreateComponentException {
+	public static TerminalComponent create(ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			try {
-				final Constructor<?> constructor = component.getConstructor(ContextFactory.class, String[].class);
-				return (TerminalComponent) constructor.newInstance(new Object[] { ecosystemFactory, parameters });
-			} catch (NoSuchMethodException e1) {
-				try {
-					final Constructor<?> constructor = component.getConstructor(String[].class);
-					return (TerminalComponent) constructor.newInstance(new Object[] { parameters });
-				} catch (NoSuchMethodException e2) {
-					return (TerminalComponent) component.newInstance();
+			final Constructor<?> constructor = getDeclaredConstructor(component);
+			final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
+			final Object[] parameters = new Object[parameterTypes.length];
+
+			environment.put("context", new ConstantValue(ecosystemFactory));
+
+			for (int i = 0; i < parameters.length; i++) {
+				final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
+				if (environment.containsKey(annotation.value())) {
+					final CodeValue codeValue = environment.get(annotation.value());
+					parameters[i] = codeValue.visit(new ParameterCodeConverter());
+				} else {
+					parameters[i] = null;
 				}
 			}
+
+			return (TerminalComponent) constructor.newInstance(parameters);
 		} catch (InvocationTargetException e) {
 			throw new CannotCreateComponentException(e.getCause());
 		} catch (Exception e) {

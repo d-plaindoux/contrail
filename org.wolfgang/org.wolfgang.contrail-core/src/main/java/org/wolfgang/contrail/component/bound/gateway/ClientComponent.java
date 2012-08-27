@@ -48,7 +48,7 @@ public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 	 * @throws CannotCreateClientException
 	 * @throws ClientFactoryCreationException
 	 */
-	@ContrailConstructor({ @ContrailArgument(name = "uri") })
+	@ContrailConstructor
 	public ClientComponent(ContextFactory connectionFactory, String[] uri) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
 		this(new ClientReceiver(connectionFactory, uri[0]));
 	}
