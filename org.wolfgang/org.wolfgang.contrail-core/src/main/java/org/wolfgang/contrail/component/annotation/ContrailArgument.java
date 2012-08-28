@@ -25,7 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * <code>ComponentPipeline</code>
+ * <code>ContrailArgument</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

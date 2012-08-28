@@ -1,0 +1,54 @@
+<?xml version='1.0'?>
+<ecosystem>
+
+	<import as='GenericCoercion'>
+		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
+	</import>
+
+	<import as='ParallelSource'>
+		org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
+	</import>
+
+	<import as='ParallelDestination'>
+		org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
+	</import>
+
+	<import as='PayLoad'>
+		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
+	</import>
+
+	<import as='Serialize'>
+		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
+	</import>
+
+	<import as='Echo'>
+		org.wolfgang.contrail.ecosystem.lang.EchoComponent
+	</import>
+
+	<define name="Coercion">
+		<function>
+			<var>type</var>
+			<ref>GenericCoercion</ref>
+		</function>
+	</define>
+
+	<define name='ParallelSerializer'>
+		<ref>ParallelSource</ref>
+		<ref>Serialize</ref>
+		<ref>ParallelDestination</ref>
+	</define>
+
+	<define name='MainFlow'>
+		<ref>PayLoad</ref>
+		<ref>ParallelSerializer</ref>
+		<apply>
+			<ref>Coercion</ref>
+			<atom>java.lang.String</atom>
+		</apply>
+		<ref>Echo</ref>
+	</define>
+
+	<binder name='Main' in="byte[]" out="byte[]">
+		<ref>MainFlow</ref>
+	</binder>
+</ecosystem>

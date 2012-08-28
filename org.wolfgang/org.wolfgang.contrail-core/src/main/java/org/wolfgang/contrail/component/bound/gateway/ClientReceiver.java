@@ -33,7 +33,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
- * <code>GatewayReceiverFactory</code>
+ * <code>ClientReceiver</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

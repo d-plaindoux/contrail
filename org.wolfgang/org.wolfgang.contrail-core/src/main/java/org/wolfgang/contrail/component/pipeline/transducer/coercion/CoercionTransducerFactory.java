@@ -51,7 +51,7 @@ public final class CoercionTransducerFactory<T> implements TransducerFactory<Obj
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor()
-	public CoercionTransducerFactory(ContextFactory factory, @ContrailArgument("type") String type) throws ClassNotFoundException {
+	public CoercionTransducerFactory(@ContrailArgument("context") ContextFactory factory, @ContrailArgument("type") String type) throws ClassNotFoundException {
 		this.coercionType = (Class<T>) factory.getClassLoader().loadClass(type);
 	}
 

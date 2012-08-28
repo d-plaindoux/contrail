@@ -37,7 +37,6 @@ import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemFactoryImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
-import org.wolfgang.contrail.ecosystem.key.NamedUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
@@ -49,7 +48,8 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  */
 public class TestNetworkEcosystem extends TestCase {
 
-	@Test public void testNominal01() {
+	@Test
+	public void testNominal01() {
 
 		try {
 			final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
@@ -74,7 +74,8 @@ public class TestNetworkEcosystem extends TestCase {
 		}
 	}
 
-	@Test public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
+	@Test
+	public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
 
 		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
 		final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());

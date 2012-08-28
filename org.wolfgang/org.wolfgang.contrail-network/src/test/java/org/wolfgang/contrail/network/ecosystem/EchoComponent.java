@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.ecosystem;
 
 import java.io.IOException;
 
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
@@ -61,6 +62,7 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 */
 	@SuppressWarnings("unchecked")
+	@ContrailConstructor
 	public EchoComponent() {
 		super(DATA_RECEIVER_FACTORY);
 	}

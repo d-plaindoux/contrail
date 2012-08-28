@@ -25,18 +25,17 @@ import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
 import org.wolfgang.contrail.connection.ContextFactory;
 
 /**
- * <code>TestComponent</code>
+ * <code>ClientComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailTerminal(name = "ClientHandler", type = @ContrailType(in = Bytes.class, out = Bytes.class))
+@ContrailTerminal(name = "ClientHandler", type = @ContrailType(in = byte[].class, out = byte[].class))
 public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 
 	/**
@@ -48,7 +47,8 @@ public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 	 * @throws ClientFactoryCreationException
 	 */
 	@ContrailConstructor
-	public ClientComponent(@ContrailArgument("context") ContextFactory connectionFactory, String[] uri) throws URISyntaxException, CannotCreateClientException, ClientFactoryCreationException {
+	public ClientComponent(@ContrailArgument("context") ContextFactory connectionFactory, @ContrailArgument("uri") String[] uri) throws URISyntaxException, CannotCreateClientException,
+			ClientFactoryCreationException {
 		this(new ClientReceiver(connectionFactory, uri[0]));
 	}
 
