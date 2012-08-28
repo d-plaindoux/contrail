@@ -36,4 +36,8 @@ public @interface ContrailPipeline {
 
 	String name();
 
+	ContrailType upType() default @ContrailType(in = Object.class, out = Object.class);
+
+	ContrailType downType() default @ContrailType(in = Object.class, out = Object.class);
+
 }

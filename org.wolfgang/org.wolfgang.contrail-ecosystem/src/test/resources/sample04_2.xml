@@ -1,0 +1,21 @@
+<?xml version='1.0'?>
+<ecosystem>
+
+	<import as='PayLoad'>
+		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
+	</import>
+
+	<import as='Serialize'>
+		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
+	</import>
+
+	<import as='Echo'>
+		org.wolfgang.contrail.ecosystem.lang.EchoComponent
+	</import>
+
+	<binder name='Main' in="byte[]" out="byte[]">
+		<ref>PayLoad</ref>
+		<ref>Serialize</ref>
+		<ref>Echo</ref>
+	</binder>
+</ecosystem>

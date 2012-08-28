@@ -18,24 +18,23 @@
 
 package org.wolfgang.contrail.component.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * <code>ComponentPipeline</code>
+ * <code>ContrailType</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(TYPE)
+@Target(ANNOTATION_TYPE)
 @Retention(RUNTIME)
-public @interface ContrailDownType {
+public @interface ContrailType {
 
 	Class<?> in();
 
 	Class<?> out();
-
 }

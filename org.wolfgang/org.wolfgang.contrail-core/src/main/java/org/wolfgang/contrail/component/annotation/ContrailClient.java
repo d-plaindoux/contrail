@@ -36,4 +36,6 @@ public @interface ContrailClient {
 
 	String scheme();
 
+	ContrailType type() default @ContrailType(in = Object.class, out = Object.class);
+
 }

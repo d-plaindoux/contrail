@@ -35,5 +35,5 @@ import java.lang.annotation.Target;
 public @interface ContrailArgument {
 
 	String value();
-	
+
 }

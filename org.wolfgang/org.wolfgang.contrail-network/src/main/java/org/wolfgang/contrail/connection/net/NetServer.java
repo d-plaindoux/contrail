@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
+import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
@@ -56,7 +57,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailServer(scheme = "tcp")
+@ContrailServer(scheme = "tcp", type = @ContrailType(in = byte[].class, out = byte[].class))
 public class NetServer implements Server {
 
 	/**
@@ -197,7 +198,7 @@ public class NetServer implements Server {
 	@Override
 	public void close() throws IOException {
 		final ServerSocket[] allServers = servers.toArray(new ServerSocket[servers.size()]);
-		
+
 		for (ServerSocket server : allServers) {
 			try {
 				server.close();

@@ -18,14 +18,10 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <code>Function</code>
+ * <code>Flow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

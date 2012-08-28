@@ -31,6 +31,7 @@ import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
@@ -209,7 +210,6 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-
 	@Test
 	public void testSample03bis() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03bis_2.xml");
@@ -250,7 +250,6 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-
 	@Test
 	public void testSample03ter() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03ter_2.xml");
@@ -287,6 +286,45 @@ public class TestEcosystemFactory extends TestCase {
 			assertEquals("RESENT-3 " + message, response.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	public void testSample04() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample04_2.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
+
+			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
+			final DataReceiverAdapter<byte[]> dataReceiver = new DataReceiverAdapter<byte[]>() {
+				@Override
+				public void receiveData(byte[] data) throws DataHandlerException {
+					futureResponse.setValue(data);
+				}
+			};
+
+			final DataSenderFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
+			final DataSender<byte[]> sender = binder.create(dataReceiver);
+
+			final String message = "Hello, World!";
+			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
+			final PayLoadTransducerFactory payload = new PayLoadTransducerFactory();
+			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
+
+			assertEquals(1, transformed.size());
+			sender.sendData(transformed.get(0));
+
+			final byte[] received = futureResponse.get(10, TimeUnit.SECONDS);
+			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
+
+			assertEquals(1, response.size());
+
+			assertEquals(message, response.get(0));
+		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 	}
