@@ -49,10 +49,11 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
@@ -72,7 +73,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * 
 	 */
-	private final DataSenderFactory<String, String> factory;
+	private final UpStreamDataHandlerFactory<String, String> factory;
 
 	/**
 	 * 
@@ -87,14 +88,14 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * 
 	 */
-	private DataSender<String> receiver;
+	private UpStreamDataHandler<String> receiver;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param ecosystem2
 	 */
-	public HTTPRequestHandlerImpl(DataSenderFactory<String, String> factory, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(UpStreamDataHandlerFactory<String, String> factory, WebServerPage serverPage) {
 		this.factory = factory;
 		this.serverPage = serverPage;
 	}
@@ -152,18 +153,17 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	}
 
 	@Override
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataHandlerException,
-			IOException {
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataHandlerException, DataHandlerCloseException {
 		// Check for closing frame
 		if (frame instanceof CloseWebSocketFrame) {
 			this.handshaker.close(context.getChannel(), (CloseWebSocketFrame) frame);
 			this.handshaker = null;
-			this.receiver.close();
+			this.receiver.handleClose();
 		} else if (frame instanceof PingWebSocketFrame) {
 			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
 		} else if (frame instanceof TextWebSocketFrame) {
 			final String request = ((TextWebSocketFrame) frame).getText();
-			this.receiver.sendData(request);
+			this.receiver.handleData(request);
 		} else {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
@@ -185,22 +185,27 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param context
 	 * @return
 	 */
-	private DataReceiver<String> createReceiver(final ChannelHandlerContext context) {
+	private DownStreamDataHandler<String> createReceiver(final ChannelHandlerContext context) {
 		assert handshaker != null;
 
-		return new DataReceiver<String>() {
+		return new DownStreamDataHandler<String>() {
 			@Override
 			public String toString() {
 				return "Web Socket " + context.getName();
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void handleClose() throws DataHandlerCloseException {
 				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
 			}
 
 			@Override
-			public void receiveData(String data) throws DataHandlerException {
+			public void handleLost() throws DataHandlerCloseException {
+				handleClose();
+			}
+
+			@Override
+			public void handleData(String data) throws DataHandlerException {
 				sendWebSocketFrame(context, new TextWebSocketFrame(data));
 			}
 		};
@@ -211,7 +216,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @return
 	 */
 	private ChannelFutureListener createListener(ChannelHandlerContext context) {
-		final DataReceiver<String> emitter = createReceiver(context);
+		final DownStreamDataHandler<String> emitter = createReceiver(context);
 
 		return new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {

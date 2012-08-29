@@ -50,7 +50,9 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.pipeline.identity.IdentityComponent;
 import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
@@ -77,6 +79,8 @@ import org.wolfgang.contrail.ecosystem.model.RouterModel;
 import org.wolfgang.contrail.ecosystem.model.ServerModel;
 import org.wolfgang.contrail.ecosystem.model.TerminalModel;
 import org.wolfgang.contrail.event.Event;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -92,7 +96,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 @SuppressWarnings("rawtypes")
 public final class EcosystemFactoryImpl implements ContextFactory {
 
-	private static class DataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
+	private static class DataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U, D> {
 		private final EcosystemFactoryImpl ecosystemFactory;
 		private final Item[] items;
 
@@ -108,11 +112,11 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		@Override
-		public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
+		public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataSenderException {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 				ecosystemFactory.create(initialComponent, items);
-				return new DataInitialSender<U>(initialComponent);
+				return new InitialUpStreamDataHandler<U>(initialComponent);
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataSenderException(e);
 			} catch (ComponentConnectionRejectedException e) {
@@ -377,14 +381,14 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 
 							routerComponent.filter(terminalTransducer.getComponentId(), this.getReferenceToUse());
 
-							final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
+							final UpStreamDataHandlerFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 								@Override
-								public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+								public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataSenderException {
 									// Initial component
 									final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 									try {
 										componentLinkManager.connect(initial, initialTransducer);
-										return new DataInitialSender<byte[]>(initial);
+										return new InitialUpStreamDataHandler<byte[]>(initial);
 									} catch (ComponentConnectionRejectedException e) {
 										throw new CannotCreateDataSenderException(e);
 									}
@@ -436,15 +440,15 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			final PipelineComponent initialTransducer = new IdentityComponent();
 			final Component terminalTransducer = create(initialTransducer, flow);
 
-			final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
+			final UpStreamDataHandlerFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+				public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataSenderException {
 					// Initial component
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 					try {
 						componentLinkManager.connect(initial, initialTransducer);
-						return new DataInitialSender<byte[]>(initial);
+						return new InitialUpStreamDataHandler<byte[]>(initial);
 					} catch (ComponentConnectionRejectedException e) {
 						throw new CannotCreateDataSenderException(e);
 					}

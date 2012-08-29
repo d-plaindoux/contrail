@@ -31,6 +31,7 @@ import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -46,7 +47,7 @@ public class TestConcurrentComponent extends TestCase {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DataReceiverAdapter<Integer>());
+		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataHandlerAdapter<Integer>());
 		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new DataReceiverAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
@@ -88,12 +89,14 @@ public class TestConcurrentComponent extends TestCase {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DataReceiverAdapter<Integer>() {
+		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataHandlerAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
 			@Override
-			public synchronized void receiveData(Integer data) throws DataHandlerException {
+			public synchronized void handleData(Integer data) throws DataHandlerException {
+				super.handleData(data);
+
 				responses[location++] = data;
 
 				if (location == responses.length) {

@@ -32,7 +32,8 @@ import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 
 /**
- * The <code>InitialComponent</code> is capable to send event in the framework.
+ * The <code>InitialComponent</code> is capable to send only event in the
+ * framework.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -59,20 +60,20 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DataReceiver<D> receiver) {
+	public InitialComponent(final DownStreamDataHandler<D> receiver) {
 		super();
-		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(receiver);
+		this.downStreamDataHandler = receiver;
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param dataFactory
-	 *            The initial data receiver factory
+	 * @param receiver
+	 *            The initial data receiver
 	 */
-	public InitialComponent(final DataReceiverFactory<D, U> dataFactory) {
+	public InitialComponent(final DownStreamDataHandlerFactory<U, D> receiver) {
 		super();
-		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(new DataInitialSender<U>(this)));
+		this.downStreamDataHandler = receiver.create(new InitialUpStreamDataHandler<U>(this));
 	}
 
 	/**

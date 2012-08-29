@@ -74,5 +74,4 @@ class DownStreamDataReceiverHandler<E> implements DownStreamDataHandler<E> {
 	public void handleLost() {
 		this.closed = true;
 	}
-
 }

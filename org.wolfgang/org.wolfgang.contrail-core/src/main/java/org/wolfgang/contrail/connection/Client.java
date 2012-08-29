@@ -24,6 +24,7 @@ import java.net.URI;
 
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 
 /**
  * <code>Client</code>
@@ -45,6 +46,6 @@ public interface Client extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataSenderException
 	 */
-	Worker connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException;
+	Worker connect(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException;
 
 }

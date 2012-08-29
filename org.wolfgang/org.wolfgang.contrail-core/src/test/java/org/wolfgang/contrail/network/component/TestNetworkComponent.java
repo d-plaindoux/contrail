@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.network.component;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -29,11 +28,11 @@ import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
@@ -48,13 +47,17 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 public class TestNetworkComponent extends TestCase {
 
 	private SourceComponent<Event, Event> getSourceComponent() {
-		return new InitialComponent<Event, Event>(new DataReceiver<Event>() {
+		return new InitialComponent<Event, Event>(new DownStreamDataHandler<Event>() {
 			@Override
-			public void close() throws IOException {
+			public void handleClose() {
 			}
 
 			@Override
-			public void receiveData(Event data) throws DataHandlerException {
+			public void handleLost() {
+			}
+
+			@Override
+			public void handleData(Event data) throws DataHandlerException {
 			}
 		});
 	}

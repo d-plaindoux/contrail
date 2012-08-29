@@ -35,13 +35,14 @@ import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.Worker;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -105,7 +106,7 @@ public class NetClient implements Client {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataSenderException
 	 */
-	public Worker connect(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+	public Worker connect(final URI uri, final UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
@@ -117,9 +118,9 @@ public class NetClient implements Client {
 			throw new CannotCreateClientException(e);
 		}
 
-		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
 			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataHandlerException {
 				try {
 					client.getOutputStream().write(data);
 					client.getOutputStream().flush();
@@ -129,18 +130,27 @@ public class NetClient implements Client {
 			}
 
 			@Override
-			public void close() throws IOException {
-				client.close();
+			public void handleClose() throws DataHandlerCloseException {
+				try {
+					client.close();
+				} catch (IOException e) {
+					throw new DataHandlerCloseException(e);
+				}
+			}
+
+			@Override
+			public void handleLost() throws DataHandlerCloseException {
+				handleClose();
 			}
 		};
 
-		final DataSender<byte[]> dataSender;
+		final UpStreamDataHandler<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
 		} catch (CannotCreateDataSenderException e) {
 			try {
-				dataReceiver.close();
-			} catch (IOException consume) {
+				dataReceiver.handleClose();
+			} catch (DataHandlerCloseException consume) {
 				// Ignore
 			}
 			throw new CannotCreateClientException(e);
@@ -153,11 +163,11 @@ public class NetClient implements Client {
 				try {
 					int len = client.getInputStream().read(buffer);
 					while (len != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
+						dataSender.handleData(Arrays.copyOf(buffer, len));
 						len = client.getInputStream().read(buffer);
 					}
 				} finally {
-					dataSender.close();
+					dataSender.handleClose();
 					client.close();
 					clients.remove(client);
 				}

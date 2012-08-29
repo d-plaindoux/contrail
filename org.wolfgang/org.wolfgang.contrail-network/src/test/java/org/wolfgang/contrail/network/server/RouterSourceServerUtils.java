@@ -27,11 +27,9 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionFactory;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
@@ -46,6 +44,8 @@ import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.event.Event;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -84,14 +84,14 @@ class RouterSourceServerUtils extends TestCase {
 
 					component.filter(coercionTransducer.getComponentId(), this.getReferenceToUse());
 
-					final DataSenderFactory<byte[], byte[]> factory = new DataSenderFactory<byte[], byte[]>() {
+					final UpStreamDataHandlerFactory<byte[], byte[]> factory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 						@Override
-						public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
+						public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataSenderException {
 							// Initial component
 							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 							try {
 								componentLinkManager.connect(initial, payLoadTransducer);
-								return new DataInitialSender<byte[]>(initial);
+								return new InitialUpStreamDataHandler<byte[]>(initial);
 							} catch (ComponentConnectionRejectedException e) {
 								throw new CannotCreateDataSenderException(e);
 							}
@@ -119,10 +119,10 @@ class RouterSourceServerUtils extends TestCase {
 		component.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static DataSenderFactory<byte[], byte[]> serverBinder(final RouterComponent component, final ComponentLinkManagerImpl componentLinkManager) {
-		return new DataSenderFactory<byte[], byte[]>() {
+	static UpStreamDataHandlerFactory<byte[], byte[]> serverBinder(final RouterComponent component, final ComponentLinkManagerImpl componentLinkManager) {
+		return new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataSender<byte[]> create(DataReceiver<byte[]> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> receiver) throws CannotCreateDataSenderException {
 				try {
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
@@ -153,7 +153,7 @@ class RouterSourceServerUtils extends TestCase {
 
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
 					componentLinkManager.connect(initial, payLoadTransducer);
-					return new DataInitialSender<byte[]>(initial);
+					return new InitialUpStreamDataHandler<byte[]>(initial);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				} catch (Exception e) {

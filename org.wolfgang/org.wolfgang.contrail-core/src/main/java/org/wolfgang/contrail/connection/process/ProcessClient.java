@@ -31,13 +31,14 @@ import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.Worker;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>ProcessClient</code> provides a client implementation using
@@ -84,7 +85,7 @@ public class ProcessClient implements Client {
 	}
 
 	@Override
-	public Worker connect(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+	public Worker connect(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException {
 		final Process client;
 		try {
 			// TODO for the SSH
@@ -93,9 +94,9 @@ public class ProcessClient implements Client {
 			throw new CannotCreateClientException(e);
 		}
 
-		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
 			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataHandlerException {
 				try {
 					client.getOutputStream().write(data);
 					client.getOutputStream().flush();
@@ -105,18 +106,23 @@ public class ProcessClient implements Client {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void handleClose() throws DataHandlerCloseException {
 				client.destroy();
+			}
+
+			@Override
+			public void handleLost() throws DataHandlerCloseException {
+				handleClose();
 			}
 		};
 
-		final DataSender<byte[]> dataSender;
+		final UpStreamDataHandler<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
 		} catch (CannotCreateDataSenderException e) {
 			try {
-				dataReceiver.close();
-			} catch (IOException consume) {
+				dataReceiver.handleClose();
+			} catch (DataHandlerCloseException consume) {
 				// Ignore
 			}
 			throw new CannotCreateClientException(e);
@@ -129,11 +135,11 @@ public class ProcessClient implements Client {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = client.getInputStream().read(buffer)) != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
+						dataSender.handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
 				} catch (Exception e) {
-					dataSender.close();
+					dataSender.handleClose();
 					throw e;
 				}
 			}

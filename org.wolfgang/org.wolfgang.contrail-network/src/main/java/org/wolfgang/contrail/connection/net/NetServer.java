@@ -37,13 +37,15 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>NetworkServer</code> provides a server implementation using
@@ -100,7 +102,7 @@ public class NetServer implements Server {
 		super();
 	}
 
-	public Worker bind(final URI uri, final DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(final URI uri, final UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
@@ -121,9 +123,9 @@ public class NetServer implements Server {
 						// Check executor.getActiveCount() in order to prevent
 						// DoS
 
-						final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+						final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
 							@Override
-							public void receiveData(byte[] data) throws DataHandlerException {
+							public void handleData(byte[] data) throws DataHandlerException {
 								try {
 									client.getOutputStream().write(data);
 									client.getOutputStream().flush();
@@ -133,12 +135,21 @@ public class NetServer implements Server {
 							}
 
 							@Override
-							public void close() throws IOException {
-								client.close();
+							public void handleClose() throws DataHandlerCloseException {
+								try {
+									client.close();
+								} catch (IOException e) {
+									throw new DataHandlerCloseException(e);
+								}
+							}
+
+							@Override
+							public void handleLost() throws DataHandlerCloseException {
+								handleClose();
 							}
 						};
 
-						final DataSender<byte[]> dataSender = factory.create(dataReceiver);
+						final UpStreamDataHandler<byte[]> dataSender = factory.create(dataReceiver);
 
 						final Callable<Void> reader = new Callable<Void>() {
 							@Override
@@ -147,12 +158,12 @@ public class NetServer implements Server {
 								try {
 									int len = client.getInputStream().read(buffer);
 									while (len != -1) {
-										dataSender.sendData(Arrays.copyOf(buffer, len));
+										dataSender.handleData(Arrays.copyOf(buffer, len));
 										len = client.getInputStream().read(buffer);
 									}
 									return null;
 								} catch (Exception e) {
-									dataSender.close();
+									dataSender.handleClose();
 									throw e;
 								}
 							}

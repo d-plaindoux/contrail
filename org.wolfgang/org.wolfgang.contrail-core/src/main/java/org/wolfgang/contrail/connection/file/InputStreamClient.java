@@ -31,10 +31,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>FileClient</code> provides a client implementation using standard
@@ -54,7 +55,7 @@ public class InputStreamClient implements Closeable {
 	/**
 	 * Data sender factory
 	 */
-	private final DataSenderFactory<byte[], byte[]> factory;
+	private final UpStreamDataHandlerFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("File.Client");
@@ -75,7 +76,7 @@ public class InputStreamClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public InputStreamClient(DataSenderFactory<byte[], byte[]> factory) {
+	public InputStreamClient(UpStreamDataHandlerFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
@@ -88,20 +89,7 @@ public class InputStreamClient implements Closeable {
 	 * @throws CannotCreateDataSenderException
 	 */
 	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataSenderException {
-
-		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
-			@Override
-			public void close() throws IOException {
-				// Nothing
-			}
-
-			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
-				// Nothing
-			}
-		};
-
-		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
+		final UpStreamDataHandler<byte[]> dataSender = this.factory.create(new DownStreamDataHandlerAdapter<byte[]>());
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
@@ -110,7 +98,7 @@ public class InputStreamClient implements Closeable {
 				try {
 					int len = inputStream.read(buffer);
 					while (len != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
+						dataSender.handleData(Arrays.copyOf(buffer, len));
 						len = inputStream.read(buffer);
 					}
 					return null;

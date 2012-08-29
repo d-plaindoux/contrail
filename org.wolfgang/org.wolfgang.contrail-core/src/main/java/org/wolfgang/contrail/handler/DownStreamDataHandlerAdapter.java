@@ -16,10 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.handler;
+
 /**
- * <code>package-info</code>
- *
+ * <code>DownStreamDataHandlerAdapter</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.bound.gateway;
+public class DownStreamDataHandlerAdapter<D> implements DownStreamDataHandler<D> {
+
+	private boolean closed;
+
+	{
+		this.closed = false;
+	}
+
+	@Override
+	public void handleData(D data) throws DataHandlerException {
+		if (closed) {
+			throw new DownStreamDataHandlerClosedException();
+		}
+	}
+
+	@Override
+	public void handleClose() {
+		this.closed = true;
+	}
+
+	@Override
+	public void handleLost() {
+		this.closed = true;
+	}
+
+}

@@ -31,13 +31,13 @@ import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * The <code>ProcessHandler</code> provides a client process handler
@@ -58,7 +58,7 @@ public class ProcessHandler implements Server {
 	/**
 	 * The data sender factory
 	 */
-	private final DataSenderFactory<byte[], byte[]> factory;
+	private final UpStreamDataHandlerFactory<byte[], byte[]> factory;
 
 	{
 		executor = Executors.newSingleThreadExecutor();
@@ -70,64 +70,9 @@ public class ProcessHandler implements Server {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(DataSenderFactory<byte[], byte[]> factory) {
+	public ProcessHandler(UpStreamDataHandlerFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
-	}
-
-	/**
-	 * Method called whether a client connection must be performed
-	 * 
-	 * @param command
-	 *            The command to be executed
-	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
-	 */
-	public void connect() throws IOException, CannotCreateDataSenderException {
-
-		final InputStream input = System.in;
-		final OutputStream output = System.out;
-
-		// TODO -- System.setIn(?);
-		// TODO -- System.setOut(?);
-
-		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
-			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
-				try {
-					output.write(data);
-					output.flush();
-				} catch (IOException e) {
-					throw new DataHandlerException(e);
-				}
-			}
-
-			@Override
-			public void close() throws IOException {
-				System.exit(0); // End of the process
-			}
-		};
-
-		final DataSender<byte[]> dataSender = this.factory.create(dataReceiver);
-
-		final Callable<Void> reader = new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				try {
-					final byte[] buffer = new byte[1024 * 8];
-					int len;
-					while ((len = input.read(buffer)) != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
-					}
-					return null;
-				} catch (Exception e) {
-					dataSender.close();
-					throw e;
-				}
-			}
-		};
-
-		executor.submit(reader);
 	}
 
 	@Override
@@ -136,7 +81,7 @@ public class ProcessHandler implements Server {
 	}
 
 	@Override
-	public Worker bind(URI uri, DataSenderFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException {
 
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
@@ -144,9 +89,9 @@ public class ProcessHandler implements Server {
 		// TODO -- System.setIn(?);
 		// TODO -- System.setOut(?);
 
-		final DataReceiver<byte[]> dataReceiver = new DataReceiver<byte[]>() {
+		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
 			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataHandlerException {
 				try {
 					output.write(data);
 					output.flush();
@@ -156,12 +101,17 @@ public class ProcessHandler implements Server {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void handleClose() {
 				System.exit(0); // End of the process
+			}
+
+			@Override
+			public void handleLost() {
+				handleClose();
 			}
 		};
 
-		final DataSender<byte[]> dataSender;
+		final UpStreamDataHandler<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
 		} catch (CannotCreateDataSenderException e) {
@@ -175,11 +125,11 @@ public class ProcessHandler implements Server {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = input.read(buffer)) != -1) {
-						dataSender.sendData(Arrays.copyOf(buffer, len));
+						dataSender.handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
 				} catch (Exception e) {
-					dataSender.close();
+					dataSender.handleClose();
 					throw e;
 				}
 			}

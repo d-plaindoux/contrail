@@ -21,11 +21,12 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * <code>ByteArraySourceComponent</code> is a simple upstream source component.
@@ -39,11 +40,11 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 	 * Constructor
 	 */
 	public ByteArraySourceComponent(final OutputStream outputStream) {
-		super(new DataReceiverFactory<byte[], byte[]>() {
+		super(new DownStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(DataSender<byte[]> initial) {
-				return new DataReceiver<byte[]>() {
-					public void receiveData(byte[] data) throws DataHandlerException {
+			public DownStreamDataHandler<byte[]> create(UpStreamDataHandler<byte[]> initial) {
+				return new DownStreamDataHandler<byte[]>() {
+					public void handleData(byte[] data) throws DataHandlerException {
 						try {
 							outputStream.write(data);
 						} catch (IOException e) {
@@ -52,8 +53,17 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 					}
 
 					@Override
-					public void close() throws IOException {
-						outputStream.close();
+					public void handleClose() throws DataHandlerCloseException {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							throw new DataHandlerCloseException(e);
+						}
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						handleClose();
 					}
 				};
 			}

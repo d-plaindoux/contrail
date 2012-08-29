@@ -33,14 +33,17 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -92,9 +95,9 @@ public class TestFileClient extends TestCase {
 			}
 		};
 
-		final DataSenderFactory<byte[], byte[]> destinationComponentFactory = new DataSenderFactory<byte[], byte[]>() {
+		final UpStreamDataHandlerFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataSender<byte[]> create(DataReceiver<byte[]> initialReceiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> initialReceiver) throws CannotCreateDataSenderException {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiver);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -103,7 +106,7 @@ public class TestFileClient extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				}
-				return new DataInitialSender<byte[]>(initialComponent);
+				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
 			}
 		};
 
@@ -123,7 +126,7 @@ public class TestFileClient extends TestCase {
 	}
 
 	@Test
-	public void testNominal02() throws IOException, CannotCreateDataSenderException, InterruptedException, ExecutionException, DataHandlerException {
+	public void testNominal02() throws IOException, CannotCreateDataSenderException, InterruptedException, ExecutionException, DataHandlerException, DataHandlerCloseException {
 		final File input = new File("src/test/Sample.txt");
 		final File output = new File("src/test/Sample.txt.out");
 
@@ -149,9 +152,9 @@ public class TestFileClient extends TestCase {
 			}
 		};
 
-		final DataSenderFactory<byte[], byte[]> destinationComponentFactory = new DataSenderFactory<byte[], byte[]>() {
+		final UpStreamDataHandlerFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataSender<byte[]> create(DataReceiver<byte[]> initialReceiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> initialReceiver) throws CannotCreateDataSenderException {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiverFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -160,7 +163,7 @@ public class TestFileClient extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				}
-				return new DataInitialSender<byte[]>(initialComponent);
+				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
 			}
 		};
 

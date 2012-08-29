@@ -34,6 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -54,9 +55,10 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>() {
 			@Override
-			public void receiveData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataHandlerException {
+				super.handleData(data);
 				sourceFuture.setValue(data);
 			}
 		});
@@ -88,7 +90,7 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>());
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>());
 		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>());

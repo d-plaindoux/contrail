@@ -34,10 +34,15 @@ import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -70,9 +75,9 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final DataSenderFactory<String, String> destinationComponentFactory = new DataSenderFactory<String, String>() {
+		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
-			public DataSender<String> create(DataReceiver<String> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataSenderException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -81,7 +86,7 @@ public class TestComponentEcosystem extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				}
-				return new DataInitialSender<String>(initialComponent);
+				return new InitialUpStreamDataHandler<String>(initialComponent);
 			}
 		};
 
@@ -89,23 +94,19 @@ public class TestComponentEcosystem extends TestCase {
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 
-		final DataReceiver<String> receiver = new DataReceiver<String>() {
+		final DownStreamDataHandlerAdapter<String> receiver = new DownStreamDataHandlerAdapter<String>() {
 			@Override
-			public void receiveData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataHandlerException {
+				super.handleData(data);
 				stringReference.set(data);
-			}
-
-			@Override
-			public void close() throws IOException {
-				// Nothing
 			}
 		};
 
 		final UnitEcosystemKey namedKey = EcosystemKeyFactory.named("test");
-		final DataSender<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
+		final UpStreamDataHandler<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
 		final String message = "Hello, World!";
 
-		createInitial.sendData(message);
+		createInitial.handleData(message);
 
 		assertEquals(message, stringReference.get());
 

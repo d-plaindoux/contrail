@@ -24,18 +24,20 @@ import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -53,8 +55,8 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(String host, int port, DataSenderFactory<String, String> factory) {
-		super(host, port, new WebServerPipelineFactory(factory));
+	public WebServer(String host, int port, UpStreamDataHandlerFactory<String, String> upStreamDataHandlerFactory) {
+		super(host, port, new WebServerPipelineFactory(upStreamDataHandlerFactory));
 	}
 
 	/**
@@ -100,10 +102,10 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		final DataSenderFactory<String, String> destinationComponentFactory = new DataSenderFactory<String, String>() {
+		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
 
 			@Override
-			public DataSender<String> create(DataReceiver<String> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataSenderException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -112,7 +114,7 @@ public final class WebServer extends NIOServer {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				}
-				return new DataInitialSender<String>(initialComponent);
+				return new InitialUpStreamDataHandler<String>(initialComponent);
 			}
 		};
 

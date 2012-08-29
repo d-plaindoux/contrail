@@ -20,12 +20,12 @@ package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * <code>DataSenderFactoryImpl</code> is dedicated to the binder mechanism
@@ -34,7 +34,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class BinderDataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
+class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U, D> {
 	private final EcosystemFactoryImpl factory;
 	private final CodeValue flow;
 
@@ -50,11 +50,11 @@ class BinderDataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 	}
 
 	@Override
-	public DataSender<U> create(DataReceiver<D> receiver) throws CannotCreateDataSenderException {
+	public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataSenderException {
 		try {
 			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 			factory.create(initialComponent, flow);
-			return new DataInitialSender<U>(initialComponent);
+			return new InitialUpStreamDataHandler<U>(initialComponent);
 		} catch (CannotCreateComponentException e) {
 			throw new CannotCreateDataSenderException(e);
 		} catch (EcosystemBuilderException e) {

@@ -16,36 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.connection;
+package org.wolfgang.contrail.component.bound;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
-
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
- * <code>Client</code>
+ * <code>DataHandlerFactory</code> is capable to build data sender.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Server extends Closeable {
+public interface DownStreamDataHandlerFactory<U, D> {
 
 	/**
-	 * Method called whether a client connection must be established . For this
-	 * purpose an URI is given and the data sender factory is also used.
+	 * Method called whether a data receiver shall be built for a given
+	 * component
 	 * 
-	 * @param uri
-	 *            The uniform resource information
-	 * @param factory
-	 *            The data sender factory
-	 * @return a future denoting the connection liveness
-	 * @throws IOException
+	 * @param component
+	 *            The component used to build the data sender
+	 * @return a data sender (Never <code>null</code>)
 	 * @throws CannotCreateDataSenderException
+	 *             if the data sender cannot be correctly created
 	 */
-	Worker bind(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException;
+	DownStreamDataHandler<D> create(UpStreamDataHandler<U> component);
 
 }
