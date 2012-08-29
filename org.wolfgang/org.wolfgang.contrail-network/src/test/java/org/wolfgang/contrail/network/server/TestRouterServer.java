@@ -35,6 +35,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.router.RouterComponent;
@@ -91,7 +92,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal01Direct() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException {
+			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 
@@ -114,13 +115,13 @@ public class TestRouterServer extends TestCase {
 
 		final String content = "Hello , World from Client01!";
 		final EventImpl event01 = new EventImpl(content, reference01);
-		terminalComponent01.getDataSender().sendData(event01);
+		terminalComponent01.getDownStreamDataHandler().handleData(event01);
 		assertEquals(reference01 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 	}
 
 	@Test
 	public void testNominal02Relay() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
+			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -169,7 +170,7 @@ public class TestRouterServer extends TestCase {
 		for (int i = 0; i < 2; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
 			final EventImpl event01 = new EventImpl(content, reference02);
-			terminalComponent01.getDataSender().sendData(event01);
+			terminalComponent01.getDownStreamDataHandler().handleData(event01);
 			assertEquals(reference02 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 			futureResponse.set(new FutureResponse<String>());
 		}
@@ -182,7 +183,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal02ComplexPath() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
+			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -231,7 +232,7 @@ public class TestRouterServer extends TestCase {
 		for (int i = 0; i < 2; i++) {
 			final String content = "Hello , World from Client01! [" + i + "]";
 			final EventImpl event01 = new EventImpl(content, reference01, reference02);
-			terminalComponent01.getDataSender().sendData(event01);
+			terminalComponent01.getDownStreamDataHandler().handleData(event01);
 			assertEquals(reference02 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 			futureResponse.set(new FutureResponse<String>());
 		}
@@ -244,7 +245,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal03ComplexPath() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
+			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -299,17 +300,17 @@ public class TestRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
-		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference02, reference03));
+		terminalComponent01.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client01!", reference02, reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and reuse opened connections ...		
-		terminalComponent03.getDataSender().sendData(new EventImpl("Hello , World from Client03!", reference02, reference01));
+		terminalComponent03.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client03!", reference02, reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------
@@ -320,7 +321,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal03Transitive() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException {
+			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -377,18 +378,18 @@ public class TestRouterServer extends TestCase {
 		// Send simple events
 		// ------------------------------------------------------------------------------------------------
 
-		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Same but reuse opened connections ...
-		terminalComponent01.getDataSender().sendData(new EventImpl("Hello , World from Client01!", reference03));
+		terminalComponent01.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client01!", reference03));
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
 		// Reverse and Reuse already opened connections ...
 
-		terminalComponent03.getDataSender().sendData(new EventImpl("Hello , World from Client03!", reference01));
+		terminalComponent03.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client03!", reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 
 		// ------------------------------------------------------------------------------------------------

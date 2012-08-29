@@ -84,7 +84,7 @@ public class TestConcurrentComponent extends TestCase {
 	}
 
 	@Test
-	public void testConcurrent02() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
+	public void testConcurrent02() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -114,7 +114,7 @@ public class TestConcurrentComponent extends TestCase {
 		for (int i = 0; i < iterations; i++) {
 			int value = random.nextInt(1024);
 			total1 += value;
-			terminalComponent.getDataSender().sendData(value);
+			terminalComponent.getDownStreamDataHandler().handleData(value);
 		}
 
 		final int[] response = responseFuture.get();

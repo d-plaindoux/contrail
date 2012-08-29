@@ -55,7 +55,7 @@ public class DataTerminalSender<E> implements DataSender<E> {
 	 */
 	public void sendData(E data) throws DataHandlerException {
 		try {
-			this.component.getDowntreamDataHandler().handleData(data);
+			this.component.getDownStreamDataHandler().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataHandlerException(e);
 		}
@@ -64,7 +64,7 @@ public class DataTerminalSender<E> implements DataSender<E> {
 	@Override
 	public void close() throws IOException {
 		try {
-			component.getDowntreamDataHandler().handleClose();
+			component.getDownStreamDataHandler().handleClose();
 		} catch (ComponentNotConnectedException e) {
 			throw new IOException(e);
 		} catch (DataHandlerCloseException e) {

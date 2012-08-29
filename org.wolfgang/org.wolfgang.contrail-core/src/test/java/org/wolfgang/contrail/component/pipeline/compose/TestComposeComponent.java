@@ -74,7 +74,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(initialComponent, composedComponent);
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
 
-		terminalComponent.getDataSender().sendData(source);
+		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
@@ -82,7 +82,7 @@ public class TestComposeComponent extends TestCase {
 
 	@SuppressWarnings("rawtypes")
 	@Test
-	public void testFailure01() throws ComponentConnectionRejectedException {
+	public void testFailure01() throws ComponentConnectionRejectedException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
@@ -97,7 +97,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
 
 		try {
-			terminalComponent.getDataSender().sendData(source);
+			terminalComponent.getDownStreamDataHandler().handleData(source);
 			fail();
 		} catch (DataHandlerException e) {
 			assertEquals(ClassCastException.class, e.getCause().getClass());

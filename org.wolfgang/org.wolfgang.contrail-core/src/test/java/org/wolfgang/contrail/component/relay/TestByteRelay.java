@@ -73,8 +73,8 @@ public class TestByteRelay extends TestCase {
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeUpStream();
-			destination.getDataSender().sendData("Hello,".getBytes());
-			destination.getDataSender().sendData(" World!".getBytes());
+			destination.getDownStreamDataHandler().handleData("Hello,".getBytes());
+			destination.getDownStreamDataHandler().handleData(" World!".getBytes());
 
 			interconnection.dispose();
 		} finally {

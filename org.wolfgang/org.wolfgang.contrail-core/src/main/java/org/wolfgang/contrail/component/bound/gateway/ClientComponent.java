@@ -24,6 +24,7 @@ import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.annotation.ContrailType;
+import org.wolfgang.contrail.component.bound.DataTerminalSender;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
@@ -59,7 +60,7 @@ public class ClientComponent extends TerminalComponent<byte[], byte[]> {
 	 */
 	private ClientComponent(ClientReceiver receiver) {
 		super(receiver);
-		receiver.setComponentSender(this.getDataSender());
+		receiver.setComponentSender(new DataTerminalSender<byte[]>(this));
 	}
 
 }

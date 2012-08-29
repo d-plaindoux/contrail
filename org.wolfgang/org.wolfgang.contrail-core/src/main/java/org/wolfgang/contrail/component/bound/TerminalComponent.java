@@ -46,26 +46,12 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	private SourceComponentLink<U, D> sourceComponentLink;
 
 	/**
-	 * The data injection mechanism
-	 */
-	private final DataSender<D> dataEmitter;
-
-	/**
 	 * The internal down stream data handler
 	 */
 	private final UpStreamDataHandler<U> upstreamDataHandler;
 
 	{
 		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
-	}
-
-	/**
-	 * Provides the local data sender
-	 * 
-	 * @return a data sender (never <code>null</code>)
-	 */
-	private DataSender<D> getLocalDataSender() {
-		return new DataTerminalSender<D>(this);
 	}
 
 	/**
@@ -77,7 +63,6 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	public TerminalComponent(final DataReceiver<U> receiver) {
 		super();
 
-		this.dataEmitter = this.getLocalDataSender();
 		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(receiver);
 	}
 
@@ -90,8 +75,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	public TerminalComponent(final DataReceiverFactory<U, D> dataFactory) {
 		super();
 
-		this.dataEmitter = this.getLocalDataSender();
-		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(this.dataEmitter));
+		this.upstreamDataHandler = new UpStreamDataReceiverHandler<U>(dataFactory.create(new DataTerminalSender<D>(this)));
 	}
 
 	/**
@@ -101,7 +85,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	protected DownStreamDataHandler<D> getDowntreamDataHandler() throws ComponentNotConnectedException {
+	public DownStreamDataHandler<D> getDownStreamDataHandler() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -141,17 +125,6 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	@Override
 	public UpStreamDataHandler<U> getUpStreamDataHandler() {
 		return this.upstreamDataHandler;
-	}
-
-	/**
-	 * Method called whether the data injection mechanism is required
-	 * 
-	 * @return the data injection mechanism
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
-	 */
-	public DataSender<D> getDataSender() {
-		return this.dataEmitter;
 	}
 
 	@Override
