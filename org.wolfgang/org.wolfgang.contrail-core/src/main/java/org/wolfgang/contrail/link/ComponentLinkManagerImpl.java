@@ -21,11 +21,14 @@ package org.wolfgang.contrail.link;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * The <code>ComponentsLinkFactory</code> is used when components link must be
@@ -52,8 +55,15 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		// Nothing
 	}
 
-	@Override
-	public final <U, D> ComponentLinkImpl<U, D> connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
+	public final <U, D> ComponentLinkImpl<U, D> connect(Component source, Component destination) throws ComponentConnectionRejectedException {
+		if (source instanceof SourceComponent && destination instanceof DestinationComponent) {
+			return safe_connect((SourceComponent) source, (DestinationComponent) destination);
+		} else {
+			throw new ComponentConnectionRejectedException("TODO");
+		}
+	}
+
+	private final <U, D> ComponentLinkImpl<U, D> safe_connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
 
 		final ComponentLinkImpl<U, D> link = new ComponentLinkImpl<U, D>(this, source, destination) {
 			@Override

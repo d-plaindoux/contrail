@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.link;
 
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
@@ -43,7 +44,7 @@ public interface ComponentLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 *             Thrown if the connection cannot be performed
 	 */
-	<U, D> ComponentLink connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException;
+	<U, D> ComponentLink connect(Component source, Component destination) throws ComponentConnectionRejectedException;
 
 	/**
 	 * Method called to retrieve all sources connected to the identified

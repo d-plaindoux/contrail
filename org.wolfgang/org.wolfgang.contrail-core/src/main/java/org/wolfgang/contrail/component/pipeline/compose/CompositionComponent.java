@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.pipeline.compose;
 
 import java.io.IOException;
 
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.InitialComponent;
@@ -31,6 +31,7 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -126,17 +127,16 @@ public class CompositionComponent<U1, D1, U2, D2> extends AbstractPipelineCompon
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public CompositionComponent(PipelineComponent... pipelines) throws ComponentConnectionRejectedException {
+	public CompositionComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
-		assert pipelines.length > 0;
+		assert components.length > 0;
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		componentLinkManagerImpl.connect(initialComponent, pipelines[0]);
-		for (int i = 1; i < pipelines.length; i++) {
-			componentLinkManagerImpl.connect(pipelines[i - 1], pipelines[i]);
+		linkManager.connect(initialComponent, components[0]);
+		for (int i = 1; i < components.length; i++) {
+			linkManager.connect(components[i - 1], components[i]);
 		}
-		componentLinkManagerImpl.connect(pipelines[pipelines.length - 1], terminalComponent);
+		linkManager.connect(components[components.length - 1], terminalComponent);
 	}
 
 	@Override

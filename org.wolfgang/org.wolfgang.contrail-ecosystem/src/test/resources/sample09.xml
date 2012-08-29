@@ -32,15 +32,21 @@
 		</function>
 	</define>
 
-	<define name='ParallelSerializer'>
-		<ref>ParallelSource</ref>
-		<ref>Serialize</ref>
-		<ref>ParallelDestination</ref>
+	<define name='Parallel'>
+		<function>
+			<var>flow</var>
+			<ref>ParallelSource</ref>
+			<ref>flow</ref>
+			<ref>ParallelDestination</ref>
+		</function>
 	</define>
 
 	<define name='MainFlow'>
 		<ref>PayLoad</ref>
-		<ref>ParallelSerializer</ref>
+		<apply>
+			<ref>Parallel</ref>
+			<ref>Serialize</ref>
+		</apply>
 		<apply>
 			<ref>Coercion</ref>
 			<atom>java.lang.String</atom>

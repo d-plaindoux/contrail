@@ -77,12 +77,14 @@
 					<ref>TCPClient</ref>
 					<atom>tcp://localhost:6667</atom>
 				</apply>
+				<self />
 			</case>
 			<default>
 				<apply>
 					<ref>TCPClient</ref>
 					<string>tcp://localhost:6668</string>
 				</apply>
+				<self />
 			</default>
 		</switch>
 	</define>

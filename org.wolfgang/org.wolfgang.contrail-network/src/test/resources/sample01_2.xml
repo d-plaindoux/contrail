@@ -21,12 +21,14 @@
 	</define>
 
 	<start>
-		<apply>
+		<ref>Server</ref>
+		<atom>tcp://localhost:6666</atom>
+		<function>
+			<var>initial</var>
 			<apply>
-				<ref>Server</ref>
-				<atom>tcp://localhost:6666</atom>
+				<ref>initial</ref>
+				<ref>Echo</ref>
 			</apply>
-			<ref>Echo</ref>
-		</apply>
+		</function>
 	</start>
 </ecosystem>

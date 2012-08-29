@@ -23,6 +23,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
@@ -31,6 +32,7 @@ import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionFactory;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -134,13 +136,11 @@ class RouterSourceServerUtils extends TestCase {
 					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
 					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
-					final CompositionComponent<Bytes, Bytes, Bytes, Bytes> log01 = new CompositionComponent<Bytes, Bytes, Bytes, Bytes>(new LoggerSourceComponent<Bytes, Bytes>("01.UP"),
-							new LoggerDestinationComponent<Bytes, Bytes>("01.DOWN"));
+					final Component log01 = CompositionFactory.compose(componentLinkManager, new LoggerSourceComponent<Bytes, Bytes>("01.UP"), new LoggerDestinationComponent<Bytes, Bytes>("01.DOWN"));
 					componentLinkManager.connect(payLoadTransducer, log01);
 					componentLinkManager.connect(log01, serialisationTransducer);
 
-					final CompositionComponent<Object, Object, Object, Object> log02 = new CompositionComponent<Object, Object, Object, Object>(new LoggerSourceComponent<Object, Object>("02.UP"),
-							new LoggerDestinationComponent<Object, Object>("02.DOWN"));
+					final Component log02 = CompositionFactory.compose(componentLinkManager, new LoggerSourceComponent("02.UP"), new LoggerDestinationComponent("02.DOWN"));
 					componentLinkManager.connect(serialisationTransducer, log02);
 					componentLinkManager.connect(log02, coercionTransducer);
 
