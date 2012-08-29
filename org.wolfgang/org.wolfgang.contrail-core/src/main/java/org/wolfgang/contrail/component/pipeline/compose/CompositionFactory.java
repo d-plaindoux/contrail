@@ -20,6 +20,9 @@ package org.wolfgang.contrail.component.pipeline.compose;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
@@ -38,7 +41,21 @@ public final class CompositionFactory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static <A, B, C, D> CompositionComponent<A, B, C, D> compose(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
-		return new CompositionComponent<A, B, C, D>(linkManager, components);
+	public static Component compose(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+		if (components.length == 0) {
+			throw new ComponentConnectionRejectedException("TODO");
+		} else if (components.length == 1) {
+			return components[0];
+		} else if (components[0] instanceof PipelineComponent && components[components.length - 1] instanceof PipelineComponent) {
+			return new CompositionPipelineComponent(linkManager, components);
+		} else if (components[0] instanceof SourceComponent && components[components.length - 1] instanceof PipelineComponent) {
+			return new CompositionSourceComponent(linkManager, components);
+		} else if (components[0] instanceof PipelineComponent && components[components.length - 1] instanceof DestinationComponent) {
+			return new CompositionDestinationComponent(linkManager, components);
+		} else if (components[0] instanceof SourceComponent && components[components.length - 1] instanceof DestinationComponent) {
+			return new CompositionComponent(linkManager, components);
+		} else {
+			throw new ComponentConnectionRejectedException("TODO");
+		}
 	}
 }

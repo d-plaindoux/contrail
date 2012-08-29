@@ -31,7 +31,7 @@ import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionPipelineComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionFactory;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;

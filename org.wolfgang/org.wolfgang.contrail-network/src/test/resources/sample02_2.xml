@@ -16,9 +16,11 @@
 	</define>
 
 	<binder name='Main' typein="byte[]" typeout="byte[]">
-		<var>initial</var>
 		<ref>Client</ref>
 		<atom>tcp://localhost:6666</atom>
-		<ref>initial</ref>
+		<function>
+			<var>initial</var>
+			<ref>initial</ref>
+		</function>
 	</binder>
 </ecosystem>

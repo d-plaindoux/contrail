@@ -62,7 +62,7 @@ public class TestComposeComponent extends TestCase {
 		});
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final CompositionComponent<byte[], byte[], String, String> composedComponent = CompositionFactory.<byte[], byte[], String, String> compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>() {
 			@Override
@@ -89,7 +89,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DataReceiverAdapter<byte[]>());
-		final CompositionComponent<byte[], byte[], String, String> composedComponent = CompositionFactory.<byte[], byte[], String, String> compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>());
 
@@ -100,7 +100,6 @@ public class TestComposeComponent extends TestCase {
 			terminalComponent.getDataSender().sendData(source);
 			fail();
 		} catch (DataHandlerException e) {
-			e.printStackTrace();
 			assertEquals(ClassCastException.class, e.getCause().getClass());
 		}
 

@@ -20,11 +20,18 @@ package org.wolfgang.contrail.component.pipeline.compose;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * <code>ComposedPipelineComponent</code>
@@ -32,9 +39,9 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CompositionComponent extends AbstractComponent implements Component {
+public class CompositionDestinationComponent<U, D> extends AbstractComponent implements DestinationComponent<U, D> {
 
-	private final SourceComponent<?, ?> initialComponent;
+	private final PipelineComponent<U, D, ?, ?> initialComponent;
 	private final DestinationComponent<?, ?> terminalComponent;
 
 	/**
@@ -42,12 +49,13 @@ public class CompositionComponent extends AbstractComponent implements Component
 	 * 
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public CompositionComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	@SuppressWarnings("unchecked")
+	public CompositionDestinationComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;
 
-		initialComponent = (SourceComponent<?, ?>) components[0];
+		initialComponent = (PipelineComponent<U, D, ?, ?>) components[0];
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);
@@ -64,5 +72,20 @@ public class CompositionComponent extends AbstractComponent implements Component
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
 		this.terminalComponent.closeDownStream();
+	}
+
+	@Override
+	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+		return this.initialComponent.getUpStreamDataHandler();
+	}
+
+	@Override
+	public boolean acceptSource(ComponentId componentId) {
+		return this.initialComponent.acceptSource(componentId);
+	}
+
+	@Override
+	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
+		return this.initialComponent.connectSource(handler);
 	}
 }

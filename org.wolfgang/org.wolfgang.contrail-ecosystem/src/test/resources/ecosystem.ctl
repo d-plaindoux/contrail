@@ -12,10 +12,10 @@ import as Serialization org.wolfgang.contrail.component.pipeline.transducer.seri
 import as ParallelSource org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
 import as ParallelDestination org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
 
-define Parallel { s | ParallelSource s ParallelDestination }
-define TCPEvent { PayLoad (Parallel Serialization) (Coercion Event) }
-define Client   { uri station | ClientHandler uri (TCPEvent station) }
-define Server   { uri station | ServerHandler uri { _ | TCPEvent station } }
+define Parallel { s | ParallelSource <> s <> ParallelDestination }
+define TCPEvent { PayLoad <> Parallel Serialization <> Coercion Event }
+define Client   { uri station | ClientHandler uri { b | b <> TCPEvent <> station } }
+define Server   { uri station | ServerHandler uri { b | b <> TCPEvent <> station } }
 
 define NetStation { 
     router id=A.A [     

@@ -20,11 +20,19 @@ package org.wolfgang.contrail.component.pipeline.compose;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.annotation.ContrailPipeline;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * <code>ComposedPipelineComponent</code>
@@ -32,17 +40,18 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CompositionComponent extends AbstractComponent implements Component {
+public class CompositionSourceComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
 
 	private final SourceComponent<?, ?> initialComponent;
-	private final DestinationComponent<?, ?> terminalComponent;
+	private final PipelineComponent<?, ?, U, D> terminalComponent;
 
 	/**
 	 * Constructor
 	 * 
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public CompositionComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	@SuppressWarnings("unchecked")
+	public CompositionSourceComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;
@@ -53,7 +62,7 @@ public class CompositionComponent extends AbstractComponent implements Component
 			linkManager.connect(components[i - 1], components[i]);
 		}
 
-		terminalComponent = (DestinationComponent<?, ?>) components[components.length - 1];
+		terminalComponent = (PipelineComponent<?, ?, U, D>) components[components.length - 1];
 	}
 
 	@Override
@@ -65,4 +74,20 @@ public class CompositionComponent extends AbstractComponent implements Component
 	public void closeDownStream() throws DataHandlerCloseException {
 		this.terminalComponent.closeDownStream();
 	}
+
+	@Override
+	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+		return this.terminalComponent.getDownStreamDataHandler();
+	}
+
+	@Override
+	public boolean acceptDestination(ComponentId componentId) {
+		return this.terminalComponent.acceptDestination(componentId);
+	}
+
+	@Override
+	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
+		return this.terminalComponent.connectDestination(handler);
+	}
+
 }

@@ -82,7 +82,7 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 
 	@Override
 	public Component visit(ClosureValue value) throws EcosystemBuilderException {
-		return current;
+		throw new EcosystemBuilderException("TODO");
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 
 	@Override
 	public Component visit(ConstantValue value) throws EcosystemBuilderException {
-		return current;
+		throw new EcosystemBuilderException("TODO");
 	}
 
 	@Override
