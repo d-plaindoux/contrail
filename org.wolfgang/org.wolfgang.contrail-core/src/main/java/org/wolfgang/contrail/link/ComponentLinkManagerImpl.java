@@ -27,8 +27,6 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * The <code>ComponentsLinkFactory</code> is used when components link must be

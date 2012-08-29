@@ -18,9 +18,9 @@
 
 package org.wolfgang.common.lang;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * <code>TestTypeUtils</code>

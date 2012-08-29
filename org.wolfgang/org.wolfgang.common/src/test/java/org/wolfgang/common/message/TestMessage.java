@@ -18,9 +18,9 @@
 
 package org.wolfgang.common.message;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * <code>TestMessage</code>

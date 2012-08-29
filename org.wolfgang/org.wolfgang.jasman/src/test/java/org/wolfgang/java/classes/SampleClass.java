@@ -18,19 +18,10 @@
 
 package org.wolfgang.java.classes;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
-import org.wolfgang.common.utils.Coercion;
-import org.wolfgang.java.classes.ClassAttribute.VisibleAnnotations;
-import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
 
 /**
  * <code>TestClassReader</code>

@@ -18,9 +18,9 @@
 
 package org.wolfgang.common.utils;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * @author Didier Plaindoux

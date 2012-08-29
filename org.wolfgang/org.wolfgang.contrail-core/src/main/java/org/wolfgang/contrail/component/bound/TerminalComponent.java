@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.component.bound;
 
-import java.io.IOException;
-
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;

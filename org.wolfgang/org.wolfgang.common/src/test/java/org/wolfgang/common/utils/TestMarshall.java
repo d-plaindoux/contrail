@@ -20,9 +20,9 @@ package org.wolfgang.common.utils;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * <code>TestMarshall</code>

@@ -23,16 +23,12 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
-import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
-import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * <code>ComposedPipelineComponent</code>

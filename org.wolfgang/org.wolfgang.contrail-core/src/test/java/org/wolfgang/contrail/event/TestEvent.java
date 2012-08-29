@@ -20,14 +20,13 @@ package org.wolfgang.contrail.event;
 
 import java.security.NoSuchAlgorithmException;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.IndirectReference;
 import org.wolfgang.contrail.reference.ReferenceFactory;
-import org.wolfgang.contrail.reference.ReferenceVisitor;
-
-import junit.framework.TestCase;
 
 /**
  * <code>TestEvent</code>

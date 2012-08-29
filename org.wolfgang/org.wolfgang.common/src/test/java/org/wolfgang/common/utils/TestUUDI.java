@@ -21,9 +21,9 @@ package org.wolfgang.common.utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * <code>TestUUDI</code>
