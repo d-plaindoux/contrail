@@ -67,27 +67,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * @return a data sender (never <code>null</code>)
 	 */
 	private DataSender<D> getLocalDataSender() {
-		return new DataSender<D>() {
-			@Override
-			public void sendData(D data) throws DataHandlerException {
-				try {
-					getDowntreamDataHandler().handleData(data);
-				} catch (ComponentNotConnectedException e) {
-					throw new DataHandlerException(e);
-				}
-			}
-
-			@Override
-			public void close() throws IOException {
-				try {
-					getDowntreamDataHandler().handleClose();
-				} catch (ComponentNotConnectedException e) {
-					throw new IOException(e);
-				} catch (DataHandlerCloseException e) {
-					throw new IOException(e);
-				}
-			}
-		};
+		return new DataTerminalSender<D>(this);
 	}
 
 	/**

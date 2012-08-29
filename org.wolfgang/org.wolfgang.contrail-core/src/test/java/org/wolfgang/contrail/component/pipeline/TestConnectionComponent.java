@@ -55,7 +55,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
-		initial.getDataSender().sendData("3");
+		initial.getUpStreamDataHandler().handleData("3");
 		assertEquals("9", stringReference.get());
 
 		initialConnection.dispose();
@@ -74,7 +74,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
-		initial.getDataSender().sendData("0");
+		initial.getUpStreamDataHandler().handleData("0");
 		assertEquals("0", stringReference.get());
 
 		initialConnection.dispose();
@@ -115,7 +115,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			initial.closeUpStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (UpStreamDataHandlerClosedException h) {
 			// Ok
@@ -139,7 +139,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			connection.closeUpStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (UpStreamDataHandlerClosedException h) {
 			// Ok
@@ -163,7 +163,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			terminal.closeUpStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (UpStreamDataHandlerClosedException h) {
 			// Ok
@@ -187,7 +187,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			initial.closeDownStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (DownStreamDataHandlerClosedException h) {
 			// Ok
@@ -211,7 +211,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			connection.closeDownStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (DownStreamDataHandlerClosedException h) {
 			// Ok
@@ -235,7 +235,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			terminal.closeDownStream();
-			initial.getDataSender().sendData("0");
+			initial.getUpStreamDataHandler().handleData("0");
 			fail();
 		} catch (DownStreamDataHandlerClosedException h) {
 			// Ok
@@ -258,7 +258,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
 		try {
-			initial.getDataSender().sendData("NaN");
+			initial.getUpStreamDataHandler().handleData("NaN");
 			fail();
 		} catch (DataHandlerException h) {
 			assertTrue(h.getCause().getCause() instanceof NumberFormatException);
@@ -304,7 +304,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 
 		try {
-			initial.getDataSender().sendData("123");
+			initial.getUpStreamDataHandler().handleData("123");
 			fail();
 		} catch (DataHandlerException e) {
 			// OK

@@ -45,6 +45,7 @@ import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.annotation.ContrailTransducer;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
@@ -111,7 +112,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 				ecosystemFactory.create(initialComponent, items);
-				return initialComponent.getDataSender();
+				return new DataInitialSender<U>(initialComponent);
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataSenderException(e);
 			} catch (ComponentConnectionRejectedException e) {
@@ -383,7 +384,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 									final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 									try {
 										componentLinkManager.connect(initial, initialTransducer);
-										return initial.getDataSender();
+										return new DataInitialSender<byte[]>(initial);
 									} catch (ComponentConnectionRejectedException e) {
 										throw new CannotCreateDataSenderException(e);
 									}
@@ -443,7 +444,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 					try {
 						componentLinkManager.connect(initial, initialTransducer);
-						return initial.getDataSender();
+						return new DataInitialSender<byte[]>(initial);
 					} catch (ComponentConnectionRejectedException e) {
 						throw new CannotCreateDataSenderException(e);
 					}

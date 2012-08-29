@@ -23,14 +23,11 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
@@ -39,10 +36,10 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CompositionDestinationComponent<U, D> extends AbstractComponent implements DestinationComponent<U, D> {
+public class CompositionDestinationComponent<U1, D1, U2, D2> extends AbstractComponent implements DestinationComponent<U1, D1> {
 
-	private final PipelineComponent<U, D, ?, ?> initialComponent;
-	private final DestinationComponent<?, ?> terminalComponent;
+	private final PipelineComponent<U1, D1, ?, ?> initialComponent;
+	private final DestinationComponent<U2, D2> terminalComponent;
 
 	/**
 	 * Constructor
@@ -55,13 +52,13 @@ public class CompositionDestinationComponent<U, D> extends AbstractComponent imp
 
 		assert components.length > 1;
 
-		initialComponent = (PipelineComponent<U, D, ?, ?>) components[0];
+		initialComponent = (PipelineComponent<U1, D1, ?, ?>) components[0];
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);
 		}
 
-		terminalComponent = (DestinationComponent<?, ?>) components[components.length - 1];
+		terminalComponent = (DestinationComponent<U2, D2>) components[components.length - 1];
 	}
 
 	@Override
@@ -75,7 +72,7 @@ public class CompositionDestinationComponent<U, D> extends AbstractComponent imp
 	}
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataHandler<U1> getUpStreamDataHandler() {
 		return this.initialComponent.getUpStreamDataHandler();
 	}
 
@@ -85,7 +82,7 @@ public class CompositionDestinationComponent<U, D> extends AbstractComponent imp
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
+	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
 		return this.initialComponent.connectSource(handler);
 	}
 }

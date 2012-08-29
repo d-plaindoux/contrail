@@ -40,10 +40,10 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CompositionSourceComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
+public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponent implements SourceComponent<U2, D2> {
 
-	private final SourceComponent<?, ?> initialComponent;
-	private final PipelineComponent<?, ?, U, D> terminalComponent;
+	private final SourceComponent<U1, D1> initialComponent;
+	private final PipelineComponent<?, ?, U2, D2> terminalComponent;
 
 	/**
 	 * Constructor
@@ -56,13 +56,13 @@ public class CompositionSourceComponent<U, D> extends AbstractComponent implemen
 
 		assert components.length > 1;
 
-		initialComponent = (SourceComponent<?, ?>) components[0];
+		initialComponent = (SourceComponent<U1, D1>) components[0];
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);
 		}
 
-		terminalComponent = (PipelineComponent<?, ?, U, D>) components[components.length - 1];
+		terminalComponent = (PipelineComponent<?, ?, U2, D2>) components[components.length - 1];
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class CompositionSourceComponent<U, D> extends AbstractComponent implemen
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataHandler<D2> getDownStreamDataHandler() {
 		return this.terminalComponent.getDownStreamDataHandler();
 	}
 
@@ -86,7 +86,7 @@ public class CompositionSourceComponent<U, D> extends AbstractComponent implemen
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
 		return this.terminalComponent.connectDestination(handler);
 	}
 

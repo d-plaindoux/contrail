@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.InitialComponent;
@@ -46,7 +47,7 @@ public class TestComposeComponent extends TestCase {
 
 	@SuppressWarnings("rawtypes")
 	@Test
-	public void testCompose01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
+	public void testCompose01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
@@ -75,7 +76,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
 
 		terminalComponent.getDataSender().sendData(source);
-		initialComponent.getDataSender().sendData(sourceFuture.get());
+		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}

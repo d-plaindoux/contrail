@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
@@ -53,7 +54,7 @@ class BinderDataSenderFactoryImpl<U, D> implements DataSenderFactory<U, D> {
 		try {
 			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 			factory.create(initialComponent, flow);
-			return initialComponent.getDataSender();
+			return new DataInitialSender<U>(initialComponent);
 		} catch (CannotCreateComponentException e) {
 			throw new CannotCreateDataSenderException(e);
 		} catch (EcosystemBuilderException e) {

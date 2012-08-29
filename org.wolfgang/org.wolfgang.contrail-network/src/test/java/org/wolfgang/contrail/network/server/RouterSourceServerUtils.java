@@ -27,6 +27,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataSender;
 import org.wolfgang.contrail.component.bound.DataSenderFactory;
@@ -91,7 +92,7 @@ class RouterSourceServerUtils extends TestCase {
 							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 							try {
 								componentLinkManager.connect(initial, payLoadTransducer);
-								return initial.getDataSender();
+								return new DataInitialSender<byte[]>(initial);
 							} catch (ComponentConnectionRejectedException e) {
 								throw new CannotCreateDataSenderException(e);
 							}
@@ -153,7 +154,7 @@ class RouterSourceServerUtils extends TestCase {
 
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
 					componentLinkManager.connect(initial, payLoadTransducer);
-					return initial.getDataSender();
+					return new DataInitialSender<byte[]>(initial);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				} catch (Exception e) {

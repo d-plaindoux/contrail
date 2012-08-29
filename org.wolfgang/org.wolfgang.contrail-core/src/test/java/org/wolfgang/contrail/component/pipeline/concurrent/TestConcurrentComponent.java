@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -41,7 +42,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestConcurrentComponent extends TestCase {
 
 	@Test
-	public void testConcurrent01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException {
+	public void testConcurrent01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
@@ -70,7 +71,7 @@ public class TestConcurrentComponent extends TestCase {
 		for (int i = 0; i < iterations; i++) {
 			int value = random.nextInt(1024);
 			total1 += value;
-			initialComponent.getDataSender().sendData(value);
+			initialComponent.getUpStreamDataHandler().handleData(value);
 		}
 
 		final int[] response = responseFuture.get();

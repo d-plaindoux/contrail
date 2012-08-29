@@ -48,11 +48,6 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	private DestinationComponentLink<U, D> destinationComponentLink;
 
 	/**
-	 * The data sender mechanism used by external components
-	 */
-	private final DataSender<U> dataSender;
-
-	/**
 	 * The internal down stream data handler
 	 */
 	private final DownStreamDataHandler<D> downStreamDataHandler;
@@ -62,43 +57,13 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	/**
-	 * Provides the local data sender
-	 * 
-	 * @return a data sender (never <code>null</code>)
-	 */
-	private DataSender<U> getLocalDataSender() {
-		return new DataSender<U>() {
-			@Override
-			public void sendData(U data) throws DataHandlerException {
-				try {
-					getUpStreamDataHandler().handleData(data);
-				} catch (ComponentNotConnectedException e) {
-					throw new DataHandlerException(e);
-				}
-			}
-
-			@Override
-			public void close() throws IOException {
-				try {
-					getUpStreamDataHandler().handleClose();
-				} catch (ComponentNotConnectedException e) {
-					throw new IOException(e);
-				} catch (DataHandlerCloseException e) {
-					throw new IOException(e);
-				}
-			}
-		};
-	}
-
-	/**
 	 * Constructor
+	 * 
 	 * @param receiver
 	 *            The initial data receiver
 	 */
 	public InitialComponent(final DataReceiver<D> receiver) {
 		super();
-
-		this.dataSender = this.getLocalDataSender();
 		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(receiver);
 	}
 
@@ -110,9 +75,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 */
 	public InitialComponent(final DataReceiverFactory<D, U> dataFactory) {
 		super();
-
-		this.dataSender = this.getLocalDataSender();
-		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(this.dataSender));
+		this.downStreamDataHandler = new DownStreamDataReceiverHandler<D>(dataFactory.create(new DataInitialSender<U>(this)));
 	}
 
 	/**
@@ -122,7 +85,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	private UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
+	public UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -162,17 +125,6 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	@Override
 	public DownStreamDataHandler<D> getDownStreamDataHandler() {
 		return this.downStreamDataHandler;
-	}
-
-	/**
-	 * Method called whether the data injection mechanism is required
-	 * 
-	 * @return the data injection mechanism
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
-	 */
-	public DataSender<U> getDataSender() {
-		return this.dataSender;
 	}
 
 	@Override

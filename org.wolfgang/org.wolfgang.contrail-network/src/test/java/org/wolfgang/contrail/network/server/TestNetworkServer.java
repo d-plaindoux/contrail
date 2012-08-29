@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.DataInitialSender;
 import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.DataReceiverFactory;
 import org.wolfgang.contrail.component.bound.DataSender;
@@ -92,7 +93,7 @@ public class TestNetworkServer extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataSenderException(e);
 				}
-				return initialComponent.getDataSender();
+				return new DataInitialSender<byte[]>(initialComponent);
 			}
 		};
 

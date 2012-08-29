@@ -18,8 +18,10 @@
 
 package org.wolfgang.contrail.component.bound;
 
-import java.io.Closeable;
+import java.io.IOException;
 
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 
 /**
@@ -29,7 +31,19 @@ import org.wolfgang.contrail.handler.DataHandlerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataSender<E> extends Closeable {
+public class DataTerminalSender<E> implements DataSender<E> {
+
+	private final TerminalComponent<?, E> component;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param component
+	 */
+	public DataTerminalSender(TerminalComponent<?, E> component) {
+		super();
+		this.component = component;
+	}
 
 	/**
 	 * Method called whether a data shall be performed
@@ -39,5 +53,22 @@ public interface DataSender<E> extends Closeable {
 	 * @throws DataHandlerException
 	 *             thrown is the data can not be handled correctly
 	 */
-	void sendData(E data) throws DataHandlerException;
+	public void sendData(E data) throws DataHandlerException {
+		try {
+			this.component.getDowntreamDataHandler().handleData(data);
+		} catch (ComponentNotConnectedException e) {
+			throw new DataHandlerException(e);
+		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		try {
+			component.getDowntreamDataHandler().handleClose();
+		} catch (ComponentNotConnectedException e) {
+			throw new IOException(e);
+		} catch (DataHandlerCloseException e) {
+			throw new IOException(e);
+		}
+	}
 }
