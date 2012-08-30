@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -47,9 +48,8 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 		super(new DownStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
 			public DownStreamDataHandler<byte[]> create(UpStreamDataHandler<byte[]> initial) {
-				return new DownStreamDataHandlerAdapter<byte[]>() {
+				return ClosableDataHandler.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
 					public void handleData(byte[] data) throws DataHandlerException {
-						super.handleData(data);
 						try {
 							outputStream.write(data);
 						} catch (IOException e) {
@@ -59,7 +59,6 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 
 					@Override
 					public void handleClose() throws DataHandlerCloseException {
-						super.handleClose();
 						try {
 							outputStream.close();
 						} catch (IOException e) {
@@ -71,7 +70,7 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 					public void handleLost() throws DataHandlerCloseException {
 						handleClose();
 					}
-				};
+				});
 			}
 		});
 	}

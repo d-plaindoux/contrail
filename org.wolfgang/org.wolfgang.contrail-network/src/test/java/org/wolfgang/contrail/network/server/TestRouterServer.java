@@ -75,7 +75,6 @@ public class TestRouterServer extends TestCase {
 		@Override
 		public void handleData(Event data) throws DataHandlerException {
 			try {
-				System.err.println(self + " - Setting the value " + data.getContent());
 				futureResponse.get().setValue(self + " - " + data.getContent());
 			} catch (Throwable e) {
 				e.printStackTrace();

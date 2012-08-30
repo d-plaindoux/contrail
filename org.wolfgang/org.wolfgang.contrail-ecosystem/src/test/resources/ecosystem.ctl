@@ -18,15 +18,15 @@ define Client   { uri station | ClientHandler uri { b | b <> TCPEvent <> station
 define Server   { uri station | ServerHandler uri { b | b <> TCPEvent <> station } }
 
 define NetStation { 
-    router id=A.A [     
+    router id=A.A {     
 	case A.B { Client tcp://localhost:6667 self }
 	case A.C { Client tcp://localhost:6668 self }
-    default switch [ 
+    default switch { 
              case Service  { ServiceAgent  } 
 			 case Transfer { TransferAgent } 
 			 default       { /* lambda */  } 
-			 ]  
-	]  
+			 }  
+	}
 }
 
 start { Server tcp://localhost:6666 NetStation }

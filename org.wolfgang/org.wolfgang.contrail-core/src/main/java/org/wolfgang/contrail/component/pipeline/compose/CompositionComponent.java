@@ -42,7 +42,7 @@ public class CompositionComponent extends AbstractComponent implements Component
 	 * 
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public CompositionComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	CompositionComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;

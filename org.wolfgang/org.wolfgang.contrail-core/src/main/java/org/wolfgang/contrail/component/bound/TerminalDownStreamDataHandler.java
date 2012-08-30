@@ -19,8 +19,10 @@
 package org.wolfgang.contrail.component.bound;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 
 /**
@@ -34,18 +36,29 @@ public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapt
 	private final TerminalComponent<?, D> component;
 
 	/**
+	 * Method called when a downstream must be created for a given initial
+	 * component
+	 * 
+	 * @param component
+	 *            The component
+	 * @return
+	 */
+	public static <D> DownStreamDataHandler<D> create(TerminalComponent<?, D> component) {
+		return ClosableDataHandler.<D> create(new TerminalDownStreamDataHandler<D>(component));
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param component
 	 */
-	public TerminalDownStreamDataHandler(TerminalComponent<?, D> component) {
+	private TerminalDownStreamDataHandler(TerminalComponent<?, D> component) {
 		super();
 		this.component = component;
 	}
 
 	@Override
 	public void handleData(D data) throws DataHandlerException {
-		super.handleData(data);
 		try {
 			this.component.getDownStreamDataHandler().handleData(data);
 		} catch (ComponentNotConnectedException e) {
@@ -56,7 +69,6 @@ public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapt
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
-		super.handleClose();
 		try {
 			this.component.getDownStreamDataHandler().handleClose();
 		} catch (ComponentNotConnectedException e) {
@@ -66,7 +78,6 @@ public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapt
 
 	@Override
 	public void handleLost() throws DataHandlerCloseException {
-		super.handleClose();
 		try {
 			this.component.getDownStreamDataHandler().handleLost();
 		} catch (ComponentNotConnectedException e) {

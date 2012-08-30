@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -33,7 +33,7 @@ import org.wolfgang.contrail.link.ComponentLinkFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerDownStreamDataHandler<U, D> extends DownStreamDataHandlerAdapter<U> {
+class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> {
 
 	/**
 	 * The component which is in charge of this data handler
@@ -62,7 +62,6 @@ class TransducerDownStreamDataHandler<U, D> extends DownStreamDataHandlerAdapter
 
 	@Override
 	public void handleData(U data) throws DataHandlerException {
-		super.handleData(data);
 		if (ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
 			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
@@ -84,7 +83,6 @@ class TransducerDownStreamDataHandler<U, D> extends DownStreamDataHandlerAdapter
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
-		super.handleClose();
 		if (!ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
 			try {
 				final List<D> transform = streamXducer.finish();
@@ -103,6 +101,6 @@ class TransducerDownStreamDataHandler<U, D> extends DownStreamDataHandlerAdapter
 
 	@Override
 	public void handleLost() throws DataHandlerCloseException {
-		super.handleLost();
+		// Nothing to do
 	}
 }

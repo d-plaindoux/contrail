@@ -47,7 +47,7 @@ public class CompositionDestinationComponent<U1, D1, U2, D2> extends AbstractCom
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	public CompositionDestinationComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	CompositionDestinationComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;

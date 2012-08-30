@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.pipeline.logger;
 
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -45,31 +46,22 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	private final String prefix;
 
 	{
-		this.upStreamDataHandler = new UpStreamDataHandler<U>() {
-			private boolean open = true;
-
+		this.upStreamDataHandler = ClosableDataHandler.<U> create(new UpStreamDataHandler<U>() {
 			@Override
 			public void handleData(final U data) throws DataHandlerException {
-				System.err.println("<" + prefix + "> " + data);
 				getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(data);
 			}
 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
-				if (open) {
-					open = false;
-					getDestinationComponentLink().getDestination().closeUpStream();
-				}
+				getDestinationComponentLink().getDestination().closeUpStream();
 			}
 
 			@Override
 			public void handleLost() throws DataHandlerCloseException {
-				if (open) {
-					open = false;
-					getDestinationComponentLink().getDestination().closeUpStream();
-				}
+				getDestinationComponentLink().getDestination().closeUpStream();
 			}
-		};
+		});
 	}
 
 	/**

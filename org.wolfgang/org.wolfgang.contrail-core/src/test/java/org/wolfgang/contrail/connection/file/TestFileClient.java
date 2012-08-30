@@ -37,6 +37,7 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -76,10 +77,9 @@ public class TestFileClient extends TestCase {
 
 		final OutputStream outputStream = new FileOutputStream(output);
 
-		final UpStreamDataHandler<byte[]> terminalReceiver = new UpStreamDataHandlerAdapter<byte[]>() {
+		final UpStreamDataHandler<byte[]> terminalReceiver = ClosableDataHandler.<byte[]> create(new UpStreamDataHandler<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataHandlerException {
-				super.handleData(data);
 				try {
 					outputStream.write(data);
 					outputStream.flush();
@@ -90,7 +90,6 @@ public class TestFileClient extends TestCase {
 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
-				super.handleClose();
 				try {
 					outputStream.close();
 				} catch (IOException e) {
@@ -102,7 +101,7 @@ public class TestFileClient extends TestCase {
 			public void handleLost() throws DataHandlerCloseException {
 				handleClose();
 			}
-		};
+		});
 
 		final UpStreamDataHandlerFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
@@ -115,7 +114,7 @@ public class TestFileClient extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataHandlerException(e);
 				}
-				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
+				return InitialUpStreamDataHandler.<byte[]> create(initialComponent);
 			}
 		};
 
@@ -167,7 +166,7 @@ public class TestFileClient extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataHandlerException(e);
 				}
-				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
+				return InitialUpStreamDataHandler.<byte[]> create(initialComponent);
 			}
 		};
 

@@ -21,7 +21,7 @@ package org.wolfgang.contrail.component.pipeline;
 import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -44,13 +44,12 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 		super(new UpStreamDataHandlerFactory<Integer, Integer>() {
 			@Override
 			public UpStreamDataHandler<Integer> create(final DownStreamDataHandler<Integer> terminal) {
-				return new UpStreamDataHandlerAdapter<Integer>() {
+				return ClosableDataHandler.<Integer> create(new UpStreamDataHandlerAdapter<Integer>() {
 					@Override
 					public void handleData(Integer data) throws DataHandlerException {
-						super.handleData(data);
 						terminal.handleData(data * data);
 					}
-				};
+				});
 			}
 		});
 	}

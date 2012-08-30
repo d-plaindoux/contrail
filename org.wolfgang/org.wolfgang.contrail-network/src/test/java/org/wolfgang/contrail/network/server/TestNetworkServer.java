@@ -101,7 +101,7 @@ public class TestNetworkServer extends TestCase {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataHandlerException(e);
 				}
-				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
+				return InitialUpStreamDataHandler.<byte[]> create(initialComponent);
 			}
 		};
 

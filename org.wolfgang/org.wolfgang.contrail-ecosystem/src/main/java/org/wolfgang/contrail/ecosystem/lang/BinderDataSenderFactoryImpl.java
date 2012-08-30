@@ -54,7 +54,7 @@ class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U,
 		try {
 			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 			factory.create(initialComponent, flow);
-			return new InitialUpStreamDataHandler<U>(initialComponent);
+			return InitialUpStreamDataHandler.<U>create(initialComponent);
 		} catch (CannotCreateComponentException e) {
 			throw new CannotCreateDataHandlerException(e);
 		} catch (EcosystemBuilderException e) {

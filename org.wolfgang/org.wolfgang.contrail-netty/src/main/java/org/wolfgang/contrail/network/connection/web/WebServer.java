@@ -86,7 +86,6 @@ public final class WebServer extends NIOServer {
 				return new UpStreamDataHandlerAdapter<String>() {
 					@Override
 					public void handleData(String data) throws DataHandlerException {
-						super.handleData(data);
 						for (DownStreamDataHandler<String> aComponent : components) {
 							aComponent.handleData(data);
 						}
@@ -94,14 +93,12 @@ public final class WebServer extends NIOServer {
 
 					@Override
 					public void handleClose() throws DataHandlerCloseException {
-						super.handleClose();
 						component.handleClose();
 						components.remove(component);
 					}
 
 					@Override
 					public void handleLost() throws DataHandlerCloseException {
-						super.handleLost();
 						component.handleLost();
 						components.remove(component);
 					}
@@ -121,7 +118,7 @@ public final class WebServer extends NIOServer {
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataHandlerException(e);
 				}
-				return new InitialUpStreamDataHandler<String>(initialComponent);
+				return InitialUpStreamDataHandler.<String>create(initialComponent);
 			}
 		};
 

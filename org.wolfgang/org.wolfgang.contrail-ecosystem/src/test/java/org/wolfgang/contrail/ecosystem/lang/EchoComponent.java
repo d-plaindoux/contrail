@@ -24,6 +24,7 @@ import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
@@ -53,12 +54,12 @@ public class EchoComponent extends TerminalComponent {
 			this.name = name;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public UpStreamDataHandler create(final DownStreamDataHandler sender) {
-			return new UpStreamDataHandlerAdapter() {
+			return ClosableDataHandler.create(new UpStreamDataHandlerAdapter() {
 				@Override
 				public void handleData(Object data) throws DataHandlerException {
-					super.handleData(data);
 					if (name == null) {
 						sender.handleData(data);
 					} else {
@@ -68,16 +69,14 @@ public class EchoComponent extends TerminalComponent {
 
 				@Override
 				public void handleClose() throws DataHandlerCloseException {
-					super.handleClose();
 					sender.handleClose();
 				}
 
 				@Override
 				public void handleLost() throws DataHandlerCloseException {
-					super.handleLost();
 					sender.handleLost();
 				}
-			};
+			});
 		}
 	}
 
@@ -85,7 +84,7 @@ public class EchoComponent extends TerminalComponent {
 	 * Constructor
 	 * 
 	 * @param receiver
-	 * @throws CannotCreateDataHandlerException 
+	 * @throws CannotCreateDataHandlerException
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor

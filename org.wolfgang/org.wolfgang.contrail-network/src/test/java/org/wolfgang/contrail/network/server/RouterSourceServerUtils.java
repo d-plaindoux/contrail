@@ -91,7 +91,7 @@ class RouterSourceServerUtils extends TestCase {
 							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 							try {
 								componentLinkManager.connect(initial, payLoadTransducer);
-								return new InitialUpStreamDataHandler<byte[]>(initial);
+								return InitialUpStreamDataHandler.<byte[]> create(initial);
 							} catch (ComponentConnectionRejectedException e) {
 								throw new CannotCreateDataHandlerException(e);
 							}
@@ -153,7 +153,7 @@ class RouterSourceServerUtils extends TestCase {
 
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
 					componentLinkManager.connect(initial, payLoadTransducer);
-					return new InitialUpStreamDataHandler<byte[]>(initial);
+					return InitialUpStreamDataHandler.<byte[]>create(initial);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateDataHandlerException(e);
 				} catch (Exception e) {

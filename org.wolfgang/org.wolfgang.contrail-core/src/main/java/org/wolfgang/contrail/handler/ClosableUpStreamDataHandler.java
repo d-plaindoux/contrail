@@ -24,6 +24,14 @@ package org.wolfgang.contrail.handler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class UpStreamDataHandlerAdapter<D> extends DataHandlerAdapter<D> implements UpStreamDataHandler<D> {
-	// Nothing
+public class ClosableUpStreamDataHandler<D> extends ClosableDataHandler<D> implements UpStreamDataHandler<D> {
+
+	/**
+	 * Constructor
+	 * 
+	 * @param exceptionToSend
+	 */
+	ClosableUpStreamDataHandler(UpStreamDataHandler<D> dataHandler) {
+		super(dataHandler, new UpStreamDataHandlerCloseException());
+	}
 }

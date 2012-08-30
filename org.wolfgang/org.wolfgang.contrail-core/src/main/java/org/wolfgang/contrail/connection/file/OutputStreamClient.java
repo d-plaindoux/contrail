@@ -73,7 +73,6 @@ public class OutputStreamClient implements Closeable {
 		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataHandlerException {
-				super.handleData(data);
 				try {
 					outputStream.write(data);
 					outputStream.flush();

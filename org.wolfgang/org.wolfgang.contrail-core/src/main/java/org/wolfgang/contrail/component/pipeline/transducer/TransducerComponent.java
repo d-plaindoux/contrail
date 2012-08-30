@@ -22,6 +22,7 @@ import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
@@ -73,8 +74,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
 
-		this.upStreamDataHandler = new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer);
-		this.downStreamDataHandler = new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer);
+		this.upStreamDataHandler = ClosableDataHandler.<U1> create(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
+		this.downStreamDataHandler = ClosableDataHandler.<D2> create(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
 	}
 
 	@Override

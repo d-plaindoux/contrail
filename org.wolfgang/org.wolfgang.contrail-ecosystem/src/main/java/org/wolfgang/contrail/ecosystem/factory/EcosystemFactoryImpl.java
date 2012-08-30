@@ -92,7 +92,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 @SuppressWarnings("rawtypes")
 public final class EcosystemFactoryImpl implements ContextFactory {
 
-	private static class DataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U, D> {
+	private static class DataHandlerFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U, D> {
 		private final EcosystemFactoryImpl ecosystemFactory;
 		private final Item[] items;
 
@@ -101,7 +101,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		 * 
 		 * @param items
 		 */
-		private DataSenderFactoryImpl(EcosystemFactoryImpl ecosystemFactorie, Item[] items) {
+		private DataHandlerFactoryImpl(EcosystemFactoryImpl ecosystemFactorie, Item[] items) {
 			super();
 			this.ecosystemFactory = ecosystemFactorie;
 			this.items = items;
@@ -112,7 +112,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 				ecosystemFactory.create(initialComponent, items);
-				return new InitialUpStreamDataHandler<U>(initialComponent);
+				return InitialUpStreamDataHandler.<U> create(initialComponent);
 			} catch (CannotCreateComponentException e) {
 				throw new CannotCreateDataHandlerException(e);
 			} catch (ComponentConnectionRejectedException e) {
@@ -384,7 +384,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 									final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 									try {
 										componentLinkManager.connect(initial, initialTransducer);
-										return new InitialUpStreamDataHandler<byte[]>(initial);
+										return InitialUpStreamDataHandler.<byte[]> create(initial);
 									} catch (ComponentConnectionRejectedException e) {
 										throw new CannotCreateDataHandlerException(e);
 									}
@@ -444,7 +444,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 					try {
 						componentLinkManager.connect(initial, initialTransducer);
-						return new InitialUpStreamDataHandler<byte[]>(initial);
+						return InitialUpStreamDataHandler.<byte[]> create(initial);
 					} catch (ComponentConnectionRejectedException e) {
 						throw new CannotCreateDataHandlerException(e);
 					}
@@ -612,7 +612,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 				final Class<?> typeOut = TypeUtils.getType(binder.getTypeOut());
 
 				final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(name, typeIn, typeOut);
-				ecosystemImpl.addBinder(key, new DataSenderFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
+				ecosystemImpl.addBinder(key, new DataHandlerFactoryImpl(ecosystemFactory, FlowModel.decompose(binder.getFlow())));
 			}
 
 			final Item[] decompose = FlowModel.decompose(ecosystem.getMain());

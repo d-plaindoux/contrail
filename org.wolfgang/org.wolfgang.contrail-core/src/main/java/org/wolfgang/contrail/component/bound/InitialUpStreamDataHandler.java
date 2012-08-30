@@ -19,8 +19,10 @@
 package org.wolfgang.contrail.component.bound;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
@@ -34,18 +36,29 @@ public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U>
 	private final InitialComponent<U, ?> component;
 
 	/**
+	 * Method called when a upstream must be created for a given initial
+	 * component
+	 * 
+	 * @param component
+	 *            The component
+	 * @return
+	 */
+	public static <U> UpStreamDataHandler<U> create(InitialComponent<U, ?> component) {
+		return ClosableDataHandler.<U> create(new InitialUpStreamDataHandler<U>(component));
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param component
 	 */
-	public InitialUpStreamDataHandler(InitialComponent<U, ?> component) {
+	private InitialUpStreamDataHandler(InitialComponent<U, ?> component) {
 		super();
 		this.component = component;
 	}
 
 	@Override
 	public void handleData(U data) throws DataHandlerException {
-		super.handleData(data);
 		try {
 			this.component.getUpStreamDataHandler().handleData(data);
 		} catch (ComponentNotConnectedException e) {
@@ -56,7 +69,6 @@ public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U>
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
-		super.handleClose();
 		try {
 			this.component.getUpStreamDataHandler().handleClose();
 		} catch (ComponentNotConnectedException e) {
@@ -66,7 +78,6 @@ public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U>
 
 	@Override
 	public void handleLost() throws DataHandlerCloseException {
-		super.handleLost();
 		try {
 			this.component.getUpStreamDataHandler().handleLost();
 		} catch (ComponentNotConnectedException e) {

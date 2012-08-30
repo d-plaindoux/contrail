@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.relay;
 import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -43,13 +44,12 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 		super(new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
-				return new UpStreamDataHandlerAdapter<byte[]>() {
+				return ClosableDataHandler.<byte[]> create(new UpStreamDataHandlerAdapter<byte[]>() {
 					@Override
 					public void handleData(byte[] data) throws DataHandlerException {
-						super.handleData(data);
 						sender.handleData(data);
 					}
-				};
+				});
 			}
 		});
 	}

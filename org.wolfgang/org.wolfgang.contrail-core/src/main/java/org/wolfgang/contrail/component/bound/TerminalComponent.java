@@ -75,7 +75,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	public TerminalComponent(final UpStreamDataHandlerFactory<U, D> receiver) throws CannotCreateDataHandlerException {
 		super();
 
-		this.upstreamDataHandler = receiver.create(new TerminalDownStreamDataHandler<D>(this));
+		this.upstreamDataHandler = receiver.create(TerminalDownStreamDataHandler.<D> create(this));
 	}
 
 	/**

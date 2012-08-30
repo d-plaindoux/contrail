@@ -35,6 +35,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
@@ -59,13 +60,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = ClosableDataHandler.<String> create(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<String> sender = binder.create(dataReceiver);
@@ -91,13 +91,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = ClosableDataHandler.<String> create(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<String> sender = binder.create(dataReceiver);
@@ -123,13 +122,13 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = ClosableDataHandler.<String> create(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
 					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<String> sender = binder.create(dataReceiver);
@@ -155,13 +154,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = ClosableDataHandler.<String> create(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<String> sender = binder.create(dataReceiver);
@@ -187,13 +185,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = ClosableDataHandler.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<Bytes> sender = binder.create(dataReceiver);
@@ -228,13 +225,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = ClosableDataHandler.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<Bytes> sender = binder.create(dataReceiver);
@@ -269,13 +265,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = ClosableDataHandler.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<Bytes> sender = binder.create(dataReceiver);
@@ -310,13 +305,12 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
-			final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
+			final DownStreamDataHandler<byte[]> dataReceiver = ClosableDataHandler.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataHandlerException {
-					super.handleData(data);
 					futureResponse.setValue(data);
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<byte[]> sender = binder.create(dataReceiver);
@@ -354,15 +348,14 @@ public class TestEcosystemFactory extends TestCase {
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 
-			final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
+			final DownStreamDataHandler<byte[]> dataReceiver = ClosableDataHandler.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataHandlerException {
-					super.handleData(data);
 					if (futureReference.incrementAndGet() == nbEventSent) {
 						response.setValue(nbEventSent);
 					}
 				}
-			};
+			});
 
 			final UpStreamDataHandlerFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
 			final UpStreamDataHandler<byte[]> sender = binder.create(dataReceiver);

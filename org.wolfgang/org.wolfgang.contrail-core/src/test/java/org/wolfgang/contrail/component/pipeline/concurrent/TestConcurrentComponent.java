@@ -95,8 +95,6 @@ public class TestConcurrentComponent extends TestCase {
 
 			@Override
 			public synchronized void handleData(Integer data) throws DataHandlerException {
-				super.handleData(data);
-
 				responses[location++] = data;
 
 				if (location == responses.length) {
