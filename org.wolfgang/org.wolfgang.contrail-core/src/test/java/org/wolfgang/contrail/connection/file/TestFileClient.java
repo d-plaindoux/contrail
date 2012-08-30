@@ -148,18 +148,6 @@ public class TestFileClient extends TestCase {
 					public void handleData(byte[] data) throws DataHandlerException {
 						sender.handleData(data);
 					}
-
-					@Override
-					public void handleClose() throws DataHandlerCloseException {
-						super.handleClose();
-						sender.handleClose();
-					}
-
-					@Override
-					public void handleLost() throws DataHandlerCloseException {
-						super.handleLost();
-						sender.handleLost();
-					}
 				};
 
 				atomicReference.set(dataReceiver);

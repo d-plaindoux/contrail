@@ -50,18 +50,6 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 						super.handleData(data);
 						terminal.handleData(data * data);
 					}
-
-					@Override
-					public void handleClose() throws DataHandlerCloseException {
-						super.handleClose();
-						terminal.handleClose();
-					}
-
-					@Override
-					public void handleLost() throws DataHandlerCloseException {
-						super.handleLost();
-						terminal.handleLost();
-					}
 				};
 			}
 		});

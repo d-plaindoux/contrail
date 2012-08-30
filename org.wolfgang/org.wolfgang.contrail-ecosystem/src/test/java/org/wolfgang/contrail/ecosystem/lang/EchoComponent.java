@@ -58,7 +58,12 @@ public class EchoComponent extends TerminalComponent {
 			return new UpStreamDataHandlerAdapter() {
 				@Override
 				public void handleData(Object data) throws DataHandlerException {
-					sender.handleData(data);
+					super.handleData(data);
+					if (name == null) {
+						sender.handleData(data);
+					} else {
+						sender.handleData(name + data);
+					}
 				}
 
 				@Override
