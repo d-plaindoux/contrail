@@ -27,11 +27,11 @@ import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -48,12 +48,12 @@ public class TestConcurrentComponent extends TestCase {
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataHandlerAdapter<Integer>());
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new DataReceiverAdapter<Integer>() {
+		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataHandlerAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
 			@Override
-			public synchronized void receiveData(Integer data) throws DataHandlerException {
+			public synchronized void handleData(Integer data) throws DataHandlerException {
 				responses[location++] = data;
 
 				if (location == responses.length) {
@@ -105,7 +105,7 @@ public class TestConcurrentComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new DataReceiverAdapter<Integer>());
+		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataHandlerAdapter<Integer>());
 		final ParallelDestinationComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelDestinationComponent<Integer, Integer>();
 
 		componentLinkManagerImpl.connect(initialComponent, concurrentSourcePipelineComponent);

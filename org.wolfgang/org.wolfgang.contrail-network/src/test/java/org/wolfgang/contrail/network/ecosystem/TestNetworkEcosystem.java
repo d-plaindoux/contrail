@@ -22,24 +22,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.wolfgang.common.concurrent.FutureResponse;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
 import org.wolfgang.contrail.ecosystem.factory.EcosystemFactoryImpl;
-import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
 
 /**
  * <code>TestNetworkEcosystem</code>

@@ -18,26 +18,52 @@
 
 package org.wolfgang.contrail.component.bound;
 
-import java.io.Closeable;
-
-import org.wolfgang.contrail.handler.DataHandlerException;
-
 /**
- * <code>DataSender</code> is capable to send data to the component stream. This
- * is mainly linked to an initial upstream source component.
+ * <code>CannotCreateDataSenderException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataSender<E> extends Closeable {
+public class CannotCreateDataHandlerException extends Exception {
 
 	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
+	 * The serialVersionUID attribute
 	 */
-	void sendData(E data) throws DataHandlerException;
+	private static final long serialVersionUID = -9200648015853026201L;
+
+	/**
+	 * Constructor
+	 */
+	public CannotCreateDataHandlerException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public CannotCreateDataHandlerException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataHandlerException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataHandlerException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

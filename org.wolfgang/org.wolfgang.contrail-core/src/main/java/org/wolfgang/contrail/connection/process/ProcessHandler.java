@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
@@ -114,7 +114,7 @@ public class ProcessHandler implements Server {
 		final UpStreamDataHandler<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataSenderException e) {
+		} catch (CannotCreateDataHandlerException e) {
 			throw new CannotCreateServerException(e);
 		}
 

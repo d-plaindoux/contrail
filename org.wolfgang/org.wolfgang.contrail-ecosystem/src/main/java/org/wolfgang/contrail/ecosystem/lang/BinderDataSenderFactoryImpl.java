@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
@@ -50,15 +50,15 @@ class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U,
 	}
 
 	@Override
-	public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataSenderException {
+	public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataHandlerException {
 		try {
 			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 			factory.create(initialComponent, flow);
 			return new InitialUpStreamDataHandler<U>(initialComponent);
 		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateDataSenderException(e);
+			throw new CannotCreateDataHandlerException(e);
 		} catch (EcosystemBuilderException e) {
-			throw new CannotCreateDataSenderException(e);
+			throw new CannotCreateDataHandlerException(e);
 		}
 	}
 }

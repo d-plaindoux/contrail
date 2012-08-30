@@ -25,13 +25,14 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerClosedException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerCloseException;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -44,7 +45,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestConnectionComponent extends TestCase {
 
 	@Test
-	public void testNominal01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
+	public void testNominal01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -62,7 +63,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testNominal02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
+	public void testNominal02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException  {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -80,7 +81,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testNominal03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testNominal03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -99,7 +100,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -113,7 +114,7 @@ public class TestConnectionComponent extends TestCase {
 			initial.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataHandlerClosedException h) {
+		} catch (UpStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -122,7 +123,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed02() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -136,7 +137,7 @@ public class TestConnectionComponent extends TestCase {
 			connection.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataHandlerClosedException h) {
+		} catch (UpStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -145,7 +146,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed03() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -159,7 +160,7 @@ public class TestConnectionComponent extends TestCase {
 			terminal.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataHandlerClosedException h) {
+		} catch (UpStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -168,7 +169,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed04() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed04() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -182,7 +183,7 @@ public class TestConnectionComponent extends TestCase {
 			initial.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataHandlerClosedException h) {
+		} catch (DownStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -191,7 +192,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -205,7 +206,7 @@ public class TestConnectionComponent extends TestCase {
 			connection.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataHandlerClosedException h) {
+		} catch (DownStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -214,7 +215,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed06() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException {
+	public void testUpStreamClosed06() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, DataHandlerCloseException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -228,7 +229,7 @@ public class TestConnectionComponent extends TestCase {
 			terminal.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataHandlerClosedException h) {
+		} catch (DownStreamDataHandlerCloseException h) {
 			// Ok
 		}
 
@@ -237,7 +238,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testFailure01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
+	public void testFailure01() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -301,7 +302,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testFailure05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException {
+	public void testFailure05() throws DataHandlerException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();

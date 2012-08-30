@@ -36,7 +36,6 @@ import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
@@ -49,6 +48,7 @@ import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.event.EventImpl;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -62,7 +62,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 public class TestRouterServer extends TestCase {
 
-	private static class Receiver implements DataReceiver<Event> {
+	private static class Receiver extends UpStreamDataHandlerAdapter<Event> {
 		private final DirectReference self;
 		private final AtomicReference<FutureResponse<String>> futureResponse;
 
@@ -73,12 +73,7 @@ public class TestRouterServer extends TestCase {
 		}
 
 		@Override
-		public void close() throws IOException {
-			// nothing to do
-		}
-
-		@Override
-		public void receiveData(Event data) throws DataHandlerException {
+		public void handleData(Event data) throws DataHandlerException {
 			try {
 				System.err.println(self + " - Setting the value " + data.getContent());
 				futureResponse.get().setValue(self + " - " + data.getContent());
@@ -309,7 +304,7 @@ public class TestRouterServer extends TestCase {
 		assertEquals(reference03 + " - Hello , World from Client01!", futureResponse.get().get(10, TimeUnit.SECONDS));
 		futureResponse.set(new FutureResponse<String>());
 
-		// Reverse and reuse opened connections ...		
+		// Reverse and reuse opened connections ...
 		terminalComponent03.getDownStreamDataHandler().handleData(new EventImpl("Hello , World from Client03!", reference02, reference01));
 		assertEquals(reference01 + " - Hello , World from Client03!", futureResponse.get().get(10, TimeUnit.SECONDS));
 

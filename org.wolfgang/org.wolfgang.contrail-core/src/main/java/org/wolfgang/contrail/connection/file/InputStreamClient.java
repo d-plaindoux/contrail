@@ -30,9 +30,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -86,9 +84,9 @@ public class InputStreamClient implements Closeable {
 	 *            The input file (can be <code>null</code>)
 	 * @return
 	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 */
-	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataSenderException {
+	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataHandlerException {
 		final UpStreamDataHandler<byte[]> dataSender = this.factory.create(new DownStreamDataHandlerAdapter<byte[]>());
 
 		final Callable<Void> reader = new Callable<Void>() {

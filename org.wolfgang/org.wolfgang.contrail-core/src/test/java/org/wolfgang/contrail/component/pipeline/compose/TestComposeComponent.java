@@ -27,7 +27,6 @@ import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.bound.DataReceiverAdapter;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
@@ -35,6 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransd
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -66,9 +66,9 @@ public class TestComposeComponent extends TestCase {
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>() {
 			@Override
-			public void receiveData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataHandlerException {
 				terminalFuture.setValue(data);
 			}
 		});
@@ -93,7 +93,7 @@ public class TestComposeComponent extends TestCase {
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>());
 		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new DataReceiverAdapter<String>());
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>());
 
 		componentLinkManagerImpl.connect(initialComponent, composedComponent);
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);

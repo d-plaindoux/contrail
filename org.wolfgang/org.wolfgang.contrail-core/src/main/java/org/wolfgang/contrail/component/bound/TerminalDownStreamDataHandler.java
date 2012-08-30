@@ -18,57 +18,60 @@
 
 package org.wolfgang.contrail.component.bound;
 
-import java.io.IOException;
-
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 
 /**
- * <code>DataSender</code> is capable to send data to the component stream. This
- * is mainly linked to an initial upstream source component.
+ * <code>TerminalDownStreamDataHandler</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DataTerminalSender<E> implements DataSender<E> {
+public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapter<D> {
 
-	private final TerminalComponent<?, E> component;
+	private final TerminalComponent<?, D> component;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param component
 	 */
-	public DataTerminalSender(TerminalComponent<?, E> component) {
+	public TerminalDownStreamDataHandler(TerminalComponent<?, D> component) {
 		super();
 		this.component = component;
 	}
 
-	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
-	 */
-	public void sendData(E data) throws DataHandlerException {
+	@Override
+	public void handleData(D data) throws DataHandlerException {
+		super.handleData(data);
 		try {
 			this.component.getDownStreamDataHandler().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataHandlerException(e);
 		}
+
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void handleClose() throws DataHandlerCloseException {
+		super.handleClose();
 		try {
-			component.getDownStreamDataHandler().handleClose();
+			this.component.getDownStreamDataHandler().handleClose();
 		} catch (ComponentNotConnectedException e) {
-			throw new IOException(e);
-		} catch (DataHandlerCloseException e) {
-			throw new IOException(e);
+			throw new DataHandlerCloseException(e);
 		}
 	}
+
+	@Override
+	public void handleLost() throws DataHandlerCloseException {
+		super.handleClose();
+		try {
+			this.component.getDownStreamDataHandler().handleLost();
+		} catch (ComponentNotConnectedException e) {
+			throw new DataHandlerCloseException(e);
+		}
+	}
+
 }

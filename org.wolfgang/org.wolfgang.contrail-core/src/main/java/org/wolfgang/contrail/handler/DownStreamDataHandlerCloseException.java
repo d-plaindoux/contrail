@@ -24,14 +24,14 @@ package org.wolfgang.contrail.handler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DownStreamDataHandlerClosedException extends DataHandlerException {
+public class DownStreamDataHandlerCloseException extends DataHandlerCloseException {
 
 	private static final long serialVersionUID = -2525135136709063308L;
 
 	/**
 	 * Constructor
 	 */
-	public DownStreamDataHandlerClosedException() {
+	public DownStreamDataHandlerCloseException() {
 		super();
 	}
 
@@ -40,7 +40,7 @@ public class DownStreamDataHandlerClosedException extends DataHandlerException {
 	 * 
 	 * @param arg0
 	 */
-	public DownStreamDataHandlerClosedException(String arg0) {
+	public DownStreamDataHandlerCloseException(String arg0) {
 		super(arg0);
 	}
 
@@ -49,7 +49,7 @@ public class DownStreamDataHandlerClosedException extends DataHandlerException {
 	 * 
 	 * @param arg0
 	 */
-	public DownStreamDataHandlerClosedException(Throwable arg0) {
+	public DownStreamDataHandlerCloseException(Throwable arg0) {
 		super(arg0);
 	}
 
@@ -59,7 +59,7 @@ public class DownStreamDataHandlerClosedException extends DataHandlerException {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public DownStreamDataHandlerClosedException(String arg0, Throwable arg1) {
+	public DownStreamDataHandlerCloseException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 	}
 

@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 
 /**
  * <code>TestComponentLink</code>
@@ -33,7 +34,7 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 public class TestComponentLink extends TestCase {
 
 	@Test
-	public void testLink01() {
+	public void testLink01() throws CannotCreateDataHandlerException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
 			final DummySourceComponent source = new DummySourceComponent();
@@ -45,7 +46,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	@Test
-	public void testLink02() {
+	public void testLink02() throws CannotCreateDataHandlerException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
 			final DummySourceComponent source = new DummySourceComponent();
@@ -62,7 +63,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	@Test
-	public void testLink03() {
+	public void testLink03() throws CannotCreateDataHandlerException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
 			final DummySourceComponent source = new DummySourceComponent();
@@ -86,7 +87,7 @@ public class TestComponentLink extends TestCase {
 	}
 
 	@Test
-	public void testLink04() {
+	public void testLink04() throws CannotCreateDataHandlerException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
 			final DummySourceComponent source = new DummySourceComponent();

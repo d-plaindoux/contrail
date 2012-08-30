@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.handler;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * <code>DownStreamDataHandlerAdapter</code>
  * 
@@ -26,27 +28,31 @@ package org.wolfgang.contrail.handler;
  */
 public class DownStreamDataHandlerAdapter<D> implements DownStreamDataHandler<D> {
 
-	private boolean closed;
+	private AtomicBoolean closed;
 
 	{
-		this.closed = false;
+		this.closed = new AtomicBoolean(false);
 	}
 
 	@Override
 	public void handleData(D data) throws DataHandlerException {
-		if (closed) {
-			throw new DownStreamDataHandlerClosedException();
+		if (closed.get()) {
+			throw new DownStreamDataHandlerCloseException();
 		}
 	}
 
 	@Override
-	public void handleClose() {
-		this.closed = true;
+	public void handleClose() throws DataHandlerCloseException {
+		if (closed.getAndSet(true)) {
+			throw new DownStreamDataHandlerCloseException();
+		}
 	}
 
 	@Override
-	public void handleLost() {
-		this.closed = true;
+	public void handleLost() throws DataHandlerCloseException {
+		if (closed.getAndSet(true)) {
+			throw new DownStreamDataHandlerCloseException();
+		}
 	}
 
 }

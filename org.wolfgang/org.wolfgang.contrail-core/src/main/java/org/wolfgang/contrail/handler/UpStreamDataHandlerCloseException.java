@@ -16,28 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
-
-import java.io.Closeable;
-
-import org.wolfgang.contrail.handler.DataHandlerException;
+package org.wolfgang.contrail.handler;
 
 /**
- * <code>DataReceiver</code> is capable to receive data from the component
- * stream. This is mainly linked to an terminal upstream destination component.
+ * <code>UpStreamDataHandlerClosedException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataReceiver<E> extends Closeable {
+public class UpStreamDataHandlerCloseException extends DataHandlerCloseException {
+
+	private static final long serialVersionUID = -2525135136709063308L;
 
 	/**
-	 * Method called whether a data shall be performed
-	 * 
-	 * @param data
-	 *            The data to be performed
-	 * @throws DataHandlerException
-	 *             thrown is the data can not be handled correctly
+	 * Constructor
 	 */
-	void receiveData(E data) throws DataHandlerException;
+	public UpStreamDataHandlerCloseException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public UpStreamDataHandlerCloseException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public UpStreamDataHandlerCloseException(Throwable arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public UpStreamDataHandlerCloseException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
 }

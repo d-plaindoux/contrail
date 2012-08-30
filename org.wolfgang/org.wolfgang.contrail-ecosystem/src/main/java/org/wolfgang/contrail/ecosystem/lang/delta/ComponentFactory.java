@@ -23,10 +23,6 @@ import java.net.URISyntaxException;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ClientFactoryCreationException;
 import org.wolfgang.contrail.connection.ContextFactory;
@@ -45,13 +41,6 @@ public class ComponentFactory {
 			ClientFactoryCreationException {
 		final URI uri = new URI(reference);
 		final Client client = context.getClientFactory().get(uri.getScheme());
-
-		final DataSenderFactory<byte[], byte[]> dataSenderFactory = new DataSenderFactory<byte[], byte[]>() {
-			@Override
-			public DataSender<byte[]> create(DataReceiver<byte[]> component) throws CannotCreateDataSenderException {
-				return null;
-			}
-		};
 
 		return null;
 	}

@@ -71,7 +71,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DownStreamDataHandlerFactory<U, D> receiver) {
+	public InitialComponent(final DownStreamDataHandlerFactory<U, D> receiver) throws CannotCreateDataHandlerException {
 		super();
 		this.downStreamDataHandler = receiver.create(new InitialUpStreamDataHandler<U>(this));
 	}

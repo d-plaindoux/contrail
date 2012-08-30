@@ -27,22 +27,19 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -54,22 +51,29 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComponentEcosystem extends TestCase {
 
 	@Test
-	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataSenderException, DataHandlerException, IOException {
+	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataHandlerException, DataHandlerException, IOException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
-		final DataReceiverFactory<String, String> dataFactory = new DataReceiverFactory<String, String>() {
+		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
-			public DataReceiver<String> create(final DataSender<String> sender) {
-				return new DataReceiver<String>() {
+			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> sender) {
+				return new UpStreamDataHandlerAdapter<String>() {
 					@Override
-					public void receiveData(String data) throws DataHandlerException {
-						sender.sendData(data);
+					public void handleData(String data) throws DataHandlerException {
+						sender.handleData(data);
 					}
 
 					@Override
-					public void close() throws IOException {
-						sender.close();
+					public void handleClose() throws DataHandlerCloseException {
+						super.handleClose();
+						sender.handleClose();
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						super.handleLost();
+						sender.handleLost();
 					}
 				};
 			}
@@ -77,14 +81,14 @@ public class TestComponentEcosystem extends TestCase {
 
 		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
-			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataHandlerException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataSenderException(e);
+					throw new CannotCreateDataHandlerException(e);
 				}
 				return new InitialUpStreamDataHandler<String>(initialComponent);
 			}

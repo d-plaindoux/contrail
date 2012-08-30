@@ -18,13 +18,14 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
-import java.io.IOException;
-
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
  * <code>IntegerDestinationComponent</code>
@@ -36,20 +37,30 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 
 	/**
 	 * Constructor
+	 * 
+	 * @throws CannotCreateDataHandlerException
 	 */
-	public IntegerDestinationComponent() {
-		super(new DataReceiverFactory<Integer, Integer>() {
+	public IntegerDestinationComponent() throws CannotCreateDataHandlerException {
+		super(new UpStreamDataHandlerFactory<Integer, Integer>() {
 			@Override
-			public DataReceiver<Integer> create(final DataSender<Integer> terminal) {
-				return new DataReceiver<Integer>() {
+			public UpStreamDataHandler<Integer> create(final DownStreamDataHandler<Integer> terminal) {
+				return new UpStreamDataHandlerAdapter<Integer>() {
 					@Override
-					public void receiveData(Integer data) throws DataHandlerException {
-						terminal.sendData(data * data);
+					public void handleData(Integer data) throws DataHandlerException {
+						super.handleData(data);
+						terminal.handleData(data * data);
 					}
 
 					@Override
-					public void close() throws IOException {
-						terminal.close();
+					public void handleClose() throws DataHandlerCloseException {
+						super.handleClose();
+						terminal.handleClose();
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						super.handleLost();
+						terminal.handleLost();
 					}
 				};
 			}

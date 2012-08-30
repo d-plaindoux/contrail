@@ -24,7 +24,7 @@ package org.wolfgang.contrail.handler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DataHandlerCloseException extends Exception {
+public class DataHandlerCloseException extends DataHandlerException {
 
 	private static final long serialVersionUID = -114097230498401093L;
 

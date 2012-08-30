@@ -18,15 +18,11 @@
 
 package org.wolfgang.contrail.network.connection.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -35,9 +31,11 @@ import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -78,24 +76,33 @@ public final class WebServer extends NIOServer {
 		 */
 
 		final EcosystemImpl ecosystem = new EcosystemImpl();
-		final List<DataSender<String>> components = new ArrayList<DataSender<String>>();
+		final List<DownStreamDataHandler<String>> components = new ArrayList<DownStreamDataHandler<String>>();
 
-		final DataReceiverFactory<String, String> dataFactory = new DataReceiverFactory<String, String>() {
+		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
-			public DataReceiver<String> create(final DataSender<String> component) {
+			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> component) {
 				components.add(component);
 
-				return new DataReceiver<String>() {
+				return new UpStreamDataHandlerAdapter<String>() {
 					@Override
-					public void receiveData(String data) throws DataHandlerException {
-						for (DataSender<String> aComponent : components) {
-							aComponent.sendData(data);
+					public void handleData(String data) throws DataHandlerException {
+						super.handleData(data);
+						for (DownStreamDataHandler<String> aComponent : components) {
+							aComponent.handleData(data);
 						}
 					}
 
 					@Override
-					public void close() throws IOException {
-						component.close();
+					public void handleClose() throws DataHandlerCloseException {
+						super.handleClose();
+						component.handleClose();
+						components.remove(component);
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						super.handleLost();
+						component.handleLost();
 						components.remove(component);
 					}
 				};
@@ -105,14 +112,14 @@ public final class WebServer extends NIOServer {
 		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
 
 			@Override
-			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataHandlerException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataSenderException(e);
+					throw new CannotCreateDataHandlerException(e);
 				}
 				return new InitialUpStreamDataHandler<String>(initialComponent);
 			}

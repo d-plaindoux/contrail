@@ -21,9 +21,7 @@ package org.wolfgang.contrail.component.pipeline;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 
 /**

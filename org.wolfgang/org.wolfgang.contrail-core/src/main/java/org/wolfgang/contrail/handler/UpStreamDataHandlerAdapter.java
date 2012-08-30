@@ -16,28 +16,43 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
+package org.wolfgang.contrail.handler;
 
-import java.io.IOException;
-
-import org.wolfgang.contrail.handler.DataHandlerException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <code>DataReceiverAdapter</code>
+ * <code>DownStreamDataHandlerAdapter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DataReceiverAdapter<E> implements DataReceiver<E> {
+public class UpStreamDataHandlerAdapter<D> implements UpStreamDataHandler<D> {
 
-	@Override
-	public void close() throws IOException {
-		// Nothing
+	private AtomicBoolean closed;
+
+	{
+		this.closed = new AtomicBoolean(false);
 	}
 
 	@Override
-	public void receiveData(E data) throws DataHandlerException {
-		// Nothing
+	public void handleData(D data) throws DataHandlerException {
+		if (closed.get()) {
+			throw new UpStreamDataHandlerCloseException();
+		}
+	}
+
+	@Override
+	public void handleClose() throws DataHandlerCloseException {
+		if (closed.getAndSet(true)) {
+			throw new UpStreamDataHandlerCloseException();
+		}
+	}
+
+	@Override
+	public void handleLost() throws DataHandlerCloseException {
+		if (closed.getAndSet(true)) {
+			throw new UpStreamDataHandlerCloseException();
+		}
 	}
 
 }

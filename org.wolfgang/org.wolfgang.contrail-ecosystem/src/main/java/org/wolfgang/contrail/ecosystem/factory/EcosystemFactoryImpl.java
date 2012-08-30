@@ -44,11 +44,7 @@ import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.annotation.ContrailTransducer;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataInitialSender;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataSender;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -112,15 +108,15 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		@Override
-		public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataSenderException {
+		public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataHandlerException {
 			try {
 				final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 				ecosystemFactory.create(initialComponent, items);
 				return new InitialUpStreamDataHandler<U>(initialComponent);
 			} catch (CannotCreateComponentException e) {
-				throw new CannotCreateDataSenderException(e);
+				throw new CannotCreateDataHandlerException(e);
 			} catch (ComponentConnectionRejectedException e) {
-				throw new CannotCreateDataSenderException(e);
+				throw new CannotCreateDataHandlerException(e);
 			}
 		}
 	}
@@ -245,10 +241,10 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	 *            The items to be used for the flow creation
 	 * @return a component (Never <code>null</code>
 	 * @throws CannotCreateComponentException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 * @throws ComponentConnectionRejectedException
 	 */
-	private Component create(final Component source, final Item item) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
+	private Component create(final Component source, final Item item) throws CannotCreateComponentException, CannotCreateDataHandlerException, ComponentConnectionRejectedException {
 		final String name = item.getName();
 
 		if (item.asAlias() && this.aliasedComponents.containsKey(item.getAlias())) {
@@ -266,7 +262,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 				return register(item.getAlias(), create(source, FlowModel.decompose(flows.get(name).getValue())));
 			} else {
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "value.unknown");
-				throw new CannotCreateDataSenderException(message.format(name));
+				throw new CannotCreateDataHandlerException(message.format(name));
 			}
 		}
 	}
@@ -280,10 +276,10 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 	 *            The items to be used for the flow creation
 	 * @return a component (Never <code>null</code>
 	 * @throws CannotCreateComponentException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 * @throws ComponentConnectionRejectedException
 	 */
-	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataSenderException, ComponentConnectionRejectedException {
+	private Component create(final Component source, final Item[] items) throws CannotCreateComponentException, CannotCreateDataHandlerException, ComponentConnectionRejectedException {
 		Component current = source;
 
 		for (Item item : items) {
@@ -291,7 +287,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 		}
 
 		if (current == null) {
-			throw new CannotCreateDataSenderException();
+			throw new CannotCreateDataHandlerException();
 		} else {
 			return current;
 		}
@@ -383,14 +379,14 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 
 							final UpStreamDataHandlerFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 								@Override
-								public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataSenderException {
+								public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataHandlerException {
 									// Initial component
 									final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 									try {
 										componentLinkManager.connect(initial, initialTransducer);
 										return new InitialUpStreamDataHandler<byte[]>(initial);
 									} catch (ComponentConnectionRejectedException e) {
-										throw new CannotCreateDataSenderException(e);
+										throw new CannotCreateDataHandlerException(e);
 									}
 								}
 							};
@@ -400,7 +396,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 							return (SourceComponent<Event, Event>) terminalTransducer;
 						} catch (ComponentConnectionRejectedException e) {
 							throw new CannotCreateComponentException(e);
-						} catch (CannotCreateDataSenderException e) {
+						} catch (CannotCreateDataHandlerException e) {
 							throw new CannotCreateComponentException(e);
 						} catch (ClassCastException e) {
 							throw new CannotCreateComponentException(e);
@@ -443,14 +439,14 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			final UpStreamDataHandlerFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataSenderException {
+				public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataHandlerException {
 					// Initial component
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 					try {
 						componentLinkManager.connect(initial, initialTransducer);
 						return new InitialUpStreamDataHandler<byte[]>(initial);
 					} catch (ComponentConnectionRejectedException e) {
-						throw new CannotCreateDataSenderException(e);
+						throw new CannotCreateDataHandlerException(e);
 					}
 				}
 			};
@@ -462,7 +458,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			throw new CannotCreateComponentException(e);
 		} catch (CannotCreateServerException e) {
 			throw new CannotCreateComponentException(e);
-		} catch (CannotCreateDataSenderException e) {
+		} catch (CannotCreateDataHandlerException e) {
 			throw new CannotCreateComponentException(e);
 		} catch (ComponentConnectionRejectedException e) {
 			throw new CannotCreateComponentException(e);
@@ -627,7 +623,7 @@ public final class EcosystemFactoryImpl implements ContextFactory {
 			return ecosystemImpl;
 		} catch (CannotCreateComponentException e) {
 			throw new EcosystemCreationException(e);
-		} catch (CannotCreateDataSenderException e) {
+		} catch (CannotCreateDataHandlerException e) {
 			throw new EcosystemCreationException(e);
 		} catch (ComponentConnectionRejectedException e) {
 			throw new EcosystemCreationException(e);

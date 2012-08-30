@@ -18,14 +18,9 @@
 
 package org.wolfgang.contrail.link;
 
-import java.io.IOException;
-
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
@@ -40,8 +35,9 @@ public class DummySourceComponent extends InitialComponent<Void, Void> {
 
 	/**
 	 * Constructor
+	 * @throws CannotCreateDataHandlerException 
 	 */
-	public DummySourceComponent() {
+	public DummySourceComponent() throws CannotCreateDataHandlerException {
 		super(new DownStreamDataHandlerFactory<Void, Void>() {
 			@Override
 			public DownStreamDataHandler<Void> create(UpStreamDataHandler<Void> sender) {

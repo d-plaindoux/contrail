@@ -18,13 +18,14 @@
 
 package org.wolfgang.contrail.link;
 
-import java.io.IOException;
-
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
  * <code>DummyDestinationComponent</code>
@@ -36,20 +37,29 @@ public class DummyDestinationComponent extends TerminalComponent<Void, Void> {
 
 	/**
 	 * Constructor
+	 * 
+	 * @throws CannotCreateDataHandlerException
 	 */
-	public DummyDestinationComponent() {
-		super(new DataReceiverFactory<Void, Void>() {
+	public DummyDestinationComponent() throws CannotCreateDataHandlerException {
+		super(new UpStreamDataHandlerFactory<Void, Void>() {
 			@Override
-			public DataReceiver<Void> create(final DataSender<Void> sender) {
-				return new DataReceiver<Void>() {
+			public UpStreamDataHandler<Void> create(final DownStreamDataHandler<Void> sender) {
+				return new UpStreamDataHandlerAdapter<Void>() {
 					@Override
-					public void receiveData(Void data) throws DataHandlerException {
-						sender.sendData(data);
+					public void handleData(Void data) throws DataHandlerException {
+						sender.handleData(data);
 					}
 
 					@Override
-					public void close() throws IOException {
-						sender.close();
+					public void handleClose() throws DataHandlerCloseException {
+						super.handleClose();
+						sender.handleClose();
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						super.handleLost();
+						sender.handleLost();
 					}
 				};
 			}

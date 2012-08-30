@@ -22,8 +22,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSenderFactory;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 
 /**
@@ -44,7 +43,7 @@ public interface Server extends Closeable {
 	 *            The data sender factory
 	 * @return a future denoting the connection liveness
 	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 */
 	Worker bind(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException;
 

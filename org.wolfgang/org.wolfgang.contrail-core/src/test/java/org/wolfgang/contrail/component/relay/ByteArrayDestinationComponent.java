@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import java.io.IOException;
-
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
  * <code>ByteArrayDestinationComponent</code>
@@ -36,20 +36,18 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 
 	/**
 	 * Constructor
+	 * 
+	 * @throws CannotCreateDataHandlerException
 	 */
-	public ByteArrayDestinationComponent() {
-		super(new DataReceiverFactory<byte[], byte[]>() {
+	public ByteArrayDestinationComponent() throws CannotCreateDataHandlerException {
+		super(new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(final DataSender<byte[]> sender) {
-				return new DataReceiver<byte[]>() {
+			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
+				return new UpStreamDataHandlerAdapter<byte[]>() {
 					@Override
-					public void receiveData(byte[] data) throws DataHandlerException {
-						sender.sendData(data);
-					}
-
-					@Override
-					public void close() throws IOException {
-						sender.close();
+					public void handleData(byte[] data) throws DataHandlerException {
+						super.handleData(data);
+						sender.handleData(data);
 					}
 				};
 			}

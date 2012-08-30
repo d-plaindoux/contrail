@@ -22,8 +22,7 @@ import java.util.List;
 
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerClosedException;
+import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -34,17 +33,12 @@ import org.wolfgang.contrail.link.ComponentLinkFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> {
+class TransducerDownStreamDataHandler<U, D> extends DownStreamDataHandlerAdapter<U> {
 
 	/**
 	 * The component which is in charge of this data handler
 	 */
 	private final TransducerComponent<?, D, ?, U> component;
-
-	/**
-	 * Boolean used to store the handler status i.e. closed or not.
-	 */
-	private boolean closed = false;
 
 	/**
 	 * The transformation process
@@ -68,9 +62,8 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 
 	@Override
 	public void handleData(U data) throws DataHandlerException {
-		if (closed) {
-			throw new DownStreamDataHandlerClosedException();
-		} else if (ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
+		super.handleData(data);
+		if (ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
 			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
 			throw new DataHandlerException(message);
 		} else {
@@ -91,7 +84,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
-		this.closed = true;
+		super.handleClose();
 		if (!ComponentLinkFactory.isUndefined(this.component.getSourceComponentLink())) {
 			try {
 				final List<D> transform = streamXducer.finish();
@@ -109,7 +102,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 	}
 
 	@Override
-	public void handleLost() {
-		this.closed = true;
+	public void handleLost() throws DataHandlerCloseException {
+		super.handleLost();
 	}
 }

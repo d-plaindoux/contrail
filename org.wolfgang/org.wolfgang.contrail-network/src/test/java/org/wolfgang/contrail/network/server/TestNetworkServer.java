@@ -27,10 +27,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
@@ -41,9 +38,11 @@ import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -65,18 +64,25 @@ public class TestNetworkServer extends TestCase {
 
 		// component -> new DataReceiver<byte[]>() {...};
 
-		final DataReceiverFactory<byte[], byte[]> dataReceiverFactory = new DataReceiverFactory<byte[], byte[]>() {
+		final UpStreamDataHandlerFactory<byte[], byte[]> dataReceiverFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public DataReceiver<byte[]> create(final DataSender<byte[]> component) {
-				return new DataReceiver<byte[]>() {
+			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
+				return new UpStreamDataHandlerAdapter<byte[]>() {
 					@Override
-					public void receiveData(byte[] data) throws DataHandlerException {
-						component.sendData(data);
+					public void handleData(byte[] data) throws DataHandlerException {
+						sender.handleData(data);
 					}
 
 					@Override
-					public void close() throws IOException {
-						component.close();
+					public void handleClose() throws DataHandlerCloseException {
+						super.handleClose();
+						sender.handleClose();
+					}
+
+					@Override
+					public void handleLost() throws DataHandlerCloseException {
+						super.handleLost();
+						sender.handleLost();
 					}
 				};
 			}
@@ -86,14 +92,14 @@ public class TestNetworkServer extends TestCase {
 
 		final UpStreamDataHandlerFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> receiver) throws CannotCreateDataSenderException {
+			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> receiver) throws CannotCreateDataHandlerException {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(receiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(dataReceiverFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataSenderException(e);
+					throw new CannotCreateDataHandlerException(e);
 				}
 				return new InitialUpStreamDataHandler<byte[]>(initialComponent);
 			}

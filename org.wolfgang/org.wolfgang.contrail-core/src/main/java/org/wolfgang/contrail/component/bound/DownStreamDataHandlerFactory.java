@@ -36,9 +36,9 @@ public interface DownStreamDataHandlerFactory<U, D> {
 	 * @param component
 	 *            The component used to build the data sender
 	 * @return a data sender (Never <code>null</code>)
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 *             if the data sender cannot be correctly created
 	 */
-	DownStreamDataHandler<D> create(UpStreamDataHandler<U> component);
+	DownStreamDataHandler<D> create(UpStreamDataHandler<U> component) throws CannotCreateDataHandlerException;
 
 }

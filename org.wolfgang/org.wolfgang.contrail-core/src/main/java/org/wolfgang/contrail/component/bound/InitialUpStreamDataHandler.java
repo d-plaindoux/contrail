@@ -21,7 +21,7 @@ package org.wolfgang.contrail.component.bound;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
  * <code>InitialUpStreamDataHandler</code>
@@ -29,7 +29,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
+public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U> {
 
 	private final InitialComponent<U, ?> component;
 
@@ -45,6 +45,7 @@ public class InitialUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
 
 	@Override
 	public void handleData(U data) throws DataHandlerException {
+		super.handleData(data);
 		try {
 			this.component.getUpStreamDataHandler().handleData(data);
 		} catch (ComponentNotConnectedException e) {
@@ -55,6 +56,7 @@ public class InitialUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
 
 	@Override
 	public void handleClose() throws DataHandlerCloseException {
+		super.handleClose();
 		try {
 			this.component.getUpStreamDataHandler().handleClose();
 		} catch (ComponentNotConnectedException e) {
@@ -64,6 +66,7 @@ public class InitialUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
 
 	@Override
 	public void handleLost() throws DataHandlerCloseException {
+		super.handleLost();
 		try {
 			this.component.getUpStreamDataHandler().handleLost();
 		} catch (ComponentNotConnectedException e) {

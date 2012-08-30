@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
@@ -104,7 +104,7 @@ public class NetClient implements Client {
 	 * @return
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 */
 	public Worker connect(final URI uri, final UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException {
 		final Socket client;
@@ -147,7 +147,7 @@ public class NetClient implements Client {
 		final UpStreamDataHandler<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataSenderException e) {
+		} catch (CannotCreateDataHandlerException e) {
 			try {
 				dataReceiver.handleClose();
 			} catch (DataHandlerCloseException consume) {

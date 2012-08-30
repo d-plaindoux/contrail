@@ -18,16 +18,17 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
-import java.io.IOException;
-
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
-import org.wolfgang.contrail.component.bound.DataReceiver;
-import org.wolfgang.contrail.component.bound.DataReceiverFactory;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
 /**
  * <code>TestComponent</code>
@@ -39,7 +40,7 @@ import org.wolfgang.contrail.handler.DataHandlerException;
 @ContrailTerminal(name = "Test")
 public class EchoComponent extends TerminalComponent {
 
-	private static class LocalDataReceiverFactory implements DataReceiverFactory {
+	private static class LocalDataReceiverFactory implements UpStreamDataHandlerFactory {
 		private final String name;
 
 		/**
@@ -53,34 +54,37 @@ public class EchoComponent extends TerminalComponent {
 		}
 
 		@Override
-		public DataReceiver create(final DataSender sender) {
-			return new DataReceiver() {
+		public UpStreamDataHandler create(final DownStreamDataHandler sender) {
+			return new UpStreamDataHandlerAdapter() {
 				@Override
-				public void close() throws IOException {
-					sender.close();
+				public void handleData(Object data) throws DataHandlerException {
+					sender.handleData(data);
 				}
 
 				@Override
-				@SuppressWarnings("unchecked")
-				public void receiveData(Object data) throws DataHandlerException {
-					if (name != null) {
-						sender.sendData(name + data);
-					} else {
-						sender.sendData(data);
-					}
+				public void handleClose() throws DataHandlerCloseException {
+					super.handleClose();
+					sender.handleClose();
+				}
+
+				@Override
+				public void handleLost() throws DataHandlerCloseException {
+					super.handleLost();
+					sender.handleLost();
 				}
 			};
 		}
-	};
+	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param receiver
+	 * @throws CannotCreateDataHandlerException 
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor
-	public EchoComponent(@ContrailArgument("name") String name) {
+	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataHandlerException {
 		super(new LocalDataReceiverFactory(name));
 	}
 

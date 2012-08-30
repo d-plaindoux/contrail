@@ -25,8 +25,7 @@ import java.io.OutputStream;
 import java.util.concurrent.Future;
 
 import org.wolfgang.common.concurrent.FutureResponse;
-import org.wolfgang.contrail.component.bound.CannotCreateDataSenderException;
-import org.wolfgang.contrail.component.bound.DataSender;
+import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
@@ -67,10 +66,10 @@ public class OutputStreamClient implements Closeable {
 	 *            The output file (can be <code>null</code>)
 	 * @return
 	 * @throws IOException
-	 * @throws CannotCreateDataSenderException
+	 * @throws CannotCreateDataHandlerException
 	 * @throws DataHandlerCloseException
 	 */
-	public Future<Void> connect(final OutputStream outputStream) throws CannotCreateDataSenderException, DataHandlerCloseException {
+	public Future<Void> connect(final OutputStream outputStream) throws CannotCreateDataHandlerException, DataHandlerCloseException {
 		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataHandlerException {
