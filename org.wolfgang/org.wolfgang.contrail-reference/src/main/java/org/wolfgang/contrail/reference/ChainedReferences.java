@@ -21,6 +21,7 @@ package org.wolfgang.contrail.reference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <code>ChainedReferences</code>
@@ -38,7 +39,7 @@ final class ChainedReferences implements IndirectReference, Serializable {
 	/**
 	 * 
 	 */
-	private final ArrayList<DirectReference> references;
+	private final List<DirectReference> references;
 
 	{
 		this.references = new ArrayList<DirectReference>();
@@ -73,9 +74,7 @@ final class ChainedReferences implements IndirectReference, Serializable {
 
 	@Override
 	public IndirectReference addFirst(DirectReference reference) {
-		if (this.references.size() > 0 && this.getCurrent().equals(reference)) {
-			// Already pushed so forget it ...
-		} else {
+		if (this.references.size() == 0 || !this.getCurrent().equals(reference)) {
 			this.references.add(0, reference);
 		}
 		return this;

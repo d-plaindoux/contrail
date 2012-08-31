@@ -30,14 +30,14 @@ import java.util.concurrent.Executors;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>ProcessHandler</code> provides a client process handler
@@ -58,7 +58,7 @@ public class ProcessHandler implements Server {
 	/**
 	 * The data sender factory
 	 */
-	private final UpStreamDataHandlerFactory<byte[], byte[]> factory;
+	private final UpStreamDataFlowFactory<byte[], byte[]> factory;
 
 	{
 		executor = Executors.newSingleThreadExecutor();
@@ -70,7 +70,7 @@ public class ProcessHandler implements Server {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(UpStreamDataHandlerFactory<byte[], byte[]> factory) {
+	public ProcessHandler(UpStreamDataFlowFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
@@ -81,7 +81,7 @@ public class ProcessHandler implements Server {
 	}
 
 	@Override
-	public Worker bind(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(URI uri, UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateServerException {
 
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
@@ -89,14 +89,14 @@ public class ProcessHandler implements Server {
 		// TODO -- System.setIn(?);
 		// TODO -- System.setOut(?);
 
-		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
+		final DownStreamDataFlow<byte[]> dataReceiver = new DownStreamDataFlow<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				try {
 					output.write(data);
 					output.flush();
 				} catch (IOException e) {
-					throw new DataHandlerException(e);
+					throw new DataFlowException(e);
 				}
 			}
 
@@ -111,10 +111,10 @@ public class ProcessHandler implements Server {
 			}
 		};
 
-		final UpStreamDataHandler<byte[]> dataSender;
+		final UpStreamDataFlow<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataHandlerException e) {
+		} catch (CannotCreateDataFlowException e) {
 			throw new CannotCreateServerException(e);
 		}
 

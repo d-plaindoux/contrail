@@ -31,9 +31,9 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -45,17 +45,17 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestConcurrentComponent extends TestCase {
 
 	@Test
-	public void testConcurrent01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testConcurrent01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataHandlerAdapter<Integer>());
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataHandlerAdapter<Integer>() {
+		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataFlowAdapter<Integer>());
+		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
 			@Override
-			public synchronized void handleData(Integer data) throws DataHandlerException {
+			public synchronized void handleData(Integer data) throws DataFlowException {
 				responses[location++] = data;
 
 				if (location == responses.length) {
@@ -87,16 +87,16 @@ public class TestConcurrentComponent extends TestCase {
 	}
 
 	@Test
-	public void testConcurrent02() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testConcurrent02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataHandlerAdapter<Integer>() {
+		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
 			@Override
-			public synchronized void handleData(Integer data) throws DataHandlerException {
+			public synchronized void handleData(Integer data) throws DataFlowException {
 				responses[location++] = data;
 
 				if (location == responses.length) {
@@ -105,7 +105,7 @@ public class TestConcurrentComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataHandlerAdapter<Integer>());
+		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataFlowAdapter<Integer>());
 		final ParallelDestinationComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelDestinationComponent<Integer, Integer>();
 
 		componentLinkManagerImpl.connect(initialComponent, concurrentSourcePipelineComponent);

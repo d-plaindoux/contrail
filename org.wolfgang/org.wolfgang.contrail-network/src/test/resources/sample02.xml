@@ -1,12 +1,22 @@
 <?xml version='1.0'?>
 <ecosystem>
-
-	<declare>
+	<import>
 		org.wolfgang.contrail.connection.net.NetClient
-		Client=org.wolfgang.contrail.component.bound.gateway.ClientComponent
-	</declare>
+	</import>
+
+	<import as='ClientHandler'>
+		org.wolfgang.contrail.component.bound.gateway.ClientComponent
+	</import>
+
+	<define name='Client'>
+		<function>
+			<var>uri</var>
+			<ref>ClientHandler</ref>
+		</function>
+	</define>
 
 	<binder name='Main' typein="byte[]" typeout="byte[]">
-		Client(tcp://localhost:6666)
+		<ref>Client</ref>
+		<atom>tcp://localhost:6666</atom>
 	</binder>
 </ecosystem>

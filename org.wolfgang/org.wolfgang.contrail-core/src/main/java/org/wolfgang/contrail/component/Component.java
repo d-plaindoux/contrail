@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
 
 /**
  * <code>Component</code> is the main specification for component definition. It
@@ -34,6 +34,13 @@ import org.wolfgang.contrail.handler.DataHandlerCloseException;
 public interface Component {
 
 	/**
+	 * Mechanism called whether a reverse version of this component is required
+	 * 
+	 * @return a reverse version of the current component
+	 */
+	// TODO ? Component reverse();
+
+	/**
 	 * Method providing the component identifier
 	 */
 	ComponentId getComponentId();
@@ -41,19 +48,19 @@ public interface Component {
 	/**
 	 * Method called whether the upstream must be closed
 	 * 
-	 * @throws DataHandlerCloseException
+	 * @throws DataFlowCloseException
 	 *             thrown if an error occurs during the stream termination
 	 *             process
 	 */
-	void closeUpStream() throws DataHandlerCloseException;
+	void closeUpStream() throws DataFlowCloseException;
 
 	/**
 	 * Method called whether the downstream must be closed
 	 * 
-	 * @throws DataHandlerCloseException
+	 * @throws DataFlowCloseException
 	 *             thrown if an error occurs during the stream termination
 	 *             process
 	 */
-	void closeDownStream() throws DataHandlerCloseException;
+	void closeDownStream() throws DataFlowCloseException;
 
 }

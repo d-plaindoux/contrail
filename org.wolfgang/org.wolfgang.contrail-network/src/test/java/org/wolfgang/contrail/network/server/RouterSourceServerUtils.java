@@ -26,11 +26,9 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionFactory;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -44,8 +42,10 @@ import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -84,16 +84,16 @@ class RouterSourceServerUtils extends TestCase {
 
 					component.filter(coercionTransducer.getComponentId(), this.getReferenceToUse());
 
-					final UpStreamDataHandlerFactory<byte[], byte[]> factory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
+					final UpStreamDataFlowFactory<byte[], byte[]> factory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 						@Override
-						public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> component) throws CannotCreateDataHandlerException {
+						public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
 							// Initial component
 							final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(component);
 							try {
 								componentLinkManager.connect(initial, payLoadTransducer);
-								return InitialUpStreamDataHandler.<byte[]> create(initial);
+								return InitialUpStreamDataFlow.<byte[]> create(initial);
 							} catch (ComponentConnectionRejectedException e) {
-								throw new CannotCreateDataHandlerException(e);
+								throw new CannotCreateDataFlowException(e);
 							}
 						}
 					};
@@ -119,10 +119,10 @@ class RouterSourceServerUtils extends TestCase {
 		component.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static UpStreamDataHandlerFactory<byte[], byte[]> serverBinder(final RouterComponent component, final ComponentLinkManagerImpl componentLinkManager) {
-		return new UpStreamDataHandlerFactory<byte[], byte[]>() {
+	static UpStreamDataFlowFactory<byte[], byte[]> serverBinder(final RouterComponent component, final ComponentLinkManagerImpl componentLinkManager) {
+		return new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> receiver) throws CannotCreateDataHandlerException {
+			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> receiver) throws CannotCreateDataFlowException {
 				try {
 					// Pay-load component
 					final PayLoadTransducerFactory payLoadTransducerFactory = new PayLoadTransducerFactory();
@@ -136,11 +136,11 @@ class RouterSourceServerUtils extends TestCase {
 					final CoercionTransducerFactory<Event> coercionTransducerFactory = new CoercionTransducerFactory<Event>(Event.class);
 					final TransducerComponent<Object, Object, Event, Event> coercionTransducer = coercionTransducerFactory.createComponent();
 
-					final Component log01 = CompositionFactory.compose(componentLinkManager, new LoggerSourceComponent<Bytes, Bytes>("01.UP"), new LoggerDestinationComponent<Bytes, Bytes>("01.DOWN"));
+					final Component log01 = CompositionComponents.compose(componentLinkManager, new LoggerSourceComponent<Bytes, Bytes>("01.UP"), new LoggerDestinationComponent<Bytes, Bytes>("01.DOWN"));
 					componentLinkManager.connect(payLoadTransducer, log01);
 					componentLinkManager.connect(log01, serialisationTransducer);
 
-					final Component log02 = CompositionFactory.compose(componentLinkManager, new LoggerSourceComponent("02.UP"), new LoggerDestinationComponent("02.DOWN"));
+					final Component log02 = CompositionComponents.compose(componentLinkManager, new LoggerSourceComponent("02.UP"), new LoggerDestinationComponent("02.DOWN"));
 					componentLinkManager.connect(serialisationTransducer, log02);
 					componentLinkManager.connect(log02, coercionTransducer);
 
@@ -153,11 +153,11 @@ class RouterSourceServerUtils extends TestCase {
 
 					final InitialComponent<byte[], byte[]> initial = new InitialComponent<byte[], byte[]>(receiver);
 					componentLinkManager.connect(initial, payLoadTransducer);
-					return InitialUpStreamDataHandler.<byte[]>create(initial);
+					return InitialUpStreamDataFlow.<byte[]>create(initial);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataHandlerException(e);
+					throw new CannotCreateDataFlowException(e);
 				} catch (Exception e) {
-					throw new CannotCreateDataHandlerException(e);
+					throw new CannotCreateDataFlowException(e);
 				}
 			}
 		};

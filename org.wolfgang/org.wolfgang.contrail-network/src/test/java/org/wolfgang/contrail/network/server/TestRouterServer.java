@@ -42,13 +42,13 @@ import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
-import org.wolfgang.contrail.ecosystem.factory.RouterFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
+import org.wolfgang.contrail.ecosystem.lang.delta.RouterFactory;
 import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.event.EventImpl;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -62,7 +62,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 public class TestRouterServer extends TestCase {
 
-	private static class Receiver extends UpStreamDataHandlerAdapter<Event> {
+	private static class Receiver extends UpStreamDataFlowAdapter<Event> {
 		private final DirectReference self;
 		private final AtomicReference<FutureResponse<String>> futureResponse;
 
@@ -73,7 +73,7 @@ public class TestRouterServer extends TestCase {
 		}
 
 		@Override
-		public void handleData(Event data) throws DataHandlerException {
+		public void handleData(Event data) throws DataFlowException {
 			try {
 				futureResponse.get().setValue(self + " - " + data.getContent());
 			} catch (Throwable e) {
@@ -86,7 +86,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal01Direct() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, ComponentNotConnectedException {
+			DataFlowException, InterruptedException, ExecutionException, TimeoutException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 
@@ -115,7 +115,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal02Relay() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
+			DataFlowException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal02ComplexPath() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
+			DataFlowException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -239,7 +239,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal03ComplexPath() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
+			DataFlowException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------
@@ -315,7 +315,7 @@ public class TestRouterServer extends TestCase {
 
 	@Test
 	public void testNominal03Transitive() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
-			DataHandlerException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
+			DataFlowException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
 
 		final AtomicReference<FutureResponse<String>> futureResponse = new AtomicReference<FutureResponse<String>>(new FutureResponse<String>());
 		// ------------------------------------------------------------------------------------------------

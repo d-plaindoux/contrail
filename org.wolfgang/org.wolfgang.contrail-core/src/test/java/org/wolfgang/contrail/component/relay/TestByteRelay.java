@@ -28,11 +28,11 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerCloseException;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerCloseException;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlowCloseException;
+import org.wolfgang.contrail.flow.UpStreamDataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -45,7 +45,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestByteRelay extends TestCase {
 
 	@Test
-	public void testNominal01() throws DataHandlerException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
+	public void testNominal01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -65,8 +65,8 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testNominal02() throws DataHandlerException, IOException, DataHandlerCloseException, ComponentDisconnectionRejectedException, ComponentConnectionRejectedException,
-			CannotCreateDataHandlerException {
+	public void testNominal02() throws DataFlowException, IOException, DataFlowCloseException, ComponentDisconnectionRejectedException, ComponentConnectionRejectedException,
+			CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -87,8 +87,8 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed01() throws DataHandlerException, IOException, DataHandlerCloseException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException,
-			CannotCreateDataHandlerException {
+	public void testUpStreamClosed01() throws DataFlowException, IOException, DataFlowCloseException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException,
+			CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -102,7 +102,7 @@ public class TestByteRelay extends TestCase {
 			interconnection.dispose();
 
 			fail();
-		} catch (UpStreamDataHandlerCloseException e) {
+		} catch (UpStreamDataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -110,8 +110,8 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testUpStreamClosed02() throws DataHandlerException, IOException, ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException,
-			CannotCreateDataHandlerException {
+	public void testUpStreamClosed02() throws DataFlowException, IOException, ComponentNotConnectedException, DataFlowCloseException, ComponentConnectionRejectedException,
+			CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -123,15 +123,15 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (UpStreamDataHandlerCloseException e) {
+		} catch (UpStreamDataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
 		}
 	}
 
-	public void tesDownStreamClosed01() throws DataHandlerException, IOException, ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException,
-			CannotCreateDataHandlerException {
+	public void tesDownStreamClosed01() throws DataFlowException, IOException, ComponentNotConnectedException, DataFlowCloseException, ComponentConnectionRejectedException,
+			CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -143,7 +143,7 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (DownStreamDataHandlerCloseException e) {
+		} catch (DownStreamDataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -151,8 +151,8 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testDownStreamClosed02() throws DataHandlerException, IOException, ComponentNotConnectedException, DataHandlerCloseException, ComponentConnectionRejectedException,
-			CannotCreateDataHandlerException {
+	public void testDownStreamClosed02() throws DataFlowException, IOException, ComponentNotConnectedException, DataFlowCloseException, ComponentConnectionRejectedException,
+			CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -164,7 +164,7 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (DownStreamDataHandlerCloseException e) {
+		} catch (DownStreamDataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -172,7 +172,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testSourceNotConnected() throws IOException, DataHandlerException, CannotCreateDataHandlerException {
+	public void testSourceNotConnected() throws IOException, DataFlowException, CannotCreateDataFlowException {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
@@ -189,20 +189,20 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testDestinationNotConnected() throws IOException, CannotCreateDataHandlerException {
+	public void testDestinationNotConnected() throws IOException, CannotCreateDataFlowException {
 		try {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 
 			destination.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (DataHandlerException e) {
+		} catch (DataFlowException e) {
 			// OK
 		}
 	}
 
 	@Test
-	public void testAlreadyConnected01() throws DataHandlerException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
+	public void testAlreadyConnected01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -221,7 +221,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testAlreadyConnected02() throws DataHandlerException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
+	public void testAlreadyConnected02() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -240,7 +240,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testNotConnected01() throws DataHandlerException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
+	public void testNotConnected01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
@@ -256,7 +256,7 @@ public class TestByteRelay extends TestCase {
 	}
 
 	@Test
-	public void testNotConnected02() throws DataHandlerException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataHandlerException {
+	public void testNotConnected02() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
 		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();

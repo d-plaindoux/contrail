@@ -38,13 +38,13 @@ public interface ContextFactory {
 	 * 
 	 * @return the serverFactory
 	 */
-	ServerFactory getServerFactory();
+	Servers getServerFactory();
 
 	/**
 	 * Return the value of the client factory
 	 * 
 	 * @return the clientFactory
 	 */
-	ClientFactory getClientFactory();
+	Clients getClientFactory();
 
 }

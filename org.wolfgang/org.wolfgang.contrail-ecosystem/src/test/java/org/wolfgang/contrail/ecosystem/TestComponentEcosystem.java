@@ -27,20 +27,20 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -52,26 +52,26 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComponentEcosystem extends TestCase {
 
 	@Test
-	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataHandlerException, DataHandlerException, IOException {
+	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataFlowException, DataFlowException, IOException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
-		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
+		final UpStreamDataFlowFactory<String, String> dataFactory = new UpStreamDataFlowFactory<String, String>() {
 			@Override
-			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> sender) {
-				return StreamDataHandlerFactory.<String> closable(new UpStreamDataHandlerAdapter<String>() {
+			public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> sender) {
+				return DataFlows.<String> closable(new UpStreamDataFlowAdapter<String>() {
 					@Override
-					public void handleData(String data) throws DataHandlerException {
+					public void handleData(String data) throws DataFlowException {
 						sender.handleData(data);
 					}
 
 					@Override
-					public void handleClose() throws DataHandlerCloseException {
+					public void handleClose() throws DataFlowCloseException {
 						sender.handleClose();
 					}
 
 					@Override
-					public void handleLost() throws DataHandlerCloseException {
+					public void handleLost() throws DataFlowCloseException {
 						super.handleLost();
 						sender.handleLost();
 					}
@@ -79,18 +79,18 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
+		final UpStreamDataFlowFactory<String, String> destinationComponentFactory = new UpStreamDataFlowFactory<String, String>() {
 			@Override
-			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataHandlerException {
+			public UpStreamDataFlow<String> create(DownStreamDataFlow<String> receiver) throws CannotCreateDataFlowException {
 				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataHandlerException(e);
+					throw new CannotCreateDataFlowException(e);
 				}
-				return InitialUpStreamDataHandler.<String> create(initialComponent);
+				return InitialUpStreamDataFlow.<String> create(initialComponent);
 			}
 		};
 
@@ -98,16 +98,16 @@ public class TestComponentEcosystem extends TestCase {
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 
-		final DownStreamDataHandlerAdapter<String> receiver = new DownStreamDataHandlerAdapter<String>() {
+		final DownStreamDataFlowAdapter<String> receiver = new DownStreamDataFlowAdapter<String>() {
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				super.handleData(data);
 				stringReference.set(data);
 			}
 		};
 
 		final UnitEcosystemKey namedKey = EcosystemKeyFactory.named("test");
-		final UpStreamDataHandler<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
+		final UpStreamDataFlow<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
 		final String message = "Hello, World!";
 
 		createInitial.handleData(message);

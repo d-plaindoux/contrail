@@ -27,10 +27,10 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>ConcurrentSourcePipelineComponent</code>
@@ -44,7 +44,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 	/**
 	 * The upstream data handler
 	 */
-	private final UpStreamDataHandler<U> upStreamDataHandler;
+	private final UpStreamDataFlow<U> upStreamDataHandler;
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -65,9 +65,9 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 	}
 
 	{
-		this.upStreamDataHandler = new UpStreamDataHandler<U>() {
+		this.upStreamDataHandler = new UpStreamDataFlow<U>() {
 			@Override
-			public void handleData(final U data) throws DataHandlerException {
+			public void handleData(final U data) throws DataFlowException {
 				executor.submit(new Callable<Void>() {
 					@Override
 					public Void call() throws Exception {
@@ -78,7 +78,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				try {
 					getDestinationComponentLink().getDestinationComponent().closeUpStream();
 				} finally {
@@ -87,7 +87,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				try {
 					getDestinationComponentLink().getDestinationComponent().closeUpStream();
 				} finally {
@@ -106,12 +106,12 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 	}
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() {
 		return this.upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() {
 		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
 	}
 

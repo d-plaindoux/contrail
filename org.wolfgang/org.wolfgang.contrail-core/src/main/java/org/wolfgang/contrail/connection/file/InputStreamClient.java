@@ -30,10 +30,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>FileClient</code> provides a client implementation using standard
@@ -53,7 +53,7 @@ public class InputStreamClient implements Closeable {
 	/**
 	 * Data sender factory
 	 */
-	private final UpStreamDataHandlerFactory<byte[], byte[]> factory;
+	private final UpStreamDataFlowFactory<byte[], byte[]> factory;
 
 	{
 		final ThreadGroup group = new ThreadGroup("File.Client");
@@ -74,7 +74,7 @@ public class InputStreamClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public InputStreamClient(UpStreamDataHandlerFactory<byte[], byte[]> factory) {
+	public InputStreamClient(UpStreamDataFlowFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
@@ -84,10 +84,10 @@ public class InputStreamClient implements Closeable {
 	 *            The input file (can be <code>null</code>)
 	 * @return
 	 * @throws IOException
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataHandlerException {
-		final UpStreamDataHandler<byte[]> dataSender = this.factory.create(new DownStreamDataHandlerAdapter<byte[]>());
+	public Future<Void> connect(final InputStream inputStream) throws IOException, CannotCreateDataFlowException {
+		final UpStreamDataFlow<byte[]> dataSender = this.factory.create(new DownStreamDataFlowAdapter<byte[]>());
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

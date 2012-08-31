@@ -20,9 +20,9 @@ package org.wolfgang.contrail.component.pipeline.transducer;
 
 import java.util.List;
 
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.link.ComponentLinkFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
+class TransducerUpStreamDataHandler<U, D> implements UpStreamDataFlow<U> {
 
 	/**
 	 * The component which is in charge of this data handler
@@ -58,10 +58,10 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 	}
 
 	@Override
-	public void handleData(U data) throws DataHandlerException {
+	public void handleData(U data) throws DataFlowException {
 		if (ComponentLinkFactory.isUndefined(component.getDestinationComponentLink())) {
 			final String message = TransducerComponent.XDUCER_UNKNOWN.format();
-			throw new DataHandlerException(message);
+			throw new DataFlowException(message);
 		} else {
 			try {
 				final List<D> transform = streamXducer.transform(data);
@@ -70,16 +70,16 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerException(message, e);
+				throw new DataFlowException(message, e);
 			} catch (RuntimeException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerException(message, e);
+				throw new DataFlowException(message, e);
 			}
 		}
 	}
 
 	@Override
-	public void handleClose() throws DataHandlerCloseException {
+	public void handleClose() throws DataFlowCloseException {
 		if (!ComponentLinkFactory.isUndefined(this.component.getDestinationComponentLink())) {
 			try {
 				final List<D> transform = streamXducer.finish();
@@ -88,16 +88,16 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
-			} catch (DataHandlerException e) {
+				throw new DataFlowCloseException(message, e);
+			} catch (DataFlowException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
-				throw new DataHandlerCloseException(message, e);
+				throw new DataFlowCloseException(message, e);
 			}
 		}
 	}
 
 	@Override
-	public void handleLost() throws DataHandlerCloseException {
+	public void handleLost() throws DataFlowCloseException {
 		// Nothing to do
 	}
 }

@@ -19,9 +19,9 @@
 package org.wolfgang.contrail.component.core;
 
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * A <code>DirectUpStreamDataHandler</code> is able to propagate immediately a
@@ -30,7 +30,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DirectUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
+public class DirectUpStreamDataHandler<U> implements UpStreamDataFlow<U> {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -48,17 +48,17 @@ public class DirectUpStreamDataHandler<U> implements UpStreamDataHandler<U> {
 	}
 
 	@Override
-	public void handleData(U data) throws DataHandlerException {
+	public void handleData(U data) throws DataFlowException {
 		this.upStreamDestinationComponent.getUpStreamDataHandler().handleData(data);
 	}
 
 	@Override
-	public void handleClose() throws DataHandlerCloseException {
+	public void handleClose() throws DataFlowCloseException {
 		this.upStreamDestinationComponent.closeDownStream();
 	}
 
 	@Override
-	public void handleLost() throws DataHandlerCloseException {
+	public void handleLost() throws DataFlowCloseException {
 		this.upStreamDestinationComponent.closeDownStream();
 	}
 

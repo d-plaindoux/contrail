@@ -24,9 +24,11 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.SourceComponentLink;
@@ -47,7 +49,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	/**
 	 * The internal down stream data handler
 	 */
-	private final UpStreamDataHandler<U> upstreamDataHandler;
+	private final UpStreamDataFlow<U> upstreamDataHandler;
 
 	{
 		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
@@ -59,7 +61,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * @param receiver
 	 *            The terminal data receiver
 	 */
-	public TerminalComponent(final UpStreamDataHandler<U> receiver) {
+	public TerminalComponent(final UpStreamDataFlow<U> receiver) {
 		super();
 
 		this.upstreamDataHandler = receiver;
@@ -70,12 +72,12 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * 
 	 * @param receiver
 	 *            The terminal data receiver
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public TerminalComponent(final UpStreamDataHandlerFactory<U, D> receiver) throws CannotCreateDataHandlerException {
+	public TerminalComponent(final UpStreamDataFlowFactory<U, D> receiver) throws CannotCreateDataFlowException {
 		super();
 
-		this.upstreamDataHandler = receiver.create(TerminalDownStreamDataHandler.<D> create(this));
+		this.upstreamDataHandler = receiver.create(TerminalDownStreamDataFlow.<D> create(this));
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	public DownStreamDataHandler<D> getDownStreamDataHandler() throws ComponentNotConnectedException {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -123,19 +125,19 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() {
 		return this.upstreamDataHandler;
 	}
 
 	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
+	public void closeUpStream() throws DataFlowCloseException {
 		this.upstreamDataHandler.handleClose();
 	}
 
 	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
+	public void closeDownStream() throws DataFlowCloseException {
 		if (this.sourceComponentLink.getSourceComponent() == null) {
-			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
+			throw new DataFlowCloseException(NOT_YET_CONNECTED.format());
 		} else {
 			this.sourceComponentLink.getSourceComponent().closeDownStream();
 		}

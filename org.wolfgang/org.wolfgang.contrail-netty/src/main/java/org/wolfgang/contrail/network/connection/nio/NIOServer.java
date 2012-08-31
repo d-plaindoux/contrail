@@ -40,7 +40,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 public class NIOServer implements Callable<Void>, Closeable {
 
 	/**
-	 * 
+	 * The host to be used
 	 */
 	private final String host;
 
@@ -48,7 +48,7 @@ public class NIOServer implements Callable<Void>, Closeable {
 	 * Port number for web based communication
 	 */
 	private final int port;
-	
+
 	/**
 	 * 
 	 */
@@ -77,16 +77,15 @@ public class NIOServer implements Callable<Void>, Closeable {
 	 */
 	public Void call() {
 		// Configure the server.
-		final NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-				Executors.newCachedThreadPool());
+		final NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ServerBootstrap serverBootstrap = new ServerBootstrap(channelFactory);
 
 		// Set up the event pipeline factory.
 		serverBootstrap.setPipelineFactory(pipeline);
 
 		// Bind and start to accept incoming connections.
-		
-		channelReference.set(serverBootstrap.bind(new InetSocketAddress(port)));
+
+		channelReference.set(serverBootstrap.bind(new InetSocketAddress(host, port)));
 
 		return null;
 	}

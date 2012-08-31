@@ -22,9 +22,9 @@ import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>TransducerComponent</code> is an implementation which requires data
@@ -56,12 +56,12 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
 	 */
-	private final UpStreamDataHandler<U1> upStreamDataHandler;
+	private final UpStreamDataFlow<U1> upStreamDataHandler;
 
 	/**
 	 * Internal upstream handler performing a data transformation for D to S
 	 */
-	private final DownStreamDataHandler<D2> downStreamDataHandler;
+	private final DownStreamDataFlow<D2> downStreamDataHandler;
 
 	/**
 	 * Constructor
@@ -74,17 +74,17 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
 
-		this.upStreamDataHandler = StreamDataHandlerFactory.<U1> closable(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
-		this.downStreamDataHandler = StreamDataHandlerFactory.<D2> closable(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
+		this.upStreamDataHandler = DataFlows.<U1> closable(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
+		this.downStreamDataHandler = DataFlows.<D2> closable(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
 	}
 
 	@Override
-	public UpStreamDataHandler<U1> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U1> getUpStreamDataHandler() {
 		return upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataHandler<D2> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D2> getDownStreamDataHandler() {
 		return downStreamDataHandler;
 	}
 }

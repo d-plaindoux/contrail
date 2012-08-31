@@ -31,8 +31,8 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
@@ -47,7 +47,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 public class TestNetworkComponent extends TestCase {
 
 	private SourceComponent<Event, Event> getSourceComponent() {
-		return new InitialComponent<Event, Event>(new DownStreamDataHandler<Event>() {
+		return new InitialComponent<Event, Event>(new DownStreamDataFlow<Event>() {
 			@Override
 			public void handleClose() {
 			}
@@ -57,7 +57,7 @@ public class TestNetworkComponent extends TestCase {
 			}
 
 			@Override
-			public void handleData(Event data) throws DataHandlerException {
+			public void handleData(Event data) throws DataFlowException {
 			}
 		});
 	}

@@ -20,8 +20,8 @@ package org.wolfgang.contrail.ecosystem;
 
 import java.io.Closeable;
 
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * An <code>Ecosystem</code> is able to provide components based on criterion.
@@ -45,5 +45,5 @@ public interface Ecosystem extends Closeable {
 	 * @throws CannotProvideComponentException
 	 *             if the component integration fails
 	 */
-	<U, D> UpStreamDataHandlerFactory<U, D> getBinder(final UnitEcosystemKey key) throws CannotProvideComponentException;
+	<U, D> UpStreamDataFlowFactory<U, D> getBinder(final UnitEcosystemKey key) throws CannotProvideComponentException;
 }

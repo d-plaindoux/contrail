@@ -49,11 +49,12 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
@@ -71,31 +72,38 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
 
 	/**
-	 * 
+	 * The upstream handler
 	 */
-	private final UpStreamDataHandlerFactory<String, String> factory;
+	private final UpStreamDataFlowFactory<String, String> factory;
 
 	/**
-	 * 
+	 * The web server page
 	 */
 	private final WebServerPage serverPage;
 
 	/**
-	 * 
+	 * The hand shaker used for web socket
 	 */
 	private WebSocketServerHandshaker handshaker;
 
 	/**
-	 * 
+	 * The upstream data flow
 	 */
-	private UpStreamDataHandler<String> receiver;
+	private Map<Integer, UpStreamDataFlow<String>> receivers;
+
+	{
+		this.receivers = new HashMap<Integer, UpStreamDataFlow<String>>();
+	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param ecosystem2
+	 * @param factory
+	 *            The factory
+	 * @param serverPage
+	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(UpStreamDataHandlerFactory<String, String> factory, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(UpStreamDataFlowFactory<String, String> factory, WebServerPage serverPage) {
 		this.factory = factory;
 		this.serverPage = serverPage;
 	}
@@ -139,7 +147,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					map.put("web.socket.location", location);
 				}
 
-				final ChannelBuffer content = resource.getContent(map);
+				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource.getContent(map));
 				res.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
 				setContentLength(res, content.readableBytes());
 
@@ -153,17 +161,20 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	}
 
 	@Override
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataHandlerException, DataHandlerCloseException {
-		// Check for closing frame
-		if (frame instanceof CloseWebSocketFrame) {
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataFlowException, DataFlowCloseException {
+		final int identifier = context.getChannel().getId();
+
+		if (!this.receivers.containsKey(identifier)) {
+			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
+		} else if (frame instanceof CloseWebSocketFrame) {
 			this.handshaker.close(context.getChannel(), (CloseWebSocketFrame) frame);
 			this.handshaker = null;
-			this.receiver.handleClose();
+			this.receivers.remove(identifier).handleClose();
 		} else if (frame instanceof PingWebSocketFrame) {
 			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
 		} else if (frame instanceof TextWebSocketFrame) {
 			final String request = ((TextWebSocketFrame) frame).getText();
-			this.receiver.handleData(request);
+			this.receivers.get(identifier).handleData(request);
 		} else {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
@@ -185,30 +196,30 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param context
 	 * @return
 	 */
-	private DownStreamDataHandler<String> createReceiver(final ChannelHandlerContext context) {
+	private DownStreamDataFlow<String> createReceiver(final ChannelHandlerContext context) {
 		assert handshaker != null;
 
-		return new DownStreamDataHandler<String>() {
+		return DataFlows.<String> closable(new DownStreamDataFlow<String>() {
 			@Override
 			public String toString() {
 				return "Web Socket " + context.getName();
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				handleClose();
 			}
 
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				sendWebSocketFrame(context, new TextWebSocketFrame(data));
 			}
-		};
+		});
 	}
 
 	/**
@@ -216,7 +227,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @return
 	 */
 	private ChannelFutureListener createListener(ChannelHandlerContext context) {
-		final DownStreamDataHandler<String> emitter = createReceiver(context);
+		final int identifier = context.getChannel().getId();
+		final DownStreamDataFlow<String> emitter = createReceiver(context);
 
 		return new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
@@ -224,7 +236,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
 					try {
-						receiver = factory.create(emitter);
+						receivers.put(identifier, factory.create(emitter));
 					} catch (Exception e) {
 						Channels.fireExceptionCaught(future.getChannel(), e);
 						throw e;
@@ -255,7 +267,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	}
 
 	//
-	// Message emission facilities
+	// Message post facilities
 	//
 	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {
 		// Send the response and close the connection if necessary.

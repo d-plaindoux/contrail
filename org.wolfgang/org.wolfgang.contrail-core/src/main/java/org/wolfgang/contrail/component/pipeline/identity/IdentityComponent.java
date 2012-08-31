@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.component.pipeline.identity;
 
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>IdentityComponent</code>
@@ -31,12 +31,12 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
 public class IdentityComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() {
 		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() {
 		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
 	}
 

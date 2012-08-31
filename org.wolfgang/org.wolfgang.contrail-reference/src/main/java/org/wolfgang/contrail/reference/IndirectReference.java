@@ -29,8 +29,7 @@ public interface IndirectReference extends Reference {
 	/**
 	 * Method called whether a simple end point must be added as fist reference
 	 * 
-	 * @param reference
-	 *            The new added direct reference
+	 * @return the current direct reference (never <code>null</code>)
 	 */
 	DirectReference getCurrent();
 
@@ -43,12 +42,13 @@ public interface IndirectReference extends Reference {
 	IndirectReference removeCurrent();
 
 	/**
-	 * @return
+	 * @return true if another direct reference exist
 	 */
 	boolean hasNext();
 
 	/**
-	 * Method called whether a simple end point must be added as last reference
+	 * Method called whether a simple direct reference must be added as the new
+	 * first reference
 	 * 
 	 * @param reference
 	 *            The new added direct reference

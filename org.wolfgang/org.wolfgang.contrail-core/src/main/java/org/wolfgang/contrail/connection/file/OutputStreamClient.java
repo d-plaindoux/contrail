@@ -25,13 +25,13 @@ import java.io.OutputStream;
 import java.util.concurrent.Future;
 
 import org.wolfgang.common.concurrent.FutureResponse;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>FileReceiverClient</code> provides a client implementation using
@@ -46,7 +46,7 @@ public class OutputStreamClient implements Closeable {
 	/**
 	 * Data sender factory
 	 */
-	private final UpStreamDataHandlerFactory<byte[], byte[]> factory;
+	private final UpStreamDataFlowFactory<byte[], byte[]> factory;
 
 	/**
 	 * Constructor
@@ -54,7 +54,7 @@ public class OutputStreamClient implements Closeable {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public OutputStreamClient(UpStreamDataHandlerFactory<byte[], byte[]> factory) {
+	public OutputStreamClient(UpStreamDataFlowFactory<byte[], byte[]> factory) {
 		super();
 		this.factory = factory;
 	}
@@ -66,23 +66,23 @@ public class OutputStreamClient implements Closeable {
 	 *            The output file (can be <code>null</code>)
 	 * @return
 	 * @throws IOException
-	 * @throws CannotCreateDataHandlerException
-	 * @throws DataHandlerCloseException
+	 * @throws CannotCreateDataFlowException
+	 * @throws DataFlowCloseException
 	 */
-	public Future<Void> connect(final OutputStream outputStream) throws CannotCreateDataHandlerException, DataHandlerCloseException {
-		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
+	public Future<Void> connect(final OutputStream outputStream) throws CannotCreateDataFlowException, DataFlowCloseException {
+		final DownStreamDataFlow<byte[]> dataReceiver = new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				try {
 					outputStream.write(data);
 					outputStream.flush();
 				} catch (IOException e) {
-					throw new DataHandlerException(e);
+					throw new DataFlowException(e);
 				}
 			}
 		};
 
-		final UpStreamDataHandler<byte[]> dataSender = this.factory.create(dataReceiver);
+		final UpStreamDataFlow<byte[]> dataSender = this.factory.create(dataReceiver);
 		dataSender.handleClose();
 
 		final FutureResponse<Void> futureResponse = new FutureResponse<Void>();

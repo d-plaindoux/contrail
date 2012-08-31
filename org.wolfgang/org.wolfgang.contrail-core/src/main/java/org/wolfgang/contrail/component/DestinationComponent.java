@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
@@ -40,7 +40,7 @@ public interface DestinationComponent<U, D> extends Component {
 	 * 
 	 * @return an upstream data handler
 	 */
-	UpStreamDataHandler<U> getUpStreamDataHandler();
+	UpStreamDataFlow<U> getUpStreamDataHandler();
 
 	/**
 	 * Method called whether a connection must be performed

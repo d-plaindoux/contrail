@@ -22,10 +22,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>AtomicSourcePipelineComponent</code>
@@ -38,13 +38,13 @@ public class AtomicSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	/**
 	 * The upstream data handler
 	 */
-	private final UpStreamDataHandler<U> upStreamDataHandler;
+	private final UpStreamDataFlow<U> upStreamDataHandler;
 
 	{
 		final Lock upstreamLock = new ReentrantLock();
-		this.upStreamDataHandler = new UpStreamDataHandler<U>() {
+		this.upStreamDataHandler = new UpStreamDataFlow<U>() {
 			@Override
-			public void handleData(final U data) throws DataHandlerException {
+			public void handleData(final U data) throws DataFlowException {
 				upstreamLock.lock();
 				try {
 					getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler().handleData(data);
@@ -54,12 +54,12 @@ public class AtomicSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				getDestinationComponentLink().getDestinationComponent().closeUpStream();
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				getDestinationComponentLink().getDestinationComponent().closeUpStream();
 			}
 		};
@@ -73,12 +73,12 @@ public class AtomicSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	}
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() {
 		return this.upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() {
 		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
 	}
 

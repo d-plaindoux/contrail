@@ -51,7 +51,7 @@ public class TestStringResource extends TestCase {
 		final Map<String, String> variables = new HashMap<String, String>();
 		variables.put("who", "World");
 
-		final ChannelBuffer content = resource.getContent(variables);
-		assertEquals("Hello, World!", new String(content.array()));
+		final byte[] content = resource.getContent(variables);
+		assertEquals("Hello, World!", new String(content));
 	}
 }

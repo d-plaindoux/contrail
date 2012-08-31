@@ -20,11 +20,11 @@ package org.wolfgang.contrail.component.pipeline.logger;
 
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>AtomicDestinationPipelineComponent</code>
@@ -38,7 +38,7 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	/**
 	 * The downstream data handler
 	 */
-	private final DownStreamDataHandler<D> downStreamDataHandler;
+	private final DownStreamDataFlow<D> downStreamDataHandler;
 
 	/**
 	 * The message prefix
@@ -46,19 +46,19 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	private final String prefix;
 
 	{
-		this.downStreamDataHandler = StreamDataHandlerFactory.<D> closable(new DownStreamDataHandler<D>() {
+		this.downStreamDataHandler = DataFlows.<D> closable(new DownStreamDataFlow<D>() {
 			@Override
-			public void handleData(final D data) throws DataHandlerException {
+			public void handleData(final D data) throws DataFlowException {
 				getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(data);
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				getDestinationComponentLink().getDestinationComponent().closeDownStream();
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				getDestinationComponentLink().getDestinationComponent().closeDownStream();
 			}
 		});
@@ -73,12 +73,12 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	}
 
 	@Override
-	public UpStreamDataHandler<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() {
 		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() {
 		return this.downStreamDataHandler;
 	}
 

@@ -21,15 +21,15 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>ByteArraySourceComponent</code> is a simple upstream source component.
@@ -42,32 +42,32 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 	/**
 	 * Constructor
 	 * 
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public ByteArraySourceComponent(final OutputStream outputStream) throws CannotCreateDataHandlerException {
-		super(new DownStreamDataHandlerFactory<byte[], byte[]>() {
+	public ByteArraySourceComponent(final OutputStream outputStream) throws CannotCreateDataFlowException {
+		super(new DownStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public DownStreamDataHandler<byte[]> create(UpStreamDataHandler<byte[]> initial) {
-				return StreamDataHandlerFactory.<byte[]> closable(new DownStreamDataHandlerAdapter<byte[]>() {
-					public void handleData(byte[] data) throws DataHandlerException {
+			public DownStreamDataFlow<byte[]> create(UpStreamDataFlow<byte[]> initial) {
+				return DataFlows.<byte[]> closable(new DownStreamDataFlowAdapter<byte[]>() {
+					public void handleData(byte[] data) throws DataFlowException {
 						try {
 							outputStream.write(data);
 						} catch (IOException e) {
-							throw new DataHandlerException(e);
+							throw new DataFlowException(e);
 						}
 					}
 
 					@Override
-					public void handleClose() throws DataHandlerCloseException {
+					public void handleClose() throws DataFlowCloseException {
 						try {
 							outputStream.close();
 						} catch (IOException e) {
-							throw new DataHandlerCloseException(e);
+							throw new DataFlowCloseException(e);
 						}
 					}
 
 					@Override
-					public void handleLost() throws DataHandlerCloseException {
+					public void handleLost() throws DataFlowCloseException {
 						handleClose();
 					}
 				});

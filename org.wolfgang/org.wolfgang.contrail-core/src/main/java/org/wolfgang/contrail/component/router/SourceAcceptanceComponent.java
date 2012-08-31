@@ -29,10 +29,10 @@ import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -50,7 +50,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 
 	private SourceComponentLink<Event, Event> sourceComponentLink;
 	private DestinationComponentLink<Event, Event> destinationComponentLink;
-	private UpStreamDataHandler<Event> intermediateUpStreamHandler;
+	private UpStreamDataFlow<Event> intermediateUpStreamHandler;
 	
 	private RouterComponent networkComponent;
 
@@ -67,21 +67,21 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
+	public void closeUpStream() throws DataFlowCloseException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
+	public void closeDownStream() throws DataFlowCloseException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public UpStreamDataHandler<Event> getUpStreamDataHandler() {
+	public UpStreamDataFlow<Event> getUpStreamDataHandler() {
 		if (intermediateUpStreamHandler == null) {
-			intermediateUpStreamHandler = new UpStreamDataHandler<Event>() {
+			intermediateUpStreamHandler = new UpStreamDataFlow<Event>() {
 				@Override
-				public void handleData(Event data) throws DataHandlerException {
+				public void handleData(Event data) throws DataFlowException {
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
@@ -104,17 +104,17 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 						networkComponent.getDownStreamDataHandler().handleData(data);
 					} catch (Throwable e) {
 						e.printStackTrace();
-						throw new DataHandlerException(e);
+						throw new DataFlowException(e);
 					}
 				}
 
 				@Override
-				public void handleClose() throws DataHandlerCloseException {
+				public void handleClose() throws DataFlowCloseException {
 					// TODO Auto-generated method stub
 				}
 
 				@Override
-				public void handleLost() throws DataHandlerCloseException {
+				public void handleLost() throws DataFlowCloseException {
 					// TODO Auto-generated method stub
 				}
 			};
@@ -147,7 +147,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	@Override
-	public DownStreamDataHandler<Event> getDownStreamDataHandler() {
+	public DownStreamDataFlow<Event> getDownStreamDataHandler() {
 		return this.sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
 	}
 

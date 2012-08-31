@@ -21,15 +21,15 @@ package org.wolfgang.contrail.ecosystem.lang;
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>TestComponent</code>
@@ -41,7 +41,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 @ContrailTerminal(name = "Test")
 public class EchoComponent extends TerminalComponent {
 
-	private static class LocalDataReceiverFactory implements UpStreamDataHandlerFactory {
+	private static class LocalDataReceiverFactory implements UpStreamDataFlowFactory {
 		private final String name;
 
 		/**
@@ -56,10 +56,10 @@ public class EchoComponent extends TerminalComponent {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public UpStreamDataHandler create(final DownStreamDataHandler sender) {
-			return StreamDataHandlerFactory.closable(new UpStreamDataHandlerAdapter() {
+		public UpStreamDataFlow create(final DownStreamDataFlow sender) {
+			return DataFlows.closable(new UpStreamDataFlowAdapter() {
 				@Override
-				public void handleData(Object data) throws DataHandlerException {
+				public void handleData(Object data) throws DataFlowException {
 					if (name == null) {
 						sender.handleData(data);
 					} else {
@@ -68,12 +68,12 @@ public class EchoComponent extends TerminalComponent {
 				}
 
 				@Override
-				public void handleClose() throws DataHandlerCloseException {
+				public void handleClose() throws DataFlowCloseException {
 					sender.handleClose();
 				}
 
 				@Override
-				public void handleLost() throws DataHandlerCloseException {
+				public void handleLost() throws DataFlowCloseException {
 					sender.handleLost();
 				}
 			});
@@ -84,11 +84,11 @@ public class EchoComponent extends TerminalComponent {
 	 * Constructor
 	 * 
 	 * @param receiver
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor
-	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataHandlerException {
+	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
 		super(new LocalDataReceiverFactory(name));
 	}
 

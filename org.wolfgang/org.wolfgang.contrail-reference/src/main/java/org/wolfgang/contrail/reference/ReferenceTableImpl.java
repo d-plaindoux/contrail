@@ -41,7 +41,7 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 	/**
 	 * Constructor
 	 */
-	protected ReferenceTableImpl() {
+	public ReferenceTableImpl() {
 		// Nothing to do
 	}
 
@@ -54,9 +54,7 @@ public class ReferenceTableImpl<E> implements ReferenceTable<E> {
 		}
 
 		for (DirectReference reference : references) {
-			if (table.containsKey(reference)) {
-				// Ignore ?
-			} else {
+			if (!table.containsKey(reference)) {
 				this.table.put(reference, element);
 			}
 		}

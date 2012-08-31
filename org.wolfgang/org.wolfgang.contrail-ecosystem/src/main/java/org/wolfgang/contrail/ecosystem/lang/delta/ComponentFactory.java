@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
 import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ClientFactoryCreationException;
+import org.wolfgang.contrail.connection.ClientCreationException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 
@@ -38,7 +38,7 @@ public class ComponentFactory {
 
 	@ContrailFactory("Client")
 	public Component create(@ContrailArgument("context") ContextFactory context, @ContrailArgument("uri") String reference, @ContrailArgument("factory") ClosureValue code) throws URISyntaxException,
-			ClientFactoryCreationException {
+			ClientCreationException {
 		final URI uri = new URI(reference);
 		final Client client = context.getClientFactory().get(uri.getScheme());
 

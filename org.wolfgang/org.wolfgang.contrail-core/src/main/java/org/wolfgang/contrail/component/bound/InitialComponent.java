@@ -24,9 +24,11 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
@@ -48,7 +50,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	/**
 	 * The internal down stream data handler
 	 */
-	private final DownStreamDataHandler<D> downStreamDataHandler;
+	private final DownStreamDataFlow<D> downStreamDataHandler;
 
 	{
 		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
@@ -60,7 +62,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DownStreamDataHandler<D> receiver) {
+	public InitialComponent(final DownStreamDataFlow<D> receiver) {
 		super();
 		this.downStreamDataHandler = receiver;
 	}
@@ -71,9 +73,9 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DownStreamDataHandlerFactory<U, D> receiver) throws CannotCreateDataHandlerException {
+	public InitialComponent(final DownStreamDataFlowFactory<U, D> receiver) throws CannotCreateDataFlowException {
 		super();
-		this.downStreamDataHandler = receiver.create(InitialUpStreamDataHandler.<U> create(this));
+		this.downStreamDataHandler = receiver.create(InitialUpStreamDataFlow.<U> create(this));
 	}
 
 	/**
@@ -83,7 +85,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	public UpStreamDataHandler<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
+	public UpStreamDataFlow<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
@@ -121,21 +123,21 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	@Override
-	public DownStreamDataHandler<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() {
 		return this.downStreamDataHandler;
 	}
 
 	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
+	public void closeUpStream() throws DataFlowCloseException {
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
-			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
+			throw new DataFlowCloseException(NOT_YET_CONNECTED.format());
 		} else {
 			this.destinationComponentLink.getDestinationComponent().closeUpStream();
 		}
 	}
 
 	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
+	public void closeDownStream() throws DataFlowCloseException {
 		this.downStreamDataHandler.handleClose();
 	}
 }

@@ -19,13 +19,13 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>DataSenderFactoryImpl</code> is dedicated to the binder mechanism
@@ -34,7 +34,7 @@ import org.wolfgang.contrail.handler.UpStreamDataHandler;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U, D> {
+class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataFlowFactory<U, D> {
 	private final EcosystemFactoryImpl factory;
 	private final CodeValue flow;
 
@@ -50,15 +50,15 @@ class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataHandlerFactory<U,
 	}
 
 	@Override
-	public UpStreamDataHandler<U> create(DownStreamDataHandler<D> receiver) throws CannotCreateDataHandlerException {
+	public UpStreamDataFlow<U> create(DownStreamDataFlow<D> receiver) throws CannotCreateDataFlowException {
 		try {
 			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
 			factory.create(initialComponent, flow);
-			return InitialUpStreamDataHandler.<U>create(initialComponent);
+			return InitialUpStreamDataFlow.<U>create(initialComponent);
 		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateDataHandlerException(e);
+			throw new CannotCreateDataFlowException(e);
 		} catch (EcosystemBuilderException e) {
-			throw new CannotCreateDataHandlerException(e);
+			throw new CannotCreateDataFlowException(e);
 		}
 	}
 }

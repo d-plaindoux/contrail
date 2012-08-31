@@ -18,14 +18,14 @@
 
 package org.wolfgang.contrail.component.relay;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>ByteArrayDestinationComponent</code>
@@ -38,15 +38,15 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 	/**
 	 * Constructor
 	 * 
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public ByteArrayDestinationComponent() throws CannotCreateDataHandlerException {
-		super(new UpStreamDataHandlerFactory<byte[], byte[]>() {
+	public ByteArrayDestinationComponent() throws CannotCreateDataFlowException {
+		super(new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
-				return StreamDataHandlerFactory.<byte[]> closable(new UpStreamDataHandlerAdapter<byte[]>() {
+			public UpStreamDataFlow<byte[]> create(final DownStreamDataFlow<byte[]> sender) {
+				return DataFlows.<byte[]> closable(new UpStreamDataFlowAdapter<byte[]>() {
 					@Override
-					public void handleData(byte[] data) throws DataHandlerException {
+					public void handleData(byte[] data) throws DataFlowException {
 						sender.handleData(data);
 					}
 				});

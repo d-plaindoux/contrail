@@ -24,7 +24,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
@@ -140,7 +140,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
+	public void closeUpStream() throws DataFlowCloseException {
 		try {
 			this.getUpStreamDataHandler().handleClose();
 		} finally {
@@ -151,7 +151,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
+	public void closeDownStream() throws DataFlowCloseException {
 		try {
 			this.getDownStreamDataHandler().handleClose();
 		} finally {

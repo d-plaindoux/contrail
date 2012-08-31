@@ -32,17 +32,17 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -71,50 +71,50 @@ public class TestFileClient extends TestCase {
 	}
 
 	@Test
-	public void testNominal01() throws IOException, CannotCreateDataHandlerException, InterruptedException, ExecutionException {
+	public void testNominal01() throws IOException, CannotCreateDataFlowException, InterruptedException, ExecutionException {
 		final File input = new File("src/test/Sample.txt");
 		final File output = new File("src/test/Sample.txt.out");
 
 		final OutputStream outputStream = new FileOutputStream(output);
 
-		final UpStreamDataHandler<byte[]> terminalReceiver = StreamDataHandlerFactory.<byte[]> closable(new UpStreamDataHandler<byte[]>() {
+		final UpStreamDataFlow<byte[]> terminalReceiver = DataFlows.<byte[]> closable(new UpStreamDataFlow<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				try {
 					outputStream.write(data);
 					outputStream.flush();
 				} catch (IOException e) {
-					throw new DataHandlerException(e);
+					throw new DataFlowException(e);
 				}
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					throw new DataHandlerCloseException(e);
+					throw new DataFlowCloseException(e);
 				}
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				handleClose();
 			}
 		});
 
-		final UpStreamDataHandlerFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
+		final UpStreamDataFlowFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> initialReceiver) throws CannotCreateDataHandlerException {
+			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiver);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataHandlerException(e);
+					throw new CannotCreateDataFlowException(e);
 				}
-				return InitialUpStreamDataHandler.<byte[]> create(initialComponent);
+				return InitialUpStreamDataFlow.<byte[]> create(initialComponent);
 			}
 		};
 
@@ -134,17 +134,17 @@ public class TestFileClient extends TestCase {
 	}
 
 	@Test
-	public void testNominal02() throws IOException, CannotCreateDataHandlerException, InterruptedException, ExecutionException, DataHandlerException, DataHandlerCloseException {
+	public void testNominal02() throws IOException, CannotCreateDataFlowException, InterruptedException, ExecutionException, DataFlowException, DataFlowCloseException {
 		final File input = new File("src/test/Sample.txt");
 		final File output = new File("src/test/Sample.txt.out");
 
-		final AtomicReference<UpStreamDataHandler<byte[]>> atomicReference = new AtomicReference<UpStreamDataHandler<byte[]>>();
-		final UpStreamDataHandlerFactory<byte[], byte[]> terminalReceiverFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
+		final AtomicReference<UpStreamDataFlow<byte[]>> atomicReference = new AtomicReference<UpStreamDataFlow<byte[]>>();
+		final UpStreamDataFlowFactory<byte[], byte[]> terminalReceiverFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
-				final UpStreamDataHandler<byte[]> dataReceiver = new UpStreamDataHandlerAdapter<byte[]>() {
+			public UpStreamDataFlow<byte[]> create(final DownStreamDataFlow<byte[]> sender) {
+				final UpStreamDataFlow<byte[]> dataReceiver = new UpStreamDataFlowAdapter<byte[]>() {
 					@Override
-					public void handleData(byte[] data) throws DataHandlerException {
+					public void handleData(byte[] data) throws DataFlowException {
 						sender.handleData(data);
 					}
 				};
@@ -155,18 +155,18 @@ public class TestFileClient extends TestCase {
 			}
 		};
 
-		final UpStreamDataHandlerFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataHandlerFactory<byte[], byte[]>() {
+		final UpStreamDataFlowFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataHandler<byte[]> create(DownStreamDataHandler<byte[]> initialReceiver) throws CannotCreateDataHandlerException {
+			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
 				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiverFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataHandlerException(e);
+					throw new CannotCreateDataFlowException(e);
 				}
-				return InitialUpStreamDataHandler.<byte[]> create(initialComponent);
+				return InitialUpStreamDataFlow.<byte[]> create(initialComponent);
 			}
 		};
 

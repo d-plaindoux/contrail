@@ -27,10 +27,10 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
 
@@ -43,7 +43,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event>, UpStreamDataHandler<Event> {
+abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, UpStreamDataFlow<Event> {
 
 	/**
 	 * Private message
@@ -83,7 +83,7 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 	}
 
 	@Override
-	public void handleData(Event data) throws DataHandlerException {
+	public void handleData(Event data) throws DataFlowException {
 		/**
 		 * Add the sender if the chosen route is private·
 		 */
@@ -120,7 +120,7 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 			source.getDownStreamDataHandler().handleData(data);
 			return;
 		} catch (CannotCreateComponentException e) {
-			throw new DataHandlerException(NOT_FOUND.format(nextTarget, this.toString()), e);
+			throw new DataFlowException(NOT_FOUND.format(nextTarget, this.toString()), e);
 		}
 
 	}
@@ -134,13 +134,13 @@ abstract class AbstractDataHandlerStation implements DownStreamDataHandler<Event
 	protected abstract DirectReference getNextTarget(Event data);
 
 	@Override
-	public void handleClose() throws DataHandlerCloseException {
+	public void handleClose() throws DataFlowCloseException {
 		component.closeDownStream();
 		component.closeUpStream();
 	}
 
 	@Override
-	public void handleLost() throws DataHandlerCloseException {
+	public void handleLost() throws DataFlowCloseException {
 		component.closeDownStream();
 		component.closeUpStream();
 	}

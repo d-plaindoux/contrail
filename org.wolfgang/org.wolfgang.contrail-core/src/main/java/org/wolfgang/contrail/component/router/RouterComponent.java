@@ -29,10 +29,10 @@ import org.wolfgang.contrail.component.MultipleDestinationComponent;
 import org.wolfgang.contrail.component.MultipleSourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.handler.DataHandler;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
@@ -40,8 +40,8 @@ import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolfgang.contrail.reference.DirectReference;
 
 /**
- * <code>RouterSourceComponent</code> is a component able to manage NetworkEvent
- * and opening route on-demand.
+ * <code>RouterComponent</code> is a component able to manage NetworkEvent and
+ * opening route on-demand.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -156,12 +156,12 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	}
 
 	@Override
-	public UpStreamDataHandler<Event> getUpStreamDataHandler() {
+	public UpStreamDataFlow<Event> getUpStreamDataHandler() {
 		return this.streamStation;
 	}
 
 	@Override
-	public DownStreamDataHandler<Event> getDownStreamDataHandler() {
+	public DownStreamDataFlow<Event> getDownStreamDataHandler() {
 		return this.streamStation;
 	}
 
@@ -180,7 +180,7 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	 * @return an source component
 	 * @throws ComponentNotConnectedException
 	 */
-	DataHandler<Event> getDataHander(ComponentId componentId) throws ComponentNotConnectedException {
+	DataFlow<Event> getDataHander(ComponentId componentId) throws ComponentNotConnectedException {
 		final DestinationComponentLink<Event, Event> destinationComponentLink = this.destinationLinks.get(componentId);
 
 		if (!ComponentLinkFactory.isUndefined(destinationComponentLink)) {
@@ -220,14 +220,14 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	}
 
 	@Override
-	public void closeUpStream() throws DataHandlerCloseException {
+	public void closeUpStream() throws DataFlowCloseException {
 		for (DestinationComponentLink<Event, Event> source : this.destinationLinks.values()) {
 			source.getDestinationComponent().closeUpStream();
 		}
 	}
 
 	@Override
-	public void closeDownStream() throws DataHandlerCloseException {
+	public void closeDownStream() throws DataFlowCloseException {
 		for (SourceComponentLink<Event, Event> source : this.sourceLinks.values()) {
 			source.getSourceComponent().closeUpStream();
 		}

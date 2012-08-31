@@ -18,14 +18,14 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>IntegerDestinationComponent</code>
@@ -38,15 +38,15 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 	/**
 	 * Constructor
 	 * 
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public IntegerDestinationComponent() throws CannotCreateDataHandlerException {
-		super(new UpStreamDataHandlerFactory<Integer, Integer>() {
+	public IntegerDestinationComponent() throws CannotCreateDataFlowException {
+		super(new UpStreamDataFlowFactory<Integer, Integer>() {
 			@Override
-			public UpStreamDataHandler<Integer> create(final DownStreamDataHandler<Integer> terminal) {
-				return StreamDataHandlerFactory.<Integer> closable(new UpStreamDataHandlerAdapter<Integer>() {
+			public UpStreamDataFlow<Integer> create(final DownStreamDataFlow<Integer> terminal) {
+				return DataFlows.<Integer> closable(new UpStreamDataFlowAdapter<Integer>() {
 					@Override
-					public void handleData(Integer data) throws DataHandlerException {
+					public void handleData(Integer data) throws DataFlowException {
 						terminal.handleData(data * data);
 					}
 				});

@@ -51,14 +51,14 @@ public class StringResourceImpl implements Resource {
 	}
 
 	@Override
-	public ChannelBuffer getContent(Map<String, String> definitions) {
+	public byte[] getContent(Map<String, String> definitions) {
 		String content = contentResource;
 
 		for (Entry<String, String> entry : definitions.entrySet()) {
 			content = content.replace("${" + entry.getKey() + "}", entry.getValue());
 		}
 
-		return ChannelBuffers.copiedBuffer(content.getBytes());
+		return content.getBytes();
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class StringResourceImpl implements Resource {
 
 		int start = 0;
 		int end;
-		
+
 		while (start != -1) {
 			start = contentResource.indexOf("${", start);
 			if (start != -1) {

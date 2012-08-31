@@ -29,17 +29,17 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionFactory;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
- * <code>TestConcurrentComponent</code>
+ * <code>TestComposeComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -47,7 +47,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComposeComponent extends TestCase {
 
 	@Test
-	public void testCompose01() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testCompose01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
@@ -55,20 +55,20 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
 				sourceFuture.setValue(data);
 			}
 		});
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = CompositionComponents.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
 			}
 		});
@@ -83,22 +83,22 @@ public class TestComposeComponent extends TestCase {
 	}
 
 	@Test
-	public void testCompose02() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testCompose02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
 				sourceFuture.setValue(data);
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
 			}
 		});
@@ -108,7 +108,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		CompositionFactory.compose(componentLinkManagerImpl, components);
+		CompositionComponents.compose(componentLinkManagerImpl, components);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
@@ -117,22 +117,22 @@ public class TestComposeComponent extends TestCase {
 	}
 
 	@Test
-	public void testCompose03() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testCompose03() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
 				sourceFuture.setValue(data);
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
 			}
 		});
@@ -142,7 +142,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		final Component compose = CompositionFactory.compose(componentLinkManagerImpl, components);
+		final Component compose = CompositionComponents.compose(componentLinkManagerImpl, components);
 
 		componentLinkManagerImpl.connect(initialComponent, compose);
 
@@ -153,22 +153,22 @@ public class TestComposeComponent extends TestCase {
 	}
 
 	@Test
-	public void testCompose04() throws ComponentConnectionRejectedException, DataHandlerException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+	public void testCompose04() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
 				sourceFuture.setValue(data);
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
 			@Override
-			public void handleData(String data) throws DataHandlerException {
+			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
 			}
 		});
@@ -178,9 +178,47 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		final Component compose = CompositionFactory.compose(componentLinkManagerImpl, components);
+		final Component compose = CompositionComponents.compose(componentLinkManagerImpl, components);
 
 		componentLinkManagerImpl.connect(compose, terminalComponent);
+
+		terminalComponent.getDownStreamDataHandler().handleData(source);
+		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+
+		assertEquals(source, terminalFuture.get());
+	}
+
+	@Test
+	public void testCompose05() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
+		final String source = new String("Hello, World!");
+		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
+		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
+
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+			@Override
+			public void handleData(byte[] data) throws DataFlowException {
+				super.handleData(data);
+				sourceFuture.setValue(data);
+			}
+		});
+
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				terminalFuture.setValue(data);
+			}
+		});
+
+		final Component[] components1 = { initialComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent() };
+
+		final Component[] components2 = { new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
+
+		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+
+		final Component compose1 = CompositionComponents.compose(componentLinkManagerImpl, components1);
+		final Component compose2 = CompositionComponents.compose(componentLinkManagerImpl, components2);
+
+		componentLinkManagerImpl.connect(compose1, compose2);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
@@ -195,10 +233,10 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataHandlerAdapter<byte[]>());
-		final Component composedComponent = CompositionFactory.compose(componentLinkManagerImpl, pipelines);
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>());
+		final Component composedComponent = CompositionComponents.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataHandlerAdapter<String>());
+		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>());
 
 		componentLinkManagerImpl.connect(initialComponent, composedComponent);
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
@@ -206,7 +244,7 @@ public class TestComposeComponent extends TestCase {
 		try {
 			terminalComponent.getDownStreamDataHandler().handleData(source);
 			fail();
-		} catch (DataHandlerException e) {
+		} catch (DataFlowException e) {
 			assertEquals(ClassCastException.class, e.getCause().getClass());
 		}
 

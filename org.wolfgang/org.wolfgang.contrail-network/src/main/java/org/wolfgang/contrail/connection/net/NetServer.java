@@ -37,14 +37,15 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>NetworkServer</code> provides a server implementation using
@@ -101,7 +102,7 @@ public class NetServer implements Server {
 		super();
 	}
 
-	public Worker bind(final URI uri, final UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(final URI uri, final UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
@@ -122,33 +123,33 @@ public class NetServer implements Server {
 						// Check executor.getActiveCount() in order to prevent
 						// DoS
 
-						final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
+						final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
 							@Override
-							public void handleData(byte[] data) throws DataHandlerException {
+							public void handleData(byte[] data) throws DataFlowException {
 								try {
 									client.getOutputStream().write(data);
 									client.getOutputStream().flush();
 								} catch (IOException e) {
-									throw new DataHandlerException(e);
+									throw new DataFlowException(e);
 								}
 							}
 
 							@Override
-							public void handleClose() throws DataHandlerCloseException {
+							public void handleClose() throws DataFlowCloseException {
 								try {
 									client.close();
 								} catch (IOException e) {
-									throw new DataHandlerCloseException(e);
+									throw new DataFlowCloseException(e);
 								}
 							}
 
 							@Override
-							public void handleLost() throws DataHandlerCloseException {
+							public void handleLost() throws DataFlowCloseException {
 								handleClose();
 							}
-						};
+						});
 
-						final UpStreamDataHandler<byte[]> dataSender = factory.create(dataReceiver);
+						final UpStreamDataFlow<byte[]> dataSender = factory.create(dataReceiver);
 
 						final Callable<Void> reader = new Callable<Void>() {
 							@Override

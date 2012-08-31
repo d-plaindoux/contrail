@@ -22,8 +22,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>Client</code>
@@ -43,8 +43,8 @@ public interface Client extends Closeable {
 	 *            The data sender factory
 	 * @return a future denoting the connection liveness
 	 * @throws IOException
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	Worker connect(URI uri, UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException;
+	Worker connect(URI uri, UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateClientException;
 
 }

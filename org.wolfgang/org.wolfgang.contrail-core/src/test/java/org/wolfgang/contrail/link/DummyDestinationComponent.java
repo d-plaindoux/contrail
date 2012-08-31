@@ -18,14 +18,14 @@
 
 package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>DummyDestinationComponent</code>
@@ -38,26 +38,26 @@ public class DummyDestinationComponent extends TerminalComponent<Void, Void> {
 	/**
 	 * Constructor
 	 * 
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public DummyDestinationComponent() throws CannotCreateDataHandlerException {
-		super(new UpStreamDataHandlerFactory<Void, Void>() {
+	public DummyDestinationComponent() throws CannotCreateDataFlowException {
+		super(new UpStreamDataFlowFactory<Void, Void>() {
 			@Override
-			public UpStreamDataHandler<Void> create(final DownStreamDataHandler<Void> sender) {
-				return new UpStreamDataHandlerAdapter<Void>() {
+			public UpStreamDataFlow<Void> create(final DownStreamDataFlow<Void> sender) {
+				return new UpStreamDataFlowAdapter<Void>() {
 					@Override
-					public void handleData(Void data) throws DataHandlerException {
+					public void handleData(Void data) throws DataFlowException {
 						sender.handleData(data);
 					}
 
 					@Override
-					public void handleClose() throws DataHandlerCloseException {
+					public void handleClose() throws DataFlowCloseException {
 						super.handleClose();
 						sender.handleClose();
 					}
 
 					@Override
-					public void handleLost() throws DataHandlerCloseException {
+					public void handleLost() throws DataFlowCloseException {
 						super.handleLost();
 						sender.handleLost();
 					}

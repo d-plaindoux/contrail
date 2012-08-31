@@ -42,7 +42,7 @@ public interface Resource {
 	 * @return a channel buffer containing the evaluated resource
 	 * @throws IOException
 	 */
-	ChannelBuffer getContent(Map<String, String> definitions) throws IOException;
+	byte[] getContent(Map<String, String> definitions) throws IOException;
 
 	/**
 	 * @return the set of required variables

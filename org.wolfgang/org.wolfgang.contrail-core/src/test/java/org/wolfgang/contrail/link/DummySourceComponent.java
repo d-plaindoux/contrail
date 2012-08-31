@@ -18,12 +18,12 @@
 
 package org.wolfgang.contrail.link;
 
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.DownStreamDataHandlerFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>DummySourceComponent</code> is a simple upstream source component.
@@ -35,13 +35,13 @@ public class DummySourceComponent extends InitialComponent<Void, Void> {
 
 	/**
 	 * Constructor
-	 * @throws CannotCreateDataHandlerException 
+	 * @throws CannotCreateDataFlowException 
 	 */
-	public DummySourceComponent() throws CannotCreateDataHandlerException {
-		super(new DownStreamDataHandlerFactory<Void, Void>() {
+	public DummySourceComponent() throws CannotCreateDataFlowException {
+		super(new DownStreamDataFlowFactory<Void, Void>() {
 			@Override
-			public DownStreamDataHandler<Void> create(UpStreamDataHandler<Void> sender) {
-				return new DownStreamDataHandlerAdapter<Void>();
+			public DownStreamDataFlow<Void> create(UpStreamDataFlow<Void> sender) {
+				return new DownStreamDataFlowAdapter<Void>();
 			}
 		});
 	}

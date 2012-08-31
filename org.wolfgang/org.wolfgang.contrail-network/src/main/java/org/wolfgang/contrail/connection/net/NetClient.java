@@ -34,15 +34,16 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.Worker;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -104,9 +105,9 @@ public class NetClient implements Client {
 	 * @return
 	 * @throws IOException
 	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotCreateDataHandlerException
+	 * @throws CannotCreateDataFlowException
 	 */
-	public Worker connect(final URI uri, final UpStreamDataHandlerFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+	public Worker connect(final URI uri, final UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
@@ -118,39 +119,39 @@ public class NetClient implements Client {
 			throw new CannotCreateClientException(e);
 		}
 
-		final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandler<byte[]>() {
+		final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
 			@Override
-			public void handleData(byte[] data) throws DataHandlerException {
+			public void handleData(byte[] data) throws DataFlowException {
 				try {
 					client.getOutputStream().write(data);
 					client.getOutputStream().flush();
 				} catch (IOException e) {
-					throw new DataHandlerException(e);
+					throw new DataFlowException(e);
 				}
 			}
 
 			@Override
-			public void handleClose() throws DataHandlerCloseException {
+			public void handleClose() throws DataFlowCloseException {
 				try {
 					client.close();
 				} catch (IOException e) {
-					throw new DataHandlerCloseException(e);
+					throw new DataFlowCloseException(e);
 				}
 			}
 
 			@Override
-			public void handleLost() throws DataHandlerCloseException {
+			public void handleLost() throws DataFlowCloseException {
 				handleClose();
 			}
-		};
+		});
 
-		final UpStreamDataHandler<byte[]> dataSender;
+		final UpStreamDataFlow<byte[]> dataSender;
 		try {
 			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataHandlerException e) {
+		} catch (CannotCreateDataFlowException e) {
 			try {
 				dataReceiver.handleClose();
-			} catch (DataHandlerCloseException consume) {
+			} catch (DataFlowCloseException consume) {
 				// Ignore
 			}
 			throw new CannotCreateClientException(e);

@@ -39,10 +39,10 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ClientFactory;
+import org.wolfgang.contrail.connection.Clients;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
-import org.wolfgang.contrail.connection.ServerFactory;
+import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
@@ -79,12 +79,12 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	/**
 	 * Server factory
 	 */
-	private final ServerFactory serverFactory;
+	private final Servers serverFactory;
 
 	/**
 	 * Client factory
 	 */
-	private final ClientFactory clientFactory;
+	private final Clients clientFactory;
 
 	/**
 	 * The embedded component link manager
@@ -102,8 +102,8 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	private final EcosystemInterpreter interpreter;
 
 	{
-		this.serverFactory = new ServerFactory();
-		this.clientFactory = new ClientFactory();
+		this.serverFactory = new Servers();
+		this.clientFactory = new Clients();
 		this.linkManager = new ComponentLinkManagerImpl();
 		this.classLoader = EcosystemFactoryImpl.class.getClassLoader();
 
@@ -277,12 +277,12 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	}
 
 	@Override
-	public ServerFactory getServerFactory() {
+	public Servers getServerFactory() {
 		return serverFactory;
 	}
 
 	@Override
-	public ClientFactory getClientFactory() {
+	public Clients getClientFactory() {
 		return clientFactory;
 	}
 

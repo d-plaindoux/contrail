@@ -22,20 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.CannotCreateDataHandlerException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
+import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
-import org.wolfgang.contrail.handler.DataHandlerCloseException;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandler;
-import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -53,8 +54,66 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(String host, int port, UpStreamDataHandlerFactory<String, String> upStreamDataHandlerFactory) {
+	public WebServer(String host, int port, UpStreamDataFlowFactory<String, String> upStreamDataHandlerFactory) {
 		super(host, port, new WebServerPipelineFactory(upStreamDataHandlerFactory));
+	}
+
+	public static WebServer create(int port) throws CannotProvideComponentException {
+		/**
+		 * Prepare the ecosystem
+		 */
+
+		final EcosystemImpl ecosystem = new EcosystemImpl();
+		final List<DownStreamDataFlow<String>> components = new ArrayList<DownStreamDataFlow<String>>();
+
+		final UpStreamDataFlowFactory<String, String> dataFactory = new UpStreamDataFlowFactory<String, String>() {
+			@Override
+			public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) {
+				components.add(component);
+
+				return DataFlows.<String> closable(new UpStreamDataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						for (DownStreamDataFlow<String> aComponent : components) {
+							aComponent.handleData(data);
+						}
+					}
+
+					@Override
+					public void handleClose() throws DataFlowCloseException {
+						component.handleClose();
+						components.remove(component);
+					}
+
+					@Override
+					public void handleLost() throws DataFlowCloseException {
+						component.handleLost();
+						components.remove(component);
+					}
+				});
+			}
+		};
+
+		final UpStreamDataFlowFactory<String, String> destinationComponentFactory = new UpStreamDataFlowFactory<String, String>() {
+
+			@Override
+			public UpStreamDataFlow<String> create(DownStreamDataFlow<String> receiver) throws CannotCreateDataFlowException {
+				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
+				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
+				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+				try {
+					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateDataFlowException(e);
+				}
+				return InitialUpStreamDataFlow.<String> create(initialComponent);
+			}
+		};
+
+		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("web.socket", String.class, String.class);
+		ecosystem.addBinder(key, destinationComponentFactory);
+
+		return new WebServer("0.0.0.0", port, ecosystem.<String, String> getBinder(key));
 	}
 
 	/**
@@ -71,60 +130,6 @@ public final class WebServer extends NIOServer {
 			port = 9090;
 		}
 
-		/**
-		 * Prepare the ecosystem
-		 */
-
-		final EcosystemImpl ecosystem = new EcosystemImpl();
-		final List<DownStreamDataHandler<String>> components = new ArrayList<DownStreamDataHandler<String>>();
-
-		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
-			@Override
-			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> component) {
-				components.add(component);
-
-				return new UpStreamDataHandlerAdapter<String>() {
-					@Override
-					public void handleData(String data) throws DataHandlerException {
-						for (DownStreamDataHandler<String> aComponent : components) {
-							aComponent.handleData(data);
-						}
-					}
-
-					@Override
-					public void handleClose() throws DataHandlerCloseException {
-						component.handleClose();
-						components.remove(component);
-					}
-
-					@Override
-					public void handleLost() throws DataHandlerCloseException {
-						component.handleLost();
-						components.remove(component);
-					}
-				};
-			}
-		};
-
-		final UpStreamDataHandlerFactory<String, String> destinationComponentFactory = new UpStreamDataHandlerFactory<String, String>() {
-
-			@Override
-			public UpStreamDataHandler<String> create(DownStreamDataHandler<String> receiver) throws CannotCreateDataHandlerException {
-				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
-				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
-				try {
-					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
-				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataHandlerException(e);
-				}
-				return InitialUpStreamDataHandler.<String>create(initialComponent);
-			}
-		};
-
-		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("web.socket", String.class, String.class);
-		ecosystem.addBinder(key, destinationComponentFactory);
-
-		new WebServer("localhost", port, ecosystem.<String, String> getBinder(key)).call();
+		create(port).call();
 	}
 }

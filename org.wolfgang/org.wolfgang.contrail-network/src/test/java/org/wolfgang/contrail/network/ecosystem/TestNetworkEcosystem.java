@@ -18,29 +18,15 @@
 
 package org.wolfgang.contrail.network.ecosystem;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-
-import javax.xml.bind.JAXBException;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-import org.wolfgang.contrail.ecosystem.Ecosystem;
-import org.wolfgang.contrail.ecosystem.factory.EcosystemCreationException;
-import org.wolfgang.contrail.ecosystem.factory.EcosystemFactoryImpl;
-import org.wolfgang.contrail.ecosystem.model.EcosystemModel;
-
 /**
  * <code>TestNetworkEcosystem</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkEcosystem extends TestCase {
-
+public class TestNetworkEcosystem {
+	
+	/** DEACTIVATED
 	@Test
 	public void testNominal01() {
 
@@ -84,7 +70,6 @@ public class TestNetworkEcosystem extends TestCase {
 		}
 	}
 
-	/** DEACTIVATED
 	@Test
 	public void testNominal02() {
 

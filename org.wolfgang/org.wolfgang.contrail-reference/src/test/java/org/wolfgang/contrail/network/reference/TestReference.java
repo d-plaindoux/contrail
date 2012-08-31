@@ -28,6 +28,7 @@ import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.IndirectReference;
 import org.wolfgang.contrail.reference.ReferenceFactory;
+import org.wolfgang.contrail.reference.ReferenceVisitor;
 
 /**
  * <code>TestReference</code>
@@ -38,17 +39,29 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
 public class TestReference extends TestCase {
 
 	@Test
-	public void testNominal01() throws NoSuchAlgorithmException {
+	public void testEquals01() throws NoSuchAlgorithmException {
 		final UUID identifier = UUIDUtils.digestBased("Reference");
 
 		final DirectReference reference01 = ReferenceFactory.directReference(identifier);
 		final DirectReference reference02 = ReferenceFactory.directReference(identifier);
 
+		assertEquals(reference01.hashCode(), reference02.hashCode());
 		assertEquals(reference01, reference02);
 	}
 
 	@Test
-	public void testNominal03() throws NoSuchAlgorithmException {
+	public void testEquals02() throws NoSuchAlgorithmException {
+		final DirectReference reference01 = ReferenceFactory.directReference(UUID.randomUUID());
+		final DirectReference reference02 = ReferenceFactory.directReference(UUID.randomUUID());
+		final IndirectReference indirectReference1 = ReferenceFactory.indirectReference(reference01, reference02);
+		final IndirectReference indirectReference2 = ReferenceFactory.indirectReference(reference01, reference02);
+
+		assertEquals(indirectReference1.hashCode(), indirectReference2.hashCode());
+		assertEquals(indirectReference1, indirectReference2);
+	}
+
+	@Test
+	public void testEquals03() throws NoSuchAlgorithmException {
 		final DirectReference reference01 = ReferenceFactory.directReference(UUID.randomUUID());
 		final DirectReference reference02 = ReferenceFactory.directReference(UUID.randomUUID());
 		final IndirectReference indirectReference = ReferenceFactory.indirectReference();
@@ -60,5 +73,50 @@ public class TestReference extends TestCase {
 		indirectReference.removeCurrent();
 
 		assertEquals(reference02, indirectReference.getCurrent());
+	}
+
+	@Test
+	public void testChainedReference01() throws NoSuchAlgorithmException {
+		final DirectReference reference01 = ReferenceFactory.directReference(UUIDUtils.digestBased("Reference"));
+		final IndirectReference reference = ReferenceFactory.indirectReference();
+		reference.addFirst(reference01).addFirst(reference01);
+		assertFalse(reference.hasNext());
+	}
+
+	@Test
+	public void testVisitor01() throws Exception {
+		final DirectReference reference01 = ReferenceFactory.directReference(UUIDUtils.digestBased("Reference"));
+		final ReferenceVisitor<Boolean, Exception> referenceVisitor = new ReferenceVisitor<Boolean, Exception>() {
+			@Override
+			public Boolean visit(DirectReference reference) throws Exception {
+				return reference.equals(reference01);
+			}
+
+			@Override
+			public Boolean visit(IndirectReference reference) throws Exception {
+				return false;
+			}
+		};
+
+		assertTrue(reference01.visit(referenceVisitor));
+	}
+
+	@Test
+	public void testVisitor02() throws Exception {
+		final DirectReference reference01 = ReferenceFactory.directReference(UUIDUtils.digestBased("Reference"));
+		final IndirectReference reference02 = ReferenceFactory.indirectReference(reference01);
+		final ReferenceVisitor<Boolean, Exception> referenceVisitor = new ReferenceVisitor<Boolean, Exception>() {
+			@Override
+			public Boolean visit(DirectReference reference) throws Exception {
+				return false;
+			}
+
+			@Override
+			public Boolean visit(IndirectReference reference) throws Exception {
+				return reference.equals(reference02);
+			}
+		};
+
+		assertTrue(reference02.visit(referenceVisitor));
 	}
 }
