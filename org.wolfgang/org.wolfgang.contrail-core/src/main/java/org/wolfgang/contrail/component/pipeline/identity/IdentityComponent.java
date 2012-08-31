@@ -32,12 +32,12 @@ public class IdentityComponent<U, D> extends AbstractPipelineComponent<U, D, U, 
 
 	@Override
 	public UpStreamDataHandler<U> getUpStreamDataHandler() {
-		return this.getDestinationComponentLink().getDestination().getUpStreamDataHandler();
+		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
 	}
 
 	@Override
 	public DownStreamDataHandler<D> getDownStreamDataHandler() {
-		return this.getSourceComponentLink().getSource().getDownStreamDataHandler();
+		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
 	}
 
 }

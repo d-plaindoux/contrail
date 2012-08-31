@@ -82,7 +82,7 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	@Override
 	public final boolean disconnect(ComponentId sourceId, ComponentId destinationId) throws ComponentDisconnectionRejectedException {
 		for (ComponentLinkImpl<?, ?> link : links) {
-			if (link.getSource().getComponentId().equals(sourceId) && link.getDestination().getComponentId().equals(destinationId)) {
+			if (link.getSourceComponent().getComponentId().equals(sourceId) && link.getDestinationComponent().getComponentId().equals(destinationId)) {
 				link.dispose();
 				links.remove(link);
 				return true;
@@ -96,8 +96,8 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	public SourceComponent<?, ?>[] getSources(ComponentId componentId) {
 		final List<SourceComponent<?, ?>> sources = new ArrayList<SourceComponent<?, ?>>();
 		for (ComponentLinkImpl<?, ?> link : links) {
-			if (link.getDestination().getComponentId().equals(componentId)) {
-				sources.add(link.getSource());
+			if (link.getDestinationComponent().getComponentId().equals(componentId)) {
+				sources.add(link.getSourceComponent());
 			}
 		}
 		return sources.toArray(new SourceComponent[links.size()]);
@@ -107,8 +107,8 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	public DestinationComponent<?, ?>[] getDestinations(ComponentId componentId) {
 		final List<DestinationComponent<?, ?>> destinations = new ArrayList<DestinationComponent<?, ?>>();
 		for (ComponentLinkImpl<?, ?> link : links) {
-			if (link.getSource().getComponentId().equals(componentId)) {
-				destinations.add(link.getDestination());
+			if (link.getSourceComponent().getComponentId().equals(componentId)) {
+				destinations.add(link.getDestinationComponent());
 			}
 		}
 		return destinations.toArray(new DestinationComponent[links.size()]);

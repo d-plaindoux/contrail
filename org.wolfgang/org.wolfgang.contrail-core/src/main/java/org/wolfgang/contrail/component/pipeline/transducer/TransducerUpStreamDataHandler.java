@@ -66,7 +66,7 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 			try {
 				final List<D> transform = streamXducer.transform(data);
 				for (D value : transform) {
-					component.getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(value);
+					component.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -84,7 +84,7 @@ class TransducerUpStreamDataHandler<U, D> implements UpStreamDataHandler<U> {
 			try {
 				final List<D> transform = streamXducer.finish();
 				for (D value : transform) {
-					component.getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(value);
+					component.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());

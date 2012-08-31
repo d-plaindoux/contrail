@@ -87,7 +87,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponentLink.getDestination().getUpStreamDataHandler();
+			return destinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
 		}
 	}
 
@@ -98,7 +98,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestination().getComponentId();
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;
 			return new ComponentLink() {
@@ -113,7 +113,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
+		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
 			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -130,7 +130,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.destinationComponentLink.getDestination().closeUpStream();
+			this.destinationComponentLink.getDestinationComponent().closeUpStream();
 		}
 	}
 

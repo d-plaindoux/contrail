@@ -85,14 +85,14 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
-						final ComponentLinkManager destinationComponentLinkManager = destinationComponentLink.getComponentLinkManager();
-						final SourceComponent<Event, Event> source = sourceComponentLink.getSource();
-						final DestinationComponent<Event, Event> destination = destinationComponentLink.getDestination();
+						final ComponentLinkManager linkManager = destinationComponentLink.getComponentLinkManager();
+						final SourceComponent<Event, Event> source = sourceComponentLink.getSourceComponent();
+						final DestinationComponent<Event, Event> destination = destinationComponentLink.getDestinationComponent();
 
 						sourceComponentLink.dispose();
 						destinationComponentLink.dispose();
 
-						destinationComponentLinkManager.connect(source, destination);
+						linkManager.connect(source, destination);
 
 						if (senderReference == null) {
 							source.closeDownStream();
@@ -130,7 +130,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
-		final SourceComponent<Event, Event> source = handler.getSource();
+		final SourceComponent<Event, Event> source = handler.getSourceComponent();
 		final ComponentId componentId = source.getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
@@ -148,7 +148,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 
 	@Override
 	public DownStreamDataHandler<Event> getDownStreamDataHandler() {
-		return this.sourceComponentLink.getSource().getDownStreamDataHandler();
+		return this.sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectionRejectedException {
-		final DestinationComponent<Event, Event> destination = handler.getDestination();
+		final DestinationComponent<Event, Event> destination = handler.getDestinationComponent();
 		final ComponentId componentId = destination.getComponentId();
 		if (this.acceptDestination(componentId) && Coercion.canCoerce(destination, RouterComponent.class)) {
 			this.destinationComponentLink = handler;
@@ -176,7 +176,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
+		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
 			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -184,7 +184,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		if (!acceptSource(componentId) && this.sourceComponentLink.getSource().getComponentId().equals(componentId)) {
+		if (!acceptSource(componentId) && this.sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
 			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());

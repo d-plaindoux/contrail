@@ -21,7 +21,7 @@ package org.wolfgang.contrail.handler;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <code>DataHandlerAdapter</code>
+ * <code>ClosableDataHandler</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

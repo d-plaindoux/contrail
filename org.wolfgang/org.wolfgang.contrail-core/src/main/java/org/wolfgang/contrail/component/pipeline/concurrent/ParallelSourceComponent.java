@@ -71,7 +71,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 				executor.submit(new Callable<Void>() {
 					@Override
 					public Void call() throws Exception {
-						getDestinationComponentLink().getDestination().getUpStreamDataHandler().handleData(data);
+						getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler().handleData(data);
 						return null;
 					}
 				});
@@ -80,7 +80,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 			@Override
 			public void handleClose() throws DataHandlerCloseException {
 				try {
-					getDestinationComponentLink().getDestination().closeUpStream();
+					getDestinationComponentLink().getDestinationComponent().closeUpStream();
 				} finally {
 					executor.shutdown();
 				}
@@ -89,7 +89,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 			@Override
 			public void handleLost() throws DataHandlerCloseException {
 				try {
-					getDestinationComponentLink().getDestination().closeUpStream();
+					getDestinationComponentLink().getDestinationComponent().closeUpStream();
 				} finally {
 					executor.shutdown();
 				}
@@ -112,7 +112,7 @@ public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, 
 
 	@Override
 	public DownStreamDataHandler<D> getDownStreamDataHandler() {
-		return this.getSourceComponentLink().getSource().getDownStreamDataHandler();
+		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
 	}
 
 }

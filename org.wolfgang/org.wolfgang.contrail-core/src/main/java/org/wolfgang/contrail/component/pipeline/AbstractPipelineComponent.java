@@ -88,7 +88,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getSource().getComponentId();
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
 			return new ComponentLink() {
@@ -103,7 +103,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		if (!acceptSource(componentId) && sourceComponentLink.getSource().getComponentId().equals(componentId)) {
+		if (!acceptSource(componentId) && sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
 			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -117,7 +117,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	@Override
 	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestination().getComponentId();
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;
 			return new ComponentLink() {
@@ -132,7 +132,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestination().getComponentId().equals(componentId)) {
+		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
 			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -144,8 +144,8 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 		try {
 			this.getUpStreamDataHandler().handleClose();
 		} finally {
-			if (this.destinationComponentLink.getDestination() != null) {
-				this.destinationComponentLink.getDestination().closeUpStream();
+			if (this.destinationComponentLink.getDestinationComponent() != null) {
+				this.destinationComponentLink.getDestinationComponent().closeUpStream();
 			}
 		}
 	}
@@ -155,8 +155,8 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 		try {
 			this.getDownStreamDataHandler().handleClose();
 		} finally {
-			if (this.sourceComponentLink.getSource() != null) {
-				this.sourceComponentLink.getSource().closeDownStream();
+			if (this.sourceComponentLink.getSourceComponent() != null) {
+				this.sourceComponentLink.getSourceComponent().closeDownStream();
 			}
 		}
 	}

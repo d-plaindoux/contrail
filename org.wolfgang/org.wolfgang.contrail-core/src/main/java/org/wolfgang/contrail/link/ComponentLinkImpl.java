@@ -90,12 +90,12 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 	}
 
 	@Override
-	public SourceComponent<U, D> getSource() {
+	public SourceComponent<U, D> getSourceComponent() {
 		return this.source;
 	}
 
 	@Override
-	public DestinationComponent<U, D> getDestination() {
+	public DestinationComponent<U, D> getDestinationComponent() {
 		return this.destination;
 	}
 

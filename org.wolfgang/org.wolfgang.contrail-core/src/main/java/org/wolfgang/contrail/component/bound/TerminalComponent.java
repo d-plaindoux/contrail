@@ -89,7 +89,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return sourceComponentLink.getSource().getDownStreamDataHandler();
+			return sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
 		}
 	}
 
@@ -100,7 +100,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getSource().getComponentId();
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
 			return new ComponentLink() {
@@ -115,7 +115,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
-		if (!acceptSource(componentId) && this.sourceComponentLink.getSource().getComponentId().equals(componentId)) {
+		if (!acceptSource(componentId) && this.sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
 			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -134,10 +134,10 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
-		if (this.sourceComponentLink.getSource() == null) {
+		if (this.sourceComponentLink.getSourceComponent() == null) {
 			throw new DataHandlerCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.sourceComponentLink.getSource().closeDownStream();
+			this.sourceComponentLink.getSourceComponent().closeDownStream();
 		}
 	}
 }

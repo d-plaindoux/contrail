@@ -100,7 +100,7 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	public ComponentLink connectDestination(DestinationComponentLink<Event, Event> handler) throws ComponentConnectedException {
 		assert handler != null;
 
-		final ComponentId componentId = handler.getDestination().getComponentId();
+		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.destinationLinks.put(componentId, handler);
 			return new ComponentLink() {
@@ -132,7 +132,7 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	public ComponentLink connectSource(SourceComponentLink<Event, Event> handler) throws ComponentConnectedException {
 		assert handler != null;
 
-		final ComponentId componentId = handler.getSource().getComponentId();
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceLinks.put(componentId, handler);
 			return new ComponentLink() {
@@ -184,13 +184,13 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 		final DestinationComponentLink<Event, Event> destinationComponentLink = this.destinationLinks.get(componentId);
 
 		if (!ComponentLinkFactory.isUndefined(destinationComponentLink)) {
-			return destinationComponentLink.getDestination().getUpStreamDataHandler();
+			return destinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
 		}
 
 		final SourceComponentLink<Event, Event> sourceComponentLink = this.sourceLinks.get(componentId);
 
 		if (!ComponentLinkFactory.isUndefined(sourceComponentLink)) {
-			return sourceComponentLink.getSource().getDownStreamDataHandler();
+			return sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
 		}
 
 		throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
@@ -222,14 +222,14 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	@Override
 	public void closeUpStream() throws DataHandlerCloseException {
 		for (DestinationComponentLink<Event, Event> source : this.destinationLinks.values()) {
-			source.getDestination().closeUpStream();
+			source.getDestinationComponent().closeUpStream();
 		}
 	}
 
 	@Override
 	public void closeDownStream() throws DataHandlerCloseException {
 		for (SourceComponentLink<Event, Event> source : this.sourceLinks.values()) {
-			source.getSource().closeUpStream();
+			source.getSourceComponent().closeUpStream();
 		}
 	}
 }

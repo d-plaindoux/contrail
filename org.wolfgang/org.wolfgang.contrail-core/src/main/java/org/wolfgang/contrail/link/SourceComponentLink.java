@@ -34,7 +34,7 @@ public interface SourceComponentLink<U, D> extends ComponentLink {
 	 * 
 	 * @return the upstream source
 	 */
-	SourceComponent<U, D> getSource();
+	SourceComponent<U, D> getSourceComponent();
 
 	/**
 	 * Method called whether the component link manager must be retrieved

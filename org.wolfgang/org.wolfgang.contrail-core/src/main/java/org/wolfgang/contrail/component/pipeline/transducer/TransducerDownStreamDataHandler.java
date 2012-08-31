@@ -69,7 +69,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 			try {
 				final List<D> transform = streamXducer.transform(data);
 				for (D value : transform) {
-					this.component.getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -87,7 +87,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataHandler<U> 
 			try {
 				final List<D> transform = streamXducer.finish();
 				for (D value : transform) {
-					this.component.getSourceComponentLink().getSource().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());

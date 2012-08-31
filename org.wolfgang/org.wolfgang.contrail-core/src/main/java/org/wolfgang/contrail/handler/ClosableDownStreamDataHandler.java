@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.handler;
 
 /**
- * <code>DownStreamDataHandlerAdapter</code>
+ * <code>ClosableDownStreamDataHandler</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
