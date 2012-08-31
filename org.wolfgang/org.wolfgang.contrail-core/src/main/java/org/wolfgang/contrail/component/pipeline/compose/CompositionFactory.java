@@ -41,6 +41,7 @@ public final class CompositionFactory {
 		// TODO Auto-generated constructor stub
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Component compose(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		if (components.length == 0) {
 			throw new ComponentConnectionRejectedException("TODO");

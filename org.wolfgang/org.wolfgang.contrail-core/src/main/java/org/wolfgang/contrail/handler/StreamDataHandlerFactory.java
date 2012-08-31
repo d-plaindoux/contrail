@@ -16,31 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline;
-
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
+package org.wolfgang.contrail.handler;
 
 /**
- * <code>StringSourceComponent</code> is a simple upstream source component.
+ * <code>StreamDataHandlerFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringSourceComponent extends InitialComponent<String, String> {
+public final class StreamDataHandlerFactory {
 
 	/**
 	 * Constructor
 	 */
-	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
-			public void handleData(String data) throws DataHandlerException {
-				reference.set(data);
-			}
-		}));
+	private StreamDataHandlerFactory() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
+
+	/**
+	 * @param dataHandler
+	 * @return
+	 */
+	public static <U> UpStreamDataHandler<U> create(UpStreamDataHandler<U> dataHandler) {
+		return new ClosableUpStreamDataHandler<U>(dataHandler);
+	}
+
+	/**
+	 * @param dataHandler
+	 * @return
+	 */
+	public static <U> DownStreamDataHandler<U> create(DownStreamDataHandler<U> dataHandler) {
+		return new ClosableDownStreamDataHandler<U>(dataHandler);
+	}
+
 }

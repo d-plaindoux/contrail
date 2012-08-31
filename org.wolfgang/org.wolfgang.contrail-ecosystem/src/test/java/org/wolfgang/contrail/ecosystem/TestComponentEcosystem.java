@@ -34,11 +34,11 @@ import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
-import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -59,7 +59,7 @@ public class TestComponentEcosystem extends TestCase {
 		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
 			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> sender) {
-				return ClosableDataHandler.<String> create(new UpStreamDataHandlerAdapter<String>() {
+				return StreamDataHandlerFactory.<String> create(new UpStreamDataHandlerAdapter<String>() {
 					@Override
 					public void handleData(String data) throws DataHandlerException {
 						sender.handleData(data);

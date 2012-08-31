@@ -19,9 +19,9 @@
 package org.wolfgang.contrail.component.bound;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
+import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 
@@ -44,7 +44,7 @@ public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U>
 	 * @return
 	 */
 	public static <U> UpStreamDataHandler<U> create(InitialComponent<U, ?> component) {
-		return ClosableDataHandler.<U> create(new InitialUpStreamDataHandler<U>(component));
+		return StreamDataHandlerFactory.<U> create(new InitialUpStreamDataHandler<U>(component));
 	}
 
 	/**

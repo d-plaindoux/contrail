@@ -21,12 +21,13 @@ package org.wolfgang.contrail.handler;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * <code>ClosableDataHandler</code>
+ * The <code>ClosableDataHandler</code> is a specific data handler managing the
+ * stream status (open or close) and delegating operations when it's open.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ClosableDataHandler<D> implements DataHandler<D> {
+abstract class ClosableDataHandler<D> implements DataHandler<D> {
 
 	private final AtomicBoolean closed;
 
@@ -35,22 +36,6 @@ public class ClosableDataHandler<D> implements DataHandler<D> {
 
 	{
 		this.closed = new AtomicBoolean(false);
-	}
-
-	/**
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> UpStreamDataHandler<U> create(UpStreamDataHandler<U> dataHandler) {
-		return new ClosableUpStreamDataHandler<U>(dataHandler);
-	}
-
-	/**
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DownStreamDataHandler<U> create(DownStreamDataHandler<U> dataHandler) {
-		return new ClosableDownStreamDataHandler<U>(dataHandler);
 	}
 
 	/**

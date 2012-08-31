@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.concurrent;
+package org.wolfgang.contrail.component.concurrent;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -29,6 +29,8 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent;
+import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;

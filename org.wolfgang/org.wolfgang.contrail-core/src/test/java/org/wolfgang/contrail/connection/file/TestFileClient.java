@@ -37,10 +37,10 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataHandler;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.bound.UpStreamDataHandlerFactory;
-import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
+import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
 import org.wolfgang.contrail.handler.UpStreamDataHandler;
 import org.wolfgang.contrail.handler.UpStreamDataHandlerAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -77,7 +77,7 @@ public class TestFileClient extends TestCase {
 
 		final OutputStream outputStream = new FileOutputStream(output);
 
-		final UpStreamDataHandler<byte[]> terminalReceiver = ClosableDataHandler.<byte[]> create(new UpStreamDataHandler<byte[]>() {
+		final UpStreamDataHandler<byte[]> terminalReceiver = StreamDataHandlerFactory.<byte[]> create(new UpStreamDataHandler<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataHandlerException {
 				try {

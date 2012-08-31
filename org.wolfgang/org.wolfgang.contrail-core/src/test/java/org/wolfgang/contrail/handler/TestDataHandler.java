@@ -16,31 +16,22 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline;
+package org.wolfgang.contrail.handler;
 
-import java.util.concurrent.atomic.AtomicReference;
+import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.handler.DataHandlerException;
-import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
-import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
+import org.junit.Test;
 
 /**
- * <code>StringSourceComponent</code> is a simple upstream source component.
+ * <code>TestDataHandler</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringSourceComponent extends InitialComponent<String, String> {
+public class TestDataHandler extends TestCase {
 
-	/**
-	 * Constructor
-	 */
-	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
-			public void handleData(String data) throws DataHandlerException {
-				reference.set(data);
-			}
-		}));
+	@Test
+	public void testClosable01() {
 	}
+
 }

@@ -19,11 +19,11 @@
 package org.wolfgang.contrail.component.bound;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.handler.ClosableDataHandler;
 import org.wolfgang.contrail.handler.DataHandlerCloseException;
 import org.wolfgang.contrail.handler.DataHandlerException;
 import org.wolfgang.contrail.handler.DownStreamDataHandler;
 import org.wolfgang.contrail.handler.DownStreamDataHandlerAdapter;
+import org.wolfgang.contrail.handler.StreamDataHandlerFactory;
 
 /**
  * <code>TerminalDownStreamDataHandler</code>
@@ -44,7 +44,7 @@ public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapt
 	 * @return
 	 */
 	public static <D> DownStreamDataHandler<D> create(TerminalComponent<?, D> component) {
-		return ClosableDataHandler.<D> create(new TerminalDownStreamDataHandler<D>(component));
+		return StreamDataHandlerFactory.<D> create(new TerminalDownStreamDataHandler<D>(component));
 	}
 
 	/**
