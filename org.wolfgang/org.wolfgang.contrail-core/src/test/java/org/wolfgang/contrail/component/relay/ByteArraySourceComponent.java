@@ -48,7 +48,7 @@ public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
 		super(new DownStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
 			public DownStreamDataHandler<byte[]> create(UpStreamDataHandler<byte[]> initial) {
-				return StreamDataHandlerFactory.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
+				return StreamDataHandlerFactory.<byte[]> closable(new DownStreamDataHandlerAdapter<byte[]>() {
 					public void handleData(byte[] data) throws DataHandlerException {
 						try {
 							outputStream.write(data);

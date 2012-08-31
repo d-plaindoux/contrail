@@ -74,8 +74,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
 
-		this.upStreamDataHandler = StreamDataHandlerFactory.<U1> create(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
-		this.downStreamDataHandler = StreamDataHandlerFactory.<D2> create(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
+		this.upStreamDataHandler = StreamDataHandlerFactory.<U1> closable(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
+		this.downStreamDataHandler = StreamDataHandlerFactory.<D2> closable(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
 	}
 
 	@Override

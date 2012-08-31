@@ -44,7 +44,7 @@ public class InitialUpStreamDataHandler<U> extends UpStreamDataHandlerAdapter<U>
 	 * @return
 	 */
 	public static <U> UpStreamDataHandler<U> create(InitialComponent<U, ?> component) {
-		return StreamDataHandlerFactory.<U> create(new InitialUpStreamDataHandler<U>(component));
+		return StreamDataHandlerFactory.<U> closable(new InitialUpStreamDataHandler<U>(component));
 	}
 
 	/**

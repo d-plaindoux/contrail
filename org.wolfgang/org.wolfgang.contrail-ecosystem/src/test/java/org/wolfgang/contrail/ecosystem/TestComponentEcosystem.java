@@ -59,7 +59,7 @@ public class TestComponentEcosystem extends TestCase {
 		final UpStreamDataHandlerFactory<String, String> dataFactory = new UpStreamDataHandlerFactory<String, String>() {
 			@Override
 			public UpStreamDataHandler<String> create(final DownStreamDataHandler<String> sender) {
-				return StreamDataHandlerFactory.<String> create(new UpStreamDataHandlerAdapter<String>() {
+				return StreamDataHandlerFactory.<String> closable(new UpStreamDataHandlerAdapter<String>() {
 					@Override
 					public void handleData(String data) throws DataHandlerException {
 						sender.handleData(data);

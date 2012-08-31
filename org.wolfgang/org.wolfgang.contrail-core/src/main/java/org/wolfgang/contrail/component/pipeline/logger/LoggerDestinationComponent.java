@@ -46,7 +46,7 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	private final String prefix;
 
 	{
-		this.downStreamDataHandler = StreamDataHandlerFactory.<D> create(new DownStreamDataHandler<D>() {
+		this.downStreamDataHandler = StreamDataHandlerFactory.<D> closable(new DownStreamDataHandler<D>() {
 			@Override
 			public void handleData(final D data) throws DataHandlerException {
 				getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(data);

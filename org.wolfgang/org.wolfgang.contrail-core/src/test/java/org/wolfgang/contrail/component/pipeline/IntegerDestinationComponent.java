@@ -44,7 +44,7 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 		super(new UpStreamDataHandlerFactory<Integer, Integer>() {
 			@Override
 			public UpStreamDataHandler<Integer> create(final DownStreamDataHandler<Integer> terminal) {
-				return StreamDataHandlerFactory.<Integer> create(new UpStreamDataHandlerAdapter<Integer>() {
+				return StreamDataHandlerFactory.<Integer> closable(new UpStreamDataHandlerAdapter<Integer>() {
 					@Override
 					public void handleData(Integer data) throws DataHandlerException {
 						terminal.handleData(data * data);

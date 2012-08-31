@@ -37,7 +37,7 @@ public class StringSourceComponent extends InitialComponent<String, String> {
 	 * Constructor
 	 */
 	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
+		super(StreamDataHandlerFactory.<String> closable(new DownStreamDataHandlerAdapter<String>() {
 			public void handleData(String data) throws DataHandlerException {
 				reference.set(data);
 			}

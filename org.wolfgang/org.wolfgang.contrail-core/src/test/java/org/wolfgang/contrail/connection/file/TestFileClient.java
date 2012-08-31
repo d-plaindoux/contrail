@@ -77,7 +77,7 @@ public class TestFileClient extends TestCase {
 
 		final OutputStream outputStream = new FileOutputStream(output);
 
-		final UpStreamDataHandler<byte[]> terminalReceiver = StreamDataHandlerFactory.<byte[]> create(new UpStreamDataHandler<byte[]>() {
+		final UpStreamDataHandler<byte[]> terminalReceiver = StreamDataHandlerFactory.<byte[]> closable(new UpStreamDataHandler<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataHandlerException {
 				try {

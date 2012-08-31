@@ -38,7 +38,7 @@ public final class StreamDataHandlerFactory {
 	 * @param dataHandler
 	 * @return
 	 */
-	public static <U> UpStreamDataHandler<U> create(UpStreamDataHandler<U> dataHandler) {
+	public static <U> UpStreamDataHandler<U> closable(UpStreamDataHandler<U> dataHandler) {
 		return new ClosableUpStreamDataHandler<U>(dataHandler);
 	}
 
@@ -46,7 +46,7 @@ public final class StreamDataHandlerFactory {
 	 * @param dataHandler
 	 * @return
 	 */
-	public static <U> DownStreamDataHandler<U> create(DownStreamDataHandler<U> dataHandler) {
+	public static <U> DownStreamDataHandler<U> closable(DownStreamDataHandler<U> dataHandler) {
 		return new ClosableDownStreamDataHandler<U>(dataHandler);
 	}
 

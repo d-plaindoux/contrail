@@ -44,7 +44,7 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 		super(new UpStreamDataHandlerFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataHandler<byte[]> create(final DownStreamDataHandler<byte[]> sender) {
-				return StreamDataHandlerFactory.<byte[]> create(new UpStreamDataHandlerAdapter<byte[]>() {
+				return StreamDataHandlerFactory.<byte[]> closable(new UpStreamDataHandlerAdapter<byte[]>() {
 					@Override
 					public void handleData(byte[] data) throws DataHandlerException {
 						sender.handleData(data);

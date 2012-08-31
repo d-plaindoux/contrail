@@ -57,7 +57,7 @@ public class EchoComponent extends TerminalComponent {
 		@SuppressWarnings("unchecked")
 		@Override
 		public UpStreamDataHandler create(final DownStreamDataHandler sender) {
-			return StreamDataHandlerFactory.create(new UpStreamDataHandlerAdapter() {
+			return StreamDataHandlerFactory.closable(new UpStreamDataHandlerAdapter() {
 				@Override
 				public void handleData(Object data) throws DataHandlerException {
 					if (name == null) {

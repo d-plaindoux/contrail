@@ -60,7 +60,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> closable(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -91,7 +91,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> closable(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -122,7 +122,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> closable(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
 					super.handleData(data);
@@ -154,7 +154,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<String> futureResponse = new FutureResponse<String>();
-			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> create(new DownStreamDataHandlerAdapter<String>() {
+			final DownStreamDataHandler<String> dataReceiver = StreamDataHandlerFactory.<String> closable(new DownStreamDataHandlerAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -185,7 +185,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> closable(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -225,7 +225,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> closable(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -265,7 +265,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<Bytes> futureResponse = new FutureResponse<Bytes>();
-			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> create(new DownStreamDataHandlerAdapter<Bytes>() {
+			final DownStreamDataHandler<Bytes> dataReceiver = StreamDataHandlerFactory.<Bytes> closable(new DownStreamDataHandlerAdapter<Bytes>() {
 				@Override
 				public void handleData(Bytes data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -305,7 +305,7 @@ public class TestEcosystemFactory extends TestCase {
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
 			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
-			final DownStreamDataHandler<byte[]> dataReceiver = StreamDataHandlerFactory.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
+			final DownStreamDataHandler<byte[]> dataReceiver = StreamDataHandlerFactory.<byte[]> closable(new DownStreamDataHandlerAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataHandlerException {
 					futureResponse.setValue(data);
@@ -348,7 +348,7 @@ public class TestEcosystemFactory extends TestCase {
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 
-			final DownStreamDataHandler<byte[]> dataReceiver = StreamDataHandlerFactory.<byte[]> create(new DownStreamDataHandlerAdapter<byte[]>() {
+			final DownStreamDataHandler<byte[]> dataReceiver = StreamDataHandlerFactory.<byte[]> closable(new DownStreamDataHandlerAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataHandlerException {
 					if (futureReference.incrementAndGet() == nbEventSent) {

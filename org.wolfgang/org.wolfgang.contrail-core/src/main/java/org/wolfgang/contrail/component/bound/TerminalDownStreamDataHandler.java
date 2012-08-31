@@ -44,7 +44,7 @@ public class TerminalDownStreamDataHandler<D> extends DownStreamDataHandlerAdapt
 	 * @return
 	 */
 	public static <D> DownStreamDataHandler<D> create(TerminalComponent<?, D> component) {
-		return StreamDataHandlerFactory.<D> create(new TerminalDownStreamDataHandler<D>(component));
+		return StreamDataHandlerFactory.<D> closable(new TerminalDownStreamDataHandler<D>(component));
 	}
 
 	/**
