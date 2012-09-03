@@ -14,7 +14,7 @@ import as ParallelDestination org.wolfgang.contrail.component.pipeline.concurren
 
 define Parallel { s | ParallelSource <> s <> ParallelDestination }
 define TCPEvent { PayLoad <> Parallel Serialization <> Coercion Event }
-define Client   { uri station | ClientHandler uri { b | b <> TCPEvent <> station } }
+define Client   { uri station | ClientHandler uri <> TCPEvent <> station }
 define Server   { uri station | ServerHandler uri { b | b <> TCPEvent <> station } }
 
 define NetStation { 

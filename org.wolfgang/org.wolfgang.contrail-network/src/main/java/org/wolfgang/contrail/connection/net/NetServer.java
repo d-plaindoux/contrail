@@ -39,7 +39,7 @@ import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
-import org.wolfgang.contrail.connection.ComponentFactory;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
@@ -102,7 +102,7 @@ public class NetServer implements Server {
 		super();
 	}
 
-	public Worker bind(final URI uri, final ComponentFactory factory) throws CannotCreateServerException {
+	public Worker bind(final URI uri, final ComponentFactoryListener listener) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
@@ -121,7 +121,7 @@ public class NetServer implements Server {
 						final Socket client = serverSocket.accept();
 
 						// Check executor.getActiveCount() in order to prevent
-						// DoS
+						// Denial Of Service
 
 						final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
 							@Override
@@ -151,8 +151,6 @@ public class NetServer implements Server {
 
 						final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
 
-						factory.getLinkManager().connect(initialComponent, factory.create());
-
 						final Callable<Void> reader = new Callable<Void>() {
 							@Override
 							public Void call() throws Exception {
@@ -169,6 +167,8 @@ public class NetServer implements Server {
 								}
 							}
 						};
+
+						listener.notifyCreation(initialComponent);
 
 						executor.submit(reader);
 					}

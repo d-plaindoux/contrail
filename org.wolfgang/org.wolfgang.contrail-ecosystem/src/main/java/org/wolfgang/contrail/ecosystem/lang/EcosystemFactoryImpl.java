@@ -255,7 +255,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			final Class<?> typeOut = TypeUtils.getType(bind.getTypeOut());
 			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
 			final CodeValue flow = this.interpreter.visit(bind.getExpressions());
-			ecosystemImpl.addBinder(key, new BinderDataSenderFactoryImpl(this, this.linkManager, flow));
+			ecosystemImpl.addBinder(key, new BinderComponentFactory(this, this.linkManager, flow));
 		}
 
 		// Create and Start the starters

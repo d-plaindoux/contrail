@@ -16,24 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 /**
- * <code>ContrailFactory</code>
- * 
+ * <code>package-info</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(METHOD)
-@Retention(RUNTIME)
-public @interface ContrailFactory {
-
-	String value();
-
-}
+package org.wolfgang.contrail.connection.component;

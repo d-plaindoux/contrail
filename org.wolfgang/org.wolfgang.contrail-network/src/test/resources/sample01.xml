@@ -24,7 +24,8 @@
 		<ref>Server</ref>
 		<atom>tcp://localhost:6666</atom>
 		<function>
-			<var />
+			<var>client</var>
+			<ref>client</ref>
 			<ref>Echo</ref>
 		</function>
 	</start>

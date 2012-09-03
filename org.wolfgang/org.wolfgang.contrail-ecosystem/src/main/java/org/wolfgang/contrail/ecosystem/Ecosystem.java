@@ -20,7 +20,7 @@ package org.wolfgang.contrail.ecosystem;
 
 import java.io.Closeable;
 
-import org.wolfgang.contrail.connection.ComponentFactory;
+import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 

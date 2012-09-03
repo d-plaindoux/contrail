@@ -29,12 +29,11 @@ import java.util.concurrent.Executors;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
-import org.wolfgang.contrail.connection.ComponentFactory;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -76,7 +75,7 @@ public class ProcessHandler implements Server {
 	}
 
 	@Override
-	public Worker bind(URI uri, ComponentFactory factory) throws CannotCreateServerException {
+	public Worker bind(URI uri, ComponentFactoryListener listener) throws CannotCreateServerException {
 
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
@@ -108,14 +107,6 @@ public class ProcessHandler implements Server {
 
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
 
-		try {
-			factory.getLinkManager().connect(initialComponent, factory.create());
-		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotCreateServerException(e);
-		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateServerException(e);
-		}
-
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -131,6 +122,12 @@ public class ProcessHandler implements Server {
 				}
 			}
 		};
+
+		try {
+			listener.notifyCreation(initialComponent);
+		} catch (CannotCreateComponentException e) {
+			throw new CannotCreateServerException(e);
+		}
 
 		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader));
 

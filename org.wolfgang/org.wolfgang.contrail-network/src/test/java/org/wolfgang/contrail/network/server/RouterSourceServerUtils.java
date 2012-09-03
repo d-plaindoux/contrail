@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
@@ -38,8 +39,6 @@ import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
-import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -79,21 +78,7 @@ class RouterSourceServerUtils extends TestCase {
 					componentLinkManager.connect(coercionTransducer, component);
 
 					component.filter(coercionTransducer.getComponentId(), this.getReferenceToUse());
-
-					final ComponentFactory factory = new ComponentFactory() {
-						@Override
-						public Component create() throws CannotCreateComponentException {
-							return payLoadTransducer;
-						}
-
-						@Override
-						public ComponentLinkManager getLinkManager() {
-							return componentLinkManager;
-						}
-					};
-
-					final Client netClient = new NetClient();
-					netClient.connect(uri, factory);
+					componentLinkManager.connect(new NetClient().connect(uri), payLoadTransducer);
 
 					return coercionTransducer;
 				} catch (ComponentConnectionRejectedException e) {

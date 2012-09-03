@@ -44,6 +44,6 @@ public interface Server extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataFlowException
 	 */
-	Worker bind(URI uri, ComponentFactory factory) throws CannotCreateServerException;
+	Worker bind(URI uri, ComponentFactoryListener listener) throws CannotCreateServerException;
 
 }

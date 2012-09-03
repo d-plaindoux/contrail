@@ -18,31 +18,29 @@
 
 package org.wolfgang.contrail.component;
 
+import org.wolfgang.contrail.link.ComponentLinkManager;
+
 /**
- * <code>ComponentAlreadyConnected</code>
+ * <code>ComponentFactory</code> specifies the minimal behaviors required for a
+ * component creation on-demand and associated linkage manager.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentConnectedException extends ComponentConnectionRejectedException {
-
-	private static final long serialVersionUID = -636050790684085546L;
+public interface ComponentFactory {
 
 	/**
-	 * Constructor
+	 * Method called whether the embedded component must be created
 	 * 
-	 * @param arg0
+	 * @return a component (never <code>null</code>)
+	 * @throws CannotCreateComponentException
 	 */
-	public ComponentConnectedException(String arg0) {
-		super(arg0);
-	}
+	Component create() throws CannotCreateComponentException;
 
 	/**
-	 * Constructor
+	 * Method called whether the link manager used for the creation is required
 	 * 
-	 * @param arg0
+	 * @return a link manager (nerver <code>null</code>)
 	 */
-	public ComponentConnectedException(Throwable arg0) {
-		super(arg0);
-	}
+	ComponentLinkManager getLinkManager();
 }

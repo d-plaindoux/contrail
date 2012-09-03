@@ -27,16 +27,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
@@ -86,7 +82,7 @@ public class ProcessClient implements Client {
 	}
 
 	@Override
-	public Component connect(URI uri, ComponentFactory factory) throws CannotCreateClientException {
+	public Component connect(URI uri) throws CannotCreateClientException {
 		final Process client;
 		try {
 			client = Runtime.getRuntime().exec(uri.getPath());
@@ -116,16 +112,7 @@ public class ProcessClient implements Client {
 			}
 		};
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
-		final Component component;
-
-		try {
-			component = CompositionComponents.compose(factory.getLinkManager(), initialComponent, factory.create());
-		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotCreateClientException(e);
-		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateClientException(e);
-		}
+		final InitialComponent<byte[], byte[]> component = new InitialComponent<byte[], byte[]>(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
@@ -134,11 +121,11 @@ public class ProcessClient implements Client {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = client.getInputStream().read(buffer)) != -1) {
-						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
+						component.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
 				} finally {
-					initialComponent.closeUpStream();
+					component.closeUpStream();
 				}
 			}
 		};

@@ -20,29 +20,15 @@ package org.wolfgang.contrail.connection;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>ComponentFactory</code> specifies the minimal behaviors required for a
- * component creation on-demand and associated linkage manager.
+ * <code>ComponentFactoryListener</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentFactory {
+public interface ComponentFactoryListener {
 
-	/**
-	 * Method called whether the embedded component must be created
-	 * 
-	 * @return a component (never <code>null</code>)
-	 * @throws CannotCreateComponentException
-	 */
-	Component create() throws CannotCreateComponentException;
+	void notifyCreation(Component component) throws CannotCreateComponentException;
 
-	/**
-	 * Method called whether the link manager used for the creation is required
-	 * 
-	 * @return a link manager (nerver <code>null</code>)
-	 */
-	ComponentLinkManager getLinkManager();
 }

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.wolfgang.common.message.Message;
-import org.wolfgang.contrail.connection.ComponentFactory;
+import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;

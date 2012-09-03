@@ -34,11 +34,15 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -113,6 +117,19 @@ public class TestRouterServer extends TestCase {
 		assertEquals(reference01 + " - " + content, futureResponse.get().get(10, TimeUnit.SECONDS));
 	}
 
+	private ComponentFactoryListener linker(final ComponentFactory factory) {
+		return new ComponentFactoryListener() {
+			@Override
+			public void notifyCreation(Component component) throws CannotCreateComponentException {
+				try {
+					factory.getLinkManager().connect(component, factory.create());
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+	}
+
 	@Test
 	public void testNominal02Relay() throws IOException, CannotProvideComponentException, NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ComponentConnectionRejectedException,
 			DataFlowException, InterruptedException, ExecutionException, TimeoutException, CannotCreateServerException, URISyntaxException, ComponentNotConnectedException {
@@ -137,7 +154,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem01.addBinder(key01, RouterSourceServerUtils.serverBinder(network01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer01 = new NetServer();
-		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.getFactory(key01));
+		networkServer01.bind(new URI("tcp://localhost:6666"), linker(ecosystem01.getFactory(key01)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
@@ -155,7 +172,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), linker(ecosystem02.getFactory(key02)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -201,7 +218,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem01.addBinder(key01, RouterSourceServerUtils.serverBinder(network01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer01 = new NetServer();
-		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.getFactory(key01));
+		networkServer01.bind(new URI("tcp://localhost:6666"), linker(ecosystem01.getFactory(key01)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
@@ -219,7 +236,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), linker(ecosystem02.getFactory(key02)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -275,7 +292,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), linker(ecosystem02.getFactory(key02)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
@@ -292,7 +309,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem03.addBinder(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer();
-		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.getFactory(key03));
+		networkServer03.bind(new URI("tcp://localhost:6668"), linker(ecosystem03.getFactory(key03)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -354,7 +371,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), linker(ecosystem02.getFactory(key02)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
@@ -372,7 +389,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem03.addBinder(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer();
-		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.getFactory(key03));
+		networkServer03.bind(new URI("tcp://localhost:6668"), linker(ecosystem03.getFactory(key03)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events

@@ -31,16 +31,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -109,7 +105,7 @@ public class NetClient implements Client {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataFlowException
 	 */
-	public Component connect(final URI uri, final ComponentFactory factory) throws CannotCreateClientException {
+	public Component connect(final URI uri) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
@@ -147,16 +143,7 @@ public class NetClient implements Client {
 			}
 		});
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
-		final Component component;
-
-		try {
-			component = CompositionComponents.compose(factory.getLinkManager(), initialComponent, factory.create());
-		} catch (ComponentConnectionRejectedException e) {
-			throw new CannotCreateClientException(e);
-		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateClientException(e);
-		}
+		final InitialComponent<byte[], byte[]> component = new InitialComponent<byte[], byte[]>(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override
@@ -165,12 +152,12 @@ public class NetClient implements Client {
 				try {
 					int len = client.getInputStream().read(buffer);
 					while (len != -1) {
-						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
+						component.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 						len = client.getInputStream().read(buffer);
 					}
 				} finally {
 					clients.remove(client);
-					initialComponent.closeUpStream();
+					component.closeUpStream();
 				}
 
 				return null;

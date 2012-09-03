@@ -53,6 +53,7 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		// Nothing
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public final <U, D> ComponentLinkImpl<U, D> connect(Component source, Component destination) throws ComponentConnectionRejectedException {
 		if (source instanceof SourceComponent && destination instanceof DestinationComponent) {
 			return safe_connect((SourceComponent) source, (DestinationComponent) destination);

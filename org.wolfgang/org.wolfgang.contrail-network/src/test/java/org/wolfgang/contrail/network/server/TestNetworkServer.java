@@ -28,9 +28,11 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
-import org.wolfgang.contrail.connection.ComponentFactory;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -51,6 +53,19 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @version 1.0
  */
 public class TestNetworkServer extends TestCase {
+
+	private ComponentFactoryListener linker(final ComponentFactory factory) {
+		return new ComponentFactoryListener() {
+			@Override
+			public void notifyCreation(Component component) throws CannotCreateComponentException {
+				try {
+					factory.getLinkManager().connect(component, factory.create());
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+	}
 
 	@Test
 	public void testNominal01() throws IOException, CannotProvideComponentException, CannotCreateServerException, URISyntaxException {
@@ -92,7 +107,7 @@ public class TestNetworkServer extends TestCase {
 		serverEcosystem.addBinder(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer();
-		networkServer.bind(new URI("tcp://localhost:6666"), serverEcosystem.getFactory(key));
+		networkServer.bind(new URI("tcp://localhost:6666"), linker(serverEcosystem.getFactory(key)));
 
 		// ------------------------------------------------------------------------------------------------
 		// Simple socket based client

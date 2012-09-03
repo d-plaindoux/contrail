@@ -45,6 +45,6 @@ public interface Client extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataFlowException
 	 */
-	Component connect(URI uri, ComponentFactory factory) throws CannotCreateClientException;
+	Component connect(URI uri) throws CannotCreateClientException;
 
 }
