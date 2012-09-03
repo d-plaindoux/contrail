@@ -4,7 +4,7 @@
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
 
-	<import as='ClientHandler'>
+	<import as='ClientComponet'>
 		org.wolfgang.contrail.component.bound.gateway.ClientComponent
 	</import>
 

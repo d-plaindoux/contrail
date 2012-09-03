@@ -31,16 +31,16 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ComponentFactory;
-import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -109,7 +109,7 @@ public class NetClient implements Client {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataFlowException
 	 */
-	public Worker connect(final URI uri, final ComponentFactory factory) throws CannotCreateClientException {
+	public Component connect(final URI uri, final ComponentFactory factory) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
@@ -148,9 +148,10 @@ public class NetClient implements Client {
 		});
 
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+		final Component component;
 
 		try {
-			factory.getLinkManager().connect(initialComponent, factory.create());
+			component = CompositionComponents.compose(factory.getLinkManager(), initialComponent, factory.create());
 		} catch (ComponentConnectionRejectedException e) {
 			throw new CannotCreateClientException(e);
 		} catch (CannotCreateComponentException e) {
@@ -168,38 +169,17 @@ public class NetClient implements Client {
 						len = client.getInputStream().read(buffer);
 					}
 				} finally {
-					initialComponent.getUpStreamDataHandler().handleClose();
-					client.close();
 					clients.remove(client);
+					initialComponent.closeUpStream();
 				}
 
 				return null;
 			}
 		};
 
-		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader)) {
-			@Override
-			public boolean cancel(boolean mayInterruptIfRunning) {
-				try {
-					client.close();
-				} catch (IOException consume) {
-					// Ignore
-				}
-				return super.cancel(mayInterruptIfRunning);
-			}
-		};
+		executor.submit(reader);
 
-		return new Worker() {
-			@Override
-			public void shutdown() {
-				delegatedFuture.cancel(true);
-			}
-
-			@Override
-			public boolean isActive() {
-				return !delegatedFuture.isCancelled() && !delegatedFuture.isDone();
-			}
-		};
+		return component;
 	}
 
 	@Override

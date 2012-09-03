@@ -24,11 +24,8 @@
 		<ref>Server</ref>
 		<atom>tcp://localhost:6666</atom>
 		<function>
-			<var>initial</var>
-			<apply>
-				<ref>initial</ref>
-				<ref>Echo</ref>
-			</apply>
+			<var />
+			<ref>Echo</ref>
 		</function>
 	</start>
 </ecosystem>

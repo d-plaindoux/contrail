@@ -22,6 +22,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
 /**
@@ -44,6 +45,6 @@ public interface Client extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataFlowException
 	 */
-	Worker connect(URI uri, ComponentFactory factory) throws CannotCreateClientException;
+	Component connect(URI uri, ComponentFactory factory) throws CannotCreateClientException;
 
 }

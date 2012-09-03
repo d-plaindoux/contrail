@@ -67,7 +67,12 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 *            the parameters to set
 	 */
 	public void add(String parameter) {
-		this.parameters.add(parameter.trim());
+		if (parameter == null) {
+			// Generate name "a la Perl" :)
+			this.parameters.add("_" + this.parameters.size());
+		} else {
+			this.parameters.add(parameter.trim());
+		}
 	}
 
 	/**

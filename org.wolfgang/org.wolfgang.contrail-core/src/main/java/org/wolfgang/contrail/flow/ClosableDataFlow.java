@@ -21,7 +21,7 @@ package org.wolfgang.contrail.flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The <code>ClosableDataHandler</code> is a specific data handler managing the
+ * The <code>ClosableDataFlow</code> is a specific data flows managing the
  * stream status (open or close) and delegating operations when it's open.
  * 
  * @author Didier Plaindoux
@@ -29,8 +29,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 abstract class ClosableDataFlow<D> implements DataFlow<D> {
 
+	/**
+	 * The atomic reference denoting the close status
+	 */
 	private final AtomicBoolean closed;
-	private final DataFlow<D> dataHandler;
+
+	/**
+	 * The deletateg data flow
+	 */
+	private final DataFlow<D> dataFlow;
 
 	{
 		this.closed = new AtomicBoolean(false);
@@ -39,11 +46,11 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 	/**
 	 * Constructor
 	 * 
-	 * @param exceptionToSend
+	 * @param dataFlow
 	 */
-	protected ClosableDataFlow(DataFlow<D> dataHandler) {
+	protected ClosableDataFlow(DataFlow<D> dataFlow) {
 		super();
-		this.dataHandler = dataHandler;
+		this.dataFlow = dataFlow;
 	}
 
 	@Override
@@ -51,7 +58,7 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 		if (closed.get()) {
 			throw new DataFlowCloseException();
 		} else {
-			dataHandler.handleData(data);
+			dataFlow.handleData(data);
 		}
 	}
 
@@ -60,7 +67,7 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 		if (closed.getAndSet(true)) {
 			throw new DataFlowCloseException();
 		} else {
-			dataHandler.handleClose();
+			dataFlow.handleClose();
 		}
 	}
 
@@ -69,7 +76,7 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 		if (closed.getAndSet(true)) {
 			throw new DataFlowCloseException();
 		} else {
-			dataHandler.handleLost();
+			dataFlow.handleLost();
 		}
 	}
 }

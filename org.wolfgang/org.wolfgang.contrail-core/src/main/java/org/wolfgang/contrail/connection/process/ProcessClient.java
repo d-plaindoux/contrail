@@ -27,16 +27,16 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.ComponentFactory;
-import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
@@ -86,7 +86,7 @@ public class ProcessClient implements Client {
 	}
 
 	@Override
-	public Worker connect(URI uri, ComponentFactory factory) throws CannotCreateClientException {
+	public Component connect(URI uri, ComponentFactory factory) throws CannotCreateClientException {
 		final Process client;
 		try {
 			client = Runtime.getRuntime().exec(uri.getPath());
@@ -117,9 +117,10 @@ public class ProcessClient implements Client {
 		};
 
 		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+		final Component component;
 
 		try {
-			factory.getLinkManager().connect(initialComponent, factory.create());
+			component = CompositionComponents.compose(factory.getLinkManager(), initialComponent, factory.create());
 		} catch (ComponentConnectionRejectedException e) {
 			throw new CannotCreateClientException(e);
 		} catch (CannotCreateComponentException e) {
@@ -136,34 +137,14 @@ public class ProcessClient implements Client {
 						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
-				} catch (Exception e) {
-					initialComponent.getUpStreamDataHandler().handleClose();
-					throw e;
-				}
-			}
-		};
-
-		final DelegatedFuture<Void> delegatedFuture = new DelegatedFuture<Void>(executor.submit(reader));
-
-		return new Worker() {
-			@Override
-			public void shutdown() {
-				try {
-					client.destroy();
 				} finally {
-					delegatedFuture.cancel(true);
-				}
-			}
-
-			@Override
-			public boolean isActive() {
-				try {
-					client.exitValue();
-					return false;
-				} catch (IllegalThreadStateException e) {
-					return true;
+					initialComponent.closeUpStream();
 				}
 			}
 		};
+
+		executor.submit(reader);
+
+		return component;
 	}
 }
