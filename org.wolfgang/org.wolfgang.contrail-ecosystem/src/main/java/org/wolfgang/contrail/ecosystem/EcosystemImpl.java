@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.wolfgang.common.message.Message;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -43,7 +43,7 @@ public class EcosystemImpl implements Ecosystem {
 	/**
 	 * Initial component integration triggers
 	 */
-	private final Map<RegisteredUnitEcosystemKey, UpStreamDataFlowFactory<?, ?>> hooks;
+	private final Map<RegisteredUnitEcosystemKey, ComponentFactory> hooks;
 
 	/**
 	 * The related link manager
@@ -51,7 +51,7 @@ public class EcosystemImpl implements Ecosystem {
 	private final ComponentLinkManagerImpl linkManager;
 
 	{
-		this.hooks = new HashMap<RegisteredUnitEcosystemKey, UpStreamDataFlowFactory<?, ?>>();
+		this.hooks = new HashMap<RegisteredUnitEcosystemKey, ComponentFactory>();
 		this.linkManager = new ComponentLinkManagerImpl();
 	}
 
@@ -60,7 +60,6 @@ public class EcosystemImpl implements Ecosystem {
 	 */
 	public EcosystemImpl() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -84,7 +83,7 @@ public class EcosystemImpl implements Ecosystem {
 	 *            The factory
 	 * @return true if the factory is correctly added; false otherwise
 	 */
-	public <U, D> boolean addBinder(RegisteredUnitEcosystemKey ecosystemKey, UpStreamDataFlowFactory<U, D> factory) {
+	public <U, D> boolean addBinder(RegisteredUnitEcosystemKey ecosystemKey, ComponentFactory factory) {
 		if (this.hooks.containsKey(ecosystemKey)) {
 			return false;
 		} else {
@@ -104,11 +103,10 @@ public class EcosystemImpl implements Ecosystem {
 	 * @throws CannotProvideTerminalComponentException
 	 *             if the terminal component cannot be created
 	 */
-	@SuppressWarnings("unchecked")
-	public <U, D> UpStreamDataFlowFactory<U, D> getBinder(final UnitEcosystemKey filter) throws CannotProvideComponentException {
-		for (Entry<RegisteredUnitEcosystemKey, UpStreamDataFlowFactory<?, ?>> unit : hooks.entrySet()) {
+	public ComponentFactory getFactory(final UnitEcosystemKey filter) throws CannotProvideComponentException {
+		for (Entry<RegisteredUnitEcosystemKey, ComponentFactory> unit : hooks.entrySet()) {
 			if (filter.filteredBy(unit.getKey())) {
-				return (UpStreamDataFlowFactory<U, D>) unit.getValue();
+				return unit.getValue();
 			}
 		}
 

@@ -21,8 +21,7 @@ package org.wolfgang.contrail.ecosystem.lang;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
@@ -42,42 +41,15 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 	// private final EcosystemInterpreter interpret;
 	private final ComponentLinkManager linkManager;
 
-	private Component current;
-
 	/**
 	 * Constructor
 	 * 
 	 * @param environment
 	 */
-	EcosystemComponentBuilder(EcosystemInterpreter interpret, ComponentLinkManager linkManager, Component current) {
+	EcosystemComponentBuilder(EcosystemInterpreter interpret, ComponentLinkManager linkManager) {
 		super();
 		// this.interpret = interpret;
 		this.linkManager = linkManager;
-		this.current = current;
-	}
-
-	/**
-	 * Method called when a link must be established between two components
-	 * 
-	 * @param source
-	 *            The source (Can be <code>null</code>)
-	 * @param destination
-	 *            The destination (Never <code>null</code>)
-	 * @return the destination
-	 * @throws ComponentConnectionRejectedException
-	 */
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Component link(final Component source, final Component destination) throws ComponentConnectionRejectedException {
-		if (source != null) {
-			try {
-				linkManager.connect((SourceComponent) source, (DestinationComponent) destination);
-			} catch (ClassCastException e) {
-				throw new ComponentConnectionRejectedException(e);
-			}
-		}
-
-		return destination;
 	}
 
 	@Override
@@ -88,14 +60,10 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 	@Override
 	public Component visit(ComponentValue value) throws EcosystemBuilderException {
 		try {
-			current = link(current, value.getComponent());
-		} catch (ComponentConnectionRejectedException e) {
-			throw new EcosystemBuilderException(e);
+			return value.getComponent();
 		} catch (CannotCreateComponentException e) {
 			throw new EcosystemBuilderException(e);
 		}
-
-		return current;
 	}
 
 	@Override
@@ -105,11 +73,18 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 
 	@Override
 	public Component visit(FlowValue value) throws EcosystemBuilderException {
-		for (CodeValue item : value.getValues()) {
-			item.visit(this);
+		final CodeValue[] values = value.getValues();
+		final Component[] components = new Component[values.length];
+
+		for (int i = 0; i < components.length; i++) {
+			components[i] = values[i].visit(this);
 		}
 
-		return current;
+		try {
+			return CompositionComponents.compose(linkManager, components);
+		} catch (ComponentConnectionRejectedException e) {
+			throw new EcosystemBuilderException(e);
+		}
 	}
 
 }

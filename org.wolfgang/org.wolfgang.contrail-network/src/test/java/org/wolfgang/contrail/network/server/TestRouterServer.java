@@ -137,7 +137,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem01.addBinder(key01, RouterSourceServerUtils.serverBinder(network01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer01 = new NetServer();
-		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.<byte[], byte[]> getBinder(key01));
+		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.getFactory(key01));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
@@ -155,7 +155,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.<byte[], byte[]> getBinder(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -173,6 +173,8 @@ public class TestRouterServer extends TestCase {
 
 		networkServer01.close();
 		networkServer02.close();
+		ecosystem01.close();
+		ecosystem02.close();
 	}
 
 	@Test
@@ -199,7 +201,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem01.addBinder(key01, RouterSourceServerUtils.serverBinder(network01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer01 = new NetServer();
-		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.<byte[], byte[]> getBinder(key01));
+		networkServer01.bind(new URI("tcp://localhost:6666"), ecosystem01.getFactory(key01));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
@@ -217,7 +219,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.<byte[], byte[]> getBinder(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -235,6 +237,8 @@ public class TestRouterServer extends TestCase {
 
 		networkServer01.close();
 		networkServer02.close();
+		ecosystem01.close();
+		ecosystem02.close();
 	}
 
 	@Test
@@ -271,7 +275,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.<byte[], byte[]> getBinder(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
@@ -288,7 +292,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem03.addBinder(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer();
-		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.<byte[], byte[]> getBinder(key03));
+		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.getFactory(key03));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -311,6 +315,8 @@ public class TestRouterServer extends TestCase {
 
 		networkServer02.close();
 		networkServer03.close();
+		ecosystem02.close();
+		ecosystem03.close();
 	}
 
 	@Test
@@ -348,7 +354,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer02 = new NetServer();
-		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.<byte[], byte[]> getBinder(key02));
+		networkServer02.bind(new URI("tcp://localhost:6667"), ecosystem02.getFactory(key02));
 
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
@@ -366,7 +372,7 @@ public class TestRouterServer extends TestCase {
 		ecosystem03.addBinder(key03, RouterSourceServerUtils.serverBinder(network03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer networkServer03 = new NetServer();
-		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.<byte[], byte[]> getBinder(key03));
+		networkServer03.bind(new URI("tcp://localhost:6668"), ecosystem03.getFactory(key03));
 
 		// ------------------------------------------------------------------------------------------------
 		// Send simple events
@@ -390,5 +396,7 @@ public class TestRouterServer extends TestCase {
 
 		networkServer02.close();
 		networkServer03.close();
+		ecosystem02.close();
+		ecosystem03.close();
 	}
 }

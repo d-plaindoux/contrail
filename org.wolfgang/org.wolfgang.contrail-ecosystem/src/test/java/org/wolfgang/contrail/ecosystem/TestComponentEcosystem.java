@@ -26,10 +26,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
@@ -41,6 +45,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -52,7 +57,8 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class TestComponentEcosystem extends TestCase {
 
 	@Test
-	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataFlowException, DataFlowException, IOException {
+	public void testNominal01() throws CannotProvideComponentException, CannotBindToComponentException, CannotCreateDataFlowException, DataFlowException, IOException,
+			ComponentConnectionRejectedException, CannotCreateComponentException, ComponentNotConnectedException {
 
 		final EcosystemImpl integrator = new EcosystemImpl();
 
@@ -79,18 +85,21 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final UpStreamDataFlowFactory<String, String> destinationComponentFactory = new UpStreamDataFlowFactory<String, String>() {
+		final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentFactory destinationComponentFactory = new ComponentFactory() {
+
 			@Override
-			public UpStreamDataFlow<String> create(DownStreamDataFlow<String> receiver) throws CannotCreateDataFlowException {
-				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
-				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+			public ComponentLinkManager getLinkManager() {
+				return componentsLinkManagerImpl;
+			}
+
+			@Override
+			public Component create() throws CannotCreateComponentException {
 				try {
-					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
-				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataFlowException(e);
+					return new TerminalComponent<String, String>(dataFactory);
+				} catch (CannotCreateDataFlowException e) {
+					throw new CannotCreateComponentException(e);
 				}
-				return InitialUpStreamDataFlow.<String> create(initialComponent);
 			}
 		};
 
@@ -106,11 +115,15 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
+		final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
 		final UnitEcosystemKey namedKey = EcosystemKeyFactory.named("test");
-		final UpStreamDataFlow<String> createInitial = integrator.<String, String> getBinder(namedKey).create(receiver);
+		final ComponentFactory factory = integrator.getFactory(namedKey);
+
 		final String message = "Hello, World!";
 
-		createInitial.handleData(message);
+		CompositionComponents.compose(componentsLinkManagerImpl, initialComponent, factory.create());
+
+		initialComponent.getUpStreamDataHandler().handleData(message);
 
 		assertEquals(message, stringReference.get());
 

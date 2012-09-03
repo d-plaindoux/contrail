@@ -37,15 +37,15 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>NetworkServer</code> provides a server implementation using
@@ -102,7 +102,7 @@ public class NetServer implements Server {
 		super();
 	}
 
-	public Worker bind(final URI uri, final UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(final URI uri, final ComponentFactory factory) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket(uri.getPort(), 0, InetAddress.getByName(uri.getHost()));
@@ -149,7 +149,9 @@ public class NetServer implements Server {
 							}
 						});
 
-						final UpStreamDataFlow<byte[]> dataSender = factory.create(dataReceiver);
+						final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+
+						factory.getLinkManager().connect(initialComponent, factory.create());
 
 						final Callable<Void> reader = new Callable<Void>() {
 							@Override
@@ -158,13 +160,12 @@ public class NetServer implements Server {
 								try {
 									int len = client.getInputStream().read(buffer);
 									while (len != -1) {
-										dataSender.handleData(Arrays.copyOf(buffer, len));
+										initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 										len = client.getInputStream().read(buffer);
 									}
 									return null;
-								} catch (Exception e) {
-									dataSender.handleClose();
-									throw e;
+								} finally {
+									initialComponent.getUpStreamDataHandler().handleClose();
 								}
 							}
 						};

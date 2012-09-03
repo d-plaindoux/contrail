@@ -26,11 +26,11 @@ import java.net.URISyntaxException;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
@@ -43,6 +43,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -75,33 +76,34 @@ public class TestNetworkServer extends TestCase {
 
 					@Override
 					public void handleClose() throws DataFlowCloseException {
-						super.handleClose();
 						sender.handleClose();
 					}
 
 					@Override
 					public void handleLost() throws DataFlowCloseException {
-						super.handleLost();
 						sender.handleLost();
 					}
 				};
 			}
 		};
 
+		final ComponentLinkManagerImpl componentLinkManager = new ComponentLinkManagerImpl();
 		// () -> new TerminalComponent<byte[], byte[]>(...).getDataSender();
 
-		final UpStreamDataFlowFactory<byte[], byte[]> dataSenderFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
+		final ComponentFactory dataSenderFactory = new ComponentFactory() {
+
 			@Override
-			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> receiver) throws CannotCreateDataFlowException {
-				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(receiver);
-				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(dataReceiverFactory);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+			public Component create() throws CannotCreateComponentException {
 				try {
-					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
-				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataFlowException(e);
+					return new TerminalComponent<byte[], byte[]>(dataReceiverFactory);
+				} catch (CannotCreateDataFlowException e) {
+					throw new CannotCreateComponentException(e);
 				}
-				return InitialUpStreamDataFlow.<byte[]> create(initialComponent);
+			}
+
+			@Override
+			public ComponentLinkManager getLinkManager() {
+				return componentLinkManager;
 			}
 		};
 
@@ -109,7 +111,7 @@ public class TestNetworkServer extends TestCase {
 		serverEcosystem.addBinder(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer();
-		networkServer.bind(new URI("tcp://localhost:6666"), serverEcosystem.<byte[], byte[]> getBinder(key));
+		networkServer.bind(new URI("tcp://localhost:6666"), serverEcosystem.getFactory(key));
 
 		// ------------------------------------------------------------------------------------------------
 		// Simple socket based client
@@ -127,5 +129,6 @@ public class TestNetworkServer extends TestCase {
 
 		socket.close();
 		networkServer.close();
+		serverEcosystem.close();
 	}
 }

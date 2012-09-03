@@ -63,7 +63,6 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
 public final class EcosystemFactoryImpl implements EcosystemSymbolTable, ContextFactory {
 
 	/**
@@ -130,8 +129,8 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 * @throws CannotCreateComponentException
 	 * @throws EcosystemBuilderException
 	 */
-	Component create(final Component source, final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
-		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(this.interpreter, linkManager, source);
+	Component create(final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
+		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(this.interpreter, linkManager);
 		final Component current = value.visit(builder);
 		if (current == null) {
 			throw new CannotCreateComponentException(MessagesProvider.message("org/wolfgang/contrail/ecosystem", "no.component").format());
@@ -152,7 +151,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			try {
 				final Class<?> aClass = classLoader.loadClass(importation.getElement());
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "incompatible.type");
-				final ParameterCodeConverter codeConverter = new ParameterCodeConverter(new EcosystemComponentBuilder(this.interpreter, linkManager, null));
+				final ParameterCodeConverter codeConverter = new ParameterCodeConverter(new EcosystemComponentBuilder(this.interpreter, linkManager));
 
 				if (aClass.isAnnotationPresent(ContrailClient.class)) {
 					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
@@ -237,7 +236,6 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	 * @throws Exception
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
 	private org.wolfgang.contrail.ecosystem.Ecosystem buildEcosystem(Logger logger, EcosystemModel ecosystemModel) throws Exception {
 
 		// Check and load importations
@@ -257,13 +255,13 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			final Class<?> typeOut = TypeUtils.getType(bind.getTypeOut());
 			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
 			final CodeValue flow = this.interpreter.visit(bind.getExpressions());
-			ecosystemImpl.addBinder(key, new BinderDataSenderFactoryImpl(this, flow));
+			ecosystemImpl.addBinder(key, new BinderDataSenderFactoryImpl(this, this.linkManager, flow));
 		}
 
 		// Create and Start the starters
 		for (Starter starter : ecosystemModel.getStarters()) {
 			final CodeValue flow = this.interpreter.visit(starter.getExpressions());
-			this.create(null, flow);
+			this.create(flow);
 		}
 
 		return ecosystemImpl;

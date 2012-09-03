@@ -32,18 +32,20 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -107,7 +109,7 @@ public class NetClient implements Client {
 	 * @throws CannotBindToInitialComponentException
 	 * @throws CannotCreateDataFlowException
 	 */
-	public Worker connect(final URI uri, final UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateClientException {
+	public Worker connect(final URI uri, final ComponentFactory factory) throws CannotCreateClientException {
 		final Socket client;
 
 		try {
@@ -145,15 +147,13 @@ public class NetClient implements Client {
 			}
 		});
 
-		final UpStreamDataFlow<byte[]> dataSender;
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+
 		try {
-			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataFlowException e) {
-			try {
-				dataReceiver.handleClose();
-			} catch (DataFlowCloseException consume) {
-				// Ignore
-			}
+			factory.getLinkManager().connect(initialComponent, factory.create());
+		} catch (ComponentConnectionRejectedException e) {
+			throw new CannotCreateClientException(e);
+		} catch (CannotCreateComponentException e) {
 			throw new CannotCreateClientException(e);
 		}
 
@@ -164,11 +164,11 @@ public class NetClient implements Client {
 				try {
 					int len = client.getInputStream().read(buffer);
 					while (len != -1) {
-						dataSender.handleData(Arrays.copyOf(buffer, len));
+						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 						len = client.getInputStream().read(buffer);
 					}
 				} finally {
-					dataSender.handleClose();
+					initialComponent.getUpStreamDataHandler().handleClose();
 					client.close();
 					clients.remove(client);
 				}

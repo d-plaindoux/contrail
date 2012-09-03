@@ -25,6 +25,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
@@ -36,13 +37,13 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  */
 class WebServerPipelineFactory implements ChannelPipelineFactory {
 
-	private final UpStreamDataFlowFactory<String, String> factory;
+	private final ComponentFactory factory;
 
 	/**
 	 * Constructor
 	 */
-	public WebServerPipelineFactory(UpStreamDataFlowFactory<String, String> upStreamDataHandlerFactory) {
-		this.factory = upStreamDataHandlerFactory;
+	public WebServerPipelineFactory(ComponentFactory factory) {
+		this.factory = factory;
 	}
 
 	@Override

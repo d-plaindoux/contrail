@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>Client</code>
@@ -45,6 +44,6 @@ public interface Client extends Closeable {
 	 * @throws IOException
 	 * @throws CannotCreateDataFlowException
 	 */
-	Worker connect(URI uri, UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateClientException;
+	Worker connect(URI uri, ComponentFactory factory) throws CannotCreateClientException;
 
 }

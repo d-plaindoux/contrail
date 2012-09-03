@@ -21,10 +21,10 @@ package org.wolfgang.contrail.network.connection.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
@@ -37,7 +37,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -54,8 +54,8 @@ public final class WebServer extends NIOServer {
 	 * 
 	 * @param port
 	 */
-	public WebServer(String host, int port, UpStreamDataFlowFactory<String, String> upStreamDataHandlerFactory) {
-		super(host, port, new WebServerPipelineFactory(upStreamDataHandlerFactory));
+	public WebServer(String host, int port, ComponentFactory factory) {
+		super(host, port, new WebServerPipelineFactory(factory));
 	}
 
 	public static WebServer create(int port) throws CannotProvideComponentException {
@@ -94,26 +94,26 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		final UpStreamDataFlowFactory<String, String> destinationComponentFactory = new UpStreamDataFlowFactory<String, String>() {
+		final ComponentFactory destinationComponentFactory = new ComponentFactory() {
+			@Override
+			public ComponentLinkManager getLinkManager() {
+				return ecosystem.getLinkManager();
+			}
 
 			@Override
-			public UpStreamDataFlow<String> create(DownStreamDataFlow<String> receiver) throws CannotCreateDataFlowException {
-				final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
-				final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(dataFactory);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+			public Component create() throws CannotCreateComponentException {
 				try {
-					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
-				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateDataFlowException(e);
+					return new TerminalComponent<String, String>(dataFactory);
+				} catch (CannotCreateDataFlowException e) {
+					throw new CannotCreateComponentException(e);
 				}
-				return InitialUpStreamDataFlow.<String> create(initialComponent);
 			}
 		};
 
 		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("web.socket", String.class, String.class);
 		ecosystem.addBinder(key, destinationComponentFactory);
 
-		return new WebServer("0.0.0.0", port, ecosystem.<String, String> getBinder(key));
+		return new WebServer("0.0.0.0", port, ecosystem.getFactory(key));
 	}
 
 	/**

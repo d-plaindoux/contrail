@@ -28,16 +28,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * The <code>ProcessHandler</code> provides a client process handler
@@ -55,11 +56,6 @@ public class ProcessHandler implements Server {
 	 */
 	private final ExecutorService executor;
 
-	/**
-	 * The data sender factory
-	 */
-	private final UpStreamDataFlowFactory<byte[], byte[]> factory;
-
 	{
 		executor = Executors.newSingleThreadExecutor();
 	}
@@ -70,9 +66,8 @@ public class ProcessHandler implements Server {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler(UpStreamDataFlowFactory<byte[], byte[]> factory) {
+	public ProcessHandler() {
 		super();
-		this.factory = factory;
 	}
 
 	@Override
@@ -81,7 +76,7 @@ public class ProcessHandler implements Server {
 	}
 
 	@Override
-	public Worker bind(URI uri, UpStreamDataFlowFactory<byte[], byte[]> factory) throws CannotCreateServerException {
+	public Worker bind(URI uri, ComponentFactory factory) throws CannotCreateServerException {
 
 		final InputStream input = System.in;
 		final OutputStream output = System.out;
@@ -111,10 +106,13 @@ public class ProcessHandler implements Server {
 			}
 		};
 
-		final UpStreamDataFlow<byte[]> dataSender;
+		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+
 		try {
-			dataSender = factory.create(dataReceiver);
-		} catch (CannotCreateDataFlowException e) {
+			factory.getLinkManager().connect(initialComponent, factory.create());
+		} catch (ComponentConnectionRejectedException e) {
+			throw new CannotCreateServerException(e);
+		} catch (CannotCreateComponentException e) {
 			throw new CannotCreateServerException(e);
 		}
 
@@ -125,12 +123,11 @@ public class ProcessHandler implements Server {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = input.read(buffer)) != -1) {
-						dataSender.handleData(Arrays.copyOf(buffer, len));
+						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
-				} catch (Exception e) {
-					dataSender.handleClose();
-					throw e;
+				} finally {
+					initialComponent.getUpStreamDataHandler().handleClose();
 				}
 			}
 		};

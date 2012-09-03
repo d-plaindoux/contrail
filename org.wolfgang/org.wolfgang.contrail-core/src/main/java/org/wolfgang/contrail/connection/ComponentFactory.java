@@ -16,17 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.connection;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ClientCreationException;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>ComponentFactory</code>
@@ -34,15 +28,10 @@ import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentFactory {
+public interface ComponentFactory {
 
-	@ContrailFactory("Client")
-	public Component create(@ContrailArgument("context") ContextFactory context, @ContrailArgument("uri") String reference, @ContrailArgument("factory") ClosureValue code) throws URISyntaxException,
-			ClientCreationException {
-		final URI uri = new URI(reference);
-		final Client client = context.getClientFactory().get(uri.getScheme());
+	ComponentLinkManager getLinkManager();
 
-		return null;
-	}
+	Component create() throws CannotCreateComponentException;
 
 }

@@ -49,12 +49,13 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
@@ -74,7 +75,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * The upstream handler
 	 */
-	private final UpStreamDataFlowFactory<String, String> factory;
+	private final ComponentFactory factory;
 
 	/**
 	 * The web server page
@@ -98,12 +99,12 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * Constructor
 	 * 
-	 * @param factory
+	 * @param factory2
 	 *            The factory
 	 * @param serverPage
 	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(UpStreamDataFlowFactory<String, String> factory, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(ComponentFactory factory, WebServerPage serverPage) {
 		this.factory = factory;
 		this.serverPage = serverPage;
 	}
@@ -235,8 +236,10 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				if (!future.isSuccess()) {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
+					final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(emitter);
+					factory.getLinkManager().connect(initialComponent, factory.create());
 					try {
-						receivers.put(identifier, factory.create(emitter));
+						receivers.put(identifier, initialComponent.getUpStreamDataHandler());
 					} catch (Exception e) {
 						Channels.fireExceptionCaught(future.getChannel(), e);
 						throw e;

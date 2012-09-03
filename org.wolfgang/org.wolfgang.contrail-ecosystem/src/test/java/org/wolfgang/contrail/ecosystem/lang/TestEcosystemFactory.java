@@ -28,9 +28,11 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -38,8 +40,6 @@ import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
  * <code>TestEcosystemFactory</code>
@@ -67,11 +67,14 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<String> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
-			sender.handleData(message);
+
+			sender.getUpStreamDataHandler().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -98,11 +101,14 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<String> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
-			sender.handleData(message);
+
+			sender.getUpStreamDataHandler().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -130,11 +136,14 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<String> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
-			sender.handleData(message);
+
+			sender.getUpStreamDataHandler().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -161,11 +170,14 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<String, String> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<String> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
-			sender.handleData(message);
+
+			sender.getUpStreamDataHandler().handleData(message);
 
 			assertEquals("RESENT " + message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -192,15 +204,17 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<Bytes> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
 			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
 			final List<Bytes> transformed = serialization.getEncoder().transform(message);
 
 			assertEquals(1, transformed.size());
-			sender.handleData(transformed.get(0));
+			sender.getUpStreamDataHandler().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -232,15 +246,18 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<Bytes> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
 			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
 			final List<Bytes> transformed = serialization.getEncoder().transform(message);
 
 			assertEquals(1, transformed.size());
-			sender.handleData(transformed.get(0));
+
+			sender.getUpStreamDataHandler().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -272,15 +289,17 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<Bytes, Bytes> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<Bytes> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
 			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
 			final List<Bytes> transformed = serialization.getEncoder().transform(message);
 
 			assertEquals(1, transformed.size());
-			sender.handleData(transformed.get(0));
+			sender.getUpStreamDataHandler().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -312,8 +331,10 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<byte[]> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<byte[], byte[]> sender = new InitialComponent<byte[], byte[]>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
 			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
@@ -321,7 +342,7 @@ public class TestEcosystemFactory extends TestCase {
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
 			assertEquals(1, transformed.size());
-			sender.handleData(transformed.get(0));
+			sender.getUpStreamDataHandler().handleData(transformed.get(0));
 
 			final byte[] received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
@@ -357,8 +378,10 @@ public class TestEcosystemFactory extends TestCase {
 				}
 			});
 
-			final UpStreamDataFlowFactory<byte[], byte[]> binder = ecosystem.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataFlow<byte[]> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<byte[], byte[]> sender = new InitialComponent<byte[], byte[]>(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
 
 			final String message = "Hello, World!";
 			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
@@ -369,7 +392,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			for (int i = 0; i < nbEventSent; i++) {
 				assertEquals(1, transformed.size());
-				sender.handleData(transformed.get(0));
+				sender.getUpStreamDataHandler().handleData(transformed.get(0));
 			}
 
 			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");

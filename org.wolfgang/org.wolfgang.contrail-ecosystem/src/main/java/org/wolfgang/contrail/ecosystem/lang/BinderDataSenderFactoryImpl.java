@@ -19,13 +19,10 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
+import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.connection.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>DataSenderFactoryImpl</code> is dedicated to the binder mechanism
@@ -34,31 +31,37 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class BinderDataSenderFactoryImpl<U, D> implements UpStreamDataFlowFactory<U, D> {
+class BinderDataSenderFactoryImpl implements ComponentFactory {
 	private final EcosystemFactoryImpl factory;
 	private final CodeValue flow;
+	private final ComponentLinkManager linkManager;
 
 	/**
 	 * Constructor
 	 * 
+	 * @param linkManager
 	 * @param items
 	 */
-	BinderDataSenderFactoryImpl(EcosystemFactoryImpl factory, CodeValue flow) {
+	BinderDataSenderFactoryImpl(EcosystemFactoryImpl factory, ComponentLinkManager linkManager, CodeValue flow) {
 		super();
 		this.factory = factory;
+		this.linkManager = linkManager;
 		this.flow = flow;
 	}
 
 	@Override
-	public UpStreamDataFlow<U> create(DownStreamDataFlow<D> receiver) throws CannotCreateDataFlowException {
+	public ComponentLinkManager getLinkManager() {
+		return this.linkManager;
+	}
+
+	@Override
+	public Component create() throws CannotCreateComponentException {
 		try {
-			final InitialComponent<U, D> initialComponent = new InitialComponent<U, D>(receiver);
-			factory.create(initialComponent, flow);
-			return InitialUpStreamDataFlow.<U>create(initialComponent);
+			return factory.create(flow);
 		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateDataFlowException(e);
+			throw new CannotCreateComponentException(e);
 		} catch (EcosystemBuilderException e) {
-			throw new CannotCreateDataFlowException(e);
+			throw new CannotCreateComponentException(e);
 		}
 	}
 }
