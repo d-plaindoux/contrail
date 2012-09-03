@@ -37,11 +37,9 @@ import org.wolfgang.contrail.ecosystem.EcosystemImpl;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
@@ -68,29 +66,12 @@ public class TestNetworkServer extends TestCase {
 		final UpStreamDataFlowFactory<byte[], byte[]> dataReceiverFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataFlow<byte[]> create(final DownStreamDataFlow<byte[]> sender) {
-				return new UpStreamDataFlowAdapter<byte[]>() {
-					@Override
-					public void handleData(byte[] data) throws DataFlowException {
-						sender.handleData(data);
-					}
-
-					@Override
-					public void handleClose() throws DataFlowCloseException {
-						sender.handleClose();
-					}
-
-					@Override
-					public void handleLost() throws DataFlowCloseException {
-						sender.handleLost();
-					}
-				};
+				return DataFlows.createUpStream(sender);
 			}
 		};
 
-		final ComponentLinkManagerImpl componentLinkManager = new ComponentLinkManagerImpl();
-		// () -> new TerminalComponent<byte[], byte[]>(...).getDataSender();
-
 		final ComponentFactory dataSenderFactory = new ComponentFactory() {
+			final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 
 			@Override
 			public Component create() throws CannotCreateComponentException {
@@ -103,7 +84,7 @@ public class TestNetworkServer extends TestCase {
 
 			@Override
 			public ComponentLinkManager getLinkManager() {
-				return componentLinkManager;
+				return linkManager;
 			}
 		};
 

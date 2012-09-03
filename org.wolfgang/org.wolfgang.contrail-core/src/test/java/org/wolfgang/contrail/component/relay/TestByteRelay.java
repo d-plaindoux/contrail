@@ -31,8 +31,6 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlowCloseException;
-import org.wolfgang.contrail.flow.UpStreamDataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -102,7 +100,7 @@ public class TestByteRelay extends TestCase {
 			interconnection.dispose();
 
 			fail();
-		} catch (UpStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -123,7 +121,7 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (UpStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -143,7 +141,7 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (DownStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();
@@ -164,7 +162,7 @@ public class TestByteRelay extends TestCase {
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
 			fail();
-		} catch (DownStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// Ok
 		} finally {
 			output.close();

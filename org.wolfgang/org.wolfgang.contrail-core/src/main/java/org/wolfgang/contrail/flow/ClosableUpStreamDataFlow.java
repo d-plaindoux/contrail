@@ -32,6 +32,6 @@ public class ClosableUpStreamDataFlow<D> extends ClosableDataFlow<D> implements 
 	 * @param exceptionToSend
 	 */
 	ClosableUpStreamDataFlow(UpStreamDataFlow<D> dataHandler) {
-		super(dataHandler, new UpStreamDataFlowCloseException());
+		super(dataHandler);
 	}
 }

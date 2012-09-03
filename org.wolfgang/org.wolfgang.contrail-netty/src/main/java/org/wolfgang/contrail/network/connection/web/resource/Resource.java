@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
 /**
  * A <code>Resource</code> is the basic information sent to a client when an
  * http request has been received and managed.

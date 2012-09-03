@@ -30,9 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 abstract class ClosableDataFlow<D> implements DataFlow<D> {
 
 	private final AtomicBoolean closed;
-
 	private final DataFlow<D> dataHandler;
-	private final DataFlowCloseException exceptionToSend;
 
 	{
 		this.closed = new AtomicBoolean(false);
@@ -43,16 +41,15 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 	 * 
 	 * @param exceptionToSend
 	 */
-	protected ClosableDataFlow(DataFlow<D> dataHandler, DataFlowCloseException exceptionToSend) {
+	protected ClosableDataFlow(DataFlow<D> dataHandler) {
 		super();
 		this.dataHandler = dataHandler;
-		this.exceptionToSend = exceptionToSend;
 	}
 
 	@Override
 	public void handleData(D data) throws DataFlowException {
 		if (closed.get()) {
-			throw exceptionToSend;
+			throw new DataFlowCloseException();
 		} else {
 			dataHandler.handleData(data);
 		}
@@ -61,7 +58,7 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 	@Override
 	public void handleClose() throws DataFlowCloseException {
 		if (closed.getAndSet(true)) {
-			throw exceptionToSend;
+			throw new DataFlowCloseException();
 		} else {
 			dataHandler.handleClose();
 		}
@@ -70,7 +67,7 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 	@Override
 	public void handleLost() throws DataFlowCloseException {
 		if (closed.getAndSet(true)) {
-			throw exceptionToSend;
+			throw new DataFlowCloseException();
 		} else {
 			dataHandler.handleLost();
 		}

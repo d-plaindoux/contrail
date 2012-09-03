@@ -24,14 +24,13 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.DownStreamDataFlowCloseException;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.UpStreamDataFlowCloseException;
 
 /**
  * <code>TestDataHandler</code>
@@ -74,7 +73,7 @@ public class TestDataHandler extends TestCase {
 			final String message = "Hello,  World!";
 			handler.handleData(message);
 			fail();
-		} catch (DownStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// OK
 		}
 	}
@@ -96,7 +95,7 @@ public class TestDataHandler extends TestCase {
 			final String message = "Hello,  World!";
 			handler.handleData(message);
 			fail();
-		} catch (DownStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// OK
 		}
 	}
@@ -134,7 +133,7 @@ public class TestDataHandler extends TestCase {
 			final String message = "Hello,  World!";
 			handler.handleData(message);
 			fail();
-		} catch (UpStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// OK
 		}
 	}
@@ -156,7 +155,7 @@ public class TestDataHandler extends TestCase {
 			final String message = "Hello,  World!";
 			handler.handleData(message);
 			fail();
-		} catch (UpStreamDataFlowCloseException e) {
+		} catch (DataFlowCloseException e) {
 			// OK
 		}
 	}

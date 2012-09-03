@@ -35,7 +35,7 @@ public final class DataFlows {
 	}
 
 	/**
-	 * @param dataHandler
+	 * @param dataFlow
 	 * @return
 	 */
 	public static <U> UpStreamDataFlow<U> closable(UpStreamDataFlow<U> dataHandler) {
@@ -43,11 +43,26 @@ public final class DataFlows {
 	}
 
 	/**
-	 * @param dataHandler
+	 * @param dataFlow
 	 * @return
 	 */
 	public static <U> DownStreamDataFlow<U> closable(DownStreamDataFlow<U> dataHandler) {
 		return new ClosableDownStreamDataFlow<U>(dataHandler);
 	}
 
+	/**
+	 * @param dataFlow
+	 * @return
+	 */
+	public static <U> UpStreamDataFlow<U> createUpStream(DownStreamDataFlow<U> dataFlow) {
+		return new UpStreamFromDownStreamDataFlow<U>(dataFlow);
+	}
+
+	/**
+	 * @param dataFlow
+	 * @return
+	 */
+	public static <U> DownStreamDataFlow<U> createDownStream(UpStreamDataFlow<U> dataFlow) {
+		return new DownStreamFromUpStreamDataFlow<U>(dataFlow);
+	}
 }

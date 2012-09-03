@@ -32,6 +32,6 @@ public class ClosableDownStreamDataFlow<D> extends ClosableDataFlow<D> implement
 	 * @param exceptionToSend
 	 */
 	ClosableDownStreamDataFlow(DownStreamDataFlow<D> dataHandler) {
-		super(dataHandler, new DownStreamDataFlowCloseException());
+		super(dataHandler);
 	}
 }

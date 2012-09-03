@@ -21,7 +21,6 @@ package org.wolfgang.contrail.network.connection.web.resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import junit.framework.TestCase;

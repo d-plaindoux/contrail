@@ -25,7 +25,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Test;
 
 /**

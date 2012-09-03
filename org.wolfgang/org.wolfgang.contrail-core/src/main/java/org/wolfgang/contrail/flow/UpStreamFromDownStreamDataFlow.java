@@ -19,48 +19,35 @@
 package org.wolfgang.contrail.flow;
 
 /**
- * <code>UpStreamDataHandlerClosedException</code>
+ * <code>DownStreamDataHandlerAdapter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class UpStreamDataFlowCloseException extends DataFlowCloseException {
-
-	private static final long serialVersionUID = -2525135136709063308L;
-
-	/**
-	 * Constructor
-	 */
-	public UpStreamDataFlowCloseException() {
-		super();
-	}
+public class UpStreamFromDownStreamDataFlow<D> implements UpStreamDataFlow<D> {
+	private final DownStreamDataFlow<D> dataFlow;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param arg0
+	 * @param dataFlow
 	 */
-	public UpStreamDataFlowCloseException(String arg0) {
-		super(arg0);
+	UpStreamFromDownStreamDataFlow(DownStreamDataFlow<D> dataFlow) {
+		this.dataFlow = dataFlow;
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public UpStreamDataFlowCloseException(Throwable arg0) {
-		super(arg0);
+	@Override
+	public void handleData(D data) throws DataFlowException {
+		dataFlow.handleData(data);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public UpStreamDataFlowCloseException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	@Override
+	public void handleClose() throws DataFlowCloseException {
+		dataFlow.handleClose();
 	}
 
+	@Override
+	public void handleLost() throws DataFlowCloseException {
+		dataFlow.handleLost();
+	}
 }

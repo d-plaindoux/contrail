@@ -23,7 +23,6 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.wolfgang.contrail.connection.ComponentFactory;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandler;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerImpl;
 

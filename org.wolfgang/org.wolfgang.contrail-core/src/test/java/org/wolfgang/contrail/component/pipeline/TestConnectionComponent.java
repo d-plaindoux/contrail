@@ -31,8 +31,6 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlowCloseException;
-import org.wolfgang.contrail.flow.UpStreamDataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
@@ -63,7 +61,7 @@ public class TestConnectionComponent extends TestCase {
 	}
 
 	@Test
-	public void testNominal02() throws DataFlowException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException  {
+	public void testNominal02() throws DataFlowException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
@@ -114,7 +112,7 @@ public class TestConnectionComponent extends TestCase {
 			initial.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 
@@ -137,7 +135,7 @@ public class TestConnectionComponent extends TestCase {
 			connection.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 
@@ -160,7 +158,7 @@ public class TestConnectionComponent extends TestCase {
 			terminal.closeUpStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (UpStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 
@@ -183,7 +181,7 @@ public class TestConnectionComponent extends TestCase {
 			initial.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 
@@ -206,7 +204,7 @@ public class TestConnectionComponent extends TestCase {
 			connection.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 
@@ -229,7 +227,7 @@ public class TestConnectionComponent extends TestCase {
 			terminal.closeDownStream();
 			initial.getUpStreamDataHandler().handleData("0");
 			fail();
-		} catch (DownStreamDataFlowCloseException h) {
+		} catch (DataFlowCloseException h) {
 			// Ok
 		}
 

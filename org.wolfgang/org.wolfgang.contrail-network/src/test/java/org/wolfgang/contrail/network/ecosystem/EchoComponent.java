@@ -22,11 +22,9 @@ import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
@@ -40,26 +38,10 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 public class EchoComponent extends TerminalComponent {
 
 	private static UpStreamDataFlowFactory DATA_RECEIVER_FACTORY = new UpStreamDataFlowFactory() {
+		@SuppressWarnings("unchecked")
 		@Override
 		public UpStreamDataFlow create(final DownStreamDataFlow sender) {
-			return new UpStreamDataFlowAdapter() {
-				@Override
-				public void handleData(Object data) throws DataFlowException {
-					sender.handleData(data);
-				}
-
-				@Override
-				public void handleClose() throws DataFlowCloseException {
-					super.handleClose();
-					sender.handleClose();
-				}
-
-				@Override
-				public void handleLost() throws DataFlowCloseException {
-					super.handleLost();
-					sender.handleLost();
-				}
-			};
+			return DataFlows.createUpStream(sender);
 		}
 	};
 
@@ -67,7 +49,7 @@ public class EchoComponent extends TerminalComponent {
 	 * Constructor
 	 * 
 	 * @param receiver
-	 * @throws CannotCreateDataFlowException 
+	 * @throws CannotCreateDataFlowException
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor

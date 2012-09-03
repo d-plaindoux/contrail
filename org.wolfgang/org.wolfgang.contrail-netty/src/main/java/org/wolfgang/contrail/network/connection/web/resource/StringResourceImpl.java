@@ -23,9 +23,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-
 /**
  * <code>StringResourceImpl</code> is a Resource implementation based a single
  * string.
