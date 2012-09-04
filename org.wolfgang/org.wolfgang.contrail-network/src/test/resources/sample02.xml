@@ -5,18 +5,20 @@
 	</import>
 
 	<import as='ClientComponent'>
-		org.wolfgang.contrail.component.bound.gateway.ClientComponent
+		org.wolfgang.contrail.component.connection.ClientComponent
 	</import>
 
 	<define name='Client'>
 		<function>
 			<var>uri</var>
-			<ref>ClientHandler</ref>
+			<ref>ClientComponent</ref>
 		</function>
 	</define>
 
-	<binder name='Main' typein="byte[]" typeout="byte[]">
-		<ref>Client</ref>
-		<atom>tcp://localhost:6666</atom>
+	<binder name='Main' in="byte[]" out="byte[]">
+		<apply>
+			<ref>Client</ref>
+			<atom>tcp://localhost:6666</atom>
+		</apply>
 	</binder>
 </ecosystem>

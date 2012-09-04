@@ -16,17 +16,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.compose;
+package org.wolfgang.contrail.component.factory;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionDestinationComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionPipelineComponent;
+import org.wolfgang.contrail.component.pipeline.compose.CompositionSourceComponent;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>CompositionFactory</code>
+ * <code>CompositionComponents</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -38,7 +42,6 @@ public final class CompositionComponents {
 	 */
 	private CompositionComponents() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@SuppressWarnings("rawtypes")

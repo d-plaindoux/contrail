@@ -48,7 +48,7 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	CompositionPipelineComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionPipelineComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;

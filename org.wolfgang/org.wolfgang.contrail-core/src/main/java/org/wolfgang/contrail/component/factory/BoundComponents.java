@@ -16,45 +16,44 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.ecosystem;
+package org.wolfgang.contrail.component.factory;
 
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailTerminal;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
- * <code>TestComponent</code>
+ * <code>Components</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
-@ContrailTerminal(name = "Test")
-public class EchoComponent extends TerminalComponent {
-
-	private static UpStreamDataFlowFactory DATA_RECEIVER_FACTORY = new UpStreamDataFlowFactory() {
-		@SuppressWarnings("unchecked")
-		@Override
-		public UpStreamDataFlow create(final DownStreamDataFlow sender) {
-			return DataFlows.reverse(sender);
-		}
-	};
+public final class BoundComponents {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param receiver
-	 * @throws CannotCreateDataFlowException
 	 */
-	@SuppressWarnings("unchecked")
-	@ContrailConstructor
-	public EchoComponent() throws CannotCreateDataFlowException {
-		super(DATA_RECEIVER_FACTORY);
+	private BoundComponents() {
+		super();
 	}
 
+	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlow<D> flow) {
+		return new InitialComponent<U, D>(flow);
+	}
+
+	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+		return new InitialComponent<U, D>(factory);
+	}
+
+	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlow<U> flow) {
+		return new TerminalComponent<U, D>(flow);
+	}
+
+	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+		return new TerminalComponent<U, D>(factory);
+	}
 }

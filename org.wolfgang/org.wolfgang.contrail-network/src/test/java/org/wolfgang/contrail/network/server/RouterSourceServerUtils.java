@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
+import org.wolfgang.contrail.component.factory.CompositionComponents;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;

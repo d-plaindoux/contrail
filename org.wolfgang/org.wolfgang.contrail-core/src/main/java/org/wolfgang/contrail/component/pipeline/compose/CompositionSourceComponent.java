@@ -47,7 +47,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	CompositionSourceComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionSourceComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;

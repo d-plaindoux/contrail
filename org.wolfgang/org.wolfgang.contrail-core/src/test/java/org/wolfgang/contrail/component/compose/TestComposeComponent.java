@@ -29,7 +29,8 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
+import org.wolfgang.contrail.component.factory.BoundComponents;
+import org.wolfgang.contrail.component.factory.CompositionComponents;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
@@ -55,7 +56,7 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -88,7 +89,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -122,7 +123,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -158,7 +159,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -194,7 +195,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -233,7 +234,7 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(new DownStreamDataFlowAdapter<byte[]>());
+		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>());
 		final Component composedComponent = CompositionComponents.compose(componentLinkManagerImpl, pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>());

@@ -81,7 +81,7 @@ public class TestNetworkServer extends TestCase {
 		final UpStreamDataFlowFactory<byte[], byte[]> dataReceiverFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataFlow<byte[]> create(final DownStreamDataFlow<byte[]> sender) {
-				return DataFlows.createUpStream(sender);
+				return DataFlows.reverse(sender);
 			}
 		};
 

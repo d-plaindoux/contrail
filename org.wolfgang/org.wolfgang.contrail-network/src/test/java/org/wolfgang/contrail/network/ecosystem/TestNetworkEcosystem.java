@@ -18,13 +18,98 @@
 
 package org.wolfgang.contrail.network.ecosystem;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import javax.xml.bind.JAXBException;
+
+import junit.framework.TestCase;
+
+import org.junit.Test;
+import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentFactory;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.factory.BoundComponents;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
+import org.wolfgang.contrail.connection.net.NetServer;
+import org.wolfgang.contrail.ecosystem.Ecosystem;
+import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemFactoryImpl;
+import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+
 /**
  * <code>TestNetworkEcosystem</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkEcosystem {
+public class TestNetworkEcosystem extends TestCase {
+	
+	@Test
+	public void testCLientConnection() throws JAXBException, IOException, Exception {
+		final NetServer netServer = new NetServer();
+		netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
+			@Override
+			public void notifyCreation(Component client) throws CannotCreateComponentException {
+				final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+				try {
+					final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+						@Override
+						public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
+							return DataFlows.reverse(component);
+						}
+					});
+					manager.connect(client, terminalComponent);
+				} catch (CannotCreateDataFlowException e) {
+					throw new CannotCreateComponentException(e);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		});
+		
+		// ----------------------------------------------------------------------------------------------------
+		
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+		
+		// ----------------------------------------------------------------------------------------------------
+
+		final FutureResponse<String> response = new FutureResponse<String>();
+		final TerminalComponent<byte[], byte[]> sender = new TerminalComponent<byte[],byte[]>(new UpStreamDataFlowAdapter<byte[]>() {
+			@Override
+			public void handleData(byte[] data) throws DataFlowException {
+				response.setValue(new String(data));
+			}
+		});
+
+		// ----------------------------------------------------------------------------------------------------
+		
+		final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+		factory.getLinkManager().connect(factory.create(), sender);
+		
+		final String message = "Hello, World!";
+		sender.getDownStreamDataHandler().handleData(message.getBytes());
+		assertEquals(message, response.get(10, TimeUnit.SECONDS));
+		
+		netServer.close();
+		ecosystem02.close();
+}
 	
 	/** DEACTIVATED
 	@Test

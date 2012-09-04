@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponents;
+import org.wolfgang.contrail.component.factory.CompositionComponents;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;

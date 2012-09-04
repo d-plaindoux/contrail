@@ -22,4 +22,4 @@
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.connection.component;
+package org.wolfgang.contrail.component.connection;
