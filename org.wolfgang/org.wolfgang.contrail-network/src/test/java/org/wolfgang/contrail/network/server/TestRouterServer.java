@@ -144,7 +144,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 		final RouterComponent network01 = RouterFactory.create(reference01);
-		final ComponentLinkManagerImpl manager01 = ecosystem01.getLinkManager();
+		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
@@ -161,7 +161,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final RouterComponent network02 = RouterFactory.create(reference02);
-		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
+		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent02 = new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse));
 		manager02.connect(network02, terminalComponent02);
@@ -208,7 +208,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 		final RouterComponent network01 = RouterFactory.create(reference01);
-		final ComponentLinkManagerImpl manager01 = ecosystem01.getLinkManager();
+		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
@@ -225,7 +225,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final RouterComponent network02 = RouterFactory.create(reference02);
-		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
+		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent02 = new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse));
 		manager02.connect(network02, terminalComponent02);
@@ -283,7 +283,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final RouterComponent network02 = RouterFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
-		final ComponentLinkManagerImpl manager02 = ecosystem02.getLinkManager();
+		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		RouterSourceServerUtils.client(network02, manager02, new URI("tcp://localhost:6668"), reference03);
 		manager02.connect(network02, new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse)));
@@ -299,7 +299,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		final RouterComponent network03 = RouterFactory.create(reference03);
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
-		final ComponentLinkManagerImpl manager03 = ecosystem03.getLinkManager();
+		final ComponentLinkManager manager03 = ecosystem03.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent03 = new TerminalComponent<Event, Event>(new Receiver(reference03, futureResponse));
 		manager03.connect(network03, terminalComponent03);
@@ -349,7 +349,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManagerImpl manager01 = new ComponentLinkManagerImpl();
+		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
@@ -360,7 +360,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManagerImpl manager02 = new ComponentLinkManagerImpl();
+		final ComponentLinkManager manager02 = new ComponentLinkManagerImpl();
 		final RouterComponent network02 = RouterFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ public class TestRouterServer extends TestCase {
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManagerImpl manager03 = new ComponentLinkManagerImpl();
+		final ComponentLinkManager manager03 = new ComponentLinkManagerImpl();
 		final RouterComponent network03 = RouterFactory.create(reference03);
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------

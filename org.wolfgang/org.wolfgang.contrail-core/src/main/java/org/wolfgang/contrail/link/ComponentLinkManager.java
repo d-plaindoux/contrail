@@ -47,6 +47,13 @@ public interface ComponentLinkManager {
 	<U, D> ComponentLink connect(Component source, Component destination) throws ComponentConnectionRejectedException;
 
 	/**
+	 * Method called whether the set of established links must be retrieved
+	 * 
+	 * @return an array of component link
+	 */
+	ComponentLink[] getExistingLinks();
+
+	/**
 	 * Method called to retrieve all sources connected to the identified
 	 * component
 	 * 
@@ -77,5 +84,4 @@ public interface ComponentLinkManager {
 	 * @throws ComponentConnectionRejectedException
 	 */
 	boolean disconnect(ComponentId sourceId, ComponentId destinationId) throws ComponentDisconnectionRejectedException;
-
 }

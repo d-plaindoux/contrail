@@ -18,8 +18,12 @@
 
 package org.wolfgang.contrail.ecosystem.lang.code;
 
+import java.util.List;
 import java.util.Map;
 
+import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpreter;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 
 /**
@@ -29,6 +33,7 @@ import org.wolfgang.contrail.ecosystem.lang.model.Function;
  * @version 1.0
  */
 public class ClosureValue implements CodeValue {
+	private final EcosystemInterpreter interpreter;
 	private final Map<String, CodeValue> environment;
 	private final Function function;
 
@@ -38,28 +43,25 @@ public class ClosureValue implements CodeValue {
 	 * @param function
 	 * @param environement
 	 */
-	public ClosureValue(Function function, Map<String, CodeValue> environement) {
+	public ClosureValue(EcosystemInterpreter interpreter, Function function, Map<String, CodeValue> environement) {
 		super();
+		this.interpreter = interpreter;
 		this.function = function;
 		this.environment = environement;
 	}
 
 	/**
-	 * Return the value of environment
+	 * Apply the function a a given parameter
 	 * 
-	 * @return the environment
+	 * @param value
+	 * @return the application result
+	 * @throws EcosystemInterpretationException
 	 */
-	public Map<String, CodeValue> getEnvironment() {
-		return environment;
-	}
-
-	/**
-	 * Return the value of function
-	 * 
-	 * @return the function
-	 */
-	public Function getFunction() {
-		return function;
+	public CodeValue apply(String name, CodeValue value) throws EcosystemInterpretationException {
+		final String parameterName = function.getParameter(name);
+		final List<Expression> applied = function.apply(parameterName);
+		this.environment.put(parameterName, value);
+		return interpreter.create(environment).visit(applied);
 	}
 
 	@Override

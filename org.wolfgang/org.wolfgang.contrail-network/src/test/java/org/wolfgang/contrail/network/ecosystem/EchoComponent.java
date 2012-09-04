@@ -41,7 +41,7 @@ public class EchoComponent extends TerminalComponent {
 		@SuppressWarnings("unchecked")
 		@Override
 		public UpStreamDataFlow create(final DownStreamDataFlow sender) {
-			return DataFlows.reverse(sender);
+			return DataFlows.echoFrom(sender);
 		}
 	};
 

@@ -75,10 +75,10 @@ public final class Clients implements Closeable {
 	 * @param factory
 	 *            The data sender factory
 	 * @return
-	 * @throws ClientCreationException
+	 * @throws ClientNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public Client get(String scheme) throws ClientCreationException {
+	public Client get(String scheme) throws ClientNotFoundException {
 		try {
 			if (clients.containsKey(scheme)) {
 				return clients.get(scheme);
@@ -94,7 +94,7 @@ public final class Clients implements Closeable {
 				return client;
 			}
 		} catch (Exception e) {
-			throw new ClientCreationException(e);
+			throw new ClientNotFoundException(e);
 		}
 	}
 

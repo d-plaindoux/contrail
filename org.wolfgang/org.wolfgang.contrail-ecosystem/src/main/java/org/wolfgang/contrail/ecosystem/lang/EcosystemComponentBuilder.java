@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -38,7 +39,6 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  */
 public class EcosystemComponentBuilder implements CodeValueVisitor<Component, EcosystemBuilderException> {
 
-	// private final EcosystemInterpreter interpret;
 	private final ComponentLinkManager linkManager;
 
 	/**
@@ -48,7 +48,6 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 	 */
 	EcosystemComponentBuilder(EcosystemInterpreter interpret, ComponentLinkManager linkManager) {
 		super();
-		// this.interpret = interpret;
 		this.linkManager = linkManager;
 	}
 
@@ -68,7 +67,11 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 
 	@Override
 	public Component visit(ConstantValue value) throws EcosystemBuilderException {
-		throw new EcosystemBuilderException("TODO");
+		if (Coercion.canCoerce(value.getValue(), Component.class)) {
+			return Coercion.coerce(value.getValue(), Component.class);
+		} else {
+			throw new EcosystemBuilderException("TODO");
+		}
 	}
 
 	@Override

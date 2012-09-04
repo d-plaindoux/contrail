@@ -18,7 +18,12 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.connection.ComponentFactoryListener;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemBuilderException;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemComponentBuilder;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
@@ -40,8 +45,19 @@ public class ParameterCodeConverter implements CodeValueVisitor<Object, Exceptio
 	}
 
 	@Override
-	public Object visit(ClosureValue value) throws Exception {
-		return null;
+	public Object visit(final ClosureValue value) throws Exception {
+		return new ComponentFactoryListener() {
+			@Override
+			public void notifyCreation(Component component) throws CannotCreateComponentException {
+				try {
+					value.apply(null, new ConstantValue(component)).visit(builder);
+				} catch (EcosystemInterpretationException e) {
+					throw new CannotCreateComponentException(e);
+				} catch (EcosystemBuilderException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
 	}
 
 	@Override

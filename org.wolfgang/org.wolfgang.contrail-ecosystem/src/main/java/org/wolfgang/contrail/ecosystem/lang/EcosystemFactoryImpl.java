@@ -18,7 +18,9 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +32,7 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
+import org.wolfgang.contrail.component.annotation.ContrailComponent;
 import org.wolfgang.contrail.component.annotation.ContrailInitial;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
@@ -167,6 +170,19 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 					} else {
 						logger.log(Level.WARNING, message.format(Server.class, importation.getElement()));
 					}
+				} else if (aClass.isAnnotationPresent(ContrailComponent.class)) {
+					final ContrailComponent annotation = aClass.getAnnotation(ContrailComponent.class);
+					if (Component.class.isAssignableFrom(aClass)) {
+						final String name;
+						if (importation.getAlias() != null) {
+							name = importation.getAlias();
+						} else {
+							name = annotation.name();
+						}
+						this.importations.put(name, new ComponentImportEntry(codeConverter, this, aClass));
+					} else {
+						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
+					}
 				} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
 					final ContrailPipeline annotation = aClass.getAnnotation(ContrailPipeline.class);
 					if (PipelineComponent.class.isAssignableFrom(aClass)) {
@@ -246,8 +262,15 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			this.definitions.put(definition.getName(), this.interpreter.visit(definition.getExpressions()));
 		}
 
+		final List<Component> activeComponents = new ArrayList<Component>();
+		// Create and Start the starters
+		for (Starter starter : ecosystemModel.getStarters()) {
+			final CodeValue flow = this.interpreter.visit(starter.getExpressions());
+			activeComponents.add(this.create(flow));
+		}
+
 		// Create the ecosystem implementation
-		final EcosystemImpl ecosystemImpl = new EcosystemImpl();
+		final EcosystemImpl ecosystemImpl = new EcosystemImpl(this.linkManager, activeComponents.toArray(new Component[activeComponents.size()]));
 
 		// Create and Load the binders
 		for (Bind bind : ecosystemModel.getBinders()) {
@@ -256,12 +279,6 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
 			final CodeValue flow = this.interpreter.visit(bind.getExpressions());
 			ecosystemImpl.addBinder(key, new BinderComponentFactory(this, this.linkManager, flow));
-		}
-
-		// Create and Start the starters
-		for (Starter starter : ecosystemModel.getStarters()) {
-			final CodeValue flow = this.interpreter.visit(starter.getExpressions());
-			this.create(flow);
 		}
 
 		return ecosystemImpl;

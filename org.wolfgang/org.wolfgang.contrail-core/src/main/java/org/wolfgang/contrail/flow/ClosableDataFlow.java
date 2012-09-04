@@ -64,18 +64,14 @@ abstract class ClosableDataFlow<D> implements DataFlow<D> {
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		if (closed.getAndSet(true)) {
-			throw new DataFlowCloseException();
-		} else {
+		if (!closed.getAndSet(true)) {
 			dataFlow.handleClose();
 		}
 	}
 
 	@Override
 	public void handleLost() throws DataFlowCloseException {
-		if (closed.getAndSet(true)) {
-			throw new DataFlowCloseException();
-		} else {
+		if (!closed.getAndSet(true)) {
 			dataFlow.handleLost();
 		}
 	}

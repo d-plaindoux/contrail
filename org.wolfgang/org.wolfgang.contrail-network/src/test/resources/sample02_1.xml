@@ -1,0 +1,53 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<import>
+		org.wolfgang.contrail.connection.net.NetClient
+	</import>
+
+	<import as='ClientComponent'>
+		org.wolfgang.contrail.component.connection.ClientComponent
+	</import>
+
+	<import as='GenericCoercion'>
+		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
+	</import>
+
+	<import as='PayLoad'>
+		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
+	</import>
+
+	<import as='Serialize'>
+		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
+	</import>
+
+	<define name="Coercion">
+		<function>
+			<var>type</var>
+			<ref>GenericCoercion</ref>
+		</function>
+	</define>
+
+	<define name='MainFlow'>
+		<ref>PayLoad</ref>
+		<ref>Serialize</ref>
+		<apply>
+			<ref>Coercion</ref>
+			<atom>java.lang.String</atom>
+		</apply>
+	</define>
+
+	<define name='Client'>
+		<function>
+			<var>uri</var>
+			<ref>ClientComponent</ref>
+		</function>
+	</define>
+
+	<binder name='Main' in="String" out="String">
+		<apply>
+			<ref>Client</ref>
+			<atom>tcp://localhost:6666</atom>
+		</apply>
+		<ref>MainFlow</ref>
+	</binder>
+</ecosystem>

@@ -75,10 +75,10 @@ public final class Servers implements Closeable {
 	 * @param factory
 	 *            The data sender factory
 	 * @return
-	 * @throws ClientCreationException
+	 * @throws ClientNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public Server get(String scheme) throws ServerCreationException {
+	public Server get(String scheme) throws ServerNotFoudException {
 		try {
 			if (servers.containsKey(scheme)) {
 				return servers.get(scheme);
@@ -95,7 +95,7 @@ public final class Servers implements Closeable {
 				return server;
 			}
 		} catch (Exception e) {
-			throw new ServerCreationException(e);
+			throw new ServerNotFoudException(e);
 		}
 	}
 

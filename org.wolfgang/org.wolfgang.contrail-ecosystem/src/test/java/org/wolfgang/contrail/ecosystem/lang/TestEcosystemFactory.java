@@ -365,7 +365,7 @@ public class TestEcosystemFactory extends TestCase {
 			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
 			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
 
-			final int nbEventSent = 250000;
+			final int nbEventSent = 50000;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 
@@ -388,10 +388,11 @@ public class TestEcosystemFactory extends TestCase {
 			final PayLoadTransducerFactory payload = new PayLoadTransducerFactory();
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
+			assertEquals(1, transformed.size());
+		
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {
-				assertEquals(1, transformed.size());
 				sender.getUpStreamDataHandler().handleData(transformed.get(0));
 			}
 
@@ -399,7 +400,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			assertEquals(new Integer(nbEventSent), response.get());
 
-			System.err.println("Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

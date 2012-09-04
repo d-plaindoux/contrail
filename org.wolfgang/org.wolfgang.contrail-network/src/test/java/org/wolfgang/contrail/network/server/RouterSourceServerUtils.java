@@ -97,7 +97,7 @@ class RouterSourceServerUtils extends TestCase {
 		component.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static ComponentFactory serverBinder(final RouterComponent component, final ComponentLinkManagerImpl linkManager) {
+	static ComponentFactory serverBinder(final RouterComponent component, final ComponentLinkManager linkManager) {
 		return new ComponentFactory() {
 			@Override
 			public Component create() throws CannotCreateComponentException {

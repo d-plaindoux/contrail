@@ -30,7 +30,7 @@ import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.connection.ClientCreationException;
+import org.wolfgang.contrail.connection.ClientNotFoundException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
@@ -54,10 +54,10 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	 * 
 	 * @param client
 	 * @throws URISyntaxException
-	 * @throws ClientCreationException
+	 * @throws ClientNotFoundException
 	 */
 	@ContrailConstructor
-	public ClientComponent(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference) throws URISyntaxException, ClientCreationException {
+	public ClientComponent(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference) throws URISyntaxException, ClientNotFoundException {
 		super();
 		this.uri = new URI(reference);
 		this.client = contextFactory.getClientFactory().get(uri.getScheme());

@@ -19,9 +19,11 @@
 package org.wolfgang.contrail.network.ecosystem;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -59,71 +61,140 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @version 1.0
  */
 public class TestNetworkEcosystem extends TestCase {
-	
+
 	@Test
-	public void testCLientConnection() throws JAXBException, IOException, Exception {
+	public void testSimpleCLientServer() throws JAXBException, IOException, Exception {
 		final NetServer netServer = new NetServer();
-		netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
-			@Override
-			public void notifyCreation(Component client) throws CannotCreateComponentException {
-				final ComponentLinkManager manager = new ComponentLinkManagerImpl();
-				try {
-					final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
-						@Override
-						public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
-							return DataFlows.reverse(component);
-						}
-					});
-					manager.connect(client, terminalComponent);
-				} catch (CannotCreateDataFlowException e) {
-					throw new CannotCreateComponentException(e);
-				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateComponentException(e);
-				}
-			}
-		});
-		
-		// ----------------------------------------------------------------------------------------------------
-		
-		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02.xml");
-		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
-		
-		// ----------------------------------------------------------------------------------------------------
-
-		final FutureResponse<String> response = new FutureResponse<String>();
-		final TerminalComponent<byte[], byte[]> sender = new TerminalComponent<byte[],byte[]>(new UpStreamDataFlowAdapter<byte[]>() {
-			@Override
-			public void handleData(byte[] data) throws DataFlowException {
-				response.setValue(new String(data));
-			}
-		});
-
-		// ----------------------------------------------------------------------------------------------------
-		
-		final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-		factory.getLinkManager().connect(factory.create(), sender);
-		
-		final String message = "Hello, World!";
-		sender.getDownStreamDataHandler().handleData(message.getBytes());
-		assertEquals(message, response.get(10, TimeUnit.SECONDS));
-		
-		netServer.close();
-		ecosystem02.close();
-}
-	
-	/** DEACTIVATED
-	@Test
-	public void testNominal01() {
 
 		try {
-			final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
-			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-			final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
+			netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
+				@Override
+				public void notifyCreation(Component client) throws CannotCreateComponentException {
+					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+					try {
+						final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+							@Override
+							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
+								return DataFlows.echoFrom(component);
+							}
+						});
+						manager.connect(client, terminalComponent);
+					} catch (CannotCreateDataFlowException e) {
+						throw new CannotCreateComponentException(e);
+					} catch (ComponentConnectionRejectedException e) {
+						throw new CannotCreateComponentException(e);
+					}
+				}
+			});
+
+			// ----------------------------------------------------------------------------------------------------
 
 			final Socket socket = new Socket("localhost", 6666);
 			final String message = "Hello, World!";
 
 			socket.getOutputStream().write(message.getBytes());
+			socket.getOutputStream().flush();
+
+			final byte[] buffer = new byte[1024];
+			final int len = socket.getInputStream().read(buffer);
+
+			assertEquals(message, new String(buffer, 0, len));
+
+			socket.close();
+		} finally {
+			netServer.close();
+		}
+	}
+
+	@Test
+	public void testClient() throws JAXBException, IOException, Exception {
+		final NetServer netServer = new NetServer();
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_0.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+			netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
+				@Override
+				public void notifyCreation(Component client) throws CannotCreateComponentException {
+					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+					try {
+						final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+							@Override
+							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
+								return DataFlows.echoFrom(component);
+							}
+						});
+						manager.connect(client, terminalComponent);
+					} catch (CannotCreateDataFlowException e) {
+						throw new CannotCreateComponentException(e);
+					} catch (ComponentConnectionRejectedException e) {
+						throw new CannotCreateComponentException(e);
+					}
+				}
+			});
+
+			// ----------------------------------------------------------------------------------------------------
+
+			final FutureResponse<String> response = new FutureResponse<String>();
+			final TerminalComponent<byte[], byte[]> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<byte[]>() {
+				@Override
+				public void handleData(byte[] data) throws DataFlowException {
+					response.setValue(new String(data));
+				}
+			});
+
+			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+			factory.getLinkManager().connect(factory.create(), sender);
+
+			final String message = "Hello, World!";
+			sender.getDownStreamDataHandler().handleData(message.getBytes());
+			assertEquals(message, response.get(10, TimeUnit.SECONDS));
+		} finally {
+			netServer.close();
+			ecosystem02.close();
+		}
+	}
+
+	@Test
+	public void testClient_Error() throws Exception {
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_0.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+			final FutureResponse<String> response = new FutureResponse<String>();
+			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+				@Override
+				public void handleData(String data) throws DataFlowException {
+					response.setValue(new String(data));
+				}
+			});
+
+			try {
+				final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+				factory.getLinkManager().connect(factory.create(), sender);
+				fail();
+			} catch (ComponentConnectionRejectedException e) {
+				// OK
+			} catch (CannotCreateComponentException e) {
+				fail();
+			}
+		} finally {
+			ecosystem02.close();
+		}
+	}
+
+	@Test
+	public void testServer() throws Exception {
+		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_0.xml");
+		final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource.openStream()));
+
+		try {
+			final Socket socket = new Socket("localhost", 6666);
+			final String message = "Hello, World!";
+
+			socket.getOutputStream().write(message.getBytes());
+			socket.getOutputStream().flush();
 
 			final byte[] buffer = new byte[1024];
 			final int len = socket.getInputStream().read(buffer);
@@ -132,67 +203,228 @@ public class TestNetworkEcosystem extends TestCase {
 
 			socket.close();
 
-			ecosystem.close();
 		} catch (Exception e) {
 			fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testNominal01Error() throws JAXBException, IOException, EcosystemCreationException {
-
-		final URL resource = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
-		final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
-		final Ecosystem ecosystem = EcosystemFactoryImpl.build(decoded);
-
-		try {
-			new Socket("localhost", 6667);
-			fail();
-		} catch (SocketException e) {
-			// OK
 		} finally {
 			ecosystem.close();
 		}
 	}
 
 	@Test
-	public void testNominal02() {
+	public void testClientServer() throws Exception {
+
+		final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_0.xml");
+		final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource01.openStream()));
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_0.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
 
 		try {
-			final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01.xml");
-			final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(EcosystemModel.decode(resource01.openStream()));
-
-			final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02.xml");
-			final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(EcosystemModel.decode(resource02.openStream()));
-
-			// ----------------------------------------------------------------------------------------------------
-
 			final FutureResponse<String> response = new FutureResponse<String>();
-			final DownStreamDataHandler<byte[]> dataReceiver = new DownStreamDataHandlerAdapter<byte[]>() {
+			final TerminalComponent<byte[], byte[]> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<byte[]>() {
 				@Override
-				public void handleData(byte[] data) throws DataHandlerException {
-					super.handleData(data);
+				public void handleData(byte[] data) throws DataFlowException {
 					response.setValue(new String(data));
 				}
-			};
+			});
 
-			// ----------------------------------------------------------------------------------------------------
-
-			final UpStreamDataHandlerFactory<byte[], byte[]> binder = ecosystem02.getBinder(EcosystemKeyFactory.named("Main"));
-			final UpStreamDataHandler<byte[]> sender = binder.create(dataReceiver);
+			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+			factory.getLinkManager().connect(factory.create(), sender);
 
 			final String message = "Hello, World!";
-
-			sender.handleData(message.getBytes());
-
+			sender.getDownStreamDataHandler().handleData(message.getBytes());
 			assertEquals(message, response.get(10, TimeUnit.SECONDS));
 
-			ecosystem01.close();
-			ecosystem02.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
+		} finally {
+			ecosystem01.close();
+			ecosystem02.close();
 		}
 	}
-	*/
+
+	@Test
+	public void testClientServer_1() throws Exception {
+
+		final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_1.xml");
+		final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource01.openStream()));
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_1.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+			final FutureResponse<String> response = new FutureResponse<String>();
+			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+				@Override
+				public void handleData(String data) throws DataFlowException {
+					response.setValue(data);
+				}
+			});
+
+			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+			factory.getLinkManager().connect(factory.create(), sender);
+
+			final String message = "Hello, World!";
+			sender.getDownStreamDataHandler().handleData(message);
+			assertEquals(message, response.get(10, TimeUnit.SECONDS));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			ecosystem01.close();
+			ecosystem02.close();
+		}
+	}
+
+	@Test
+	public void testClientsServer_1() throws Exception {
+
+		final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_1.xml");
+		final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource01.openStream()));
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_1.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+			final FutureResponse<String>[] responses = new FutureResponse[100];
+
+			for (int i = 0; i < responses.length; i++) {
+				responses[i] = new FutureResponse<String>();
+				final FutureResponse<String> response1 = responses[i];
+				final TerminalComponent<String, String> sender1 = BoundComponents.terminal(new UpStreamDataFlowFactory<String, String>() {
+					@Override
+					public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) throws CannotCreateDataFlowException {
+						return new UpStreamDataFlowAdapter<String>() {
+							@Override
+							public void handleData(String data) throws DataFlowException {
+								response1.setValue(data);
+								component.handleClose();
+							}
+						};
+					}
+				});
+
+				final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+				factory.getLinkManager().connect(factory.create(), sender1);
+
+				final String message1 = "Hello, World! [" + i + "]";
+				sender1.getDownStreamDataHandler().handleData(message1);
+			}
+
+			for (int i = 0; i < responses.length; i++) {
+				final String message1 = "Hello, World! [" + i + "]";
+				assertEquals(message1, responses[i].get(10, TimeUnit.SECONDS));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			ecosystem01.close();
+			ecosystem02.close();
+		}
+	}
+
+	@Test
+	public void testClientServer_parallel_1() throws Exception {
+
+		final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_1.xml");
+		final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource01.openStream()));
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_1.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+			final int nbEventSent = 50000;
+			final FutureResponse<Integer> response = new FutureResponse<Integer>();
+			final AtomicInteger futureReference = new AtomicInteger();
+
+			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+				@Override
+				public void handleData(String data) throws DataFlowException {
+					if (futureReference.incrementAndGet() == nbEventSent) {
+						response.setValue(nbEventSent);
+					}
+				}
+			});
+
+			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+			factory.getLinkManager().connect(factory.create(), sender);
+
+			final String message = "Hello, World!";
+
+			long t0 = System.currentTimeMillis();
+
+			for (int i = 0; i < nbEventSent; i++) {
+				sender.getDownStreamDataHandler().handleData(message);
+			}
+
+			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+
+			assertEquals(new Integer(nbEventSent), response.get());
+
+			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			ecosystem01.close();
+			ecosystem02.close();
+		}
+	}
+
+	@Test
+	public void testClientServer_parallel_2() throws Exception {
+
+		final URL resource01 = TestNetworkEcosystem.class.getClassLoader().getResource("sample01_1.xml");
+		final Ecosystem ecosystem01 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource01.openStream()));
+
+		final URL resource02 = TestNetworkEcosystem.class.getClassLoader().getResource("sample02_1.xml");
+		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
+
+		try {
+
+			final int nbEventSent = 50;
+			final FutureResponse<Integer> response = new FutureResponse<Integer>();
+			final AtomicInteger futureReference = new AtomicInteger();
+
+			final UpStreamDataFlowFactory<String, String> receiver = new UpStreamDataFlowFactory<String, String>() {
+				@Override
+				public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) throws CannotCreateDataFlowException {
+					return new UpStreamDataFlowAdapter<String>() {
+						@Override
+						public void handleData(String data) throws DataFlowException {
+							if (futureReference.incrementAndGet() == nbEventSent) {
+								response.setValue(nbEventSent);
+							}
+							component.handleClose();
+						}
+					};
+				}
+			};
+
+			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
+			final String message = "Hello, World!";
+			long t0 = System.currentTimeMillis();
+
+			for (int i = 0; i < nbEventSent; i++) {
+				final TerminalComponent<String, String> sender = BoundComponents.terminal(receiver);
+				factory.getLinkManager().connect(factory.create(), sender);
+				sender.getDownStreamDataHandler().handleData(message);
+			}
+
+			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+
+			assertEquals(new Integer(nbEventSent), response.get());
+
+			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			ecosystem01.close();
+			ecosystem02.close();
+		}
+	}
 }

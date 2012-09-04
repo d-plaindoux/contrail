@@ -26,9 +26,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.wolfgang.common.message.Message;
+import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.link.ComponentLink;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
@@ -41,6 +46,11 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 public class EcosystemImpl implements Ecosystem {
 
 	/**
+	 * List of active components
+	 */
+	private final Component[] activeComponents;
+
+	/**
 	 * Initial component integration triggers
 	 */
 	private final Map<RegisteredUnitEcosystemKey, ComponentFactory> hooks;
@@ -48,18 +58,29 @@ public class EcosystemImpl implements Ecosystem {
 	/**
 	 * The related link manager
 	 */
-	private final ComponentLinkManagerImpl linkManager;
+	private final ComponentLinkManager linkManager;
 
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, ComponentFactory>();
-		this.linkManager = new ComponentLinkManagerImpl();
 	}
 
 	/**
 	 * Constructor
 	 */
 	public EcosystemImpl() {
+		this(new ComponentLinkManagerImpl());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param manager
+	 * @param activeComponents
+	 */
+	public EcosystemImpl(ComponentLinkManager manager, Component... activeComponents) {
 		super();
+		this.linkManager = manager;
+		this.activeComponents = activeComponents;
 	}
 
 	/**
@@ -67,13 +88,13 @@ public class EcosystemImpl implements Ecosystem {
 	 * 
 	 * @return the link manager
 	 */
-	public ComponentLinkManagerImpl getLinkManager() {
+	public ComponentLinkManager getLinkManager() {
 		return linkManager;
 	}
 
 	/**
-	 * Method used to add a new terminal component unit integrator. If the entry
-	 * is already defined this method do not add the integrator.
+	 * Method used to add a new terminal component unit integration. If the
+	 * entry is already defined this method do not add the integration.
 	 * 
 	 * @param upstream
 	 *            The upstream type
@@ -116,6 +137,25 @@ public class EcosystemImpl implements Ecosystem {
 
 	@Override
 	public void close() throws IOException {
-		// Nothing to do
+		for (ComponentLink link : this.linkManager.getExistingLinks()) {
+			try {
+				link.dispose();
+			} catch (ComponentDisconnectionRejectedException consume) {
+				// Ignore
+			}
+		}
+
+		for (Component component : activeComponents) {
+			try {
+				component.closeDownStream();
+			} catch (DataFlowCloseException consume) {
+				// Ignore
+			}
+			try {
+				component.closeUpStream();
+			} catch (DataFlowCloseException consume) {
+				// Ignore
+			}
+		}
 	}
 }

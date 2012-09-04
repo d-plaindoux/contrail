@@ -37,7 +37,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class ContrailComponentFactory {
+public class ContrailComponentFactory {
 
 	/**
 	 * Method providing the constructor defined

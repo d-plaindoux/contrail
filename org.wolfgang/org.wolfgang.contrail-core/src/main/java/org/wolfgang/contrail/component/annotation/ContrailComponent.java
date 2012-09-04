@@ -16,27 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.connection;
+package org.wolfgang.contrail.component.annotation;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * <code>ClientFactoryCreationException</code>
+ * <code>ComponentPipeline</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ClientCreationException extends Exception {
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface ContrailComponent {
 
-	/**
-	 * The serialVersionUID attribute
-	 */
-	private static final long serialVersionUID = 9180144466807471771L;
+	String name();
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public ClientCreationException(Throwable arg0) {
-		super(arg0);
-	}
 }

@@ -62,6 +62,11 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		}
 	}
 
+	@Override
+	public ComponentLink[] getExistingLinks() {
+		return links.toArray(new ComponentLink[links.size()]);
+	}
+
 	private final <U, D> ComponentLinkImpl<U, D> safe_connect(SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
 
 		final ComponentLinkImpl<U, D> link = new ComponentLinkImpl<U, D>(this, source, destination) {

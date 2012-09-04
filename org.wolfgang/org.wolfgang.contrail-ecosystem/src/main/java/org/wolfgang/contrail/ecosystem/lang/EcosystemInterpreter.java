@@ -43,7 +43,7 @@ import org.wolfgang.contrail.ecosystem.lang.model.Reference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInterpretationException> {
+public class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInterpretationException> {
 
 	private final EcosystemSymbolTable symbolTable;
 	private final Map<String, CodeValue> environment;
@@ -59,6 +59,21 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 		this.environment = environment;
 	}
 
+	/**
+	 * @param environment
+	 * @return
+	 */
+	public EcosystemInterpreter create(Map<String, CodeValue> environment) {
+		final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
+		newEnvironment.putAll(environment);
+		return new EcosystemInterpreter(symbolTable, newEnvironment);
+	}
+
+	/**
+	 * @param expressions
+	 * @return
+	 * @throws EcosystemInterpretationException
+	 */
 	public CodeValue visit(final List<Expression> expressions) throws EcosystemInterpretationException {
 		final CodeValue[] values = new CodeValue[expressions.size()];
 		final EcosystemInterpreter interpret = new EcosystemInterpreter(symbolTable, environment);
@@ -99,11 +114,7 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 
 		if (interpreted instanceof ClosureValue) {
 			final ClosureValue closure = (ClosureValue) interpreted;
-			final CodeValue result = expression.getParameter().visit(this);
-			final String parameterName = closure.getFunction().getParameter(expression.getBinding());
-			final List<Expression> applied = closure.getFunction().apply(parameterName);
-			closure.getEnvironment().put(parameterName, result);
-			return new EcosystemInterpreter(symbolTable, closure.getEnvironment()).visit(applied);
+			return closure.apply(expression.getBinding(), expression.getParameter().visit(this));
 		} else {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
 			throw new EcosystemInterpretationException(message.format());
@@ -119,6 +130,6 @@ class EcosystemInterpreter implements ExpressionVisitor<CodeValue, EcosystemInte
 	public CodeValue visit(Function expression) throws EcosystemInterpretationException {
 		final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
 		newEnvironment.putAll(environment);
-		return new ClosureValue(expression, newEnvironment);
+		return new ClosureValue(this, expression, newEnvironment);
 	}
 }

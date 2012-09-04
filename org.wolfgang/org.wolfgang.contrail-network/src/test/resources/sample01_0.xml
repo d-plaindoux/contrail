@@ -1,0 +1,37 @@
+<?xml version='1.0'?>
+<ecosystem>
+	<import>
+		org.wolfgang.contrail.connection.net.NetServer
+	</import>
+
+	<import as='ServerHandler'>
+		org.wolfgang.contrail.component.connection.ServerComponent
+	</import>
+
+	<import as='Echo'>
+		org.wolfgang.contrail.network.ecosystem.EchoComponent
+	</import>
+
+	<define name='Server'>
+		<function>
+			<var>uri</var>
+			<var>flow</var>
+			<ref>ServerHandler</ref>
+		</function>
+	</define>
+
+	<start>
+		<apply>
+			<apply>
+				<ref>Server</ref>
+				<atom>tcp://localhost:6666</atom>
+			</apply>
+			<function>
+				<var>client</var>
+				<ref>client</ref>
+				<ref>Echo</ref>
+			</function>
+		</apply>
+	</start>
+</ecosystem>
+
