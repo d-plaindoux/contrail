@@ -60,7 +60,7 @@ public class InitialUpStreamDataFlow<U> extends UpStreamDataFlowAdapter<U> {
 	@Override
 	public void handleData(U data) throws DataFlowException {
 		try {
-			this.component.getUpStreamDataHandler().handleData(data);
+			this.component.getUpStreamDataFlow().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowException(e);
 		}
@@ -69,20 +69,6 @@ public class InitialUpStreamDataFlow<U> extends UpStreamDataFlowAdapter<U> {
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		try {
-			this.component.getUpStreamDataHandler().handleClose();
-		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
-		}
+		this.component.closeUpStream();
 	}
-
-	@Override
-	public void handleLost() throws DataFlowCloseException {
-		try {
-			this.component.getUpStreamDataHandler().handleLost();
-		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
-		}
-	}
-
 }

@@ -18,6 +18,11 @@
 
 package org.wolfgang.contrail.component.pipeline.logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
@@ -27,7 +32,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
- * <code>AtomicDestinationPipelineComponent</code>
+ * <code>LoggerSourceComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -41,25 +46,34 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	private final UpStreamDataFlow<U> upStreamDataHandler;
 
 	/**
-	 * The message prefix
+	 * The internal logger
 	 */
+	private final Logger logger;
+
 	private final String prefix;
 
 	{
 		this.upStreamDataHandler = DataFlows.<U> closable(new UpStreamDataFlow<U>() {
 			@Override
 			public void handleData(final U data) throws DataFlowException {
-				getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler().handleData(data);
+				try {
+					logger.info(prefix + " Handle Data("+ this.hashCode() + "){" + String.valueOf(data) + "}");
+					getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
+				} catch (DataFlowException e) {
+					logger.log(Level.WARNING, "DataFlowException("+ this.hashCode() + ")", e);
+					throw e;
+				}
 			}
 
 			@Override
 			public void handleClose() throws DataFlowCloseException {
-				getDestinationComponentLink().getDestinationComponent().closeUpStream();
-			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
-				getDestinationComponentLink().getDestinationComponent().closeUpStream();
+				try {
+					logger.log(Level.INFO, prefix + " Handle Close("+ this.hashCode() + ")");
+					getDestinationComponentLink().getDestinationComponent().closeUpStream();
+				} catch (DataFlowCloseException e) {
+					logger.log(Level.WARNING, "DataFlowCloseException("+ this.hashCode() + ")", e);
+					throw e;
+				}
 			}
 		});
 	}
@@ -67,19 +81,25 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	/**
 	 * Constructor
 	 */
-	public LoggerSourceComponent(String prefix) {
+	@ContrailConstructor
+	public LoggerSourceComponent(@ContrailArgument("name") String prefix) {
 		super();
 		this.prefix = prefix;
+		if (prefix == null) {
+			this.logger = Logger.getAnonymousLogger();
+		} else {
+			this.logger = Logger.getLogger(prefix);
+		}
 	}
 
 	@Override
-	public UpStreamDataFlow<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataFlow() {
 		return this.upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataFlow<D> getDownStreamDataHandler() {
-		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
+		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow();
 	}
 
 }

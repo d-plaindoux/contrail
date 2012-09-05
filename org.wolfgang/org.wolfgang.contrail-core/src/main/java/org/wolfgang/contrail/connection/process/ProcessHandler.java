@@ -99,11 +99,6 @@ public class ProcessHandler implements Server {
 			public void handleClose() {
 				System.exit(0); // End of the process
 			}
-
-			@Override
-			public void handleLost() {
-				handleClose();
-			}
 		};
 
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(dataReceiver);
@@ -115,11 +110,11 @@ public class ProcessHandler implements Server {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = input.read(buffer)) != -1) {
-						initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
+						initialComponent.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
 				} finally {
-					initialComponent.getUpStreamDataHandler().handleClose();
+					initialComponent.getUpStreamDataFlow().handleClose();
 				}
 			}
 		};

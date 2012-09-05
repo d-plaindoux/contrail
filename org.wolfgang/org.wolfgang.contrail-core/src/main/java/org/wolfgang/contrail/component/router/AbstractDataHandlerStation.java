@@ -117,7 +117,7 @@ abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, 
 		 */
 		try {
 			final SourceComponent<Event, Event> source = this.createSource(nextTarget);
-			source.getDownStreamDataHandler().handleData(data);
+			source.getDownStreamDataFlow().handleData(data);
 			return;
 		} catch (CannotCreateComponentException e) {
 			throw new DataFlowException(NOT_FOUND.format(nextTarget, this.toString()), e);
@@ -135,12 +135,6 @@ abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, 
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		component.closeDownStream();
-		component.closeUpStream();
-	}
-
-	@Override
-	public void handleLost() throws DataFlowCloseException {
 		component.closeDownStream();
 		component.closeUpStream();
 	}

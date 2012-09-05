@@ -18,6 +18,11 @@
 
 package org.wolfgang.contrail.component.pipeline.logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.wolfgang.contrail.component.annotation.ContrailArgument;
+import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
@@ -41,25 +46,34 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	private final DownStreamDataFlow<D> downStreamDataHandler;
 
 	/**
-	 * The message prefix
+	 * The internal logger
 	 */
+	private final Logger logger;
+
 	private final String prefix;
 
 	{
 		this.downStreamDataHandler = DataFlows.<D> closable(new DownStreamDataFlow<D>() {
 			@Override
 			public void handleData(final D data) throws DataFlowException {
-				getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(data);
+				try {
+					getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
+					logger.info(prefix + " Handle Data("+ this.hashCode() + "){" + String.valueOf(data) + "}");
+				} catch (DataFlowException e) {
+					logger.log(Level.WARNING, "DataFlowException("+ this.hashCode() + ")", e);
+					throw e;
+				}
 			}
 
 			@Override
 			public void handleClose() throws DataFlowCloseException {
-				getDestinationComponentLink().getDestinationComponent().closeDownStream();
-			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
-				getDestinationComponentLink().getDestinationComponent().closeDownStream();
+				try {
+					getDestinationComponentLink().getDestinationComponent().closeDownStream();
+					logger.log(Level.INFO, prefix + " Handle Close("+ this.hashCode() + ")");
+				} catch (DataFlowCloseException e) {
+					logger.log(Level.WARNING, "DataFlowCloseException("+ this.hashCode() + ")", e);
+					throw e;
+				}
 			}
 		});
 	}
@@ -67,18 +81,24 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	/**
 	 * Constructor
 	 */
-	public LoggerDestinationComponent(String prefix) {
+	@ContrailConstructor
+	public LoggerDestinationComponent(@ContrailArgument("name") String prefix) {
 		super();
 		this.prefix = prefix;
+		if (prefix == null) {
+			this.logger = Logger.getAnonymousLogger();
+		} else {
+			this.logger = Logger.getLogger(prefix);
+		}
 	}
 
 	@Override
-	public UpStreamDataFlow<U> getUpStreamDataHandler() {
-		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
+	public UpStreamDataFlow<U> getUpStreamDataFlow() {
+		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
 	}
 
 	@Override
-	public DownStreamDataFlow<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
 		return this.downStreamDataHandler;
 	}
 

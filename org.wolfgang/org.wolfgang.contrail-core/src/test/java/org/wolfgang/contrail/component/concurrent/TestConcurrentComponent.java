@@ -75,7 +75,7 @@ public class TestConcurrentComponent extends TestCase {
 		for (int i = 0; i < iterations; i++) {
 			int value = random.nextInt(1024);
 			total1 += value;
-			initialComponent.getUpStreamDataHandler().handleData(value);
+			initialComponent.getUpStreamDataFlow().handleData(value);
 		}
 
 		final int[] response = responseFuture.get();

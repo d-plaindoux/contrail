@@ -91,7 +91,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
+			return sourceComponentLink.getSourceComponent().getDownStreamDataFlow();
 		}
 	}
 
@@ -125,7 +125,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	@Override
-	public UpStreamDataFlow<U> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U> getUpStreamDataFlow() {
 		return this.upstreamDataHandler;
 	}
 

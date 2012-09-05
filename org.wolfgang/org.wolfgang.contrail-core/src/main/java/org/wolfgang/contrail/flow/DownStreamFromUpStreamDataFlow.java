@@ -45,9 +45,4 @@ public class DownStreamFromUpStreamDataFlow<D> implements DownStreamDataFlow<D> 
 	public void handleClose() throws DataFlowCloseException {
 		dataFlow.handleClose();
 	}
-
-	@Override
-	public void handleLost() throws DataFlowCloseException {
-		dataFlow.handleLost();
-	}
 }

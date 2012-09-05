@@ -28,7 +28,6 @@ import org.wolfgang.common.utils.UUIDUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.event.Event;

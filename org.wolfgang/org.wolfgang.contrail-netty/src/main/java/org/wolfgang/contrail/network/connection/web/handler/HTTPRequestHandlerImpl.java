@@ -213,11 +213,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 			}
 
 			@Override
-			public void handleLost() throws DataFlowCloseException {
-				handleClose();
-			}
-
-			@Override
 			public void handleData(String data) throws DataFlowException {
 				sendWebSocketFrame(context, new TextWebSocketFrame(data));
 			}
@@ -240,7 +235,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					final InitialComponent<String, String> initialComponent = Components.initial(emitter);
 					factory.getLinkManager().connect(initialComponent, factory.create());
 					try {
-						receivers.put(identifier, initialComponent.getUpStreamDataHandler());
+						receivers.put(identifier, initialComponent.getUpStreamDataFlow());
 					} catch (Exception e) {
 						Channels.fireExceptionCaught(future.getChannel(), e);
 						throw e;

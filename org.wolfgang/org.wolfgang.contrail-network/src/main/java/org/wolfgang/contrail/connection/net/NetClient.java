@@ -20,10 +20,12 @@ package org.wolfgang.contrail.connection.net;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -62,7 +64,7 @@ public class NetClient implements Client {
 	/**
 	 * Active server sockets
 	 */
-	private List<Socket> clients;
+	private final List<Socket> clients;
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -70,7 +72,7 @@ public class NetClient implements Client {
 	private final ThreadPoolExecutor executor;
 
 	{
-		this.clients = new ArrayList<Socket>();
+		this.clients = Collections.synchronizedList(new ArrayList<Socket>());
 
 		final ThreadGroup group = new ThreadGroup("Network.Client");
 		final ThreadFactory threadFactory = new ThreadFactory() {
@@ -137,11 +139,6 @@ public class NetClient implements Client {
 					throw new DataFlowCloseException(e);
 				}
 			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
-				handleClose();
-			}
 		});
 
 		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
@@ -151,11 +148,15 @@ public class NetClient implements Client {
 			public Void call() throws Exception {
 				final byte[] buffer = new byte[1024 * 8];
 				try {
-					int len = client.getInputStream().read(buffer);
-					while (len != -1) {
-						component.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
-						len = client.getInputStream().read(buffer);
+					int len;
+					while ((len = client.getInputStream().read(buffer)) != -1) {
+						component.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
 					}
+				} catch (SocketException e) {
+					// Nothings
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw e;
 				} finally {
 					clients.remove(client);
 					component.closeUpStream();

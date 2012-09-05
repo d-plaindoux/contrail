@@ -69,7 +69,7 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
+			return destinationComponentLink.getDestinationComponent().getUpStreamDataFlow();
 		}
 	}
 

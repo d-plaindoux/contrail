@@ -79,12 +79,12 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	}
 
 	@Override
-	public UpStreamDataFlow<U1> getUpStreamDataHandler() {
+	public UpStreamDataFlow<U1> getUpStreamDataFlow() {
 		return upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
 		return downStreamDataHandler;
 	}
 }

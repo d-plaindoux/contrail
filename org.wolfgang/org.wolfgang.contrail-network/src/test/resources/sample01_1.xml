@@ -3,23 +3,18 @@
 	<import>
 		org.wolfgang.contrail.connection.net.NetServer
 	</import>
-
 	<import as='Echo'>
 		org.wolfgang.contrail.network.ecosystem.EchoComponent
 	</import>
-
-	<import as='ServerHandler'>
+	<import as='ServerComponent'>
 		org.wolfgang.contrail.component.connection.ServerComponent
 	</import>
-
 	<import as='GenericCoercion'>
 		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
 	</import>
-
 	<import as='PayLoad'>
 		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
 	</import>
-
 	<import as='Serialize'>
 		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
 	</import>
@@ -45,7 +40,7 @@
 		<function>
 			<var>uri</var>
 			<var>flow</var>
-			<ref>ServerHandler</ref>
+			<ref>ServerComponent</ref>
 		</function>
 	</define>
 

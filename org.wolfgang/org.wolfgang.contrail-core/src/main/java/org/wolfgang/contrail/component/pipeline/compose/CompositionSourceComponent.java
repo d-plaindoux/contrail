@@ -73,8 +73,8 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataHandler() {
-		return this.terminalComponent.getDownStreamDataHandler();
+	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
+		return this.terminalComponent.getDownStreamDataFlow();
 	}
 
 	@Override

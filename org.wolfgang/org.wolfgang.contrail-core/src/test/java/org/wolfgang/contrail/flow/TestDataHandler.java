@@ -72,28 +72,6 @@ public class TestDataHandler extends TestCase {
 	}
 
 	@Test
-	public void testClosable03() throws InterruptedException, ExecutionException, DataFlowException {
-		final FutureResponse<String> future = new FutureResponse<String>();
-
-		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.setValue(data);
-			}
-		});
-
-		handler.handleLost();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-	}
-
-	@Test
 	public void testClosable04() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
@@ -121,28 +99,6 @@ public class TestDataHandler extends TestCase {
 		});
 
 		handler.handleClose();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-	}
-
-	@Test
-	public void testClosable06() throws InterruptedException, ExecutionException, DataFlowException {
-		final FutureResponse<String> future = new FutureResponse<String>();
-
-		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.setValue(data);
-			}
-		});
-
-		handler.handleLost();
 
 		try {
 			final String message = "Hello,  World!";
@@ -194,29 +150,6 @@ public class TestDataHandler extends TestCase {
 	}
 
 	@Test
-	public void testReverse03() throws DataFlowException, InterruptedException, ExecutionException {
-		final FutureResponse<String> future = new FutureResponse<String>();
-
-		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.setValue(data);
-			}
-		}));
-
-		handler.handleLost();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-
-	}
-
-	@Test
 	public void testReverse04() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
@@ -245,29 +178,6 @@ public class TestDataHandler extends TestCase {
 		}));
 
 		handler.handleClose();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-
-	}
-
-	@Test
-	public void testReverse06() throws DataFlowException, InterruptedException, ExecutionException {
-		final FutureResponse<String> future = new FutureResponse<String>();
-
-		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.setValue(data);
-			}
-		}));
-
-		handler.handleLost();
 
 		try {
 			final String message = "Hello,  World!";

@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.link;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.wolfgang.contrail.component.Component;
@@ -43,7 +44,7 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	private final List<ComponentLinkImpl<?, ?>> links;
 
 	{
-		links = new ArrayList<ComponentLinkImpl<?, ?>>();
+		links = Collections.synchronizedList(new ArrayList<ComponentLinkImpl<?, ?>>());
 	}
 
 	/**

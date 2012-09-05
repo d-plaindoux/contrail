@@ -28,7 +28,7 @@ package org.wolfgang.contrail.flow;
  * @version 1.0@
  */
 public interface DataFlow<D> {
-		
+
 	/**
 	 * Method called whether a data has to be managed
 	 * 
@@ -44,13 +44,5 @@ public interface DataFlow<D> {
 	 *             thrown if any error occurs when operation fails
 	 */
 	void handleClose() throws DataFlowCloseException;
-
-	/**
-	 * Method called when the channel is lost and therefore closed
-	 * 
-	 * @throws DataFlowCloseException
-	 *             thrown if any error occurs when operation fails
-	 */
-	void handleLost() throws DataFlowCloseException;
 
 }

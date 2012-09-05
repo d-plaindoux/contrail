@@ -106,11 +106,6 @@ public class ProcessClient implements Client {
 			public void handleClose() throws DataFlowCloseException {
 				client.destroy();
 			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
-				handleClose();
-			}
 		};
 
 		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
@@ -122,7 +117,7 @@ public class ProcessClient implements Client {
 					final byte[] buffer = new byte[1024 * 8];
 					int len;
 					while ((len = client.getInputStream().read(buffer)) != -1) {
-						component.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
+						component.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
 					}
 					return null;
 				} finally {

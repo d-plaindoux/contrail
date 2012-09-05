@@ -64,13 +64,13 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataHandler() {
-		return this.terminalComponent.getDownStreamDataHandler();
+	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
+		return this.terminalComponent.getDownStreamDataFlow();
 	}
 
 	@Override
-	public UpStreamDataFlow<U1> getUpStreamDataHandler() {
-		return this.initialComponent.getUpStreamDataHandler();
+	public UpStreamDataFlow<U1> getUpStreamDataFlow() {
+		return this.initialComponent.getUpStreamDataFlow();
 	}
 
 	@Override

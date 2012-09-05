@@ -73,8 +73,8 @@ public class CompositionDestinationComponent<U1, D1, U2, D2> extends AbstractCom
 	}
 
 	@Override
-	public UpStreamDataFlow<U1> getUpStreamDataHandler() {
-		return this.initialComponent.getUpStreamDataHandler();
+	public UpStreamDataFlow<U1> getUpStreamDataFlow() {
+		return this.initialComponent.getUpStreamDataFlow();
 	}
 
 	@Override

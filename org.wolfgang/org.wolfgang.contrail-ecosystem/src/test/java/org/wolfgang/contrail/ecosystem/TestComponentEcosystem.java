@@ -75,12 +75,6 @@ public class TestComponentEcosystem extends TestCase {
 					public void handleClose() throws DataFlowCloseException {
 						sender.handleClose();
 					}
-
-					@Override
-					public void handleLost() throws DataFlowCloseException {
-						super.handleLost();
-						sender.handleLost();
-					}
 				});
 			}
 		};
@@ -123,7 +117,7 @@ public class TestComponentEcosystem extends TestCase {
 
 		Components.compose(componentsLinkManagerImpl, initialComponent, factory.create());
 
-		initialComponent.getUpStreamDataHandler().handleData(message);
+		initialComponent.getUpStreamDataFlow().handleData(message);
 
 		assertEquals(message, stringReference.get());
 

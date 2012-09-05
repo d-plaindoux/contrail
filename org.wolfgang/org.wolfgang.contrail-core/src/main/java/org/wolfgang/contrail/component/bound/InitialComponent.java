@@ -85,11 +85,11 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	public UpStreamDataFlow<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
+	public UpStreamDataFlow<U> getUpStreamDataFlow() throws ComponentNotConnectedException {
 		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
+			return destinationComponentLink.getDestinationComponent().getUpStreamDataFlow();
 		}
 	}
 
@@ -123,7 +123,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	@Override
-	public DownStreamDataFlow<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
 		return this.downStreamDataHandler;
 	}
 

@@ -36,9 +36,4 @@ public class DataFlowAdapter<D> implements DataFlow<D> {
 		// Nothing
 	}
 
-	@Override
-	public void handleLost() throws DataFlowCloseException {
-		// Nothing
-	}
-
 }

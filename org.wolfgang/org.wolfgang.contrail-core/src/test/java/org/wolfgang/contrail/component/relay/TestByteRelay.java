@@ -52,8 +52,8 @@ public class TestByteRelay extends TestCase {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
-			source.getUpStreamDataHandler().handleData(" World!".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData(" World!".getBytes());
 
 			interconnection.dispose();
 		} finally {
@@ -96,7 +96,7 @@ public class TestByteRelay extends TestCase {
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeUpStream();
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			interconnection.dispose();
 
@@ -119,7 +119,7 @@ public class TestByteRelay extends TestCase {
 			new ComponentLinkManagerImpl().connect(source, destination);
 
 			destination.closeUpStream();
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (DataFlowCloseException e) {
@@ -139,7 +139,7 @@ public class TestByteRelay extends TestCase {
 			new ComponentLinkManagerImpl().connect(source, destination);
 
 			source.closeDownStream();
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (DataFlowCloseException e) {
@@ -160,7 +160,7 @@ public class TestByteRelay extends TestCase {
 			new ComponentLinkManagerImpl().connect(source, destination);
 
 			destination.closeDownStream();
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (DataFlowCloseException e) {
@@ -177,7 +177,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 
-			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (ComponentNotConnectedException e) {
@@ -192,7 +192,7 @@ public class TestByteRelay extends TestCase {
 		try {
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 
-			destination.getUpStreamDataHandler().handleData("Hello,".getBytes());
+			destination.getUpStreamDataFlow().handleData("Hello,".getBytes());
 
 			fail();
 		} catch (DataFlowException e) {

@@ -31,13 +31,13 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
 public class IdentityComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	@Override
-	public UpStreamDataFlow<U> getUpStreamDataHandler() {
-		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
+	public UpStreamDataFlow<U> getUpStreamDataFlow() {
+		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
 	}
 
 	@Override
-	public DownStreamDataFlow<D> getDownStreamDataHandler() {
-		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
+		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow();
 	}
 
 }

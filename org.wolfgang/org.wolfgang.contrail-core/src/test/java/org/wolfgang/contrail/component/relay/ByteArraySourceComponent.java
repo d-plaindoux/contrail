@@ -66,11 +66,6 @@ public class ByteArraySourceComponent {
 							throw new DataFlowCloseException(e);
 						}
 					}
-
-					@Override
-					public void handleLost() throws DataFlowCloseException {
-						handleClose();
-					}
 				});
 			}
 		});

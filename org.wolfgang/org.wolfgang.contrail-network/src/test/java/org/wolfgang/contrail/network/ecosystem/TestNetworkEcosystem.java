@@ -318,7 +318,6 @@ public class TestNetworkEcosystem extends TestCase {
 				assertEquals(message1, responses[i].get(10, TimeUnit.SECONDS));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();
@@ -385,20 +384,21 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 
-			final int nbEventSent = 50;
+			final int nbEventSent = 10000;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 
-			final UpStreamDataFlowFactory<String, String> receiver = new UpStreamDataFlowFactory<String, String>() {
+			final UpStreamDataFlowFactory<String, String> senderFactory = new UpStreamDataFlowFactory<String, String>() {
 				@Override
-				public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) throws CannotCreateDataFlowException {
+				public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> downStream) throws CannotCreateDataFlowException {
 					return new UpStreamDataFlowAdapter<String>() {
 						@Override
 						public void handleData(String data) throws DataFlowException {
-							if (futureReference.incrementAndGet() == nbEventSent) {
+							final int value = futureReference.incrementAndGet();
+							if (value == nbEventSent) {
 								response.setValue(nbEventSent);
 							}
-							component.handleClose();
+							downStream.handleClose();
 						}
 					};
 				}
@@ -409,9 +409,13 @@ public class TestNetworkEcosystem extends TestCase {
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {
-				final TerminalComponent<String, String> sender = Components.terminal(receiver);
+				final TerminalComponent<String, String> sender = Components.terminal(senderFactory);
 				factory.getLinkManager().connect(factory.create(), sender);
-				sender.getDownStreamDataHandler().handleData(message);
+				try {
+					sender.getDownStreamDataHandler().handleData(message);
+				} catch (DataFlowException e) {
+					System.err.println("Error -- > " + e.getMessage());
+				}
 			}
 
 			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");

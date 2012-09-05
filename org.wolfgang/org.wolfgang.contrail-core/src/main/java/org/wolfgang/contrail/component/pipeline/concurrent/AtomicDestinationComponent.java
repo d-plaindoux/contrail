@@ -47,7 +47,7 @@ public class AtomicDestinationComponent<U, D> extends AbstractPipelineComponent<
 			public void handleData(final D data) throws DataFlowException {
 				downstreamLock.lock();
 				try {
-					getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(data);
+					getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
 				} finally {
 					downstreamLock.unlock();
 				}
@@ -55,11 +55,6 @@ public class AtomicDestinationComponent<U, D> extends AbstractPipelineComponent<
 
 			@Override
 			public void handleClose() throws DataFlowCloseException {
-				getDestinationComponentLink().getDestinationComponent().closeDownStream();
-			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
 				getDestinationComponentLink().getDestinationComponent().closeDownStream();
 			}
 		};
@@ -73,12 +68,12 @@ public class AtomicDestinationComponent<U, D> extends AbstractPipelineComponent<
 	}
 
 	@Override
-	public UpStreamDataFlow<U> getUpStreamDataHandler() {
-		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
+	public UpStreamDataFlow<U> getUpStreamDataFlow() {
+		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
 	}
 
 	@Override
-	public DownStreamDataFlow<D> getDownStreamDataHandler() {
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
 		return this.downStreamDataHandler;
 	}
 

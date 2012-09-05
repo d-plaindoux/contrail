@@ -75,7 +75,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			final String message = "Hello, World!";
 
-			sender.getUpStreamDataHandler().handleData(message);
+			sender.getUpStreamDataFlow().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -109,7 +109,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			final String message = "Hello, World!";
 
-			sender.getUpStreamDataHandler().handleData(message);
+			sender.getUpStreamDataFlow().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -144,7 +144,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			final String message = "Hello, World!";
 
-			sender.getUpStreamDataHandler().handleData(message);
+			sender.getUpStreamDataFlow().handleData(message);
 
 			assertEquals(message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -178,7 +178,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			final String message = "Hello, World!";
 
-			sender.getUpStreamDataHandler().handleData(message);
+			sender.getUpStreamDataFlow().handleData(message);
 
 			assertEquals("RESENT " + message, futureResponse.get(10, TimeUnit.SECONDS));
 		} catch (Exception e) {
@@ -215,7 +215,7 @@ public class TestEcosystemFactory extends TestCase {
 			final List<Bytes> transformed = serialization.getEncoder().transform(message);
 
 			assertEquals(1, transformed.size());
-			sender.getUpStreamDataHandler().handleData(transformed.get(0));
+			sender.getUpStreamDataFlow().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -258,7 +258,7 @@ public class TestEcosystemFactory extends TestCase {
 
 			assertEquals(1, transformed.size());
 
-			sender.getUpStreamDataHandler().handleData(transformed.get(0));
+			sender.getUpStreamDataFlow().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -300,7 +300,7 @@ public class TestEcosystemFactory extends TestCase {
 			final List<Bytes> transformed = serialization.getEncoder().transform(message);
 
 			assertEquals(1, transformed.size());
-			sender.getUpStreamDataHandler().handleData(transformed.get(0));
+			sender.getUpStreamDataFlow().handleData(transformed.get(0));
 
 			final Bytes received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(received);
@@ -343,7 +343,7 @@ public class TestEcosystemFactory extends TestCase {
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
 			assertEquals(1, transformed.size());
-			sender.getUpStreamDataHandler().handleData(transformed.get(0));
+			sender.getUpStreamDataFlow().handleData(transformed.get(0));
 
 			final byte[] received = futureResponse.get(10, TimeUnit.SECONDS);
 			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
@@ -394,7 +394,7 @@ public class TestEcosystemFactory extends TestCase {
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {
-				sender.getUpStreamDataHandler().handleData(transformed.get(0));
+				sender.getUpStreamDataFlow().handleData(transformed.get(0));
 			}
 
 			System.err.println("Sending " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");

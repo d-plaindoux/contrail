@@ -97,11 +97,6 @@ public class TestFileClient extends TestCase {
 					throw new DataFlowCloseException(e);
 				}
 			}
-
-			@Override
-			public void handleLost() throws DataFlowCloseException {
-				handleClose();
-			}
 		});
 
 		final UpStreamDataFlowFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {

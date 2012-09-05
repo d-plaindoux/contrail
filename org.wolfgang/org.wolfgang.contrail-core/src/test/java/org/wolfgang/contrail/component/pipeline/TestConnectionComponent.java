@@ -53,7 +53,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
-		initial.getUpStreamDataHandler().handleData("3");
+		initial.getUpStreamDataFlow().handleData("3");
 		assertEquals("9", stringReference.get());
 
 		initialConnection.dispose();
@@ -71,7 +71,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
-		initial.getUpStreamDataHandler().handleData("0");
+		initial.getUpStreamDataFlow().handleData("0");
 		assertEquals("0", stringReference.get());
 
 		initialConnection.dispose();
@@ -110,7 +110,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			initial.closeUpStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -133,7 +133,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			connection.closeUpStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -156,7 +156,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			terminal.closeUpStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -179,7 +179,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			initial.closeDownStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -202,7 +202,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			connection.closeDownStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -225,7 +225,7 @@ public class TestConnectionComponent extends TestCase {
 
 		try {
 			terminal.closeDownStream();
-			initial.getUpStreamDataHandler().handleData("0");
+			initial.getUpStreamDataFlow().handleData("0");
 			fail();
 		} catch (DataFlowCloseException h) {
 			// Ok
@@ -247,7 +247,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
 
 		try {
-			initial.getUpStreamDataHandler().handleData("NaN");
+			initial.getUpStreamDataFlow().handleData("NaN");
 			fail();
 		} catch (DataFlowException h) {
 			assertTrue(h.getCause().getCause() instanceof NumberFormatException);
@@ -262,7 +262,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		try {
-			connection.getUpStreamDataHandler().handleData("123");
+			connection.getUpStreamDataFlow().handleData("123");
 			fail();
 		} catch (DataFlowException e) {
 			// OK
@@ -273,7 +273,7 @@ public class TestConnectionComponent extends TestCase {
 	public void testFailure03() {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 		try {
-			connection.getDownStreamDataHandler().handleData(123);
+			connection.getDownStreamDataFlow().handleData(123);
 			fail();
 		} catch (DataFlowException e) {
 			// OK
@@ -290,7 +290,7 @@ public class TestConnectionComponent extends TestCase {
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 
 		try {
-			initial.getUpStreamDataHandler().handleData("123");
+			initial.getUpStreamDataFlow().handleData("123");
 			fail();
 		} catch (DataFlowException e) {
 			// OK

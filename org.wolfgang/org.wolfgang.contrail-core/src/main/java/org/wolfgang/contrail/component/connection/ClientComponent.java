@@ -64,13 +64,13 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	}
 
 	@Override
-	public UpStreamDataFlow<byte[]> getUpStreamDataHandler() {
-		return getDestinationComponentLink().getDestinationComponent().getUpStreamDataHandler();
+	public UpStreamDataFlow<byte[]> getUpStreamDataFlow() {
+		return getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
 	}
 
 	@Override
-	public DownStreamDataFlow<byte[]> getDownStreamDataHandler() {
-		return getSourceComponentLink().getSourceComponent().getDownStreamDataHandler();
+	public DownStreamDataFlow<byte[]> getDownStreamDataFlow() {
+		return getSourceComponentLink().getSourceComponent().getDownStreamDataFlow();
 	}
 
 	@Override

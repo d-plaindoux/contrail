@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -143,11 +144,6 @@ public class NetServer implements Server {
 									throw new DataFlowCloseException(e);
 								}
 							}
-
-							@Override
-							public void handleLost() throws DataFlowCloseException {
-								handleClose();
-							}
 						});
 
 						final InitialComponent<byte[], byte[]> initialComponent = Components.initial(dataReceiver);
@@ -157,15 +153,20 @@ public class NetServer implements Server {
 							public Void call() throws Exception {
 								final byte[] buffer = new byte[1024 * 8];
 								try {
-									int len = client.getInputStream().read(buffer);
-									while (len != -1) {
-										initialComponent.getUpStreamDataHandler().handleData(Arrays.copyOf(buffer, len));
-										len = client.getInputStream().read(buffer);
+									int len;
+									while ((len = client.getInputStream().read(buffer)) != -1) {
+										initialComponent.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
 									}
-									return null;
+								} catch (SocketException e) {
+									// Nothings
+								} catch (Exception e) {
+									e.printStackTrace();
+									throw e;
 								} finally {
-									initialComponent.getUpStreamDataHandler().handleClose();
+									initialComponent.getUpStreamDataFlow().handleClose();
 								}
+								
+								return null;
 							}
 						};
 
@@ -210,7 +211,7 @@ public class NetServer implements Server {
 
 	@Override
 	public void close() throws IOException {
-		final ServerSocket[] allServers = servers.toArray(new ServerSocket[servers.size()]);
+		final ServerSocket[] allServers = servers.toArray(new ServerSocket[0]);
 
 		for (ServerSocket server : allServers) {
 			try {

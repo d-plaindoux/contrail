@@ -40,7 +40,7 @@ public interface DestinationComponent<U, D> extends Component {
 	 * 
 	 * @return an upstream data handler
 	 */
-	UpStreamDataFlow<U> getUpStreamDataHandler();
+	UpStreamDataFlow<U> getUpStreamDataFlow();
 
 	/**
 	 * Method called whether a connection must be performed

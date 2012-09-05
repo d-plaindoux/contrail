@@ -39,7 +39,7 @@ public interface SourceComponent<U, D> extends Component {
 	 * 
 	 * @return a down stream data channel (never <code>null</code>)
 	 */
-	DownStreamDataFlow<D> getDownStreamDataHandler();
+	DownStreamDataFlow<D> getDownStreamDataFlow();
 
 	/**
 	 * Method called whether a connection must be performed

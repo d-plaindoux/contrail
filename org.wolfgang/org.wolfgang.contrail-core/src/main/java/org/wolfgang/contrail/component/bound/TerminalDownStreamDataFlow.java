@@ -69,20 +69,6 @@ public class TerminalDownStreamDataFlow<D> extends DownStreamDataFlowAdapter<D> 
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		try {
-			this.component.getDownStreamDataHandler().handleClose();
-		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
-		}
+		this.component.closeDownStream();
 	}
-
-	@Override
-	public void handleLost() throws DataFlowCloseException {
-		try {
-			this.component.getDownStreamDataHandler().handleLost();
-		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
-		}
-	}
-
 }

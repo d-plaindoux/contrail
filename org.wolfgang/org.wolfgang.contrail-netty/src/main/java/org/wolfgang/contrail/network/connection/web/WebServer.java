@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.network.connection.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
@@ -38,6 +39,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -63,10 +65,9 @@ public final class WebServer extends NIOServer {
 		 * Prepare the ecosystem
 		 */
 
-		final EcosystemImpl ecosystem = new EcosystemImpl();
-		final List<DownStreamDataFlow<String>> components = new ArrayList<DownStreamDataFlow<String>>();
-
 		final UpStreamDataFlowFactory<String, String> dataFactory = new UpStreamDataFlowFactory<String, String>() {
+			final List<DownStreamDataFlow<String>> components = Collections.synchronizedList(new ArrayList<DownStreamDataFlow<String>>());
+
 			@Override
 			public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) {
 				components.add(component);
@@ -84,20 +85,16 @@ public final class WebServer extends NIOServer {
 						component.handleClose();
 						components.remove(component);
 					}
-
-					@Override
-					public void handleLost() throws DataFlowCloseException {
-						component.handleLost();
-						components.remove(component);
-					}
 				});
 			}
 		};
 
 		final ComponentFactory destinationComponentFactory = new ComponentFactory() {
+			final ComponentLinkManager linkManager = new ComponentLinkManagerImpl();
+
 			@Override
 			public ComponentLinkManager getLinkManager() {
-				return ecosystem.getLinkManager();
+				return linkManager;
 			}
 
 			@Override
@@ -110,10 +107,7 @@ public final class WebServer extends NIOServer {
 			}
 		};
 
-		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("web.socket", String.class, String.class);
-		ecosystem.addBinder(key, destinationComponentFactory);
-
-		return new WebServer("0.0.0.0", port, ecosystem.getFactory(key));
+		return new WebServer("0.0.0.0", port, destinationComponentFactory);
 	}
 
 	/**

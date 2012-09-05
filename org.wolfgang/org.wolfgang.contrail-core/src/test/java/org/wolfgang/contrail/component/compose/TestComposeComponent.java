@@ -77,7 +77,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
-		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}
@@ -111,7 +111,7 @@ public class TestComposeComponent extends TestCase {
 		Components.compose(componentLinkManagerImpl, components);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
-		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}
@@ -147,7 +147,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(initialComponent, compose);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
-		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}
@@ -183,7 +183,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(compose, terminalComponent);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
-		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}
@@ -221,7 +221,7 @@ public class TestComposeComponent extends TestCase {
 		componentLinkManagerImpl.connect(compose1, compose2);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
-		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
+		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
 
 		assertEquals(source, terminalFuture.get());
 	}

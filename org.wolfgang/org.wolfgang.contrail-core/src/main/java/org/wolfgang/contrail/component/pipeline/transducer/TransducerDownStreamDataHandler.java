@@ -69,7 +69,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataFlow<U> {
 			try {
 				final List<D> transform = streamXducer.transform(data);
 				for (D value : transform) {
-					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -87,7 +87,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataFlow<U> {
 			try {
 				final List<D> transform = streamXducer.finish();
 				for (D value : transform) {
-					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataHandler().handleData(value);
+					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(value);
 				}
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
@@ -97,10 +97,5 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataFlow<U> {
 				throw new DataFlowCloseException(message, e);
 			}
 		}
-	}
-
-	@Override
-	public void handleLost() throws DataFlowCloseException {
-		// Nothing to do
 	}
 }

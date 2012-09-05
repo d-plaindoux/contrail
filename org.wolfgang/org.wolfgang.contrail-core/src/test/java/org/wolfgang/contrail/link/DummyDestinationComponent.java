@@ -52,14 +52,7 @@ public class DummyDestinationComponent extends TerminalComponent<Void, Void> {
 
 					@Override
 					public void handleClose() throws DataFlowCloseException {
-						super.handleClose();
 						sender.handleClose();
-					}
-
-					@Override
-					public void handleLost() throws DataFlowCloseException {
-						super.handleLost();
-						sender.handleLost();
 					}
 				};
 			}

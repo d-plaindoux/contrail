@@ -71,11 +71,6 @@ public class EchoComponent extends TerminalComponent {
 				public void handleClose() throws DataFlowCloseException {
 					sender.handleClose();
 				}
-
-				@Override
-				public void handleLost() throws DataFlowCloseException {
-					sender.handleLost();
-				}
 			});
 		}
 	}

@@ -156,12 +156,12 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	}
 
 	@Override
-	public UpStreamDataFlow<Event> getUpStreamDataHandler() {
+	public UpStreamDataFlow<Event> getUpStreamDataFlow() {
 		return this.streamStation;
 	}
 
 	@Override
-	public DownStreamDataFlow<Event> getDownStreamDataHandler() {
+	public DownStreamDataFlow<Event> getDownStreamDataFlow() {
 		return this.streamStation;
 	}
 
@@ -184,13 +184,13 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 		final DestinationComponentLink<Event, Event> destinationComponentLink = this.destinationLinks.get(componentId);
 
 		if (!ComponentLinkFactory.isUndefined(destinationComponentLink)) {
-			return destinationComponentLink.getDestinationComponent().getUpStreamDataHandler();
+			return destinationComponentLink.getDestinationComponent().getUpStreamDataFlow();
 		}
 
 		final SourceComponentLink<Event, Event> sourceComponentLink = this.sourceLinks.get(componentId);
 
 		if (!ComponentLinkFactory.isUndefined(sourceComponentLink)) {
-			return sourceComponentLink.getSourceComponent().getDownStreamDataHandler();
+			return sourceComponentLink.getSourceComponent().getDownStreamDataFlow();
 		}
 
 		throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
