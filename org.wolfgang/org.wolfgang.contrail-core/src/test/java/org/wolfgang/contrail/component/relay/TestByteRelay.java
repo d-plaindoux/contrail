@@ -28,6 +28,7 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -47,7 +48,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -68,7 +69,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -90,7 +91,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -113,7 +114,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -133,7 +134,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -154,7 +155,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 			new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -174,7 +175,7 @@ public class TestByteRelay extends TestCase {
 
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
-			final ByteArraySourceComponent source = new ByteArraySourceComponent(output);
+			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 
 			source.getUpStreamDataHandler().handleData("Hello,".getBytes());
 
@@ -202,11 +203,11 @@ public class TestByteRelay extends TestCase {
 	@Test
 	public void testAlreadyConnected01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
-		final ByteArraySourceComponent source1 = new ByteArraySourceComponent(null);
+		final InitialComponent<byte[], byte[]> source1 = ByteArraySourceComponent.create(null);
 
 		try {
 			new ComponentLinkManagerImpl().connect(source1, destination);
@@ -221,7 +222,7 @@ public class TestByteRelay extends TestCase {
 	@Test
 	public void testAlreadyConnected02() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 
@@ -240,7 +241,7 @@ public class TestByteRelay extends TestCase {
 	@Test
 	public void testNotConnected01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 		interconnection.dispose();
@@ -256,7 +257,7 @@ public class TestByteRelay extends TestCase {
 	@Test
 	public void testNotConnected02() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {
 
-		final ByteArraySourceComponent source = new ByteArraySourceComponent(null);
+		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
 		final ComponentLink interconnection = new ComponentLinkManagerImpl().connect(source, destination);
 		interconnection.dispose();

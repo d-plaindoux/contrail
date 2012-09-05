@@ -29,8 +29,7 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.factory.BoundComponents;
-import org.wolfgang.contrail.component.factory.CompositionComponents;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
@@ -56,7 +55,7 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -65,9 +64,9 @@ public class TestComposeComponent extends TestCase {
 		});
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final Component composedComponent = CompositionComponents.compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
@@ -89,7 +88,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -97,7 +96,7 @@ public class TestComposeComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
@@ -109,7 +108,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		CompositionComponents.compose(componentLinkManagerImpl, components);
+		Components.compose(componentLinkManagerImpl, components);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataHandler().handleData(sourceFuture.get());
@@ -123,7 +122,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -131,7 +130,7 @@ public class TestComposeComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
@@ -143,7 +142,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		final Component compose = CompositionComponents.compose(componentLinkManagerImpl, components);
+		final Component compose = Components.compose(componentLinkManagerImpl, components);
 
 		componentLinkManagerImpl.connect(initialComponent, compose);
 
@@ -159,7 +158,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -167,7 +166,7 @@ public class TestComposeComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
@@ -179,7 +178,7 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		final Component compose = CompositionComponents.compose(componentLinkManagerImpl, components);
+		final Component compose = Components.compose(componentLinkManagerImpl, components);
 
 		componentLinkManagerImpl.connect(compose, terminalComponent);
 
@@ -195,7 +194,7 @@ public class TestComposeComponent extends TestCase {
 		final FutureResponse<byte[]> sourceFuture = new FutureResponse<byte[]>();
 		final FutureResponse<String> terminalFuture = new FutureResponse<String>();
 
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>() {
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
@@ -203,7 +202,7 @@ public class TestComposeComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>() {
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				terminalFuture.setValue(data);
@@ -216,8 +215,8 @@ public class TestComposeComponent extends TestCase {
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
 
-		final Component compose1 = CompositionComponents.compose(componentLinkManagerImpl, components1);
-		final Component compose2 = CompositionComponents.compose(componentLinkManagerImpl, components2);
+		final Component compose1 = Components.compose(componentLinkManagerImpl, components1);
+		final Component compose2 = Components.compose(componentLinkManagerImpl, components2);
 
 		componentLinkManagerImpl.connect(compose1, compose2);
 
@@ -234,10 +233,10 @@ public class TestComposeComponent extends TestCase {
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<byte[], byte[]> initialComponent = BoundComponents.initial(new DownStreamDataFlowAdapter<byte[]>());
-		final Component composedComponent = CompositionComponents.compose(componentLinkManagerImpl, pipelines);
+		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>());
+		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
 
-		final TerminalComponent<String, String> terminalComponent = new TerminalComponent<String, String>(new UpStreamDataFlowAdapter<String>());
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>());
 
 		componentLinkManagerImpl.connect(initialComponent, composedComponent);
 		componentLinkManagerImpl.connect(composedComponent, terminalComponent);

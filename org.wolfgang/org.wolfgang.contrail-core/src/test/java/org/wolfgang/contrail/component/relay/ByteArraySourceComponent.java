@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -37,15 +38,15 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ByteArraySourceComponent extends InitialComponent<byte[], byte[]> {
+public class ByteArraySourceComponent {
 
 	/**
 	 * Constructor
 	 * 
 	 * @throws CannotCreateDataFlowException
 	 */
-	public ByteArraySourceComponent(final OutputStream outputStream) throws CannotCreateDataFlowException {
-		super(new DownStreamDataFlowFactory<byte[], byte[]>() {
+	public static InitialComponent<byte[], byte[]> create(final OutputStream outputStream) throws CannotCreateDataFlowException {
+		return Components.initial(new DownStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public DownStreamDataFlow<byte[]> create(UpStreamDataFlow<byte[]> initial) {
 				return DataFlows.<byte[]> closable(new DownStreamDataFlowAdapter<byte[]>() {

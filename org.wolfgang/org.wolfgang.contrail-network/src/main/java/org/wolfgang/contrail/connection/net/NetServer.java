@@ -38,6 +38,7 @@ import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.Server;
@@ -149,7 +150,7 @@ public class NetServer implements Server {
 							}
 						});
 
-						final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(dataReceiver);
+						final InitialComponent<byte[], byte[]> initialComponent = Components.initial(dataReceiver);
 
 						final Callable<Void> reader = new Callable<Void>() {
 							@Override

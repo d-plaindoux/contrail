@@ -29,6 +29,7 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -49,8 +50,8 @@ public class TestConcurrentComponent extends TestCase {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataFlowAdapter<Integer>());
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataFlowAdapter<Integer>() {
+		final InitialComponent<Integer, Integer> initialComponent = Components.initial(new DownStreamDataFlowAdapter<Integer>());
+		final TerminalComponent<Integer, Integer> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
@@ -91,7 +92,7 @@ public class TestConcurrentComponent extends TestCase {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
 		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
-		final InitialComponent<Integer, Integer> initialComponent = new InitialComponent<Integer, Integer>(new DownStreamDataFlowAdapter<Integer>() {
+		final InitialComponent<Integer, Integer> initialComponent = Components.initial(new DownStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];
 
@@ -105,7 +106,7 @@ public class TestConcurrentComponent extends TestCase {
 			}
 		});
 
-		final TerminalComponent<Integer, Integer> terminalComponent = new TerminalComponent<Integer, Integer>(new UpStreamDataFlowAdapter<Integer>());
+		final TerminalComponent<Integer, Integer> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<Integer>());
 		final ParallelDestinationComponent<Integer, Integer> concurrentSourcePipelineComponent = new ParallelDestinationComponent<Integer, Integer>();
 
 		componentLinkManagerImpl.connect(initialComponent, concurrentSourcePipelineComponent);

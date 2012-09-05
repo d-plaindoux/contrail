@@ -37,7 +37,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.factory.BoundComponents;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.net.NetServer;
 import org.wolfgang.contrail.ecosystem.Ecosystem;
@@ -72,7 +72,7 @@ public class TestNetworkEcosystem extends TestCase {
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
 					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
 					try {
-						final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
 							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
 								return DataFlows.echoFrom(component);
@@ -119,7 +119,7 @@ public class TestNetworkEcosystem extends TestCase {
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
 					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
 					try {
-						final Component terminalComponent = BoundComponents.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
 							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
 								return DataFlows.echoFrom(component);
@@ -137,7 +137,7 @@ public class TestNetworkEcosystem extends TestCase {
 			// ----------------------------------------------------------------------------------------------------
 
 			final FutureResponse<String> response = new FutureResponse<String>();
-			final TerminalComponent<byte[], byte[]> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<byte[]>() {
+			final TerminalComponent<byte[], byte[]> sender = Components.terminal(new UpStreamDataFlowAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataFlowException {
 					response.setValue(new String(data));
@@ -163,7 +163,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 			final FutureResponse<String> response = new FutureResponse<String>();
-			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+			final TerminalComponent<String, String> sender = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataFlowException {
 					response.setValue(new String(data));
@@ -221,7 +221,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 			final FutureResponse<String> response = new FutureResponse<String>();
-			final TerminalComponent<byte[], byte[]> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<byte[]>() {
+			final TerminalComponent<byte[], byte[]> sender = Components.terminal(new UpStreamDataFlowAdapter<byte[]>() {
 				@Override
 				public void handleData(byte[] data) throws DataFlowException {
 					response.setValue(new String(data));
@@ -255,7 +255,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 			final FutureResponse<String> response = new FutureResponse<String>();
-			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+			final TerminalComponent<String, String> sender = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataFlowException {
 					response.setValue(data);
@@ -293,7 +293,7 @@ public class TestNetworkEcosystem extends TestCase {
 			for (int i = 0; i < responses.length; i++) {
 				responses[i] = new FutureResponse<String>();
 				final FutureResponse<String> response1 = responses[i];
-				final TerminalComponent<String, String> sender1 = BoundComponents.terminal(new UpStreamDataFlowFactory<String, String>() {
+				final TerminalComponent<String, String> sender1 = Components.terminal(new UpStreamDataFlowFactory<String, String>() {
 					@Override
 					public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) throws CannotCreateDataFlowException {
 						return new UpStreamDataFlowAdapter<String>() {
@@ -340,7 +340,7 @@ public class TestNetworkEcosystem extends TestCase {
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 
-			final TerminalComponent<String, String> sender = BoundComponents.terminal(new UpStreamDataFlowAdapter<String>() {
+			final TerminalComponent<String, String> sender = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 				@Override
 				public void handleData(String data) throws DataFlowException {
 					if (futureReference.incrementAndGet() == nbEventSent) {
@@ -409,7 +409,7 @@ public class TestNetworkEcosystem extends TestCase {
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {
-				final TerminalComponent<String, String> sender = BoundComponents.terminal(receiver);
+				final TerminalComponent<String, String> sender = Components.terminal(receiver);
 				factory.getLinkManager().connect(factory.create(), sender);
 				sender.getDownStreamDataHandler().handleData(message);
 			}

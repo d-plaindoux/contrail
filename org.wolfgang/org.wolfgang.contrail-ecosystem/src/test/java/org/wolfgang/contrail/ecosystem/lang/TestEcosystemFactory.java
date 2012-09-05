@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
@@ -68,7 +69,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+			final InitialComponent<String, String> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -102,7 +103,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+			final InitialComponent<String, String> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -137,7 +138,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+			final InitialComponent<String, String> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -171,7 +172,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<String, String> sender = new InitialComponent<String, String>(dataReceiver);
+			final InitialComponent<String, String> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -205,7 +206,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+			final InitialComponent<Bytes, Bytes> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -247,7 +248,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+			final InitialComponent<Bytes, Bytes> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -290,7 +291,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<Bytes, Bytes> sender = new InitialComponent<Bytes, Bytes>(dataReceiver);
+			final InitialComponent<Bytes, Bytes> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -332,7 +333,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<byte[], byte[]> sender = new InitialComponent<byte[], byte[]>(dataReceiver);
+			final InitialComponent<byte[], byte[]> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -379,7 +380,7 @@ public class TestEcosystemFactory extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
-			final InitialComponent<byte[], byte[]> sender = new InitialComponent<byte[], byte[]>(dataReceiver);
+			final InitialComponent<byte[], byte[]> sender = Components.initial(dataReceiver);
 
 			ecosystem.getLinkManager().connect(sender, factory.create());
 
@@ -389,7 +390,7 @@ public class TestEcosystemFactory extends TestCase {
 			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
 
 			assertEquals(1, transformed.size());
-		
+
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {

@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.factory.CompositionComponents;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -109,12 +109,12 @@ class RouterSourceServerUtils extends TestCase {
 					// Coercion component
 					final Component coercionTransducer = new CoercionTransducerFactory<Event>(Event.class).createComponent();
 					// Loggers 01 & 02
-					final Component log01 = CompositionComponents.compose(linkManager, new LoggerSourceComponent("01.UP"), new LoggerDestinationComponent("01.DOWN"));
-					final Component log02 = CompositionComponents.compose(linkManager, new LoggerSourceComponent("02.UP"), new LoggerDestinationComponent("02.DOWN"));
+					final Component log01 = Components.compose(linkManager, new LoggerSourceComponent("01.UP"), new LoggerDestinationComponent("01.DOWN"));
+					final Component log02 = Components.compose(linkManager, new LoggerSourceComponent("02.UP"), new LoggerDestinationComponent("02.DOWN"));
 					// Source acceptance
 					final SourceAcceptanceComponent acceptanceComponent = new SourceAcceptanceComponent();
 					// Composed components
-					return CompositionComponents.compose(linkManager, payLoadTransducer, log01, serialisationTransducer, log02, coercionTransducer, acceptanceComponent, component);
+					return Components.compose(linkManager, payLoadTransducer, log01, serialisationTransducer, log02, coercionTransducer, acceptanceComponent, component);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (Exception e) {

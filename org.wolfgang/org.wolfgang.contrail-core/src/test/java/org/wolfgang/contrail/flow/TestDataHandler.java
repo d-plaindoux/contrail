@@ -24,13 +24,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 
 /**
  * <code>TestDataHandler</code>
@@ -159,7 +152,7 @@ public class TestDataHandler extends TestCase {
 			// OK
 		}
 	}
-	
+
 	@Test
 	public void testReverse01() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
@@ -174,9 +167,8 @@ public class TestDataHandler extends TestCase {
 		final String message = "Hello,  World!";
 		handler.handleData(message);
 		assertEquals(message, future.get());
-		
-	}
 
+	}
 
 	@Test
 	public void testReverse02() throws DataFlowException, InterruptedException, ExecutionException {
@@ -198,9 +190,8 @@ public class TestDataHandler extends TestCase {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
-		
-	}
 
+	}
 
 	@Test
 	public void testReverse03() throws DataFlowException, InterruptedException, ExecutionException {
@@ -222,9 +213,8 @@ public class TestDataHandler extends TestCase {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
-		
-	}
 
+	}
 
 	@Test
 	public void testReverse04() throws DataFlowException, InterruptedException, ExecutionException {
@@ -240,9 +230,8 @@ public class TestDataHandler extends TestCase {
 		final String message = "Hello,  World!";
 		handler.handleData(message);
 		assertEquals(message, future.get());
-		
-	}
 
+	}
 
 	@Test
 	public void testReverse05() throws DataFlowException, InterruptedException, ExecutionException {
@@ -264,9 +253,8 @@ public class TestDataHandler extends TestCase {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
-		
-	}
 
+	}
 
 	@Test
 	public void testReverse06() throws DataFlowException, InterruptedException, ExecutionException {
@@ -288,6 +276,6 @@ public class TestDataHandler extends TestCase {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
-		
+
 	}
 }

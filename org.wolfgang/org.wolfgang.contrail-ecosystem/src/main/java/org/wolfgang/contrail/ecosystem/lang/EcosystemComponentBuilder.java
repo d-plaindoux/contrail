@@ -22,7 +22,7 @@ import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.factory.CompositionComponents;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
@@ -84,7 +84,7 @@ public class EcosystemComponentBuilder implements CodeValueVisitor<Component, Ec
 		}
 
 		try {
-			return CompositionComponents.compose(linkManager, components);
+			return Components.compose(linkManager, components);
 		} catch (ComponentConnectionRejectedException e) {
 			throw new EcosystemBuilderException(e);
 		}

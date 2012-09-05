@@ -51,6 +51,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFa
 import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
@@ -236,7 +237,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				if (!future.isSuccess()) {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
-					final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(emitter);
+					final InitialComponent<String, String> initialComponent = Components.initial(emitter);
 					factory.getLinkManager().connect(initialComponent, factory.create());
 					try {
 						receivers.put(identifier, initialComponent.getUpStreamDataHandler());

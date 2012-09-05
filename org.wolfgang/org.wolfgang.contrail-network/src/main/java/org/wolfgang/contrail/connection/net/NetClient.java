@@ -35,6 +35,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
@@ -143,7 +144,7 @@ public class NetClient implements Client {
 			}
 		});
 
-		final InitialComponent<byte[], byte[]> component = new InitialComponent<byte[], byte[]>(dataReceiver);
+		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

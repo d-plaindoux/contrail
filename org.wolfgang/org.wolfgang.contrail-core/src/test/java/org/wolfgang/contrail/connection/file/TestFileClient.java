@@ -35,6 +35,7 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.InitialUpStreamDataFlow;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -106,8 +107,8 @@ public class TestFileClient extends TestCase {
 		final UpStreamDataFlowFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
-				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
-				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiver);
+				final InitialComponent<byte[], byte[]> initialComponent = Components.initial(initialReceiver);
+				final TerminalComponent<byte[], byte[]> terminalComponent = Components.terminal(terminalReceiver);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
@@ -158,8 +159,8 @@ public class TestFileClient extends TestCase {
 		final UpStreamDataFlowFactory<byte[], byte[]> destinationComponentFactory = new UpStreamDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
-				final InitialComponent<byte[], byte[]> initialComponent = new InitialComponent<byte[], byte[]>(initialReceiver);
-				final TerminalComponent<byte[], byte[]> terminalComponent = new TerminalComponent<byte[], byte[]>(terminalReceiverFactory);
+				final InitialComponent<byte[], byte[]> initialComponent = Components.initial(initialReceiver);
+				final TerminalComponent<byte[], byte[]> terminalComponent = Components.terminal(terminalReceiverFactory);
 				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);

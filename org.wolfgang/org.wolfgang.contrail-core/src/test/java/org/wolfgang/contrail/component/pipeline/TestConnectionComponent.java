@@ -47,7 +47,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -65,7 +65,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -83,7 +83,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -102,7 +102,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -125,7 +125,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -148,7 +148,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -171,7 +171,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -194,7 +194,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -217,7 +217,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -240,7 +240,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
@@ -285,7 +285,7 @@ public class TestConnectionComponent extends TestCase {
 		final TransducerComponent<String, String, Integer, Integer> connection = new TransducerComponent<String, String, Integer, Integer>(new StringToInteger(), new IntegerToString());
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
-		final InitialComponent<String, String> initial = new StringSourceComponent(stringReference);
+		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 
 		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
 

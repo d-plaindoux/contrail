@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.factory.CompositionComponents;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
@@ -115,13 +115,13 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		final InitialComponent<String, String> initialComponent = new InitialComponent<String, String>(receiver);
+		final InitialComponent<String, String> initialComponent = Components.initial(receiver);
 		final UnitEcosystemKey namedKey = EcosystemKeyFactory.named("test");
 		final ComponentFactory factory = integrator.getFactory(namedKey);
 
 		final String message = "Hello, World!";
 
-		CompositionComponents.compose(componentsLinkManagerImpl, initialComponent, factory.create());
+		Components.compose(componentsLinkManagerImpl, initialComponent, factory.create());
 
 		initialComponent.getUpStreamDataHandler().handleData(message);
 

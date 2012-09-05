@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
 /**
@@ -37,7 +38,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink01() throws CannotCreateDataFlowException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
-			final DummySourceComponent source = new DummySourceComponent();
+			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
 			linkManager.connect(source, destination);
 		} catch (ComponentConnectionRejectedException e) {
@@ -49,7 +50,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink02() throws CannotCreateDataFlowException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
-			final DummySourceComponent source = new DummySourceComponent();
+			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
 			final ComponentLink connect = linkManager.connect(source, destination);
 			try {
@@ -66,7 +67,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink03() throws CannotCreateDataFlowException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
-			final DummySourceComponent source = new DummySourceComponent();
+			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
 			final ComponentLink connect = linkManager.connect(source, destination);
 
@@ -90,7 +91,7 @@ public class TestComponentLink extends TestCase {
 	public void testLink04() throws CannotCreateDataFlowException {
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 		try {
-			final DummySourceComponent source = new DummySourceComponent();
+			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
 			final ComponentLink connect = linkManager.connect(source, destination);
 

@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.pipeline;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
@@ -31,13 +32,13 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringSourceComponent extends InitialComponent<String, String> {
+public class StringSourceComponent {
 
 	/**
 	 * Constructor
 	 */
-	public StringSourceComponent(final AtomicReference<String> reference) {
-		super(DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
+	public static InitialComponent<String, String> create(final AtomicReference<String> reference) {
+		return Components.initial(DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
 			public void handleData(String data) throws DataFlowException {
 				reference.set(data);
 			}

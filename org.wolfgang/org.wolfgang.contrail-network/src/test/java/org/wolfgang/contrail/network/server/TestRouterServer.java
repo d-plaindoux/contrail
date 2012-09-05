@@ -40,6 +40,7 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
@@ -103,7 +104,7 @@ public class TestRouterServer extends TestCase {
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 		network01.filter(terminalComponent01.getComponentId(), reference01);
 
@@ -146,7 +147,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 		RouterSourceServerUtils.client(network01, manager01, new URI("tcp://localhost:6667"), reference02);
 		// ------------------------------------------------------------------------------------------------
@@ -163,7 +164,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network02 = RouterFactory.create(reference02);
 		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent02 = new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent02 = Components.terminal(new Receiver(reference02, futureResponse));
 		manager02.connect(network02, terminalComponent02);
 		network02.filter(terminalComponent02.getComponentId(), reference02);
 		RouterSourceServerUtils.client(network02, manager02, new URI("tcp://localhost:6666"), reference01);
@@ -210,7 +211,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 		RouterSourceServerUtils.client(network01, manager01, new URI("tcp://localhost:6667"), reference02);
 		// ------------------------------------------------------------------------------------------------
@@ -227,7 +228,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network02 = RouterFactory.create(reference02);
 		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent02 = new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent02 = Components.terminal(new Receiver(reference02, futureResponse));
 		manager02.connect(network02, terminalComponent02);
 		network02.filter(terminalComponent02.getComponentId(), reference02);
 		RouterSourceServerUtils.client(network02, manager02, new URI("tcp://localhost:6666"), reference01);
@@ -275,7 +276,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
 		RouterSourceServerUtils.client(network01, manager01, new URI("tcp://localhost:6667"), reference02);
-		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 		network01.filter(terminalComponent01.getComponentId(), reference01);
 		// ------------------------------------------------------------------------------------------------
@@ -286,7 +287,7 @@ public class TestRouterServer extends TestCase {
 		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		RouterSourceServerUtils.client(network02, manager02, new URI("tcp://localhost:6668"), reference03);
-		manager02.connect(network02, new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse)));
+		manager02.connect(network02, Components.terminal(new Receiver(reference02, futureResponse)));
 		// ------------------------------------------------------------------------------------------------
 		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
 		ecosystem02.addBinder(key02, RouterSourceServerUtils.serverBinder(network02, manager02));
@@ -301,7 +302,7 @@ public class TestRouterServer extends TestCase {
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		final ComponentLinkManager manager03 = ecosystem03.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent03 = new TerminalComponent<Event, Event>(new Receiver(reference03, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent03 = Components.terminal(new Receiver(reference03, futureResponse));
 		manager03.connect(network03, terminalComponent03);
 		network03.filter(terminalComponent03.getComponentId(), reference03);
 		// ------------------------------------------------------------------------------------------------
@@ -352,7 +353,7 @@ public class TestRouterServer extends TestCase {
 		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
 		final RouterComponent network01 = RouterFactory.create(reference01);
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent01 = new TerminalComponent<Event, Event>(new Receiver(reference01, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(network01, terminalComponent01);
 		network01.filter(terminalComponent01.getComponentId(), reference01);
 		RouterSourceServerUtils.client(network01, manager01, new URI("tcp://localhost:6667"), reference02, reference03);
@@ -364,7 +365,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network02 = RouterFactory.create(reference02);
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
-		manager02.connect(network02, new TerminalComponent<Event, Event>(new Receiver(reference02, futureResponse)));
+		manager02.connect(network02, Components.terminal(new Receiver(reference02, futureResponse)));
 		RouterSourceServerUtils.client(network02, manager02, new URI("tcp://localhost:6668"), reference03);
 		// ------------------------------------------------------------------------------------------------
 		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
@@ -380,7 +381,7 @@ public class TestRouterServer extends TestCase {
 		final RouterComponent network03 = RouterFactory.create(reference03);
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
-		final TerminalComponent<Event, Event> terminalComponent03 = new TerminalComponent<Event, Event>(new Receiver(reference03, futureResponse));
+		final TerminalComponent<Event, Event> terminalComponent03 = Components.terminal(new Receiver(reference03, futureResponse));
 		manager03.connect(network03, terminalComponent03);
 		network03.filter(terminalComponent03.getComponentId(), reference03);
 		RouterSourceServerUtils.client(network03, manager03, new URI("tcp://localhost:6667"), reference02, reference01);

@@ -23,25 +23,48 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionPipelineComponent;
 import org.wolfgang.contrail.component.pipeline.compose.CompositionSourceComponent;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>CompositionComponents</code>
+ * <code>BoundComponents</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class CompositionComponents {
+public final class Components {
 
 	/**
 	 * Constructor
 	 */
-	private CompositionComponents() {
+	private Components() {
 		super();
+	}
+
+	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlow<D> flow) {
+		return new InitialComponent<U, D>(flow);
+	}
+
+	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+		return new InitialComponent<U, D>(factory);
+	}
+
+	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlow<U> flow) {
+		return new TerminalComponent<U, D>(flow);
+	}
+
+	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+		return new TerminalComponent<U, D>(factory);
 	}
 
 	@SuppressWarnings("rawtypes")
