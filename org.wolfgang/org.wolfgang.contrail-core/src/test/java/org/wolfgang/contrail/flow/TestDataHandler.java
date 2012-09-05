@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.handler;
+package org.wolfgang.contrail.flow;
 
 import java.util.concurrent.ExecutionException;
 
@@ -44,7 +44,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable01() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final DownStreamDataFlow<String> handler = DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
+		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -60,7 +60,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable02() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final DownStreamDataFlow<String> handler = DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
+		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -82,7 +82,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable03() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final DownStreamDataFlow<String> handler = DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
+		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -104,7 +104,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable04() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final UpStreamDataFlow<String> handler = DataFlows.<String> closable(new UpStreamDataFlowAdapter<String>() {
+		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -120,7 +120,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable05() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final UpStreamDataFlow<String> handler = DataFlows.<String> closable(new UpStreamDataFlowAdapter<String>() {
+		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -142,7 +142,7 @@ public class TestDataHandler extends TestCase {
 	public void testClosable06() throws InterruptedException, ExecutionException, DataFlowException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final UpStreamDataFlow<String> handler = DataFlows.<String> closable(new UpStreamDataFlowAdapter<String>() {
+		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -158,5 +158,136 @@ public class TestDataHandler extends TestCase {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
+	}
+	
+	@Test
+	public void testReverse01() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		final String message = "Hello,  World!";
+		handler.handleData(message);
+		assertEquals(message, future.get());
+		
+	}
+
+
+	@Test
+	public void testReverse02() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		handler.handleClose();
+
+		try {
+			final String message = "Hello,  World!";
+			handler.handleData(message);
+			fail();
+		} catch (DataFlowCloseException e) {
+			// OK
+		}
+		
+	}
+
+
+	@Test
+	public void testReverse03() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		handler.handleLost();
+
+		try {
+			final String message = "Hello,  World!";
+			handler.handleData(message);
+			fail();
+		} catch (DataFlowCloseException e) {
+			// OK
+		}
+		
+	}
+
+
+	@Test
+	public void testReverse04() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		final String message = "Hello,  World!";
+		handler.handleData(message);
+		assertEquals(message, future.get());
+		
+	}
+
+
+	@Test
+	public void testReverse05() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		handler.handleClose();
+
+		try {
+			final String message = "Hello,  World!";
+			handler.handleData(message);
+			fail();
+		} catch (DataFlowCloseException e) {
+			// OK
+		}
+		
+	}
+
+
+	@Test
+	public void testReverse06() throws DataFlowException, InterruptedException, ExecutionException {
+		final FutureResponse<String> future = new FutureResponse<String>();
+
+		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				future.setValue(data);
+			}
+		}));
+
+		handler.handleLost();
+
+		try {
+			final String message = "Hello,  World!";
+			handler.handleData(message);
+			fail();
+		} catch (DataFlowCloseException e) {
+			// OK
+		}
+		
 	}
 }
