@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.pipeline.compose;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -47,13 +48,13 @@ public class CompositionComponent extends AbstractComponent implements Component
 
 		assert components.length > 1;
 
-		initialComponent = (SourceComponent<?, ?>) components[0];
+		initialComponent = Coercion.coerce(components[0], SourceComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);
 		}
 
-		terminalComponent = (DestinationComponent<?, ?>) components[components.length - 1];
+		terminalComponent = Coercion.coerce(components[components.length - 1], DestinationComponent.class);
 	}
 
 	@Override

@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.factory;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
@@ -73,13 +74,13 @@ public final class Components {
 			throw new ComponentConnectionRejectedException("TODO");
 		} else if (components.length == 1) {
 			return components[0];
-		} else if (components[0] instanceof PipelineComponent && components[components.length - 1] instanceof PipelineComponent) {
+		} else if (Coercion.canCoerce(components[0], PipelineComponent.class) && Coercion.canCoerce(components[components.length - 1], PipelineComponent.class)) {
 			return new CompositionPipelineComponent(linkManager, components);
-		} else if (components[0] instanceof SourceComponent && components[components.length - 1] instanceof PipelineComponent) {
+		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], PipelineComponent.class)) {
 			return new CompositionSourceComponent(linkManager, components);
-		} else if (components[0] instanceof PipelineComponent && components[components.length - 1] instanceof DestinationComponent) {
+		} else if (Coercion.canCoerce(components[0], PipelineComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionDestinationComponent(linkManager, components);
-		} else if (components[0] instanceof SourceComponent && components[components.length - 1] instanceof DestinationComponent) {
+		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionComponent(linkManager, components);
 		} else {
 			throw new ComponentConnectionRejectedException("TODO");
