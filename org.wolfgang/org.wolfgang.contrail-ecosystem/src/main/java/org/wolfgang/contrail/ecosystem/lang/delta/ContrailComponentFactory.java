@@ -21,7 +21,10 @@ package org.wolfgang.contrail.ecosystem.lang.delta;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.annotation.ContrailArgument;
@@ -46,25 +49,60 @@ public class ContrailComponentFactory {
 	 *            The class
 	 * @return a constructor (Never <code>null</code>)
 	 */
-	private static Constructor<?> getDeclaredConstructor(Class<?> component) {
+	@SuppressWarnings("rawtypes")
+	static Constructor[] getDeclaredConstructor(Class<?> component) {
+		final TreeSet<Constructor> treeSet = new TreeSet<Constructor>(new Comparator<Constructor>() {
+			@Override
+			public int compare(Constructor arg0, Constructor arg1) {
+				int n = arg0.getParameterTypes().length - arg1.getParameterTypes().length;
+				if (n < 0) {
+					return 1;
+				} else if (n > 0) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		final Collection<Constructor> annoted = treeSet;
 		final Constructor<?>[] constructors = component.getConstructors();
+
 		for (Constructor<?> constructor : constructors) {
 			if (constructor.isAnnotationPresent(ContrailConstructor.class)) {
-				return constructor;
+				annoted.add(constructor);
 			}
 		}
 
-		throw new NoSuchMethodError("TODO: Constructor Definition not found");
+		return annoted.toArray(new Constructor[annoted.size()]);
 	}
 
-	private static ContrailArgument getDeclaredParameter(Annotation[] parameterTypes) {
+	static ContrailArgument getDeclaredParameter(Annotation[] parameterTypes) {
 		for (Annotation annotation : parameterTypes) {
 			if (ContrailArgument.class.isAssignableFrom(annotation.annotationType())) {
 				return (ContrailArgument) annotation;
 			}
 		}
 
-		throw new NoSuchMethodError("TODO: Constructor Parameter Definition not found");
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	static Object[] getParameters(CodeValueVisitor converter, Constructor<?> constructor, Map<String, CodeValue> environment) throws Exception {
+		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
+		final Object[] parameters = new Object[parameterTypes.length];
+
+		for (int i = 0; i < parameters.length; i++) {
+			final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
+			if (annotation != null && environment.containsKey(annotation.value())) {
+				final CodeValue codeValue = environment.get(annotation.value());
+				parameters[i] = codeValue.visit(converter);
+			} else {
+				return null;
+			}
+		}
+
+		return parameters;
 	}
 
 	/**
@@ -77,28 +115,35 @@ public class ContrailComponentFactory {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T create(CodeValueVisitor converter, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			final Constructor<?> constructor = getDeclaredConstructor(component);
-			final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
-			final Object[] parameters = new Object[parameterTypes.length];
+			final Constructor[] constructors = getDeclaredConstructor(component);
 
 			environment.put("context", new ConstantValue(ecosystemFactory));
 
-			for (int i = 0; i < parameters.length; i++) {
-				final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
-				if (environment.containsKey(annotation.value())) {
-					final CodeValue codeValue = environment.get(annotation.value());
-					parameters[i] = codeValue.visit(converter);
-				} else {
-					parameters[i] = null;
+			Exception raised = new CannotCreateComponentException("TODO: Constructor Definition not found");
+
+			for (Constructor<?> constructor : constructors) {
+				Object[] parameters;
+
+				try {
+					parameters = getParameters(converter, constructor, environment);
+				} catch (Exception exception) {
+					parameters = null;
+					raised = exception;
+				}
+
+				if (parameters != null) {
+					return (T) constructor.newInstance(parameters);
 				}
 			}
 
-			return (T) constructor.newInstance(parameters);
+			throw raised;
+
+		} catch (CannotCreateComponentException e) {
+			throw e;
 		} catch (InvocationTargetException e) {
 			throw new CannotCreateComponentException(e.getCause());
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}
-
 	}
 }

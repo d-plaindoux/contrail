@@ -405,10 +405,10 @@ public class TestNetworkEcosystem extends TestCase {
 			};
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			final String message = "Hello, World!";
 			long t0 = System.currentTimeMillis();
 
 			for (int i = 0; i < nbEventSent; i++) {
+				final String message = "Hello, World! <" + i + ">";
 				final TerminalComponent<String, String> sender = Components.terminal(senderFactory);
 				factory.getLinkManager().connect(factory.create(), sender);
 				try {

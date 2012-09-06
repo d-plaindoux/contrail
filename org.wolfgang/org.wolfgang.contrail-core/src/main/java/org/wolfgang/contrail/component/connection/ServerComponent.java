@@ -52,7 +52,7 @@ public class ServerComponent extends AbstractComponent {
 	 * @param reference
 	 * @throws URISyntaxException
 	 * @throws ServerNotFoudException
-	 * @throws CannotCreateServerException 
+	 * @throws CannotCreateServerException
 	 */
 	@ContrailConstructor
 	public ServerComponent(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference, @ContrailArgument("flow") ComponentFactoryListener listener)

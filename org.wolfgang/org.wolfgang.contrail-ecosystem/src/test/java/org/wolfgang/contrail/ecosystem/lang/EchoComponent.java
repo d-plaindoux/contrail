@@ -83,8 +83,11 @@ public class EchoComponent extends TerminalComponent {
 	 */
 	@SuppressWarnings("unchecked")
 	@ContrailConstructor
-	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
-		super(new LocalDataReceiverFactory(name));
+	public EchoComponent() throws CannotCreateDataFlowException {
+		super(new LocalDataReceiverFactory(null));
 	}
 
-}
+	@ContrailConstructor
+	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		super(new LocalDataReceiverFactory(name));
+	}}
