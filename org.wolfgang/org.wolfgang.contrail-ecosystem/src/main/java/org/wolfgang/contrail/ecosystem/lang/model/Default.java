@@ -18,25 +18,26 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
- * <code>ExpressionVisitor</code>
+ * <code>Case</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ExpressionVisitor<T, E extends Exception> {
+@XmlRootElement(name = "default")
+public class Default extends ContentExpressions implements Validation {
 
-	T visit(Reference expression) throws E;
+	/**
+	 * Constructor
+	 */
+	public Default() {
+		super();
+	}
 
-	T visit(Atom expression) throws E;
-
-	T visit(Apply expression) throws E;
-
-	T visit(Flow expression) throws E;
-
-	T visit(Function expression) throws E;
-
-	T visit(Router expression) throws E;
-
-	T visit(Switch expression) throws E;
+	@Override
+	public void validate() throws ValidationException {
+		// TODO
+	}
 }

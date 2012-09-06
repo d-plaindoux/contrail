@@ -22,54 +22,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <code>ContentExpressions</code>
+ * <code>Case</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public abstract class ContentExpressions implements Validation {
+@XmlRootElement(name = "case")
+public class Case implements Validation {
 
-	protected List<Expression> expressions;
+	public List<String> filters;
+	public Function caseBody;
 
 	{
-		this.expressions = new ArrayList<Expression>();
+		this.filters = new ArrayList<String>();
 	}
 
 	/**
 	 * Constructor
 	 */
-	ContentExpressions() {
+	public Case() {
 		super();
 	}
 
 	/**
-	 * Return the value of expression
+	 * Return the value of filters
 	 * 
-	 * @return the expression
+	 * @return the filters
 	 */
-	@XmlElements(value = { 
-			@XmlElement(type = Function.class, name = "function"), 
-			@XmlElement(type = Flow.class, name = "flow"), 
-			@XmlElement(type = Apply.class, name = "apply"),
-			@XmlElement(type = Reference.class, name = "ref"), 
-			@XmlElement(type = Router.class, name = "router"), 
-			@XmlElement(type = Switch.class, name = "switch"), 
-			@XmlElement(type = Atom.class, name = "atom") 
-			})
-	public List<Expression> getExpressions() {
-		return expressions;
+	public List<String> getFilters() {
+		return filters;
 	}
 
 	/**
-	 * Set the value of expression
+	 * Set the value of filters
 	 * 
-	 * @param expression
-	 *            the expression to set
+	 * @param filters
+	 *            the filters to set
 	 */
-	public void add(Expression expression) {
-		this.expressions.add(expression);
+	public void add(String filter) {
+		this.filters.add(filter);
+	}
+
+	/**
+	 * Return the value of body
+	 * 
+	 * @return the body
+	 */
+	@XmlElement(name = "function")
+	public Function getBody() {
+		return caseBody;
+	}
+
+	/**
+	 * Set the value of body
+	 * 
+	 * @param body
+	 *            the body to set
+	 */
+	public void setBody(Function body) {
+		this.caseBody = body;
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// TODO
 	}
 }

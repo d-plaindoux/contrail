@@ -36,6 +36,8 @@ import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
 import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
+import org.wolfgang.contrail.ecosystem.lang.model.Router;
+import org.wolfgang.contrail.ecosystem.lang.model.Switch;
 
 /**
  * <code>Interpret</code>
@@ -132,4 +134,15 @@ public class EcosystemInterpreter implements ExpressionVisitor<CodeValue, Ecosys
 		newEnvironment.putAll(environment);
 		return new ClosureValue(this, expression, newEnvironment);
 	}
+
+	@Override
+	public CodeValue visit(Router expression) throws EcosystemInterpretationException {
+		return null;
+	}
+
+	@Override
+	public CodeValue visit(Switch expression) throws EcosystemInterpretationException {
+		return null;
+	}
+
 }
