@@ -121,16 +121,17 @@ public class NetClient implements Client {
 		}
 
 		final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
-			int nbPacket = 0;
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				try {
-					nbPacket++;					
 					client.getOutputStream().write(data);
+				} catch (IOException e) {
+					throw new DataFlowException(e);
+				}
+				try {
 					client.getOutputStream().flush();
 				} catch (IOException e) {
-					System.err.println("Closed after " + nbPacket + " sent and sending " + new String(data));
-					throw new DataFlowException(e);
+					// Ignore this flush exception ...
 				}
 			}
 

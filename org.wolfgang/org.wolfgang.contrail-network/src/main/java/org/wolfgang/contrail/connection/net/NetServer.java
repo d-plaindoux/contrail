@@ -86,7 +86,7 @@ public class NetServer implements Server {
 		};
 		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
 
-		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
+		this.executor = new ThreadPoolExecutor(250, 250, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
 		this.executor.allowCoreThreadTimeOut(true);
 	}
 
@@ -104,6 +104,7 @@ public class NetServer implements Server {
 		super();
 	}
 
+	@Override
 	public Worker bind(final URI uri, final ComponentFactoryListener listener) throws CannotCreateServerException {
 		final ServerSocket serverSocket;
 		try {
@@ -165,7 +166,7 @@ public class NetServer implements Server {
 								} finally {
 									initialComponent.getUpStreamDataFlow().handleClose();
 								}
-								
+
 								return null;
 							}
 						};

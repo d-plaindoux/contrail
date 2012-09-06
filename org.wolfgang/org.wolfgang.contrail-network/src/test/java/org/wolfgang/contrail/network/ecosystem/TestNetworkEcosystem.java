@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -384,9 +387,9 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 
-			final int nbEventSent = 10000;
+			final int nbEventSent = 100;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
-			final AtomicInteger futureReference = new AtomicInteger();
+			final List<String> tokens = Collections.synchronizedList(new ArrayList<String>());
 
 			final UpStreamDataFlowFactory<String, String> senderFactory = new UpStreamDataFlowFactory<String, String>() {
 				@Override
@@ -394,11 +397,13 @@ public class TestNetworkEcosystem extends TestCase {
 					return new UpStreamDataFlowAdapter<String>() {
 						@Override
 						public void handleData(String data) throws DataFlowException {
-							final int value = futureReference.incrementAndGet();
-							if (value == nbEventSent) {
+							downStream.handleClose();
+
+							tokens.remove(data);
+
+							if (tokens.size() == 0) {
 								response.setValue(nbEventSent);
 							}
-							downStream.handleClose();
 						}
 					};
 				}
@@ -409,12 +414,17 @@ public class TestNetworkEcosystem extends TestCase {
 
 			for (int i = 0; i < nbEventSent; i++) {
 				final String message = "Hello, World! <" + i + ">";
+				tokens.add(message);
+			}
+
+			for (int i = 0; i < nbEventSent; i++) {
+				final String message = "Hello, World! <" + i + ">";
 				final TerminalComponent<String, String> sender = Components.terminal(senderFactory);
 				factory.getLinkManager().connect(factory.create(), sender);
 				try {
 					sender.getDownStreamDataHandler().handleData(message);
 				} catch (DataFlowException e) {
-					System.err.println("Error -- > " + e.getMessage());
+					System.err.println("Error while sending " + message);
 				}
 			}
 
