@@ -24,7 +24,7 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>TerminalFactory</code>
@@ -42,7 +42,8 @@ public class TerminalComponentFactory {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings("rawtypes")
-	public static TerminalComponent create(CodeValueVisitor converter, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return ContrailComponentFactory.<TerminalComponent> create(converter, ecosystemFactory, component, environment);
+	public static TerminalComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment)
+			throws CannotCreateComponentException {
+		return ComponentBuilder.<TerminalComponent> create(linkManager, ecosystemFactory, component, environment);
 	}
 }

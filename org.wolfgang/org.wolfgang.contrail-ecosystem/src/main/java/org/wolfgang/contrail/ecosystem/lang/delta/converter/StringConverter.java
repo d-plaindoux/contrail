@@ -16,34 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
-import java.util.Map;
-
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>TerminalFactory</code>
+ * <code>StringConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialComponentFactory {
+public class StringConverter extends AbstractConverter<String> {
 
 	/**
-	 * @param classLoader
-	 * @param factoryName
-	 * @param array
-	 * @return
-	 * @throws CannotCreateComponentException
+	 * Constructor
 	 */
-	@SuppressWarnings("rawtypes")
-	public static InitialComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> parameters)
-			throws CannotCreateComponentException {
-		return ComponentBuilder.<InitialComponent> create(linkManager, ecosystemFactory, component, parameters);
+	private StringConverter(ComponentLinkManager linkManager) {
+		super(String.class);
+	}
+
+	@Override
+	public String visit(ConstantValue value) throws ConversionException {
+		return String.valueOf(value.getValue());
 	}
 }

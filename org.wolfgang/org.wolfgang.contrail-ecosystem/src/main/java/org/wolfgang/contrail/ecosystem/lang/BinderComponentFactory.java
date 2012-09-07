@@ -22,6 +22,8 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.ComponentBuilder;
+import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
@@ -32,7 +34,6 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @version 1.0
  */
 class BinderComponentFactory implements ComponentFactory {
-	private final EcosystemFactoryImpl factory;
 	private final CodeValue flow;
 	private final ComponentLinkManager linkManager;
 
@@ -42,9 +43,8 @@ class BinderComponentFactory implements ComponentFactory {
 	 * @param linkManager
 	 * @param items
 	 */
-	BinderComponentFactory(EcosystemFactoryImpl factory, ComponentLinkManager linkManager, CodeValue flow) {
+	BinderComponentFactory(ComponentLinkManager linkManager, CodeValue flow) {
 		super();
-		this.factory = factory;
 		this.linkManager = linkManager;
 		this.flow = flow;
 	}
@@ -57,10 +57,8 @@ class BinderComponentFactory implements ComponentFactory {
 	@Override
 	public Component create() throws CannotCreateComponentException {
 		try {
-			return factory.create(flow);
-		} catch (CannotCreateComponentException e) {
-			throw new CannotCreateComponentException(e);
-		} catch (EcosystemBuilderException e) {
+			return ComponentBuilder.create(linkManager, Component.class, flow);
+		} catch (ConversionException e) {
 			throw new CannotCreateComponentException(e);
 		}
 	}

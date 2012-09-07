@@ -32,6 +32,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 /**
  * <code>TestContrailComponentFactory</code>
@@ -63,7 +64,7 @@ public class TestContrailComponentFactory extends TestCase {
 
 	@Test
 	public void testConstructors() {
-		final Constructor<?>[] declaredConstructors = ContrailComponentFactory.getDeclaredConstructor(TestClass.class);
+		final Constructor<?>[] declaredConstructors = ComponentBuilder.getDeclaredConstructor(TestClass.class);
 
 		assertEquals(3, declaredConstructors.length);
 		assertEquals(2, declaredConstructors[0].getParameterTypes().length);
@@ -74,7 +75,7 @@ public class TestContrailComponentFactory extends TestCase {
 	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor01() throws CannotCreateComponentException {
-		final TestClass test = ContrailComponentFactory.create(null, new ContextFactory() {
+		final TestClass test = ComponentBuilder.create(null, new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -100,7 +101,7 @@ public class TestContrailComponentFactory extends TestCase {
 	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor02() throws CannotCreateComponentException {
-		final TestClass test = ContrailComponentFactory.create(new ParameterCodeConverter(null), new ContextFactory() {
+		final TestClass test = ComponentBuilder.create(new ComponentLinkManagerImpl(), new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -127,7 +128,7 @@ public class TestContrailComponentFactory extends TestCase {
 	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor03() throws CannotCreateComponentException {
-		final TestClass test = ContrailComponentFactory.create(new ParameterCodeConverter(null), new ContextFactory() {
+		final TestClass test = ComponentBuilder.create(new ComponentLinkManagerImpl(), new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;

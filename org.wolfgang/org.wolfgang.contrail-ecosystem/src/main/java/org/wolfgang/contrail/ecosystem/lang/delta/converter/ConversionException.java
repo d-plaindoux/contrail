@@ -16,34 +16,38 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
-
-import java.util.Map;
-
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 /**
- * <code>PipelineFactory</code>
+ * <code>ConversionException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PipelineComponentFactory {
+public class ConversionException extends Exception {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 928837609343463110L;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
 	 */
-	private PipelineComponentFactory() {
-		super();
+	ConversionException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
 
-	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class component, Map<String, CodeValue> environment)
-			throws CannotCreateComponentException {
-		return ComponentBuilder.<PipelineComponent> create(linkManager, ecosystemFactory, component, environment);
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	ConversionException(String arg0) {
+		super(arg0);
 	}
+
 }

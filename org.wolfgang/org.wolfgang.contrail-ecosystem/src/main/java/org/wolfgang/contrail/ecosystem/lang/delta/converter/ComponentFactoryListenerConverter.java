@@ -16,62 +16,47 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
-import org.wolfgang.contrail.ecosystem.lang.EcosystemBuilderException;
-import org.wolfgang.contrail.ecosystem.lang.EcosystemComponentBuilder;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
-import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
-public class ParameterCodeConverter implements CodeValueVisitor<Object, Exception> {
+/**
+ * <code>StringConverter</code>
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public class ComponentFactoryListenerConverter extends AbstractConverter<ComponentFactoryListener> {
 
-	private final EcosystemComponentBuilder builder;
+	private final ComponentLinkManager linkManager;
 
 	/**
 	 * Constructor
-	 * 
-	 * @param builder
 	 */
-	public ParameterCodeConverter(EcosystemComponentBuilder builder) {
-		super();
-		this.builder = builder;
+	public ComponentFactoryListenerConverter(ComponentLinkManager linkManager) {
+		super(ComponentFactoryListener.class);
+		this.linkManager = linkManager;
 	}
 
 	@Override
-	public Object visit(final ClosureValue value) throws Exception {
+	public ComponentFactoryListener visit(final ClosureValue value) throws ConversionException {
 		return new ComponentFactoryListener() {
 			@Override
 			public void notifyCreation(Component component) throws CannotCreateComponentException {
 				try {
-					value.apply(null, new ConstantValue(component)).visit(builder);
+					value.apply(null, new ConstantValue(component)).visit(new ComponentConverter(linkManager));
 				} catch (EcosystemInterpretationException e) {
 					throw new CannotCreateComponentException(e);
-				} catch (EcosystemBuilderException e) {
+				} catch (ConversionException e) {
 					throw new CannotCreateComponentException(e);
 				}
 			}
 		};
-	}
-
-	@Override
-	public Object visit(ComponentValue value) throws Exception {
-		return builder.visit(value);
-	}
-
-	@Override
-	public Object visit(ConstantValue value) throws Exception {
-		return value.getValue();
-	}
-
-	@Override
-	public Object visit(FlowValue value) throws Exception {
-		return builder.visit(value);
 	}
 }

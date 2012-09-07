@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>PipelineFactory</code>
@@ -43,9 +43,10 @@ public final class TransducerComponentFactory {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(CodeValueVisitor converter, ContextFactory ecosystemFactory, Class component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
+	public static PipelineComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class component, Map<String, CodeValue> environment)
+			throws CannotCreateComponentException {
 		try {
-			final TransducerFactory factory = ContrailComponentFactory.<TransducerFactory> create(converter, ecosystemFactory, component, environment);
+			final TransducerFactory factory = ComponentBuilder.<TransducerFactory> create(linkManager, ecosystemFactory, component, environment);
 			return factory.createComponent();
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);

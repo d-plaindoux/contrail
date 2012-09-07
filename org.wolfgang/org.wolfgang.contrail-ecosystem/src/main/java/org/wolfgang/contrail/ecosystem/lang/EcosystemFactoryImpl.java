@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import org.wolfgang.common.lang.TypeUtils;
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
@@ -51,7 +50,7 @@ import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.ParameterCodeConverter;
+import org.wolfgang.contrail.ecosystem.lang.delta.ComponentBuilder;
 import org.wolfgang.contrail.ecosystem.lang.model.Bind;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -122,27 +121,6 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	}
 
 	/**
-	 * Internal method dedicated to the component flow creation
-	 * 
-	 * @param source
-	 *            Can be null
-	 * @param items
-	 *            The items to be used for the flow creation
-	 * @return a component (Never <code>null</code>)
-	 * @throws CannotCreateComponentException
-	 * @throws EcosystemBuilderException
-	 */
-	Component create(final CodeValue value) throws CannotCreateComponentException, EcosystemBuilderException {
-		final EcosystemComponentBuilder builder = new EcosystemComponentBuilder(this.interpreter, linkManager);
-		final Component current = value.visit(builder);
-		if (current == null) {
-			throw new CannotCreateComponentException(MessagesProvider.message("org/wolfgang/contrail/ecosystem", "no.component").format());
-		} else {
-			return current;
-		}
-	}
-
-	/**
 	 * Method called whether an ecosystem importation set must be managed. This
 	 * management is done using annotations.
 	 * 
@@ -154,7 +132,6 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			try {
 				final Class<?> aClass = classLoader.loadClass(importation.getElement());
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "incompatible.type");
-				final ParameterCodeConverter codeConverter = new ParameterCodeConverter(new EcosystemComponentBuilder(this.interpreter, linkManager));
 
 				if (aClass.isAnnotationPresent(ContrailClient.class)) {
 					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
@@ -179,7 +156,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new ComponentImportEntry(codeConverter, this, aClass));
+						this.importations.put(name, new ComponentImportEntry(linkManager, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
@@ -192,7 +169,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new PipelineImportEntry(codeConverter, this, aClass));
+						this.importations.put(name, new PipelineImportEntry(linkManager, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
@@ -205,7 +182,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new TransducerImportEntry(codeConverter, this, aClass));
+						this.importations.put(name, new TransducerImportEntry(linkManager, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
@@ -218,7 +195,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new TerminaImportEntry(codeConverter, this, aClass));
+						this.importations.put(name, new TerminaImportEntry(linkManager, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(TerminalComponent.class, importation.getElement()));
 					}
@@ -231,7 +208,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 						} else {
 							name = annotation.name();
 						}
-						this.importations.put(name, new InitialImportEntry(codeConverter, this, aClass));
+						this.importations.put(name, new InitialImportEntry(linkManager, this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(InitialComponent.class, importation.getElement()));
 					}
@@ -266,7 +243,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 		// Create and Start the starters
 		for (Starter starter : ecosystemModel.getStarters()) {
 			final CodeValue flow = this.interpreter.visit(starter.getExpressions());
-			activeComponents.add(this.create(flow));
+			activeComponents.add(ComponentBuilder.create(linkManager, Component.class, flow));
 		}
 
 		// Create the ecosystem implementation
@@ -278,7 +255,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 			final Class<?> typeOut = TypeUtils.getType(bind.getTypeOut());
 			final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key(bind.getName(), typeIn, typeOut);
 			final CodeValue flow = this.interpreter.visit(bind.getExpressions());
-			ecosystemImpl.addBinder(key, new BinderComponentFactory(this, this.linkManager, flow));
+			ecosystemImpl.addBinder(key, new BinderComponentFactory(this.linkManager, flow));
 		}
 
 		return ecosystemImpl;

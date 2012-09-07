@@ -24,8 +24,8 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
-import org.wolfgang.contrail.ecosystem.lang.delta.ContrailComponentFactory;
+import org.wolfgang.contrail.ecosystem.lang.delta.ComponentBuilder;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>PipelineImportEntry</code>
@@ -35,7 +35,7 @@ import org.wolfgang.contrail.ecosystem.lang.delta.ContrailComponentFactory;
  */
 @SuppressWarnings("rawtypes")
 class ComponentImportEntry implements EcosystemImportation<Component> {
-	private final CodeValueVisitor visitor;
+	private final ComponentLinkManager linkManager;
 	private final ContextFactory factory;
 	private final Class<?> component;
 
@@ -44,15 +44,15 @@ class ComponentImportEntry implements EcosystemImportation<Component> {
 	 * 
 	 * @param component
 	 */
-	ComponentImportEntry(CodeValueVisitor visitor, ContextFactory factory, Class component) {
+	ComponentImportEntry(ComponentLinkManager linkManager, ContextFactory factory, Class component) {
 		super();
-		this.visitor = visitor;
+		this.linkManager = linkManager;
 		this.factory = factory;
 		this.component = component;
 	}
 
 	@Override
 	public Component create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return ContrailComponentFactory.create(visitor, factory, component, environment);
+		return ComponentBuilder.create(linkManager, factory, component, environment);
 	}
 }

@@ -16,34 +16,34 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
-import java.util.Map;
-
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 
 /**
- * <code>PipelineFactory</code>
+ * <code>StringConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class PipelineComponentFactory {
+public class CoercionConverter<E> extends AbstractConverter<E> {
 
 	/**
 	 * Constructor
+	 * 
+	 * @param type
 	 */
-	private PipelineComponentFactory() {
-		super();
+	public CoercionConverter(Class<E> type) {
+		super(type);
 	}
 
-	@SuppressWarnings({ "rawtypes" })
-	public static PipelineComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class component, Map<String, CodeValue> environment)
-			throws CannotCreateComponentException {
-		return ComponentBuilder.<PipelineComponent> create(linkManager, ecosystemFactory, component, environment);
+	@Override
+	public E visit(ConstantValue value) throws ConversionException {
+		if (Coercion.canCoerce(value.getValue(), type)) {
+			return Coercion.coerce(value.getValue(), type);
+		} else {
+			return super.visit(value);
+		}
 	}
 }

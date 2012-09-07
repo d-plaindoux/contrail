@@ -18,32 +18,25 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
-import java.util.Map;
+import junit.framework.TestCase;
 
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.junit.Test;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 
 /**
- * <code>TerminalFactory</code>
+ * <code>TestConversion</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialComponentFactory {
+public class TestConversion extends TestCase {
 
-	/**
-	 * @param classLoader
-	 * @param factoryName
-	 * @param array
-	 * @return
-	 * @throws CannotCreateComponentException
-	 */
-	@SuppressWarnings("rawtypes")
-	public static InitialComponent create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> parameters)
-			throws CannotCreateComponentException {
-		return ComponentBuilder.<InitialComponent> create(linkManager, ecosystemFactory, component, parameters);
+	@Test
+	public void testNominal01() throws ConversionException {
+		final String value = "Hello, World!";
+		final ConstantValue constantValue = new ConstantValue(value);
+
+		assertEquals(value, ComponentBuilder.create(null, String.class, constantValue));
 	}
 }

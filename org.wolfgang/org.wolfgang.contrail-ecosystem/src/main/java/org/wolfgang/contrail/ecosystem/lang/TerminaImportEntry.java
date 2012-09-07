@@ -24,8 +24,8 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 import org.wolfgang.contrail.ecosystem.lang.delta.TerminalComponentFactory;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>TerminalImportEntry</code>
@@ -35,7 +35,7 @@ import org.wolfgang.contrail.ecosystem.lang.delta.TerminalComponentFactory;
  */
 @SuppressWarnings("rawtypes")
 class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
-	private final CodeValueVisitor visitor;
+	private final ComponentLinkManager linkManager;
 	private final ContextFactory factory;
 	private final Class<?> component;
 
@@ -44,15 +44,15 @@ class TerminaImportEntry implements EcosystemImportation<TerminalComponent> {
 	 * 
 	 * @param component
 	 */
-	TerminaImportEntry(CodeValueVisitor visitor, ContextFactory factory, Class component) {
+	TerminaImportEntry(ComponentLinkManager linkManager, ContextFactory factory, Class component) {
 		super();
-		this.visitor = visitor;
+		this.linkManager = linkManager;
 		this.factory = factory;
 		this.component = component;
 	}
 
 	@Override
 	public TerminalComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return TerminalComponentFactory.create(visitor, factory, component, environment);
+		return TerminalComponentFactory.create(linkManager, factory, component, environment);
 	}
 }
