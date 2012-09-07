@@ -57,6 +57,17 @@ public class ClosureValue implements CodeValue {
 	 * @return the application result
 	 * @throws EcosystemInterpretationException
 	 */
+	public CodeValue apply(CodeValue value) throws EcosystemInterpretationException {
+		return this.apply(null, value);
+	}
+
+	/**
+	 * Apply the function a a given parameter
+	 * 
+	 * @param value
+	 * @return the application result
+	 * @throws EcosystemInterpretationException
+	 */
 	public CodeValue apply(String name, CodeValue value) throws EcosystemInterpretationException {
 		final String parameterName = function.getParameter(name);
 		final List<Expression> applied = function.apply(parameterName);

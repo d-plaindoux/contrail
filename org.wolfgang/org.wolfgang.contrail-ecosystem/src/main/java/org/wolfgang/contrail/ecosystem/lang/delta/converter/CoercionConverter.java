@@ -22,12 +22,12 @@ import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 
 /**
- * <code>StringConverter</code>
+ * <code>CoercionConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CoercionConverter<E> extends AbstractConverter<E> {
+public final class CoercionConverter<E> extends AbstractConverter<E> {
 
 	/**
 	 * Constructor

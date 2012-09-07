@@ -28,7 +28,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 
 /**
- * <code>StringConverter</code>
+ * <code>AbstractConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

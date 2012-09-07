@@ -27,7 +27,7 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StringConverter extends AbstractConverter<String> {
+public final class StringConverter extends AbstractConverter<String> {
 
 	/**
 	 * Constructor

@@ -30,7 +30,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>StringConverter</code>
+ * <code>ComponentConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0

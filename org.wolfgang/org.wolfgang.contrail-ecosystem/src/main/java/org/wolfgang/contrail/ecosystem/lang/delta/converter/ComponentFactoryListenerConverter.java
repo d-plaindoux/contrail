@@ -23,11 +23,12 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>StringConverter</code>
+ * <code>ComponentFactoryListenerConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -50,7 +51,8 @@ public class ComponentFactoryListenerConverter extends AbstractConverter<Compone
 			@Override
 			public void notifyCreation(Component component) throws CannotCreateComponentException {
 				try {
-					value.apply(null, new ConstantValue(component)).visit(new ComponentConverter(linkManager));
+					final CodeValue result = value.apply(new ConstantValue(component));
+					result.visit(new ComponentConverter(linkManager));
 				} catch (EcosystemInterpretationException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ConversionException e) {
