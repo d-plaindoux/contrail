@@ -20,6 +20,7 @@ package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
@@ -69,7 +70,11 @@ class AbstractConverter<E> implements Converter<E>, CodeValueVisitor<E, Conversi
 
 	@Override
 	public E visit(ConstantValue value) throws ConversionException {
-		throw new ConversionException(CONSTANT.format(type.getName(), this.getClass().getSimpleName()));
+		if (Coercion.canCoerce(value.getValue(), type)) {
+			return Coercion.coerce(value.getValue(), type);
+		} else {
+			throw new ConversionException(CONSTANT.format(type.getName(), this.getClass().getSimpleName()));
+		}
 	}
 
 	@Override

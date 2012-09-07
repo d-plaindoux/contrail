@@ -80,7 +80,7 @@ public class Switch implements Expression, Validation {
 	/**
 	 * Set the value of defaultCase
 	 * 
-	 * @param defaultCase
+	 * @param defaultCse
 	 *            the defaultCase to set
 	 */
 	public void setDefaultCase(Default defaultCase) {
@@ -94,6 +94,6 @@ public class Switch implements Expression, Validation {
 
 	@Override
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return null;
+		return visitor.visit(this);
 	}
 }

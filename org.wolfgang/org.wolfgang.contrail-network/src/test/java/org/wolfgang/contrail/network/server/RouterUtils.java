@@ -33,9 +33,9 @@ import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.component.router.OnReceiveAcceptanceComponent;
 import org.wolfgang.contrail.component.router.RouterComponent;
 import org.wolfgang.contrail.component.router.RouterSourceTable;
-import org.wolfgang.contrail.component.router.SourceAcceptanceComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.event.Event;
@@ -68,7 +68,7 @@ class RouterUtils extends TestCase {
 					// Create the link from the client to the network
 					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, log, coercionTransducer, router);
 
-					router.filter(coercionTransducer.getComponentId(), this.getReferenceToUse());
+					router.filter(coercionTransducer.getComponentId(), mainReference);
 					linkManager.connect(new NetClient().connect(uri), compose);
 
 					return coercionTransducer;
@@ -77,11 +77,6 @@ class RouterUtils extends TestCase {
 				} catch (CannotCreateClientException e) {
 					throw new CannotCreateComponentException(e);
 				}
-			}
-
-			@Override
-			public DirectReference getReferenceToUse() {
-				return mainReference;
 			}
 		};
 
@@ -105,7 +100,7 @@ class RouterUtils extends TestCase {
 					final LoggerDestinationComponent loggerDestinationComponent = new LoggerDestinationComponent("SERVER.UP<" + router.toString() + ">");
 					final Component log = Components.compose(linkManager, loggerSourceComponent, loggerDestinationComponent);
 					// Source acceptance
-					final SourceAcceptanceComponent acceptanceComponent = new SourceAcceptanceComponent();
+					final OnReceiveAcceptanceComponent acceptanceComponent = new OnReceiveAcceptanceComponent();
 					// Composed components
 					return Components.compose(linkManager, payLoadTransducer, serialisationTransducer, log, coercionTransducer, acceptanceComponent, router);
 				} catch (ComponentConnectionRejectedException e) {

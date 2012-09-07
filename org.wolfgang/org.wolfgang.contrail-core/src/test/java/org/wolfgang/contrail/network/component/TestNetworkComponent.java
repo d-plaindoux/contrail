@@ -62,11 +62,6 @@ public class TestNetworkComponent extends TestCase {
 			public SourceComponent<Event, Event> create() {
 				return sourceComponent;
 			}
-
-			@Override
-			public DirectReference getReferenceToUse() {
-				return clientReference;
-			}
 		}, clientReference);
 
 		assertEquals(componentId, networkRouterTable.retrieve(clientReference).create().getComponentId());
@@ -85,11 +80,6 @@ public class TestNetworkComponent extends TestCase {
 				public SourceComponent<Event, Event> create() {
 					return sourceComponent;
 				}
-
-				@Override
-				public DirectReference getReferenceToUse() {
-					return clientReference;
-				}
 			}, clientReference);
 		} catch (ReferenceEntryAlreadyExistException e1) {
 			fail();
@@ -100,11 +90,6 @@ public class TestNetworkComponent extends TestCase {
 				@Override
 				public SourceComponent<Event, Event> create() {
 					return sourceComponent;
-				}
-
-				@Override
-				public DirectReference getReferenceToUse() {
-					return clientReference;
 				}
 			}, clientReference);
 			fail();
@@ -125,11 +110,6 @@ public class TestNetworkComponent extends TestCase {
 			@Override
 			public SourceComponent<Event, Event> create() {
 				return sourceComponent;
-			}
-
-			@Override
-			public DirectReference getReferenceToUse() {
-				return clientReference;
 			}
 		}, clientReference);
 

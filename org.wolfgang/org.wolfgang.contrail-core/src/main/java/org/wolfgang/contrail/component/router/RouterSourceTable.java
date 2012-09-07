@@ -42,11 +42,6 @@ public class RouterSourceTable extends ReferenceTableImpl<RouterSourceTable.Entr
 	 */
 	public interface Entry {
 		/**
-		 * @return
-		 */
-		DirectReference getReferenceToUse();
-
-		/**
 		 * Method called whether a source component has to be created
 		 * 
 		 * @return
@@ -60,14 +55,5 @@ public class RouterSourceTable extends ReferenceTableImpl<RouterSourceTable.Entr
 	 */
 	public RouterSourceTable() {
 		super();
-	}
-
-	public DirectReference getDirectTarget(DirectReference reference) {
-		try {
-			return this.retrieve(reference).getReferenceToUse();
-		} catch (ReferenceEntryNotFoundException e) {
-			// No specific reference entry ...
-			return reference;
-		}
 	}
 }

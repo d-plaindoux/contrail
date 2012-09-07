@@ -18,8 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
+import org.wolfgang.contrail.component.router.DataFlowStationFactory;
 import org.wolfgang.contrail.component.router.RouterComponent;
-import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.reference.DirectReference;
 
 /**
@@ -43,6 +43,6 @@ public final class RouterComponentFactory {
 	 * @return a network router component
 	 */
 	public static RouterComponent create(DirectReference selfReference) {
-		return new RouterComponent(new RouterSourceTable(), selfReference);
+		return new RouterComponent(DataFlowStationFactory.forRouter(selfReference));
 	}
 }

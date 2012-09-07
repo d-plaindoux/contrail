@@ -16,16 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.model;
+package org.wolfgang.contrail.ecosystem.lang;
 
 /**
- * <code>Validation</code>
+ * <code>EcosystemCompilationException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Validation {
+public class EcosystemCodeValueGeneratorException extends Exception {
 
-	void validate() throws ValidationException;
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -6029469822901574906L;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	EcosystemCodeValueGeneratorException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	EcosystemCodeValueGeneratorException(Throwable arg0) {
+		super(arg0);
+	}
 
 }

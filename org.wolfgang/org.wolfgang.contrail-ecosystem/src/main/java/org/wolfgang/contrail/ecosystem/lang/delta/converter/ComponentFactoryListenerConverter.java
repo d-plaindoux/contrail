@@ -21,7 +21,7 @@ package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
-import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
@@ -53,7 +53,7 @@ public class ComponentFactoryListenerConverter extends AbstractConverter<Compone
 				try {
 					final CodeValue result = value.apply(new ConstantValue(component));
 					result.visit(new ComponentConverter(linkManager));
-				} catch (EcosystemInterpretationException e) {
+				} catch (EcosystemCodeValueGeneratorException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ConversionException e) {
 					throw new CannotCreateComponentException(e);

@@ -52,10 +52,10 @@ public class TestCodeValue extends TestCase {
 		}
 	}
 
-	@Test public void testAtom() throws EcosystemInterpretationException {
+	@Test public void testAtom() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Atom expression = new Atom();
 		expression.setValue("Hello, World!");
@@ -65,10 +65,10 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ConstantValue.class, interpreted.getClass());
 	}
 
-	@Test public void testFunction() throws EcosystemInterpretationException {
+	@Test public void testFunction() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemCompiler = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Function expression = new Function();
 		expression.add("var1");
@@ -83,10 +83,10 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted.getClass());
 	}
 
-	@Test public void testApply01() throws EcosystemInterpretationException {
+	@Test public void testApply01() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Function expression = new Function();
 		expression.add("var1");
@@ -110,10 +110,10 @@ public class TestCodeValue extends TestCase {
 		assertEquals(value, ((ConstantValue) interpreted).getValue());
 	}
 
-	@Test public void testApply02() throws EcosystemInterpretationException {
+	@Test public void testApply02() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Function expression = new Function();
 		expression.add("var0");
@@ -141,10 +141,10 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted1.getClass());
 	}
 
-	@Test public void testApply03() throws EcosystemInterpretationException {
+	@Test public void testApply03() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Function expression = new Function();
 		expression.add("var0");
@@ -179,10 +179,10 @@ public class TestCodeValue extends TestCase {
 	}
 
 	@Test
-	public void testApply04() throws EcosystemInterpretationException {
+	public void testApply04() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemInterpreter ecosystemInterpreter = new EcosystemInterpreter(factory, environment);
+		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
 
 		final Function expression = new Function();
 		expression.add("var0");

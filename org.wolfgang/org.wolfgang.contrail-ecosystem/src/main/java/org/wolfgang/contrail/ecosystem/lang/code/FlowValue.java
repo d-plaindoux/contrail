@@ -32,7 +32,7 @@ public class FlowValue implements CodeValue {
 	 * 
 	 * @param values
 	 */
-	public FlowValue(CodeValue[] values) {
+	public FlowValue(CodeValue... values) {
 		super();
 		this.values = values;
 	}
@@ -45,7 +45,6 @@ public class FlowValue implements CodeValue {
 	public CodeValue[] getValues() {
 		return values;
 	}
-
 
 	@Override
 	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {

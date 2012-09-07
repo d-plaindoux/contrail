@@ -21,6 +21,7 @@ package org.wolfgang.contrail.ecosystem.lang.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -53,7 +54,7 @@ public class Router implements Expression, Validation {
 	 * 
 	 * @return the selfReference
 	 */
-	@XmlElement(name = "self")
+	@XmlAttribute(name = "self")
 	public String getSelf() {
 		return selfReference;
 	}
@@ -115,6 +116,6 @@ public class Router implements Expression, Validation {
 
 	@Override
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
-		return null;
+		return visitor.visit(this);
 	}
 }

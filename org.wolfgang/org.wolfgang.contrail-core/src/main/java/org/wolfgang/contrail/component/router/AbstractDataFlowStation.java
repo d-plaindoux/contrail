@@ -43,7 +43,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryNotFoundException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, UpStreamDataFlow<Event> {
+abstract class AbstractDataFlowStation implements DownStreamDataFlow<Event>, UpStreamDataFlow<Event> {
 
 	/**
 	 * Private message
@@ -67,7 +67,7 @@ abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, 
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public AbstractDataHandlerStation(RouterComponent component, RouterSourceTable routerTable) {
+	public AbstractDataFlowStation(RouterComponent component, RouterSourceTable routerTable) {
 		super();
 		this.component = component;
 		this.routerTable = routerTable;
@@ -125,14 +125,6 @@ abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, 
 
 	}
 
-	/**
-	 * Method called whether the next target must be computed
-	 * 
-	 * @param data
-	 * @return
-	 */
-	protected abstract DirectReference getNextTarget(Event data);
-
 	@Override
 	public void handleClose() throws DataFlowCloseException {
 		component.closeDownStream();
@@ -155,4 +147,12 @@ abstract class AbstractDataHandlerStation implements DownStreamDataFlow<Event>, 
 			throw new CannotCreateComponentException(e);
 		}
 	}
+
+	/**
+	 * Method called whether the next target must be computed
+	 * 
+	 * @param data
+	 * @return
+	 */
+	protected abstract DirectReference getNextTarget(Event data);
 }

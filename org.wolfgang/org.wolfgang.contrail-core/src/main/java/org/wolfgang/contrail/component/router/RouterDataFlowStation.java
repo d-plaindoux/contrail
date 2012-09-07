@@ -30,7 +30,7 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RouterDataHandlerStation extends AbstractDataHandlerStation {
+public class RouterDataFlowStation extends AbstractDataFlowStation {
 
 	/**
 	 * The component in charge of managing this multiplexer
@@ -44,7 +44,7 @@ public class RouterDataHandlerStation extends AbstractDataHandlerStation {
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public RouterDataHandlerStation(RouterComponent component, DirectReference selfReference, RouterSourceTable routerTable) {
+	public RouterDataFlowStation(RouterComponent component, DirectReference selfReference, RouterSourceTable routerTable) {
 		super(component, routerTable);
 		this.selfReference = selfReference;
 	}

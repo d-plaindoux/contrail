@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "case")
 public class Case implements Validation {
 
-	public List<String> filters;
-	public Function caseBody;
+	private List<String> caseFilters;
+	private Function caseBody;
 
 	{
-		this.filters = new ArrayList<String>();
+		this.caseFilters = new ArrayList<String>();
 	}
 
 	/**
@@ -52,18 +52,19 @@ public class Case implements Validation {
 	 * 
 	 * @return the filters
 	 */
+	@XmlElement(name = "when")
 	public List<String> getFilters() {
-		return filters;
+		return caseFilters;
 	}
 
 	/**
 	 * Set the value of filters
 	 * 
-	 * @param filters
+	 * @param caseFilters
 	 *            the filters to set
 	 */
 	public void add(String filter) {
-		this.filters.add(filter);
+		this.caseFilters.add(filter);
 	}
 
 	/**

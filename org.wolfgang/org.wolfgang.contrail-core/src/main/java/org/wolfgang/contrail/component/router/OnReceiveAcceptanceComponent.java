@@ -48,7 +48,7 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class SourceAcceptanceComponent extends AbstractComponent implements PipelineComponent<Event, Event, Event, Event> {
+public class OnReceiveAcceptanceComponent extends AbstractComponent implements PipelineComponent<Event, Event, Event, Event> {
 
 	private SourceComponentLink<Event, Event> sourceComponentLink;
 	private DestinationComponentLink<Event, Event> destinationComponentLink;
@@ -64,7 +64,7 @@ public class SourceAcceptanceComponent extends AbstractComponent implements Pipe
 	/**
 	 * Constructor
 	 */
-	public SourceAcceptanceComponent() {
+	public OnReceiveAcceptanceComponent() {
 		super();
 	}
 

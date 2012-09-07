@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,13 +28,35 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement(name = "default")
-public class Default extends ContentExpressions implements Validation {
+public class Default implements Validation {
+
+	private Function caseBody;
 
 	/**
 	 * Constructor
 	 */
 	public Default() {
 		super();
+	}
+
+	/**
+	 * Return the value of body
+	 * 
+	 * @return the body
+	 */
+	@XmlElement(name = "function")
+	public Function getBody() {
+		return caseBody;
+	}
+
+	/**
+	 * Set the value of body
+	 * 
+	 * @param body
+	 *            the body to set
+	 */
+	public void setBody(Function body) {
+		this.caseBody = body;
 	}
 
 	@Override

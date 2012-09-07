@@ -30,7 +30,7 @@ import org.wolfgang.contrail.reference.DirectReference;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class SwitchDataHandlerStation extends AbstractDataHandlerStation {
+public class SwitchDataFlowStation extends AbstractDataFlowStation {
 
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class SwitchDataHandlerStation extends AbstractDataHandlerStation {
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public SwitchDataHandlerStation(RouterComponent component, RouterSourceTable routerTable) {
+	public SwitchDataFlowStation(RouterComponent component, RouterSourceTable routerTable) {
 		super(component, routerTable);
 	}
 

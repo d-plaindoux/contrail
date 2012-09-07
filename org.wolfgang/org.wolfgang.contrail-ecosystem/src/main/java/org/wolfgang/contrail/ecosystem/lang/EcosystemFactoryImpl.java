@@ -100,7 +100,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 	/**
 	 * The code interpreter
 	 */
-	private final EcosystemInterpreter interpreter;
+	private final EcosystemCodeValueGenerator interpreter;
 
 	{
 		this.serverFactory = new Servers();
@@ -110,7 +110,7 @@ public final class EcosystemFactoryImpl implements EcosystemSymbolTable, Context
 
 		this.importations = new HashMap<String, EcosystemImportation<?>>();
 		this.definitions = new HashMap<String, CodeValue>();
-		this.interpreter = new EcosystemInterpreter(this, definitions);
+		this.interpreter = new EcosystemCodeValueGenerator(this, definitions);
 	}
 
 	/**

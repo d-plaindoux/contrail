@@ -21,8 +21,8 @@ package org.wolfgang.contrail.ecosystem.lang.code;
 import java.util.List;
 import java.util.Map;
 
-import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpretationException;
-import org.wolfgang.contrail.ecosystem.lang.EcosystemInterpreter;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGenerator;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 
@@ -33,7 +33,7 @@ import org.wolfgang.contrail.ecosystem.lang.model.Function;
  * @version 1.0
  */
 public class ClosureValue implements CodeValue {
-	private final EcosystemInterpreter interpreter;
+	private final EcosystemCodeValueGenerator interpreter;
 	private final Map<String, CodeValue> environment;
 	private final Function function;
 
@@ -43,7 +43,7 @@ public class ClosureValue implements CodeValue {
 	 * @param function
 	 * @param environement
 	 */
-	public ClosureValue(EcosystemInterpreter interpreter, Function function, Map<String, CodeValue> environement) {
+	public ClosureValue(EcosystemCodeValueGenerator interpreter, Function function, Map<String, CodeValue> environement) {
 		super();
 		this.interpreter = interpreter;
 		this.function = function;
@@ -55,9 +55,9 @@ public class ClosureValue implements CodeValue {
 	 * 
 	 * @param value
 	 * @return the application result
-	 * @throws EcosystemInterpretationException
+	 * @throws EcosystemCodeValueGeneratorException
 	 */
-	public CodeValue apply(CodeValue value) throws EcosystemInterpretationException {
+	public CodeValue apply(CodeValue value) throws EcosystemCodeValueGeneratorException {
 		return this.apply(null, value);
 	}
 
@@ -66,9 +66,9 @@ public class ClosureValue implements CodeValue {
 	 * 
 	 * @param value
 	 * @return the application result
-	 * @throws EcosystemInterpretationException
+	 * @throws EcosystemCodeValueGeneratorException
 	 */
-	public CodeValue apply(String name, CodeValue value) throws EcosystemInterpretationException {
+	public CodeValue apply(String name, CodeValue value) throws EcosystemCodeValueGeneratorException {
 		final String parameterName = function.getParameter(name);
 		final List<Expression> applied = function.apply(parameterName);
 		this.environment.put(parameterName, value);

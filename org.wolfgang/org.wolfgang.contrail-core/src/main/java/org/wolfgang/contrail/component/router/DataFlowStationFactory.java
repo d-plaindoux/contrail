@@ -16,37 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.component.router;
+
+import org.wolfgang.contrail.reference.DirectReference;
 
 /**
- * <code>EcosystemCompilationException</code>
+ * <code>DataFlowStationFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class EcosystemInterpretationException extends Exception {
+public abstract class DataFlowStationFactory {
 
-	/**
-	 * The serialVersionUID attribute
-	 */
-	private static final long serialVersionUID = -6029469822901574906L;
+	public abstract AbstractDataFlowStation create(RouterComponent component);
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	EcosystemInterpretationException(String arg0) {
-		super(arg0);
+	public static DataFlowStationFactory forRouter(final DirectReference reference) {
+		return new DataFlowStationFactory() {
+			@Override
+			public AbstractDataFlowStation create(RouterComponent component) {
+				return new RouterDataFlowStation(component, reference, new RouterSourceTable());
+			}
+		};
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	EcosystemInterpretationException(Throwable arg0) {
-		super(arg0);
+	public static DataFlowStationFactory forSwitch() {
+		return new DataFlowStationFactory() {
+			@Override
+			public AbstractDataFlowStation create(RouterComponent component) {
+				return new SwitchDataFlowStation(component, new RouterSourceTable());
+			}
+		};
 	}
-
 }

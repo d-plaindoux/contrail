@@ -74,7 +74,7 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<byte[], byte[]> handler) throws ComponentConnectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<byte[], byte[]> handler) throws ComponentConnectionRejectedException {
 		final ComponentLink connectDestination = super.connectDestination(handler);
 
 		try {

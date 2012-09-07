@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.component.pipeline;
 
 import org.wolfgang.contrail.component.ComponentConnectedException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
@@ -87,7 +88,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectedException {
+	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
@@ -116,7 +117,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectedException {
+	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;

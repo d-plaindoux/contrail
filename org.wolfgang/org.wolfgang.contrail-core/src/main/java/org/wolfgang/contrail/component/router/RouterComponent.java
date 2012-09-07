@@ -51,7 +51,7 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	/**
 	 * The multiplexer component
 	 */
-	private final RouterDataHandlerStation streamStation;
+	private final AbstractDataFlowStation streamStation;
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -80,8 +80,8 @@ public class RouterComponent extends AbstractComponent implements MultipleDestin
 	/**
 	 * Constructor
 	 */
-	public RouterComponent(RouterSourceTable table, DirectReference selfReference) {
-		this.streamStation = new RouterDataHandlerStation(this, selfReference, table);
+	public RouterComponent(DataFlowStationFactory factory) {
+		this.streamStation = factory.create(this);
 	}
 
 	/**
