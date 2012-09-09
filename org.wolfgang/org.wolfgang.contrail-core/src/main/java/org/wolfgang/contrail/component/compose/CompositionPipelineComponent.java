@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.compose;
+package org.wolfgang.contrail.component.compose;
 
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.Component;

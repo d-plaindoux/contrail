@@ -13,7 +13,7 @@ import as ParallelSource org.wolfgang.contrail.component.pipeline.concurrent.Par
 import as ParallelDestination org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
 
 define Parallel { s | ParallelSource <> s <> ParallelDestination }
-define TCPEvent { PayLoad <> Parallel Serialization <> Coercion Event }
+define TCPEvent { _ | PayLoad <> Parallel Serialization <> Coercion Event }
 define Client   { uri station | ClientHandler uri <> TCPEvent <> station }
 define Server   { uri station | ServerHandler uri { b | b <> TCPEvent <> station } }
 
@@ -22,8 +22,8 @@ define NetStation {
 	case A.B { Client tcp://localhost:6667 ((OnLink A.A) <> self) }
 	case A.C { Client tcp://localhost:6668 self }
     default switch { 
-             case Service  { ServiceAgent  } 
-			 case Transfer { TransferAgent } 
+             case Service  { ServiceAgent () } 
+			 case Transfer { TransferAgent () } 
 			 }  
 	}
 }

@@ -26,10 +26,11 @@ import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionDestinationComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionPipelineComponent;
-import org.wolfgang.contrail.component.pipeline.compose.CompositionSourceComponent;
+import org.wolfgang.contrail.component.compose.CompositionComponent;
+import org.wolfgang.contrail.component.compose.CompositionDestinationComponent;
+import org.wolfgang.contrail.component.compose.CompositionPipelineComponent;
+import org.wolfgang.contrail.component.compose.CompositionSourceComponent;
+import org.wolfgang.contrail.component.reverse.RerversedPipelineComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
@@ -84,6 +85,19 @@ public final class Components {
 			return new CompositionComponent(linkManager, components);
 		} else {
 			throw new ComponentConnectionRejectedException("TODO");
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Component reverse(Component component) {
+		if (Coercion.canCoerce(component, PipelineComponent.class)) {
+			return new RerversedPipelineComponent(Coercion.coerce(component, PipelineComponent.class));
+		} else if (Coercion.canCoerce(component, SourceComponent.class)) {
+			return null;
+		} else if (Coercion.canCoerce(component, DestinationComponent.class)) {
+			return null;
+		} else {
+			return null;
 		}
 	}
 }

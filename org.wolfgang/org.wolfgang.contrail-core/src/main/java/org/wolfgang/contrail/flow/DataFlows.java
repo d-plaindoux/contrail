@@ -54,7 +54,7 @@ public final class DataFlows {
 	 * @param dataFlow
 	 * @return
 	 */
-	public static <U> UpStreamDataFlow<U> echoFrom(DownStreamDataFlow<U> dataFlow) {
+	public static <U> UpStreamDataFlow<U> reverse(DownStreamDataFlow<U> dataFlow) {
 		return new UpStreamFromDownStreamDataFlow<U>(dataFlow);
 	}
 
@@ -62,7 +62,7 @@ public final class DataFlows {
 	 * @param dataFlow
 	 * @return
 	 */
-	public static <U> DownStreamDataFlow<U> echoFrom(UpStreamDataFlow<U> dataFlow) {
+	public static <U> DownStreamDataFlow<U> reverse(UpStreamDataFlow<U> dataFlow) {
 		return new DownStreamFromUpStreamDataFlow<U>(dataFlow);
 	}
 }

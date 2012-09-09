@@ -18,32 +18,19 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.common.utils.UUIDUtils;
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.factory.Components;
-import org.wolfgang.contrail.component.router.OnLinkAcceptanceComponent;
-import org.wolfgang.contrail.component.router.RouterComponent;
-import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.RouterComponentFactory;
-import org.wolfgang.contrail.ecosystem.lang.delta.SwitchComponentFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
-import org.wolfgang.contrail.ecosystem.lang.model.Case;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
 import org.wolfgang.contrail.ecosystem.lang.model.Flow;
@@ -51,10 +38,6 @@ import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 import org.wolfgang.contrail.ecosystem.lang.model.Router;
 import org.wolfgang.contrail.ecosystem.lang.model.Switch;
-import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.reference.DirectReference;
-import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
-import org.wolfgang.contrail.reference.ReferenceFactory;
 
 /**
  * <code>Interpret</code>

@@ -22,29 +22,29 @@ import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
-import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
- * <code>AbstractSourceComponent</code>
+ * <code>AbstractDestinationComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public abstract class AbstractSourceComponent<U, D> extends AbstractComponent implements SourceComponent<U, D> {
+public abstract class AbstractDestinationComponent<U, D> extends AbstractComponent implements DestinationComponent<U, D> {
 
 	/**
 	 * Related up stream data handler after connection. Null otherwise
 	 */
-	private DestinationComponentLink<U, D> destinationComponentLink;
+	private SourceComponentLink<U, D> sourceComponentLink;
 
 	{
-		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 	}
 
 	/**
@@ -53,7 +53,7 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public AbstractSourceComponent() {
+	public AbstractDestinationComponent() {
 		super();
 	}
 
@@ -64,24 +64,24 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 	 * @throws ComponentNotConnectedException
 	 *             thrown if the handler is not yet available
 	 */
-	public UpStreamDataFlow<U> getUpStreamDataHandler() throws ComponentNotConnectedException {
-		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
+	public DownStreamDataFlow<D> getDownStreamDataHandler() throws ComponentNotConnectedException {
+		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		} else {
-			return destinationComponentLink.getDestinationComponent().getUpStreamDataFlow();
+			return sourceComponentLink.getSourceComponent().getDownStreamDataFlow();
 		}
 	}
 
 	@Override
-	public boolean acceptDestination(ComponentId componentId) {
-		return ComponentLinkFactory.isUndefined(this.destinationComponentLink);
+	public boolean acceptSource(ComponentId componentId) {
+		return ComponentLinkFactory.isUndefined(this.sourceComponentLink);
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
-		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
-		if (acceptDestination(componentId)) {
-			this.destinationComponentLink = handler;
+	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
+		final ComponentId componentId = handler.getSourceComponent().getComponentId();
+		if (acceptSource(componentId)) {
+			this.sourceComponentLink = handler;
 			return new ComponentLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
@@ -94,19 +94,19 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 	}
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
-			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		if (!acceptSource(componentId) && this.sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
+			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
 	}
 
 	@Override
-	public void closeUpStream() throws DataFlowCloseException {
-		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
+	public void closeDownStream() throws DataFlowCloseException {
+		if (ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			throw new DataFlowCloseException(NOT_YET_CONNECTED.format());
 		} else {
-			this.destinationComponentLink.getDestinationComponent().closeUpStream();
+			this.sourceComponentLink.getSourceComponent().closeDownStream();
 		}
 	}
 }

@@ -18,6 +18,12 @@
 
 package org.wolfgang.contrail.ecosystem.lang.code;
 
+import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.factory.Components;
+import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
+import org.wolfgang.contrail.link.ComponentLinkManager;
+
 /**
  * <code>FlowValue</code>
  * 
@@ -26,6 +32,8 @@ package org.wolfgang.contrail.ecosystem.lang.code;
  */
 public class FlowValue implements CodeValue {
 	private final CodeValue[] values;
+
+	private Component component;
 
 	/**
 	 * Constructor
@@ -40,10 +48,24 @@ public class FlowValue implements CodeValue {
 	/**
 	 * Return the value of values
 	 * 
+	 * @param componentConverter
+	 * @param linkManager
 	 * @return the values
+	 * @throws ConversionException
+	 * @throws ComponentConnectionRejectedException
 	 */
-	public CodeValue[] getValues() {
-		return values;
+	public Component getValues(ComponentLinkManager linkManager, CodeValueVisitor<Component, ConversionException> visitor) throws ConversionException, ComponentConnectionRejectedException {
+		if (component == null) {
+			final Component[] components = new Component[values.length];
+
+			for (int i = 0; i < components.length; i++) {
+				components[i] = values[i].visit(visitor);
+			}
+
+			component = Components.compose(linkManager, components);
+		}
+
+		return component;
 	}
 
 	@Override

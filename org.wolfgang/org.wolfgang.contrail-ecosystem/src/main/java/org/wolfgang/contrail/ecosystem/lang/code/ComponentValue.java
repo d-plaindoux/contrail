@@ -33,6 +33,8 @@ import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
 public class ComponentValue implements CodeValue {
 	private final Map<String, CodeValue> environement;
 	private final EcosystemImportation<?> entry;
+	
+	private Component component;
 
 	/**
 	 * Constructor
@@ -47,7 +49,11 @@ public class ComponentValue implements CodeValue {
 	}
 
 	public Component getComponent() throws CannotCreateComponentException {
-		return entry.create(environement);
+		if (component == null) {
+			this.component = entry.create(environement);
+		} 
+		
+		return component;
 	}
 
 	@Override

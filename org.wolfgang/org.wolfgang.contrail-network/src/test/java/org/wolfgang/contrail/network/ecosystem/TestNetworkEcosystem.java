@@ -78,7 +78,7 @@ public class TestNetworkEcosystem extends TestCase {
 						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
 							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
-								return DataFlows.echoFrom(component);
+								return DataFlows.reverse(component);
 							}
 						});
 						manager.connect(client, terminalComponent);
@@ -125,7 +125,7 @@ public class TestNetworkEcosystem extends TestCase {
 						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
 							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
-								return DataFlows.echoFrom(component);
+								return DataFlows.reverse(component);
 							}
 						});
 						manager.connect(client, terminalComponent);
@@ -291,6 +291,7 @@ public class TestNetworkEcosystem extends TestCase {
 		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
 
 		try {
+			@SuppressWarnings("unchecked")
 			final FutureResponse<String>[] responses = new FutureResponse[100];
 
 			for (int i = 0; i < responses.length; i++) {

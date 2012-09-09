@@ -21,8 +21,6 @@ package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.factory.Components;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -58,15 +56,8 @@ public class ComponentConverter extends AbstractConverter<Component> {
 
 	@Override
 	public Component visit(FlowValue value) throws ConversionException {
-		final CodeValue[] values = value.getValues();
-		final Component[] components = new Component[values.length];
-
-		for (int i = 0; i < components.length; i++) {
-			components[i] = values[i].visit(this);
-		}
-
 		try {
-			return Components.compose(linkManager, components);
+			return value.getValues(linkManager, this);
 		} catch (ComponentConnectionRejectedException e) {
 			return super.visit(value);
 		}

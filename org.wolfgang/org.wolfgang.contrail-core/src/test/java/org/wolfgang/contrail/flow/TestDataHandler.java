@@ -113,7 +113,7 @@ public class TestDataHandler extends TestCase {
 	public void testReverse01() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+		final UpStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -130,7 +130,7 @@ public class TestDataHandler extends TestCase {
 	public void testReverse02() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final UpStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+		final UpStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -153,7 +153,7 @@ public class TestDataHandler extends TestCase {
 	public void testReverse04() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+		final DownStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
@@ -170,7 +170,7 @@ public class TestDataHandler extends TestCase {
 	public void testReverse05() throws DataFlowException, InterruptedException, ExecutionException {
 		final FutureResponse<String> future = new FutureResponse<String>();
 
-		final DownStreamDataFlow<String> handler = DataFlows.echoFrom(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+		final DownStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.setValue(data);
