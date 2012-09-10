@@ -12,20 +12,19 @@ import as Serialization org.wolfgang.contrail.component.pipeline.transducer.seri
 import as ParallelSource org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
 import as ParallelDestination org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
 
-define Parallel { s | ParallelSource <> s <> ParallelDestination }
-define TCPEvent { _ | PayLoad <> Parallel Serialization <> Coercion Event }
-define Client   { uri station | ClientHandler uri <> TCPEvent <> station }
-define Server   { uri station | ServerHandler uri { b | b <> TCPEvent <> station } }
+define Parallel = s -> ParallelSource <> s <> ParallelDestination
+define TCPEvent = _ -> PayLoad <> Parallel Serialization <> Coercion Event
+define Client   = uri station -> ClientHandler uri <> TCPEvent <> station
+define Server   = uri station -> ServerHandler uri ( b -> b <> TCPEvent <> station )
 
-define NetStation { 
+define NetStation =  
     router id=A.A {     
-	case A.B { Client tcp://localhost:6667 ((OnLink A.A) <> self) }
-	case A.C { Client tcp://localhost:6668 self }
-    default switch { 
-             case Service  { ServiceAgent () } 
-			 case Transfer { TransferAgent () } 
+	case A.B: Client tcp://localhost:6667 ((OnLink A.A) <> self)
+	case A.C: Client tcp://localhost:6668 self
+    default: switch { 
+             case Service: ServiceAgent ()
+			 case Transfer:TransferAgent () 
 			 }  
 	}
-}
 
-start { Server tcp://localhost:6666 NetStation }
+Server tcp://localhost:6666 ( client -> client <> NetStation )

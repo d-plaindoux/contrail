@@ -55,7 +55,8 @@
 	</define>
 
 	<define name="TCPClient">
-		<function vars="uri">
+		<function>
+			<var>uri</var>
 			<apply>
 				<ref>reverse</ref>
 				<ref>TCPEvent</ref>
@@ -99,8 +100,9 @@
 				<ref>Server</ref>
 				<atom>tcp://localhost:6666</atom>
 			</apply>
-			<function vars="b">
-				<ref>b</ref>
+			<function>
+				<var>client</var>
+				<ref>client</ref>
 				<ref>TCPEvent</ref>
 				<ref>SharedStation</ref>
 			</function>

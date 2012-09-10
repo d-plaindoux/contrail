@@ -242,7 +242,6 @@ public class TestNetworkEcosystem extends TestCase {
 			assertEquals(message, response.get(10, TimeUnit.SECONDS));
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();
@@ -276,7 +275,6 @@ public class TestNetworkEcosystem extends TestCase {
 			assertEquals(message, response.get(10, TimeUnit.SECONDS));
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();
@@ -372,7 +370,6 @@ public class TestNetworkEcosystem extends TestCase {
 
 			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
 		} catch (Exception e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();
@@ -438,7 +435,6 @@ public class TestNetworkEcosystem extends TestCase {
 
 			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
 		} catch (Exception e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();
