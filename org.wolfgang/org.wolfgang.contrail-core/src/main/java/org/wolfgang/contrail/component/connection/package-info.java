@@ -17,7 +17,7 @@
  */
 
 /**
- * <code>package-info</code>
+ * The package provides basic components dedicated to clients and servers.
  *
  * @author Didier Plaindoux
  * @version 1.0
