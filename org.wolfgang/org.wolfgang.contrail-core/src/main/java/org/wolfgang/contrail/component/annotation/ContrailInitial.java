@@ -34,8 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface ContrailInitial {
 
-	String name();
-
 	ContrailType type() default @ContrailType(in = Object.class, out = Object.class);
 
 }

@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -33,7 +32,6 @@ import org.wolfgang.common.message.MessagesProvider;
 @XmlRootElement(name = "import")
 public class Import implements Validation {
 
-	private String alias;
 	private String element;
 
 	/**
@@ -41,26 +39,6 @@ public class Import implements Validation {
 	 */
 	public Import() {
 		super();
-	}
-
-	/**
-	 * Return the value of alias
-	 * 
-	 * @return the alias
-	 */
-	@XmlAttribute(name = "as")
-	public String getAlias() {
-		return alias;
-	}
-
-	/**
-	 * Set the value of alias
-	 * 
-	 * @param alias
-	 *            the alias to set
-	 */
-	public void setAlias(String alias) {
-		this.alias = alias;
 	}
 
 	/**

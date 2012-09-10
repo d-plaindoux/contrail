@@ -13,6 +13,8 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
  * @version 1.0
  */
 public interface EcosystemImportation<T extends Component> {
+	
+	
 
 	/**
 	 * Hook to invoke underlying factories

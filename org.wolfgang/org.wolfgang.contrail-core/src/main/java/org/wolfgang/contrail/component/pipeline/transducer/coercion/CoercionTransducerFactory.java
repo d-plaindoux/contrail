@@ -36,7 +36,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailTransducer(name = "Coercion", upType = @ContrailType(in = Object.class, out = Object.class))
+@ContrailTransducer(upType = @ContrailType(in = Object.class, out = Object.class))
 public final class CoercionTransducerFactory<T> implements TransducerFactory<Object, T> {
 
 	/**

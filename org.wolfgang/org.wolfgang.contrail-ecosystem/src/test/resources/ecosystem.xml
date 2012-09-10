@@ -96,10 +96,8 @@
 
 	<define name="Main">
 		<apply bind="factory">
-			<apply bind="uri">
-				<ref>Server</ref>
-				<atom>tcp://localhost:6666</atom>
-			</apply>
+			<ref>Server</ref>
+			<atom>tcp://localhost:6666</atom>
 			<function>
 				<var>client</var>
 				<ref>client</ref>

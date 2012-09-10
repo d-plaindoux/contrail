@@ -140,72 +140,45 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 						logger.log(Level.WARNING, message.format(Server.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailComponent.class)) {
-					final ContrailComponent annotation = aClass.getAnnotation(ContrailComponent.class);
 					if (Component.class.isAssignableFrom(aClass)) {
-						final String name;
-						if (importation.getAlias() != null) {
-							name = importation.getAlias();
-						} else {
-							name = annotation.name();
-						}
+						final String name = aClass.getSimpleName();
 						this.importations.put(name, new ComponentImportEntry(getLinkManager(), this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
-					final ContrailPipeline annotation = aClass.getAnnotation(ContrailPipeline.class);
 					if (PipelineComponent.class.isAssignableFrom(aClass)) {
-						final String name;
-						if (importation.getAlias() != null) {
-							name = importation.getAlias();
-						} else {
-							name = annotation.name();
-						}
+						final String name = aClass.getSimpleName();
 						this.importations.put(name, new PipelineImportEntry(getLinkManager(), this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailTransducer.class)) {
-					final ContrailTransducer annotation = aClass.getAnnotation(ContrailTransducer.class);
 					if (TransducerFactory.class.isAssignableFrom(aClass)) {
-						final String name;
-						if (importation.getAlias() != null) {
-							name = importation.getAlias();
-						} else {
-							name = annotation.name();
-						}
+						final String name = aClass.getSimpleName();
 						this.importations.put(name, new TransducerImportEntry(getLinkManager(), this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailTerminal.class)) {
-					final ContrailTerminal annotation = aClass.getAnnotation(ContrailTerminal.class);
 					if (TerminalComponent.class.isAssignableFrom(aClass)) {
-						final String name;
-						if (importation.getAlias() != null) {
-							name = importation.getAlias();
-						} else {
-							name = annotation.name();
-						}
+						final String name = aClass.getSimpleName();
 						this.importations.put(name, new TerminaImportEntry(getLinkManager(), this, aClass));
+
 					} else {
 						logger.log(Level.WARNING, message.format(TerminalComponent.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailInitial.class)) {
-					final ContrailInitial annotation = aClass.getAnnotation(ContrailInitial.class);
 					if (InitialComponent.class.isAssignableFrom(aClass)) {
-						final String name;
-						if (importation.getAlias() != null) {
-							name = importation.getAlias();
-						} else {
-							name = annotation.name();
-						}
+						final String name = aClass.getSimpleName();
 						this.importations.put(name, new InitialImportEntry(getLinkManager(), this, aClass));
 					} else {
 						logger.log(Level.WARNING, message.format(InitialComponent.class, importation.getElement()));
 					}
-				} else if (importation.getAlias() != null) {
-					this.definitions.put(importation.getAlias(), new ConstantValue(importation.getElement()));
+				} else {
+					// TODO -- Check this branch
+					final String name = aClass.getSimpleName();
+					this.definitions.put(name, new ConstantValue(importation.getElement()));
 				}
 			} catch (ClassNotFoundException ignore) {
 				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
@@ -256,7 +229,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 							if (Coercion.canCoerce(interpreted, ClosureValue.class)) {
 								final ClosureValue closure = Coercion.coerce(interpreted, ClosureValue.class);
 								try {
-									interpreted = closure.apply(null, new ConstantValue(argument));
+									interpreted = closure.apply(new ConstantValue(argument));
 								} catch (EcosystemCodeValueGeneratorException e) {
 									throw new CannotCreateComponentException(e);
 								}

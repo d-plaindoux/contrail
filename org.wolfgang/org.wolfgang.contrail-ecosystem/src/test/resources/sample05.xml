@@ -17,7 +17,7 @@
 	</define>
 
 	<define name='Main'>
-		<ref>Serialize</ref>
-		<ref>Echo</ref>
+		<ref>SerializationTransducerFactory</ref>
+		<ref>EchoComponent</ref>
 	</define>
 </ecosystem>

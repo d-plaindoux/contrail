@@ -80,14 +80,20 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 * 
 	 * @return the parameters
 	 */
-	public String getParameter(String name) {
-		if (name == null) {
-			return this.parameters.get(0);
-		} else if (this.parameters.contains(name)) {
-			return name;
+	public String[] getParameters(String[] names, int arity) {
+		if (names == null) {
+			final String[] result = new String[arity];
+			for (int i = 0; i < arity; i++) {
+				result[i] = this.parameters.get(i);
+			}
+			return result;
 		} else {
-			throw new RuntimeException("Parameter " + name + " not found");
-			/** TODO */
+			for (String name : names) {
+				if (!this.parameters.contains(name)) {
+					throw new RuntimeException("Parameter " + name + " not found -- TODO");
+				}
+			}
+			return names;
 		}
 	}
 
@@ -98,15 +104,15 @@ public class Function extends ContentExpressions implements Expression, Validati
 	 *            The applied parameter
 	 * @return the expression list
 	 */
-	public List<Expression> apply(String name) {
-		assert this.parameters.contains(name);
-
-		if (this.parameters.size() == 1) {
-			return this.getExpressions();
-		} else {
-			final List<String> remaining = new ArrayList<String>();
-			remaining.addAll(this.parameters);
+	public List<Expression> apply(String[] names) {
+		final List<String> remaining = new ArrayList<String>();
+		remaining.addAll(this.parameters);
+		for (String name : names) {
 			remaining.remove(name);
+		}
+		if (remaining.size() == 0) {
+			return this.expressions;
+		} else {
 			final Function result = new Function();
 			result.parameters = remaining;
 			result.expressions = this.expressions;

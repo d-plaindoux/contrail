@@ -52,7 +52,8 @@ public class TestCodeValue extends TestCase {
 		}
 	}
 
-	@Test public void testAtom() throws EcosystemCodeValueGeneratorException {
+	@Test
+	public void testAtom() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(factory, environment);
@@ -65,7 +66,8 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ConstantValue.class, interpreted.getClass());
 	}
 
-	@Test public void testFunction() throws EcosystemCodeValueGeneratorException {
+	@Test
+	public void testFunction() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(factory, environment);
@@ -83,7 +85,8 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted.getClass());
 	}
 
-	@Test public void testApply01() throws EcosystemCodeValueGeneratorException {
+	@Test
+	public void testApply01() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
@@ -110,7 +113,8 @@ public class TestCodeValue extends TestCase {
 		assertEquals(value, ((ConstantValue) interpreted).getValue());
 	}
 
-	@Test public void testApply02() throws EcosystemCodeValueGeneratorException {
+	@Test
+	public void testApply02() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
@@ -141,7 +145,8 @@ public class TestCodeValue extends TestCase {
 		assertEquals(ClosureValue.class, interpreted1.getClass());
 	}
 
-	@Test public void testApply03() throws EcosystemCodeValueGeneratorException {
+	@Test
+	public void testApply03() throws EcosystemCodeValueGeneratorException {
 		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final EcosystemSymbolTable factory = new TestSymbolTable();
 		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
@@ -212,5 +217,38 @@ public class TestCodeValue extends TestCase {
 
 		assertEquals(ConstantValue.class, interpreted2.getClass());
 		assertEquals(value, ((ConstantValue) interpreted2).getValue());
+	}
+
+	@Test
+	public void testApply05() throws EcosystemCodeValueGeneratorException {
+		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
+		final EcosystemSymbolTable factory = new TestSymbolTable();
+		final EcosystemCodeValueGenerator ecosystemInterpreter = new EcosystemCodeValueGenerator(factory, environment);
+
+		final Function expression = new Function();
+		expression.add("var0");
+		expression.add("var1");
+
+		final Reference reference1 = new Reference();
+		reference1.setValue("var1");
+
+		expression.add(reference1);
+
+		final Atom atom1 = new Atom();
+		atom1.setValue("unbound");
+
+		final String value = "Hello, World!";
+		final Atom atom2 = new Atom();
+		atom2.setValue(value);
+
+		final Apply apply = new Apply();
+		apply.add(expression);
+		apply.add(atom1);
+		apply.add(atom2);
+
+		final CodeValue interpreted = ecosystemInterpreter.visit(apply);
+
+		assertEquals(ConstantValue.class, interpreted.getClass());
+		assertEquals(value, ((ConstantValue) interpreted).getValue());
 	}
 }

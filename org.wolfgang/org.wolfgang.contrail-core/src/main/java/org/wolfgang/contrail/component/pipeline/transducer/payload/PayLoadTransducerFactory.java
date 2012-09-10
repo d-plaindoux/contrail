@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailTransducer(name = "PayLoad", upType = @ContrailType(in = byte[].class, out = byte[].class), downType = @ContrailType(in = Bytes.class, out = Bytes.class))
+@ContrailTransducer(upType = @ContrailType(in = byte[].class, out = byte[].class), downType = @ContrailType(in = Bytes.class, out = Bytes.class))
 public final class PayLoadTransducerFactory implements TransducerFactory<byte[], Bytes> {
 
 	/**

@@ -5,6 +5,6 @@
 	</import>
 
 	<define name='Main'>
-		<ref>Test</ref>
+		<ref>EchoComponent</ref>
 	</define>
 </ecosystem>

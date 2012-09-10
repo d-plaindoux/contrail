@@ -34,8 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface ContrailTransducer {
 
-	String name();
-
 	ContrailType upType() default @ContrailType(in = Object.class, out = Object.class);
 
 	ContrailType downType() default @ContrailType(in = Object.class, out = Object.class);

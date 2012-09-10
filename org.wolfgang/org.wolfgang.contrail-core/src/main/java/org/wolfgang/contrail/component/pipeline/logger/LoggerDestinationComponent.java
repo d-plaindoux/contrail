@@ -37,7 +37,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline(name = "LoggerDestination")
+@ContrailPipeline
 public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**

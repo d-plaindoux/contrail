@@ -38,7 +38,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline(name = "ParallelSource")
+@ContrailPipeline
 public class ParallelSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**

@@ -57,7 +57,7 @@ public abstract class ContentExpressions implements Validation {
 			@XmlElement(type = Reference.class, name = "ref"), 
 			@XmlElement(type = Router.class, name = "router"), 
 			@XmlElement(type = Switch.class, name = "switch"), 
-			@XmlElement(type = Atom.class, name = "atom") 
+			@XmlElement(type = Atom.class, name = "atom")
 			})
 	public List<Expression> getExpressions() {
 		return expressions;

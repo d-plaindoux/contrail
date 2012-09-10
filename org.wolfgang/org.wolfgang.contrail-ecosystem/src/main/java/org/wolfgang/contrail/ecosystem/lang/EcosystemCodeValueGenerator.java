@@ -124,7 +124,18 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 
 		if (Coercion.canCoerce(interpreted, ClosureValue.class)) {
 			final ClosureValue closure = Coercion.coerce(interpreted, ClosureValue.class);
-			return closure.apply(expression.getBinding(), expression.getParameter().visit(this));
+			final Expression[] parameters = expression.getParameters();
+			final CodeValue[] values = new CodeValue[parameters.length];
+			for (int i = 0; i < parameters.length; i++) {
+				values[i] = parameters[i].visit(this);
+			}
+			final String[] names;
+			if (expression.getBinding() == null) {
+				names = null;
+			} else {
+				names = expression.getBinding().split("\\s+");
+			}
+			return closure.apply(names, values);
 		} else {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
 			throw new EcosystemCodeValueGeneratorException(message.format());
@@ -146,54 +157,49 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	@Override
 	public CodeValue visit(Router expression) throws EcosystemCodeValueGeneratorException {
 		/*
-		try {
-			final DirectReference reference = ReferenceFactory.directReference(UUIDUtils.digestBased(expression.getSelf()));
-			final RouterComponent routerComponent = RouterComponentFactory.create(reference);
-			final ConstantValue constantRouter = new ConstantValue(routerComponent);
-			final List<Case> cases = expression.getCases();
+		 * try { final DirectReference reference =
+		 * ReferenceFactory.directReference
+		 * (UUIDUtils.digestBased(expression.getSelf())); final RouterComponent
+		 * routerComponent = RouterComponentFactory.create(reference); final
+		 * ConstantValue constantRouter = new ConstantValue(routerComponent);
+		 * final List<Case> cases = expression.getCases();
+		 * 
+		 * for (Case aCase : cases) { final List<String> filters =
+		 * aCase.getFilters(); final List<DirectReference> references = new
+		 * ArrayList<DirectReference>(); for (String filter : filters) {
+		 * references
+		 * .add(ReferenceFactory.directReference(UUIDUtils.digestBased(
+		 * filter))); }
+		 * 
+		 * final DirectReference primary = references.remove(0); final
+		 * DirectReference[] secundaries = references.toArray(new
+		 * DirectReference[references.size()]); final CodeValue visit =
+		 * this.visit(aCase.getBody());
+		 * 
+		 * final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
+		 * 
+		 * @Override public SourceComponent<Event, Event> create() throws
+		 * CannotCreateComponentException { final OnLinkAcceptanceComponent
+		 * onLinkAcceptanceComponent = new OnLinkAcceptanceComponent(primary);
+		 * try { final ConstantValue constantValue1 = new
+		 * ConstantValue(onLinkAcceptanceComponent); final FlowValue flowValue =
+		 * new FlowValue(constantValue1, constantRouter);
+		 * visit.apply(flowValue); return onLinkAcceptanceComponent; } catch
+		 * (EcosystemCodeValueGeneratorException e) { throw new
+		 * CannotCreateComponentException(e); } } };
+		 * 
+		 * routerComponent.getRouterSourceTable().insert(entry, primary,
+		 * secundaries); }
+		 * 
+		 * 
+		 * if (expression.getDefaultCase() != null) { // TODO }
+		 * 
+		 * return constantRouter; } catch (NoSuchAlgorithmException e) { throw
+		 * new EcosystemCodeValueGeneratorException(e); } catch
+		 * (ReferenceEntryAlreadyExistException e) { throw new
+		 * EcosystemCodeValueGeneratorException(e); }
+		 */
 
-			for (Case aCase : cases) {
-				final List<String> filters = aCase.getFilters();
-				final List<DirectReference> references = new ArrayList<DirectReference>();
-				for (String filter : filters) {
-					references.add(ReferenceFactory.directReference(UUIDUtils.digestBased(filter)));
-				}
-
-				final DirectReference primary = references.remove(0);
-				final DirectReference[] secundaries = references.toArray(new DirectReference[references.size()]);
-				final CodeValue visit = this.visit(aCase.getBody());
-
-				final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
-					@Override
-					public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
-						final OnLinkAcceptanceComponent onLinkAcceptanceComponent = new OnLinkAcceptanceComponent(primary);
-						try {
-							final ConstantValue constantValue1 = new ConstantValue(onLinkAcceptanceComponent);
-							final FlowValue flowValue = new FlowValue(constantValue1, constantRouter);
-							visit.apply(flowValue);
-							return onLinkAcceptanceComponent;
-						} catch (EcosystemCodeValueGeneratorException e) {
-							throw new CannotCreateComponentException(e);
-						}
-					}
-				};
-				
-				routerComponent.getRouterSourceTable().insert(entry, primary, secundaries);
-			}
-
-
-			if (expression.getDefaultCase() != null) {
-				// TODO
-			}
-
-			return constantRouter;
-		} catch (NoSuchAlgorithmException e) {
-			throw new EcosystemCodeValueGeneratorException(e);
-		} catch (ReferenceEntryAlreadyExistException e) {
-			throw new EcosystemCodeValueGeneratorException(e);
-		}
-		*/
-		
 		return null;
 	}
 

@@ -57,8 +57,8 @@ public class ClosureValue implements CodeValue {
 	 * @return the application result
 	 * @throws EcosystemCodeValueGeneratorException
 	 */
-	public CodeValue apply(CodeValue value) throws EcosystemCodeValueGeneratorException {
-		return this.apply(null, value);
+	public CodeValue apply(CodeValue... values) throws EcosystemCodeValueGeneratorException {
+		return this.apply(null, values);
 	}
 
 	/**
@@ -68,10 +68,12 @@ public class ClosureValue implements CodeValue {
 	 * @return the application result
 	 * @throws EcosystemCodeValueGeneratorException
 	 */
-	public CodeValue apply(String name, CodeValue value) throws EcosystemCodeValueGeneratorException {
-		final String parameterName = function.getParameter(name);
-		final List<Expression> applied = function.apply(parameterName);
-		this.environment.put(parameterName, value);
+	public CodeValue apply(String[] names, CodeValue... values) throws EcosystemCodeValueGeneratorException {
+		final String[] parameterNames = function.getParameters(names, values.length);
+		final List<Expression> applied = function.apply(parameterNames);
+		for (int i = 0; i < parameterNames.length; i++) {
+			this.environment.put(parameterNames[i], values[i]);
+		}
 		return interpreter.create(environment).visit(applied);
 	}
 

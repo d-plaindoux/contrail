@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import java.util.Arrays;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -69,8 +71,9 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 	/**
 	 * @return the parameter part of the apply
 	 */
-	public Expression getParameter() {
-		return this.expressions.get(1);
+	public Expression[] getParameters() {
+		final int size = this.expressions.size();
+		return Arrays.copyOfRange(this.expressions.toArray(new Expression[size]), 1, size);
 	}
 
 	@Override

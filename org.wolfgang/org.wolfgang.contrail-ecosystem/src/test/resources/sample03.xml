@@ -1,11 +1,11 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import as="Echo">
+	<import>
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 	
 	<define name="Test">
-		<ref>Echo</ref>
+		<ref>EchoComponent</ref>
 	</define>
 
 	<define name='Main'>

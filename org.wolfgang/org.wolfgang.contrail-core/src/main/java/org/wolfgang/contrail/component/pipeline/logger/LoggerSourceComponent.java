@@ -37,7 +37,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline(name = "LoggerSource")
+@ContrailPipeline
 public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
@@ -57,10 +57,10 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 			@Override
 			public void handleData(final U data) throws DataFlowException {
 				try {
-					logger.info(prefix + " Handle Data("+ this.hashCode() + "){" + String.valueOf(data) + "}");
+					logger.info(prefix + " Handle Data(" + this.hashCode() + "){" + String.valueOf(data) + "}");
 					getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
 				} catch (DataFlowException e) {
-					logger.log(Level.WARNING, "DataFlowException("+ this.hashCode() + ")", e);
+					logger.log(Level.WARNING, "DataFlowException(" + this.hashCode() + ")", e);
 					throw e;
 				}
 			}
@@ -68,10 +68,10 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 			@Override
 			public void handleClose() throws DataFlowCloseException {
 				try {
-					logger.log(Level.INFO, prefix + " Handle Close("+ this.hashCode() + ")");
+					logger.log(Level.INFO, prefix + " Handle Close(" + this.hashCode() + ")");
 					getDestinationComponentLink().getDestinationComponent().closeUpStream();
 				} catch (DataFlowCloseException e) {
-					logger.log(Level.WARNING, "DataFlowCloseException("+ this.hashCode() + ")", e);
+					logger.log(Level.WARNING, "DataFlowCloseException(" + this.hashCode() + ")", e);
 					throw e;
 				}
 			}

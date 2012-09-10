@@ -1,57 +1,52 @@
 <?xml version='1.0'?>
 <ecosystem>
 
-	<import as='GenericCoercion'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
 	</import>
-
-	<import as='ParallelSource'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent
 	</import>
-
-	<import as='ParallelDestination'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationComponent
 	</import>
-
-	<import as='PayLoad'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
 	</import>
-
-	<import as='Serialize'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
 	</import>
-
-	<import as='Echo'>
+	<import>
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 
 	<define name="Coercion">
 		<function>
 			<var>type</var>
-			<ref>GenericCoercion</ref>
+			<ref>CoercionTransducerFactory</ref>
 		</function>
 	</define>
 
 	<define name='Parallel'>
 		<function>
 			<var>flow</var>
-			<ref>ParallelSource</ref>
+			<ref>ParallelSourceComponent</ref>
 			<ref>flow</ref>
-			<ref>ParallelDestination</ref>
+			<ref>ParallelDestinationComponent</ref>
 		</function>
 	</define>
 
 	<define name='Main'>
-		<ref>PayLoad</ref>
+		<ref>PayLoadTransducerFactory</ref>
 		<apply>
 			<ref>Parallel</ref>
-			<ref>Serialize</ref>
+			<ref>SerializationTransducerFactory</ref>
 		</apply>
 		<apply>
 			<ref>Coercion</ref>
 			<atom>java.lang.String</atom>
 		</apply>
-		<ref>Echo</ref>
+		<ref>EchoComponent</ref>
 	</define>
 
 </ecosystem>

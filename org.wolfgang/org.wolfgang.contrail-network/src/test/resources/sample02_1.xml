@@ -3,27 +3,23 @@
 	<import>
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
-
-	<import as='ClientComponent'>
+	<import>
 		org.wolfgang.contrail.component.connection.ClientComponent
 	</import>
-
-	<import as='GenericCoercion'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
 	</import>
-
-	<import as='PayLoad'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
 	</import>
-
-	<import as='Serialize'>
+	<import>
 		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
 	</import>
 
 	<define name="Coercion">
 		<function>
 			<var>type</var>
-			<ref>GenericCoercion</ref>
+			<ref>CoercionTransducerFactory</ref>
 		</function>
 	</define>
 
@@ -41,8 +37,8 @@
 				<ref>Client</ref>
 				<atom>tcp://localhost:6666</atom>
 			</apply>
-			<ref>PayLoad</ref>
-			<ref>Serialize</ref>
+			<ref>PayLoadTransducerFactory</ref>
+			<ref>SerializationTransducerFactory</ref>
 			<apply>
 				<ref>Coercion</ref>
 				<atom>java.lang.String</atom>

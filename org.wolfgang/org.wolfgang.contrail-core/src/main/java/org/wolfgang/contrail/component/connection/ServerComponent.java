@@ -39,7 +39,7 @@ import org.wolfgang.contrail.flow.DataFlowCloseException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailComponent(name = "ServerComponent")
+@ContrailComponent
 public class ServerComponent extends AbstractComponent {
 
 	private final Server server;

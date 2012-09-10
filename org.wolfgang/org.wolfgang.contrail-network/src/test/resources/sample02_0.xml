@@ -3,8 +3,7 @@
 	<import>
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
-
-	<import as='ClientComponent'>
+	<import>
 		org.wolfgang.contrail.component.connection.ClientComponent
 	</import>
 

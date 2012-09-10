@@ -34,7 +34,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-@ContrailTerminal(name = "Test")
+@ContrailTerminal
 public class EchoComponent extends TerminalComponent {
 
 	private static UpStreamDataFlowFactory DATA_RECEIVER_FACTORY = new UpStreamDataFlowFactory() {

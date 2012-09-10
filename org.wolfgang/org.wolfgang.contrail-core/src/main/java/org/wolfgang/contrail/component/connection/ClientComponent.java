@@ -43,7 +43,7 @@ import org.wolfgang.contrail.link.DestinationComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline(name = "ClientComponent")
+@ContrailPipeline
 public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], byte[], byte[]> {
 
 	private final Client client;
