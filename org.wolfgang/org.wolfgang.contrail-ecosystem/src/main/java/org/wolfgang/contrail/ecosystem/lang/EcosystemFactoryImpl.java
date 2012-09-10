@@ -229,9 +229,6 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 		// Check on load definitions
 		for (Definition definition : ecosystemModel.getDefinitions()) {
 			final CodeValue generated = this.interpreter.visit(definition.getExpressions());
-			final String name = definition.getName();
-
-			this.definitions.put(name, generated);
 
 			try {
 				final Component component = ComponentBuilder.create(getLinkManager(), Component.class, generated);
@@ -240,42 +237,48 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 				// Ignore
 			}
 
-			final ComponentFactory factory = new ComponentFactory() {
-				@Override
-				public ComponentLinkManager getLinkManager() {
-					return EcosystemFactoryImpl.this.getLinkManager();
-				}
+			final String name = definition.getName();
 
-				@Override
-				public Component create(Object... arguments) throws CannotCreateComponentException {
+			if (name != null) {
+				this.definitions.put(name, generated);
+				final ComponentFactory factory = new ComponentFactory() {
+					@Override
+					public ComponentLinkManager getLinkManager() {
+						return EcosystemFactoryImpl.this.getLinkManager();
+					}
 
-					CodeValue interpreted = generated;
+					@Override
+					public Component create(Object... arguments) throws CannotCreateComponentException {
 
-					for (Object argument : arguments) {
-						if (Coercion.canCoerce(interpreted, ClosureValue.class)) {
-							final ClosureValue closure = Coercion.coerce(interpreted, ClosureValue.class);
-							try {
-								interpreted = closure.apply(null, new ConstantValue(argument));
-							} catch (EcosystemCodeValueGeneratorException e) {
-								throw new CannotCreateComponentException(e);
+						CodeValue interpreted = generated;
+
+						for (Object argument : arguments) {
+							if (Coercion.canCoerce(interpreted, ClosureValue.class)) {
+								final ClosureValue closure = Coercion.coerce(interpreted, ClosureValue.class);
+								try {
+									interpreted = closure.apply(null, new ConstantValue(argument));
+								} catch (EcosystemCodeValueGeneratorException e) {
+									throw new CannotCreateComponentException(e);
+								}
+							} else {
+								final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
+								throw new CannotCreateComponentException(message.format());
 							}
-						} else {
-							final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
-							throw new CannotCreateComponentException(message.format());
+						}
+
+						try {
+							final Component component = ComponentBuilder.create(getLinkManager(), Component.class, interpreted);
+							EcosystemFactoryImpl.this.addActiveComponent(component);
+							return component;
+						} catch (ConversionException e) {
+							throw new CannotCreateComponentException(e);
 						}
 					}
+				};
 
-					try {
-						final Component component = ComponentBuilder.create(getLinkManager(), Component.class, interpreted);
-						EcosystemFactoryImpl.this.addActiveComponent(component);
-						return component;
-					} catch (ConversionException e) {
-						throw new CannotCreateComponentException(e);
-					}
-				}
-			};
+				this.addBinder(EcosystemKeyFactory.key(definition.getName()), factory);
+			}
 
-			this.addBinder(EcosystemKeyFactory.key(definition.getName()), factory);
 		}
 	}
 

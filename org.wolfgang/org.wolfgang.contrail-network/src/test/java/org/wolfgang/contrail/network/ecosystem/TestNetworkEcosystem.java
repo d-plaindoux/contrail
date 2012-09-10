@@ -149,7 +149,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
 
-			factory.create(sender);
+			factory.create("tcp://localhost:6666", sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message.getBytes());
@@ -235,7 +235,7 @@ public class TestNetworkEcosystem extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.create(sender);
+			factory.create("tcp://localhost:6666", sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message.getBytes());

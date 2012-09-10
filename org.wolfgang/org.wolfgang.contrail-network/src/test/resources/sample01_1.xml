@@ -48,7 +48,7 @@
 		</function>
 	</define>
 
-	<define name='Main'>
+	<define>
 		<apply>
 			<apply>
 				<ref>Server</ref>

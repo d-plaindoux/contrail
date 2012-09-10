@@ -17,10 +17,11 @@
 
 	<define name='Main'>
 		<function>
+			<var>uri</var>
 			<var>client</var>
 			<apply>
 				<ref>Client</ref>
-				<atom>tcp://localhost:6666</atom>
+				<ref>uri</ref>
 			</apply>
 			<ref>client</ref>
 		</function>
