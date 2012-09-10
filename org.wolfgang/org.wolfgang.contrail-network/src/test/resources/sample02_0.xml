@@ -15,10 +15,14 @@
 		</function>
 	</define>
 
-	<binder name='Main' in="byte[]" out="byte[]">
-		<apply>
-			<ref>Client</ref>
-			<atom>tcp://localhost:6666</atom>
-		</apply>
-	</binder>
+	<define name='Main'>
+		<function>
+			<var>client</var>
+			<apply>
+				<ref>Client</ref>
+				<atom>tcp://localhost:6666</atom>
+			</apply>
+			<ref>client</ref>
+		</function>
+	</define>
 </ecosystem>

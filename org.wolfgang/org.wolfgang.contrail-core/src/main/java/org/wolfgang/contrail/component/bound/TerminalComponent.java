@@ -136,9 +136,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	@Override
 	public void closeDownStream() throws DataFlowCloseException {
-		if (this.sourceComponentLink.getSourceComponent() == null) {
-			throw new DataFlowCloseException(NOT_YET_CONNECTED.format());
-		} else {
+		if (!ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			this.sourceComponentLink.getSourceComponent().closeDownStream();
 		}
 	}

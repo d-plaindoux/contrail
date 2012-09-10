@@ -55,7 +55,8 @@ class BinderComponentFactory implements ComponentFactory {
 	}
 
 	@Override
-	public Component create() throws CannotCreateComponentException {
+	public Component create(Object... arguments) throws CannotCreateComponentException {
+		// TODO -- Use the environment
 		try {
 			return ComponentBuilder.create(linkManager, Component.class, flow);
 		} catch (ConversionException e) {

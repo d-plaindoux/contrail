@@ -4,7 +4,7 @@
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 
-	<binder name='Main' in="String" out="String">
+	<define name='Main'>
 		<ref>Echo</ref>
-	</binder>
+	</define>
 </ecosystem>

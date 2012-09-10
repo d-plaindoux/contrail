@@ -32,16 +32,6 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 	private final String name;
 
 	/**
-	 * The upstream class type
-	 */
-	private final Class<?> upstream;
-
-	/**
-	 * The downstream class type
-	 */
-	private final Class<?> downstream;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param upstream
@@ -49,11 +39,9 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 	 * @param downstream
 	 *            The downstream class type
 	 */
-	public RegisteredUnitEcosystemKey(String name, Class<?> upstream, Class<?> downstream) {
+	public RegisteredUnitEcosystemKey(String name) {
 		super();
 		this.name = name;
-		this.upstream = upstream;
-		this.downstream = downstream;
 	}
 
 	/**
@@ -72,21 +60,11 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 		return ecosystemKey.getName().equals(this.name);
 	}
 
-	/**
-	 * @param ecosystemKey
-	 * @return
-	 */
-	public boolean accept(TypedUnitEcosystemKey ecosystemKey) {
-		return ecosystemKey.getUpstream().equals(this.upstream) && ecosystemKey.getDownstream().equals(this.downstream);
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((downstream == null) ? 0 : downstream.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((upstream == null) ? 0 : upstream.hashCode());
 		return result;
 	}
 
@@ -104,13 +82,6 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 
 		RegisteredUnitEcosystemKey other = (RegisteredUnitEcosystemKey) obj;
 
-		if (downstream == null) {
-			if (other.downstream != null) {
-				return false;
-			}
-		} else if (!downstream.equals(other.downstream)) {
-			return false;
-		}
 		if (name == null) {
 			if (other.name != null) {
 				return false;
@@ -118,13 +89,7 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (upstream == null) {
-			if (other.upstream != null) {
-				return false;
-			}
-		} else if (!upstream.equals(other.upstream)) {
-			return false;
-		}
+
 		return true;
 	}
 
@@ -137,4 +102,4 @@ public class RegisteredUnitEcosystemKey implements UnitEcosystemKey {
 	public String toString() {
 		return name;
 	}
-	}
+}

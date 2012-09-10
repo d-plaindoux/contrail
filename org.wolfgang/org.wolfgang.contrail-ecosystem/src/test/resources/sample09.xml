@@ -41,7 +41,7 @@
 		</function>
 	</define>
 
-	<define name='MainFlow'>
+	<define name='Main'>
 		<ref>PayLoad</ref>
 		<apply>
 			<ref>Parallel</ref>
@@ -54,7 +54,4 @@
 		<ref>Echo</ref>
 	</define>
 
-	<binder name='Main' in="byte[]" out="byte[]">
-		<ref>MainFlow</ref>
-	</binder>
 </ecosystem>

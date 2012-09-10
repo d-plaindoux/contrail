@@ -151,7 +151,7 @@ public class TestRouterServer extends TestCase {
 		manager01.connect(router01, terminalComponent01);
 		RouterUtils.client(router01, manager01, new URI("tcp://localhost:6667"), reference02);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key01 = EcosystemKeyFactory.key("01", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key01 = EcosystemKeyFactory.key("01");
 		ecosystem01.addBinder(key01, RouterUtils.serverBinder(router01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer01 = new NetServer();
@@ -169,7 +169,7 @@ public class TestRouterServer extends TestCase {
 		router02.filter(terminalComponent02.getComponentId(), reference02);
 		RouterUtils.client(router02, manager02, new URI("tcp://localhost:6666"), reference01);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02");
 		ecosystem02.addBinder(key02, RouterUtils.serverBinder(router02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer02 = new NetServer();
@@ -215,7 +215,7 @@ public class TestRouterServer extends TestCase {
 		manager01.connect(router01, terminalComponent01);
 		RouterUtils.client(router01, manager01, new URI("tcp://localhost:6667"), reference02);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key01 = EcosystemKeyFactory.key("01", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key01 = EcosystemKeyFactory.key("01");
 		ecosystem01.addBinder(key01, RouterUtils.serverBinder(router01, manager01));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer01 = new NetServer();
@@ -233,7 +233,7 @@ public class TestRouterServer extends TestCase {
 		router02.filter(terminalComponent02.getComponentId(), reference02);
 		RouterUtils.client(router02, manager02, new URI("tcp://localhost:6666"), reference01);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02");
 		ecosystem02.addBinder(key02, RouterUtils.serverBinder(router02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer02 = new NetServer();
@@ -289,7 +289,7 @@ public class TestRouterServer extends TestCase {
 		RouterUtils.client(router02, manager02, new URI("tcp://localhost:6668"), reference03);
 		manager02.connect(router02, Components.terminal(new Receiver(reference02, futureResponse)));
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02");
 		ecosystem02.addBinder(key02, RouterUtils.serverBinder(router02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer02 = new NetServer();
@@ -306,7 +306,7 @@ public class TestRouterServer extends TestCase {
 		manager03.connect(router03, terminalComponent03);
 		router03.filter(terminalComponent03.getComponentId(), reference03);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key03 = EcosystemKeyFactory.key("03", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key03 = EcosystemKeyFactory.key("03");
 		ecosystem03.addBinder(key03, RouterUtils.serverBinder(router03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer03 = new NetServer();
@@ -368,7 +368,7 @@ public class TestRouterServer extends TestCase {
 		manager02.connect(router02, Components.terminal(new Receiver(reference02, futureResponse)));
 		RouterUtils.client(router02, manager02, new URI("tcp://localhost:6668"), reference03);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key02 = EcosystemKeyFactory.key("02");
 		ecosystem02.addBinder(key02, RouterUtils.serverBinder(router02, manager02));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer02 = new NetServer();
@@ -386,7 +386,7 @@ public class TestRouterServer extends TestCase {
 		router03.filter(terminalComponent03.getComponentId(), reference03);
 		RouterUtils.client(router03, manager03, new URI("tcp://localhost:6667"), reference02, reference01);
 		// ------------------------------------------------------------------------------------------------
-		final RegisteredUnitEcosystemKey key03 = EcosystemKeyFactory.key("03", Event.class, Event.class);
+		final RegisteredUnitEcosystemKey key03 = EcosystemKeyFactory.key("03");
 		ecosystem03.addBinder(key03, RouterUtils.serverBinder(router03, manager03));
 		// ------------------------------------------------------------------------------------------------
 		final NetServer routerServer03 = new NetServer();

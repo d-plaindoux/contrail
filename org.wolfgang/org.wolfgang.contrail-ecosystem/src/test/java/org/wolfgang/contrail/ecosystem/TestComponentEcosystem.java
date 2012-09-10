@@ -21,6 +21,8 @@
 package org.wolfgang.contrail.ecosystem;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
@@ -88,7 +90,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 
 			@Override
-			public Component create() throws CannotCreateComponentException {
+			public Component create(Object... arguments) throws CannotCreateComponentException {
 				try {
 					return new TerminalComponent<String, String>(dataFactory);
 				} catch (CannotCreateDataFlowException e) {
@@ -97,7 +99,7 @@ public class TestComponentEcosystem extends TestCase {
 			}
 		};
 
-		integrator.addBinder(EcosystemKeyFactory.key("test", String.class, String.class), destinationComponentFactory);
+		integrator.addBinder(EcosystemKeyFactory.key("test"), destinationComponentFactory);
 
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 

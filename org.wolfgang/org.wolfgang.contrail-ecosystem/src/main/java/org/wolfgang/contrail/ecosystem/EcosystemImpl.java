@@ -21,7 +21,9 @@ package org.wolfgang.contrail.ecosystem;
 import static org.wolfgang.common.message.MessagesProvider.message;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -48,7 +50,7 @@ public class EcosystemImpl implements Ecosystem {
 	/**
 	 * List of active components
 	 */
-	private final Component[] activeComponents;
+	private final List<Component> activeComponents;
 
 	/**
 	 * Initial component integration triggers
@@ -62,6 +64,7 @@ public class EcosystemImpl implements Ecosystem {
 
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, ComponentFactory>();
+		this.activeComponents = new ArrayList<Component>();
 	}
 
 	/**
@@ -77,10 +80,18 @@ public class EcosystemImpl implements Ecosystem {
 	 * @param manager
 	 * @param activeComponents
 	 */
-	public EcosystemImpl(ComponentLinkManager manager, Component... activeComponents) {
+	public EcosystemImpl(ComponentLinkManager manager) {
 		super();
 		this.linkManager = manager;
-		this.activeComponents = activeComponents;
+	}
+
+	/**
+	 * Register an active component
+	 * 
+	 * @param component
+	 */
+	protected void addActiveComponent(Component component) {
+		this.activeComponents.add(component);
 	}
 
 	/**

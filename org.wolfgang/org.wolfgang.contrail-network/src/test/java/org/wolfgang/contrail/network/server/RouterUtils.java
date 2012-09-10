@@ -54,6 +54,7 @@ class RouterUtils extends TestCase {
 	static void client(final RouterComponent router, final ComponentLinkManager linkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
 			throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
+			@SuppressWarnings({ "resource", "rawtypes" })
 			@Override
 			public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
 				try {
@@ -69,7 +70,9 @@ class RouterUtils extends TestCase {
 					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, log, coercionTransducer, router);
 
 					router.filter(coercionTransducer.getComponentId(), mainReference);
-					linkManager.connect(new NetClient().connect(uri), compose);
+
+					final Component component = new NetClient().connect(uri);
+					linkManager.connect(component, compose);
 
 					return coercionTransducer;
 				} catch (ComponentConnectionRejectedException e) {
@@ -85,8 +88,9 @@ class RouterUtils extends TestCase {
 
 	static ComponentFactory serverBinder(final RouterComponent router, final ComponentLinkManager linkManager) {
 		return new ComponentFactory() {
+			@SuppressWarnings("rawtypes")
 			@Override
-			public Component create() throws CannotCreateComponentException {
+			public Component create(Object... arguments) throws CannotCreateComponentException {
 				try {
 					// Pay-load component
 					final Component payLoadTransducer = new PayLoadTransducerFactory().createComponent();

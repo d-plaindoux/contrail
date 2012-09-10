@@ -32,17 +32,8 @@ public final class EcosystemKeyFactory {
 	 * @param downstream
 	 * @return
 	 */
-	public static RegisteredUnitEcosystemKey key(String name, Class<?> upstream, Class<?> downstream) {
-		return new RegisteredUnitEcosystemKey(name, upstream, downstream);
-	}
-
-	/**
-	 * @param upstream
-	 * @param downstream
-	 * @return
-	 */
-	public static UnitEcosystemKey typed(Class<?> upstream, Class<?> downstream) {
-		return new TypedUnitEcosystemKey(upstream, downstream);
+	public static RegisteredUnitEcosystemKey key(String name) {
+		return new RegisteredUnitEcosystemKey(name);
 	}
 
 	/**

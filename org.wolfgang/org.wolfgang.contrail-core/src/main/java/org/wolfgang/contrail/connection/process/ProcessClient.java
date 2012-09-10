@@ -19,24 +19,16 @@
 package org.wolfgang.contrail.connection.process;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.net.UnknownHostException;
 
-import org.wolfgang.contrail.component.Component;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.factory.Components;
+import org.wolfgang.contrail.connection.AbstractClient;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
-import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
 
 /**
  * The <code>ProcessClient</code> provides a client implementation using
@@ -47,87 +39,17 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
  * @version 1.0
  */
 @ContrailClient(scheme = "sh", type = @ContrailType(in = byte[].class, out = byte[].class))
-public class ProcessClient implements Client {
-
-	/**
-	 * The internal executor in charge of managing incoming connection requests
-	 */
-	private final ThreadPoolExecutor executor;
-
-	{
-		final ThreadGroup group = new ThreadGroup("Process.Client");
-		final ThreadFactory threadFactory = new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				return new Thread(group, r, "Process.Connected.Client");
-			}
-		};
-		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
-		this.executor.allowCoreThreadTimeOut(true);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param ecosystem
-	 *            The factory used to create components
-	 */
-	public ProcessClient() {
-		super();
-	}
+public class ProcessClient extends AbstractClient {
 
 	@Override
-	public void close() throws IOException {
-		executor.shutdownNow();
-	}
-
-	@Override
-	public Component connect(URI uri) throws CannotCreateClientException {
-		final Process client;
+	protected Pair<InputStream, OutputStream> getClient(URI uri) throws CannotCreateClientException {
 		try {
-			client = Runtime.getRuntime().exec(uri.getPath());
+			final Process client = Runtime.getRuntime().exec(uri.getPath());
+			return new Pair<InputStream, OutputStream>(client.getInputStream(), client.getOutputStream());
+		} catch (UnknownHostException e) {
+			throw new CannotCreateClientException(e);
 		} catch (IOException e) {
 			throw new CannotCreateClientException(e);
 		}
-
-		final DownStreamDataFlow<byte[]> dataReceiver = new DownStreamDataFlow<byte[]>() {
-			@Override
-			public void handleData(byte[] data) throws DataFlowException {
-				try {
-					client.getOutputStream().write(data);
-					client.getOutputStream().flush();
-				} catch (IOException e) {
-					throw new DataFlowException(e);
-				}
-			}
-
-			@Override
-			public void handleClose() throws DataFlowCloseException {
-				client.destroy();
-			}
-		};
-
-		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
-
-		final Callable<Void> reader = new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				try {
-					final byte[] buffer = new byte[1024 * 8];
-					int len;
-					while ((len = client.getInputStream().read(buffer)) != -1) {
-						component.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
-					}
-					return null;
-				} finally {
-					component.closeUpStream();
-				}
-			}
-		};
-
-		executor.submit(reader);
-
-		return component;
 	}
 }

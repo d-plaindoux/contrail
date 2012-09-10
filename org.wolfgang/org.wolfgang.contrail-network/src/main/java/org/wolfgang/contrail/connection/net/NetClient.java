@@ -19,32 +19,17 @@
 package org.wolfgang.contrail.connection.net;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.Component;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.annotation.ContrailClient;
 import org.wolfgang.contrail.component.annotation.ContrailType;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.factory.Components;
+import org.wolfgang.contrail.connection.AbstractClient;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
-import org.wolfgang.contrail.connection.Client;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -59,132 +44,18 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
  * @version 1.0
  */
 @ContrailClient(scheme = "tcp", type = @ContrailType(in = byte[].class, out = byte[].class))
-public class NetClient implements Client {
+public class NetClient extends AbstractClient {
 
-	/**
-	 * Active server sockets
-	 */
-	private final List<Socket> clients;
-
-	/**
-	 * The internal executor in charge of managing incoming connection requests
-	 */
-	private final ThreadPoolExecutor executor;
-
-	{
-		this.clients = Collections.synchronizedList(new ArrayList<Socket>());
-
-		final ThreadGroup group = new ThreadGroup("Network.Client");
-		final ThreadFactory threadFactory = new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				return new Thread(group, r, "Network.Connected.Client");
-			}
-		};
-		final LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<Runnable>();
-		this.executor = new ThreadPoolExecutor(256, 256, 30L, TimeUnit.SECONDS, linkedBlockingQueue, threadFactory);
-		this.executor.allowCoreThreadTimeOut(true);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param ecosystem
-	 *            The factory used to create components
-	 */
-	public NetClient() {
-		super();
-	}
-
-	/**
-	 * Method called whether a client connection must be performed
-	 * 
-	 * @param address
-	 *            The server internet address
-	 * @param port
-	 *            The server port
-	 * @return
-	 * @throws IOException
-	 * @throws CannotBindToInitialComponentException
-	 * @throws CannotCreateDataFlowException
-	 */
-	public Component connect(final URI uri) throws CannotCreateClientException {
-		final Socket client;
-
+	@Override
+	protected Pair<InputStream, OutputStream> getClient(URI uri) throws CannotCreateClientException {
 		try {
-			client = new Socket(uri.getHost(), uri.getPort());
-			this.clients.add(client);
+			final Socket client = new Socket(uri.getHost(), uri.getPort());
+			return new Pair<InputStream, OutputStream>(client.getInputStream(), client.getOutputStream());
 		} catch (UnknownHostException e) {
 			throw new CannotCreateClientException(e);
 		} catch (IOException e) {
 			throw new CannotCreateClientException(e);
 		}
-
-		final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
-			@Override
-			public void handleData(byte[] data) throws DataFlowException {
-				try {
-					client.getOutputStream().write(data);
-				} catch (IOException e) {
-					throw new DataFlowException(e);
-				}
-				try {
-					client.getOutputStream().flush();
-				} catch (IOException e) {
-					// Ignore this flush exception ...
-				}
-			}
-
-			@Override
-			public void handleClose() throws DataFlowCloseException {
-				try {
-					client.close();
-				} catch (IOException e) {
-					throw new DataFlowCloseException(e);
-				}
-			}
-		});
-
-		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
-
-		final Callable<Void> reader = new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final byte[] buffer = new byte[1024 * 8];
-				try {
-					int len;
-					while ((len = client.getInputStream().read(buffer)) != -1) {
-						component.getUpStreamDataFlow().handleData(Arrays.copyOf(buffer, len));
-					}
-				} catch (SocketException e) {
-					// Nothings
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw e;
-				} finally {
-					clients.remove(client);
-					component.closeUpStream();
-				}
-
-				return null;
-			}
-		};
-
-		executor.submit(reader);
-
-		return component;
 	}
 
-	@Override
-	public void close() throws IOException {
-		for (Socket client : this.clients) {
-			try {
-				client.close();
-			} catch (IOException consume) {
-				// Ignore
-			}
-		}
-
-		executor.shutdownNow();
-	}
 }

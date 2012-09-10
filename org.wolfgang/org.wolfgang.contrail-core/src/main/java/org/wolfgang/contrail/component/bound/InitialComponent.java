@@ -129,9 +129,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	@Override
 	public void closeUpStream() throws DataFlowCloseException {
-		if (ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
-			throw new DataFlowCloseException(NOT_YET_CONNECTED.format());
-		} else {
+		if (!ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			this.destinationComponentLink.getDestinationComponent().closeUpStream();
 		}
 	}

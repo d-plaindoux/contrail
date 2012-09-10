@@ -8,7 +8,7 @@
 		<ref>Echo</ref>
 	</define>
 
-	<binder name='Main' in="String" out="String">
+	<define name='Main'>
 		<ref>Test</ref>
-	</binder>
+	</define>
 </ecosystem>

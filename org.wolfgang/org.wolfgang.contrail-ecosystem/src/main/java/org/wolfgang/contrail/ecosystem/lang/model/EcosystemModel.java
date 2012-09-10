@@ -47,21 +47,9 @@ public class EcosystemModel {
 	 */
 	private List<Definition> definitions;
 
-	/**
-	 * Binders
-	 */
-	private List<Bind> binders;
-
-	/**
-	 * Definitions
-	 */
-	private List<Starter> starters;
-
 	{
 		this.importations = new ArrayList<Import>();
 		this.definitions = new ArrayList<Definition>();
-		this.binders = new ArrayList<Bind>();
-		this.starters = new ArrayList<Starter>();
 	}
 
 	/**
@@ -109,46 +97,6 @@ public class EcosystemModel {
 	 */
 	public void add(Definition definition) {
 		this.definitions.add(definition);
-	}
-
-	/**
-	 * Return the value of binders
-	 * 
-	 * @return the binders
-	 */
-	@XmlElement(name = "binder")
-	public List<Bind> getBinders() {
-		return binders;
-	}
-
-	/**
-	 * Set the value of binders
-	 * 
-	 * @param binders
-	 *            the binders to set
-	 */
-	public void add(Bind bind) {
-		this.binders.add(bind);
-	}
-
-	/**
-	 * Return the value of starters
-	 * 
-	 * @return the starters
-	 */
-	@XmlElement(name = "start")
-	public List<Starter> getStarters() {
-		return starters;
-	}
-
-	/**
-	 * Set the value of starters
-	 * 
-	 * @param starters
-	 *            the starters to set
-	 */
-	void add(Starter starter) {
-		this.starters.add(starter);
 	}
 
 	/**

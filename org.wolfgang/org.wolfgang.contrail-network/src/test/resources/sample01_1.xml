@@ -28,7 +28,8 @@
 
 	<define name='MainFlow'>
 		<function>
-			<var />
+			<var>client</var>
+			<ref>client</ref>
 			<ref>PayLoad</ref>
 			<ref>Serialize</ref>
 			<apply>
@@ -47,21 +48,14 @@
 		</function>
 	</define>
 
-	<start>
+	<define name='Main'>
 		<apply>
 			<apply>
 				<ref>Server</ref>
 				<atom>tcp://localhost:6666</atom>
 			</apply>
-			<function>
-				<var>client</var>
-				<ref>client</ref>
-				<apply>
-					<ref>MainFlow</ref>
-					<atom />
-				</apply>
-			</function>
+			<ref>MainFlow</ref>
 		</apply>
-	</start>
+	</define>
 </ecosystem>
 

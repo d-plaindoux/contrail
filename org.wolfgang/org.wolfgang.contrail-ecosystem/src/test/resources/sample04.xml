@@ -11,10 +11,10 @@
 		</function>
 	</define>
 
-	<binder name='Main' in="String" out="String">
+	<define name='Main'>
 		<apply>
 			<ref>Test</ref>
 			<atom>RESENT </atom>
 		</apply>
-	</binder>
+	</define>
 </ecosystem>

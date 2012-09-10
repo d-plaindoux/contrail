@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
@@ -121,8 +122,8 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	public CodeValue visit(Apply expression) throws EcosystemCodeValueGeneratorException {
 		final CodeValue interpreted = expression.getFunction().visit(this);
 
-		if (interpreted instanceof ClosureValue) {
-			final ClosureValue closure = (ClosureValue) interpreted;
+		if (Coercion.canCoerce(interpreted, ClosureValue.class)) {
+			final ClosureValue closure = Coercion.coerce(interpreted, ClosureValue.class);
 			return closure.apply(expression.getBinding(), expression.getParameter().visit(this));
 		} else {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");

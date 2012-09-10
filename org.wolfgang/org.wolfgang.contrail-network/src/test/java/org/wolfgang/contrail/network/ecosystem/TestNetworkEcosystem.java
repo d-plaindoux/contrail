@@ -148,7 +148,8 @@ public class TestNetworkEcosystem extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.getLinkManager().connect(factory.create(), sender);
+
+			factory.create(sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message.getBytes());
@@ -175,12 +176,14 @@ public class TestNetworkEcosystem extends TestCase {
 
 			try {
 				final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-				factory.getLinkManager().connect(factory.create(), sender);
+				factory.create(sender);
+
+				final String message = "Hello, World!";
+				sender.getDownStreamDataHandler().handleData(message);
+
 				fail();
-			} catch (ComponentConnectionRejectedException e) {
-				// OK
 			} catch (CannotCreateComponentException e) {
-				fail();
+				// TODO
 			}
 		} finally {
 			ecosystem02.close();
@@ -232,7 +235,7 @@ public class TestNetworkEcosystem extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.getLinkManager().connect(factory.create(), sender);
+			factory.create(sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message.getBytes());
@@ -266,7 +269,7 @@ public class TestNetworkEcosystem extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.getLinkManager().connect(factory.create(), sender);
+			factory.create(sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message);
@@ -311,7 +314,7 @@ public class TestNetworkEcosystem extends TestCase {
 				});
 
 				final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-				factory.getLinkManager().connect(factory.create(), sender1);
+				factory.create(sender1);
 
 				final String message1 = "Hello, World! [" + i + "]";
 				sender1.getDownStreamDataHandler().handleData(message1);
@@ -353,7 +356,7 @@ public class TestNetworkEcosystem extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.getLinkManager().connect(factory.create(), sender);
+			factory.create(sender);
 
 			final String message = "Hello, World!";
 
@@ -421,7 +424,7 @@ public class TestNetworkEcosystem extends TestCase {
 			for (int i = 0; i < nbEventSent; i++) {
 				final String message = "Hello, World! <" + i + ">";
 				final TerminalComponent<String, String> sender = Components.terminal(senderFactory);
-				factory.getLinkManager().connect(factory.create(), sender);
+				factory.create(sender);
 				try {
 					sender.getDownStreamDataHandler().handleData(message);
 				} catch (DataFlowException e) {

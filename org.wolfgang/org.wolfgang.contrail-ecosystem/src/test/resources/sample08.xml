@@ -13,9 +13,9 @@
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 
-	<binder name='Main' in="byte[]" out="byte[]">
+	<define name='Main'>
 		<ref>PayLoad</ref>
 		<ref>Serialize</ref>
 		<ref>Echo</ref>
-	</binder>
+	</define>
 </ecosystem>

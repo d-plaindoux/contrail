@@ -32,10 +32,12 @@ public interface ComponentFactory {
 	/**
 	 * Method called whether the embedded component must be created
 	 * 
+	 * @param a
+	 *            set of parameters
 	 * @return a component (never <code>null</code>)
 	 * @throws CannotCreateComponentException
 	 */
-	Component create() throws CannotCreateComponentException;
+	Component create(Object... arguments) throws CannotCreateComponentException;
 
 	/**
 	 * Method called whether the link manager used for the creation is required

@@ -16,10 +16,8 @@
 		</function>
 	</define>
 
-	<binder name='Main'
-		in="org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes"
-		out="org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes">
+	<define name='Main'>
 		<ref>Serialize</ref>
 		<ref>Echo</ref>
-	</binder>
+	</define>
 </ecosystem>

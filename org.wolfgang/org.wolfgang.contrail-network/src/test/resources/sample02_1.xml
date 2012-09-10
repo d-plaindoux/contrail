@@ -27,18 +27,6 @@
 		</function>
 	</define>
 
-	<define name='MainFlow'>
-		<function>
-			<var />
-			<ref>PayLoad</ref>
-			<ref>Serialize</ref>
-			<apply>
-				<ref>Coercion</ref>
-				<atom>java.lang.String</atom>
-			</apply>
-		</function>
-	</define>
-
 	<define name='Client'>
 		<function>
 			<var>uri</var>
@@ -46,14 +34,20 @@
 		</function>
 	</define>
 
-	<binder name='Main' in="String" out="String">
-		<apply>
-			<ref>Client</ref>
-			<atom>tcp://localhost:6666</atom>
-		</apply>
-		<apply>
-			<ref>MainFlow</ref>
-			<atom />
-		</apply>
-	</binder>
+	<define name='Main'>
+		<function>
+			<var>client</var>
+			<apply>
+				<ref>Client</ref>
+				<atom>tcp://localhost:6666</atom>
+			</apply>
+			<ref>PayLoad</ref>
+			<ref>Serialize</ref>
+			<apply>
+				<ref>Coercion</ref>
+				<atom>java.lang.String</atom>
+			</apply>
+			<ref>client</ref>
+		</function>
+	</define>
 </ecosystem>

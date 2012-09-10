@@ -23,9 +23,7 @@
 		</function>
 	</define>
 
-	<binder name='Main'
-		in="org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes"
-		out="org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes">
+	<define name='Main'>
 		<apply>
 			<ref>Identity</ref>
 			<flow>
@@ -36,5 +34,5 @@
 				</apply>
 			</flow>
 		</apply>
-	</binder>
+	</define>
 </ecosystem>

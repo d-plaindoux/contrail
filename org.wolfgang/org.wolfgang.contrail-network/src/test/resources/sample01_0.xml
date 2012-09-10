@@ -20,7 +20,7 @@
 		</function>
 	</define>
 
-	<start>
+	<define name="Main">
 		<apply>
 			<apply>
 				<ref>Server</ref>
@@ -32,6 +32,6 @@
 				<ref>Echo</ref>
 			</function>
 		</apply>
-	</start>
+	</define>
 </ecosystem>
 

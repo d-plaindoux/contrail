@@ -142,10 +142,10 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	@Override
 	public void closeUpStream() throws DataFlowCloseException {
-		try {
-			this.getUpStreamDataFlow().handleClose();
-		} finally {
-			if (this.destinationComponentLink.getDestinationComponent() != null) {
+		if (!ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
+			try {
+				this.getUpStreamDataFlow().handleClose();
+			} finally {
 				this.destinationComponentLink.getDestinationComponent().closeUpStream();
 			}
 		}
@@ -153,10 +153,10 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	@Override
 	public void closeDownStream() throws DataFlowCloseException {
-		try {
-			this.getDownStreamDataFlow().handleClose();
-		} finally {
-			if (this.sourceComponentLink.getSourceComponent() != null) {
+		if (!ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
+			try {
+				this.getDownStreamDataFlow().handleClose();
+			} finally {
 				this.sourceComponentLink.getSourceComponent().closeDownStream();
 			}
 		}

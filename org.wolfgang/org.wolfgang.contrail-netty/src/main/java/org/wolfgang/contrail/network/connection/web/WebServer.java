@@ -27,9 +27,6 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
-import org.wolfgang.contrail.ecosystem.EcosystemImpl;
-import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
-import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -98,7 +95,7 @@ public final class WebServer extends NIOServer {
 			}
 
 			@Override
-			public Component create() throws CannotCreateComponentException {
+			public Component create(Object... arguments) throws CannotCreateComponentException {
 				try {
 					return new TerminalComponent<String, String>(dataFactory);
 				} catch (CannotCreateDataFlowException e) {

@@ -89,7 +89,7 @@ public class TestNetworkServer extends TestCase {
 			final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 
 			@Override
-			public Component create() throws CannotCreateComponentException {
+			public Component create(Object... arguments) throws CannotCreateComponentException {
 				try {
 					return new TerminalComponent<byte[], byte[]>(dataReceiverFactory);
 				} catch (CannotCreateDataFlowException e) {
@@ -103,7 +103,7 @@ public class TestNetworkServer extends TestCase {
 			}
 		};
 
-		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("test", byte[].class, byte[].class);
+		final RegisteredUnitEcosystemKey key = EcosystemKeyFactory.key("test");
 		serverEcosystem.addBinder(key, dataSenderFactory);
 
 		final NetServer networkServer = new NetServer();
