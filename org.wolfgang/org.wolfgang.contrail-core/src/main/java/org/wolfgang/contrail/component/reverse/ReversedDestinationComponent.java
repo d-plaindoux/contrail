@@ -27,6 +27,7 @@ import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
@@ -48,15 +49,10 @@ public class ReversedDestinationComponent<U, D> extends AbstractSourceComponent<
 	public ReversedDestinationComponent(ComponentLinkManager manager, DestinationComponent<D, U> component) throws ComponentConnectionRejectedException {
 		super();
 
-		this.initialComponent = new InitialComponent<D, U>(DataFlows.closable(new DownStreamDataFlow<U>() {
+		this.initialComponent = new InitialComponent<D, U>(DataFlows.closable(new DownStreamDataFlowAdapter<U>() {
 			@Override
 			public void handleData(U data) throws DataFlowException {
 				getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
-			}
-
-			@Override
-			public void handleClose() throws DataFlowCloseException {
-				// TODO
 			}
 		}));
 
@@ -74,6 +70,16 @@ public class ReversedDestinationComponent<U, D> extends AbstractSourceComponent<
 
 	@Override
 	public void closeDownStream() throws DataFlowCloseException {
-		// TODO
+		this.initialComponent.closeUpStream();
 	}
+
+	@Override
+	public void closeUpStream() throws DataFlowCloseException {
+		try {
+			this.initialComponent.closeDownStream();
+		} finally {
+			super.closeUpStream();
+		}
+	}
+
 }

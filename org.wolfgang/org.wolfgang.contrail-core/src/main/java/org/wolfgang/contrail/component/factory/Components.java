@@ -91,7 +91,7 @@ public final class Components {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Component reverse(ComponentLinkManager linkManager, Component component) throws ComponentConnectionRejectedException {
 		if (Coercion.canCoerce(component, PipelineComponent.class)) {
 			return new ReversedPipelIneComponent(linkManager, Coercion.coerce(component, PipelineComponent.class));

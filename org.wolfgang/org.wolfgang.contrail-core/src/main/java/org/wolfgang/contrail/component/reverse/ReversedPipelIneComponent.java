@@ -100,13 +100,19 @@ public class ReversedPipelIneComponent<U1, D1, U2, D2> extends AbstractPipelineC
 
 	@Override
 	public void closeUpStream() throws DataFlowCloseException {
-		// TODO Auto-generated method stub
-		super.closeUpStream();
+		try {
+			this.terminalComponent.closeDownStream();
+		} finally {
+			super.closeUpStream();
+		}
 	}
 
 	@Override
 	public void closeDownStream() throws DataFlowCloseException {
-		// TODO Auto-generated method stub
-		super.closeDownStream();
+		try {
+			this.initialComponent.closeUpStream();
+		} finally {
+			super.closeDownStream();
+		}
 	}
 }
