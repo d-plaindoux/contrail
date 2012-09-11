@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.factory;
 
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -30,7 +31,9 @@ import org.wolfgang.contrail.component.compose.CompositionComponent;
 import org.wolfgang.contrail.component.compose.CompositionDestinationComponent;
 import org.wolfgang.contrail.component.compose.CompositionPipelineComponent;
 import org.wolfgang.contrail.component.compose.CompositionSourceComponent;
-import org.wolfgang.contrail.component.reverse.RerversedPipelineComponent;
+import org.wolfgang.contrail.component.reverse.ReversedDestinationComponent;
+import org.wolfgang.contrail.component.reverse.ReversedPipelIneComponent;
+import org.wolfgang.contrail.component.reverse.ReversedSourceComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
@@ -84,18 +87,18 @@ public final class Components {
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionComponent(linkManager, components);
 		} else {
-			throw new ComponentConnectionRejectedException("TODO");
+			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Component reverse(Component component) {
+	public static Component reverse(ComponentLinkManager linkManager, Component component) throws ComponentConnectionRejectedException {
 		if (Coercion.canCoerce(component, PipelineComponent.class)) {
-			return new RerversedPipelineComponent(Coercion.coerce(component, PipelineComponent.class));
+			return new ReversedPipelIneComponent(linkManager, Coercion.coerce(component, PipelineComponent.class));
 		} else if (Coercion.canCoerce(component, SourceComponent.class)) {
-			return null;
+			return new ReversedSourceComponent(linkManager, Coercion.coerce(component, SourceComponent.class));
 		} else if (Coercion.canCoerce(component, DestinationComponent.class)) {
-			return null;
+			return new ReversedDestinationComponent(linkManager, Coercion.coerce(component, DestinationComponent.class));
 		} else {
 			return null;
 		}

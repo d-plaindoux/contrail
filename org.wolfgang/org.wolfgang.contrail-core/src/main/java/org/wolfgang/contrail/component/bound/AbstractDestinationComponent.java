@@ -109,4 +109,13 @@ public abstract class AbstractDestinationComponent<U, D> extends AbstractCompone
 			this.sourceComponentLink.getSourceComponent().closeDownStream();
 		}
 	}
+
+	/**
+	 * Return the value of sourceComponentLink
+	 * 
+	 * @return the sourceComponentLink
+	 */
+	public SourceComponentLink<U, D> getSourceComponentLink() {
+		return sourceComponentLink;
+	}	
 }

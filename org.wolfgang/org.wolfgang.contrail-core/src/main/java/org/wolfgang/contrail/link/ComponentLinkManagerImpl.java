@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -58,8 +59,12 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 	public final <U, D> ComponentLinkImpl<U, D> connect(Component source, Component destination) throws ComponentConnectionRejectedException {
 		if (source instanceof SourceComponent && destination instanceof DestinationComponent) {
 			return safe_connect((SourceComponent) source, (DestinationComponent) destination);
+		} else if (destination instanceof DestinationComponent) {
+			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source").format());
+		} else if (source instanceof SourceComponent) {
+			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.destination").format());
 		} else {
-			throw new ComponentConnectionRejectedException("TODO");
+			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
 
