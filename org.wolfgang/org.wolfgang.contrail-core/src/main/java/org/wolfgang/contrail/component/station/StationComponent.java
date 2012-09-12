@@ -66,7 +66,23 @@ public class StationComponent<U> extends AbstractComponent implements MultipleSo
 	{
 		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<U, U>>();
 		this.destinationLinks = new HashMap<ComponentId, DestinationComponentLink<U, U>>();
+	}
+
+	/**
+	 * Constructor
+	 */
+	public StationComponent() {
 		this.dataFlowStation = new DataFlowStation<U>(this);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param dataFlowStation
+	 */
+	protected StationComponent(DataFlowStation<U> dataFlowStation) {
+		super();
+		this.dataFlowStation = dataFlowStation;
 	}
 
 	@Override
