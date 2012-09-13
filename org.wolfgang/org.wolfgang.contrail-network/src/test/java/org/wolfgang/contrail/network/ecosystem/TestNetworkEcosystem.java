@@ -70,10 +70,10 @@ public class TestNetworkEcosystem extends TestCase {
 		final NetServer netServer = new NetServer();
 
 		try {
-			netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
+			final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+			netServer.bind(new URI("tcp://localhost:6666"), new ComponentFactoryListener() {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
-					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
 					try {
 						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
@@ -117,10 +117,10 @@ public class TestNetworkEcosystem extends TestCase {
 		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
 
 		try {
-			netServer.bind(new URI("tcp://0.0.0.0:6666"), new ComponentFactoryListener() {
+			final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+			netServer.bind(new URI("tcp://localhost:6666"), new ComponentFactoryListener() {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
-					final ComponentLinkManager manager = new ComponentLinkManagerImpl();
 					try {
 						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override

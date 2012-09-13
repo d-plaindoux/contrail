@@ -34,6 +34,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.annotation.ContrailServer;
@@ -160,9 +162,8 @@ public class NetServer implements Server {
 									}
 								} catch (SocketException e) {
 									// Nothings
-								} catch (Exception e) {
-									e.printStackTrace();
-									throw e;
+								} catch (Throwable t) {
+									Logger.getAnonymousLogger().log(Level.SEVERE, "Socket.Accepted.Client " + uri, t);
 								} finally {
 									initialComponent.getUpStreamDataFlow().handleClose();
 								}
@@ -176,12 +177,16 @@ public class NetServer implements Server {
 						executor.submit(reader);
 					}
 
-					return null;
-
+				} catch (SocketException e) {
+					// Nothings
+				} catch (Throwable t) {
+					Logger.getAnonymousLogger().log(Level.SEVERE, "Socket.Server " + uri, t);
 				} finally {
 					servers.remove(serverSocket);
 					serverSocket.close();
 				}
+
+				return null;
 			}
 		};
 

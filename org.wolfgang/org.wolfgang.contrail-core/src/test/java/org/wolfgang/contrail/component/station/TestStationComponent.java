@@ -49,7 +49,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  */
 public class TestStationComponent extends TestCase {
 
-	public static class StringHandler implements IDataStreamHandler<String> {
+	public static class StringDataStreamHandler implements IDataStreamHandler<String> {
 		private final String filter;
 
 		/**
@@ -57,19 +57,18 @@ public class TestStationComponent extends TestCase {
 		 * 
 		 * @param filter
 		 */
-		public StringHandler(String filter) {
+		public StringDataStreamHandler(String filter) {
 			super();
 			this.filter = filter;
 		}
 
 		@Override
-		public boolean canAccept(String data) {
-			return data.equals(filter);
-		}
-
-		@Override
-		public String accept(String data) {
-			return data;
+		public String accept(String data) throws CannotAcceptDataException {
+			if (data.equals(filter)) {
+				return data;
+			} else {
+				throw new CannotAcceptDataException();
+			}
 		}
 	}
 
@@ -96,9 +95,9 @@ public class TestStationComponent extends TestCase {
 			}
 		});
 
-		final Component initialPipeline = new StationPipeline<String>(new StringHandler("Hello, World!"));
-		final Component terminalPipeline = new StationPipeline<String>(new StringHandler("Hello"));
-		final Component stationComponent = new StationComponent<String>();
+		final Component initialPipeline = new StationPipeline<String, String>(null, new StringDataStreamHandler("Hello, World!"));
+		final Component terminalPipeline = new StationPipeline<String, String>(new StringDataStreamHandler("Hello"), null);
+		final Component stationComponent = new StationComponent<String, String>();
 		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
 
 		Components.compose(linkManager, initialComponent, initialPipeline, stationComponent, terminalPipeline, terminalComponent);

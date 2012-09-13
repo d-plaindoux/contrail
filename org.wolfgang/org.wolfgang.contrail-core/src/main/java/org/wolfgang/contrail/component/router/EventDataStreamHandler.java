@@ -21,6 +21,7 @@ package org.wolfgang.contrail.component.router;
 import java.util.Arrays;
 import java.util.List;
 
+import org.wolfgang.contrail.component.station.CannotAcceptDataException;
 import org.wolfgang.contrail.component.station.IDataStreamHandler;
 import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -47,19 +48,22 @@ public class EventDataStreamHandler implements IDataStreamHandler<Event> {
 		this.references = Arrays.asList(references);
 	}
 
-	@Override
 	public boolean canAccept(Event data) {
 		final DirectReference destination = data.getReferenceToDestination().getCurrent();
 		return reference.equals(destination) || references.contains(destination);
 	}
 
 	@Override
-	public Event accept(Event data) {
-		final DirectReference destination = data.getReferenceToDestination().getCurrent();
-		if (reference.equals(destination)) {
-			data.getReferenceToDestination().removeCurrent();
+	public Event accept(Event data) throws CannotAcceptDataException {
+		if (canAccept(data)) {
+			final DirectReference destination = data.getReferenceToDestination().getCurrent();
+			if (reference.equals(destination)) {
+				data.getReferenceToDestination().removeCurrent();
+			}
+			return data;
+		} else {
+			throw new CannotAcceptDataException();
 		}
-		return data;
 	}
 
 }

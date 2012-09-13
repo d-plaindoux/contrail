@@ -19,6 +19,8 @@
 package org.wolfgang.contrail.component.station;
 
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
@@ -28,46 +30,62 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StationPipeline<U> extends AbstractPipelineComponent<U, U, U, U> implements IDataStreamHandler<U> {
+public class StationPipeline<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
-	private final IDataStreamHandler<U> handler;
+	private final IDataStreamHandler<U> handlerUpStream;
+	private final IDataStreamHandler<D> handlerDownStream;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param handler
 	 */
-	public StationPipeline(IDataStreamHandler<U> handler) {
+	public StationPipeline(IDataStreamHandler<U> handlerUpStream, IDataStreamHandler<D> handlerDownStream) {
 		super();
-		this.handler = handler;
-	}
+		assert handlerUpStream != null || handlerDownStream != null;
 
-	/**
-	 * @param data
-	 * @return
-	 * @see org.wolfgang.contrail.component.station.IDataStreamHandler#canAccept(java.lang.Object)
-	 */
-	public boolean canAccept(U data) {
-		return handler.canAccept(data);
-	}
-
-	/**
-	 * @param data
-	 * @return
-	 * @see org.wolfgang.contrail.component.station.IDataStreamHandler#accept(java.lang.Object)
-	 */
-	public U accept(U data) {
-		return handler.accept(data);
+		this.handlerUpStream = handlerUpStream;
+		this.handlerDownStream = handlerDownStream;
 	}
 
 	@Override
 	public UpStreamDataFlow<U> getUpStreamDataFlow() {
-		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
+		final UpStreamDataFlow<U> upStreamDataFlow = getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
+		if (handlerUpStream == null) {
+			return upStreamDataFlow;
+		} else {
+			return new UpStreamDataFlow<U>() {
+				@Override
+				public void handleData(U data) throws DataFlowException {
+					upStreamDataFlow.handleData(handlerUpStream.accept(data));
+				}
+
+				@Override
+				public void handleClose() throws DataFlowCloseException {
+					upStreamDataFlow.handleClose();
+				}
+			};
+		}
 	}
 
 	@Override
-	public DownStreamDataFlow<U> getDownStreamDataFlow() {
-		return this.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow();
+	public DownStreamDataFlow<D> getDownStreamDataFlow() {
+		final DownStreamDataFlow<D> downStreamDataFlow = this.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow();
+		if (handlerDownStream == null) {
+			return downStreamDataFlow;
+		} else {
+			return new DownStreamDataFlow<D>() {
+				@Override
+				public void handleData(D data) throws DataFlowException {
+					downStreamDataFlow.handleData(handlerDownStream.accept(data));
+				}
+
+				@Override
+				public void handleClose() throws DataFlowCloseException {
+					downStreamDataFlow.handleClose();
+				}
+			};
+		}
 	}
 
 }

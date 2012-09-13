@@ -18,14 +18,53 @@
 
 package org.wolfgang.contrail.component.station;
 
+import org.wolfgang.contrail.flow.DataFlowException;
+
 /**
- * <code>IDataStreamFilter</code>
+ * <code>CannotAcceptDataFlowException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface IDataStreamHandler<U> {
+public class CannotAcceptDataException extends DataFlowException {
 
-	U accept(U data) throws CannotAcceptDataException, StopAcceptData;
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 2718508230030619981L;
 
+	/**
+	 * Constructor
+	 */
+	public CannotAcceptDataException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public CannotAcceptDataException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotAcceptDataException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotAcceptDataException(Throwable arg0) {
+		super(arg0);
+	}
 }
