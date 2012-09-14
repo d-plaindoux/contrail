@@ -19,15 +19,25 @@
 package org.wolfgang.opala.parsing;
 
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
+import org.wolfgang.opala.scanner.LexemeFilter;
 
+/**
+ * <code>LanguageSupport</code>
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
 public interface LanguageSupport {
-    boolean isKeyword(String keyword);
 
-    <E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound;
+	boolean isKeyword(String keyword);
 
-    void enterUnit(String key);
+	LexemeFilter getSkippedLexemes();
 
-    void exitUnit(String key);
+	<E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound;
 
-    String[] getContext();
+	void enterUnit(String key);
+
+	void exitUnit(String key);
+
+	String[] getContext();
 }

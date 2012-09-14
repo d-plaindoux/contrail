@@ -23,44 +23,50 @@ import org.wolfgang.opala.lexing.LexemeTokenizer;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
-
 public interface LexemeFilter {
 
-    public static LexemeFilter SPACE_AND_COMMENT = new SpaceAndComment();
+	public static LexemeFilter NONE = new None();
+	public static LexemeFilter SPACE_AND_COMMENT = new SpaceAndComment();
 
-    static class SpaceAndComment implements LexemeFilter {
-        public Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException {
-            Lexeme lexeme = current;
+	static class None implements LexemeFilter {
+		public Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException {
+			return current;
+		}
+	}
 
-            while (lexeme.isA(LexemeKind.SPACES) || lexeme.isA(LexemeKind.EOL) || lexeme.isA(LexemeKind.COMMENT)) {
-                lexeme = tokenizer.getNextLexeme();
-            }
+	static class SpaceAndComment implements LexemeFilter {
+		public Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException {
+			Lexeme lexeme = current;
 
-            return lexeme;
-        }
-    }
+			while (lexeme.isA(LexemeKind.SPACES) || lexeme.isA(LexemeKind.EOL) || lexeme.isA(LexemeKind.COMMENT)) {
+				lexeme = tokenizer.getNextLexeme();
+			}
 
-    static class LexemeSetOfFilters implements LexemeFilter {
-        LexemeFilter[] filters;
+			return lexeme;
+		}
+	}
 
-        public LexemeSetOfFilters(LexemeFilter[] filters) {
-            this.filters = filters;
-        }
+	static class LexemeSetOfFilters implements LexemeFilter {
+		LexemeFilter[] filters;
 
-        public Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException {
-            Lexeme previouslexeme;
-            Lexeme lastlexeme = current;
+		public LexemeSetOfFilters(LexemeFilter[] filters) {
+			this.filters = filters;
+		}
 
-            do {
-                previouslexeme = lastlexeme;
-                for (LexemeFilter filter : filters) {
-                    lastlexeme = filter.getNextLexeme(lastlexeme, tokenizer);
-                }
-            } while (previouslexeme != lastlexeme);
+		public Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException {
+			Lexeme previouslexeme;
+			Lexeme lastlexeme = current;
 
-            return lastlexeme;
-        }
-    }
+			do {
+				previouslexeme = lastlexeme;
+				for (LexemeFilter filter : filters) {
+					lastlexeme = filter.getNextLexeme(lastlexeme, tokenizer);
+				}
+			} while (previouslexeme != lastlexeme);
 
-    Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException;
+			return lastlexeme;
+		}
+	}
+
+	Lexeme getNextLexeme(Lexeme current, LexemeTokenizer tokenizer) throws ScannerException;
 }

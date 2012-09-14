@@ -16,15 +16,54 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.opala.parsing;
+package org.wolfgang.opala.parsing.exception;
 
-import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
-import org.wolfgang.opala.parsing.exception.ParsingException;
-import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
-import org.wolfgang.opala.scanner.Scanner;
-import org.wolfgang.opala.scanner.exception.ScannerException;
+/**
+ * <code>AbstractSyntaxTreeError</code>
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public class ParsingException extends Exception {
 
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = 6618176224852326404L;
 
-public interface CompilationUnit<E, P> {
-    E compile(LanguageSupport support, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException;
+	/**
+	 * Constructor
+	 */
+	public ParsingException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public ParsingException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ParsingException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ParsingException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

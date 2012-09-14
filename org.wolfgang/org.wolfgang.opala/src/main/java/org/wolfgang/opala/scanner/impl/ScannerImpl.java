@@ -49,6 +49,10 @@ public class ScannerImpl implements Scanner {
 	 * @throws org.wolfgang.opala.scanner.exception.ScannerException
 	 */
 
+	public ScannerImpl(LexemeTokenizer tokenizer) throws ScannerException {
+		this(LexemeFilter.NONE, tokenizer);
+	}
+
 	public ScannerImpl(LexemeFilter lexemeFilter, LexemeTokenizer tokenizer) throws ScannerException {
 		this.lexemeFilter = lexemeFilter;
 		this.lookup = 1;
