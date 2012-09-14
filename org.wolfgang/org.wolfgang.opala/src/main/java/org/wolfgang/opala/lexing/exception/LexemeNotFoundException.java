@@ -18,23 +18,23 @@
 
 package org.wolfgang.opala.lexing.exception;
 
-import org.wolfgang.opala.lexing.ILexeme;
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Lexeme;
+import org.wolfgang.opala.lexing.Location;
 
 public class LexemeNotFoundException extends Exception {
     private static final long serialVersionUID = -3485381874230125117L;
-    final private ILexeme lexeme;
+    final private Lexeme lexeme;
 
-    public LexemeNotFoundException(ILexeme lexeme) {
+    public LexemeNotFoundException(Lexeme lexeme) {
         super("found token " + lexeme.getKind() + " " + lexeme.getValue());
         this.lexeme = lexeme;
     }
 
-    public ILexeme getLexeme() {
+    public Lexeme getLexeme() {
         return lexeme;
     }
 
-    public ILocation getLocation() {
+    public Location getLocation() {
         return lexeme.getLocation();
     }
 }

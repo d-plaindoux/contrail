@@ -21,9 +21,9 @@ package org.wolfgang.opala.lexing.impl;
 
 import java.util.List;
 
-import org.wolfgang.opala.lexing.ILexeme;
-import org.wolfgang.opala.lexing.ILexemeTokenizer;
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Lexeme;
+import org.wolfgang.opala.lexing.LexemeTokenizer;
+import org.wolfgang.opala.lexing.Location;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
@@ -33,14 +33,14 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * (without letter and digit) and special for unrecognized characters.
  */
 
-public class ListBasedTokenizer implements ILexemeTokenizer {
+public class ListBasedTokenizer implements LexemeTokenizer {
 
     //
     // Attributes
     //
 
-    private List<ILexeme> lexemes;
-    private ILocation lastLocation;
+    private List<Lexeme> lexemes;
+    private Location lastLocation;
 
     /**
      * Constructor
@@ -49,7 +49,7 @@ public class ListBasedTokenizer implements ILexemeTokenizer {
      * @throws org.wolfgang.opala.scanner.exception.ScannerException
      *
      */
-    public ListBasedTokenizer(List<ILexeme> lexemes) throws ScannerException {
+    public ListBasedTokenizer(List<Lexeme> lexemes) throws ScannerException {
         assert lexemes.size() > 0;
         this.lexemes = lexemes;
         this.lastLocation = null;
@@ -68,9 +68,9 @@ public class ListBasedTokenizer implements ILexemeTokenizer {
      * @throws org.wolfgang.opala.scanner.exception.ScannerException
      *
      */
-    public ILexeme getNextLexeme() throws ScannerException {
+    public Lexeme getNextLexeme() throws ScannerException {
         if (lexemes.size() == 0) {
-            return new Lexeme(lastLocation, LexemeKind.FINISHED, null);
+            return new LexemeImpl(lastLocation, LexemeKind.FINISHED, null);
         } else {
             return lexemes.remove(0);
         }

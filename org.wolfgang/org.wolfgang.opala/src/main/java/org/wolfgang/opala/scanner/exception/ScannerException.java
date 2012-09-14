@@ -18,22 +18,22 @@
 
 package org.wolfgang.opala.scanner.exception;
 
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Location;
 
 public class ScannerException extends Exception {
     private static final long serialVersionUID = -1914404276284660206L;
-    private ILocation location;
+    private Location location;
 
     public ScannerException(Exception exn) {
         super();
         this.initCause(exn);
     }
 
-    public ILocation getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public ScannerException setLocation(ILocation location) {
+    public ScannerException setLocation(Location location) {
         this.location = location;
         return this;
     }

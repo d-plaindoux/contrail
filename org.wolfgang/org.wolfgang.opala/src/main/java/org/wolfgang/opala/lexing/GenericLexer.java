@@ -20,7 +20,7 @@ package org.wolfgang.opala.lexing;
 
 import java.io.IOException;
 
-public interface IGenericLexer {
+public interface GenericLexer {
 
     /**
      * Provide the next lexeme type. If this lexeme type is <code>-1</code> the stream has been fully parsed.
@@ -43,7 +43,7 @@ public interface IGenericLexer {
      *
      * @return a location.
      */
-    ILocation getLocation();
+    Location getLocation();
 
     /**
      * This method will release resources used for the scanner.

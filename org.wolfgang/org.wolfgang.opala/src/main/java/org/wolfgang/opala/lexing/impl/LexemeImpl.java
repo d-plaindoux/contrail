@@ -21,8 +21,8 @@ package org.wolfgang.opala.lexing.impl;
 import java.util.regex.Pattern;
 
 import org.wolfgang.common.utils.Predicate;
-import org.wolfgang.opala.lexing.ILexeme;
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Lexeme;
+import org.wolfgang.opala.lexing.Location;
 import org.wolfgang.opala.lexing.LexemeKind;
 
 /**
@@ -31,22 +31,22 @@ import org.wolfgang.opala.lexing.LexemeKind;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Lexeme implements ILexeme {
-	private ILocation location;
+public class LexemeImpl implements Lexeme {
+	private Location location;
 	private LexemeKind kind;
 	private String value;
 
-	public Lexeme(ILocation location, LexemeKind kind, String value) {
+	public LexemeImpl(Location location, LexemeKind kind, String value) {
 		this.location = location;
 		this.kind = kind;
 		this.value = value;
 	}
 
-	public Lexeme(LexemeKind kind, String value) {
+	public LexemeImpl(LexemeKind kind, String value) {
 		this(null, kind, value);
 	}
 
-	public ILocation getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 

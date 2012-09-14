@@ -18,14 +18,14 @@
 
 package org.wolfgang.opala.lexing.exception;
 
-import org.wolfgang.opala.lexing.ILexeme;
+import org.wolfgang.opala.lexing.Lexeme;
 
 public class UnexpectedLexemeException extends LexemeNotFoundException {
     private static final long serialVersionUID = -214362872107039294L;
 
     final private String[] context;
 
-    public UnexpectedLexemeException(String[] context, ILexeme lexeme) {
+    public UnexpectedLexemeException(String[] context, Lexeme lexeme) {
         super(lexeme);
         this.context = context;
     }

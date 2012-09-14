@@ -18,8 +18,8 @@
 
 package org.wolfgang.opala.scanner;
 
-import org.wolfgang.opala.lexing.ILexeme;
-import org.wolfgang.opala.lexing.ILexemeTokenizer;
+import org.wolfgang.opala.lexing.Lexeme;
+import org.wolfgang.opala.lexing.LexemeTokenizer;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.scanner.exception.ScannerException;
@@ -32,7 +32,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author D. Plaindoux
  */
 
-public interface IScanner {
+public interface Scanner {
 
     /**
      * Method called to set the lexeme filter.
@@ -40,20 +40,20 @@ public interface IScanner {
      * @param filter The filter
      * @return
      */
-    ILexemeFilter setLexemeFilter(ILexemeFilter filter);
+    LexemeFilter setLexemeFilter(LexemeFilter filter);
 
 
     /**
      * @param listener
      * @return
      */
-    IScannerListener setListener(IScannerListener listener);
+    ScannerListener setListener(ScannerListener listener);
 
     /**
      * @param tokenizer
      * @return
      */
-    IScanner buildWith(ILexemeTokenizer tokenizer) throws ScannerException;
+    Scanner buildWith(LexemeTokenizer tokenizer) throws ScannerException;
 
     /**
      * Convenient method called when the scan will finish. It releases resources.
@@ -78,7 +78,7 @@ public interface IScanner {
      * @param lexeme The push-backed lexeme
      */
 
-    void rollback(ILexeme lexeme);
+    void rollback(Lexeme lexeme);
 
     /**
      * Provide the current lexeme.
@@ -87,7 +87,7 @@ public interface IScanner {
      * @throws org.wolfgang.opala.scanner.exception.ScannerException
      *          thrown if the lexer is not able to provide the current lexeme
      */
-    ILexeme currentLexeme() throws ScannerException;
+    Lexeme currentLexeme() throws ScannerException;
 
     /**
      * Consume the current lexeme and read the next one. At this time the consumed lexeme is lost and cannot be
@@ -96,7 +96,7 @@ public interface IScanner {
      * @return the dropped lexeme.
      * @throws ScannerException Raised when the scanner is not able to consume the lexeme
      */
-    ILexeme scan() throws ScannerException;
+    Lexeme scan() throws ScannerException;
 
     /**
      * Consume the current lexeme if the conditions are verified. These conditions are the required kind and the
@@ -111,7 +111,7 @@ public interface IScanner {
      * @throws org.wolfgang.opala.scanner.exception.ScannerException
      *          Raised when the scanner is not able to consume the lexeme
      */
-    ILexeme scan(LexemeKind kind, String lexeme) throws LexemeNotFoundException, ScannerException;
+    Lexeme scan(LexemeKind kind, String lexeme) throws LexemeNotFoundException, ScannerException;
 
     /**
      * Consume the current lexeme if the condition is verified and returns the corresponding value. This conditions was
@@ -123,7 +123,7 @@ public interface IScanner {
      * @throws LexemeNotFoundException Raised when the condition is not verified
      * @throws ScannerException        Raised when the scanner is not able to consume the lexeme
      */
-    ILexeme scan(LexemeKind kind) throws LexemeNotFoundException, ScannerException;
+    Lexeme scan(LexemeKind kind) throws LexemeNotFoundException, ScannerException;
 
     /**
      * Consume the current lexeme if the condition is verified and returns the corresponding kind. This conditions was
@@ -135,5 +135,5 @@ public interface IScanner {
      * @throws LexemeNotFoundException Raised when the condition is not verified
      * @throws ScannerException        Raised when the scanner is not able to consume the lexeme
      */
-    ILexeme scan(String lexeme) throws LexemeNotFoundException, ScannerException;
+    Lexeme scan(String lexeme) throws LexemeNotFoundException, ScannerException;
 }

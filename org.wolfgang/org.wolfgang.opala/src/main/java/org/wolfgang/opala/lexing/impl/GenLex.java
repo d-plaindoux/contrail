@@ -5,8 +5,8 @@ package org.wolfgang.opala.lexing.impl;
 import java.io.IOException;
 import java.net.URL;
 
-import org.wolfgang.opala.lexing.IGenericLexer;
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.GenericLexer;
+import org.wolfgang.opala.lexing.Location;
 
 
 
@@ -332,7 +332,7 @@ public class GenLex {
     StringBuffer string   = new StringBuffer();
     URL          filename = null;
 
-    public static IGenericLexer getGenericLexer(URL filename,java.io.InputStream stream) {
+    public static GenericLexer getGenericLexer(URL filename,java.io.InputStream stream) {
         return new GenLex(filename, stream).getLexer();
     }
 
@@ -341,8 +341,8 @@ public class GenLex {
        this.filename = filename;
     }
 
-    public IGenericLexer getLexer() {
-        return new IGenericLexer() {
+    public GenericLexer getLexer() {
+        return new GenericLexer() {
             public int getLexemeType() throws IOException {
                 return yylex();
             }
@@ -351,7 +351,7 @@ public class GenLex {
                 return string.toString();
             }
 
-            public Location getLocation() {
+            public LocationImpl getLocation() {
                 return GenLex.this.getLocation();
             }
 
@@ -366,8 +366,8 @@ public class GenLex {
 	throw new Error(filename+":"+(yyline+1)+": syntax error");
     }
 
-    public Location getLocation() {
-    	return new Location(filename,yycolumn+1,yyline+1);
+    public LocationImpl getLocation() {
+    	return new LocationImpl(filename,yycolumn+1,yyline+1);
     }
 
     public int token(int i) {

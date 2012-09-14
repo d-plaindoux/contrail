@@ -16,25 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.opala.lexing;
+package org.wolfgang.opala.parsing;
 
-import org.wolfgang.opala.scanner.exception.ScannerException;
+import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 
-public interface ILexemeTokenizer {
+public interface LanguageSupport {
+    boolean isKeyword(String keyword);
 
-    /**
-     * Provide the next available lexeme. If no one is available a scanner exception is thrown
-     *
-     * @return a new lexeme which cannot be null
-     * @throws ScannerException Thrown when no more lexeme can be read
-     */
+    <E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound;
 
-    ILexeme getNextLexeme() throws ScannerException;
+    void enterUnit(String key);
 
-    /**
-     * Method used when scanner can be disposed by the system.
-     *
-     * @throws ScannerException Thrown when the finish cannot be normally performed.
-     */
-    void finish() throws ScannerException;
+    void exitUnit(String key);
+
+    String[] getContext();
 }

@@ -22,34 +22,34 @@ package org.wolfgang.opala.parsing.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wolfgang.opala.lexing.ILexeme;
+import org.wolfgang.opala.lexing.Lexeme;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.lexing.exception.UnexpectedLexemeException;
-import org.wolfgang.opala.parsing.ICompilationUnit;
-import org.wolfgang.opala.parsing.ILanguageSupport;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
 import org.wolfgang.opala.parsing.exception.AbstractSyntaxTreeError;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
-import org.wolfgang.opala.scanner.IScanner;
+import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 import org.wolfgang.opala.scanner.impl.CheckPointScanner;
 import org.wolfgang.opala.utils.Cast;
 
 /**
  * This class provides the main entry for statement compilation. Statements can be extended using {@link
- * #addCompilationUnit(org.wolfgang.opala.lexing.ILexeme,String)} function.
+ * #addCompilationUnit(org.wolfgang.opala.lexing.Lexeme,String)} function.
  */
 
-public abstract class AbstractSetOfCompilationUnit<E, P> implements ICompilationUnit<E, P> {
+public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationUnit<E, P> {
 
     private final Cast<E> localCast = new Cast<E>();
 
     private class Entry {
-        private final ILexeme key;
+        private final Lexeme key;
         private final String val;
         private final boolean tryDefault;
 
-        public Entry(ILexeme key, String val, boolean tryDefault) {
+        public Entry(Lexeme key, String val, boolean tryDefault) {
             this.key = key;
             this.val = val;
             this.tryDefault = tryDefault;
@@ -63,9 +63,9 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements ICompilation
         this.unitSet = new ArrayList<Entry>();
     }
 
-    private Entry getCompilationUnit(ILexeme lexeme) {
+    private Entry getCompilationUnit(Lexeme lexeme) {
         for (Entry entry : unitSet) {
-            ILexeme iLexeme = entry.key;
+            Lexeme iLexeme = entry.key;
             if (iLexeme.isA(lexeme.getKind(), iLexeme.getValue() == null ? null : lexeme.getValue())) {
                 return entry;
             }
@@ -74,7 +74,7 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements ICompilation
         return null;
     }
 
-    final public boolean hasCompilationUnit(ILexeme lexeme) {
+    final public boolean hasCompilationUnit(Lexeme lexeme) {
         return this.getCompilationUnit(lexeme) != null;
     }
 
@@ -82,11 +82,11 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements ICompilation
         this.defaultUnit = defautUnit;
     }
 
-    final public void addCompilationUnit(ILexeme lexeme, String unitName) throws EntryAlreadyBoundException {
+    final public void addCompilationUnit(Lexeme lexeme, String unitName) throws EntryAlreadyBoundException {
         this.addCompilationUnit(lexeme, unitName, false);
     }
 
-    final public void addCompilationUnit(ILexeme lexeme, String unitName, boolean tryDefault) throws EntryAlreadyBoundException {
+    final public void addCompilationUnit(Lexeme lexeme, String unitName, boolean tryDefault) throws EntryAlreadyBoundException {
         if (this.getCompilationUnit(lexeme) == null) {
             this.unitSet.add(new Entry(lexeme, unitName, tryDefault));
         } else {
@@ -94,11 +94,11 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements ICompilation
         }
     }
 
-    public boolean canCompile(IScanner scanner) throws ScannerException {
+    public boolean canCompile(Scanner scanner) throws ScannerException {
         return this.getCompilationUnit(scanner.currentLexeme()) != null;
     }
 
-    public E compile(ILanguageSupport support, IScanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, AbstractSyntaxTreeError {
+    public E compile(LanguageSupport support, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, AbstractSyntaxTreeError {
         final Entry unitName = this.getCompilationUnit(scanner.currentLexeme());
 
         if (unitName != null) {

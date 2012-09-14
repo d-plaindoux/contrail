@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.wolfgang.opala.parsing.ICompilationUnit;
-import org.wolfgang.opala.parsing.ILanguageSupport;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 import org.wolfgang.opala.scanner.exception.CastException;
@@ -37,15 +37,15 @@ import org.wolfgang.opala.utils.Cast;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract public class AbstractSupport implements ILanguageSupport {
+abstract public class AbstractSupport implements LanguageSupport {
 
 	private final Stack<String> context;
 	private final List<String> keywords;
-	private final Map<String, ICompilationUnit<?, ?>> units;
+	private final Map<String, CompilationUnit<?, ?>> units;
 
 	{
 		this.context = new Stack<String>();
-		this.units = new HashMap<String, ICompilationUnit<?, ?>>();
+		this.units = new HashMap<String, CompilationUnit<?, ?>>();
 		this.keywords = new ArrayList<String>();
 	}
 
@@ -57,7 +57,7 @@ abstract public class AbstractSupport implements ILanguageSupport {
 		return this.keywords.contains(keyword);
 	}
 
-	protected <E, P> void addUnit(String key, ICompilationUnit<E, P> unit) throws EntryAlreadyBoundException {
+	protected <E, P> void addUnit(String key, CompilationUnit<E, P> unit) throws EntryAlreadyBoundException {
 		if (this.units.get(key) == null) {
 			this.units.put(key, new CompilationUnitTracker<E, P>(key, unit));
 		} else {
@@ -65,9 +65,9 @@ abstract public class AbstractSupport implements ILanguageSupport {
 		}
 	}
 
-	public <E, P> ICompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound {
+	public <E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound {
 		try {
-			final ICompilationUnit<E, P> unit = new Cast<ICompilationUnit<E, P>>().perform(this.units.get(key));
+			final CompilationUnit<E, P> unit = new Cast<CompilationUnit<E, P>>().perform(this.units.get(key));
 			if (unit != null) {
 				return unit;
 			} else {

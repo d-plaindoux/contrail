@@ -21,9 +21,9 @@ package org.wolfgang.opala.lexing.impl;
 
 import java.io.IOException;
 
-import org.wolfgang.opala.lexing.IGenericLexer;
-import org.wolfgang.opala.lexing.ILexeme;
-import org.wolfgang.opala.lexing.ILexemeTokenizer;
+import org.wolfgang.opala.lexing.GenericLexer;
+import org.wolfgang.opala.lexing.Lexeme;
+import org.wolfgang.opala.lexing.LexemeTokenizer;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
@@ -33,13 +33,13 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * (without letter and digit) and special for unrecognized characters.
  */
 
-public class LexerTokenizer implements ILexemeTokenizer {
+public class LexerTokenizer implements LexemeTokenizer {
 
     //
     // Attributes
     //
 
-    private IGenericLexer lexer;
+    private GenericLexer lexer;
 
     /**
      * Constructor
@@ -47,7 +47,7 @@ public class LexerTokenizer implements ILexemeTokenizer {
      * @param lexer which is visited
      * @throws ScannerException
      */
-    public LexerTokenizer(IGenericLexer lexer) throws ScannerException {
+    public LexerTokenizer(GenericLexer lexer) throws ScannerException {
         this.lexer = lexer;
     }
 
@@ -66,13 +66,13 @@ public class LexerTokenizer implements ILexemeTokenizer {
      * @return
      * @throws ScannerException
      */
-    public ILexeme getNextLexeme() throws ScannerException {
+    public Lexeme getNextLexeme() throws ScannerException {
         try {
             int p = lexer.getLexemeType();
             if (p == -1) {
-                return new Lexeme(lexer.getLocation(), LexemeKind.FINISHED, null);
+                return new LexemeImpl(lexer.getLocation(), LexemeKind.FINISHED, null);
             } else {
-                return new Lexeme(lexer.getLocation(), Tokens.getKind(p), lexer.getLexemeValue());
+                return new LexemeImpl(lexer.getLocation(), Tokens.getKind(p), lexer.getLexemeValue());
             }
         } catch (IOException ioe) {
             throw new ScannerException(ioe);

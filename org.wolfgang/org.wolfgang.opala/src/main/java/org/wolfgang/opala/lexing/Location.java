@@ -21,7 +21,7 @@ package org.wolfgang.opala.lexing;
 import java.io.Serializable;
 import java.net.URL;
 
-public interface ILocation extends Serializable {
+public interface Location extends Serializable {
     URL getURL();
 
     int getCharPos();

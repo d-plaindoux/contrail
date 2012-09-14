@@ -18,12 +18,12 @@
 
 package org.wolfgang.opala.parsing.exception;
 
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Location;
 
 public class ParsingUnitNotFound extends Exception {
 	private static final long serialVersionUID = -421616441655825652L;
 
-	private ILocation location;
+	private Location location;
 
 	/**
 	 * Constructor
@@ -62,11 +62,11 @@ public class ParsingUnitNotFound extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ILocation getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
-	public ParsingUnitNotFound setLocation(ILocation location) {
+	public ParsingUnitNotFound setLocation(Location location) {
 		this.location = location;
 		return this;
 	}

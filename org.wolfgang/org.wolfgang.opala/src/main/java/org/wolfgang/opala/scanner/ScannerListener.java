@@ -16,15 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.opala.parsing;
+package org.wolfgang.opala.scanner;
 
-import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
-import org.wolfgang.opala.parsing.exception.AbstractSyntaxTreeError;
-import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
-import org.wolfgang.opala.scanner.IScanner;
-import org.wolfgang.opala.scanner.exception.ScannerException;
+import org.wolfgang.opala.lexing.Lexeme;
 
+/**
+ * Interface used when analysis is non-determinist.
+ */
+public interface ScannerListener {
 
-public interface ICompilationUnit<E, P> {
-    E compile(ILanguageSupport support, IScanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, AbstractSyntaxTreeError;
+	void performScan(Lexeme lexeme);
+
 }

@@ -21,21 +21,21 @@ package org.wolfgang.opala.lexing.impl;
 
 import java.net.URL;
 
-import org.wolfgang.opala.lexing.ILocation;
+import org.wolfgang.opala.lexing.Location;
 
 /**
  * This class denotes a location in a given file. The location is a tuple file name plus the character index and the
  * line number.
  */
 
-public class Location implements ILocation {
+public class LocationImpl implements Location {
     private static final long serialVersionUID = 1757116409848078234L;
 
     private URL url;
     private int charPos;
     private int linePos;
 
-    public Location(URL url, int charPos, int linePos) {
+    public LocationImpl(URL url, int charPos, int linePos) {
         this.url = url;
         this.linePos = linePos;
         this.charPos = charPos;

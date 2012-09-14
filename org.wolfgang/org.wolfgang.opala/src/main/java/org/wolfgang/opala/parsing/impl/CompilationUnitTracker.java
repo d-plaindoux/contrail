@@ -20,25 +20,25 @@ package org.wolfgang.opala.parsing.impl;
 
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.lexing.exception.UnexpectedLexemeException;
-import org.wolfgang.opala.parsing.ICompilationUnit;
-import org.wolfgang.opala.parsing.ILanguageSupport;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
 import org.wolfgang.opala.parsing.exception.AbstractSyntaxTreeError;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
-import org.wolfgang.opala.scanner.IScanner;
+import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
 
-public class CompilationUnitTracker<E, P> implements ICompilationUnit<E, P> {
+public class CompilationUnitTracker<E, P> implements CompilationUnit<E, P> {
 
     private final String compilationKey;
-    private final ICompilationUnit<E, P> compilationUnit;
+    private final CompilationUnit<E, P> compilationUnit;
 
-    public CompilationUnitTracker(String compilationKey, ICompilationUnit<E, P> unit) {
+    public CompilationUnitTracker(String compilationKey, CompilationUnit<E, P> unit) {
         this.compilationKey = compilationKey;
         this.compilationUnit = unit;
     }
 
-    public E compile(ILanguageSupport support, IScanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, AbstractSyntaxTreeError {
+    public E compile(LanguageSupport support, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, AbstractSyntaxTreeError {
         support.enterUnit(compilationKey);
         try {
             return compilationUnit.compile(support, scanner, parameter);

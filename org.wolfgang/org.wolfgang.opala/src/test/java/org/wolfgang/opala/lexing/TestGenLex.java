@@ -37,7 +37,7 @@ public class TestGenLex extends TestCase {
 
 	@Test
 	public void testGenLex01() throws IOException {
-		IGenericLexer lexer = new GenLex(new ByteArrayInputStream("\"A String\" anId 'a'  +123".getBytes())).getLexer();
+		GenericLexer lexer = new GenLex(new ByteArrayInputStream("\"A String\" anId 'a'  +123".getBytes())).getLexer();
 
 		assertEquals(Tokens.getKind(Tokens._STRING_), Tokens.getKind(lexer.getLexemeType()));
 		assertEquals("A String", lexer.getLexemeValue());

@@ -23,17 +23,17 @@ import java.util.regex.Pattern;
 /**
  * A ILexeme provides a set of information related to the location, the kind and the value for a given token.
  *
- * @see org.wolfgang.opala.scanner.IScanner
+ * @see org.wolfgang.opala.scanner.Scanner
  */
 
-public interface ILexeme {
+public interface Lexeme {
 
     /**
      * Provide the location where this lexeme come from. This information was provided for tracability purpose.
      *
      * @return the location which cannot be <code>null</code>.
      */
-    ILocation getLocation();
+    Location getLocation();
 
     /**
      * Each lexeme is linked to a basic kind for classification exposed in {@link LexemeKind ).
