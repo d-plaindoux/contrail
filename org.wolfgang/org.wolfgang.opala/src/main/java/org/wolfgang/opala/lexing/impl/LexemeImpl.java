@@ -26,34 +26,57 @@ import org.wolfgang.opala.lexing.Location;
 import org.wolfgang.opala.lexing.LexemeKind;
 
 /**
- * <code>Lexeme</code>
+ * <code>LexemeImpl</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class LexemeImpl implements Lexeme {
-	private Location location;
-	private LexemeKind kind;
-	private String value;
 
+	private final Location location;
+	private final LexemeKind kind;
+	private final String value;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param location
+	 * @param kind
+	 * @param value
+	 */
 	public LexemeImpl(Location location, LexemeKind kind, String value) {
 		this.location = location;
 		this.kind = kind;
 		this.value = value;
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param kind
+	 * @param value
+	 */
 	public LexemeImpl(LexemeKind kind, String value) {
 		this(null, kind, value);
 	}
 
+	/**
+	 * @return the location (can be <code>null</code>)
+	 */
 	public Location getLocation() {
 		return location;
 	}
 
+	/**
+	 * @return the kind
+	 */
 	public LexemeKind getKind() {
 		return kind;
 	}
 
+	/**
+	 * @return the value (can be <code>null</code>)
+	 */
 	public String getValue() {
 		return value;
 	}
