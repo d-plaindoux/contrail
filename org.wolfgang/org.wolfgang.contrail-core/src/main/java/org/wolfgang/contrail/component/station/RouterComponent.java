@@ -1,5 +1,4 @@
-/*
- * Copyright (C)2012 D. Plaindoux.
+/* Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -26,22 +25,23 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.component.DestinationComponent;
+import org.wolfgang.contrail.component.bound.AbstractSourceComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
- * <code>StationComponent</code>
+ * <code>StationComponent</code> is capable to manager multiple source and
+ * multiple destinations.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StationComponent<U, D> extends AbstractComponent implements StationSourceComponent<U, D>, StationDestinationComponent<U, D> {
+public class RouterComponent<U, D> extends AbstractSourceComponent<U, D> implements StationSourceComponent<U, D>, DestinationComponent<U, D> {
 
 	/**
 	 * The set of connected filtering destination component (can be empty)
@@ -49,27 +49,25 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 	private final Map<ComponentId, SourceComponentLink<U, D>> sourceLinks;
 
 	/**
-	 * The set of connected filtering destination component (can be empty)
-	 */
-	private Map<ComponentId, DestinationComponentLink<U, D>> destinationLinks;
-
-	/**
 	 * 
 	 */
-	private final DataUpStreamStation<U> dataUpStreamFlowStation;
-	private final DataDownStreamStation<D> dataDownStreamFlowStation;
+	private DataDownStreamStation<D> dataDownStreamFlowStation;
 
 	{
 		this.sourceLinks = new HashMap<ComponentId, SourceComponentLink<U, D>>();
-		this.destinationLinks = new HashMap<ComponentId, DestinationComponentLink<U, D>>();
+	}
+
+	protected void init(DataDownStreamStation<D> dataDownStreamFlowStation) {
+		assert this.dataDownStreamFlowStation == null;
+
+		this.dataDownStreamFlowStation = dataDownStreamFlowStation;
 	}
 
 	/**
 	 * Constructor
 	 */
-	public StationComponent() {
-		this.dataUpStreamFlowStation = new DataUpStreamStation<U>(this);
-		this.dataDownStreamFlowStation = new DataDownStreamStation<D>(this);
+	public RouterComponent() {
+		this.init(new DataDownStreamStation<D>(this));
 	}
 
 	/**
@@ -77,27 +75,19 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 	 * 
 	 * @param dataFlowStation
 	 */
-	protected StationComponent(DataUpStreamStation<U> dataUpStreamFlowStation, DataDownStreamStation<D> dataDownStreamFlowStation) {
+	protected RouterComponent(DataDownStreamStation<D> dataDownStreamFlowStation) {
 		super();
-		this.dataUpStreamFlowStation = dataUpStreamFlowStation;
-		this.dataDownStreamFlowStation = dataDownStreamFlowStation;
+		this.init(dataDownStreamFlowStation);
 	}
 
 	@Override
 	public UpStreamDataFlow<U> getUpStreamDataFlow() {
-		return this.dataUpStreamFlowStation;
+		return this.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow();
 	}
 
 	@Override
 	public DownStreamDataFlow<D> getDownStreamDataFlow() {
 		return this.dataDownStreamFlowStation;
-	}
-
-	@Override
-	public void closeUpStream() throws DataFlowCloseException {
-		for (DestinationComponentLink<U, D> source : this.destinationLinks.values()) {
-			source.getDestinationComponent().closeUpStream();
-		}
 	}
 
 	@Override
@@ -109,7 +99,7 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return !this.sourceLinks.containsKey(componentId) && !this.destinationLinks.containsKey(componentId);
+		return !this.sourceLinks.containsKey(componentId);
 	}
 
 	@Override
@@ -128,27 +118,6 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 		}
 	}
 
-	@Override
-	public boolean acceptDestination(ComponentId componentId) {
-		return this.acceptSource(componentId);
-	}
-
-	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
-		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
-		if (this.acceptSource(componentId)) {
-			this.destinationLinks.put(componentId, handler);
-			return new ComponentLink() {
-				@Override
-				public void dispose() throws ComponentDisconnectionRejectedException {
-					disconnectDestination(componentId);
-				}
-			};
-		} else {
-			throw new ComponentConnectedException(ALREADY_CONNECTED.format());
-		}
-	}
-
 	private void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
 		if (this.sourceLinks.containsKey(componentId)) {
 			this.sourceLinks.remove(componentId);
@@ -157,19 +126,12 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 		}
 	}
 
-	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
-		if (this.destinationLinks.containsKey(componentId)) {
-			this.destinationLinks.remove(componentId);
-		} else {
-			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
-		}
-	}
-
 	/**
 	 * @param data
 	 * @return
 	 * @throws DataFlowException
 	 */
+	@Override
 	public boolean handleDownStreamData(D data) throws DataFlowException {
 		boolean hasBeenSent = false;
 
@@ -177,30 +139,6 @@ public class StationComponent<U, D> extends AbstractComponent implements Station
 			for (SourceComponentLink<U, D> sourceComponentLink : this.sourceLinks.values()) {
 				try {
 					sourceComponentLink.getSourceComponent().getDownStreamDataFlow().handleData(data);
-					hasBeenSent = true;
-				} catch (CannotAcceptDataException consume) {
-					// Ignore
-				}
-			}
-		} catch (StopAcceptData e) {
-			// Ignore
-		}
-
-		return hasBeenSent;
-	}
-
-	/**
-	 * @param data
-	 * @return
-	 * @throws DataFlowException
-	 */
-	public boolean handleUpStreamData(U data) throws DataFlowException {
-		boolean hasBeenSent = false;
-
-		try {
-			for (DestinationComponentLink<U, D> destinationComponentLink : this.destinationLinks.values()) {
-				try {
-					destinationComponentLink.getDestinationComponent().getUpStreamDataFlow().handleData(data);
 					hasBeenSent = true;
 				} catch (CannotAcceptDataException consume) {
 					// Ignore

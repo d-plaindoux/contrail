@@ -46,7 +46,7 @@ class DataDownStreamStation<D> implements DownStreamDataFlow<D> {
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final StationComponent<?, D> component;
+	private final StationSourceComponent<?, D> component;
 
 	/**
 	 * Constructor
@@ -55,7 +55,7 @@ class DataDownStreamStation<D> implements DownStreamDataFlow<D> {
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public DataDownStreamStation(StationComponent<?, D> component) {
+	public DataDownStreamStation(StationSourceComponent<?, D> component) {
 		super();
 		this.component = component;
 	}

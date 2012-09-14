@@ -78,11 +78,11 @@ public final class Components {
 			throw new ComponentConnectionRejectedException("TODO");
 		} else if (components.length == 1) {
 			return components[0];
-		} else if (Coercion.canCoerce(components[0], PipelineComponent.class) && Coercion.canCoerce(components[components.length - 1], PipelineComponent.class)) {
+		} else if (Coercion.canCoerce(components[0], SourceComponent.class, DestinationComponent.class) && Coercion.canCoerce(components[components.length - 1], SourceComponent.class, DestinationComponent.class)) {
 			return new CompositionPipelineComponent(linkManager, components);
-		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], PipelineComponent.class)) {
+		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], SourceComponent.class, DestinationComponent.class)) {
 			return new CompositionSourceComponent(linkManager, components);
-		} else if (Coercion.canCoerce(components[0], PipelineComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
+		} else if (Coercion.canCoerce(components[0], SourceComponent.class, DestinationComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionDestinationComponent(linkManager, components);
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionComponent(linkManager, components);

@@ -46,7 +46,7 @@ class DataUpStreamStation<U> implements UpStreamDataFlow<U> {
 	/**
 	 * The component in charge of managing this multiplexer
 	 */
-	private final StationComponent<U, ?> component;
+	private final StationDestinationComponent<U, ?> component;
 
 	/**
 	 * Constructor
@@ -55,7 +55,7 @@ class DataUpStreamStation<U> implements UpStreamDataFlow<U> {
 	 * @param selfReference
 	 * @param routerTable
 	 */
-	public DataUpStreamStation(StationComponent<U, ?> component) {
+	public DataUpStreamStation(StationDestinationComponent<U, ?> component) {
 		super();
 		this.component = component;
 	}

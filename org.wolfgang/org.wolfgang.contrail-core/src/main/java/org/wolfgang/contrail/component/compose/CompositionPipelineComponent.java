@@ -22,7 +22,9 @@ import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
@@ -40,8 +42,8 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  */
 public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractComponent implements PipelineComponent<U1, D1, U2, D2> {
 
-	private final PipelineComponent<U1, D1, ?, ?> initialComponent;
-	private final PipelineComponent<?, ?, U2, D2> terminalComponent;
+	private final DestinationComponent<U1, D1> initialComponent;
+	private final SourceComponent<U2, D2> terminalComponent;
 
 	/**
 	 * Constructor
@@ -54,13 +56,13 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 
 		assert components.length > 1;
 
-		initialComponent = Coercion.coerce(components[0], PipelineComponent.class);
+		initialComponent = Coercion.coerce(components[0], DestinationComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);
 		}
 
-		terminalComponent = Coercion.coerce(components[components.length - 1], PipelineComponent.class);
+		terminalComponent = Coercion.coerce(components[components.length - 1], SourceComponent.class);
 	}
 
 	@Override

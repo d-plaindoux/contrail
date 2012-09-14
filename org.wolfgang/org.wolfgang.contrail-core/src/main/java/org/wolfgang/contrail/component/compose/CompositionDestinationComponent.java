@@ -23,7 +23,6 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
-import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
@@ -39,7 +38,7 @@ import org.wolfgang.contrail.link.SourceComponentLink;
  */
 public class CompositionDestinationComponent<U1, D1, U2, D2> extends AbstractComponent implements DestinationComponent<U1, D1> {
 
-	private final PipelineComponent<U1, D1, ?, ?> initialComponent;
+	private final DestinationComponent<U1, D1> initialComponent;
 	private final DestinationComponent<U2, D2> terminalComponent;
 
 	/**
@@ -53,7 +52,7 @@ public class CompositionDestinationComponent<U1, D1, U2, D2> extends AbstractCom
 
 		assert components.length > 1;
 
-		initialComponent = Coercion.coerce(components[0], PipelineComponent.class);
+		initialComponent = Coercion.coerce(components[0], DestinationComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
 			linkManager.connect(components[i - 1], components[i]);

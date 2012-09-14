@@ -34,6 +34,15 @@ public final class Coercion {
 	}
 
 	/**
+	 * @param object
+	 * @param type
+	 * @return
+	 */
+	private static boolean canCoerceToType(Object object, Class<?> type) {
+		return object != null && type != null && type.isAssignableFrom(object.getClass());
+	}
+
+	/**
 	 * Method called whether a given object coercion must be checked
 	 * 
 	 * @param object
@@ -42,8 +51,14 @@ public final class Coercion {
 	 *            The required type
 	 * @return true if the object can be coerced to the given type
 	 */
-	public static boolean canCoerce(Object object, Class<?> type) {
-		return object != null && type != null && type.isAssignableFrom(object.getClass());
+	public static boolean canCoerce(Object object, Class<?> primary, Class<?>... types) {
+		boolean coerce = canCoerceToType(object, primary);
+
+		for (Class<?> type : types) {
+			coerce = coerce && canCoerceToType(object, type);
+		}
+
+		return coerce;
 	}
 
 	/**

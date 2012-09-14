@@ -105,4 +105,48 @@ public class TestStationComponent extends TestCase {
 		initialComponent.getUpStreamDataFlow().handleData("Hello");
 		assertEquals("Hello, World!", response.get(10, TimeUnit.SECONDS));
 	}
+
+	@Test
+	public void testNominal02() throws ComponentConnectionRejectedException, ComponentNotConnectedException, DataFlowException, InterruptedException, ExecutionException, TimeoutException,
+			CannotCreateDataFlowException {
+		final FutureResponse<String> response1 = new FutureResponse<String>();
+		final InitialComponent<String, String> initialComponent1 = Components.initial(new DownStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				response1.setValue(data);
+			}
+		});
+		final FutureResponse<String> response2 = new FutureResponse<String>();
+		final InitialComponent<String, String> initialComponent2 = Components.initial(new DownStreamDataFlowAdapter<String>() {
+			@Override
+			public void handleData(String data) throws DataFlowException {
+				response2.setValue(data);
+			}
+		});
+
+		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowFactory<String, String>() {
+			@Override
+			public UpStreamDataFlow<String> create(final DownStreamDataFlow<String> component) throws CannotCreateDataFlowException {
+				return new UpStreamDataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						component.handleData(data + ", World! <2>");
+					}
+				};
+			}
+		});
+
+		final Component initialPipeline1 = new StationPipeline<String, String>(null, new StringDataStreamHandler("Hello, World! <1>"));
+		final Component initialPipeline2 = new StationPipeline<String, String>(null, new StringDataStreamHandler("Hello, World! <2>"));
+		final Component stationComponent = new RouterComponent<String, String>();
+
+		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final Component station = Components.compose(linkManager, stationComponent, terminalComponent);
+		Components.compose(linkManager, initialComponent1, initialPipeline1, station);
+		Components.compose(linkManager, initialComponent2, initialPipeline2, station);
+
+		initialComponent1.getUpStreamDataFlow().handleData("Hello");
+		assertEquals("Hello, World! <2>", response2.get(10, TimeUnit.SECONDS));
+		assertFalse(response1.isCancelled() || response1.isDone());
+	}
 }
