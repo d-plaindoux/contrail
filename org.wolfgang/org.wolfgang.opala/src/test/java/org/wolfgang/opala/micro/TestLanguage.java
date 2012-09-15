@@ -28,6 +28,7 @@ import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.lexing.impl.GenLex;
 import org.wolfgang.opala.lexing.impl.LexerTokenizer;
 import org.wolfgang.opala.micro.Language.ExpressionUnit;
+import org.wolfgang.opala.micro.Language.S0Unit;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
@@ -51,7 +52,7 @@ public class TestLanguage extends TestCase {
 		final Scanner scanner = new ScannerImpl(lexer);
 		final Language.MyLang myLang = new Language.MyLang();
 		
-		myLang.parse(ExpressionUnit.class.getName(), scanner, null);
+		myLang.parse(S0Unit.class.getName(), scanner, null);
 	}
 
 }

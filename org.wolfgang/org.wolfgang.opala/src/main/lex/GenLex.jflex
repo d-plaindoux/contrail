@@ -70,6 +70,7 @@ import org.wolfgang.opala.lexing.Location;
 CharsDelimiter  = '
 StringDelimiter = \"
 LineComment     = \/\/
+
 BlockComment    = \/\*\*?
 WhiteSpaces     = ([ ]|\t|\f|\r)+
 NewLine         = (\n|\r\n)
