@@ -32,11 +32,11 @@ import java.util.Map;
  */
 public final class Servers implements Closeable {
 
-	private Map<String, Class<?>> prototypes;
+	private Map<String, Class<? extends Server>> prototypes;
 	private Map<String, Server> servers;
 
 	{
-		this.prototypes = new HashMap<String, Class<?>>();
+		this.prototypes = new HashMap<String, Class<? extends Server>>();
 		this.servers = new HashMap<String, Server>();
 	}
 
@@ -55,16 +55,21 @@ public final class Servers implements Closeable {
 	 * @param className
 	 *            The corresponding class name
 	 */
-	public void declareScheme(String scheme, Class<?> className) {
+	public void declareScheme(String scheme, Class<? extends Server> className) {
 		prototypes.put(scheme, className);
 	}
 
 	/**
 	 * @param scheme
 	 * @return
+	 * @throws ServerNotFoundException
 	 */
-	private Class<?> getFromScheme(String scheme) {
-		return prototypes.get(scheme);
+	private Class<? extends Server> getFromScheme(String scheme) throws ServerNotFoundException {
+		if (prototypes.containsKey(scheme)) {
+			return prototypes.get(scheme);
+		} else {
+			throw new ServerNotFoundException("TODO");
+		}
 	}
 
 	/**
@@ -77,25 +82,18 @@ public final class Servers implements Closeable {
 	 * @return
 	 * @throws ClientNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
-	public Server get(String scheme) throws ServerNotFoudException {
-		try {
-			if (servers.containsKey(scheme)) {
-				return servers.get(scheme);
-			} else {
-
-				final Class<Server> serverClass = (Class<Server>) getFromScheme(scheme);
-
-				assert serverClass != null;
-
+	public Server get(String scheme) throws ServerNotFoundException {
+		if (servers.containsKey(scheme)) {
+			return servers.get(scheme);
+		} else {
+			try {
+				final Class<? extends Server> serverClass = getFromScheme(scheme);
 				final Server server = serverClass.newInstance();
-
 				servers.put(scheme, server);
-
 				return server;
+			} catch (Exception e) {
+				throw new ServerNotFoundException(e);
 			}
-		} catch (Exception e) {
-			throw new ServerNotFoudException(e);
 		}
 	}
 

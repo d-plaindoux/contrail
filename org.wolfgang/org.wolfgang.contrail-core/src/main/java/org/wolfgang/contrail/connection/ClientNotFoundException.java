@@ -39,4 +39,13 @@ public class ClientNotFoundException extends Exception {
 	public ClientNotFoundException(Throwable arg0) {
 		super(arg0);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ClientNotFoundException(String arg0) {
+		super(arg0);
+	}
 }

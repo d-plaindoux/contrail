@@ -30,7 +30,7 @@ import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
-import org.wolfgang.contrail.connection.ServerNotFoudException;
+import org.wolfgang.contrail.connection.ServerNotFoundException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 
 /**
@@ -51,12 +51,12 @@ public class ServerComponent extends AbstractComponent {
 	 * @param contextFactory
 	 * @param reference
 	 * @throws URISyntaxException
-	 * @throws ServerNotFoudException
+	 * @throws ServerNotFoundException
 	 * @throws CannotCreateServerException
 	 */
 	@ContrailConstructor
 	public ServerComponent(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference, @ContrailArgument("flow") ComponentFactoryListener listener)
-			throws URISyntaxException, ServerNotFoudException, CannotCreateServerException {
+			throws URISyntaxException, ServerNotFoundException, CannotCreateServerException {
 		this.uri = new URI(reference);
 		this.server = contextFactory.getServerFactory().get(uri.getScheme());
 		this.server.bind(this.uri, listener);

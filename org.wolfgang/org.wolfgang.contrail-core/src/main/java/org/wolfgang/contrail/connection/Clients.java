@@ -32,11 +32,11 @@ import java.util.Map;
  */
 public final class Clients implements Closeable {
 
-	private Map<String, Class<?>> prototypes;
+	private Map<String, Class<? extends Client>> prototypes;
 	private Map<String, Client> clients;
 
 	{
-		this.prototypes = new HashMap<String, Class<?>>();
+		this.prototypes = new HashMap<String, Class<? extends Client>>();
 		this.clients = new HashMap<String, Client>();
 	}
 
@@ -55,16 +55,21 @@ public final class Clients implements Closeable {
 	 * @param aClass
 	 *            The corresponding class
 	 */
-	public void declareScheme(String scheme, Class<?> aClass) {
+	public void declareScheme(String scheme, Class<? extends Client> aClass) {
 		prototypes.put(scheme, aClass);
 	}
 
 	/**
 	 * @param scheme
 	 * @return
+	 * @throws ClientNotFoundException
 	 */
-	private Class<?> getFromScheme(String scheme) {
-		return prototypes.get(scheme);
+	private Class<? extends Client> getFromScheme(String scheme) throws ClientNotFoundException {
+		if (prototypes.containsKey(scheme)) {
+			return prototypes.get(scheme);
+		} else {
+			throw new ClientNotFoundException("TODO");
+		}
 	}
 
 	/**
@@ -77,24 +82,18 @@ public final class Clients implements Closeable {
 	 * @return
 	 * @throws ClientNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
 	public Client get(String scheme) throws ClientNotFoundException {
-		try {
-			if (clients.containsKey(scheme)) {
-				return clients.get(scheme);
-			} else {
-				final Class<Client> clientClass = (Class<Client>) getFromScheme(scheme);
-
-				assert clientClass != null;
-
+		if (clients.containsKey(scheme)) {
+			return clients.get(scheme);
+		} else {
+			final Class<? extends Client> clientClass = getFromScheme(scheme);
+			try {
 				final Client client = clientClass.newInstance();
-
 				clients.put(scheme, client);
-
 				return client;
+			} catch (Exception e) {
+				throw new ClientNotFoundException(e);
 			}
-		} catch (Exception e) {
-			throw new ClientNotFoundException(e);
 		}
 	}
 

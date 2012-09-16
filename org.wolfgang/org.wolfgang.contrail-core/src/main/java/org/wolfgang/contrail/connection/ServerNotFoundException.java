@@ -24,7 +24,7 @@ package org.wolfgang.contrail.connection;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ServerNotFoudException extends Exception {
+public class ServerNotFoundException extends Exception {
 
 	/**
 	 * The serialVersionUID attribute
@@ -36,7 +36,16 @@ public class ServerNotFoudException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	public ServerNotFoudException(Throwable arg0) {
+	public ServerNotFoundException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ServerNotFoundException(Throwable arg0) {
 		super(arg0);
 	}
 }

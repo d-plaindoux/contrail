@@ -119,6 +119,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 * @param loader
 	 * @param factory
 	 */
+	@SuppressWarnings("unchecked")
 	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
 		for (Import importation : ecosystemModel.getImportations()) {
 			try {
@@ -128,14 +129,14 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 				if (aClass.isAnnotationPresent(ContrailClient.class)) {
 					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
 					if (Client.class.isAssignableFrom(aClass)) {
-						this.getClientFactory().declareScheme(annotation.scheme(), aClass);
+						this.getClientFactory().declareScheme(annotation.scheme(), (Class<? extends Client>) aClass);
 					} else {
 						logger.log(Level.WARNING, message.format(Client.class, importation.getElement()));
 					}
 				} else if (aClass.isAnnotationPresent(ContrailServer.class)) {
 					final ContrailServer annotation = aClass.getAnnotation(ContrailServer.class);
 					if (Server.class.isAssignableFrom(aClass)) {
-						this.getServerFactory().declareScheme(annotation.scheme(), aClass);
+						this.getServerFactory().declareScheme(annotation.scheme(), (Class<? extends Server>) aClass);
 					} else {
 						logger.log(Level.WARNING, message.format(Server.class, importation.getElement()));
 					}
