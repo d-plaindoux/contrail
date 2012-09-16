@@ -18,13 +18,17 @@
 
 package org.wolfgang.opala.micro;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.lexing.impl.LexemeImpl;
 import org.wolfgang.opala.parsing.CompilationUnit;
 import org.wolfgang.opala.parsing.LanguageSupport;
-import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
+import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 import org.wolfgang.opala.parsing.impl.AbstractLanguageSupport;
 import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
@@ -167,14 +171,23 @@ public interface Language {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, Void parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 			scanner.scan(LexemeKind.IDENT, "fun");
+
+			final List<String> values = new ArrayList<String>();
+
+			values.add(0, scanner.scan(LexemeKind.IDENT).getValue());
 			while (scanner.currentLexeme().isA(LexemeKind.IDENT)) {
-				scanner.scan();
+				values.add(0, scanner.scan(LexemeKind.IDENT).getValue());
 			}
+
 			scanner.scan(LexemeKind.OPERATOR, "->");
 
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+			Expression body = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
 
-			return null;
+			for (String value : values) {
+				body = new Lambda(value, body);
+			}
+
+			return body;
 		}
 	}
 
@@ -188,23 +201,29 @@ public interface Language {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, Void parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 			scanner.scan(LexemeKind.OPERATOR, "(");
+
+			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+
 			while (!scanner.currentLexeme().isA(LexemeKind.OPERATOR, ")")) {
-				support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class));
 			}
+
 			scanner.scan(LexemeKind.OPERATOR, ")");
 
-			return null;
+			return expression;
 		}
 	}
 
 	public class S0Unit implements CompilationUnit<Expression, Void> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, Void parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+
 			while (!scanner.isFinished()) {
-				support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class));
 			}
-			return null;
+
+			return expression;
 		}
 	}
 
