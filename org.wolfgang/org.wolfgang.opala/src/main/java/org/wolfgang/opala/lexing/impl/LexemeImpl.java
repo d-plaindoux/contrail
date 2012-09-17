@@ -20,10 +20,9 @@ package org.wolfgang.opala.lexing.impl;
 
 import java.util.regex.Pattern;
 
-import org.wolfgang.common.utils.Predicate;
 import org.wolfgang.opala.lexing.Lexeme;
-import org.wolfgang.opala.lexing.Location;
 import org.wolfgang.opala.lexing.LexemeKind;
+import org.wolfgang.opala.lexing.Location;
 
 /**
  * <code>LexemeImpl</code>
@@ -90,7 +89,7 @@ public class LexemeImpl implements Lexeme {
 	}
 
 	public boolean isA(String value) {
-		return Predicate.isNullOfEquals(this.value, value);
+		return (this.value == null && value == null) || (this.value != null && this.value.equals(value));
 	}
 
 	public boolean isA(LexemeKind kind, String value) {

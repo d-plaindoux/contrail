@@ -49,7 +49,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
  * @version 1.0
  */
 @ContrailServer(scheme = "sh", type = @ContrailType(in = byte[].class, out = byte[].class))
-public class ProcessHandler implements Server {
+public class ProcessServer implements Server {
 
 	/**
 	 * The internal executor in charge of managing incoming connection requests
@@ -66,7 +66,7 @@ public class ProcessHandler implements Server {
 	 * @param ecosystem
 	 *            The factory used to create components
 	 */
-	public ProcessHandler() {
+	public ProcessServer() {
 		super();
 	}
 
