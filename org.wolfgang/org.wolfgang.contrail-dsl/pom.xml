@@ -1,23 +1,55 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>org.wolfgang</artifactId>
-    <groupId>org.wolfgang</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>org.wolgang</groupId>
-  <artifactId>org.wolfgang.contrail-dsl</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>org.wolfgang.contrail-dsl</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.wolgang</groupId>
+	<artifactId>org.wolfgang.contrail-dsl</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>org.wolfgang.contrail-dsl</name>
+	<url>http://maven.apache.org</url>
+
+	<developers>
+		<developer>
+			<id>d.plaindoux</id>
+			<name>Didier Plaindoux</name>
+			<email>d.plaindoux@free.fr</email>
+			<url>http://d.plaindoux.free.fr</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wolfgang</groupId>
+			<artifactId>org.wolfgang.opala</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wolfgang</groupId>
+			<artifactId>org.wolfgang.contrail-ecosystem</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

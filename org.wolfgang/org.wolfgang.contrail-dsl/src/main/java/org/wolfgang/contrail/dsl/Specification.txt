@@ -1,16 +1,13 @@
 DSL Contrail Ecosystem Language aka CEL
 ---------------------------------------
 
-Keywords = { 'function', 'def' }
+Keywords = { 'import', 'function', 'var' }
 
-Unit ::=
-	Requires Statements
+Source ::=
+	Imports Statements
 	
 Imports ::=
-	'require' Package ';'
-	
-Package ::=
-    ID ('.' ID)* 		
+	'import' STRING ';'
 	 	
 Statements ::=
     (Statement)*	
@@ -21,8 +18,13 @@ Statement ::=
 
 FlowExpression ::=
     Expression ('<>' Expression)*
+    Expression ('|' Expression)*
 
 Expression ::=
+	STRING
+	INTEGER
+	CHARACTERE
+	URL
 	'(' FlowExpression ')' 
 	function '(' Args? ')' (Expression | '{' Statements '}')
 	ID ('(' Params* ')')?		

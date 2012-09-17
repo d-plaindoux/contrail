@@ -1,9 +1,9 @@
-require NetClient, NetServer;
-
-adminServer = ....
+import http://www.contrail-network.org/imports/core.jar
+import http://www.contrail-network.org/imports/network.jar
+import http://www.contrail-network.org/imports/netty.jar
 
 var payLoad = function(){
-	delta "...";
+	component org.wolfgang.contrail.component.pipeline.transducer.PayLoad;
 }
 
 var clientFlow = function(uri){
@@ -13,7 +13,7 @@ var clientFlow = function(uri){
 
 var serverFlow = function(uri){
 	var flow = function(client){ 
-		client <> [ Jaxb() | PayLoad() <> Serialize() ] <> coerce(Event) 
+		client <> ( Jaxb() | PayLoad() <> Serialize() ) <> coerce(Event) 
 	};
 	server(uri,flow) <> adminServer;	
 }

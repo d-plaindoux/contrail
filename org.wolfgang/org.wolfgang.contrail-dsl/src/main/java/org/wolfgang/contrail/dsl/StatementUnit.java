@@ -16,10 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.dsl;
+
+import java.util.List;
+
+import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
+import org.wolfgang.opala.parsing.exception.ParsingException;
+import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
+import org.wolfgang.opala.scanner.Scanner;
+import org.wolfgang.opala.scanner.exception.ScannerException;
+
 /**
- * <code>package-info</code>
- *
+ * <code>StatementUnit</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.dsl.parse;
+public class StatementUnit implements CompilationUnit<Void, List<String>> {
+
+	@Override
+	public Void compile(LanguageSupport support, Scanner scanner, List<String> parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		return null;
+	}
+}

@@ -16,26 +16,32 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.annotation;
+package org.wolfgang.contrail.dsl;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.wolfgang.opala.parsing.impl.AbstractLanguageSupport;
+import org.wolfgang.opala.scanner.LexemeFilter;
 
 /**
- * <code>ComponentPipeline</code>
+ * <code>CELLanguage</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface ContrailTransducer {
-	
-	ContrailType upType() default @ContrailType(in = Object.class, out = Object.class);
+public class CELLanguage extends AbstractLanguageSupport {
 
-	ContrailType downType() default @ContrailType(in = Object.class, out = Object.class);
+	/**
+	 * Constructor
+	 */
+	public CELLanguage() {
+		super();
+		this.addKeyword("import");
+		this.addKeyword("function");
+		this.addKeyword("var");
+	}
+
+	@Override
+	public LexemeFilter getSkippedLexemes() {
+		return LexemeFilter.SPACE_AND_COMMENT;
+	}
 
 }

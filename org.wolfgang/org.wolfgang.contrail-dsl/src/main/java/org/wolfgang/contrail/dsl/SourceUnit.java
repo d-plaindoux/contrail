@@ -16,26 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.annotation;
+package org.wolfgang.contrail.dsl;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.List;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
+import org.wolfgang.opala.parsing.exception.ParsingException;
+import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
+import org.wolfgang.opala.scanner.Scanner;
+import org.wolfgang.opala.scanner.exception.ScannerException;
 
 /**
- * <code>ComponentPipeline</code>
+ * <code>SourceUnit</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface ContrailTransducer {
-	
-	ContrailType upType() default @ContrailType(in = Object.class, out = Object.class);
+public class SourceUnit implements CompilationUnit<Void, List<String>> {
 
-	ContrailType downType() default @ContrailType(in = Object.class, out = Object.class);
-
+	@Override
+	public Void compile(LanguageSupport support, Scanner scanner, List<String> parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		return null;
+	}
 }
