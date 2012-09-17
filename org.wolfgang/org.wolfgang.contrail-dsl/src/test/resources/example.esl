@@ -1,0 +1,21 @@
+require NetClient, NetServer;
+
+adminServer = ....
+
+var payLoad = function(){
+	delta "...";
+}
+
+var clientFlow = function(uri){
+	var flow = payLoad() <> serialize() <> coerce(Event);
+	reverse(flow) <> client(uri);   
+}
+
+var serverFlow = function(uri){
+	var flow = function(client){ 
+		client <> [ Jaxb() | PayLoad() <> Serialize() ] <> coerce(Event) 
+	};
+	server(uri,flow) <> adminServer;	
+}
+
+

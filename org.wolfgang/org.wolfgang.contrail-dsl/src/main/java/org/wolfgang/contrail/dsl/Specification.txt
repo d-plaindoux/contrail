@@ -1,0 +1,36 @@
+DSL Contrail Ecosystem Language aka CEL
+---------------------------------------
+
+Keywords = { 'function', 'def' }
+
+Unit ::=
+	Requires Statements
+	
+Imports ::=
+	'require' Package ';'
+	
+Package ::=
+    ID ('.' ID)* 		
+	 	
+Statements ::=
+    (Statement)*	
+	
+Statement ::=
+	'var' ID '=' FlowExpression ';'
+	FlowExpression ';'
+
+FlowExpression ::=
+    Expression ('<>' Expression)*
+
+Expression ::=
+	'(' FlowExpression ')' 
+	function '(' Args? ')' (Expression | '{' Statements '}')
+	ID ('(' Params* ')')?		
+
+Args ::= 
+	ID (',' Args)*
+		
+Params ::=
+	FlowExpression (',' FlowExpression)*	
+	
+

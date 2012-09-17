@@ -59,9 +59,7 @@ public class LexemeImpl implements Lexeme {
 		this(null, kind, value);
 	}
 
-	/**
-	 * @return the location (can be <code>null</code>)
-	 */
+	@Override
 	public Location getLocation() {
 		return location;
 	}
@@ -69,13 +67,12 @@ public class LexemeImpl implements Lexeme {
 	/**
 	 * @return the kind
 	 */
+	@Override
 	public LexemeKind getKind() {
 		return kind;
 	}
 
-	/**
-	 * @return the value (can be <code>null</code>)
-	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -84,22 +81,27 @@ public class LexemeImpl implements Lexeme {
 		return kind + "[" + value + "]";
 	}
 
+	@Override
 	public boolean isA(LexemeKind kind) {
 		return this.kind == kind;
 	}
 
+	@Override
 	public boolean isA(String value) {
 		return (this.value == null && value == null) || (this.value != null && this.value.equals(value));
 	}
 
+	@Override
 	public boolean isA(LexemeKind kind, String value) {
 		return isA(kind) && isA(value);
 	}
 
+	@Override
 	public boolean isA(Pattern value) {
 		return (this.value == null && value == null) || (this.value != null && value.matcher(this.value).matches());
 	}
 
+	@Override
 	public boolean isA(LexemeKind kind, Pattern value) {
 		return isA(kind) && isA(value);
 	}
