@@ -26,8 +26,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 
 import org.wolfgang.common.utils.Pair;
-import org.wolfgang.contrail.component.annotation.ContrailClient;
-import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.connection.AbstractClient;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 
@@ -43,7 +41,6 @@ import org.wolfgang.contrail.connection.CannotCreateClientException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailClient(scheme = "tcp", type = @ContrailType(in = byte[].class, out = byte[].class))
 public class NetClient extends AbstractClient {
 
 	@Override

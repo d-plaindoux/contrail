@@ -5,7 +5,7 @@
 	</import>
 	
 	<define name="Test">
-		<ref>EchoComponent</ref>
+		<ref>echo</ref>
 	</define>
 
 	<define name='Main'>

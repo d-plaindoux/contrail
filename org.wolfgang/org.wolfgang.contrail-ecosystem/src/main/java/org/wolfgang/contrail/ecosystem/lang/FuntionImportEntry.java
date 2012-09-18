@@ -18,41 +18,38 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.TransducerComponentFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
 
 /**
- * <code>PipelineImportEntry</code>
+ * <code>FuntionImportEntry</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
-class TransducerImportEntry implements EcosystemImportation<PipelineComponent> {
-	private final ComponentLinkManager linkManager;
+class FuntionImportEntry implements EcosystemImportation<Component> {
 	private final ContextFactory factory;
-	private final Class<?> component;
+	private final Method method;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param component
 	 */
-	TransducerImportEntry(ComponentLinkManager linkManager, ContextFactory factory, Class component) {
+	FuntionImportEntry(ContextFactory factory, Method method) {
 		super();
-		this.linkManager = linkManager;
 		this.factory = factory;
-		this.component = component;
+		this.method = method;
 	}
 
 	@Override
-	public PipelineComponent create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return TransducerComponentFactory.create(linkManager, factory, component, environment);
+	public Component create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
+		return LibraryBuilder.create(method, factory, environment);
 	}
 }

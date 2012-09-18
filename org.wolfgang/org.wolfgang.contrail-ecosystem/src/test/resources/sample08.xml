@@ -1,19 +1,12 @@
 <?xml version='1.0'?>
 <ecosystem>
-
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
-	</import>
 	<import>
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
 
 	<define name='Main'>
-		<ref>PayLoadTransducerFactory</ref>
-		<ref>SerializationTransducerFactory</ref>
-		<ref>EchoComponent</ref>
+		<ref>payload</ref>
+		<ref>serialize</ref>
+		<ref>echo</ref>
 	</define>
 </ecosystem>

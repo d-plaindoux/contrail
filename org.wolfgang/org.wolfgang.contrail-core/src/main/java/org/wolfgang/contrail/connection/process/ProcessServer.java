@@ -29,8 +29,6 @@ import java.util.concurrent.Executors;
 
 import org.wolfgang.common.concurrent.DelegatedFuture;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.annotation.ContrailServer;
-import org.wolfgang.contrail.component.annotation.ContrailType;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
@@ -48,7 +46,6 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailServer(scheme = "sh", type = @ContrailType(in = byte[].class, out = byte[].class))
 public class ProcessServer implements Server {
 
 	/**

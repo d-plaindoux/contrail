@@ -21,15 +21,17 @@ package org.wolfgang.contrail.ecosystem.lang.delta;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeSet;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.CoercionConverter;
@@ -43,11 +45,11 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentBuilder {
+public class LibraryBuilder {
 
 	@SuppressWarnings("unchecked")
 	static <E> Converter<E> getConverter(ComponentLinkManager linkManager, Class<E> type) {
-		final Class<ComponentBuilder> aClass = ComponentBuilder.class;
+		final Class<LibraryBuilder> aClass = LibraryBuilder.class;
 		final String name = aClass.getPackage().getName() + ".converter." + type.getSimpleName() + "Converter";
 		try {
 			final Class<?> converter = aClass.getClassLoader().loadClass(name);
@@ -71,17 +73,29 @@ public class ComponentBuilder {
 	}
 
 	/**
+	 * Method called when a given code value msut be converted
+	 * 
+	 * @param linkManager
+	 * @param type
+	 * @param value
+	 * @return
+	 * @throws ConversionException
+	 */
+	public static <T> T create(ComponentLinkManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
+		return getConverter(linkManager, type).performConversion(value);
+	}
+
+	/**
 	 * Method providing the constructor defined
 	 * 
 	 * @param component
 	 *            The class
 	 * @return a constructor (Never <code>null</code>)
 	 */
-	@SuppressWarnings("rawtypes")
-	static Constructor[] getDeclaredConstructor(Class<?> component) {
-		final TreeSet<Constructor> treeSet = new TreeSet<Constructor>(new Comparator<Constructor>() {
+	public static Method[] getDeclaredMethods(String name, Class<?> component) {
+		final TreeSet<Method> treeSet = new TreeSet<Method>(new Comparator<Method>() {
 			@Override
-			public int compare(Constructor arg0, Constructor arg1) {
+			public int compare(Method arg0, Method arg1) {
 				int n = arg0.getParameterTypes().length - arg1.getParameterTypes().length;
 				if (n < 0) {
 					return 1;
@@ -93,16 +107,18 @@ public class ComponentBuilder {
 			}
 		});
 
-		final Collection<Constructor> annoted = treeSet;
-		final Constructor<?>[] constructors = component.getConstructors();
+		final Collection<Method> annoted = treeSet;
+		final Method[] methods = component.getMethods();
 
-		for (Constructor<?> constructor : constructors) {
-			if (constructor.isAnnotationPresent(ContrailConstructor.class)) {
-				annoted.add(constructor);
+		for (Method method : methods) {
+			if ((name == null || method.getName().equals(name)) && method.isAnnotationPresent(ContrailMethod.class)) {
+				if (Modifier.isStatic(method.getModifiers())) {
+					annoted.add(method);
+				}
 			}
 		}
 
-		return annoted.toArray(new Constructor[annoted.size()]);
+		return annoted.toArray(new Method[annoted.size()]);
 	}
 
 	static ContrailArgument getDeclaredParameter(Annotation[] parameterTypes) {
@@ -115,7 +131,7 @@ public class ComponentBuilder {
 		return null;
 	}
 
-	static Object[] getParameters(ComponentLinkManager linkManager, Constructor<?> constructor, Map<String, CodeValue> environment) throws Exception {
+	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, Map<String, CodeValue> environment) throws Exception {
 		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
 
@@ -133,16 +149,24 @@ public class ComponentBuilder {
 	}
 
 	/**
-	 * Method called when a given code value msut be converted
-	 * 
-	 * @param linkManager
-	 * @param type
-	 * @param value
+	 * @param classLoader
+	 * @param factoryName
+	 * @param array
 	 * @return
-	 * @throws ConversionException
+	 * @throws CannotCreateComponentException
 	 */
-	public static <T> T create(ComponentLinkManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
-		return getConverter(linkManager, type).performConversion(value);
+	@SuppressWarnings({ "unchecked" })
+	public static <T> T create(Method method, ContextFactory ecosystemFactory, Map<String, CodeValue> environment) throws CannotCreateComponentException {
+		try {
+			final Object[] parameters = getParameters(ecosystemFactory.getLinkManager(), method, environment);
+			return (T) method.invoke(null, parameters);
+		} catch (CannotCreateComponentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw new CannotCreateComponentException(e.getCause());
+		} catch (Exception e) {
+			throw new CannotCreateComponentException(e);
+		}
 	}
 
 	/**
@@ -152,27 +176,27 @@ public class ComponentBuilder {
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T create(ComponentLinkManager linkManager, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
+	@SuppressWarnings({ "unchecked" })
+	public static <T> T create(String name, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			final Constructor[] constructors = getDeclaredConstructor(component);
+			final Method[] methods = getDeclaredMethods(name, component);
 
 			environment.put("context", new ConstantValue(ecosystemFactory));
 
 			Exception raised = new CannotCreateComponentException("TODO: Constructor Definition not found");
 
-			for (Constructor<?> constructor : constructors) {
+			for (Method method : methods) {
 				Object[] parameters;
 
 				try {
-					parameters = getParameters(linkManager, constructor, environment);
+					parameters = getParameters(ecosystemFactory.getLinkManager(), method, environment);
 				} catch (Exception exception) {
 					parameters = null;
 					raised = exception;
 				}
 
 				if (parameters != null) {
-					return (T) constructor.newInstance(parameters);
+					return (T) method.invoke(null, parameters);
 				}
 			}
 

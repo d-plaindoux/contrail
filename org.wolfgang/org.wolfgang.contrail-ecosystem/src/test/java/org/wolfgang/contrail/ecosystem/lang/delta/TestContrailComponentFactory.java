@@ -18,21 +18,22 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
 import org.wolfgang.contrail.connection.Clients;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Servers;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
  * <code>TestContrailComponentFactory</code>
@@ -43,39 +44,42 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
 
 public class TestContrailComponentFactory extends TestCase {
 
+	@ContrailLibrary
 	public static class TestClass {
 		private final String i;
 
-		@ContrailConstructor
 		public TestClass() {
 			this.i = "anon";
 		}
 
-		@ContrailConstructor
-		public TestClass(@ContrailArgument("a") String a) {
+		public TestClass(String a) {
 			this.i = a;
 		}
 
-		@ContrailConstructor
-		public TestClass(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
-			this.i = a + b;
+		@ContrailMethod
+		public static TestClass add1(@ContrailArgument("a") String a) {
+			return new TestClass(a);
+		}
+
+		@ContrailMethod
+		public static TestClass add2(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
+			return new TestClass(a + b);
 		}
 	}
 
 	@Test
-	public void testConstructors() {
-		final Constructor<?>[] declaredConstructors = ComponentBuilder.getDeclaredConstructor(TestClass.class);
+	public void testDefinitions() {
+		final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, TestClass.class);
 
-		assertEquals(3, declaredConstructors.length);
-		assertEquals(2, declaredConstructors[0].getParameterTypes().length);
-		assertEquals(1, declaredConstructors[1].getParameterTypes().length);
-		assertEquals(0, declaredConstructors[2].getParameterTypes().length);
+		assertEquals(2, declaredMethods.length);
+		assertEquals(2, declaredMethods[0].getParameterTypes().length);
+		assertEquals(1, declaredMethods[1].getParameterTypes().length);
 	}
 
 	@SuppressWarnings("serial")
 	@Test
-	public void testConstructor01() throws CannotCreateComponentException {
-		final TestClass test = ComponentBuilder.create(null, new ContextFactory() {
+	public void testMethod01() throws CannotCreateComponentException {
+		final TestClass test = LibraryBuilder.create("add1", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -88,6 +92,11 @@ public class TestContrailComponentFactory extends TestCase {
 
 			@Override
 			public ClassLoader getClassLoader() {
+				return null;
+			}
+
+			@Override
+			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
 		}, TestClass.class, new HashMap<String, CodeValue>() {
@@ -101,7 +110,7 @@ public class TestContrailComponentFactory extends TestCase {
 	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor02() throws CannotCreateComponentException {
-		final TestClass test = ComponentBuilder.create(new ComponentLinkManagerImpl(), new ContextFactory() {
+		final TestClass test = LibraryBuilder.create("add2", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -114,6 +123,11 @@ public class TestContrailComponentFactory extends TestCase {
 
 			@Override
 			public ClassLoader getClassLoader() {
+				return null;
+			}
+
+			@Override
+			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
 		}, TestClass.class, new HashMap<String, CodeValue>() {
@@ -123,33 +137,5 @@ public class TestContrailComponentFactory extends TestCase {
 		});
 
 		assertEquals("Hello", test.i);
-	}
-
-	@SuppressWarnings("serial")
-	@Test
-	public void testConstructor03() throws CannotCreateComponentException {
-		final TestClass test = ComponentBuilder.create(new ComponentLinkManagerImpl(), new ContextFactory() {
-			@Override
-			public Servers getServerFactory() {
-				return null;
-			}
-
-			@Override
-			public Clients getClientFactory() {
-				return null;
-			}
-
-			@Override
-			public ClassLoader getClassLoader() {
-				return null;
-			}
-		}, TestClass.class, new HashMap<String, CodeValue>() {
-			{
-				this.put("a", new ConstantValue("Hello"));
-				this.put("b", new ConstantValue(", World!"));
-			}
-		});
-
-		assertEquals("Hello, World!", test.i);
 	}
 }

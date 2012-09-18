@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,28 +30,17 @@ import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentFactory;
-import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.annotation.ContrailClient;
-import org.wolfgang.contrail.component.annotation.ContrailComponent;
-import org.wolfgang.contrail.component.annotation.ContrailInitial;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
-import org.wolfgang.contrail.component.annotation.ContrailServer;
-import org.wolfgang.contrail.component.annotation.ContrailTerminal;
-import org.wolfgang.contrail.component.annotation.ContrailTransducer;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
-import org.wolfgang.contrail.connection.Client;
 import org.wolfgang.contrail.connection.Clients;
 import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.ComponentBuilder;
+import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
+import org.wolfgang.contrail.ecosystem.lang.delta.RuntimeFunction;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -113,78 +103,48 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	}
 
 	/**
+	 * Method called whether an ecosystem importation must be managed. This
+	 * management is done using annotations.
+	 * 
+	 * @param loader
+	 * @param factory
+	 */
+	private void loadImportation(Logger logger, Import importation) {
+		try {
+			final Class<?> aClass = classLoader.loadClass(importation.getElement());
+			if (aClass.isAnnotationPresent(ContrailLibrary.class)) {
+				LibraryBuilder.create("init", this, aClass, this.definitions);
+				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
+				for (Method method : declaredMethods) {
+					this.importations.put(method.getName(), new FuntionImportEntry(this, method));
+				}
+			} else {
+				final String name = aClass.getSimpleName();
+				this.definitions.put(name, new ConstantValue(importation.getElement()));
+			}
+		} catch (ClassNotFoundException e) {
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (CannotCreateComponentException e) {
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		}
+	}
+
+	/**
 	 * Method called whether an ecosystem importation set must be managed. This
 	 * management is done using annotations.
 	 * 
 	 * @param loader
 	 * @param factory
 	 */
-	@SuppressWarnings("unchecked")
 	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
+		final Import pervasive = new Import();
+		pervasive.setElement(RuntimeFunction.class.getName());
+		loadImportation(logger, pervasive);
+
 		for (Import importation : ecosystemModel.getImportations()) {
-			try {
-				final Class<?> aClass = classLoader.loadClass(importation.getElement());
-				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "incompatible.type");
-
-				if (aClass.isAnnotationPresent(ContrailClient.class)) {
-					final ContrailClient annotation = aClass.getAnnotation(ContrailClient.class);
-					if (Client.class.isAssignableFrom(aClass)) {
-						this.getClientFactory().declareScheme(annotation.scheme(), (Class<? extends Client>) aClass);
-					} else {
-						logger.log(Level.WARNING, message.format(Client.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailServer.class)) {
-					final ContrailServer annotation = aClass.getAnnotation(ContrailServer.class);
-					if (Server.class.isAssignableFrom(aClass)) {
-						this.getServerFactory().declareScheme(annotation.scheme(), (Class<? extends Server>) aClass);
-					} else {
-						logger.log(Level.WARNING, message.format(Server.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailComponent.class)) {
-					if (Component.class.isAssignableFrom(aClass)) {
-						final String name = aClass.getSimpleName();
-						this.importations.put(name, new ComponentImportEntry(getLinkManager(), this, aClass));
-					} else {
-						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailPipeline.class)) {
-					if (PipelineComponent.class.isAssignableFrom(aClass)) {
-						final String name = aClass.getSimpleName();
-						this.importations.put(name, new PipelineImportEntry(getLinkManager(), this, aClass));
-					} else {
-						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailTransducer.class)) {
-					if (TransducerFactory.class.isAssignableFrom(aClass)) {
-						final String name = aClass.getSimpleName();
-						this.importations.put(name, new TransducerImportEntry(getLinkManager(), this, aClass));
-					} else {
-						logger.log(Level.WARNING, message.format(PipelineComponent.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailTerminal.class)) {
-					if (TerminalComponent.class.isAssignableFrom(aClass)) {
-						final String name = aClass.getSimpleName();
-						this.importations.put(name, new TerminaImportEntry(getLinkManager(), this, aClass));
-
-					} else {
-						logger.log(Level.WARNING, message.format(TerminalComponent.class, importation.getElement()));
-					}
-				} else if (aClass.isAnnotationPresent(ContrailInitial.class)) {
-					if (InitialComponent.class.isAssignableFrom(aClass)) {
-						final String name = aClass.getSimpleName();
-						this.importations.put(name, new InitialImportEntry(getLinkManager(), this, aClass));
-					} else {
-						logger.log(Level.WARNING, message.format(InitialComponent.class, importation.getElement()));
-					}
-				} else {
-					// TODO -- Check this branch
-					final String name = aClass.getSimpleName();
-					this.definitions.put(name, new ConstantValue(importation.getElement()));
-				}
-			} catch (ClassNotFoundException ignore) {
-				final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-				logger.log(Level.WARNING, message.format(importation.getElement(), ignore.getClass().getSimpleName()));
-			}
+			loadImportation(logger, importation);
 		}
 	}
 
@@ -205,7 +165,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 			final CodeValue generated = this.interpreter.visit(definition.getExpressions());
 
 			try {
-				final Component component = ComponentBuilder.create(getLinkManager(), Component.class, generated);
+				final Component component = LibraryBuilder.create(getLinkManager(), Component.class, generated);
 				EcosystemFactoryImpl.this.addActiveComponent(component);
 			} catch (ConversionException consume) {
 				// Ignore
@@ -241,7 +201,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 						}
 
 						try {
-							final Component component = ComponentBuilder.create(getLinkManager(), Component.class, interpreted);
+							final Component component = LibraryBuilder.create(getLinkManager(), Component.class, interpreted);
 							EcosystemFactoryImpl.this.addActiveComponent(component);
 							return component;
 						} catch (ConversionException e) {

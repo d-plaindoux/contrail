@@ -16,9 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.annotation;
+package org.wolfgang.contrail.ecosystem.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
@@ -30,8 +30,7 @@ import java.lang.annotation.Target;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@Target(TYPE)
+@Target(METHOD)
 @Retention(RUNTIME)
-public @interface ContrailComponent {
-
+public @interface ContrailMethod {
 }

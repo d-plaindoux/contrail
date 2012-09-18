@@ -21,9 +21,6 @@ package org.wolfgang.contrail.component.pipeline.logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -37,7 +34,6 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline
 public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
@@ -81,8 +77,7 @@ public class LoggerSourceComponent<U, D> extends AbstractPipelineComponent<U, D,
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor
-	public LoggerSourceComponent(@ContrailArgument("name") String prefix) {
+	public LoggerSourceComponent(String prefix) {
 		super();
 		this.prefix = prefix;
 		if (prefix == null) {

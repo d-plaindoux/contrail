@@ -18,6 +18,8 @@ $ * Copyright (C)2012 D. Plaindoux.
 
 package org.wolfgang.contrail.connection;
 
+import org.wolfgang.contrail.link.ComponentLinkManager;
+
 /**
  * <code>ConnectionFactory</code>
  * 
@@ -25,6 +27,13 @@ package org.wolfgang.contrail.connection;
  * @version 1.0
  */
 public interface ContextFactory {
+	
+	/**
+	 * The component link manager
+	 * 
+	 * @return a component link manager
+	 */
+	ComponentLinkManager getLinkManager();
 
 	/**
 	 * The class loader

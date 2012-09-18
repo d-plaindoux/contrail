@@ -1,10 +1,5 @@
 <?xml version='1.0'?>
 <ecosystem>
-
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
-	</import>
-
 	<import>
 		org.wolfgang.contrail.ecosystem.lang.EchoComponent
 	</import>
@@ -12,12 +7,12 @@
 	<define name="Test">
 		<function>
 			<var>name</var>
-			<ref>EchoComponent</ref>
+			<ref>echoWithPrefix</ref>
 		</function>
 	</define>
 
 	<define name='Main'>
-		<ref>SerializationTransducerFactory</ref>
+		<ref>serialize</ref>
 		<apply>
 			<ref>Test</ref>
 			<atom>RESENT </atom>

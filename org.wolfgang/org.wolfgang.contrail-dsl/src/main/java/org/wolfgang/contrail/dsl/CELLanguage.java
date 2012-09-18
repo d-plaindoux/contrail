@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.dsl;
 
+import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.impl.AbstractLanguageSupport;
 import org.wolfgang.opala.scanner.LexemeFilter;
 
@@ -31,12 +32,20 @@ public class CELLanguage extends AbstractLanguageSupport {
 
 	/**
 	 * Constructor
+	 * @throws EntryAlreadyBoundException 
 	 */
-	public CELLanguage() {
+	public CELLanguage() throws EntryAlreadyBoundException {
 		super();
 		this.addKeyword("import");
 		this.addKeyword("function");
 		this.addKeyword("var");
+		
+		this.addUnit(SourceUnit.class.getName(), new SourceUnit());
+		this.addUnit(ImportsUnit.class.getName(), new ImportsUnit());
+		this.addUnit(StatementsUnit.class.getName(), new StatementsUnit());
+		this.addUnit(StatementUnit.class.getName(), new StatementUnit());
+		this.addUnit(FlowExpressionUnit.class.getName(), new FlowExpressionUnit());
+		this.addUnit(ExpressionUnit.class.getName(), new ExpressionUnit());
 	}
 
 	@Override

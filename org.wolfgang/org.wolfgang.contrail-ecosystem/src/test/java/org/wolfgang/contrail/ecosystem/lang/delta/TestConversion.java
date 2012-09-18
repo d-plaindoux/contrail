@@ -37,6 +37,6 @@ public class TestConversion extends TestCase {
 		final String value = "Hello, World!";
 		final ConstantValue constantValue = new ConstantValue(value);
 
-		assertEquals(value, ComponentBuilder.create(null, String.class, constantValue));
+		assertEquals(value, LibraryBuilder.create(null, String.class, constantValue));
 	}
 }

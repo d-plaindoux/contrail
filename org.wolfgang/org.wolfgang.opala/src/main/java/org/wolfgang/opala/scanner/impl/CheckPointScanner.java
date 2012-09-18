@@ -18,7 +18,6 @@
 
 package org.wolfgang.opala.scanner.impl;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,53 +26,60 @@ import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.ScannerListener;
 
 /**
- * This class provides backtrack facilities when scanning the document.
  */
 
+/**
+ * The <code>CheckPointScanner</code> class provides backtrack facilities when
+ * scanning the document.
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
 public class CheckPointScanner implements ScannerListener {
 
-    private Scanner scanner;
-    private ScannerListener oldLexemeListener;
-    private List<Lexeme> scannedLexeme;
+	private final Scanner scanner;
+	private final ScannerListener oldLexemeListener;
+	private final List<Lexeme> scannedLexeme;
 
-    public synchronized static CheckPointScanner newInstance(Scanner scanner) {
-        return new CheckPointScanner(scanner);
-    }
+	public synchronized static CheckPointScanner newInstance(Scanner scanner) {
+		return new CheckPointScanner(scanner);
+	}
 
-    private CheckPointScanner(Scanner scanner) {
-        this.scanner = scanner;
-        this.scannedLexeme = new ArrayList<Lexeme>();
-        this.oldLexemeListener = this.scanner.setListener(this);
-    }
+	{
+		this.scannedLexeme = new ArrayList<Lexeme>();
+	}
 
-    public void performScan(Lexeme lexeme) {
-        this.scannedLexeme.add(0, lexeme);
-    }
+	private CheckPointScanner(Scanner scanner) {
+		this.scanner = scanner;
+		this.oldLexemeListener = this.scanner.setListener(this);
+	}
 
-    public synchronized void commit() {
-        if (this.oldLexemeListener != null) {
-            for (int i = scannedLexeme.size() - 1; i > -1; i--) {
-                this.oldLexemeListener.performScan(scannedLexeme.get(i));
-            }
-        }
+	public void performScan(Lexeme lexeme) {
+		this.scannedLexeme.add(0, lexeme);
+	}
 
-        this.scanner.setListener(this.oldLexemeListener);
-    }
+	public synchronized void commit() {
+		for (int i = scannedLexeme.size() - 1; i > -1; i--) {
+			this.oldLexemeListener.performScan(scannedLexeme.get(i));
+		}
 
-    public synchronized void rollback() {
-        for (Lexeme lexeme : scannedLexeme) {
-            this.scanner.rollback(lexeme);
-        }
+		this.scanner.setListener(this.oldLexemeListener);
+	}
 
-        this.scannedLexeme.clear();
-        this.scanner.setListener(this.oldLexemeListener);
-    }
+	public synchronized void rollback() {
+		for (Lexeme lexeme : scannedLexeme) {
+			this.scanner.rollback(lexeme);
+		}
 
-    public synchronized List<Lexeme> getScannedLexeme() {
-        List<Lexeme> scanned = new ArrayList<Lexeme>();
-        for (Lexeme lexeme : this.scannedLexeme) {
-            scanned.add(0, lexeme);
-        }
-        return scanned;
-    }
+		this.scannedLexeme.clear();
+		this.scanner.setListener(this.oldLexemeListener);
+	}
+
+	public synchronized List<Lexeme> getScannedLexeme() {
+		List<Lexeme> scanned = new ArrayList<Lexeme>();
+		for (Lexeme lexeme : this.scannedLexeme) {
+			scanned.add(0, lexeme);
+		}
+		return scanned;
+	}
 }

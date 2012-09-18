@@ -24,9 +24,6 @@ import java.net.URISyntaxException;
 import org.wolfgang.contrail.component.ComponentConnectedException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.Client;
@@ -43,7 +40,6 @@ import org.wolfgang.contrail.link.DestinationComponentLink;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline
 public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], byte[], byte[]> {
 
 	private final Client client;
@@ -56,8 +52,7 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	 * @throws URISyntaxException
 	 * @throws ClientNotFoundException
 	 */
-	@ContrailConstructor
-	public ClientComponent(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference) throws URISyntaxException, ClientNotFoundException {
+	public ClientComponent(ContextFactory contextFactory, String reference) throws URISyntaxException, ClientNotFoundException {
 		super();
 		this.uri = new URI(reference);
 		this.client = contextFactory.getClientFactory().get(uri.getScheme());

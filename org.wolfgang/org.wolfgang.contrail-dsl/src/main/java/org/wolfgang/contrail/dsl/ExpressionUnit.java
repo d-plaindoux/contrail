@@ -20,6 +20,7 @@ package org.wolfgang.contrail.dsl;
 
 import java.util.List;
 
+import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
 import org.wolfgang.opala.parsing.LanguageSupport;
@@ -38,6 +39,24 @@ public class ExpressionUnit implements CompilationUnit<Void, List<String>> {
 
 	@Override
 	public Void compile(LanguageSupport support, Scanner scanner, List<String> parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		if (scanner.currentLexeme().isA(LexemeKind.STRING)) {
+			scanner.scan();
+		} else if (scanner.currentLexeme().isA(LexemeKind.INTEGER)) {
+			scanner.scan();
+		} else if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "(")) {
+			scanner.scan(LexemeKind.OPERATOR, "(");
+			while (scanner.currentLexeme().isA(LexemeKind.IDENT)) {
+				scanner.scan(LexemeKind.IDENT);
+			}
+			scanner.scan(LexemeKind.OPERATOR, ")");
+			scanner.scan(LexemeKind.OPERATOR, "->");
+			if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "{")) {
+				// TODO
+			} else {
+				// TODO
+			}
+		}
+
 		return null;
 	}
 }

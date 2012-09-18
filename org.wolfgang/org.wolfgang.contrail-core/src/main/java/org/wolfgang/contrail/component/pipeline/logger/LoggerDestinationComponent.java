@@ -21,9 +21,6 @@ package org.wolfgang.contrail.component.pipeline.logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -37,7 +34,6 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline
 public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
@@ -58,9 +54,9 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 			public void handleData(final D data) throws DataFlowException {
 				try {
 					getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
-					logger.info(prefix + " Handle Data("+ this.hashCode() + "){" + String.valueOf(data) + "}");
+					logger.info(prefix + " Handle Data(" + this.hashCode() + "){" + String.valueOf(data) + "}");
 				} catch (DataFlowException e) {
-					logger.log(Level.WARNING, "DataFlowException("+ this.hashCode() + ")", e);
+					logger.log(Level.WARNING, "DataFlowException(" + this.hashCode() + ")", e);
 					throw e;
 				}
 			}
@@ -69,9 +65,9 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 			public void handleClose() throws DataFlowCloseException {
 				try {
 					getDestinationComponentLink().getDestinationComponent().closeDownStream();
-					logger.log(Level.INFO, prefix + " Handle Close("+ this.hashCode() + ")");
+					logger.log(Level.INFO, prefix + " Handle Close(" + this.hashCode() + ")");
 				} catch (DataFlowCloseException e) {
-					logger.log(Level.WARNING, "DataFlowCloseException("+ this.hashCode() + ")", e);
+					logger.log(Level.WARNING, "DataFlowCloseException(" + this.hashCode() + ")", e);
 					throw e;
 				}
 			}
@@ -81,8 +77,7 @@ public class LoggerDestinationComponent<U, D> extends AbstractPipelineComponent<
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor
-	public LoggerDestinationComponent(@ContrailArgument("name") String prefix) {
+	public LoggerDestinationComponent(String prefix) {
 		super();
 		this.prefix = prefix;
 		if (prefix == null) {

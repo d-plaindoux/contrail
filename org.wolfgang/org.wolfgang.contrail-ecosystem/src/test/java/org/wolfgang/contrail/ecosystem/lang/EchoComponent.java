@@ -18,10 +18,10 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
-import org.wolfgang.contrail.component.annotation.ContrailArgument;
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -38,7 +38,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-@ContrailTerminal
+@ContrailLibrary
 public class EchoComponent extends TerminalComponent {
 
 	private static class LocalDataReceiverFactory implements UpStreamDataFlowFactory {
@@ -81,14 +81,22 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 * @throws CannotCreateDataFlowException
 	 */
-	@ContrailConstructor
 	public EchoComponent() throws CannotCreateDataFlowException {
 		this(null);
 	}
 
 	@SuppressWarnings("unchecked")
-	@ContrailConstructor
-	public EchoComponent(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+	public EchoComponent(String name) throws CannotCreateDataFlowException {
 		super(new LocalDataReceiverFactory(name));
+	}
+
+	@ContrailMethod
+	public static EchoComponent echo() throws CannotCreateDataFlowException {
+		return new EchoComponent();
+	}
+
+	@ContrailMethod
+	public static EchoComponent echoWithPrefix(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		return new EchoComponent(name);
 	}
 }

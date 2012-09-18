@@ -18,8 +18,6 @@
 
 package org.wolfgang.contrail.network.ecosystem;
 
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailTerminal;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
@@ -34,7 +32,6 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-@ContrailTerminal
 public class EchoComponent extends TerminalComponent {
 
 	private static UpStreamDataFlowFactory DATA_RECEIVER_FACTORY = new UpStreamDataFlowFactory() {
@@ -52,7 +49,6 @@ public class EchoComponent extends TerminalComponent {
 	 * @throws CannotCreateDataFlowException
 	 */
 	@SuppressWarnings("unchecked")
-	@ContrailConstructor
 	public EchoComponent() throws CannotCreateDataFlowException {
 		super(DATA_RECEIVER_FACTORY);
 	}

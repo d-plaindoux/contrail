@@ -24,8 +24,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.wolfgang.contrail.component.annotation.ContrailConstructor;
-import org.wolfgang.contrail.component.annotation.ContrailPipeline;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -38,7 +36,6 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailPipeline
 public class ParallelDestinationComponent<U, D> extends AbstractPipelineComponent<U, D, U, D> {
 
 	/**
@@ -91,7 +88,6 @@ public class ParallelDestinationComponent<U, D> extends AbstractPipelineComponen
 	/**
 	 * Constructor
 	 */
-	@ContrailConstructor
 	public ParallelDestinationComponent() {
 		super();
 	}

@@ -33,17 +33,22 @@
 	<define name='Main'>
 		<function>
 			<var>client</var>
-			<apply>
-				<ref>Client</ref>
-				<atom>tcp://localhost:6666</atom>
-			</apply>
-			<ref>PayLoadTransducerFactory</ref>
-			<ref>SerializationTransducerFactory</ref>
+			<ref>client</ref>
+			<appy>
+				<ref>reverse</ref>
+				<flow>
+					<ref>PayLoadTransducerFactory</ref>
+					<ref>SerializationTransducerFactory</ref>
+				</flow>
+			</appy>
 			<apply>
 				<ref>Coercion</ref>
 				<atom>java.lang.String</atom>
 			</apply>
-			<ref>client</ref>
+			<apply>
+				<ref>Client</ref>
+				<atom>tcp://localhost:6666</atom>
+			</apply>
 		</function>
 	</define>
 </ecosystem>

@@ -18,11 +18,11 @@
 		<function>
 			<var>uri</var>
 			<var>client</var>
+			<ref>client</ref>
 			<apply>
 				<ref>Client</ref>
 				<ref>uri</ref>
 			</apply>
-			<ref>client</ref>
 		</function>
 	</define>
 </ecosystem>
