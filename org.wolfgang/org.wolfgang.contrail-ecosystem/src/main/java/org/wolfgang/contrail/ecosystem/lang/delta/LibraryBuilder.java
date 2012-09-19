@@ -28,6 +28,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
@@ -96,13 +98,18 @@ public class LibraryBuilder {
 		final TreeSet<Method> treeSet = new TreeSet<Method>(new Comparator<Method>() {
 			@Override
 			public int compare(Method arg0, Method arg1) {
-				int n = arg0.getParameterTypes().length - arg1.getParameterTypes().length;
-				if (n < 0) {
-					return 1;
-				} else if (n > 0) {
-					return -1;
+				final int nameComparison = arg0.getName().compareTo(arg1.getName());
+				if (nameComparison == 0) {
+					int n = arg0.getParameterTypes().length - arg1.getParameterTypes().length;
+					if (n < 0) {
+						return 1;
+					} else if (n > 0) {
+						return -1;
+					} else {
+						return 0;
+					}
 				} else {
-					return 0;
+					return nameComparison;
 				}
 			}
 		});
@@ -131,17 +138,21 @@ public class LibraryBuilder {
 		return null;
 	}
 
-	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, Map<String, CodeValue> environment) throws Exception {
+	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, Map<String, CodeValue> environment) throws CannotCreateComponentException, ConversionException {
 		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
 
 		for (int i = 0; i < parameters.length; i++) {
 			final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
-			if (annotation != null && environment.containsKey(annotation.value())) {
+			if (annotation == null) {
+				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.error");
+				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), i));
+			} else if (!environment.containsKey(annotation.value())) {
+				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.undefined");
+				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), annotation.value()));
+			} else {
 				final CodeValue codeValue = environment.get(annotation.value());
 				parameters[i] = create(linkManager, constructor.getParameterTypes()[i], codeValue);
-			} else {
-				return null;
 			}
 		}
 
@@ -158,8 +169,7 @@ public class LibraryBuilder {
 	@SuppressWarnings({ "unchecked" })
 	public static <T> T create(Method method, ContextFactory ecosystemFactory, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			final Object[] parameters = getParameters(ecosystemFactory.getLinkManager(), method, environment);
-			return (T) method.invoke(null, parameters);
+			return (T) method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
 		} catch (CannotCreateComponentException e) {
 			throw e;
 		} catch (InvocationTargetException e) {
@@ -179,28 +189,20 @@ public class LibraryBuilder {
 	@SuppressWarnings({ "unchecked" })
 	public static <T> T create(String name, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			final Method[] methods = getDeclaredMethods(name, component);
-
 			environment.put("context", new ConstantValue(ecosystemFactory));
 
-			Exception raised = new CannotCreateComponentException("TODO: Constructor Definition not found");
+			final Method[] methods = getDeclaredMethods(name, component);
 
 			for (Method method : methods) {
-				Object[] parameters;
-
 				try {
-					parameters = getParameters(ecosystemFactory.getLinkManager(), method, environment);
-				} catch (Exception exception) {
-					parameters = null;
-					raised = exception;
-				}
-
-				if (parameters != null) {
-					return (T) method.invoke(null, parameters);
+					return (T) method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
+				} catch (ConversionException ignore) {
+					// Consume
 				}
 			}
 
-			throw raised;
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
+			throw new CannotCreateComponentException(message.format(name));
 
 		} catch (CannotCreateComponentException e) {
 			throw e;

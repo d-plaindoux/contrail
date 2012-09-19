@@ -19,28 +19,61 @@
 package org.wolfgang.contrail.network.ecosystem;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
- * <code>TestComponent</code>
+ * <code>EchoComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
+@ContrailLibrary
 public class EchoComponent extends TerminalComponent {
 
-	private static UpStreamDataFlowFactory DATA_RECEIVER_FACTORY = new UpStreamDataFlowFactory() {
+	private static class LocalDataReceiverFactory implements UpStreamDataFlowFactory {
+		private final String name;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param name
+		 */
+		LocalDataReceiverFactory(String name) {
+			super();
+			this.name = name;
+		}
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public UpStreamDataFlow create(final DownStreamDataFlow sender) {
-			return DataFlows.reverse(sender);
+			return DataFlows.closable(new UpStreamDataFlowAdapter() {
+				@Override
+				public void handleData(Object data) throws DataFlowException {
+					if (name == null) {
+						sender.handleData(data);
+					} else {
+						sender.handleData(name + data);
+					}
+				}
+
+				@Override
+				public void handleClose() throws DataFlowCloseException {
+					sender.handleClose();
+				}
+			});
 		}
-	};
+	}
 
 	/**
 	 * Constructor
@@ -48,9 +81,27 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 * @throws CannotCreateDataFlowException
 	 */
-	@SuppressWarnings("unchecked")
-	public EchoComponent() throws CannotCreateDataFlowException {
-		super(DATA_RECEIVER_FACTORY);
+	private EchoComponent() throws CannotCreateDataFlowException {
+		this(null);
 	}
 
+	@SuppressWarnings("unchecked")
+	private EchoComponent(String name) throws CannotCreateDataFlowException {
+		super(new LocalDataReceiverFactory(name));
+	}
+
+	@ContrailMethod
+	public static void init() {
+		// Nothing
+	}
+
+	@ContrailMethod
+	public static EchoComponent echo() throws CannotCreateDataFlowException {
+		return new EchoComponent();
+	}
+
+	@ContrailMethod
+	public static EchoComponent echoWithPrefix(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		return new EchoComponent(name);
+	}
 }

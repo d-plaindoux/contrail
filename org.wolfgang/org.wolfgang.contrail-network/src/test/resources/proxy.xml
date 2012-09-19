@@ -1,17 +1,17 @@
-// Client/Server connectors
-import org.wolfgang.contrail.connection.net.NetClient
-import org.wolfgang.contrail.connection.net.NetServer
+/**
+ * Proxy / Tunnel example
+ */
 
-// Client/Server components
-import as Client org.wolfgang.contrail.component.bound.gateway.ClientComponent
-import as Server org.wolfgang.contrail.component.bound.gateway.ServerComponent
+import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.connection.net.NetServer;
 
-// Logger components
-import as LogSrc org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent
-import as LogDst org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent
+// ----------------------------------------------------------------------
 
-define Logger     { LogSrc + LogDst }
-define ClientFlow { uri | Logger <> Client uri }
-define ServerFlow { Server "tcp://localhost:6665" { b | b <> ClientFlow "tcp://localhost:6666" } }
+var Logger = fun () -> LogSrc <> LogDst;
+var Client = fun (uri) -> Logger <> client:uri;
+var Server = fun (uri,flow) -> server:uri:flow;
+var Tunnel = fun (in,out) -> Server(in,fun (client) ->  client <> Client(out));
 
-start { ServerFlow } 
+// ----------------------------------------------------------------------
+
+Tunnel http://localhost:6666 http://localhost:6667

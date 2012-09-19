@@ -22,7 +22,7 @@
 		<apply>
 			<ref>Identity</ref>
 			<flow>
-				<ref>serialize</ref>
+				<ref>object</ref>
 				<apply>
 					<ref>Test</ref>
 					<atom>RESENT-3 </atom>

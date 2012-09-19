@@ -32,7 +32,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
 
 /**
- * <code>TestComponent</code>
+ * <code>EchoComponent</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -81,13 +81,18 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 * @throws CannotCreateDataFlowException
 	 */
-	public EchoComponent() throws CannotCreateDataFlowException {
+	private EchoComponent() throws CannotCreateDataFlowException {
 		this(null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public EchoComponent(String name) throws CannotCreateDataFlowException {
+	private EchoComponent(String name) throws CannotCreateDataFlowException {
 		super(new LocalDataReceiverFactory(name));
+	}
+	
+	@ContrailMethod
+	public static void init() {
+		// Nothing
 	}
 
 	@ContrailMethod

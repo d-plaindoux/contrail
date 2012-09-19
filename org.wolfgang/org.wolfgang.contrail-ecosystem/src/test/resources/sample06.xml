@@ -12,7 +12,7 @@
 	</define>
 
 	<define name='Main'>
-		<ref>serialize</ref>
+		<ref>object</ref>
 		<apply>
 			<ref>Test</ref>
 			<atom>RESENT </atom>

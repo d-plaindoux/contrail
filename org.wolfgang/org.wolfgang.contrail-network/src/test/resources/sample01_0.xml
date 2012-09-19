@@ -1,6 +1,9 @@
 <?xml version='1.0'?>
 <ecosystem>
 	<import>
+		org.wolfgang.contrail.connection.net.NetServer
+	</import>
+	<import>
 		org.wolfgang.contrail.network.ecosystem.EchoComponent
 	</import>
 
@@ -8,7 +11,7 @@
 		<function>
 			<var>uri</var>
 			<var>flow</var>
-			<ref>internal.server</ref>
+			<ref>server</ref>
 		</function>
 	</define>
 
@@ -17,9 +20,9 @@
 			<ref>Server</ref>
 			<atom>tcp://localhost:6666</atom>
 			<function>
-				<var>client</var>
-				<ref>client</ref>
-				<ref>EchoComponent</ref>
+				<var>bind</var>
+				<ref>bind</ref>
+				<ref>echo</ref>
 			</function>
 		</apply>
 	</define>

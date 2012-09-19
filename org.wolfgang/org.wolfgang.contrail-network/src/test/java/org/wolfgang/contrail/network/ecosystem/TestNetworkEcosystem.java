@@ -51,6 +51,7 @@ import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
@@ -122,13 +123,13 @@ public class TestNetworkEcosystem extends TestCase {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
 					try {
-						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
+						final Component initialComponent = Components.initial(new DownStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
-							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
+							public DownStreamDataFlow<byte[]> create(UpStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
 								return DataFlows.reverse(component);
 							}
 						});
-						manager.connect(client, terminalComponent);
+						manager.connect(initialComponent, client);
 					} catch (CannotCreateDataFlowException e) {
 						throw new CannotCreateComponentException(e);
 					} catch (ComponentConnectionRejectedException e) {

@@ -110,12 +110,14 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 * @param factory
 	 */
 	private void loadImportation(Logger logger, Import importation) {
+		System.err.println("Importing <" + importation.getElement() + ">");
 		try {
 			final Class<?> aClass = classLoader.loadClass(importation.getElement());
 			if (aClass.isAnnotationPresent(ContrailLibrary.class)) {
 				LibraryBuilder.create("init", this, aClass, this.definitions);
 				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 				for (Method method : declaredMethods) {
+					System.err.println("\t method <" + method.getName() + ">");					
 					this.importations.put(method.getName(), new FuntionImportEntry(this, method));
 				}
 			} else {

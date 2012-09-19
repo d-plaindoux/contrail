@@ -50,7 +50,7 @@ public class ComponentConverter extends AbstractConverter<Component> {
 		try {
 			return value.getComponent();
 		} catch (CannotCreateComponentException e) {
-			return super.visit(value);
+			throw new ConversionException(e);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class ComponentConverter extends AbstractConverter<Component> {
 		try {
 			return value.getValues(linkManager, this);
 		} catch (ComponentConnectionRejectedException e) {
-			return super.visit(value);
+			throw new ConversionException(e);
 		}
 	}
 

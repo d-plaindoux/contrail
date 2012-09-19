@@ -50,7 +50,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
  */
 public class TestEcosystemFactory extends TestCase {
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample01() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample01.xml");
 
@@ -84,7 +84,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample02() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample02.xml");
 
@@ -118,7 +118,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample03() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample03.xml");
 
@@ -153,7 +153,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample04() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample04.xml");
 
@@ -187,7 +187,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample05() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample05.xml");
 
@@ -229,7 +229,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample6() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample06.xml");
 
@@ -272,7 +272,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample07() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample07.xml");
 
@@ -314,7 +314,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample08() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample08.xml");
 
@@ -356,7 +356,7 @@ public class TestEcosystemFactory extends TestCase {
 		}
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	public void testSample09() {
 		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample09.xml");
 

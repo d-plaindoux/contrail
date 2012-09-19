@@ -23,8 +23,8 @@ import java.io.IOException;
 
 import org.wolfgang.opala.lexing.GenericLexer;
 import org.wolfgang.opala.lexing.Lexeme;
-import org.wolfgang.opala.lexing.LexemeTokenizer;
 import org.wolfgang.opala.lexing.LexemeKind;
+import org.wolfgang.opala.lexing.LexemeTokenizer;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
 /**

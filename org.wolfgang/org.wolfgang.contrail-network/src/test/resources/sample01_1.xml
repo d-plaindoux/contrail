@@ -6,34 +6,22 @@
 	<import>
 		org.wolfgang.contrail.network.ecosystem.EchoComponent
 	</import>
-	<import>
-		org.wolfgang.contrail.component.connection.ServerComponent
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
-	</import>
 
 	<define name="Coercion">
 		<function>
 			<var>type</var>
-			<ref>CoercionTransducerFactory</ref>
+			<ref>coerce</ref>
 		</function>
 	</define>
 
 	<define name='MainFlow'>
 		<function>
-			<var>client</var>
-			<ref>client</ref>
-			<ref>PayLoadTransducerFactory</ref>
-			<ref>SerializationTransducerFactory</ref>
+			<var>bind</var>
+			<ref>bind</ref>
+			<ref>payload</ref>
+			<ref>object</ref>
 			<apply>
-				<ref>Coercion</ref>
+				<ref>Coerce</ref>
 				<atom>java.lang.String</atom>
 			</apply>
 			<ref>EchoComponent</ref>
@@ -44,7 +32,7 @@
 		<function>
 			<var>uri</var>
 			<var>flow</var>
-			<ref>ServerComponent</ref>
+			<ref>server</ref>
 		</function>
 	</define>
 

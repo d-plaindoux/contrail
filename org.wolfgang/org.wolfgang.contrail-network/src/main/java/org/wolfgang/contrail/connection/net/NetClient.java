@@ -28,6 +28,10 @@ import java.net.UnknownHostException;
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.connection.AbstractClient;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
+import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -41,7 +45,13 @@ import org.wolfgang.contrail.connection.CannotCreateClientException;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@ContrailLibrary
 public class NetClient extends AbstractClient {
+
+	@ContrailMethod
+	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
+		contextFactory.getClientFactory().declareScheme("tcp", NetClient.class);
+	}
 
 	@Override
 	protected Pair<InputStream, OutputStream> getClient(URI uri) throws CannotCreateClientException {
@@ -54,5 +64,4 @@ public class NetClient extends AbstractClient {
 			throw new CannotCreateClientException(e);
 		}
 	}
-
 }

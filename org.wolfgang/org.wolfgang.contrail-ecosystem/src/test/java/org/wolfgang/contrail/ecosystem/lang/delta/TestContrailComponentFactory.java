@@ -57,12 +57,17 @@ public class TestContrailComponentFactory extends TestCase {
 		}
 
 		@ContrailMethod
-		public static TestClass add1(@ContrailArgument("a") String a) {
+		public static TestClass add() {
+			return new TestClass();
+		}
+
+		@ContrailMethod
+		public static TestClass add(@ContrailArgument("a") String a) {
 			return new TestClass(a);
 		}
 
 		@ContrailMethod
-		public static TestClass add2(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
+		public static TestClass add(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
 			return new TestClass(a + b);
 		}
 	}
@@ -71,15 +76,16 @@ public class TestContrailComponentFactory extends TestCase {
 	public void testDefinitions() {
 		final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, TestClass.class);
 
-		assertEquals(2, declaredMethods.length);
+		assertEquals(3, declaredMethods.length);
 		assertEquals(2, declaredMethods[0].getParameterTypes().length);
 		assertEquals(1, declaredMethods[1].getParameterTypes().length);
+		assertEquals(0, declaredMethods[2].getParameterTypes().length);
 	}
 
 	@SuppressWarnings("serial")
 	@Test
 	public void testMethod01() throws CannotCreateComponentException {
-		final TestClass test = LibraryBuilder.create("add1", new ContextFactory() {
+		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -109,8 +115,8 @@ public class TestContrailComponentFactory extends TestCase {
 
 	@SuppressWarnings("serial")
 	@Test
-	public void testConstructor02() throws CannotCreateComponentException {
-		final TestClass test = LibraryBuilder.create("add2", new ContextFactory() {
+	public void testConstructor03() throws CannotCreateComponentException {
+		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -137,5 +143,39 @@ public class TestContrailComponentFactory extends TestCase {
 		});
 
 		assertEquals("Hello", test.i);
+	}
+
+
+	@SuppressWarnings("serial")
+	@Test
+	public void testConstructor02() throws CannotCreateComponentException {
+		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
+			@Override
+			public Servers getServerFactory() {
+				return null;
+			}
+
+			@Override
+			public Clients getClientFactory() {
+				return null;
+			}
+
+			@Override
+			public ClassLoader getClassLoader() {
+				return null;
+			}
+
+			@Override
+			public ComponentLinkManager getLinkManager() {
+				return null;
+			}
+		}, TestClass.class, new HashMap<String, CodeValue>() {
+			{
+				this.put("a", new ConstantValue("Hello"));
+				this.put("b", new ConstantValue(", World!"));
+			}
+		});
+
+		assertEquals("Hello, World!", test.i);
 	}
 }

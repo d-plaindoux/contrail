@@ -29,6 +29,7 @@ import org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationCo
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
@@ -39,7 +40,6 @@ import org.wolfgang.contrail.connection.ServerNotFoundException;
 import org.wolfgang.contrail.connection.process.ProcessClient;
 import org.wolfgang.contrail.connection.process.ProcessServer;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailInit;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 
@@ -75,14 +75,14 @@ public class RuntimeFunction {
 		return new ServerComponent(contextFactory, reference, listener);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component parallelsSource() {
+	@SuppressWarnings("rawtypes")
+	public static Component parallelSource() {
 		return new ParallelSourceComponent();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@ContrailMethod
+	@SuppressWarnings("rawtypes")
 	public static Component parallelDestination() {
 		return new ParallelDestinationComponent();
 	}
@@ -105,12 +105,13 @@ public class RuntimeFunction {
 	}
 
 	@ContrailMethod
-	public static Component serialize() {
+	public static Component object() {
 		return new SerializationTransducerFactory().createComponent();
 	}
 
 	@ContrailMethod
-	public static Component coerce(@ContrailArgument("type") String type) throws ClassNotFoundException {
-		return new SerializationTransducerFactory(type).createComponent();
+	@SuppressWarnings("rawtypes")
+	public static Component coerce(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("type") String type) throws ClassNotFoundException {
+		return new CoercionTransducerFactory(contextFactory, type).createComponent();
 	}
 }

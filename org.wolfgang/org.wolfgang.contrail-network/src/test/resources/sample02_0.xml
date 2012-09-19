@@ -3,22 +3,19 @@
 	<import>
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
-	<import>
-		org.wolfgang.contrail.component.connection.ClientComponent
-	</import>
 
 	<define name='Client'>
 		<function>
 			<var>uri</var>
-			<ref>ClientComponent</ref>
+			<ref>client</ref>
 		</function>
 	</define>
 
 	<define name='Main'>
 		<function>
 			<var>uri</var>
-			<var>client</var>
-			<ref>client</ref>
+			<var>bind</var>
+			<ref>bind</ref>
 			<apply>
 				<ref>Client</ref>
 				<ref>uri</ref>

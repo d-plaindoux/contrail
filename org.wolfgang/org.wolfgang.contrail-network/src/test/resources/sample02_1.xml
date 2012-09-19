@@ -3,42 +3,30 @@
 	<import>
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
-	<import>
-		org.wolfgang.contrail.component.connection.ClientComponent
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory
-	</import>
-	<import>
-		org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory
-	</import>
 
 	<define name="Coercion">
 		<function>
 			<var>type</var>
-			<ref>CoercionTransducerFactory</ref>
+			<ref>coerce</ref>
 		</function>
 	</define>
 
 	<define name='Client'>
 		<function>
 			<var>uri</var>
-			<ref>ClientComponent</ref>
+			<ref>client</ref>
 		</function>
 	</define>
 
 	<define name='Main'>
 		<function>
-			<var>client</var>
-			<ref>client</ref>
+			<var>bind</var>
+			<ref>bind</ref>
 			<appy>
 				<ref>reverse</ref>
 				<flow>
-					<ref>PayLoadTransducerFactory</ref>
-					<ref>SerializationTransducerFactory</ref>
+					<ref>payload</ref>
+					<ref>object</ref>
 				</flow>
 			</appy>
 			<apply>

@@ -5,7 +5,7 @@
 	</import>
 
 	<define name='Main'>
-		<ref>serialize</ref>
+		<ref>object</ref>
 		<ref>echo</ref>
 	</define>
 </ecosystem>

@@ -46,8 +46,16 @@ public class ConversionException extends Exception {
 	 * 
 	 * @param arg0
 	 */
-	ConversionException(String arg0) {
+	public ConversionException(String arg0) {
 		super(arg0);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public ConversionException(Throwable arg0) {
+		super(arg0);
+	}
 }

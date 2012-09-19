@@ -6,7 +6,7 @@
 
 	<define name='Main'>
 		<ref>payload</ref>
-		<ref>serialize</ref>
+		<ref>object</ref>
 		<ref>echo</ref>
 	</define>
 </ecosystem>

@@ -1,17 +1,10 @@
-import http://www.contrail-network.org/imports/core.jar
-import http://www.contrail-network.org/imports/network.jar
-import http://www.contrail-network.org/imports/netty.jar
+import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.connection.net.NetServer;
 
-var payLoad = () -> 
-	component org.wolfgang.contrail.component.pipeline.transducer.PayLoad
+var clientFlow = fun (uri) -> reverse(payload() <> object() <> coerce(Event)) <> client(uri);   
 
-var clientFlow = (uri) ->
-	reverse(payLoad() <> serialize() <> coerce(Event)) <> client(uri);   
-
-var serverFlow = (uri) -> {
-	flow = (client) -> 
-		client <> [ Jaxb() | PayLoad() <> Serialize() ] <> coerce(Event);
-			
+var serverFlow = fun (uri) -> {
+	flow = fun (client) -> client <> [ jaxb() | payload() <> object() ] <> coerce(Event);			
 	server(uri,flow) <> adminServer;	
 }
 

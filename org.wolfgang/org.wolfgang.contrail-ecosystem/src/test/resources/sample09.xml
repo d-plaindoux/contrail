@@ -24,7 +24,7 @@
 		<ref>payload</ref>
 		<apply>
 			<ref>parallel</ref>
-			<ref>serialize</ref>
+			<ref>object</ref>
 		</apply>
 		<apply>
 			<ref>coercion</ref>

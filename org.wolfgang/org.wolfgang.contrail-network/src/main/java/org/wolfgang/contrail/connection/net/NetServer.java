@@ -42,8 +42,12 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.connection.CannotCreateServerException;
 import org.wolfgang.contrail.connection.ComponentFactoryListener;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Server;
 import org.wolfgang.contrail.connection.Worker;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
@@ -61,7 +65,13 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@ContrailLibrary
 public class NetServer implements Server {
+
+	@ContrailMethod
+	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
+		contextFactory.getServerFactory().declareScheme("tcp", NetServer.class);
+	}
 
 	/**
 	 * Active server sockets
