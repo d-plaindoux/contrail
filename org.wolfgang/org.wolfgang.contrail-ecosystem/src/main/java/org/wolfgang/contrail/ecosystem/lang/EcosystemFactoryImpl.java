@@ -117,7 +117,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 				LibraryBuilder.create("init", this, aClass, this.definitions);
 				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 				for (Method method : declaredMethods) {
-					System.err.println("\t method <" + method.getName() + ">");					
+					System.err.println("\t method <" + method.getName() + ">");
 					this.importations.put(method.getName(), new FuntionImportEntry(this, method));
 				}
 			} else {

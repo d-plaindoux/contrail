@@ -35,7 +35,8 @@ import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
  */
 class FuntionImportEntry implements EcosystemImportation<Component> {
 	private final ContextFactory factory;
-	private final Method method;
+	private final String name;
+	private final Class<?> provider;
 
 	/**
 	 * Constructor
@@ -45,11 +46,12 @@ class FuntionImportEntry implements EcosystemImportation<Component> {
 	FuntionImportEntry(ContextFactory factory, Method method) {
 		super();
 		this.factory = factory;
-		this.method = method;
+		this.name = method.getName();
+		this.provider = method.getDeclaringClass();
 	}
 
 	@Override
 	public Component create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return LibraryBuilder.create(method, factory, environment);
+		return LibraryBuilder.create(name, factory, provider, environment);
 	}
 }

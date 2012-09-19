@@ -101,7 +101,7 @@ public class EchoComponent extends TerminalComponent {
 	}
 
 	@ContrailMethod
-	public static EchoComponent echoWithPrefix(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+	public static EchoComponent echo(@ContrailArgument("name") String name) throws CannotCreateDataFlowException {
 		return new EchoComponent(name);
 	}
 }
