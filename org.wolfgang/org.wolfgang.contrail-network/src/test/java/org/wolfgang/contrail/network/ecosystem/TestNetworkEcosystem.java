@@ -123,13 +123,13 @@ public class TestNetworkEcosystem extends TestCase {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
 					try {
-						final Component initialComponent = Components.initial(new DownStreamDataFlowFactory<byte[], byte[]>() {
+						final Component terminalComponent = Components.terminal(new UpStreamDataFlowFactory<byte[], byte[]>() {
 							@Override
-							public DownStreamDataFlow<byte[]> create(UpStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
+							public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> component) throws CannotCreateDataFlowException {
 								return DataFlows.reverse(component);
 							}
 						});
-						manager.connect(initialComponent, client);
+						manager.connect(client, terminalComponent);
 					} catch (CannotCreateDataFlowException e) {
 						throw new CannotCreateComponentException(e);
 					} catch (ComponentConnectionRejectedException e) {

@@ -35,13 +35,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.DownStreamDataFlow;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -112,7 +112,7 @@ public abstract class AbstractClient implements Client {
 
 		this.clients.add(client);
 
-		final UpStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new UpStreamDataFlow<byte[]>() {
+		final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlow<byte[]>() {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				try {
@@ -138,7 +138,7 @@ public abstract class AbstractClient implements Client {
 			}
 		});
 
-		final TerminalComponent<byte[], byte[]> component = Components.terminal(dataReceiver);
+		final InitialComponent<byte[], byte[]> component = Components.initial(dataReceiver);
 
 		final Callable<Void> reader = new Callable<Void>() {
 			@Override

@@ -4,7 +4,7 @@
 		org.wolfgang.contrail.connection.net.NetClient
 	</import>
 
-	<define name="Coercion">
+	<define name="Coerce">
 		<function>
 			<var>type</var>
 			<ref>coerce</ref>
@@ -21,22 +21,17 @@
 	<define name='Main'>
 		<function>
 			<var>bind</var>
-			<ref>bind</ref>
-			<appy>
-				<ref>reverse</ref>
-				<flow>
-					<ref>payload</ref>
-					<ref>object</ref>
-				</flow>
-			</appy>
-			<apply>
-				<ref>Coercion</ref>
-				<atom>java.lang.String</atom>
-			</apply>
 			<apply>
 				<ref>Client</ref>
 				<atom>tcp://localhost:6666</atom>
 			</apply>
+			<ref>payload</ref>
+			<ref>object</ref>
+			<apply>
+				<ref>Coerce</ref>
+				<atom>java.lang.String</atom>
+			</apply>
+			<ref>bind</ref>
 		</function>
 	</define>
 </ecosystem>

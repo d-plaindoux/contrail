@@ -7,7 +7,7 @@
 		org.wolfgang.contrail.network.ecosystem.EchoComponent
 	</import>
 
-	<define name="Coercion">
+	<define name="Coerce">
 		<function>
 			<var>type</var>
 			<ref>coerce</ref>
@@ -24,7 +24,7 @@
 				<ref>Coerce</ref>
 				<atom>java.lang.String</atom>
 			</apply>
-			<ref>EchoComponent</ref>
+			<ref>echo</ref>
 		</function>
 	</define>
 
