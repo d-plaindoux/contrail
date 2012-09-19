@@ -18,8 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 
 import org.wolfgang.common.message.MessagesProvider;
 
@@ -46,7 +46,7 @@ public class Import implements Validation {
 	 * 
 	 * @return the element
 	 */
-	@XmlValue
+	@XmlAttribute(name = "library")
 	public String getElement() {
 		return element;
 	}

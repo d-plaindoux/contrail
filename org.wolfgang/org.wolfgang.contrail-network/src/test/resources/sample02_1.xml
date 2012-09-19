@@ -1,8 +1,6 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import>
-		org.wolfgang.contrail.connection.net.NetClient
-	</import>
+	<import library='org.wolfgang.contrail.connection.net.NetClient' />
 
 	<define name="Coerce">
 		<function>

@@ -40,7 +40,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
-import org.wolfgang.contrail.ecosystem.lang.delta.RuntimeFunction;
+import org.wolfgang.contrail.ecosystem.lang.delta.CoreFunctions;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -142,7 +142,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 */
 	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
 		final Import pervasive = new Import();
-		pervasive.setElement(RuntimeFunction.class.getName());
+		pervasive.setElement(CoreFunctions.class.getName());
 		loadImportation(logger, pervasive);
 
 		for (Import importation : ecosystemModel.getImportations()) {

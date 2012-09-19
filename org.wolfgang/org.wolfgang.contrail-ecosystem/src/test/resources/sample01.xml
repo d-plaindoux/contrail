@@ -1,8 +1,6 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import>
-		org.wolfgang.contrail.ecosystem.lang.EchoComponent
-	</import>
+	<import library='org.wolfgang.contrail.ecosystem.lang.EchoComponent' />
 
 	<define name='Main'>
 		<ref>echo</ref>

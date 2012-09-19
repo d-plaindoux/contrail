@@ -1,11 +1,7 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import>
-		org.wolfgang.contrail.connection.net.NetServer
-	</import>
-	<import>
-		org.wolfgang.contrail.network.ecosystem.EchoComponent
-	</import>
+	<import library='org.wolfgang.contrail.connection.net.NetServer' />
+	<import library='org.wolfgang.contrail.network.ecosystem.EchoComponent' />
 
 	<define name="Coerce">
 		<function>

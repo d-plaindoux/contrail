@@ -38,11 +38,13 @@ class AbstractConverter<E> implements Converter<E>, CodeValueVisitor<E, Conversi
 
 	private static Message CLOSURE;
 	private static Message CONSTANT;
+	private static Message COMPONENT;
 	private static Message COMPONENTS;
 
 	static {
 		CLOSURE = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "cannot.convert.closure");
 		CONSTANT = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "cannot.convert.constant");
+		COMPONENT = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "cannot.convert.components");
 		COMPONENTS = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "cannot.convert.components");
 	}
 
@@ -79,7 +81,7 @@ class AbstractConverter<E> implements Converter<E>, CodeValueVisitor<E, Conversi
 
 	@Override
 	public E visit(ComponentValue value) throws ConversionException {
-		throw new ConversionException(COMPONENTS.format(type.getName(), this.getClass().getSimpleName()));
+		throw new ConversionException(COMPONENT.format(type.getName(), this.getClass().getSimpleName()));
 	}
 
 	@Override

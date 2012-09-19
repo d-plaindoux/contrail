@@ -49,8 +49,9 @@ import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
  * @author Didier Plaindoux
  * @version 1.0
  */
+@SuppressWarnings("rawtypes")
 @ContrailLibrary
-public class RuntimeFunction {
+public class CoreFunctions {
 
 	@ContrailMethod
 	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
@@ -62,6 +63,10 @@ public class RuntimeFunction {
 	public static Component reverse(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
 		return Components.reverse(contextFactory.getLinkManager(), component);
 	}
+
+	//
+	// Client and Server hooks
+	//
 
 	@ContrailMethod
 	public static Component client(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException,
@@ -75,25 +80,25 @@ public class RuntimeFunction {
 		return new ServerComponent(contextFactory, reference, listener);
 	}
 
+	//
+	// Basic pipelines and transducers
+	//
+
 	@ContrailMethod
-	@SuppressWarnings("rawtypes")
 	public static Component parallelSource() {
 		return new ParallelSourceComponent();
 	}
 
 	@ContrailMethod
-	@SuppressWarnings("rawtypes")
 	public static Component parallelDestination() {
 		return new ParallelDestinationComponent();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@ContrailMethod
 	public static Component logSource(@ContrailArgument("name") String prefix) {
 		return new LoggerSourceComponent(prefix);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@ContrailMethod
 	public static Component logDestination(@ContrailArgument("name") String prefix) {
 		return new LoggerDestinationComponent(prefix);
@@ -110,7 +115,6 @@ public class RuntimeFunction {
 	}
 
 	@ContrailMethod
-	@SuppressWarnings("rawtypes")
 	public static Component coerce(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("type") String type) throws ClassNotFoundException {
 		return new CoercionTransducerFactory(contextFactory, type).createComponent();
 	}
