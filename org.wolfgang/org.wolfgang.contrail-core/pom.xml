@@ -42,7 +42,7 @@
 
 		<dependency>
 			<groupId>org.wolfgang</groupId>
-			<artifactId>org.wolfgang.contrail-reference</artifactId>
+			<artifactId>org.wolfgang.reference</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

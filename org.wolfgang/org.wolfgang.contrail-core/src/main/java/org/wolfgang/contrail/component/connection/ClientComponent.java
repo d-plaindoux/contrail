@@ -32,7 +32,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
  * <code>ClientComponent</code>
@@ -69,11 +69,11 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<byte[], byte[]> handler) throws ComponentConnectionRejectedException {
-		final ComponentLink connectDestination = super.connectDestination(handler);
+	public ComponentLink connectSource(SourceComponentLink<byte[], byte[]> handler) throws ComponentConnectionRejectedException {
+		final ComponentLink connectDestination = super.connectSource(handler);
 
 		try {
-			handler.getComponentLinkManager().connect(client.connect(uri), this);
+			handler.getComponentLinkManager().connect(this, client.connect(uri));
 		} catch (ComponentConnectionRejectedException e) {
 			try {
 				connectDestination.dispose();

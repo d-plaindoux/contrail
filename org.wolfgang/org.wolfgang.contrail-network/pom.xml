@@ -37,19 +37,7 @@
 
 		<dependency>
 			<groupId>org.wolfgang</groupId>
-			<artifactId>org.wolfgang.common</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.wolfgang</groupId>
-			<artifactId>org.wolfgang.contrail-core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.wolfgang</groupId>
-			<artifactId>org.wolfgang.contrail-reference</artifactId>
+			<artifactId>org.wolfgang.reference</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
@@ -57,7 +45,6 @@
 			<groupId>org.wolfgang</groupId>
 			<artifactId>org.wolfgang.contrail-ecosystem</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
