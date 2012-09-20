@@ -35,17 +35,21 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FlowExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
+public class ChoiceExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
 
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 
-		support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		scanner.scan(LexemeKind.OPERATOR, "[");
 
-		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
-			scanner.scan(LexemeKind.OPERATOR, "<>");
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter);
+
+		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "|")) {
+			scanner.scan(LexemeKind.OPERATOR, "|");
+			support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter);
 		}
+
+		scanner.scan(LexemeKind.OPERATOR, "]");
 
 		return null;
 	}

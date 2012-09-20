@@ -19,24 +19,28 @@
 package org.wolfgang.contrail.dsl;
 
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.impl.LexemeImpl;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
 
 /**
- * <code>StatementUnit</code>
+ * <code>ExpressionUnit</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StatementUnit extends AbstractSetOfCompilationUnit<Void, EcosystemModel> {
+public class SimpleExpressionUnit extends AbstractSetOfCompilationUnit<Expression, EcosystemModel> {
 
-	public StatementUnit() throws EntryAlreadyBoundException {
+	public SimpleExpressionUnit() throws EntryAlreadyBoundException {
 		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "{"), StatementsUnit.Block.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), VariableUnit.class.getName());
-		this.setDefaultCompilationUnit(FlowExpressionUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.STRING, null), AtomUnit.String.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.INTEGER, null), AtomUnit.Integer.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.CHARACTERS, null), AtomUnit.Character.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "("), UnitOrFlowExpressionUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "["), ChoiceExpressionUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "fun"), AbstractionUnit.class.getName());
 	}
 
 }

@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
-import org.wolfgang.opala.lexing.impl.GenLex;
-import org.wolfgang.opala.lexing.impl.LexerTokenizer;
 import org.wolfgang.opala.micro.Language.Expression;
 import org.wolfgang.opala.micro.Language.Lambda;
 import org.wolfgang.opala.micro.Language.S0Unit;
@@ -35,8 +33,8 @@ import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 import org.wolfgang.opala.scanner.Scanner;
+import org.wolfgang.opala.scanner.ScannerFactory;
 import org.wolfgang.opala.scanner.exception.ScannerException;
-import org.wolfgang.opala.scanner.impl.ScannerImpl;
 
 /**
  * <code>TestLanguage</code>
@@ -49,9 +47,7 @@ public class TestLanguage extends TestCase {
 	@Test
 	public void testNominal01() throws EntryAlreadyBoundException, ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final InputStream input = new ByteArrayInputStream("fun a -> a".getBytes());
-		final GenLex genLex = new GenLex(input);
-		final LexerTokenizer lexer = new LexerTokenizer(genLex.getLexer());
-		final Scanner scanner = new ScannerImpl(lexer);
+		final Scanner scanner = ScannerFactory.create(input);
 		final Language.MyLang myLang = new Language.MyLang();
 
 		final Expression expression = myLang.parse(S0Unit.class.getName(), scanner, null);

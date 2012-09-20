@@ -30,6 +30,7 @@ import org.wolfgang.opala.parsing.LanguageSupport;
 import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
+import org.wolfgang.opala.scanner.LexemeFilter;
 import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.CastException;
 import org.wolfgang.opala.scanner.exception.ScannerException;
@@ -57,6 +58,7 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 		this.keywords.add(keyword);
 	}
 
+	@Override
 	public boolean isKeyword(String keyword) {
 		return this.keywords.contains(keyword);
 	}
@@ -69,6 +71,7 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 		}
 	}
 
+	@Override
 	public <E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound {
 		try {
 			final CompilationUnit<E, P> unit = new Cast<CompilationUnit<E, P>>().perform(this.units.get(key));
@@ -82,21 +85,29 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 		}
 	}
 
+	@Override
 	public void enterUnit(String key) {
 		this.context.push(key);
 	}
 
+	@Override
 	public void exitUnit(String key) {
 		while (key.equals(this.context.pop()) == false)
 			;
 	}
 
+	@Override
 	public String[] getContext() {
 		return this.context.toArray(new String[this.context.size()]);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <E, P> E parse(String unit, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		return (E) this.getUnitByKey(unit).compile(this, scanner, parameter);
+		final LexemeFilter previousLexemeFilter = scanner.setLexemeFilter(this.getSkippedLexemes());
+		try {
+			return (E) this.getUnitByKey(unit).compile(this, scanner, parameter);
+		} finally {
+			scanner.setLexemeFilter(previousLexemeFilter);
+		}
 	}
 }

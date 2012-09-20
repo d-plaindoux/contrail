@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.dsl;
 
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
-import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Import;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -30,22 +30,28 @@ import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
 /**
- * <code>FlowExpressionUnit</code>
+ * <code>ImportUnit</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FlowExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
+public class ImportUnit implements CompilationUnit<Void, EcosystemModel> {
 
 	@Override
-	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+	public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		scanner.scan(LexemeKind.IDENT, "import");
 
-		support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		final StringBuilder aPackage = new StringBuilder();
+		aPackage.append(scanner.scan(LexemeKind.IDENT).getValue());
 
-		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
-			scanner.scan(LexemeKind.OPERATOR, "<>");
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
+			aPackage.append(scanner.scan(LexemeKind.OPERATOR, ".").getValue());
+			aPackage.append(scanner.scan(LexemeKind.IDENT).getValue());
 		}
+
+		final Import anImport = new Import();
+		anImport.setElement(aPackage.toString());
+		ecosystemModel.add(anImport);
 
 		return null;
 	}

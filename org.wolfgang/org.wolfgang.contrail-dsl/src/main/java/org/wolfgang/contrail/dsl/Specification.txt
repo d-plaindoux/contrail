@@ -1,38 +1,39 @@
 DSL Contrail Ecosystem Language aka CEL
 ---------------------------------------
 
-Keywords = { 'import', 'function', 'var' }
+Keywords = { 'import', 'fun', 'var' }
 
-Source ::=
++ Source ::=
 	Imports Statements
 	
-Imports ::=
-	'import' STRING ';'
++ Imports ::=
+	'import' IDENT ('.' IDENT)*
 	 	
-Statements ::=
-    (Statement)*	
++ Statements ::=
+    Statement*	
 	
-Statement ::=
-	'var' ID '=' FlowExpression ';'
-	FlowExpression ';'
++ Statement ::=
+	'{' Statements '}' 										-- Block
+	'var' ID '=' FlowExpression ';'							-- Variable definition
+	FlowExpression ';'										-- ...
 
-FlowExpression ::=
-    Expression ('<>' Expression)*
-    Expression ('|' Expression)*
++ FlowExpression ::=
+    Expression ('<>' Expression)*							-- Pipeline
+    
++ ChoiceExpression ::=
+    FlowExpression ('|' FlowExpression)*					-- Choice
 
-Expression ::=
-	STRING
-	INTEGER
-	CHARACTERE
-	URL
-	'(' FlowExpression ')' 
-	'(' Args? ')' '->' (Expression | '{' Statements '}')
-	ID ('(' Params* ')')?		
++ Expression = 
+	SimpleExpression SimpleExpression*						-- Apply
 
-Args ::= 
-	ID (',' Args)*
-		
-Params ::=
-	FlowExpression (',' FlowExpression)*	
++ SimpleExpression ::=
+	STRING													-- Guess what ?
+	INTEGER													-- Guess what ?
+	CHARACTER												-- Guess what ?	
+	'(' ')'													-- Unit
+	'(' FlowExpression ')' 									-- Flow
+	'[' ChoiceExpression ']'								-- Choice	
+	'fun' ID+ '->' Statement 								-- Abstraction
+	'fun' '(' ')' '->' Statement 							-- Unit Abstraction 
 	
 

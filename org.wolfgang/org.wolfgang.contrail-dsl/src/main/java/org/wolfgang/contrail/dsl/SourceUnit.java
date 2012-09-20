@@ -18,15 +18,11 @@
 
 package org.wolfgang.contrail.dsl;
 
-import java.util.List;
-
-import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
-import org.wolfgang.opala.parsing.CompilationUnit;
-import org.wolfgang.opala.parsing.LanguageSupport;
-import org.wolfgang.opala.parsing.exception.ParsingException;
-import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
-import org.wolfgang.opala.scanner.Scanner;
-import org.wolfgang.opala.scanner.exception.ScannerException;
+import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.opala.lexing.LexemeKind;
+import org.wolfgang.opala.lexing.impl.LexemeImpl;
+import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
+import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
 
 /**
  * <code>SourceUnit</code>
@@ -34,10 +30,11 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class SourceUnit implements CompilationUnit<Void, List<String>> {
+public class SourceUnit extends AbstractSetOfCompilationUnit<Void, EcosystemModel> {
 
-	@Override
-	public Void compile(LanguageSupport support, Scanner scanner, List<String> parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		return null;
+	public SourceUnit() throws EntryAlreadyBoundException {
+		super();
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "import"), ImportUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), StatementUnit.class.getName());
 	}
 }

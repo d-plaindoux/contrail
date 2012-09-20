@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.dsl;
 
-import java.util.List;
-
-import org.wolfgang.opala.lexing.LexemeKind;
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
 import org.wolfgang.opala.parsing.LanguageSupport;
@@ -35,26 +35,16 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ExpressionUnit implements CompilationUnit<Void, List<String>> {
+public class ExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
 
 	@Override
-	public Void compile(LanguageSupport support, Scanner scanner, List<String> parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		if (scanner.currentLexeme().isA(LexemeKind.STRING)) {
-			scanner.scan();
-		} else if (scanner.currentLexeme().isA(LexemeKind.INTEGER)) {
-			scanner.scan();
-		} else if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "(")) {
-			scanner.scan(LexemeKind.OPERATOR, "(");
-			while (scanner.currentLexeme().isA(LexemeKind.IDENT)) {
-				scanner.scan(LexemeKind.IDENT);
-			}
-			scanner.scan(LexemeKind.OPERATOR, ")");
-			scanner.scan(LexemeKind.OPERATOR, "->");
-			if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "{")) {
-				// TODO
-			} else {
-				// TODO
-			}
+	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		support.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(support, scanner, ecosystemModel);
+
+		final SimpleExpressionUnit unit = Coercion.coerce(support.getUnitByKey(SimpleExpressionUnit.class.getName()), SimpleExpressionUnit.class);
+
+		while (unit.canCompile(scanner)) {
+			support.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(support, scanner, ecosystemModel);
 		}
 
 		return null;

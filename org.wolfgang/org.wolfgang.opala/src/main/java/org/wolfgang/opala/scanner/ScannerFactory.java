@@ -16,27 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.dsl;
+package org.wolfgang.opala.scanner;
 
-import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
-import org.wolfgang.opala.lexing.LexemeKind;
-import org.wolfgang.opala.lexing.impl.LexemeImpl;
-import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
-import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
+import java.io.InputStream;
+
+import org.wolfgang.opala.lexing.impl.GenLex;
+import org.wolfgang.opala.lexing.impl.LexemeTokenizerImpl;
+import org.wolfgang.opala.scanner.exception.ScannerException;
+import org.wolfgang.opala.scanner.impl.ScannerImpl;
 
 /**
- * <code>StatementUnit</code>
+ * <code>ScannerFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StatementUnit extends AbstractSetOfCompilationUnit<Void, EcosystemModel> {
+public final class ScannerFactory {
 
-	public StatementUnit() throws EntryAlreadyBoundException {
+	private ScannerFactory() {
 		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "{"), StatementsUnit.Block.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), VariableUnit.class.getName());
-		this.setDefaultCompilationUnit(FlowExpressionUnit.class.getName());
 	}
 
+	public static Scanner create(InputStream input) throws ScannerException {
+		return new ScannerImpl(new LexemeTokenizerImpl(new GenLex(input).getLexer()));
+	}
 }

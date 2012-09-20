@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.dsl;
 
+import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.LexemeKind;
@@ -30,23 +32,27 @@ import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
 /**
- * <code>FlowExpressionUnit</code>
+ * <code>UnitOrFlowExpressionUnit</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FlowExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
+public class UnitOrFlowExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
 
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final Expression expression;
 
-		support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		scanner.scan(LexemeKind.OPERATOR, "(");
 
-		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
-			scanner.scan(LexemeKind.OPERATOR, "<>");
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ")")) {
+			expression = new Atom();
+		} else {
+			expression = Coercion.coerce(support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
 		}
 
-		return null;
+		scanner.scan(LexemeKind.OPERATOR, ")");
+
+		return expression;
 	}
 }

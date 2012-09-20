@@ -32,20 +32,27 @@ public class CELLanguage extends AbstractLanguageSupport {
 
 	/**
 	 * Constructor
-	 * @throws EntryAlreadyBoundException 
+	 * 
+	 * @throws EntryAlreadyBoundException
 	 */
-	public CELLanguage() throws EntryAlreadyBoundException {
+	public CELLanguage() {
 		super();
 		this.addKeyword("import");
 		this.addKeyword("function");
 		this.addKeyword("var");
-		
-		this.addUnit(SourceUnit.class.getName(), new SourceUnit());
-		this.addUnit(ImportsUnit.class.getName(), new ImportsUnit());
-		this.addUnit(StatementsUnit.class.getName(), new StatementsUnit());
-		this.addUnit(StatementUnit.class.getName(), new StatementUnit());
-		this.addUnit(FlowExpressionUnit.class.getName(), new FlowExpressionUnit());
-		this.addUnit(ExpressionUnit.class.getName(), new ExpressionUnit());
+
+		try {
+			this.addUnit(SourceUnit.class.getName(), new SourceUnit());
+			this.addUnit(ImportUnit.class.getName(), new ImportUnit());
+			this.addUnit(StatementsUnit.class.getName(), new StatementsUnit.Toplevel());
+			this.addUnit(StatementUnit.class.getName(), new StatementUnit());
+			this.addUnit(FlowExpressionUnit.class.getName(), new FlowExpressionUnit());
+			this.addUnit(ChoiceExpressionUnit.class.getName(), new ChoiceExpressionUnit());
+			this.addUnit(ExpressionUnit.class.getName(), new ExpressionUnit());
+			this.addUnit(SimpleExpressionUnit.class.getName(), new SimpleExpressionUnit());
+		} catch (EntryAlreadyBoundException consume) {
+			// Ignore
+		}
 	}
 
 	@Override
