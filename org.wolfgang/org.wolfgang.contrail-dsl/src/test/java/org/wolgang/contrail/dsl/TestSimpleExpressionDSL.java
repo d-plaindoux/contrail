@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.Coercion;
-import org.wolfgang.contrail.dsl.AtomUnit;
 import org.wolfgang.contrail.dsl.CELLanguage;
 import org.wolfgang.contrail.dsl.SimpleExpressionUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
@@ -45,7 +44,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestAtomDSL extends TestCase {
+public class TestSimpleExpressionDSL extends TestCase {
 
 	@Test
 	public void testAtom01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
@@ -55,7 +54,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(AtomUnit.String.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
+		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("Hello, World!", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -68,7 +67,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.parse(AtomUnit.Integer.class.getName(), scanner, ecosystemModel), Expression.class);
+		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -81,7 +80,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(AtomUnit.Character.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
+		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
 	}
