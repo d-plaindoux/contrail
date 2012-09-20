@@ -35,12 +35,12 @@ public class SimpleExpressionUnit extends AbstractSetOfCompilationUnit<Expressio
 
 	public SimpleExpressionUnit() throws EntryAlreadyBoundException {
 		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.STRING, null), AtomUnit.String.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.INTEGER, null), AtomUnit.Integer.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.CHARACTERS, null), AtomUnit.Character.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "("), UnitOrFlowExpressionUnit.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "["), ChoiceExpressionUnit.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "fun"), AbstractionUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.STRING, null), AtomUnit.String.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.INTEGER, null), AtomUnit.Integer.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.CHARACTERS, null), AtomUnit.Character.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "("), UnitOrFlowExpressionUnit.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "["), ChoiceExpressionUnit.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "fun"), AbstractionUnit.class);
 	}
 
 }

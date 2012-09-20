@@ -50,7 +50,8 @@ public class TestLanguage extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 		final Language.MyLang myLang = new Language.MyLang();
 
-		final Expression expression = myLang.parse(S0Unit.class.getName(), scanner, null);
+		final Expression expression = myLang.parse(S0Unit.class, scanner, null);
+		
 		assertEquals(Lambda.class, expression.getClass());
 		final Lambda lambda = (Lambda) expression;
 		assertEquals("a", lambda.variable);

@@ -18,7 +18,12 @@
 
 package org.wolfgang.contrail.dsl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -34,15 +39,18 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class AbstractionUnit implements CompilationUnit<Void, EcosystemModel> {
+public class AbstractionUnit implements CompilationUnit<Expression, EcosystemModel> {
 
 	@Override
-	public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		scanner.scan(LexemeKind.IDENT, "fun");
+
+		final List<String> variables = new ArrayList<String>();
 
 		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "(")) {
 			scanner.scan(LexemeKind.OPERATOR, "(");
 			scanner.scan(LexemeKind.OPERATOR, ")");
+			variables.add(null);
 		} else {
 			scanner.scan(LexemeKind.IDENT);
 			while (scanner.currentLexeme().isA(LexemeKind.IDENT)) {
@@ -52,8 +60,13 @@ public class AbstractionUnit implements CompilationUnit<Void, EcosystemModel> {
 
 		scanner.scan(LexemeKind.OPERATOR, "->");
 
-		support.getUnitByKey(StatementUnit.class.getName()).compile(support, scanner, ecosystemModel);
+		final Expression expression = support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, ecosystemModel);
+		final Function function = new Function();
+		for (String string : variables) {
+			function.add(string);
+		}
+		function.add(expression);
 
-		return null;
+		return function;
 	}
 }

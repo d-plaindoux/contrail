@@ -294,7 +294,7 @@ public class TestNetworkEcosystem extends TestCase {
 
 		try {
 			@SuppressWarnings("unchecked")
-			final FutureResponse<String>[] responses = new FutureResponse[100];
+			final FutureResponse<String>[] responses = new FutureResponse[10];
 
 			for (int i = 0; i < responses.length; i++) {
 				responses[i] = new FutureResponse<String>();
@@ -341,7 +341,7 @@ public class TestNetworkEcosystem extends TestCase {
 		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
 
 		try {
-			final int nbEventSent = 50000;
+			final int nbEventSent = 500;
 			final FutureResponse<Integer> response = new FutureResponse<Integer>();
 			final AtomicInteger futureReference = new AtomicInteger();
 

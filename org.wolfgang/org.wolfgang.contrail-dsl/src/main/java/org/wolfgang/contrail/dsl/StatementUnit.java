@@ -34,9 +34,8 @@ public class StatementUnit extends AbstractSetOfCompilationUnit<Void, EcosystemM
 
 	public StatementUnit() throws EntryAlreadyBoundException {
 		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "{"), StatementsUnit.Block.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), VariableUnit.class.getName());
-		this.setDefaultCompilationUnit(FlowExpressionUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "{"), StatementsUnit.Block.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), VariableUnit.class);
 	}
 
 }

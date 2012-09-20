@@ -115,17 +115,17 @@ public interface Language {
 	 * @author Didier Plaindoux
 	 * @version 1.0
 	 */
-	public class ExpressionUnit extends AbstractSetOfCompilationUnit<Void, Void> {
+	public class ExpressionUnit extends AbstractSetOfCompilationUnit<Expression, Void> {
 		/**
 		 * Constructor
 		 * 
 		 * @throws EntryAlreadyBoundException
 		 */
 		public ExpressionUnit() throws EntryAlreadyBoundException {
-			this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "fun"), LambdaUnit.class.getName());
-			this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "("), BlockUnit.class.getName());
-			this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, null), IdentUnit.class.getName());
-			this.addCompilationUnit(new LexemeImpl(LexemeKind.STRING, null), AtomUnit.class.getName());
+			this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "fun"), LambdaUnit.class);
+			this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "("), BlockUnit.class);
+			this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, null), IdentUnit.class);
+			this.addCompilationUnit(new LexemeImpl(LexemeKind.STRING, null), AtomUnit.class);
 		}
 	}
 
@@ -181,7 +181,7 @@ public interface Language {
 
 			scanner.scan(LexemeKind.OPERATOR, "->");
 
-			Expression body = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+			Expression body = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter), Expression.class);
 
 			for (String value : values) {
 				body = new Lambda(value, body);
@@ -202,10 +202,10 @@ public interface Language {
 		public Expression compile(LanguageSupport support, Scanner scanner, Void parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 			scanner.scan(LexemeKind.OPERATOR, "(");
 
-			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter), Expression.class);
 
 			while (!scanner.currentLexeme().isA(LexemeKind.OPERATOR, ")")) {
-				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class));
+				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter), Expression.class));
 			}
 
 			scanner.scan(LexemeKind.OPERATOR, ")");
@@ -217,10 +217,10 @@ public interface Language {
 	public class S0Unit implements CompilationUnit<Expression, Void> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, Void parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+			Expression expression = Coercion.coerce(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter), Expression.class);
 
 			while (!scanner.isFinished()) {
-				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class));
+				expression = new Application(expression, Coercion.coerce(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter), Expression.class));
 			}
 
 			return expression;
@@ -237,12 +237,12 @@ public interface Language {
 			super();
 			this.addKeyword("fun");
 
-			this.addUnit(S0Unit.class.getName(), new S0Unit());
-			this.addUnit(ExpressionUnit.class.getName(), new ExpressionUnit());
-			this.addUnit(IdentUnit.class.getName(), new IdentUnit());
-			this.addUnit(AtomUnit.class.getName(), new AtomUnit());
-			this.addUnit(LambdaUnit.class.getName(), new LambdaUnit());
-			this.addUnit(BlockUnit.class.getName(), new BlockUnit());
+			this.addUnit(new S0Unit());
+			this.addUnit(new ExpressionUnit());
+			this.addUnit(new IdentUnit());
+			this.addUnit(new AtomUnit());
+			this.addUnit(new LambdaUnit());
+			this.addUnit(new BlockUnit());
 		}
 
 		@Override

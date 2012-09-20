@@ -122,7 +122,7 @@ public class TestFuture extends TestCase {
 		}.start();
 
 		try {
-			futureResponse.get(4, TimeUnit.SECONDS);
+			futureResponse.get(2, TimeUnit.SECONDS);
 			fail();
 		} catch (InterruptedException e) {
 			fail();

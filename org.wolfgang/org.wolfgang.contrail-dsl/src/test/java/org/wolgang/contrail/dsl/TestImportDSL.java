@@ -30,7 +30,6 @@ import org.wolfgang.contrail.dsl.ImportUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
-import org.wolfgang.opala.lexing.exception.UnexpectedLexemeException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 import org.wolfgang.opala.scanner.Scanner;
@@ -53,7 +52,7 @@ public class TestImportDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		celLanguage.parse(ImportUnit.class.getName(), scanner, ecosystemModel);
+		celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 
 		assertEquals(1, ecosystemModel.getImportations().size());
 		assertEquals("abcd", ecosystemModel.getImportations().get(0).getElement());
@@ -67,7 +66,7 @@ public class TestImportDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		celLanguage.parse(ImportUnit.class.getName(), scanner, ecosystemModel);
+		celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 
 		assertEquals(1, ecosystemModel.getImportations().size());
 		assertEquals("a.b.c.d", ecosystemModel.getImportations().get(0).getElement());
@@ -82,9 +81,9 @@ public class TestImportDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		try {
-			celLanguage.parse(ImportUnit.class.getName(), scanner, ecosystemModel);
+			celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 			fail();
-		} catch (UnexpectedLexemeException e) {
+		} catch (LexemeNotFoundException e) {
 			assertTrue(e.getLexeme().isA(LexemeKind.FINISHED));
 		}
 	}
@@ -98,9 +97,9 @@ public class TestImportDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		try {
-			celLanguage.parse(ImportUnit.class.getName(), scanner, ecosystemModel);
+			celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 			fail();
-		} catch (UnexpectedLexemeException e) {
+		} catch (LexemeNotFoundException e) {
 			assertTrue(e.getLexeme().isA(LexemeKind.INTEGER));
 		}
 	}

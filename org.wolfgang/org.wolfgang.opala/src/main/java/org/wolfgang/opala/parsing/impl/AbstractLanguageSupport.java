@@ -46,11 +46,11 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 
 	private final Stack<String> context;
 	private final List<String> keywords;
-	private final Map<String, CompilationUnit<?, ?>> units;
+	private final Map<Class<?>, CompilationUnit<?, ?>> units;
 
 	{
 		this.context = new Stack<String>();
-		this.units = new HashMap<String, CompilationUnit<?, ?>>();
+		this.units = new HashMap<Class<?>, CompilationUnit<?, ?>>();
 		this.keywords = new ArrayList<String>();
 	}
 
@@ -63,22 +63,27 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 		return this.keywords.contains(keyword);
 	}
 
-	protected <E, P> void addUnit(String key, CompilationUnit<E, P> unit) throws EntryAlreadyBoundException {
+	private <E, P> void addUnit(Class<? extends CompilationUnit<E, P>> key, CompilationUnit<E, P> unit) throws EntryAlreadyBoundException {
 		if (this.units.get(key) == null) {
-			this.units.put(key, new CompilationUnitObserver<E, P>(key, unit));
+			this.units.put(key, unit);
 		} else {
-			throw new EntryAlreadyBoundException(key);
+			throw new EntryAlreadyBoundException(key.getName());
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	protected <E, P> void addUnit(CompilationUnit<E, P> unit) throws EntryAlreadyBoundException {
+		this.addUnit((Class<? extends CompilationUnit<E, P>>) unit.getClass(), unit);
+	}
+
 	@Override
-	public <E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound {
+	public <E, P, C extends CompilationUnit<E, P>> C getUnitByKey(Class<C> key) throws ParsingUnitNotFound {
 		try {
-			final CompilationUnit<E, P> unit = new Cast<CompilationUnit<E, P>>().perform(this.units.get(key));
+			final C unit = new Cast<C>().perform(this.units.get(key));
 			if (unit != null) {
 				return unit;
 			} else {
-				throw new ParsingUnitNotFound(key);
+				throw new ParsingUnitNotFound(key.getName());
 			}
 		} catch (CastException e) {
 			throw new ParsingUnitNotFound(e);
@@ -101,8 +106,7 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 		return this.context.toArray(new String[this.context.size()]);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <E, P> E parse(String unit, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+	public <E, P> E parse(Class<? extends CompilationUnit<E, P>> unit, Scanner scanner, P parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final LexemeFilter previousLexemeFilter = scanner.setLexemeFilter(this.getSkippedLexemes());
 		try {
 			return (E) this.getUnitByKey(unit).compile(this, scanner, parameter);

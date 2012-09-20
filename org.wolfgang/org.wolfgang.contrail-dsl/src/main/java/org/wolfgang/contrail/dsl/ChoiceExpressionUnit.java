@@ -42,11 +42,11 @@ public class ChoiceExpressionUnit implements CompilationUnit<Expression, Ecosyst
 
 		scanner.scan(LexemeKind.OPERATOR, "[");
 
-		support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, parameter);
 
 		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "|")) {
 			scanner.scan(LexemeKind.OPERATOR, "|");
-			support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter);
+			support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, parameter);
 		}
 
 		scanner.scan(LexemeKind.OPERATOR, "]");

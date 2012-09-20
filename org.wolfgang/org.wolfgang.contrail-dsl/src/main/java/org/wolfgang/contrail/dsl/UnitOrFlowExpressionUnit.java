@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.dsl;
 
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
@@ -48,7 +47,7 @@ public class UnitOrFlowExpressionUnit implements CompilationUnit<Expression, Eco
 		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ")")) {
 			expression = new Atom();
 		} else {
-			expression = Coercion.coerce(support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, parameter), Expression.class);
+			expression = support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, parameter);
 		}
 
 		scanner.scan(LexemeKind.OPERATOR, ")");

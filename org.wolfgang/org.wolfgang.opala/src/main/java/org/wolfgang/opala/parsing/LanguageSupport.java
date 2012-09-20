@@ -33,7 +33,7 @@ public interface LanguageSupport {
 
 	LexemeFilter getSkippedLexemes();
 
-	<E, P> CompilationUnit<E, P> getUnitByKey(String key) throws ParsingUnitNotFound;
+	<E, P, C extends CompilationUnit<E, P>> C getUnitByKey(Class<C> key) throws ParsingUnitNotFound;
 
 	void enterUnit(String key);
 

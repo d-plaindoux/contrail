@@ -65,9 +65,9 @@ class RouterUtils extends TestCase {
 					// Coercion component
 					final SourceComponent<Event, Event> coercionTransducer = new CoercionTransducerFactory<Event>(Event.class).createComponent();
 					// Logger
-					final Component log = Components.compose(linkManager, new LoggerSourceComponent("CLIENT.UP<" + uri + ">"), new LoggerDestinationComponent("CLIENT.DOWN<" + uri + ">"));
+					// final Component log = Components.compose(linkManager, new LoggerSourceComponent("CLIENT.UP<" + uri + ">"), new LoggerDestinationComponent("CLIENT.DOWN<" + uri + ">"));
 					// Create the link from the client to the network
-					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, log, coercionTransducer, router);
+					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, /*log,*/ coercionTransducer, router);
 
 					router.filter(coercionTransducer.getComponentId(), mainReference);
 
@@ -102,11 +102,11 @@ class RouterUtils extends TestCase {
 					// Logger
 					final LoggerSourceComponent loggerSourceComponent = new LoggerSourceComponent("SERVER.UP<" + router.toString() + ">");
 					final LoggerDestinationComponent loggerDestinationComponent = new LoggerDestinationComponent("SERVER.UP<" + router.toString() + ">");
-					final Component log = Components.compose(linkManager, loggerSourceComponent, loggerDestinationComponent);
+					// final Component log = Components.compose(linkManager, loggerSourceComponent, loggerDestinationComponent);
 					// Source acceptance
 					final OnReceiveAcceptanceComponent acceptanceComponent = new OnReceiveAcceptanceComponent();
 					// Composed components
-					return Components.compose(linkManager, payLoadTransducer, serialisationTransducer, log, coercionTransducer, acceptanceComponent, router);
+					return Components.compose(linkManager, payLoadTransducer, serialisationTransducer, /*log,*/ coercionTransducer, acceptanceComponent, router);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (Exception e) {

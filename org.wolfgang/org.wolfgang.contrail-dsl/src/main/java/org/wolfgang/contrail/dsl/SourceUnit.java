@@ -34,7 +34,7 @@ public class SourceUnit extends AbstractSetOfCompilationUnit<Void, EcosystemMode
 
 	public SourceUnit() throws EntryAlreadyBoundException {
 		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "import"), ImportUnit.class.getName());
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), StatementUnit.class.getName());
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "import"), ImportUnit.class);
+		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), StatementUnit.class);
 	}
 }

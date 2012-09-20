@@ -54,7 +54,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("Hello, World!", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -67,7 +67,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -80,7 +80,46 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = Coercion.coerce(celLanguage.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(celLanguage, scanner, ecosystemModel), Expression.class);
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
+	}
+
+	@Test
+	public void testUnit() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("()".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertNull(Coercion.coerce(compile, Atom.class).getValue());
+	}
+
+	@Test
+	public void testParenthesis01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("( 123 )".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
+	}
+
+	@Test
+	public void testParenthesis02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("( 'a' )".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
 	}

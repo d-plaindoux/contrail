@@ -42,18 +42,19 @@ public class CELLanguage extends AbstractLanguageSupport {
 		this.addKeyword("var");
 
 		try {
-			this.addUnit(SourceUnit.class.getName(), new SourceUnit());
-			this.addUnit(ImportUnit.class.getName(), new ImportUnit());
-			this.addUnit(StatementsUnit.class.getName(), new StatementsUnit.Toplevel());
-			this.addUnit(StatementUnit.class.getName(), new StatementUnit());
-			this.addUnit(FlowExpressionUnit.class.getName(), new FlowExpressionUnit());
-			this.addUnit(ChoiceExpressionUnit.class.getName(), new ChoiceExpressionUnit());
-			this.addUnit(ExpressionUnit.class.getName(), new ExpressionUnit());
-			this.addUnit(SimpleExpressionUnit.class.getName(), new SimpleExpressionUnit());
+			this.addUnit(new SourceUnit());
+			this.addUnit(new ImportUnit());
+			this.addUnit(new StatementsUnit.Toplevel());
+			this.addUnit(new StatementUnit());
+			this.addUnit(new FlowExpressionUnit());
+			this.addUnit(new ChoiceExpressionUnit());
+			this.addUnit(new ExpressionUnit());
+			this.addUnit(new SimpleExpressionUnit());
 
-			this.addUnit(AtomUnit.String.class.getName(), new AtomUnit.String());
-			this.addUnit(AtomUnit.Integer.class.getName(), new AtomUnit.Integer());
-			this.addUnit(AtomUnit.Character.class.getName(), new AtomUnit.Character());
+			this.addUnit(new UnitOrFlowExpressionUnit());
+			this.addUnit(new AtomUnit.String());
+			this.addUnit(new AtomUnit.Integer());
+			this.addUnit(new AtomUnit.Character());
 
 		} catch (EntryAlreadyBoundException consume) {
 			// Ignore

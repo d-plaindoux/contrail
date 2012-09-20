@@ -18,8 +18,12 @@
 
 package org.wolfgang.contrail.dsl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -40,13 +44,23 @@ public class FlowExpressionUnit implements CompilationUnit<Expression, Ecosystem
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 
-		support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+		final List<Expression> expressions = new ArrayList<Expression>();
+
+		expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 
 		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
 			scanner.scan(LexemeKind.OPERATOR, "<>");
-			support.getUnitByKey(ExpressionUnit.class.getName()).compile(support, scanner, parameter);
+			expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 		}
 
-		return null;
+		if (expressions.size() == 1) {
+			return expressions.get(0);
+		} else {
+			final Flow flow = new Flow();
+			for (Expression expression : expressions) {
+				flow.add(expression);
+			}
+			return flow;
+		}
 	}
 }

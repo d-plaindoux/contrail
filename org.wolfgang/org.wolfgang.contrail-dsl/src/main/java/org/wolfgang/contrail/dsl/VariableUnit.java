@@ -45,10 +45,10 @@ public class VariableUnit implements CompilationUnit<Void, EcosystemModel> {
 
 		final String name = scanner.scan(LexemeKind.IDENT).getValue();
 		scanner.scan(LexemeKind.OPERATOR, "=");
-		final Expression expression = Coercion.coerce(support.getUnitByKey(FlowExpressionUnit.class.getName()).compile(support, scanner, ecosystemModel), Expression.class);
+		final Expression expression = Coercion.coerce(support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, ecosystemModel), Expression.class);
 
 		final Definition definition = new Definition();
-		
+
 		definition.setName(name);
 		definition.add(expression);
 

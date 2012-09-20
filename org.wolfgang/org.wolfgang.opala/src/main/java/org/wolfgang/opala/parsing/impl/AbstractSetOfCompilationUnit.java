@@ -47,10 +47,10 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 
 	private class Entry {
 		private final Lexeme key;
-		private final String val;
+		private final Class<? extends CompilationUnit<E, P>> val;
 		private final boolean tryDefault;
 
-		public Entry(Lexeme key, String val, boolean tryDefault) {
+		public Entry(Lexeme key, Class<? extends CompilationUnit<E, P>> val, boolean tryDefault) {
 			this.key = key;
 			this.val = val;
 			this.tryDefault = tryDefault;
@@ -58,7 +58,7 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 	}
 
 	protected final List<Entry> unitSet;
-	protected String defaultUnit;
+	protected Class<? extends CompilationUnit<E, P>> defaultUnit;
 
 	protected AbstractSetOfCompilationUnit() {
 		this.unitSet = new ArrayList<Entry>();
@@ -75,19 +75,19 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 		return null;
 	}
 
-	final public boolean hasCompilationUnit(Lexeme lexeme) {
+	public final boolean hasCompilationUnit(Lexeme lexeme) {
 		return this.getCompilationUnit(lexeme) != null;
 	}
 
-	final public void setDefaultCompilationUnit(String defautUnit) {
+	public final void setDefaultCompilationUnit(Class<? extends CompilationUnit<E, P>> defautUnit) {
 		this.defaultUnit = defautUnit;
 	}
 
-	final public void addCompilationUnit(Lexeme lexeme, String unitName) throws EntryAlreadyBoundException {
+	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<E, P>> unitName) throws EntryAlreadyBoundException {
 		this.addCompilationUnit(lexeme, unitName, false);
 	}
 
-	final public void addCompilationUnit(Lexeme lexeme, String unitName, boolean tryDefault) throws EntryAlreadyBoundException {
+	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<E, P>> unitName, boolean tryDefault) throws EntryAlreadyBoundException {
 		if (this.getCompilationUnit(lexeme) == null) {
 			this.unitSet.add(new Entry(lexeme, unitName, tryDefault));
 		} else {

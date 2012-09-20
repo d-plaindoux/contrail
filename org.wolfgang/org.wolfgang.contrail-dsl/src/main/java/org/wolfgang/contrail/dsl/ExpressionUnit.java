@@ -18,7 +18,10 @@
 
 package org.wolfgang.contrail.dsl;
 
-import org.wolfgang.common.utils.Coercion;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -39,14 +42,24 @@ public class ExpressionUnit implements CompilationUnit<Expression, EcosystemMode
 
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		support.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(support, scanner, ecosystemModel);
+		final SimpleExpressionUnit unit = support.getUnitByKey(SimpleExpressionUnit.class);
 
-		final SimpleExpressionUnit unit = Coercion.coerce(support.getUnitByKey(SimpleExpressionUnit.class.getName()), SimpleExpressionUnit.class);
+		final List<Expression> expressions = new ArrayList<Expression>();
+
+		expressions.add(unit.compile(support, scanner, ecosystemModel));
 
 		while (unit.canCompile(scanner)) {
-			support.getUnitByKey(SimpleExpressionUnit.class.getName()).compile(support, scanner, ecosystemModel);
+			expressions.add(support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel));
 		}
 
-		return null;
+		if (expressions.size() == 1) {
+			return expressions.get(0);
+		} else {
+			final Apply apply = new Apply();
+			for (Expression expression : expressions) {
+				apply.add(expression);
+			}
+			return apply;
+		}
 	}
 }
