@@ -51,10 +51,13 @@ public class CELLanguage extends AbstractLanguageSupport {
 			this.addUnit(new ExpressionUnit());
 			this.addUnit(new SimpleExpressionUnit());
 
+			this.addUnit(new AbstractionUnit());
 			this.addUnit(new UnitOrFlowExpressionUnit());
-			this.addUnit(new AtomUnit.String());
-			this.addUnit(new AtomUnit.Integer());
-			this.addUnit(new AtomUnit.Character());
+
+			this.addUnit(new TerminalUnit.Variable());
+			this.addUnit(new TerminalUnit.String());
+			this.addUnit(new TerminalUnit.Integer());
+			this.addUnit(new TerminalUnit.Character());
 
 		} catch (EntryAlreadyBoundException consume) {
 			// Ignore

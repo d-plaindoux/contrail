@@ -21,8 +21,10 @@ package org.wolfgang.contrail.dsl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -52,20 +54,29 @@ public class AbstractionUnit implements CompilationUnit<Expression, EcosystemMod
 			scanner.scan(LexemeKind.OPERATOR, ")");
 			variables.add(null);
 		} else {
-			scanner.scan(LexemeKind.IDENT);
+			variables.add(scanner.scan(LexemeKind.IDENT).getValue());
 			while (scanner.currentLexeme().isA(LexemeKind.IDENT)) {
-				scanner.scan(LexemeKind.IDENT);
+				variables.add(scanner.scan(LexemeKind.IDENT).getValue());
 			}
 		}
 
 		scanner.scan(LexemeKind.OPERATOR, "->");
 
-		final Expression expression = support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, ecosystemModel);
+		final Expression expression = support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, ecosystemModel);
+		
 		final Function function = new Function();
 		for (String string : variables) {
 			function.add(string);
 		}
-		function.add(expression);
+
+		if (Coercion.canCoerce(expression, Flow.class)) {
+			final Flow flow = Coercion.coerce(expression, Flow.class);
+			for (Expression subExpression : flow.getExpressions()) {
+				function.add(subExpression);
+			}
+		} else {
+			function.add(expression);
+		}
 
 		return function;
 	}

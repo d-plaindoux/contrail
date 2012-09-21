@@ -45,4 +45,16 @@ public class Flow extends ContentExpressions implements Expression, Validation {
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		return super.equals(obj);
+	}
+
 }

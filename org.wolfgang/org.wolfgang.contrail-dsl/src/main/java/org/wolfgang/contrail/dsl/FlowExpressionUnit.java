@@ -48,11 +48,13 @@ public class FlowExpressionUnit implements CompilationUnit<Expression, Ecosystem
 
 		expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 
+		System.err.println("Found " + scanner.currentLexeme());
 		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
 			scanner.scan(LexemeKind.OPERATOR, "<>");
 			expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 		}
 
+		
 		if (expressions.size() == 1) {
 			return expressions.get(0);
 		} else {

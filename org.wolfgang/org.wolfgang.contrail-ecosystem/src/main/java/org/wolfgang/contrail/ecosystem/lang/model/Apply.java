@@ -88,4 +88,30 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((binding == null) ? 0 : binding.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Apply other = (Apply) obj;
+		if (binding == null) {
+			if (other.binding != null)
+				return false;
+		} else if (!binding.equals(other.binding))
+			return false;
+		return super.equals(obj);
+	}
+
 }

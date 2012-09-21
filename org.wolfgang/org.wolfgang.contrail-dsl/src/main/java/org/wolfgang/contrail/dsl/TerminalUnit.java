@@ -21,6 +21,7 @@ package org.wolfgang.contrail.dsl;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -36,7 +37,16 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface AtomUnit {
+public interface TerminalUnit {
+
+	class Variable implements CompilationUnit<Expression, EcosystemModel> {
+		@Override
+		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+			final Reference atom = new Reference();
+			atom.setValue(scanner.scan(LexemeKind.IDENT).getValue());
+			return atom;
+		}
+	}
 
 	class String implements CompilationUnit<Expression, EcosystemModel> {
 		@Override

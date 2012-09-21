@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.Coercion;
-import org.wolfgang.contrail.dsl.AtomUnit;
+import org.wolfgang.contrail.dsl.TerminalUnit;
 import org.wolfgang.contrail.dsl.CELLanguage;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -54,7 +54,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(AtomUnit.String.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.String.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("Hello, World!", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -67,7 +67,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(AtomUnit.Integer.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Integer.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
 	}
@@ -80,7 +80,7 @@ public class TestAtomDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(AtomUnit.Character.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Character.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
 		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
 	}
