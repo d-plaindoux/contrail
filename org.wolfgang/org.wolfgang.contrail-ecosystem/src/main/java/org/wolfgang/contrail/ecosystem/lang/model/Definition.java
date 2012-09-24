@@ -30,7 +30,7 @@ import org.wolfgang.common.message.MessagesProvider;
  * @version 1.0
  */
 @XmlRootElement(name = "define")
-public class Definition extends ContentExpressions implements Validation {
+public class Definition extends ContentExpressions implements Expression, Validation {
 
 	private String name;
 
@@ -66,5 +66,10 @@ public class Definition extends ContentExpressions implements Validation {
 		if (this.getExpressions().size() == 0) {
 			throw new ValidationException(MessagesProvider.message("org.wolfgang.contrail.ecosystem", "expression.undefined").format(name));
 		}
+	}
+
+	@Override
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
 	}
 }

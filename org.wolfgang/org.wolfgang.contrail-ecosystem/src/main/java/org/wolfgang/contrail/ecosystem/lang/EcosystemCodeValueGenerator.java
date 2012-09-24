@@ -32,12 +32,15 @@ import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
+import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.ExpressionVisitor;
 import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 import org.wolfgang.contrail.ecosystem.lang.model.Router;
+import org.wolfgang.contrail.ecosystem.lang.model.Sequence;
 import org.wolfgang.contrail.ecosystem.lang.model.Switch;
 
 /**
@@ -206,5 +209,27 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	@Override
 	public CodeValue visit(Switch expression) throws EcosystemCodeValueGeneratorException {
 		return null;
+	}
+
+	@Override
+	public CodeValue visit(Definition definition) throws EcosystemCodeValueGeneratorException {
+		this.environment.put(definition.getName(), this.visit(definition.getExpressions()));
+		return ModelFactory.unit().visit(this);
+	}
+
+	@Override
+	public CodeValue visit(Sequence sequence) throws EcosystemCodeValueGeneratorException {
+		final List<Expression> expressions = sequence.getExpressions();
+		if (expressions.size() == 0) {
+			return ModelFactory.unit().visit(this);
+		} else {
+			Expression result = expressions.get(expressions.size() - 1);
+
+			for (int i = expressions.size() - 1; i > 0; i--) {
+				result = ModelFactory.apply(ModelFactory.abstraction(result, (String) null), expressions.get(i - 1));
+			}
+
+			return result.visit(this);
+		}
 	}
 }

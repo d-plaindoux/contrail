@@ -16,27 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.dsl;
+package org.wolfgang.contrail.ecosystem.lang.model;
 
-import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
-import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.opala.lexing.LexemeKind;
-import org.wolfgang.opala.lexing.impl.LexemeImpl;
-import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
-import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <code>StatementUnit</code>
+ * <code>Sequence</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class StatementUnit extends AbstractSetOfCompilationUnit<Expression, EcosystemModel> {
+@XmlRootElement(name = "sequence")
+public class Sequence extends ContentExpressions implements Expression, Validation {
 
-	public StatementUnit() throws EntryAlreadyBoundException {
-		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.OPERATOR, "{"), StatementsUnit.Block.class);
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), VariableUnit.class);
+	@Override
+	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		// Nothing to do
 	}
 
 }

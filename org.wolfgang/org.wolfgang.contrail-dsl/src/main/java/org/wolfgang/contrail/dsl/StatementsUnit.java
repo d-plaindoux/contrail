@@ -18,7 +18,12 @@
 
 package org.wolfgang.contrail.dsl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -46,19 +51,21 @@ public interface StatementsUnit {
 		}
 	}
 
-	public class Block implements CompilationUnit<Void, EcosystemModel> {
+	public class Block implements CompilationUnit<Expression, EcosystemModel> {
 
 		@Override
-		public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 			scanner.scan(LexemeKind.OPERATOR, "{");
 
+			final List<Expression> sequence = new ArrayList<Expression>();
+
 			while (!scanner.currentLexeme().isA(LexemeKind.OPERATOR, "}")) {
-				support.getUnitByKey(StatementUnit.class).compile(support, scanner, parameter);
+				sequence.add(support.getUnitByKey(StatementUnit.class).compile(support, scanner, parameter));
 			}
 
 			scanner.scan(LexemeKind.OPERATOR, "}");
 
-			return null;
+			return ModelFactory.sequence(sequence.toArray(new Expression[sequence.size()]));
 		}
 	}
 }

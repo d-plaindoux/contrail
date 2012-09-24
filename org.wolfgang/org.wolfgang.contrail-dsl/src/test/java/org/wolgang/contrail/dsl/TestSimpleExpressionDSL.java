@@ -131,6 +131,19 @@ public class TestSimpleExpressionDSL extends TestCase {
 	}
 
 	@Test
+	public void testFunction03() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("fun a b -> a b".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+
+		assertEquals(abstraction(apply(reference("a"), reference("b")), "a", "b"), compile);
+	}
+
+	@Test
 	public void testApply01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final InputStream input = new ByteArrayInputStream("a b".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);

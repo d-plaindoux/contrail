@@ -30,7 +30,6 @@ public final class ModelFactory {
 
 	private ModelFactory() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public static Expression apply(Expression function, Expression... expressions) {
@@ -70,6 +69,20 @@ public final class ModelFactory {
 		}
 	}
 
+	public static Expression sequence(Expression... expressions) {
+		if (expressions.length == 0) {
+			return atom(null);
+		} else if (expressions.length == 1) {
+			return expressions[0];
+		} else {
+			final Sequence expression = new Sequence();
+			for (Expression expression2 : expressions) {
+				expression.add(expression2);
+			}
+			return expression;
+		}
+	}
+
 	public static Expression abstraction(Expression body, String... parameters) {
 		assert parameters.length > 0;
 		final Function expression = new Function();
@@ -91,5 +104,12 @@ public final class ModelFactory {
 		final Reference expression = new Reference();
 		expression.setValue(value);
 		return expression;
+	}
+
+	public static Expression define(String name, Expression value) {
+		final Definition definition = new Definition();
+		definition.setName(name);
+		definition.add(value);
+		return definition;
 	}
 }

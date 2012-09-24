@@ -62,5 +62,4 @@ public class ComponentConverter extends AbstractConverter<Component> {
 			throw new ConversionException(e);
 		}
 	}
-
 }

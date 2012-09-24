@@ -19,10 +19,13 @@
 package org.wolfgang.contrail.dsl;
 
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
-import org.wolfgang.opala.lexing.LexemeKind;
-import org.wolfgang.opala.lexing.impl.LexemeImpl;
-import org.wolfgang.opala.parsing.exception.EntryAlreadyBoundException;
-import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
+import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
+import org.wolfgang.opala.parsing.CompilationUnit;
+import org.wolfgang.opala.parsing.LanguageSupport;
+import org.wolfgang.opala.parsing.exception.ParsingException;
+import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
+import org.wolfgang.opala.scanner.Scanner;
+import org.wolfgang.opala.scanner.exception.ScannerException;
 
 /**
  * <code>SourceUnit</code>
@@ -30,11 +33,13 @@ import org.wolfgang.opala.parsing.impl.AbstractSetOfCompilationUnit;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class SourceUnit extends AbstractSetOfCompilationUnit<Void, EcosystemModel> {
+public class SourceUnit implements CompilationUnit<Void, EcosystemModel> {
 
-	public SourceUnit() throws EntryAlreadyBoundException {
-		super();
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "import"), ImportUnit.class);
-		this.addCompilationUnit(new LexemeImpl(LexemeKind.IDENT, "var"), StatementUnit.class);
+	@Override
+	public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		support.getUnitByKey(ImportsUnit.class).compile(support, scanner, ecosystemModel);
+		support.getUnitByKey(StatementsUnit.Toplevel.class).compile(support, scanner, ecosystemModel);
+		return null;
 	}
+
 }

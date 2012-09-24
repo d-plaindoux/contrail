@@ -20,12 +20,12 @@ package org.wolfgang.contrail.ecosystem.lang.code;
 
 /**
  * <code>CodeValueVisitor</code>
- *
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public interface CodeValueVisitor<T, E extends Exception> {
-	
+
 	T visit(ClosureValue value) throws E;
 
 	T visit(ComponentValue value) throws E;
@@ -33,4 +33,5 @@ public interface CodeValueVisitor<T, E extends Exception> {
 	T visit(ConstantValue value) throws E;
 
 	T visit(FlowValue value) throws E;
+
 }
