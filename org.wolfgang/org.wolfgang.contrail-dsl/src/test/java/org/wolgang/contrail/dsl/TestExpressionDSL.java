@@ -25,6 +25,7 @@ import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.flow;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.unit;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.sequence;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -141,6 +142,19 @@ public class TestExpressionDSL extends TestCase {
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(function(apply(reference("a"), reference("b")), "a", "b"), compile);
+	}
+
+	@Test
+	public void testFunction04() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("fun a b -> { a ; b ; }".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
+
+		assertEquals(function(sequence(reference("a"), reference("b")), "a", "b"), compile);
 	}
 
 	@Test

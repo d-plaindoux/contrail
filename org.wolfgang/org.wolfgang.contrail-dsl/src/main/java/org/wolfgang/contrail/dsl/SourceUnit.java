@@ -38,7 +38,7 @@ public class SourceUnit implements CompilationUnit<Void, EcosystemModel> {
 	@Override
 	public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		support.getUnitByKey(ImportsUnit.class).compile(support, scanner, ecosystemModel);
-		support.getUnitByKey(StatementsUnit.Toplevel.class).compile(support, scanner, ecosystemModel);
+		support.getUnitByKey(ToplevelUnit.class).compile(support, scanner, ecosystemModel);
 		return null;
 	}
 

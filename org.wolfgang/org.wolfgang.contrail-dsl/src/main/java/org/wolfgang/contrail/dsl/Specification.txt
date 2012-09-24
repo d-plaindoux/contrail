@@ -31,9 +31,9 @@ Keywords = { 'import', 'fun', 'var' }
 	INTEGER													-- Guess what ?
 	CHARACTER												-- Guess what ?	
 	'(' ')'													-- Unit
-	'(' FlowExpression ')' 									-- Flow
 	'[' ChoiceExpression ']'								-- Choice	
 	'fun' ID+ '->' Statement 								-- Abstraction
 	'fun' '(' ')' '->' Statement 							-- Unit Abstraction 
+	'{' Statements '}' 										-- Block
 	
 

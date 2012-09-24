@@ -19,8 +19,8 @@
 
 package org.wolgang.contrail.dsl;
 
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.define;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.dsl.CELLanguage;
-import org.wolfgang.contrail.dsl.ToplevelUnit;
+import org.wolfgang.contrail.dsl.SourceUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
@@ -45,17 +45,20 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestStatementsDSL extends TestCase {
+public class TestSourceDSL extends TestCase {
 
 	@Test
-	public void testStatements01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var constant = a;var id = fun a -> a;".getBytes());
+	public void testSource01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("import a.b.c var constant = a;var id = fun a -> a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		celLanguage.parse(ToplevelUnit.class, scanner, ecosystemModel);
+		celLanguage.parse(SourceUnit.class, scanner, ecosystemModel);
+
+		assertEquals(1, ecosystemModel.getImportations().size());
+		assertEquals("a.b.c", ecosystemModel.getImportations().get(0).getElement());
 
 		assertEquals(2, ecosystemModel.getDefinitions().size());
 		assertEquals(define("constant", reference("a")), ecosystemModel.getDefinitions().get(0));

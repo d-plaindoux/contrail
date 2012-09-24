@@ -33,39 +33,20 @@ import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
 import org.wolfgang.opala.scanner.Scanner;
 import org.wolfgang.opala.scanner.exception.ScannerException;
 
-/**
- * <code>StatementsUnit</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public interface StatementsUnit {
-	public class Toplevel implements CompilationUnit<Void, EcosystemModel> {
-		@Override
-		public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			while (!scanner.isFinished()) {
-				parameter.add(support.getUnitByKey(VariableUnit.class).compile(support, scanner, parameter));
-			}
+public class BlockUnit implements CompilationUnit<Expression, EcosystemModel> {
 
-			return null;
+	@Override
+	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		scanner.scan(LexemeKind.OPERATOR, "{");
+
+		final List<Expression> sequence = new ArrayList<Expression>();
+
+		while (!scanner.currentLexeme().isA(LexemeKind.OPERATOR, "}")) {
+			sequence.add(support.getUnitByKey(StatementUnit.class).compile(support, scanner, parameter));
 		}
-	}
 
-	public class Block implements CompilationUnit<Expression, EcosystemModel> {
+		scanner.scan(LexemeKind.OPERATOR, "}");
 
-		@Override
-		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			scanner.scan(LexemeKind.OPERATOR, "{");
-
-			final List<Expression> sequence = new ArrayList<Expression>();
-
-			while (!scanner.currentLexeme().isA(LexemeKind.OPERATOR, "}")) {
-				sequence.add(support.getUnitByKey(StatementUnit.class).compile(support, scanner, parameter));
-			}
-
-			scanner.scan(LexemeKind.OPERATOR, "}");
-
-			return ModelFactory.sequence(sequence.toArray(new Expression[sequence.size()]));
-		}
+		return ModelFactory.sequence(sequence.toArray(new Expression[sequence.size()]));
 	}
 }

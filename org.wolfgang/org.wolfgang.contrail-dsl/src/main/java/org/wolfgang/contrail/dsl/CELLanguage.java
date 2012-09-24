@@ -49,9 +49,10 @@ public class CELLanguage extends AbstractLanguageSupport {
 			this.addUnit(new ImportUnit());
 
 			// Toplevel statements
-			this.addUnit(new StatementsUnit.Toplevel());
+			this.addUnit(new ToplevelUnit());
 			this.addUnit(new VariableUnit());
 			this.addUnit(new StatementUnit());
+			this.addUnit(new FlowStatementUnit());
 
 			// Flow / Choice or Application
 			this.addUnit(new FlowExpressionUnit());
@@ -60,11 +61,11 @@ public class CELLanguage extends AbstractLanguageSupport {
 
 			// Simple expression
 			this.addUnit(new SimpleExpressionUnit());
+			this.addUnit(new BlockUnit());
 
 			// Simple expressions
 			this.addUnit(new AbstractionUnit());
 			this.addUnit(new UnitOrFlowExpressionUnit());
-			this.addUnit(new StatementsUnit.Block());
 			this.addUnit(new TerminalUnit.Variable());
 			this.addUnit(new TerminalUnit.String());
 			this.addUnit(new TerminalUnit.Integer());
