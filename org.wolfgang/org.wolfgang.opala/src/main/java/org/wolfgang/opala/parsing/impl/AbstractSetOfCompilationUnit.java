@@ -66,7 +66,7 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 
 	private Entry getCompilationUnit(Lexeme lexeme) {
 		for (Entry entry : unitSet) {
-			Lexeme iLexeme = entry.key;
+			final Lexeme iLexeme = entry.key;
 			if (iLexeme.isA(lexeme.getKind(), iLexeme.getValue() == null ? null : lexeme.getValue())) {
 				return entry;
 			}

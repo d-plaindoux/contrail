@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.dsl;
 
-import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -40,12 +40,13 @@ public class UnitOrFlowExpressionUnit implements CompilationUnit<Expression, Eco
 
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final Expression expression;
 
 		scanner.scan(LexemeKind.OPERATOR, "(");
 
+		final Expression expression;
+
 		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ")")) {
-			expression = new Atom();
+			expression = ModelFactory.unit();
 		} else {
 			expression = support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, parameter);
 		}

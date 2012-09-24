@@ -154,4 +154,11 @@ public class Function extends ContentExpressions implements Expression, Validati
 			return false;
 		return super.equals(obj);
 	}
+
+	@Override
+	public String toString() {
+		return "fun " + Arrays.toString(parameters.toArray()) + " -> " + super.toString();
+	}
+	
+	
 }

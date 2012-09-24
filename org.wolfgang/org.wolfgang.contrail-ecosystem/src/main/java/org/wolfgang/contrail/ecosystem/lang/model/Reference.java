@@ -98,4 +98,9 @@ public class Reference implements Expression, Validation {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return value;
+	}
+
 }

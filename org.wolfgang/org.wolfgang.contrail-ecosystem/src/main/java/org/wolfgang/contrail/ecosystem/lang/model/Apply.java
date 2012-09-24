@@ -114,4 +114,8 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 		return super.equals(obj);
 	}
 
+	@Override
+	public String toString() {
+		return "Apply [binding=" + binding + ", expressions=" + Arrays.toString(expressions.toArray()) + "]";
+	}
 }

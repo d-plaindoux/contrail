@@ -98,4 +98,10 @@ public class Atom implements Expression, Validation {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "atom(" + value + ")";
+	}
+
+	
 }

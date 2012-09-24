@@ -19,6 +19,8 @@
 
 package org.wolgang.contrail.dsl;
 
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -59,8 +61,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("Hello, World!", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("Hello, World!"), compile);
 	}
 
 	@Test
@@ -72,8 +74,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("123"), compile);
 	}
 
 	@Test
@@ -85,8 +87,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("a"), compile);
 	}
 
 	@Test
@@ -98,8 +100,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertNull(Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(unit(), compile);
 	}
 
 	@Test
@@ -111,12 +113,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Function.class));
-		assertEquals(1, Coercion.coerce(compile, Function.class).getParameters().size());
-		assertEquals("a", Coercion.coerce(compile, Function.class).getParameters().get(0));
-		assertEquals(1, Coercion.coerce(compile, Function.class).getExpressions().size());
-		assertTrue(Coercion.canCoerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class));
-		assertEquals("a", Coercion.coerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class).getValue());
+
+		assertEquals(abstraction(reference("a"), "a"), compile);
 	}
 
 	@Test
@@ -128,15 +126,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Function.class));
-		assertEquals(2, Coercion.coerce(compile, Function.class).getParameters().size());
-		assertEquals("a", Coercion.coerce(compile, Function.class).getParameters().get(0));
-		assertEquals("b", Coercion.coerce(compile, Function.class).getParameters().get(1));
-		assertEquals(2, Coercion.coerce(compile, Function.class).getExpressions().size());
-		assertTrue(Coercion.canCoerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class));
-		assertEquals("a", Coercion.coerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class).getValue());
-		assertTrue(Coercion.canCoerce(Coercion.coerce(compile, Function.class).getExpressions().get(1), Reference.class));
-		assertEquals("b", Coercion.coerce(Coercion.coerce(compile, Function.class).getExpressions().get(1), Reference.class).getValue());
+
+		assertEquals(abstraction(flow(reference("a"), reference("b")), "a", "b"), compile);
 	}
 
 	@Test
@@ -148,10 +139,10 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(ExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Apply.class));
-		assert(Coercion.coerce(compile, Apply.class).getFunction());
+
+		assertEquals(apply(reference("a"), reference("b")), compile);
 	}
-	
+
 	@Test
 	public void testParenthesis01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final InputStream input = new ByteArrayInputStream("( 123 )".getBytes());
@@ -161,8 +152,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("123"), compile);
 	}
 
 	@Test
@@ -174,8 +165,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("a"), compile);
 	}
 
 	@Test
@@ -187,8 +178,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Atom.class));
-		assertEquals("abc", Coercion.coerce(compile, Atom.class).getValue());
+
+		assertEquals(atom("abc"), compile);
 	}
 
 	@Test
@@ -200,15 +191,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final CELLanguage celLanguage = new CELLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
-		assertTrue(Coercion.canCoerce(compile, Function.class));
-		assertEquals(2, Coercion.coerce(compile, Function.class).getParameters().size());
-		assertEquals("a", Coercion.coerce(compile, Function.class).getParameters().get(0));
-		assertEquals("b", Coercion.coerce(compile, Function.class).getParameters().get(1));
-		assertEquals(2, Coercion.coerce(compile, Function.class).getExpressions().size());
-		assertTrue(Coercion.canCoerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class));
-		assertEquals("a", Coercion.coerce(Coercion.coerce(compile, Function.class).getExpressions().get(0), Reference.class).getValue());
-		assertTrue(Coercion.canCoerce(Coercion.coerce(compile, Function.class).getExpressions().get(1), Reference.class));
-		assertEquals("b", Coercion.coerce(Coercion.coerce(compile, Function.class).getExpressions().get(1), Reference.class).getValue());
-	}
 
+		assertEquals(abstraction(flow(reference("a"), reference("b")), "a", "b"), compile);
+	}
 }

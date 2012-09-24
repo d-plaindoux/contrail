@@ -21,9 +21,9 @@ package org.wolfgang.contrail.dsl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
 import org.wolfgang.opala.parsing.LanguageSupport;
@@ -46,20 +46,12 @@ public class ExpressionUnit implements CompilationUnit<Expression, EcosystemMode
 
 		final List<Expression> expressions = new ArrayList<Expression>();
 
-		expressions.add(unit.compile(support, scanner, ecosystemModel));
+		final Expression function = unit.compile(support, scanner, ecosystemModel);
 
 		while (unit.canCompile(scanner)) {
 			expressions.add(support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel));
 		}
 
-		if (expressions.size() == 1) {
-			return expressions.get(0);
-		} else {
-			final Apply apply = new Apply();
-			for (Expression expression : expressions) {
-				apply.add(expression);
-			}
-			return apply;
-		}
+		return ModelFactory.apply(function, expressions.toArray(new Expression[expressions.size()]));
 	}
 }

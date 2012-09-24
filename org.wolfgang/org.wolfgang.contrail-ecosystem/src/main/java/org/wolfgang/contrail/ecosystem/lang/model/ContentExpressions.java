@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -90,5 +91,10 @@ public abstract class ContentExpressions implements Validation {
 		} else if (!expressions.equals(other.expressions))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(expressions.toArray());
 	}
 }

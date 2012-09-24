@@ -18,10 +18,9 @@
 
 package org.wolfgang.contrail.dsl;
 
-import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.Reference;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -42,36 +41,28 @@ public interface TerminalUnit {
 	class Variable implements CompilationUnit<Expression, EcosystemModel> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			final Reference atom = new Reference();
-			atom.setValue(scanner.scan(LexemeKind.IDENT).getValue());
-			return atom;
+			return ModelFactory.reference(scanner.scan(LexemeKind.IDENT).getValue());
 		}
 	}
 
 	class String implements CompilationUnit<Expression, EcosystemModel> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			final Atom atom = new Atom();
-			atom.setValue(scanner.scan(LexemeKind.STRING).getValue());
-			return atom;
+			return ModelFactory.atom(scanner.scan(LexemeKind.STRING).getValue());
 		}
 	}
 
 	class Integer implements CompilationUnit<Expression, EcosystemModel> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			final Atom atom = new Atom();
-			atom.setValue(scanner.scan(LexemeKind.INTEGER).getValue());
-			return atom;
+			return ModelFactory.atom(scanner.scan(LexemeKind.INTEGER).getValue());
 		}
 	}
 
 	class Character implements CompilationUnit<Expression, EcosystemModel> {
 		@Override
 		public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-			final Atom atom = new Atom();
-			atom.setValue(scanner.scan(LexemeKind.CHARACTERS).getValue());
-			return atom;
+			return ModelFactory.atom(scanner.scan(LexemeKind.CHARACTERS).getValue());
 		}
 	}
 

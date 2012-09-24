@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.Flow;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -48,21 +48,11 @@ public class FlowExpressionUnit implements CompilationUnit<Expression, Ecosystem
 
 		expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 
-		System.err.println("Found " + scanner.currentLexeme());
 		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, "<>")) {
 			scanner.scan(LexemeKind.OPERATOR, "<>");
 			expressions.add(support.getUnitByKey(ExpressionUnit.class).compile(support, scanner, parameter));
 		}
 
-		
-		if (expressions.size() == 1) {
-			return expressions.get(0);
-		} else {
-			final Flow flow = new Flow();
-			for (Expression expression : expressions) {
-				flow.add(expression);
-			}
-			return flow;
-		}
+		return ModelFactory.flow(expressions.toArray(new Expression[expressions.size()]));
 	}
 }

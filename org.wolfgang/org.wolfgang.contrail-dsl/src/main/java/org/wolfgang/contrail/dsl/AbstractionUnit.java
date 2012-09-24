@@ -21,11 +21,9 @@ package org.wolfgang.contrail.dsl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.Flow;
-import org.wolfgang.contrail.ecosystem.lang.model.Function;
+import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
@@ -63,21 +61,7 @@ public class AbstractionUnit implements CompilationUnit<Expression, EcosystemMod
 		scanner.scan(LexemeKind.OPERATOR, "->");
 
 		final Expression expression = support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, ecosystemModel);
-		
-		final Function function = new Function();
-		for (String string : variables) {
-			function.add(string);
-		}
 
-		if (Coercion.canCoerce(expression, Flow.class)) {
-			final Flow flow = Coercion.coerce(expression, Flow.class);
-			for (Expression subExpression : flow.getExpressions()) {
-				function.add(subExpression);
-			}
-		} else {
-			function.add(expression);
-		}
-
-		return function;
+		return ModelFactory.abstraction(expression, variables.toArray(new String[variables.size()]));
 	}
 }
