@@ -62,6 +62,6 @@ public class AbstractionUnit implements CompilationUnit<Expression, EcosystemMod
 
 		final Expression expression = support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, ecosystemModel);
 
-		return ModelFactory.abstraction(expression, variables.toArray(new String[variables.size()]));
+		return ModelFactory.function(expression, variables.toArray(new String[variables.size()]));
 	}
 }

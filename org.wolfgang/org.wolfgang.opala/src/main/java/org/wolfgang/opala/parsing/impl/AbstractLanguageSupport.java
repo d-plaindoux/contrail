@@ -77,7 +77,7 @@ abstract public class AbstractLanguageSupport implements LanguageSupport {
 	}
 
 	@Override
-	public <E, P, C extends CompilationUnit<E, P>> C getUnitByKey(Class<C> key) throws ParsingUnitNotFound {
+	public <E, P, C extends CompilationUnit<? extends E, P>> C getUnitByKey(Class<C> key) throws ParsingUnitNotFound {
 		try {
 			final C unit = new Cast<C>().perform(this.units.get(key));
 			if (unit != null) {

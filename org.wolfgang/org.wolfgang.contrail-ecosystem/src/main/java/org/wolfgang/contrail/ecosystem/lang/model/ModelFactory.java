@@ -45,11 +45,11 @@ public final class ModelFactory {
 		}
 	}
 
-	public static Expression unit() {
+	public static Atom unit() {
 		return new Atom();
 	}
 
-	public static Expression atom(String value) {
+	public static Atom atom(String value) {
 		final Atom expression = new Atom();
 		expression.setValue(value);
 		return expression;
@@ -83,7 +83,7 @@ public final class ModelFactory {
 		}
 	}
 
-	public static Expression abstraction(Expression body, String... parameters) {
+	public static Function function(Expression body, String... parameters) {
 		assert parameters.length > 0;
 		final Function expression = new Function();
 		if (Coercion.canCoerce(body, Flow.class)) {
@@ -100,13 +100,13 @@ public final class ModelFactory {
 		return expression;
 	}
 
-	public static Expression reference(String value) {
+	public static Reference reference(String value) {
 		final Reference expression = new Reference();
 		expression.setValue(value);
 		return expression;
 	}
 
-	public static Expression define(String name, Expression value) {
+	public static Definition define(String name, Expression value) {
 		final Definition definition = new Definition();
 		definition.setName(name);
 		definition.add(value);

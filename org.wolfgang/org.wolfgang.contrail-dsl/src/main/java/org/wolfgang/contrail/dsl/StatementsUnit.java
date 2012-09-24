@@ -44,7 +44,7 @@ public interface StatementsUnit {
 		@Override
 		public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel parameter) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 			while (!scanner.isFinished()) {
-				support.getUnitByKey(StatementUnit.class).compile(support, scanner, parameter);
+				parameter.add(support.getUnitByKey(VariableUnit.class).compile(support, scanner, parameter));
 			}
 
 			return null;

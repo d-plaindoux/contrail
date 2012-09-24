@@ -226,7 +226,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 			Expression result = expressions.get(expressions.size() - 1);
 
 			for (int i = expressions.size() - 1; i > 0; i--) {
-				result = ModelFactory.apply(ModelFactory.abstraction(result, (String) null), expressions.get(i - 1));
+				result = ModelFactory.apply(ModelFactory.function(result, (String) null), expressions.get(i - 1));
 			}
 
 			return result.visit(this);

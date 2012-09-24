@@ -47,10 +47,10 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 
 	private class Entry {
 		private final Lexeme key;
-		private final Class<? extends CompilationUnit<E, P>> val;
+		private final Class<? extends CompilationUnit<? extends E, P>> val;
 		private final boolean tryDefault;
 
-		public Entry(Lexeme key, Class<? extends CompilationUnit<E, P>> val, boolean tryDefault) {
+		public Entry(Lexeme key, Class<? extends CompilationUnit<? extends E, P>> val, boolean tryDefault) {
 			this.key = key;
 			this.val = val;
 			this.tryDefault = tryDefault;
@@ -83,11 +83,11 @@ public abstract class AbstractSetOfCompilationUnit<E, P> implements CompilationU
 		this.defaultUnit = defautUnit;
 	}
 
-	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<E, P>> unitName) throws EntryAlreadyBoundException {
+	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<? extends E, P>> unitName) throws EntryAlreadyBoundException {
 		this.addCompilationUnit(lexeme, unitName, false);
 	}
 
-	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<E, P>> unitName, boolean tryDefault) throws EntryAlreadyBoundException {
+	public final void addCompilationUnit(Lexeme lexeme, Class<? extends CompilationUnit<? extends E, P>> unitName, boolean tryDefault) throws EntryAlreadyBoundException {
 		if (this.getCompilationUnit(lexeme) == null) {
 			this.unitSet.add(new Entry(lexeme, unitName, tryDefault));
 		} else {

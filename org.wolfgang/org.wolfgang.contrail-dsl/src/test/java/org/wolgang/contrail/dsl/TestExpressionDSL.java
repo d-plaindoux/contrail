@@ -19,7 +19,12 @@
 
 package org.wolgang.contrail.dsl;
 
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.*;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.apply;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.atom;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.flow;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.unit;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -27,16 +32,11 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.dsl.CELLanguage;
 import org.wolfgang.contrail.dsl.ExpressionUnit;
 import org.wolfgang.contrail.dsl.SimpleExpressionUnit;
-import org.wolfgang.contrail.ecosystem.lang.model.Apply;
-import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
-import org.wolfgang.contrail.ecosystem.lang.model.Function;
-import org.wolfgang.contrail.ecosystem.lang.model.Reference;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
@@ -50,7 +50,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestSimpleExpressionDSL extends TestCase {
+public class TestExpressionDSL extends TestCase {
 
 	@Test
 	public void testAtom01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
@@ -60,7 +60,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("Hello, World!"), compile);
 	}
@@ -73,7 +73,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("123"), compile);
 	}
@@ -86,7 +86,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("a"), compile);
 	}
@@ -99,7 +99,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(unit(), compile);
 	}
@@ -112,9 +112,9 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
-		assertEquals(abstraction(reference("a"), "a"), compile);
+		assertEquals(function(reference("a"), "a"), compile);
 	}
 
 	@Test
@@ -125,9 +125,9 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
-		assertEquals(abstraction(flow(reference("a"), reference("b")), "a", "b"), compile);
+		assertEquals(function(flow(reference("a"), reference("b")), "a", "b"), compile);
 	}
 
 	@Test
@@ -138,9 +138,9 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
-		assertEquals(abstraction(apply(reference("a"), reference("b")), "a", "b"), compile);
+		assertEquals(function(apply(reference("a"), reference("b")), "a", "b"), compile);
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("123"), compile);
 	}
@@ -177,7 +177,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("a"), compile);
 	}
@@ -190,7 +190,7 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
 		assertEquals(atom("abc"), compile);
 	}
@@ -203,9 +203,9 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
-		assertEquals(abstraction(flow(reference("a"), reference("b")), "a", "b"), compile);
+		assertEquals(function(flow(reference("a"), reference("b")), "a", "b"), compile);
 	}
 
 	@Test
@@ -216,8 +216,8 @@ public class TestSimpleExpressionDSL extends TestCase {
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(SimpleExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
-		assertEquals(abstraction(apply(reference("a"), reference("b")), "a", "b"), compile);
+		assertEquals(function(apply(reference("a"), reference("b")), "a", "b"), compile);
 	}
 }

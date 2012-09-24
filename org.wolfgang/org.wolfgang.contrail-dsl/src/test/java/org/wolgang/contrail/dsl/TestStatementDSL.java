@@ -19,7 +19,7 @@
 
 package org.wolgang.contrail.dsl;
 
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.abstraction;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.define;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
 
@@ -46,19 +46,31 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestSimpleStatementDSL extends TestCase {
+public class TestStatementDSL extends TestCase {
 
 	@Test
-	public void testDefinition() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+	public void testDefinition01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final InputStream input = new ByteArrayInputStream("var id = fun a -> a;".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+		
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final CELLanguage celLanguage = new CELLanguage();
+
+		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
+
+		assertEquals(define("id", function(reference("a"), "a")), compile);
+	}
+
+	@Test
+	public void testDefinition02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("var constant = a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final CELLanguage celLanguage = new CELLanguage();
 
-		final Expression compile = celLanguage.getUnitByKey(StatementUnit.class).compile(celLanguage, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
 
-		assertEquals(define("id", abstraction(reference("a"), "a")), compile);
+		assertEquals(define("constant", reference("a")), compile);
 	}
-
 }

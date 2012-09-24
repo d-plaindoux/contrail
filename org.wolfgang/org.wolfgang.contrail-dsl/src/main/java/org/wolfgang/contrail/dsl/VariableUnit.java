@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.dsl;
 
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
@@ -37,16 +38,17 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class VariableUnit implements CompilationUnit<Expression, EcosystemModel> {
+public class VariableUnit implements CompilationUnit<Definition, EcosystemModel> {
 
 	@Override
-	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+	public Definition compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		scanner.scan(LexemeKind.IDENT, "var");
 
 		final String name = scanner.scan(LexemeKind.IDENT).getValue();
 		scanner.scan(LexemeKind.OPERATOR, "=");
 		final Expression expression = Coercion.coerce(support.getUnitByKey(FlowExpressionUnit.class).compile(support, scanner, ecosystemModel), Expression.class);
-
+		scanner.scan(LexemeKind.OPERATOR, ";");
+		
 		return ModelFactory.define(name, expression);
 	}
 }
