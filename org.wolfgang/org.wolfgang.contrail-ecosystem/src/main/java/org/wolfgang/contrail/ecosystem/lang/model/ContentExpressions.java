@@ -95,6 +95,12 @@ public abstract class ContentExpressions implements Validation {
 
 	@Override
 	public String toString() {
-		return Arrays.toString(expressions.toArray());
+		if (expressions.size() == 0) {
+			return "()";
+		} else if (expressions.size() == 1) {
+			return expressions.get(0).toString();
+		} else {
+			return Arrays.toString(expressions.toArray());
+		}
 	}
 }

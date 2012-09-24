@@ -38,23 +38,33 @@ public class CELLanguage extends AbstractLanguageSupport {
 	public CELLanguage() {
 		super();
 		this.addKeyword("import");
-		this.addKeyword("function");
+		this.addKeyword("fun");
 		this.addKeyword("var");
 
 		try {
 			this.addUnit(new SourceUnit());
+
+			// Toplevel imports
+			this.addUnit(new ImportsUnit());
 			this.addUnit(new ImportUnit());
-			
+
+			// Toplevel statements
 			this.addUnit(new StatementsUnit.Toplevel());
+			this.addUnit(new VariableUnit());
 			this.addUnit(new StatementUnit());
+
+			// Flow / Choice or Application
 			this.addUnit(new FlowExpressionUnit());
 			this.addUnit(new ChoiceExpressionUnit());
 			this.addUnit(new ExpressionUnit());
+
+			// Simple expression
 			this.addUnit(new SimpleExpressionUnit());
 
+			// Simple expressions
 			this.addUnit(new AbstractionUnit());
 			this.addUnit(new UnitOrFlowExpressionUnit());
-
+			this.addUnit(new StatementsUnit.Block());
 			this.addUnit(new TerminalUnit.Variable());
 			this.addUnit(new TerminalUnit.String());
 			this.addUnit(new TerminalUnit.Integer());

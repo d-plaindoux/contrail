@@ -72,4 +72,34 @@ public class Definition extends ContentExpressions implements Expression, Valida
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Definition other = (Definition) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return super.equals(obj);
+	}
+
+	@Override
+	public String toString() {
+		return "var " + name + " = " + super.toString();
+	}
 }
