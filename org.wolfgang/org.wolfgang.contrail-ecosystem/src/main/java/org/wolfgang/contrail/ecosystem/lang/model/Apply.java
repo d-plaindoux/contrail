@@ -116,6 +116,6 @@ public class Apply extends ContentExpressions implements Expression, Validation 
 
 	@Override
 	public String toString() {
-		return "Apply [binding=" + binding + ", expressions=" + Arrays.toString(expressions.toArray()) + "]";
+		return Arrays.toString(this.expressions.toArray());
 	}
 }

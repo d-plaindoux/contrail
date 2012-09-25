@@ -47,6 +47,10 @@ public class BlockUnit implements CompilationUnit<Expression, EcosystemModel> {
 
 		scanner.scan(LexemeKind.OPERATOR, "}");
 
+		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ";")) {
+			scanner.scan();
+		}
+
 		return ModelFactory.sequence(sequence.toArray(new Expression[sequence.size()]));
 	}
 }

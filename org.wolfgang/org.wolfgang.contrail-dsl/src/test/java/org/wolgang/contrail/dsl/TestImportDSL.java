@@ -25,7 +25,7 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.wolfgang.contrail.dsl.CELLanguage;
+import org.wolfgang.contrail.dsl.ESLLanguage;
 import org.wolfgang.contrail.dsl.ImportUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.opala.lexing.LexemeKind;
@@ -50,7 +50,7 @@ public class TestImportDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 
@@ -64,7 +64,7 @@ public class TestImportDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
 
@@ -78,7 +78,7 @@ public class TestImportDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		try {
 			celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);
@@ -94,7 +94,7 @@ public class TestImportDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		try {
 			celLanguage.parse(ImportUnit.class, scanner, ecosystemModel);

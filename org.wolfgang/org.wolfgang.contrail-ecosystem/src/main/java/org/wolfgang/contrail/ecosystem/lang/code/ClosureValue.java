@@ -21,8 +21,8 @@ package org.wolfgang.contrail.ecosystem.lang.code;
 import java.util.List;
 import java.util.Map;
 
-import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGenerator;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 

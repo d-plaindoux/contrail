@@ -1,5 +1,5 @@
 /**
- * Proxy / Tunnel example
+ * Tunnel example
  */
 
 import org.wolfgang.contrail.connection.net.NetClient;
@@ -8,10 +8,10 @@ import org.wolfgang.contrail.connection.net.NetServer;
 // ----------------------------------------------------------------------
 
 var Logger = fun () -> LogSrc <> LogDst;
-var Client = fun (uri) -> Logger <> client:uri;
-var Server = fun (uri,flow) -> server:uri:flow;
-var Tunnel = fun (in,out) -> Server(in,fun (client) ->  client <> Client(out));
+var Client = fun uri -> Logger () <> native client uri;
+var Server = fun uri flow -> native server uri flow;
+var Tunnel = fun in out -> Server in (fun client ->  client <> Client out):
 
 // ----------------------------------------------------------------------
 
-Tunnel http://localhost:6666 http://localhost:6667
+Tunnel "http://localhost:6666" "http://localhost:6667"

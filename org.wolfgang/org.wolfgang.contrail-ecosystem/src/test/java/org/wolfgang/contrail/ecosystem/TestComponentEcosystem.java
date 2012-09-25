@@ -21,8 +21,6 @@
 package org.wolfgang.contrail.ecosystem;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;

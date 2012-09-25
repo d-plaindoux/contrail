@@ -23,19 +23,19 @@ import org.wolfgang.opala.parsing.impl.AbstractLanguageSupport;
 import org.wolfgang.opala.scanner.LexemeFilter;
 
 /**
- * <code>CELLanguage</code>
+ * <code>ESLLanguage</code> The ecosystem language
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class CELLanguage extends AbstractLanguageSupport {
+public class ESLLanguage extends AbstractLanguageSupport {
 
 	/**
 	 * Constructor
 	 * 
 	 * @throws EntryAlreadyBoundException
 	 */
-	public CELLanguage() {
+	public ESLLanguage() {
 		super();
 		this.addKeyword("import");
 		this.addKeyword("fun");

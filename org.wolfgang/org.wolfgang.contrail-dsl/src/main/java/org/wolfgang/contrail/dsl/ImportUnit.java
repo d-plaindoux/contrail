@@ -49,6 +49,10 @@ public class ImportUnit implements CompilationUnit<Void, EcosystemModel> {
 			aPackage.append(scanner.scan(LexemeKind.IDENT).getValue());
 		}
 
+		if (scanner.currentLexeme().isA(LexemeKind.OPERATOR ,";")) {
+			scanner.scan();
+		}
+		
 		final Import anImport = new Import();
 		anImport.setElement(aPackage.toString());
 		ecosystemModel.add(anImport);

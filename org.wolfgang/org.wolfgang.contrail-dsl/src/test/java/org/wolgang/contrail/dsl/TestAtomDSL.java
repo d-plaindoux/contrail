@@ -26,8 +26,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.dsl.ESLLanguage;
 import org.wolfgang.contrail.dsl.TerminalUnit;
-import org.wolfgang.contrail.dsl.CELLanguage;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
@@ -52,7 +52,7 @@ public class TestAtomDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.String.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
@@ -65,7 +65,7 @@ public class TestAtomDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Integer.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));
@@ -78,7 +78,7 @@ public class TestAtomDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Character.class).compile(celLanguage, scanner, ecosystemModel);
 		assertTrue(Coercion.canCoerce(compile, Atom.class));

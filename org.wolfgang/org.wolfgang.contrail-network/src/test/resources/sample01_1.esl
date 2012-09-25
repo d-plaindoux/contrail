@@ -1,0 +1,12 @@
+import org.wolfgang.contrail.connection.net.NetServer
+import org.wolfgang.contrail.network.ecosystem.EchoComponent
+
+var Coerce = fun type -> coerce;
+
+var MainFlow = fun b -> 
+	b <> payload <> object <> Coerce "java.lang.String" <> echo; 	
+
+var Server = fun uri flow -> server;
+
+Server "tcp://localhost:6666" MainFlow;
+

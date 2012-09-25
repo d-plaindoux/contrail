@@ -33,16 +33,14 @@ public final class ModelFactory {
 	}
 
 	public static Expression apply(Expression function, Expression... expressions) {
-		if (expressions.length == 0) {
-			return function;
-		} else {
+		Expression resultat = function;
+		for (Expression expression : expressions) {
 			final Apply apply = new Apply();
-			apply.add(function);
-			for (Expression expression : expressions) {
-				apply.add(expression);
-			}
-			return apply;
+			apply.add(resultat);
+			apply.add(expression);
+			resultat = apply;
 		}
+		return resultat;
 	}
 
 	public static Atom unit() {

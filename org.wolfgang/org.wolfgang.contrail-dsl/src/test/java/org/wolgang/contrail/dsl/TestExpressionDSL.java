@@ -24,8 +24,8 @@ import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.atom;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.flow;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.unit;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.sequence;
+import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.unit;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.wolfgang.contrail.dsl.CELLanguage;
+import org.wolfgang.contrail.dsl.ESLLanguage;
 import org.wolfgang.contrail.dsl.ExpressionUnit;
 import org.wolfgang.contrail.dsl.SimpleExpressionUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
@@ -59,7 +59,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -72,7 +72,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -85,7 +85,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -98,7 +98,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -111,7 +111,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -124,7 +124,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -137,7 +137,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -150,7 +150,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -163,7 +163,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.getUnitByKey(ExpressionUnit.class).compile(celLanguage, scanner, ecosystemModel);
 
@@ -176,7 +176,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -189,7 +189,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -202,7 +202,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -215,7 +215,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 
@@ -228,7 +228,7 @@ public class TestExpressionDSL extends TestCase {
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
-		final CELLanguage celLanguage = new CELLanguage();
+		final ESLLanguage celLanguage = new ESLLanguage();
 
 		final Expression compile = celLanguage.parse(SimpleExpressionUnit.class, scanner, ecosystemModel);
 

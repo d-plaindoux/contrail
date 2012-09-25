@@ -1,0 +1,8 @@
+import org.wolfgang.contrail.connection.net.NetClient
+
+var Coerce = fun type -> coerce;
+var Client = fun uri -> client;
+
+var Main = fun bind -> 
+	Client "tcp://localhost:6666" <> payload <> object <> Coerce "java.lang.String" <> bind;
+
