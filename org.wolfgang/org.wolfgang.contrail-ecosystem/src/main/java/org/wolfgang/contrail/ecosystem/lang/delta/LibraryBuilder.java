@@ -30,12 +30,12 @@ import java.util.TreeSet;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.CoercionConverter;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.Converter;
@@ -167,35 +167,24 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T> T create(Method method, ContextFactory ecosystemFactory, Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		try {
-			return (T) method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
-		} catch (CannotCreateComponentException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw new CannotCreateComponentException(e.getCause());
-		} catch (Exception e) {
-			throw new CannotCreateComponentException(e);
-		}
-	}
-
-	/**
-	 * @param classLoader
-	 * @param factoryName
-	 * @param array
-	 * @return
-	 * @throws CannotCreateComponentException
-	 */
-	@SuppressWarnings({ "unchecked" })
 	public static <T> T create(String name, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
 		try {
-			environment.put("context", new ConstantValue(ecosystemFactory));
-
 			final Method[] methods = getDeclaredMethods(name, component);
 
 			for (Method method : methods) {
 				try {
-					return (T) method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
+					final Object create = method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
+					final Object result;
+
+					if (Coercion.canCoerce(create, NativeFunction.class)) {
+						result = Coercion.coerce(create, NativeFunction.class).create(ecosystemFactory);
+					} else {
+						result = create;
+					}
+
+					return (T) result;
+				} catch (ClassCastException e) {
+					throw new CannotCreateComponentException(e);
 				} catch (ConversionException ignore) {
 					// Consume
 				}
@@ -203,7 +192,6 @@ public class LibraryBuilder {
 
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
 			throw new CannotCreateComponentException(message.format(name));
-
 		} catch (CannotCreateComponentException e) {
 			throw e;
 		} catch (InvocationTargetException e) {

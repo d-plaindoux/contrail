@@ -48,6 +48,7 @@ import org.wolfgang.contrail.connection.Worker;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.ecosystem.lang.delta.NativeFunction;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
@@ -69,8 +70,14 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 public class NetServer implements Server {
 
 	@ContrailMethod
-	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
-		contextFactory.getServerFactory().declareScheme("tcp", NetServer.class);
+	public static NativeFunction<Void> init() {
+		return new NativeFunction<Void>() {
+			@Override
+			public Void create(ContextFactory contextFactory) throws Exception {
+				contextFactory.getServerFactory().declareScheme("tcp", NetServer.class);
+				return null;
+			}
+		};
 	}
 
 	/**

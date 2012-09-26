@@ -18,11 +18,12 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ObjectValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
@@ -46,9 +47,14 @@ public class ComponentConverter extends AbstractConverter<Component> {
 	}
 
 	@Override
-	public Component visit(ComponentValue value) throws ConversionException {
+	public Component visit(ObjectValue value) throws ConversionException {
 		try {
-			return value.getComponent();
+			final Object result = value.getValue();
+			if (Coercion.canCoerce(result, Component.class)) {
+				return Coercion.coerce(result, Component.class);
+			} else {
+				throw new ConversionException("TODO : Not a component");
+			}
 		} catch (CannotCreateComponentException e) {
 			throw new ConversionException(e);
 		}

@@ -16,42 +16,53 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.ecosystem.lang.code;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
 
 /**
- * <code>FuntionImportEntry</code>
+ * <code>ComponentValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class FuntionImportEntry implements EcosystemImportation<Component> {
-	private final ContextFactory factory;
-	private final String name;
-	private final Class<?> provider;
+public class ObjectValue implements CodeValue {
+	private final Map<String, CodeValue> environement;
+	private final EcosystemImportation<?> entry;
+
+	private Object value;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param component
+	 * @param environement
+	 * @param entry
 	 */
-	FuntionImportEntry(ContextFactory factory, Method method) {
+	public ObjectValue(Map<String, CodeValue> environement, EcosystemImportation<?> entry) {
 		super();
-		this.factory = factory;
-		this.name = method.getName();
-		this.provider = method.getDeclaringClass();
+		this.environement = environement;
+		this.entry = entry;
+	}
+
+	public Object getValue() throws CannotCreateComponentException {
+		if (value == null) {
+			try {
+				this.value = entry.create(environement);
+			} catch (CannotCreateComponentException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new CannotCreateComponentException(e);
+			}
+		}
+
+		return value;
 	}
 
 	@Override
-	public Component create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return LibraryBuilder.create(name, factory, provider, environment);
+	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
+		return visitor.visit(this);
 	}
 }

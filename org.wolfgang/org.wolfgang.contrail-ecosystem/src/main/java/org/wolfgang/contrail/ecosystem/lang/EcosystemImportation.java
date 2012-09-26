@@ -3,7 +3,6 @@ package org.wolfgang.contrail.ecosystem.lang;
 import java.util.Map;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 
 /**
@@ -12,9 +11,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface EcosystemImportation<T extends Component> {
-	
-	
+public interface EcosystemImportation<T> {
 
 	/**
 	 * Hook to invoke underlying factories

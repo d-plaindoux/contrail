@@ -25,11 +25,12 @@ import java.util.Map;
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ObjectValue;
 import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
@@ -52,6 +53,11 @@ import org.wolfgang.contrail.ecosystem.lang.model.Switch;
 public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue, EcosystemCodeValueGeneratorException> {
 
 	/**
+	 * The context factory
+	 */
+	private final ContextFactory contextFactory;
+
+	/**
 	 * The related synbol table
 	 */
 	private final EcosystemSymbolTable symbolTable;
@@ -66,8 +72,9 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	 * 
 	 * @param environment
 	 */
-	EcosystemCodeValueGenerator(EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
+	EcosystemCodeValueGenerator(ContextFactory contextFactory, EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
 		super();
+		this.contextFactory = contextFactory;
 		this.symbolTable = factory;
 		this.environment = environment;
 	}
@@ -79,7 +86,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	public EcosystemCodeValueGenerator create(Map<String, CodeValue> environment) {
 		final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
 		newEnvironment.putAll(environment);
-		return new EcosystemCodeValueGenerator(symbolTable, newEnvironment);
+		return new EcosystemCodeValueGenerator(contextFactory, symbolTable, newEnvironment);
 	}
 
 	/**
@@ -89,7 +96,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	 */
 	public CodeValue visit(final List<Expression> expressions) throws EcosystemCodeValueGeneratorException {
 		final CodeValue[] values = new CodeValue[expressions.size()];
-		final EcosystemCodeValueGenerator interpret = new EcosystemCodeValueGenerator(symbolTable, environment);
+		final EcosystemCodeValueGenerator interpret = new EcosystemCodeValueGenerator(contextFactory, symbolTable, environment);
 
 		for (int i = 0; i < values.length; i++) {
 			values[i] = expressions.get(i).visit(interpret);
@@ -107,7 +114,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 		final String name = expression.getValue();
 
 		if (symbolTable.hasImportation(name)) {
-			return new ComponentValue(environment, symbolTable.getImportation(name));
+			return new ObjectValue(environment, symbolTable.getImportation(name));
 		} else if (environment.containsKey(name)) {
 			return environment.get(name);
 		} else {

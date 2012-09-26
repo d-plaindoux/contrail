@@ -44,11 +44,11 @@ public class ToplevelUnit implements CompilationUnit<Void, EcosystemModel>, Expr
 	@Override
 	public Void compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		while (!scanner.isFinished()) {
+			final Expression expression = support.getUnitByKey(StatementUnit.class).compile(support, scanner, ecosystemModel);
 			try {
-				final Expression expression = support.getUnitByKey(StatementUnit.class).compile(support, scanner, ecosystemModel);
 				ecosystemModel.add(expression.visit(this));
-			} catch (Exception ignore) {
-				// Consume
+			} catch (Exception e) {
+				throw new ParsingException(e);
 			}
 		}
 

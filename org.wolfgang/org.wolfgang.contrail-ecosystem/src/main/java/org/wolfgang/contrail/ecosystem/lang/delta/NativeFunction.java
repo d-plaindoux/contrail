@@ -16,22 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.code;
+package org.wolfgang.contrail.ecosystem.lang.delta;
 
-/**
- * <code>CodeValueVisitor</code>
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public interface CodeValueVisitor<T, E extends Exception> {
+import org.wolfgang.contrail.connection.ContextFactory;
 
-	T visit(ClosureValue value) throws E;
-
-	T visit(ObjectValue value) throws E;
-
-	T visit(ConstantValue value) throws E;
-
-	T visit(FlowValue value) throws E;
-
+public interface NativeFunction<T> {
+	T create(ContextFactory contextFactory) throws Exception;
 }

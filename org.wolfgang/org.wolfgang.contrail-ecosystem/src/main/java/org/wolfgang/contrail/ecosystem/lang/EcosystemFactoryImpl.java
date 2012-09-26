@@ -92,7 +92,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 		this.classLoader = EcosystemFactoryImpl.class.getClassLoader();
 		this.importations = new HashMap<String, EcosystemImportation<?>>();
 		this.definitions = new HashMap<String, CodeValue>();
-		this.interpreter = new EcosystemCodeValueGenerator(this, definitions);
+		this.interpreter = new EcosystemCodeValueGenerator(this, this, definitions);
 	}
 
 	/**
@@ -113,10 +113,13 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 		try {
 			final Class<?> aClass = classLoader.loadClass(importation.getElement());
 			if (aClass.isAnnotationPresent(ContrailLibrary.class)) {
-				LibraryBuilder.create("init", this, aClass, this.definitions);
+				final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
+				for (Method init : initMethods) {
+					new NativeFunctionEntry(this, init).create(this.definitions);
+				}
 				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 				for (Method method : declaredMethods) {
-					this.importations.put(method.getName(), new FuntionImportEntry(this, method));
+					this.importations.put(method.getName(), new NativeFunctionEntry(this, method));
 				}
 			} else {
 				final String name = aClass.getSimpleName();
@@ -126,8 +129,8 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (CannotCreateComponentException e) {
-			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "no.component");
+			logger.log(Level.WARNING, message.format(), e);
 		}
 	}
 
@@ -140,6 +143,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 */
 	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
 		final Import pervasive = new Import();
+
 		pervasive.setElement(CoreFunctions.class.getName());
 		loadImportation(logger, pervasive);
 

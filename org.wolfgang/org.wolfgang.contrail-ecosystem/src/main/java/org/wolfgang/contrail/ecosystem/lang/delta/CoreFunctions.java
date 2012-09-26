@@ -49,19 +49,29 @@ import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@SuppressWarnings("rawtypes")
 @ContrailLibrary
 public class CoreFunctions {
 
 	@ContrailMethod
-	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
-		contextFactory.getClientFactory().declareScheme("ssh", ProcessClient.class);
-		contextFactory.getServerFactory().declareScheme("ssh", ProcessServer.class);
+	public static NativeFunction<Void> init() {
+		return new NativeFunction<Void>() {
+			@Override
+			public Void create(ContextFactory contextFactory) throws ComponentConnectionRejectedException {
+				contextFactory.getClientFactory().declareScheme("ssh", ProcessClient.class);
+				contextFactory.getServerFactory().declareScheme("ssh", ProcessServer.class);
+				return null;
+			}
+		};
 	}
 
 	@ContrailMethod
-	public static Component reverse(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
-		return Components.reverse(contextFactory.getLinkManager(), component);
+	public static NativeFunction<Component> reverse(final @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
+		return new NativeFunction<Component>() {
+			@Override
+			public Component create(ContextFactory contextFactory) throws ComponentConnectionRejectedException {
+				return Components.reverse(contextFactory.getLinkManager(), component);
+			}
+		};
 	}
 
 	//
@@ -69,38 +79,51 @@ public class CoreFunctions {
 	//
 
 	@ContrailMethod
-	public static Component client(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException,
-			URISyntaxException, ClientNotFoundException {
-		return new ClientComponent(contextFactory, reference);
+	public static NativeFunction<Component> client(final @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException, URISyntaxException, ClientNotFoundException {
+		return new NativeFunction<Component>() {
+			@Override
+			public Component create(ContextFactory contextFactory) throws Exception {
+				return new ClientComponent(contextFactory, reference);
+			}
+		};
 	}
 
 	@ContrailMethod
-	public static Component server(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("uri") String reference, @ContrailArgument("flow") ComponentFactoryListener listener)
-			throws URISyntaxException, ServerNotFoundException, CannotCreateServerException {
-		return new ServerComponent(contextFactory, reference, listener);
+	public static NativeFunction<Component> server(final @ContrailArgument("uri") String reference, final @ContrailArgument("flow") ComponentFactoryListener listener) throws URISyntaxException,
+			ServerNotFoundException, CannotCreateServerException {
+		return new NativeFunction<Component>() {
+			@Override
+			public Component create(ContextFactory contextFactory) throws Exception {
+				return new ServerComponent(contextFactory, reference, listener);
+			}
+		};
 	}
 
 	//
 	// Basic pipelines and transducers
 	//
 
+	@SuppressWarnings("rawtypes")
 	@ContrailMethod
 	public static Component parallelSource() {
 		return new ParallelSourceComponent();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@ContrailMethod
 	public static Component parallelDestination() {
 		return new ParallelDestinationComponent();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component logSource(@ContrailArgument("name") String prefix) {
+	public static Component logSource(final @ContrailArgument("name") String prefix) {
 		return new LoggerSourceComponent(prefix);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component logDestination(@ContrailArgument("name") String prefix) {
+	public static Component logDestination(final @ContrailArgument("name") String prefix) {
 		return new LoggerDestinationComponent(prefix);
 	}
 
@@ -114,8 +137,9 @@ public class CoreFunctions {
 		return new SerializationTransducerFactory().createComponent();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component coerce(@ContrailArgument("context") ContextFactory contextFactory, @ContrailArgument("type") String type) throws ClassNotFoundException {
-		return new CoercionTransducerFactory(contextFactory, type).createComponent();
+	public static Component coerce(final @ContrailArgument("type") String type) throws ClassNotFoundException {
+		return new CoercionTransducerFactory(CoercionTransducerFactory.class.getClassLoader(), type).createComponent();
 	}
 }

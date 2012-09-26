@@ -79,7 +79,7 @@ public class TestNetworkEcosystemDSL extends TestCase {
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message.getBytes());
-			assertEquals(message, response.get(10, TimeUnit.SECONDS));
+			assertEquals(message, response.get(5, TimeUnit.SECONDS));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,13 +106,14 @@ public class TestNetworkEcosystemDSL extends TestCase {
 			});
 
 			final ComponentFactory factory = ecosystem02.getFactory(EcosystemKeyFactory.named("Main"));
-			factory.create(sender);
+			factory.create("tcp://localhost:6666", sender);
 
 			final String message = "Hello, World!";
 			sender.getDownStreamDataHandler().handleData(message);
-			assertEquals(message, response.get(10, TimeUnit.SECONDS));
+			assertEquals(message, response.get(5, TimeUnit.SECONDS));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			ecosystem01.close();

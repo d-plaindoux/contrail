@@ -24,9 +24,9 @@ import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
-import org.wolfgang.contrail.ecosystem.lang.code.ComponentValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ObjectValue;
 
 /**
  * <code>AbstractConverter</code>
@@ -80,7 +80,7 @@ class AbstractConverter<E> implements Converter<E>, CodeValueVisitor<E, Conversi
 	}
 
 	@Override
-	public E visit(ComponentValue value) throws ConversionException {
+	public E visit(ObjectValue value) throws ConversionException {
 		throw new ConversionException(COMPONENT.format(type.getName(), this.getClass().getSimpleName()));
 	}
 

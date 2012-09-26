@@ -45,18 +45,8 @@ public final class CoercionTransducerFactory<T> implements TransducerFactory<Obj
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public CoercionTransducerFactory(ContextFactory factory, String type) throws ClassNotFoundException {
-		this.coercionType = (Class<T>) factory.getClassLoader().loadClass(type);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @throws ClassNotFoundException
-	 */
-	@SuppressWarnings("unchecked")
-	public CoercionTransducerFactory(ContextFactory factory, String[] type) throws ClassNotFoundException {
-		this.coercionType = (Class<T>) factory.getClassLoader().loadClass(type[0]);
+	public CoercionTransducerFactory(ClassLoader loader, String type) throws ClassNotFoundException {
+		this.coercionType = (Class<T>) loader.loadClass(type);
 	}
 
 	/**

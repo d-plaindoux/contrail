@@ -32,6 +32,7 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.ecosystem.lang.delta.NativeFunction;
 
 /**
  * The <code>NetClient</code> provides a client implementation using standard
@@ -49,8 +50,14 @@ import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 public class NetClient extends AbstractClient {
 
 	@ContrailMethod
-	public static void init(@ContrailArgument("context") ContextFactory contextFactory) {
-		contextFactory.getClientFactory().declareScheme("tcp", NetClient.class);
+	public static NativeFunction<Void> init() {
+		return new NativeFunction<Void>() {
+			@Override
+			public Void create(ContextFactory contextFactory) throws Exception {
+				contextFactory.getClientFactory().declareScheme("tcp", NetClient.class);
+				return null;
+			}
+		};
 	}
 
 	@Override
