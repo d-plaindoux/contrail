@@ -26,7 +26,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValueVisitor;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ObjectValue;
+import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
 
 /**
  * <code>AbstractConverter</code>
@@ -80,7 +80,7 @@ class AbstractConverter<E> implements Converter<E>, CodeValueVisitor<E, Conversi
 	}
 
 	@Override
-	public E visit(ObjectValue value) throws ConversionException {
+	public E visit(EvaluableValue value) throws ConversionException {
 		throw new ConversionException(COMPONENT.format(type.getName(), this.getClass().getSimpleName()));
 	}
 

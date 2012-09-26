@@ -16,22 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.code;
+package org.wolfgang.contrail.ecosystem.lang.delta.converter;
+
+import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>CodeValueVisitor</code>
+ * <code>StringConverter</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface CodeValueVisitor<T, E extends Exception> {
+public final class ClosureValueConverter extends AbstractConverter<ClosureValue> {
 
-	T visit(ClosureValue value) throws E;
+	/**
+	 * Constructor
+	 */
+	public ClosureValueConverter(ComponentLinkManager linkManager) {
+		super(ClosureValue.class);
+	}
 
-	T visit(EvaluableValue value) throws E;
-
-	T visit(ConstantValue value) throws E;
-
-	T visit(FlowValue value) throws E;
-
+	@Override
+	public ClosureValue visit(ClosureValue value) throws ConversionException {
+		return value;
+	}
 }

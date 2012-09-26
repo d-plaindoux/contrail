@@ -8,4 +8,3 @@ var MainFlow = fun b ->
 
 var Main = fun uri b -> 
 	Client uri <> MainFlow b;
-

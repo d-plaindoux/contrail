@@ -19,6 +19,8 @@
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -29,6 +31,9 @@ import org.wolfgang.contrail.component.pipeline.concurrent.ParallelDestinationCo
 import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
 import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
@@ -42,6 +47,11 @@ import org.wolfgang.contrail.connection.process.ProcessServer;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
+import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
+import org.wolfgang.contrail.ecosystem.lang.delta.converter.ObjectConverter;
 
 /**
  * <code>ReverseFunction</code>
@@ -141,5 +151,45 @@ public class CoreFunctions {
 	@ContrailMethod
 	public static Component coerce(final @ContrailArgument("type") String type) throws ClassNotFoundException {
 		return new CoercionTransducerFactory(CoercionTransducerFactory.class.getClassLoader(), type).createComponent();
+	}
+
+	@ContrailMethod
+	public static Component component(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
+		final DataTransducer<Object, Object> encoder = new DataTransducer<Object, Object>() {
+			@Override
+			public List<Object> transform(Object source) throws DataTransducerException {
+				try {
+					return Arrays.asList(upStream.apply(new ConstantValue(source)).visit(new ObjectConverter()));
+				} catch (EcosystemCodeValueGeneratorException e) {
+					throw new DataTransducerException(e);
+				} catch (ConversionException e) {
+					throw new DataTransducerException(e);
+				}
+			}
+
+			@Override
+			public List<Object> finish() throws DataTransducerException {
+				return Arrays.asList();
+			}
+		};
+		final DataTransducer<Object, Object> decoder = new DataTransducer<Object, Object>() {
+			@Override
+			public List<Object> transform(Object source) throws DataTransducerException {
+				try {
+					return Arrays.asList(downStream.apply(new ConstantValue(source)).visit(new ObjectConverter()));
+				} catch (EcosystemCodeValueGeneratorException e) {
+					throw new DataTransducerException(e);
+				} catch (ConversionException e) {
+					throw new DataTransducerException(e);
+				}
+			}
+
+			@Override
+			public List<Object> finish() throws DataTransducerException {
+				return Arrays.asList();
+			}
+		};
+
+		return new TransducerComponent<Object, Object, Object, Object>(encoder, decoder);
 	}
 }

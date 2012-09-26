@@ -17,7 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.dsl;
+package org.wolfgang.contrail.dsl;
 
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.define;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;

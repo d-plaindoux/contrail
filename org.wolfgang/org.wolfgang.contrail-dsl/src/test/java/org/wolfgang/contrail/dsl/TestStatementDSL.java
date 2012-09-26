@@ -17,7 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.dsl;
+package org.wolfgang.contrail.dsl;
 
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.define;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
@@ -30,8 +30,9 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.dsl.ESLLanguage;
-import org.wolfgang.contrail.dsl.ToplevelUnit;
+import org.wolfgang.contrail.dsl.StatementUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
+import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.exception.ParsingException;
 import org.wolfgang.opala.parsing.exception.ParsingUnitNotFound;
@@ -45,20 +46,31 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestStatementsDSL extends TestCase {
+public class TestStatementDSL extends TestCase {
 
 	@Test
-	public void testStatements01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var constant = a;var id = fun a -> a;".getBytes());
+	public void testDefinition01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("var id = fun a -> a;".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+		
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final ESLLanguage celLanguage = new ESLLanguage();
+
+		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
+
+		assertEquals(define("id", function(reference("a"), "a")), compile);
+	}
+
+	@Test
+	public void testDefinition02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("var constant = a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final ESLLanguage celLanguage = new ESLLanguage();
 
-		celLanguage.parse(ToplevelUnit.class, scanner, ecosystemModel);
+		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
 
-		assertEquals(2, ecosystemModel.getDefinitions().size());
-		assertEquals(define("constant", reference("a")), ecosystemModel.getDefinitions().get(0));
-		assertEquals(define("id", function(reference("a"), "a")), ecosystemModel.getDefinitions().get(1));
+		assertEquals(define("constant", reference("a")), compile);
 	}
 }

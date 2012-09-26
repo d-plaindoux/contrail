@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.ecosystem;
+package org.wolfgang.contrail.ecosystem;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;

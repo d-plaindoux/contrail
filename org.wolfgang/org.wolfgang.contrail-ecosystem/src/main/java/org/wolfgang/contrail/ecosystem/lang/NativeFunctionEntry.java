@@ -21,12 +21,10 @@ package org.wolfgang.contrail.ecosystem.lang;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
-import org.wolfgang.contrail.ecosystem.lang.delta.NativeFunction;
 
 /**
  * <code>FuntionImportEntry</code>

@@ -21,10 +21,10 @@ package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
-import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 
 /**
  * <code>ComponentConverter</code>
@@ -32,22 +32,29 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentConverter extends AbstractConverter<Component> {
-
-	private final ComponentLinkManager linkManager;
+public class ObjectConverter extends AbstractConverter<Object> {
 
 	/**
 	 * Constructor
 	 * 
 	 * @param type
 	 */
-	public ComponentConverter(ComponentLinkManager linkManager) {
-		super(Component.class);
-		this.linkManager = linkManager;
+	public ObjectConverter() {
+		super(Object.class);
 	}
 
 	@Override
-	public Component visit(EvaluableValue value) throws ConversionException {
+	public Object visit(ClosureValue value) throws ConversionException {
+		return this;
+	}
+
+	@Override
+	public Object visit(ConstantValue value) throws ConversionException {
+		return value.getValue();
+	}
+
+	@Override
+	public Object visit(EvaluableValue value) throws ConversionException {
 		try {
 			final Object result = value.getValue();
 			if (Coercion.canCoerce(result, Component.class)) {
@@ -61,11 +68,7 @@ public class ComponentConverter extends AbstractConverter<Component> {
 	}
 
 	@Override
-	public Component visit(FlowValue value) throws ConversionException {
-		try {
-			return value.getValues(linkManager, this);
-		} catch (ComponentConnectionRejectedException e) {
-			throw new ConversionException(e);
-		}
+	public Object visit(FlowValue value) throws ConversionException {
+		return this;
 	}
 }

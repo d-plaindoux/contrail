@@ -1,0 +1,4 @@
+import org.wolfgang.contrail.ecosystem.EchoComponent
+
+var Component = fun upstream downstream -> component;
+var Main = fun b -> b <> Component (fun e -> e) (fun e -> e) <> echo;

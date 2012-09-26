@@ -30,7 +30,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
-import org.wolfgang.contrail.ecosystem.lang.code.ObjectValue;
+import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
 import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
@@ -114,7 +114,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 		final String name = expression.getValue();
 
 		if (symbolTable.hasImportation(name)) {
-			return new ObjectValue(environment, symbolTable.getImportation(name));
+			return new EvaluableValue(environment, symbolTable.getImportation(name));
 		} else if (environment.containsKey(name)) {
 			return environment.get(name);
 		} else {

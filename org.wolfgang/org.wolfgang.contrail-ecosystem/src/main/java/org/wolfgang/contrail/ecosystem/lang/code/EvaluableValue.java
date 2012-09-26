@@ -24,12 +24,12 @@ import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
 
 /**
- * <code>ComponentValue</code>
+ * <code>ObjectValue</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ObjectValue implements CodeValue {
+public class EvaluableValue implements CodeValue {
 	private final Map<String, CodeValue> environement;
 	private final EcosystemImportation<?> entry;
 
@@ -41,7 +41,7 @@ public class ObjectValue implements CodeValue {
 	 * @param environement
 	 * @param entry
 	 */
-	public ObjectValue(Map<String, CodeValue> environement, EcosystemImportation<?> entry) {
+	public EvaluableValue(Map<String, CodeValue> environement, EcosystemImportation<?> entry) {
 		super();
 		this.environement = environement;
 		this.entry = entry;

@@ -17,11 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolgang.contrail.dsl;
-
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.define;
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.function;
-import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.reference;
+package org.wolfgang.contrail.dsl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -29,8 +25,10 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.dsl.ESLLanguage;
-import org.wolfgang.contrail.dsl.StatementUnit;
+import org.wolfgang.contrail.dsl.TerminalUnit;
+import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -46,31 +44,44 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestStatementDSL extends TestCase {
+public class TestAtomDSL extends TestCase {
 
 	@Test
-	public void testDefinition01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var id = fun a -> a;".getBytes());
+	public void testAtom01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("\"Hello, World!\"".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
-		
+
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final ESLLanguage celLanguage = new ESLLanguage();
 
-		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
-
-		assertEquals(define("id", function(reference("a"), "a")), compile);
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.String.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertEquals("Hello, World!", Coercion.coerce(compile, Atom.class).getValue());
 	}
 
 	@Test
-	public void testDefinition02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var constant = a;".getBytes());
+	public void testAtom02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("123".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();
 		final ESLLanguage celLanguage = new ESLLanguage();
 
-		final Expression compile = celLanguage.parse(StatementUnit.class, scanner, ecosystemModel);
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Integer.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertEquals("123", Coercion.coerce(compile, Atom.class).getValue());
+	}
 
-		assertEquals(define("constant", reference("a")), compile);
+	@Test
+	public void testAtom03() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
+		final InputStream input = new ByteArrayInputStream("'a'".getBytes());
+		final Scanner scanner = ScannerFactory.create(input);
+
+		final EcosystemModel ecosystemModel = new EcosystemModel();
+		final ESLLanguage celLanguage = new ESLLanguage();
+
+		final Expression compile = celLanguage.getUnitByKey(TerminalUnit.Character.class).compile(celLanguage, scanner, ecosystemModel);
+		assertTrue(Coercion.canCoerce(compile, Atom.class));
+		assertEquals("a", Coercion.coerce(compile, Atom.class).getValue());
 	}
 }

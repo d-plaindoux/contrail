@@ -42,13 +42,19 @@ import org.wolfgang.contrail.ecosystem.lang.delta.converter.Converter;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
- * <code>TerminalFactory</code>
+ * <code>LibraryBuilder</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class LibraryBuilder {
 
+	/**
+	 * 
+	 * @param linkManager
+	 * @param type
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	static <E> Converter<E> getConverter(ComponentLinkManager linkManager, Class<E> type) {
 		final Class<LibraryBuilder> aClass = LibraryBuilder.class;
@@ -128,6 +134,11 @@ public class LibraryBuilder {
 		return annoted.toArray(new Method[annoted.size()]);
 	}
 
+	/**
+	 * 
+	 * @param parameterTypes
+	 * @return
+	 */
 	static ContrailArgument getDeclaredParameter(Annotation[] parameterTypes) {
 		for (Annotation annotation : parameterTypes) {
 			if (ContrailArgument.class.isAssignableFrom(annotation.annotationType())) {
@@ -138,6 +149,15 @@ public class LibraryBuilder {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param linkManager
+	 * @param constructor
+	 * @param environment
+	 * @return
+	 * @throws CannotCreateComponentException
+	 * @throws ConversionException
+	 */
 	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, Map<String, CodeValue> environment) throws CannotCreateComponentException, ConversionException {
 		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
