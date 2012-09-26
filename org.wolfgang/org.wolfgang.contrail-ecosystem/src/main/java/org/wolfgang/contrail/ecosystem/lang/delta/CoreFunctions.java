@@ -154,7 +154,7 @@ public class CoreFunctions {
 	}
 
 	@ContrailMethod
-	public static Component component(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
+	public static Component pipeline(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
 		final DataTransducer<Object, Object> encoder = new DataTransducer<Object, Object>() {
 			@Override
 			public List<Object> transform(Object source) throws DataTransducerException {
