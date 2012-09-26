@@ -1,11 +1,13 @@
-import org.wolfgang.contrail.connection.net.NetClient
-import org.wolfgang.contrail.connection.net.NetServer
+import org.wolfgang.contrail.connection.net.NetClient;
+import org.wolfgang.contrail.connection.net.NetServer;
 
-var clientFlow = fun uri -> client uri <>  payload () <> object () <> coerce Event;   
+def clientFlow = fun uri -> client uri <>  payload () <> object () <> coerce Event;   
 
-var serverFlow = fun uri -> {
-	var flow = fun client -> client <> switch [ jaxb() | payload() <> object() ] <> coerce Event;			
+def serverFlow = fun uri -> {
+	def flow = fun client -> client <> switch [ jaxb() | payload() <> object() ] <> coerce Event;			
 	server uri flow  <> adminServer;	
 }
+
+def print = fun message -> (System.println message).echo (); 
 
 

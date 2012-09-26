@@ -50,7 +50,7 @@ public class TestStatementDSL extends TestCase {
 
 	@Test
 	public void testDefinition01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var id = fun a -> a;".getBytes());
+		final InputStream input = new ByteArrayInputStream("def id = fun a -> a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 		
 		final EcosystemModel ecosystemModel = new EcosystemModel();
@@ -63,7 +63,7 @@ public class TestStatementDSL extends TestCase {
 
 	@Test
 	public void testDefinition02() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var constant = a;".getBytes());
+		final InputStream input = new ByteArrayInputStream("def constant = a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();

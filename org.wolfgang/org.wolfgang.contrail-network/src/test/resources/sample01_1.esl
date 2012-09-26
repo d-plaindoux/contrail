@@ -1,11 +1,11 @@
 import org.wolfgang.contrail.connection.net.NetServer
 import org.wolfgang.contrail.network.ecosystem.EchoComponent
 
-var typeCase = fun type -> coerce;
+def typeCase = fun type -> coerce;
 
-var MainFlow = fun b -> 
+def MainFlow = fun b -> 
 	b <> payload <> object <> typeCase "java.lang.String" <> echo;
 
-var Server = fun uri flow -> server;
+def Server = fun uri flow -> server;
 
 Server "tcp://localhost:6666" MainFlow;

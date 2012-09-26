@@ -49,7 +49,7 @@ public class TestStatementsDSL extends TestCase {
 
 	@Test
 	public void testStatements01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		final InputStream input = new ByteArrayInputStream("var constant = a;var id = fun a -> a;".getBytes());
+		final InputStream input = new ByteArrayInputStream("def constant = a;def id = fun a -> a;".getBytes());
 		final Scanner scanner = ScannerFactory.create(input);
 
 		final EcosystemModel ecosystemModel = new EcosystemModel();

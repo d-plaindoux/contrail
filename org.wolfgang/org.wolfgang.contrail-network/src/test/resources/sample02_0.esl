@@ -1,5 +1,5 @@
 import org.wolfgang.contrail.connection.net.NetClient
 
-var Client = fun uri -> client;
+def Client = fun uri -> client;
 
-var Main = fun uri b -> Client uri <> b;
+def Main = fun uri b -> Client uri <> b;

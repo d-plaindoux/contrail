@@ -42,7 +42,7 @@ public class VariableUnit implements CompilationUnit<Definition, EcosystemModel>
 
 	@Override
 	public Definition compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
-		scanner.scan(LexemeKind.IDENT, "var");
+		scanner.scan(LexemeKind.IDENT, "def");
 
 		final String name = scanner.scan(LexemeKind.IDENT).getValue();
 		scanner.scan(LexemeKind.OPERATOR, "=");

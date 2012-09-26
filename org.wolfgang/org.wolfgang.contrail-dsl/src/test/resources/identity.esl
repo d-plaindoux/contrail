@@ -1,4 +1,7 @@
-import org.wolfgang.contrail.ecosystem.EchoComponent
+import org.wolfgang.contrail.ecosystem.EchoComponent;
 
-var Pipeline = fun upstream downstream -> pipeline;
-var Main = fun b -> b <> Pipeline (fun e -> e) (fun e -> e) <> echo;
+def nop = fun e -> e;
+def print = fun e -> nop.println e;
+def Pipeline = fun upstream downstream ->pipeline;
+def Identity = fun () ->  Pipeline (fun e -> { print e ; e; } ) (fun e -> e);
+def Main = fun b ->  b <> Identity () <> echo;

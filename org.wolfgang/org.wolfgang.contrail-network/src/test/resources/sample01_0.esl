@@ -1,7 +1,7 @@
 import org.wolfgang.contrail.connection.net.NetServer
 import org.wolfgang.contrail.network.ecosystem.EchoComponent
 
-var Server = fun uri flow -> server;
+def Server = fun uri flow -> server;
 
 Server "tcp://localhost:6666" (fun bin -> bin <> echo); 
 

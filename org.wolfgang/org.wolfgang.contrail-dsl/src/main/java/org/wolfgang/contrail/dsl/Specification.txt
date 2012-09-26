@@ -11,7 +11,7 @@ Keywords = { 'import', 'fun', 'var' }
 	
 + Statement ::=
 	'{' Statement* '}' 										-- Block
-	'var' ID '=' FlowExpression ';'							-- Variable definition
+	'def' IDENT '=' FlowExpression ';'							-- Variable definition
 	FlowExpression ';'										-- ...
     
 + ChoiceExpression ::=
@@ -21,17 +21,21 @@ Keywords = { 'import', 'fun', 'var' }
     Expression ('<>' Expression)*							-- Pipeline
 
 + Expression = 
-	SimpleExpression SimpleExpression*						-- Apply
-
+	SimpleExpression Expression?							-- Apply
+	
 + SimpleExpression ::=
+	UnitExpression ('.' IDENT)*								-- Behavior
+	
++ UnitExpression ::=
 	STRING													-- Guess what ?
 	INTEGER													-- Guess what ?
 	CHARACTER												-- Guess what ?	
 	'(' ')'													-- Unit
 	'(' FlowExpression ')'									-- Embedded flow
 	'[' ChoiceExpression ']'								-- Choice	
-	'fun' ID+ '->' Statement 								-- Abstraction
-	'fun' '(' ')' '->' Statement 							-- Unit Abstraction 
+	'fun' IDENT+ '->' FlowExpression						-- Abstraction
+	'fun' '(' ')' '->' FlowExpression						-- Unit Abstraction 
 	'{' Statement* '}' 										-- Block {} == ()
 	
+
 

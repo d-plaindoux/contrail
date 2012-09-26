@@ -39,7 +39,7 @@ public class ESLLanguage extends AbstractLanguageSupport {
 		super();
 		this.addKeyword("import");
 		this.addKeyword("fun");
-		this.addKeyword("var");
+		this.addKeyword("def");
 
 		try {
 			this.addUnit(new SourceUnit());

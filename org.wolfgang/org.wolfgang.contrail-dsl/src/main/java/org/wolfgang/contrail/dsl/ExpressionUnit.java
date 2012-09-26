@@ -24,6 +24,7 @@ import java.util.List;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
+import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
 import org.wolfgang.opala.parsing.CompilationUnit;
 import org.wolfgang.opala.parsing.LanguageSupport;
@@ -39,17 +40,37 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @version 1.0
  */
 public class ExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
+	
+	private Expression getNextSimpleExpression(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws LexemeNotFoundException, ScannerException, ParsingUnitNotFound, ParsingException {
+		final Expression function = support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel);
+
+		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
+			scanner.scan(LexemeKind.OPERATOR, ".");
+			scanner.scan(LexemeKind.IDENT);
+		}
+
+		return function;
+	}
 
 	@Override
 	public Expression compile(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final SimpleExpressionUnit unit = support.getUnitByKey(SimpleExpressionUnit.class);
 
 		final List<Expression> expressions = new ArrayList<Expression>();
+		final Expression function = getNextSimpleExpression(support, scanner, ecosystemModel);
 
-		final Expression function = unit.compile(support, scanner, ecosystemModel);
+		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
+			scanner.scan(LexemeKind.OPERATOR, ".");
+			scanner.scan(LexemeKind.IDENT);
+		}
 
 		while (unit.canCompile(scanner)) {
 			expressions.add(support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel));
+
+			while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
+				scanner.scan(LexemeKind.OPERATOR, ".");
+				scanner.scan(LexemeKind.IDENT);
+			}
 		}
 
 		return ModelFactory.apply(function, expressions.toArray(new Expression[expressions.size()]));
