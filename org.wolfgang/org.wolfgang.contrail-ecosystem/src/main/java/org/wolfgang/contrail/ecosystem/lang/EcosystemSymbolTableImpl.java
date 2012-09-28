@@ -119,12 +119,4 @@ public class EcosystemSymbolTableImpl implements EcosystemSymbolTable {
 	public void putDefinition(String name, CodeValue value) {
 		this.definitions.put(name, value);
 	}
-
-	/**
-	 * @return
-	 */
-	public Map<String, CodeValue> getDefinitions() {
-		return this.definitions;
-	}
-
 }

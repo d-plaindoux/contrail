@@ -83,7 +83,7 @@ public class TestContrailComponentFactory extends TestCase {
 
 	@Test
 	public void testMethod01() throws CannotCreateComponentException {
-		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
+		final TestClass test = LibraryBuilder.create(new TestClass(), "add", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -103,14 +103,14 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, new TestClass(), new EcosystemSymbolTableImpl());
+		}, new EcosystemSymbolTableImpl());
 
 		assertEquals("anon", test.i);
 	}
 
 	@Test
 	public void testConstructor03() throws CannotCreateComponentException {
-		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
+		final TestClass test = LibraryBuilder.create(new TestClass(), "add", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -130,7 +130,7 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, new TestClass(), new EcosystemSymbolTableImpl() {
+		}, new EcosystemSymbolTableImpl() {
 			{
 				this.putDefinition("a", new ConstantValue("Hello"));
 			}
@@ -141,7 +141,7 @@ public class TestContrailComponentFactory extends TestCase {
 
 	@Test
 	public void testConstructor02() throws CannotCreateComponentException {
-		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
+		final TestClass test = LibraryBuilder.create(new TestClass(), "add", new ContextFactory() {
 			@Override
 			public Servers getServerFactory() {
 				return null;
@@ -161,7 +161,7 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, new TestClass(), new EcosystemSymbolTableImpl() {
+		}, new EcosystemSymbolTableImpl() {
 			{
 				this.putDefinition("a", new ConstantValue("Hello"));
 				this.putDefinition("b", new ConstantValue(", World!"));

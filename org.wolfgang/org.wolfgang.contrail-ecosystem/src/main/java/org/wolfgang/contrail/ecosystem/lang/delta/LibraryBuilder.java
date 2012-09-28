@@ -166,30 +166,34 @@ public class LibraryBuilder {
 		return parameters;
 	}
 
+	public static String[] getParametersName(Method method) {
+		return null;
+	}
+
 	/**
 	 * 
 	 * @param linkManager
-	 * @param constructor
+	 * @param method
 	 * @param environment
 	 * @return
 	 * @throws CannotCreateComponentException
 	 * @throws ConversionException
 	 */
-	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException, ConversionException {
-		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
+	static Object[] getParameters(Method method, ComponentLinkManager linkManager, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException, ConversionException {
+		final Annotation[][] parameterTypes = method.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
 
 		for (int i = 0; i < parameters.length; i++) {
 			final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
 			if (annotation == null) {
 				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.error");
-				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), i));
+				throw new ConversionException(message.format(method.getDeclaringClass().getName(), method.getName(), i));
 			} else if (!symbolTable.hasDefinition(annotation.value())) {
 				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.undefined");
-				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), annotation.value()));
+				throw new ConversionException(message.format(method.getDeclaringClass().getName(), method.getName(), annotation.value()));
 			} else {
 				final CodeValue codeValue = symbolTable.getDefinition(annotation.value());
-				parameters[i] = convert(linkManager, constructor.getParameterTypes()[i], codeValue);
+				parameters[i] = convert(linkManager, method.getParameterTypes()[i], codeValue);
 			}
 		}
 
@@ -204,22 +208,18 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T> T create(String name, ContextFactory ecosystemFactory, Object component, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
+	public static <T> T create(Object component, Method method, ContextFactory ecosystemFactory, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		try {
-			final Method[] methods = getDeclaredMethods(name, component.getClass());
-
-			for (Method method : methods) {
-				try {
-					return (T) method.invoke(component, getParameters(ecosystemFactory.getLinkManager(), method, symbolTable));
-				} catch (ClassCastException e) {
-					throw new CannotCreateComponentException(e);
-				} catch (ConversionException ignore) {
-					// Consume
-				}
+			try {
+				return (T) method.invoke(component, getParameters(method, ecosystemFactory.getLinkManager(), symbolTable));
+			} catch (ClassCastException e) {
+				throw new CannotCreateComponentException(e);
+			} catch (ConversionException ignore) {
+				// Consume
 			}
 
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
-			throw new CannotCreateComponentException(message.format(name));
+			throw new CannotCreateComponentException(message.format(method.getName()));
 		} catch (CannotCreateComponentException e) {
 			throw e;
 		} catch (InvocationTargetException e) {
@@ -227,5 +227,28 @@ public class LibraryBuilder {
 		} catch (Exception e) {
 			throw new CannotCreateComponentException(e);
 		}
+	}
+
+	/**
+	 * @param classLoader
+	 * @param factoryName
+	 * @param array
+	 * @return
+	 * @throws CannotCreateComponentException
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public static <T> T create(Object component, String name, ContextFactory ecosystemFactory, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
+		final Method[] methods = getDeclaredMethods(name, component.getClass());
+
+		for (Method method : methods) {
+			try {
+				return (T) create(component, method, ecosystemFactory, symbolTable);
+			} catch (CannotCreateComponentException e) {
+				// Ignore and try the next one
+			}
+		}
+
+		final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
+		throw new CannotCreateComponentException(message.format(name));
 	}
 }

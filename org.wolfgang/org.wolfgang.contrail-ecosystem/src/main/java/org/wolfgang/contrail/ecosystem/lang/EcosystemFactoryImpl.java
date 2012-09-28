@@ -112,11 +112,11 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 				final Object object = constructor.newInstance(this);
 				final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
 				for (Method init : initMethods) {
-					LibraryBuilder.create(init.getName(), this, object, this.symbolTableImpl);
+					LibraryBuilder.create(object, init.getName(), this, this.symbolTableImpl);
 				}
 				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 				for (Method method : declaredMethods) {
-					this.symbolTableImpl.putImportation(method.getName(), new FunctionEntry(this, object, method.getName()));
+					this.symbolTableImpl.putImportation(method.getName(), new FunctionImportation(this, object, method.getName()));
 				}
 			} else {
 				final String name = aClass.getSimpleName();

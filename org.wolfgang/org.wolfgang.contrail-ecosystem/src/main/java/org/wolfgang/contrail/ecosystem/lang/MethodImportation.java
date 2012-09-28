@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.lang.reflect.Method;
+
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
@@ -28,9 +30,9 @@ import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class FunctionEntry<T> implements EcosystemImportation<T> {
+public class MethodImportation<T> implements EcosystemImportation<T> {
 	private final ContextFactory factory;
-	private final String name;
+	private final Method method;
 	private final Object provider;
 
 	/**
@@ -38,15 +40,15 @@ class FunctionEntry<T> implements EcosystemImportation<T> {
 	 * 
 	 * @param component
 	 */
-	FunctionEntry(ContextFactory factory, Object object, String name) {
+	public MethodImportation(ContextFactory factory, Object object, Method method) {
 		super();
 		this.factory = factory;
-		this.name = name;
 		this.provider = object;
+		this.method = method;
 	}
 
 	@Override
 	public T create(EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
-		return LibraryBuilder.create(name, factory, provider, symbolTable);
+		return LibraryBuilder.create(provider, method, factory, symbolTable);
 	}
 }
