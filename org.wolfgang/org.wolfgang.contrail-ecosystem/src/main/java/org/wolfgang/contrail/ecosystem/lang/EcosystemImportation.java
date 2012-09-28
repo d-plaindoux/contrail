@@ -1,9 +1,6 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
-import java.util.Map;
-
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 
 /**
  * <code>ImportEntry</code>
@@ -16,9 +13,9 @@ public interface EcosystemImportation<T> {
 	/**
 	 * Hook to invoke underlying factories
 	 * 
-	 * @param environment
+	 * @param symbolTable
 	 * @return
 	 * @throws CannotCreateComponentException
 	 */
-	T create(Map<String, CodeValue> environment) throws CannotCreateComponentException;
+	T create(EcosystemSymbolTable symbolTable) throws CannotCreateComponentException;
 }

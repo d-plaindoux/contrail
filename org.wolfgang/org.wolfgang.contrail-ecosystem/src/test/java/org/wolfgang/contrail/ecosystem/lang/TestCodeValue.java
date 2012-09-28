@@ -18,9 +18,6 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -66,24 +63,11 @@ public class TestCodeValue extends TestCase {
 		}
 	}
 
-	private static class TestSymbolTable implements EcosystemSymbolTable {
-		@Override
-		public boolean hasImportation(String name) {
-			return false;
-		}
-
-		@Override
-		public EcosystemImportation<?> getImportation(String name) {
-			return null;
-		}
-	}
-
 	@Test
 	public void testAtom() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Atom expression = new Atom();
 		expression.setValue("Hello, World!");
@@ -95,10 +79,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testFunction() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var1");
@@ -115,10 +98,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testApply01() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var1");
@@ -144,10 +126,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testApply02() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var0");
@@ -177,10 +158,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testApply03() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var0");
@@ -216,10 +196,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testApply04() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var0");
@@ -253,10 +232,9 @@ public class TestCodeValue extends TestCase {
 
 	@Test
 	public void testApply05() throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> environment = new HashMap<String, CodeValue>();
 		final ContextFactory context = new TestContextFactory();
-		final EcosystemSymbolTable factory = new TestSymbolTable();
-		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory, environment);
+		final EcosystemSymbolTable factory = new EcosystemSymbolTableImpl();
+		final EcosystemCodeValueGenerator ecosystemCompiler = new EcosystemCodeValueGenerator(context, factory);
 
 		final Function expression = new Function();
 		expression.add("var0");

@@ -19,10 +19,12 @@
 package org.wolfgang.contrail.ecosystem.lang.code;
 
 import java.util.List;
-import java.util.Map;
 
+import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGenerator;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTable;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 
@@ -33,8 +35,8 @@ import org.wolfgang.contrail.ecosystem.lang.model.Function;
  * @version 1.0
  */
 public class ClosureValue implements CodeValue {
-	private final EcosystemCodeValueGenerator interpreter;
-	private final Map<String, CodeValue> environment;
+	private final ContextFactory contextFactory;
+	private final EcosystemSymbolTableImpl symbolTable;
 	private final Function function;
 
 	/**
@@ -43,11 +45,11 @@ public class ClosureValue implements CodeValue {
 	 * @param function
 	 * @param environement
 	 */
-	public ClosureValue(EcosystemCodeValueGenerator interpreter, Function function, Map<String, CodeValue> environement) {
+	public ClosureValue(ContextFactory contextFactory, EcosystemSymbolTable symbolTable, Function function) {
 		super();
-		this.interpreter = interpreter;
+		this.contextFactory = contextFactory;
+		this.symbolTable = new EcosystemSymbolTableImpl(symbolTable);
 		this.function = function;
-		this.environment = environement;
 	}
 
 	/**
@@ -71,10 +73,12 @@ public class ClosureValue implements CodeValue {
 	public CodeValue apply(String[] names, CodeValue... values) throws EcosystemCodeValueGeneratorException {
 		final String[] parameterNames = function.getParameters(names, values.length);
 		final List<Expression> applied = function.apply(parameterNames);
+
 		for (int i = 0; i < parameterNames.length; i++) {
-			this.environment.put(parameterNames[i], values[i]);
+			this.symbolTable.putDefinition(parameterNames[i], values[i]);
 		}
-		return interpreter.create(environment).visit(applied);
+
+		return new EcosystemCodeValueGenerator(contextFactory, symbolTable).visit(applied);
 	}
 
 	@Override

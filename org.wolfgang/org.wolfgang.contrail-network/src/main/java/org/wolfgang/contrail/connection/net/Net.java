@@ -16,27 +16,32 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.connection.net;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
-import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
+import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 
 /**
- * <code>TestConversion</code>
+ * <code>Net</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConversion extends TestCase {
+@ContrailLibrary
+public class Net {
 
-	@Test
-	public void testNominal01() throws ConversionException {
-		final String value = "Hello, World!";
-		final ConstantValue constantValue = new ConstantValue(value);
+	private final ContextFactory contextFactory;
 
-		assertEquals(value, LibraryBuilder.convert(null, String.class, constantValue));
+	public Net(ContextFactory contextFactory) {
+		super();
+		this.contextFactory = contextFactory;
 	}
+
+	@ContrailMethod
+	public void init() {
+		contextFactory.getClientFactory().register("tcp", NetClient.class);
+		contextFactory.getServerFactory().register("tcp", NetServer.class);
+	}
+
 }

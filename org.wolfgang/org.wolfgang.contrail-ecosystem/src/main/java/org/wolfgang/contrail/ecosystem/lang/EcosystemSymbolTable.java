@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+
 /**
  * <code>EcosystemSymbolTable</code>
  * 
@@ -26,8 +28,40 @@ package org.wolfgang.contrail.ecosystem.lang;
  */
 public interface EcosystemSymbolTable {
 
+	/**
+	 * Check importation availability
+	 * 
+	 * @param name
+	 *            The importation name
+	 * @return true if an importation exist for the given key; false otherwise
+	 */
 	boolean hasImportation(String name);
 
+	/**
+	 * Method called whether a given importation must be retrieved
+	 * 
+	 * @param name
+	 *            The importation name
+	 * @return a importation or <code>null</code>
+	 */
 	EcosystemImportation<?> getImportation(String name);
+
+	/**
+	 * Check definition availability
+	 * 
+	 * @param name
+	 *            The definition name
+	 * @return true if a definition exist for the given key; false otherwise
+	 */
+	boolean hasDefinition(String name);
+
+	/**
+	 * Method called whether a given definition must be retrieved
+	 * 
+	 * @param name
+	 *            The definition name
+	 * @return a definition or <code>null</code>
+	 */
+	CodeValue getDefinition(String name);
 
 }

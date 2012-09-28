@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import library='org.wolfgang.contrail.ecosystem.lang.EchoComponent' />
+	<import library='org.wolfgang.contrail.ecosystem.lang.Echo' />
 
 	<define name="coercion">
 		<function>

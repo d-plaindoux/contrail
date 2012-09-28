@@ -1,4 +1,4 @@
-import org.wolfgang.contrail.connection.net.NetClient
+import org.wolfgang.contrail.connection.net.Net
 
 def Coerce = fun type -> coerce;
 def Client = fun uri -> client;

@@ -10,9 +10,9 @@ Keywords = { 'import', 'fun', 'var' }
 	'import' IDENT ('.' IDENT)*
 	
 + Statement ::=
-	'{' Statement* '}' 										-- Block
+	'{' Statement* '}' ';'?										-- Block
 	'def' IDENT '=' FlowExpression ';'							-- Variable definition
-	FlowExpression ';'										-- ...
+	FlowExpression ';'											-- ...
     
 + ChoiceExpression ::=
     FlowExpression ('|' FlowExpression)*					-- Choice
@@ -31,11 +31,13 @@ Keywords = { 'import', 'fun', 'var' }
 	INTEGER													-- Guess what ?
 	CHARACTER												-- Guess what ?	
 	'(' ')'													-- Unit
+	'{' Statement* '}'										-- Statements
 	'(' FlowExpression ')'									-- Embedded flow
 	'[' ChoiceExpression ']'								-- Choice	
 	'fun' IDENT+ '->' FlowExpression						-- Abstraction
 	'fun' '(' ')' '->' FlowExpression						-- Unit Abstraction 
-	'{' Statement* '}' 										-- Block {} == ()
+	IDENT													-- An identifier
+	object { (name : FlowExpression ';'?)* }				-- An Object	
 	
 
 

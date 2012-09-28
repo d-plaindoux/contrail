@@ -18,10 +18,9 @@
 
 package org.wolfgang.contrail.ecosystem.lang.code;
 
-import java.util.Map;
-
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTable;
 
 /**
  * <code>ObjectValue</code>
@@ -30,7 +29,7 @@ import org.wolfgang.contrail.ecosystem.lang.EcosystemImportation;
  * @version 1.0
  */
 public class EvaluableValue implements CodeValue {
-	private final Map<String, CodeValue> environement;
+	private final EcosystemSymbolTable symbolTable;
 	private final EcosystemImportation<?> entry;
 
 	private Object value;
@@ -38,19 +37,19 @@ public class EvaluableValue implements CodeValue {
 	/**
 	 * Constructor
 	 * 
-	 * @param environement
+	 * @param symbolTable
 	 * @param entry
 	 */
-	public EvaluableValue(Map<String, CodeValue> environement, EcosystemImportation<?> entry) {
+	public EvaluableValue(EcosystemSymbolTable symbolTable, EcosystemImportation<?> entry) {
 		super();
-		this.environement = environement;
+		this.symbolTable = symbolTable;
 		this.entry = entry;
 	}
 
 	public Object getValue() throws CannotCreateComponentException {
 		if (value == null) {
 			try {
-				this.value = entry.create(environement);
+				this.value = entry.create(symbolTable);
 			} catch (CannotCreateComponentException e) {
 				throw e;
 			} catch (Exception e) {

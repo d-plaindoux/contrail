@@ -2,16 +2,23 @@
  * Tunnel example
  */
 
-import org.wolfgang.contrail.connection.net.NetClient;
-import org.wolfgang.contrail.connection.net.NetServer;
+// Type definitions
+// ----------------------------------------------------------------------
+// type terminal<U,D>;
+// type initial<U,D;
+// type pipeline<U,D> = initial<U,D> & terminal<U,D>;
+// type client = string -> terminal<byte[]>;
+// type server = string -> initial<byte[]> -> ??);
+// ----------------------------------------------------------------------
+
+def client = extern "org.wolfgang.contrail.connection.net.Net" "client";
 
 // ----------------------------------------------------------------------
 
-var Logger = fun () -> LogSrc <> LogDst;
-var Client = fun uri -> Logger () <> native client uri;
-var Server = fun uri flow -> native server uri flow;
-var Tunnel = fun in out -> Server in (fun client ->  client <> Client out):
+def Client = fun uri -> client;
+def Server = fun uri flow -> server;
+def Tunnel = fun in out -> Server in (fun client ->  client <> Client out):
 
-// ----------------------------------------------------------------------
-
-Tunnel "http://localhost:6666" "http://localhost:6667"
+//
+// Usage: Tunnel "tcp://localhost:6666" "tcp://localhost:6667"
+//

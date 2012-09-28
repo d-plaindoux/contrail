@@ -60,23 +60,17 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	/**
 	 * The related synbol table
 	 */
-	private final EcosystemSymbolTable symbolTable;
-
-	/**
-	 * The environment
-	 */
-	private final Map<String, CodeValue> environment;
+	private final EcosystemSymbolTableImpl symbolTable;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param environment
 	 */
-	EcosystemCodeValueGenerator(ContextFactory contextFactory, EcosystemSymbolTable factory, Map<String, CodeValue> environment) {
+	public EcosystemCodeValueGenerator(ContextFactory contextFactory, EcosystemSymbolTable symbolTable) {
 		super();
 		this.contextFactory = contextFactory;
-		this.symbolTable = factory;
-		this.environment = environment;
+		this.symbolTable = new EcosystemSymbolTableImpl(symbolTable);
 	}
 
 	/**
@@ -86,7 +80,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	public EcosystemCodeValueGenerator create(Map<String, CodeValue> environment) {
 		final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
 		newEnvironment.putAll(environment);
-		return new EcosystemCodeValueGenerator(contextFactory, symbolTable, newEnvironment);
+		return new EcosystemCodeValueGenerator(contextFactory, symbolTable);
 	}
 
 	/**
@@ -96,7 +90,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	 */
 	public CodeValue visit(final List<Expression> expressions) throws EcosystemCodeValueGeneratorException {
 		final CodeValue[] values = new CodeValue[expressions.size()];
-		final EcosystemCodeValueGenerator interpret = new EcosystemCodeValueGenerator(contextFactory, symbolTable, environment);
+		final EcosystemCodeValueGenerator interpret = new EcosystemCodeValueGenerator(contextFactory, symbolTable);
 
 		for (int i = 0; i < values.length; i++) {
 			values[i] = expressions.get(i).visit(interpret);
@@ -114,9 +108,9 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 		final String name = expression.getValue();
 
 		if (symbolTable.hasImportation(name)) {
-			return new EvaluableValue(environment, symbolTable.getImportation(name));
-		} else if (environment.containsKey(name)) {
-			return environment.get(name);
+			return new EvaluableValue(symbolTable, symbolTable.getImportation(name));
+		} else if (symbolTable.hasDefinition(name)) {
+			return symbolTable.getDefinition(name);
 		} else {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "definition.not.found");
 			throw new EcosystemCodeValueGeneratorException(message.format(name));
@@ -159,57 +153,11 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 
 	@Override
 	public CodeValue visit(Function expression) throws EcosystemCodeValueGeneratorException {
-		final Map<String, CodeValue> newEnvironment = new HashMap<String, CodeValue>();
-		newEnvironment.putAll(environment);
-		return new ClosureValue(this, expression, newEnvironment);
+		return new ClosureValue(this.contextFactory, this.symbolTable, expression);
 	}
 
 	@Override
 	public CodeValue visit(Router expression) throws EcosystemCodeValueGeneratorException {
-		/*
-		 * try { final DirectReference reference =
-		 * ReferenceFactory.directReference
-		 * (UUIDUtils.digestBased(expression.getSelf())); final RouterComponent
-		 * routerComponent = RouterComponentFactory.create(reference); final
-		 * ConstantValue constantRouter = new ConstantValue(routerComponent);
-		 * final List<Case> cases = expression.getCases();
-		 * 
-		 * for (Case aCase : cases) { final List<String> filters =
-		 * aCase.getFilters(); final List<DirectReference> references = new
-		 * ArrayList<DirectReference>(); for (String filter : filters) {
-		 * references
-		 * .add(ReferenceFactory.directReference(UUIDUtils.digestBased(
-		 * filter))); }
-		 * 
-		 * final DirectReference primary = references.remove(0); final
-		 * DirectReference[] secundaries = references.toArray(new
-		 * DirectReference[references.size()]); final CodeValue visit =
-		 * this.visit(aCase.getBody());
-		 * 
-		 * final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
-		 * 
-		 * @Override public SourceComponent<Event, Event> create() throws
-		 * CannotCreateComponentException { final OnLinkAcceptanceComponent
-		 * onLinkAcceptanceComponent = new OnLinkAcceptanceComponent(primary);
-		 * try { final ConstantValue constantValue1 = new
-		 * ConstantValue(onLinkAcceptanceComponent); final FlowValue flowValue =
-		 * new FlowValue(constantValue1, constantRouter);
-		 * visit.apply(flowValue); return onLinkAcceptanceComponent; } catch
-		 * (EcosystemCodeValueGeneratorException e) { throw new
-		 * CannotCreateComponentException(e); } } };
-		 * 
-		 * routerComponent.getRouterSourceTable().insert(entry, primary,
-		 * secundaries); }
-		 * 
-		 * 
-		 * if (expression.getDefaultCase() != null) { // TODO }
-		 * 
-		 * return constantRouter; } catch (NoSuchAlgorithmException e) { throw
-		 * new EcosystemCodeValueGeneratorException(e); } catch
-		 * (ReferenceEntryAlreadyExistException e) { throw new
-		 * EcosystemCodeValueGeneratorException(e); }
-		 */
-
 		return null;
 	}
 
@@ -220,7 +168,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 
 	@Override
 	public CodeValue visit(Definition definition) throws EcosystemCodeValueGeneratorException {
-		this.environment.put(definition.getName(), this.visit(definition.getExpressions()));
+		this.symbolTable.putDefinition(definition.getName(), this.visit(definition.getExpressions()));
 		return ModelFactory.unit().visit(this);
 	}
 

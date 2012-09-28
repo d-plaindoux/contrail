@@ -22,7 +22,6 @@ package org.wolfgang.contrail.component.pipeline.transducer.coercion;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
-import org.wolfgang.contrail.connection.ContextFactory;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream

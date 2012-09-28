@@ -16,10 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.network.ecosystem;
 
 import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
-public interface NativeFunction<T> {
-	T create(ContextFactory contextFactory) throws Exception;
+/**
+ * <code>Echo</code>
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+@ContrailLibrary(name = "Echo")
+public class Echo {
+
+	public Echo(ContextFactory contextFactory) {
+		super();
+	}
+
+	@ContrailMethod
+	public EchoComponent echo() throws CannotCreateDataFlowException {
+		return new EchoComponent();
+	}
+
+	@ContrailMethod
+	public EchoComponent echo(final @ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		return new EchoComponent(name);
+	}
+
 }

@@ -16,41 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang;
+package org.wolfgang.contrail.ecosystem;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-
-import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
 /**
- * <code>FuntionImportEntry</code>
+ * <code>Echo</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class NativeFunctionEntry<T> implements EcosystemImportation<T> {
-	private final ContextFactory factory;
-	private final String name;
-	private final Class<?> provider;
+@ContrailLibrary(name = "Echo")
+public class Echo {
 
-	/**
-	 * Constructor
-	 * 
-	 * @param component
-	 */
-	NativeFunctionEntry(ContextFactory factory, Method method) {
+	public Echo(ContextFactory contextFactory) {
 		super();
-		this.factory = factory;
-		this.name = method.getName();
-		this.provider = method.getDeclaringClass();
 	}
 
-	@Override
-	public T create(Map<String, CodeValue> environment) throws CannotCreateComponentException {
-		return LibraryBuilder.create(name, factory, provider, environment);
+	@ContrailMethod
+	public EchoComponent echo() throws CannotCreateDataFlowException {
+		return new EchoComponent();
 	}
+
+	@ContrailMethod
+	public EchoComponent echo(final @ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		return new EchoComponent(name);
+	}
+
 }

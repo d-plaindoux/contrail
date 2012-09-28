@@ -40,14 +40,17 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @version 1.0
  */
 public class ExpressionUnit implements CompilationUnit<Expression, EcosystemModel> {
-	
-	private Expression getNextSimpleExpression(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws LexemeNotFoundException, ScannerException, ParsingUnitNotFound, ParsingException {
+
+	private Expression getNextExpression(LanguageSupport support, Scanner scanner, EcosystemModel ecosystemModel) throws LexemeNotFoundException, ScannerException, ParsingUnitNotFound,
+			ParsingException {
 		final Expression function = support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel);
 
+		/*
 		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
 			scanner.scan(LexemeKind.OPERATOR, ".");
 			scanner.scan(LexemeKind.IDENT);
 		}
+		*/
 
 		return function;
 	}
@@ -57,20 +60,10 @@ public class ExpressionUnit implements CompilationUnit<Expression, EcosystemMode
 		final SimpleExpressionUnit unit = support.getUnitByKey(SimpleExpressionUnit.class);
 
 		final List<Expression> expressions = new ArrayList<Expression>();
-		final Expression function = getNextSimpleExpression(support, scanner, ecosystemModel);
+		final Expression function = getNextExpression(support, scanner, ecosystemModel);
 
-		while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
-			scanner.scan(LexemeKind.OPERATOR, ".");
-			scanner.scan(LexemeKind.IDENT);
-		}
-
-		while (unit.canCompile(scanner)) {
-			expressions.add(support.getUnitByKey(SimpleExpressionUnit.class).compile(support, scanner, ecosystemModel));
-
-			while (scanner.currentLexeme().isA(LexemeKind.OPERATOR, ".")) {
-				scanner.scan(LexemeKind.OPERATOR, ".");
-				scanner.scan(LexemeKind.IDENT);
-			}
+		while (unit.canCompile(scanner) && !support.isKeyword(scanner.currentLexeme().getValue())) {
+			expressions.add(getNextExpression(support, scanner, ecosystemModel));
 		}
 
 		return ModelFactory.apply(function, expressions.toArray(new Expression[expressions.size()]));

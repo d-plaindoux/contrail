@@ -62,26 +62,29 @@ import org.wolfgang.contrail.ecosystem.lang.delta.converter.ObjectConverter;
 @ContrailLibrary
 public class CoreFunctions {
 
-	@ContrailMethod
-	public static NativeFunction<Void> init() {
-		return new NativeFunction<Void>() {
-			@Override
-			public Void create(ContextFactory contextFactory) throws ComponentConnectionRejectedException {
-				contextFactory.getClientFactory().declareScheme("ssh", ProcessClient.class);
-				contextFactory.getServerFactory().declareScheme("ssh", ProcessServer.class);
-				return null;
-			}
-		};
+	private final ContextFactory contextFactory;
+
+	public CoreFunctions(ContextFactory contextFactory) {
+		super();
+		this.contextFactory = contextFactory;
 	}
 
 	@ContrailMethod
-	public static NativeFunction<Component> reverse(final @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
-		return new NativeFunction<Component>() {
-			@Override
-			public Component create(ContextFactory contextFactory) throws ComponentConnectionRejectedException {
-				return Components.reverse(contextFactory.getLinkManager(), component);
-			}
-		};
+	public void init() {
+		contextFactory.getClientFactory().register("ssh", ProcessClient.class);
+		contextFactory.getServerFactory().register("ssh", ProcessServer.class);
+	}
+
+	@ContrailMethod
+	public Object extern(@ContrailArgument("package") String packageName, @ContrailArgument("package") String methodName) throws ComponentConnectionRejectedException {
+		
+		
+		return null;
+	}
+
+	@ContrailMethod
+	public Component reverse(final @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
+		return Components.reverse(contextFactory.getLinkManager(), component);
 	}
 
 	//
@@ -89,24 +92,14 @@ public class CoreFunctions {
 	//
 
 	@ContrailMethod
-	public static NativeFunction<Component> client(final @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException, URISyntaxException, ClientNotFoundException {
-		return new NativeFunction<Component>() {
-			@Override
-			public Component create(ContextFactory contextFactory) throws Exception {
-				return new ClientComponent(contextFactory, reference);
-			}
-		};
+	public Component client(final @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException, URISyntaxException, ClientNotFoundException {
+		return new ClientComponent(contextFactory, reference);
 	}
 
 	@ContrailMethod
-	public static NativeFunction<Component> server(final @ContrailArgument("uri") String reference, final @ContrailArgument("flow") ComponentFactoryListener listener) throws URISyntaxException,
-			ServerNotFoundException, CannotCreateServerException {
-		return new NativeFunction<Component>() {
-			@Override
-			public Component create(ContextFactory contextFactory) throws Exception {
-				return new ServerComponent(contextFactory, reference, listener);
-			}
-		};
+	public Component server(final @ContrailArgument("uri") String reference, final @ContrailArgument("flow") ComponentFactoryListener listener) throws URISyntaxException, ServerNotFoundException,
+			CannotCreateServerException {
+		return new ServerComponent(contextFactory, reference, listener);
 	}
 
 	//
@@ -115,46 +108,46 @@ public class CoreFunctions {
 
 	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component parallelSource() {
+	public Component parallelSource() {
 		return new ParallelSourceComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component parallelDestination() {
+	public Component parallelDestination() {
 		return new ParallelDestinationComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component logSource(final @ContrailArgument("name") String prefix) {
+	public Component logSource(final @ContrailArgument("name") String prefix) {
 		return new LoggerSourceComponent(prefix);
 	}
 
 	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component logDestination(final @ContrailArgument("name") String prefix) {
+	public Component logDestination(final @ContrailArgument("name") String prefix) {
 		return new LoggerDestinationComponent(prefix);
 	}
 
 	@ContrailMethod
-	public static Component payload() {
+	public Component payload() {
 		return new PayLoadTransducerFactory().createComponent();
 	}
 
 	@ContrailMethod
-	public static Component object() {
+	public Component object() {
 		return new SerializationTransducerFactory().createComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
 	@ContrailMethod
-	public static Component coerce(final @ContrailArgument("type") String type) throws ClassNotFoundException {
+	public Component coerce(final @ContrailArgument("type") String type) throws ClassNotFoundException {
 		return new CoercionTransducerFactory(CoercionTransducerFactory.class.getClassLoader(), type).createComponent();
 	}
 
 	@ContrailMethod
-	public static Component pipeline(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
+	public Component pipeline(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
 		final DataTransducer<Object, Object> encoder = new DataTransducer<Object, Object>() {
 			@Override
 			public List<Object> transform(Object source) throws DataTransducerException {

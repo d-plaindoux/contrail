@@ -1,5 +1,4 @@
-import org.wolfgang.contrail.connection.net.NetClient
+import org.wolfgang.contrail.connection.net.Net
 
 def Client = fun uri -> client;
-
 def Main = fun uri b -> Client uri <> b;

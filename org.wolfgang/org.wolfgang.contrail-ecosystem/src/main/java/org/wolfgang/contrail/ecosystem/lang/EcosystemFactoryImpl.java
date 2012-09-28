@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,17 +54,12 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class EcosystemFactoryImpl extends EcosystemImpl implements EcosystemSymbolTable, ContextFactory {
+public final class EcosystemFactoryImpl extends EcosystemImpl implements ContextFactory {
 
 	/**
-	 * Importations
+	 * Symbol table
 	 */
-	private final Map<String, EcosystemImportation<?>> importations;
-
-	/**
-	 * Importations
-	 */
-	private final Map<String, CodeValue> definitions;
+	private final EcosystemSymbolTableImpl symbolTableImpl;
 
 	/**
 	 * Server factory
@@ -87,12 +82,11 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	private final EcosystemCodeValueGenerator interpreter;
 
 	{
+		this.symbolTableImpl = new EcosystemSymbolTableImpl();
 		this.serverFactory = new Servers();
 		this.clientFactory = new Clients();
 		this.classLoader = EcosystemFactoryImpl.class.getClassLoader();
-		this.importations = new HashMap<String, EcosystemImportation<?>>();
-		this.definitions = new HashMap<String, CodeValue>();
-		this.interpreter = new EcosystemCodeValueGenerator(this, this, definitions);
+		this.interpreter = new EcosystemCodeValueGenerator(this, this.symbolTableImpl);
 	}
 
 	/**
@@ -109,21 +103,24 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 * @param loader
 	 * @param factory
 	 */
+	@SuppressWarnings("rawtypes")
 	private void loadImportation(Logger logger, Import importation) {
 		try {
 			final Class<?> aClass = classLoader.loadClass(importation.getElement());
 			if (aClass.isAnnotationPresent(ContrailLibrary.class)) {
+				final Constructor<?> constructor = aClass.getConstructor(ContextFactory.class);
+				final Object object = constructor.newInstance(this);
 				final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
 				for (Method init : initMethods) {
-					new NativeFunctionEntry(this, init).create(this.definitions);
+					LibraryBuilder.create(init.getName(), this, object, this.symbolTableImpl);
 				}
 				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 				for (Method method : declaredMethods) {
-					this.importations.put(method.getName(), new NativeFunctionEntry(this, method));
+					this.symbolTableImpl.putImportation(method.getName(), new FunctionEntry(this, object, method.getName()));
 				}
 			} else {
 				final String name = aClass.getSimpleName();
-				this.definitions.put(name, new ConstantValue(importation.getElement()));
+				this.symbolTableImpl.putDefinition(name, new ConstantValue(importation.getElement()));
 			}
 		} catch (ClassNotFoundException e) {
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
@@ -131,6 +128,30 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 		} catch (CannotCreateComponentException e) {
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "no.component");
 			logger.log(Level.WARNING, message.format(), e);
+		} catch (SecurityException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (NoSuchMethodException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (IllegalArgumentException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (InstantiationException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (IllegalAccessException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (InvocationTargetException e) {
+			// TODO
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		}
 	}
 
@@ -159,7 +180,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 	 * @throws Exception
 	 * @throws ClassNotFoundException
 	 */
-	private void buildEcosystem(Logger logger, EcosystemModel ecosystemModel) throws Exception {
+	public void buildEcosystem(Logger logger, EcosystemModel ecosystemModel) throws Exception {
 
 		// Check and load importations
 		this.loadImportations(logger, ecosystemModel);
@@ -169,7 +190,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 			final CodeValue generated = this.interpreter.visit(definition.getExpressions());
 
 			try {
-				final Component component = LibraryBuilder.create(getLinkManager(), Component.class, generated);
+				final Component component = LibraryBuilder.convert(getLinkManager(), Component.class, generated);
 				EcosystemFactoryImpl.this.addActiveComponent(component);
 			} catch (ConversionException consume) {
 				// Ignore
@@ -178,7 +199,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 			final String name = definition.getName();
 
 			if (name != null) {
-				this.definitions.put(name, generated);
+				this.symbolTableImpl.putDefinition(name, generated);
 				final ComponentFactory factory = new ComponentFactory() {
 					@Override
 					public ComponentLinkManager getLinkManager() {
@@ -205,7 +226,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 						}
 
 						try {
-							final Component component = LibraryBuilder.create(getLinkManager(), Component.class, interpreted);
+							final Component component = LibraryBuilder.convert(getLinkManager(), Component.class, interpreted);
 							EcosystemFactoryImpl.this.addActiveComponent(component);
 							return component;
 						} catch (ConversionException e) {
@@ -237,14 +258,8 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Ecosyst
 		return clientFactory;
 	}
 
-	@Override
-	public boolean hasImportation(String name) {
-		return this.importations.containsKey(name);
-	}
-
-	@Override
-	public EcosystemImportation<?> getImportation(String name) {
-		return this.importations.get(name);
+	public EcosystemCodeValueGenerator getInterpreter() {
+		return interpreter;
 	}
 
 	// Static method

@@ -1,5 +1,5 @@
-import org.wolfgang.contrail.connection.net.NetServer
-import org.wolfgang.contrail.network.ecosystem.EchoComponent
+import org.wolfgang.contrail.connection.net.Net
+import org.wolfgang.contrail.network.ecosystem.Echo
 
 def Server = fun uri flow -> server;
 

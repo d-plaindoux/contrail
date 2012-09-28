@@ -19,9 +19,6 @@
 package org.wolfgang.contrail.ecosystem.lang;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
@@ -38,18 +35,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
-@ContrailLibrary
 public class EchoComponent extends TerminalComponent {
-
-	@ContrailMethod
-	public static EchoComponent echo() throws CannotCreateDataFlowException {
-		return new EchoComponent();
-	}
-
-	@ContrailMethod
-	public static EchoComponent echo(final @ContrailArgument("name") String name) throws CannotCreateDataFlowException {
-		return new EchoComponent(name);
-	}
 
 	private static class LocalDataReceiverFactory implements UpStreamDataFlowFactory {
 		private final String name;
@@ -91,12 +77,12 @@ public class EchoComponent extends TerminalComponent {
 	 * @param receiver
 	 * @throws CannotCreateDataFlowException
 	 */
-	private EchoComponent() throws CannotCreateDataFlowException {
+	EchoComponent() throws CannotCreateDataFlowException {
 		this(null);
 	}
 
 	@SuppressWarnings("unchecked")
-	private EchoComponent(String name) throws CannotCreateDataFlowException {
+	EchoComponent(String name) throws CannotCreateDataFlowException {
 		super(new LocalDataReceiverFactory(name));
 	}
 }

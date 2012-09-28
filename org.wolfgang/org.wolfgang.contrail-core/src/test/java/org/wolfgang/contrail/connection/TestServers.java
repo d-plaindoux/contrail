@@ -61,7 +61,7 @@ public class TestServers extends TestCase {
 	@Test
 	public void testServers02() throws ServerNotFoundException, IOException {
 		final Servers servers = new Servers();
-		servers.declareScheme("my", MyServer.class);
+		servers.register("my", MyServer.class);
 		assertEquals(MyServer.class, servers.get("my").getClass());
 		servers.close();
 	}

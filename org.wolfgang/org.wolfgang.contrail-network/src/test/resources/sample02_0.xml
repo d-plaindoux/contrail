@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import library='org.wolfgang.contrail.connection.net.NetClient'/>
+	<import library='org.wolfgang.contrail.connection.net.Net'/>
 
 	<define name='Client'>
 		<function>

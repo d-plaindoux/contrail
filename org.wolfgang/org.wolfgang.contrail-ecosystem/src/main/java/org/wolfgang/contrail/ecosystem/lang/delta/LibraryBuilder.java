@@ -22,19 +22,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Map;
 import java.util.TreeSet;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
-import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTable;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.CoercionConverter;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
@@ -81,7 +79,7 @@ public class LibraryBuilder {
 	}
 
 	/**
-	 * Method called when a given code value msut be converted
+	 * Method called when a given code value must be converted
 	 * 
 	 * @param linkManager
 	 * @param type
@@ -89,7 +87,7 @@ public class LibraryBuilder {
 	 * @return
 	 * @throws ConversionException
 	 */
-	public static <T> T create(ComponentLinkManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
+	public static <T> T convert(ComponentLinkManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
 		return getConverter(linkManager, type).performConversion(value);
 	}
 
@@ -125,9 +123,7 @@ public class LibraryBuilder {
 
 		for (Method method : methods) {
 			if ((name == null || method.getName().equals(name)) && method.isAnnotationPresent(ContrailMethod.class)) {
-				if (Modifier.isStatic(method.getModifiers())) {
-					annoted.add(method);
-				}
+				annoted.add(method);
 			}
 		}
 
@@ -158,7 +154,28 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 * @throws ConversionException
 	 */
-	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, Map<String, CodeValue> environment) throws CannotCreateComponentException, ConversionException {
+	static Object[] getParameters(ComponentLinkManager linkManager, Class<?>[] parameters, CodeValue[] values) throws ConversionException {
+		assert parameters.length == values.length;
+
+		final Object[] objects = new Object[parameters.length];
+
+		for (int i = 0; i < parameters.length; i++) {
+			objects[i] = convert(linkManager, parameters[i], values[i]);
+		}
+
+		return parameters;
+	}
+
+	/**
+	 * 
+	 * @param linkManager
+	 * @param constructor
+	 * @param environment
+	 * @return
+	 * @throws CannotCreateComponentException
+	 * @throws ConversionException
+	 */
+	static Object[] getParameters(ComponentLinkManager linkManager, Method constructor, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException, ConversionException {
 		final Annotation[][] parameterTypes = constructor.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
 
@@ -167,12 +184,12 @@ public class LibraryBuilder {
 			if (annotation == null) {
 				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.error");
 				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), i));
-			} else if (!environment.containsKey(annotation.value())) {
+			} else if (!symbolTable.hasDefinition(annotation.value())) {
 				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.undefined");
 				throw new ConversionException(message.format(constructor.getDeclaringClass().getName(), constructor.getName(), annotation.value()));
 			} else {
-				final CodeValue codeValue = environment.get(annotation.value());
-				parameters[i] = create(linkManager, constructor.getParameterTypes()[i], codeValue);
+				final CodeValue codeValue = symbolTable.getDefinition(annotation.value());
+				parameters[i] = convert(linkManager, constructor.getParameterTypes()[i], codeValue);
 			}
 		}
 
@@ -187,22 +204,13 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T> T create(String name, ContextFactory ecosystemFactory, Class<?> component, Map<String, CodeValue> environment) throws CannotCreateComponentException {
+	public static <T> T create(String name, ContextFactory ecosystemFactory, Object component, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		try {
-			final Method[] methods = getDeclaredMethods(name, component);
+			final Method[] methods = getDeclaredMethods(name, component.getClass());
 
 			for (Method method : methods) {
 				try {
-					final Object create = method.invoke(null, getParameters(ecosystemFactory.getLinkManager(), method, environment));
-					final Object result;
-
-					if (Coercion.canCoerce(create, NativeFunction.class)) {
-						result = Coercion.coerce(create, NativeFunction.class).create(ecosystemFactory);
-					} else {
-						result = create;
-					}
-
-					return (T) result;
+					return (T) method.invoke(component, getParameters(ecosystemFactory.getLinkManager(), method, symbolTable));
 				} catch (ClassCastException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (ConversionException ignore) {

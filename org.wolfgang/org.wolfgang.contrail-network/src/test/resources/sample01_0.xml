@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <ecosystem>
-	<import library='org.wolfgang.contrail.connection.net.NetServer' />
-	<import library='org.wolfgang.contrail.network.ecosystem.EchoComponent' />
+	<import library='org.wolfgang.contrail.connection.net.Net' />
+	<import library='org.wolfgang.contrail.network.ecosystem.Echo' />
 
 	<define name='Server'>
 		<function>

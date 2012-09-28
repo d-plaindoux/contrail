@@ -16,27 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.lang;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
-import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
 
 /**
- * <code>TestConversion</code>
+ * <code>FuntionImportEntry</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConversion extends TestCase {
+class FunctionEntry<T> implements EcosystemImportation<T> {
+	private final ContextFactory factory;
+	private final String name;
+	private final Object provider;
 
-	@Test
-	public void testNominal01() throws ConversionException {
-		final String value = "Hello, World!";
-		final ConstantValue constantValue = new ConstantValue(value);
+	/**
+	 * Constructor
+	 * 
+	 * @param component
+	 */
+	FunctionEntry(ContextFactory factory, Object object, String name) {
+		super();
+		this.factory = factory;
+		this.name = name;
+		this.provider = object;
+	}
 
-		assertEquals(value, LibraryBuilder.convert(null, String.class, constantValue));
+	@Override
+	public T create(EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
+		return LibraryBuilder.create(name, factory, provider, symbolTable);
 	}
 }

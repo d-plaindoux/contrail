@@ -16,27 +16,35 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.ecosystem.lang.delta;
+package org.wolfgang.contrail.ecosystem.lang;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
-import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
+import org.wolfgang.contrail.connection.ContextFactory;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
+import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
+import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
 /**
- * <code>TestConversion</code>
+ * <code>Echo</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConversion extends TestCase {
+@ContrailLibrary(name = "Echo")
+public class Echo {
 
-	@Test
-	public void testNominal01() throws ConversionException {
-		final String value = "Hello, World!";
-		final ConstantValue constantValue = new ConstantValue(value);
-
-		assertEquals(value, LibraryBuilder.convert(null, String.class, constantValue));
+	public Echo(ContextFactory contextFactory) {
+		super();
 	}
+
+	@ContrailMethod
+	public EchoComponent echo() throws CannotCreateDataFlowException {
+		return new EchoComponent();
+	}
+
+	@ContrailMethod
+	public EchoComponent echo(final @ContrailArgument("name") String name) throws CannotCreateDataFlowException {
+		return new EchoComponent(name);
+	}
+
 }

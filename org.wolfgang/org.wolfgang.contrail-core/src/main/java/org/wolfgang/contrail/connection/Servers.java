@@ -55,7 +55,7 @@ public final class Servers implements Closeable {
 	 * @param className
 	 *            The corresponding class name
 	 */
-	public void declareScheme(String scheme, Class<? extends Server> className) {
+	public void register(String scheme, Class<? extends Server> className) {
 		prototypes.put(scheme, className);
 	}
 

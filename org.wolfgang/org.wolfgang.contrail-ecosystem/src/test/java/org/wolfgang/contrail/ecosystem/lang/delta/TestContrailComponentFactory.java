@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -31,7 +30,7 @@ import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
-import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
@@ -57,17 +56,17 @@ public class TestContrailComponentFactory extends TestCase {
 		}
 
 		@ContrailMethod
-		public static TestClass add() {
+		public TestClass add() {
 			return new TestClass();
 		}
 
 		@ContrailMethod
-		public static TestClass add(@ContrailArgument("a") String a) {
+		public TestClass add(@ContrailArgument("a") String a) {
 			return new TestClass(a);
 		}
 
 		@ContrailMethod
-		public static TestClass add(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
+		public TestClass add(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
 			return new TestClass(a + b);
 		}
 	}
@@ -82,7 +81,6 @@ public class TestContrailComponentFactory extends TestCase {
 		assertEquals(0, declaredMethods[2].getParameterTypes().length);
 	}
 
-	@SuppressWarnings("serial")
 	@Test
 	public void testMethod01() throws CannotCreateComponentException {
 		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
@@ -105,15 +103,11 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, TestClass.class, new HashMap<String, CodeValue>() {
-			{
-			}
-		});
+		}, new TestClass(), new EcosystemSymbolTableImpl());
 
 		assertEquals("anon", test.i);
 	}
 
-	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor03() throws CannotCreateComponentException {
 		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
@@ -136,17 +130,15 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, TestClass.class, new HashMap<String, CodeValue>() {
+		}, new TestClass(), new EcosystemSymbolTableImpl() {
 			{
-				this.put("a", new ConstantValue("Hello"));
+				this.putDefinition("a", new ConstantValue("Hello"));
 			}
 		});
 
 		assertEquals("Hello", test.i);
 	}
 
-
-	@SuppressWarnings("serial")
 	@Test
 	public void testConstructor02() throws CannotCreateComponentException {
 		final TestClass test = LibraryBuilder.create("add", new ContextFactory() {
@@ -169,10 +161,10 @@ public class TestContrailComponentFactory extends TestCase {
 			public ComponentLinkManager getLinkManager() {
 				return null;
 			}
-		}, TestClass.class, new HashMap<String, CodeValue>() {
+		}, new TestClass(), new EcosystemSymbolTableImpl() {
 			{
-				this.put("a", new ConstantValue("Hello"));
-				this.put("b", new ConstantValue(", World!"));
+				this.putDefinition("a", new ConstantValue("Hello"));
+				this.putDefinition("b", new ConstantValue(", World!"));
 			}
 		});
 

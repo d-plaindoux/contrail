@@ -28,8 +28,6 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.factory.Components;
-import org.wolfgang.contrail.component.pipeline.logger.LoggerDestinationComponent;
-import org.wolfgang.contrail.component.pipeline.logger.LoggerSourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
@@ -54,7 +52,7 @@ class RouterUtils extends TestCase {
 	static void client(final RouterComponent router, final ComponentLinkManager linkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
 			throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
-			@SuppressWarnings({ "resource", "rawtypes" })
+			@SuppressWarnings({ "resource" })
 			@Override
 			public SourceComponent<Event, Event> create() throws CannotCreateComponentException {
 				try {
@@ -64,10 +62,8 @@ class RouterUtils extends TestCase {
 					final Component serialisationTransducer = new SerializationTransducerFactory().createComponent();
 					// Coercion component
 					final SourceComponent<Event, Event> coercionTransducer = new CoercionTransducerFactory<Event>(Event.class).createComponent();
-					// Logger
-					// final Component log = Components.compose(linkManager, new LoggerSourceComponent("CLIENT.UP<" + uri + ">"), new LoggerDestinationComponent("CLIENT.DOWN<" + uri + ">"));
 					// Create the link from the client to the network
-					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, /*log,*/ coercionTransducer, router);
+					final Component compose = Components.compose(linkManager, payLoadTransducer, serialisationTransducer, coercionTransducer, router);
 
 					router.filter(coercionTransducer.getComponentId(), mainReference);
 
@@ -88,7 +84,6 @@ class RouterUtils extends TestCase {
 
 	static ComponentFactory serverBinder(final RouterComponent router, final ComponentLinkManager linkManager) {
 		return new ComponentFactory() {
-			@SuppressWarnings("rawtypes")
 			@Override
 			public Component create(Object... arguments) throws CannotCreateComponentException {
 				try {
@@ -98,15 +93,10 @@ class RouterUtils extends TestCase {
 					final Component serialisationTransducer = new SerializationTransducerFactory().createComponent();
 					// Coercion component
 					final Component coercionTransducer = new CoercionTransducerFactory<Event>(Event.class).createComponent();
-					// Loggers 01 & 02
-					// Logger
-					final LoggerSourceComponent loggerSourceComponent = new LoggerSourceComponent("SERVER.UP<" + router.toString() + ">");
-					final LoggerDestinationComponent loggerDestinationComponent = new LoggerDestinationComponent("SERVER.UP<" + router.toString() + ">");
-					// final Component log = Components.compose(linkManager, loggerSourceComponent, loggerDestinationComponent);
 					// Source acceptance
 					final OnReceiveAcceptanceComponent acceptanceComponent = new OnReceiveAcceptanceComponent();
 					// Composed components
-					return Components.compose(linkManager, payLoadTransducer, serialisationTransducer, /*log,*/ coercionTransducer, acceptanceComponent, router);
+					return Components.compose(linkManager, payLoadTransducer, serialisationTransducer, coercionTransducer, acceptanceComponent, router);
 				} catch (ComponentConnectionRejectedException e) {
 					throw new CannotCreateComponentException(e);
 				} catch (Exception e) {

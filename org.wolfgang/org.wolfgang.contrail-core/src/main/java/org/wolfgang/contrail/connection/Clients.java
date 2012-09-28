@@ -55,7 +55,7 @@ public final class Clients implements Closeable {
 	 * @param aClass
 	 *            The corresponding class
 	 */
-	public void declareScheme(String scheme, Class<? extends Client> aClass) {
+	public void register(String scheme, Class<? extends Client> aClass) {
 		prototypes.put(scheme, aClass);
 	}
 

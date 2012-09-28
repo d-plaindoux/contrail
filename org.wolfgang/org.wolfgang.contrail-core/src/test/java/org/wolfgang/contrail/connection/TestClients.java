@@ -61,7 +61,7 @@ public class TestClients extends TestCase {
 	@Test
 	public void testClients02() throws ClientNotFoundException, IOException {
 		final Clients clients = new Clients();
-		clients.declareScheme("my", MyClient.class);
+		clients.register("my", MyClient.class);
 		assertEquals(MyClient.class, clients.get("my").getClass());
 		clients.close();
 	}
