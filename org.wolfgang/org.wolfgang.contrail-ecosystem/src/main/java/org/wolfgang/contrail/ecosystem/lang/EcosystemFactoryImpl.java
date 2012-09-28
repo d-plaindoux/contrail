@@ -34,7 +34,6 @@ import org.wolfgang.contrail.connection.Clients;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.EcosystemImpl;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
 import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
@@ -107,21 +106,17 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 	private void loadImportation(Logger logger, Import importation) {
 		try {
 			final Class<?> aClass = classLoader.loadClass(importation.getElement());
-			if (aClass.isAnnotationPresent(ContrailLibrary.class)) {
-				final Constructor<?> constructor = aClass.getConstructor(ContextFactory.class);
-				final Object object = constructor.newInstance(this);
-				final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
-				for (Method init : initMethods) {
-					LibraryBuilder.create(object, init.getName(), this, this.symbolTableImpl);
-				}
-				final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
-				for (Method method : declaredMethods) {
-					this.symbolTableImpl.putImportation(method.getName(), new FunctionImportation(this, object, method.getName()));
-				}
-			} else {
-				final String name = aClass.getSimpleName();
-				this.symbolTableImpl.putDefinition(name, new ConstantValue(importation.getElement()));
+			final Constructor<?> constructor = aClass.getConstructor(ContextFactory.class);
+			final Object object = constructor.newInstance(this);
+			final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
+			for (Method init : initMethods) {
+				LibraryBuilder.create(object, init.getName(), this, this.symbolTableImpl);
 			}
+			final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
+			for (Method method : declaredMethods) {
+				this.symbolTableImpl.putImportation(method.getName(), new FunctionImportation(this, object, method.getName()));
+			}
+
 		} catch (ClassNotFoundException e) {
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));

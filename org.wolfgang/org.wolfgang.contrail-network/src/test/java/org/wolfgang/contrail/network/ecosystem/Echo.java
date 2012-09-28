@@ -20,8 +20,6 @@ package org.wolfgang.contrail.network.ecosystem;
 
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 
 /**
@@ -30,19 +28,16 @@ import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailLibrary(name = "Echo")
 public class Echo {
 
 	public Echo(ContextFactory contextFactory) {
 		super();
 	}
 
-	@ContrailMethod
 	public EchoComponent echo() throws CannotCreateDataFlowException {
 		return new EchoComponent();
 	}
 
-	@ContrailMethod
 	public EchoComponent echo(final @ContrailArgument("name") String name) throws CannotCreateDataFlowException {
 		return new EchoComponent(name);
 	}

@@ -45,8 +45,6 @@ import org.wolfgang.contrail.connection.ServerNotFoundException;
 import org.wolfgang.contrail.connection.process.ProcessClient;
 import org.wolfgang.contrail.connection.process.ProcessServer;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
@@ -59,7 +57,6 @@ import org.wolfgang.contrail.ecosystem.lang.delta.converter.ObjectConverter;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailLibrary
 public class CoreFunctions {
 
 	private final ContextFactory contextFactory;
@@ -69,20 +66,11 @@ public class CoreFunctions {
 		this.contextFactory = contextFactory;
 	}
 
-	@ContrailMethod
 	public void init() {
 		contextFactory.getClientFactory().register("ssh", ProcessClient.class);
 		contextFactory.getServerFactory().register("ssh", ProcessServer.class);
 	}
 
-	@ContrailMethod
-	public Object extern(@ContrailArgument("package") String packageName, @ContrailArgument("package") String methodName) throws ComponentConnectionRejectedException {
-		
-		
-		return null;
-	}
-
-	@ContrailMethod
 	public Component reverse(final @ContrailArgument("flow") Component component) throws ComponentConnectionRejectedException {
 		return Components.reverse(contextFactory.getLinkManager(), component);
 	}
@@ -91,12 +79,10 @@ public class CoreFunctions {
 	// Client and Server hooks
 	//
 
-	@ContrailMethod
 	public Component client(final @ContrailArgument("uri") String reference) throws ComponentConnectionRejectedException, URISyntaxException, ClientNotFoundException {
 		return new ClientComponent(contextFactory, reference);
 	}
 
-	@ContrailMethod
 	public Component server(final @ContrailArgument("uri") String reference, final @ContrailArgument("flow") ComponentFactoryListener listener) throws URISyntaxException, ServerNotFoundException,
 			CannotCreateServerException {
 		return new ServerComponent(contextFactory, reference, listener);
@@ -107,46 +93,38 @@ public class CoreFunctions {
 	//
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
 	public Component parallelSource() {
 		return new ParallelSourceComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
 	public Component parallelDestination() {
 		return new ParallelDestinationComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
 	public Component logSource(final @ContrailArgument("name") String prefix) {
 		return new LoggerSourceComponent(prefix);
 	}
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
 	public Component logDestination(final @ContrailArgument("name") String prefix) {
 		return new LoggerDestinationComponent(prefix);
 	}
 
-	@ContrailMethod
 	public Component payload() {
 		return new PayLoadTransducerFactory().createComponent();
 	}
 
-	@ContrailMethod
 	public Component object() {
 		return new SerializationTransducerFactory().createComponent();
 	}
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
 	public Component coerce(final @ContrailArgument("type") String type) throws ClassNotFoundException {
 		return new CoercionTransducerFactory(CoercionTransducerFactory.class.getClassLoader(), type).createComponent();
 	}
 
-	@ContrailMethod
 	public Component pipeline(final @ContrailArgument("upstream") ClosureValue upStream, final @ContrailArgument("downstream") ClosureValue downStream) {
 		final DataTransducer<Object, Object> encoder = new DataTransducer<Object, Object>() {
 			@Override

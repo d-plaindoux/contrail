@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -31,7 +32,6 @@ import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTable;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.CoercionConverter;
@@ -119,10 +119,10 @@ public class LibraryBuilder {
 		});
 
 		final Collection<Method> annoted = treeSet;
-		final Method[] methods = component.getMethods();
+		final Method[] methods = component.getDeclaredMethods();
 
 		for (Method method : methods) {
-			if ((name == null || method.getName().equals(name)) && method.isAnnotationPresent(ContrailMethod.class)) {
+			if ((name == null || method.getName().equals(name)) && Modifier.isPublic(method.getModifiers())) {
 				annoted.add(method);
 			}
 		}
@@ -167,7 +167,19 @@ public class LibraryBuilder {
 	}
 
 	public static String[] getParametersName(Method method) {
-		return null;
+		final Annotation[][] parameterTypes = method.getParameterAnnotations();
+		final String[] parameters = new String[parameterTypes.length];
+
+		for (int i = 0; i < parameters.length; i++) {
+			final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
+			if (annotation == null) {
+				parameters[i] = "$_" + i;
+			} else {
+				parameters[i] = annotation.value();
+			}
+		}
+
+		return parameters;
 	}
 
 	/**
@@ -186,8 +198,8 @@ public class LibraryBuilder {
 		for (int i = 0; i < parameters.length; i++) {
 			final ContrailArgument annotation = getDeclaredParameter(parameterTypes[i]);
 			if (annotation == null) {
-				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.error");
-				throw new ConversionException(message.format(method.getDeclaringClass().getName(), method.getName(), i));
+				final CodeValue codeValue = symbolTable.getDefinition("$_" + i);
+				parameters[i] = convert(linkManager, method.getParameterTypes()[i], codeValue);
 			} else if (!symbolTable.hasDefinition(annotation.value())) {
 				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.argument.undefined");
 				throw new ConversionException(message.format(method.getDeclaringClass().getName(), method.getName(), annotation.value()));

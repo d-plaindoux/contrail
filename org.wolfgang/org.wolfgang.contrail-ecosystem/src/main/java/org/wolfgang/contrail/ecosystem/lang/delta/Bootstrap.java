@@ -23,9 +23,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.crypto.NoSuchMechanismException;
+
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemFactoryImpl;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.MethodImportation;
@@ -56,11 +57,28 @@ public class Bootstrap {
 	}
 
 	@SuppressWarnings("rawtypes")
-	@ContrailMethod
+	private void findAndRegisterMethod(String nativeName, Object component, String methodName, int arity) {
+		final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(methodName, component.getClass());
+
+		for (Method method : declaredMethods) {
+			if (method.getParameterTypes().length == arity) {
+				final String[] names = LibraryBuilder.getParametersName(method);
+				final ClosureValue closureValue = new ClosureValue(this.factoryImpl, symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
+
+				this.symbolTable.putImportation(nativeName, new MethodImportation(factoryImpl, component, method));
+				this.symbolTable.putDefinition(nativeName, closureValue);
+
+				return;
+			}
+		}
+
+		throw new NoSuchMechanismException(nativeName);
+	}
+
 	public CodeValue extern(@ContrailArgument("package") String packageName, @ContrailArgument("name") String methodName, @ContrailArgument("arity") int arity) throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
 
-		final String nativeName = packageName + "_" + methodName + "_" + arity;
+		final String nativeName = packageName + "#" + methodName + "/" + arity;
 
 		if (!symbolTable.hasDefinition(nativeName)) {
 			if (!importations.containsKey(packageName)) {
@@ -69,22 +87,7 @@ public class Bootstrap {
 			}
 
 			final Object component = this.importations.get(packageName);
-			final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(methodName, component.getClass());
-
-			for (Method method : declaredMethods) {
-				if (method.getParameterTypes().length == arity) {
-					symbolTable.putImportation(nativeName, new MethodImportation(factoryImpl, component, method));
-					break;
-				}
-			}
-
-			final String[] names = new String[arity];
-			for (int i = 0; i < arity; i++) {
-				names[i] = "$_" + i;
-			}
-
-			final ClosureValue closureValue = new ClosureValue(this.factoryImpl, symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
-			this.symbolTable.putDefinition(nativeName, closureValue);
+			this.findAndRegisterMethod(nativeName, component, methodName, arity);
 		}
 
 		return symbolTable.getDefinition(nativeName);

@@ -28,8 +28,6 @@ import org.wolfgang.contrail.connection.Clients;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
@@ -43,7 +41,6 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
 
 public class TestContrailComponentFactory extends TestCase {
 
-	@ContrailLibrary
 	public static class TestClass {
 		private final String i;
 
@@ -55,17 +52,14 @@ public class TestContrailComponentFactory extends TestCase {
 			this.i = a;
 		}
 
-		@ContrailMethod
 		public TestClass add() {
 			return new TestClass();
 		}
 
-		@ContrailMethod
 		public TestClass add(@ContrailArgument("a") String a) {
 			return new TestClass(a);
 		}
 
-		@ContrailMethod
 		public TestClass add(@ContrailArgument("a") String a, @ContrailArgument("b") String b) {
 			return new TestClass(a + b);
 		}

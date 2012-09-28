@@ -19,8 +19,6 @@
 package org.wolfgang.contrail.connection.net;
 
 import org.wolfgang.contrail.connection.ContextFactory;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailLibrary;
-import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
 
 /**
  * <code>Net</code>
@@ -28,7 +26,6 @@ import org.wolfgang.contrail.ecosystem.annotation.ContrailMethod;
  * @author Didier Plaindoux
  * @version 1.0
  */
-@ContrailLibrary
 public class Net {
 
 	private final ContextFactory contextFactory;
@@ -38,7 +35,6 @@ public class Net {
 		this.contextFactory = contextFactory;
 	}
 
-	@ContrailMethod
 	public void init() {
 		contextFactory.getClientFactory().register("tcp", NetClient.class);
 		contextFactory.getServerFactory().register("tcp", NetServer.class);
