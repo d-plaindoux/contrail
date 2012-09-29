@@ -18,10 +18,12 @@
 
 package org.wolfgang.contrail.codec.serializer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
@@ -33,8 +35,9 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestSerializer extends TestCase {
+public class TestSerializer {
 
+	@Test
 	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
@@ -51,6 +54,7 @@ public class TestSerializer extends TestCase {
 		assertEquals(source, result.get(0));
 	}
 
+	@Test
 	public void testFailure01() {
 		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
 
@@ -63,6 +67,7 @@ public class TestSerializer extends TestCase {
 		}
 	}
 
+	@Test
 	public void testFailure02() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 

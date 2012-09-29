@@ -18,9 +18,9 @@
 
 package org.wolfgang.java.classes;
 
-import java.lang.reflect.Array;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.lang.reflect.Array;
 
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * 
  */
-public class TestTypes extends TestCase {
+public class TestTypes {
 
 	@Test public void testSingleType() {
 		assertEquals(Byte.TYPE.getName(), TypeDecoder.getType("B"));

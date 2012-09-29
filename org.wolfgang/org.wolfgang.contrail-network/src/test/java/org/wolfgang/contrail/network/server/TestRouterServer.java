@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.network.server;
 
+import static org.junit.Assert.assertEquals;
 import static org.wolfgang.contrail.reference.ReferenceFactory.directReference;
 
 import java.io.IOException;
@@ -29,8 +30,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -65,7 +64,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestRouterServer extends TestCase {
+public class TestRouterServer {
 
 	private static class Receiver extends UpStreamDataFlowAdapter<Event> {
 		private final DirectReference self;

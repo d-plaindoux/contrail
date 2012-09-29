@@ -18,7 +18,8 @@
 
 package org.wolfgang.common.utils;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestOption extends TestCase {
+public class TestOption {
 
 	@Test
 	public void testOption01() {

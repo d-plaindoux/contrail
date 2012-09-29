@@ -18,12 +18,12 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.ecosystem.CannotProvideComponentException;
@@ -35,7 +35,7 @@ import org.wolfgang.contrail.network.connection.web.WebServer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestWebServer extends TestCase {
+public class TestWebServer {
 
 	@Test
 	public void testWebServer01() throws CannotProvideComponentException, IOException {

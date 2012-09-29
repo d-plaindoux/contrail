@@ -18,9 +18,11 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
-import java.util.concurrent.atomic.AtomicReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -40,7 +42,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConnectionComponent extends TestCase {
+public class TestConnectionComponent {
 
 	@Test
 	public void testNominal01() throws DataFlowException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {

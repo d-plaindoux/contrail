@@ -18,10 +18,10 @@
 
 package org.wolfgang.contrail.component.concurrent;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -43,7 +43,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConcurrentComponent extends TestCase {
+public class TestConcurrentComponent {
 
 	@Test
 	public void testConcurrent01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {

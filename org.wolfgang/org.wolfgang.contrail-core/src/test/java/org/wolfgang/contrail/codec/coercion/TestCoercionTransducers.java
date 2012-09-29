@@ -18,10 +18,12 @@
 
 package org.wolfgang.contrail.codec.coercion;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTransducerFactory;
@@ -32,7 +34,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestCoercionTransducers extends TestCase {
+public class TestCoercionTransducers {
 
 	public static class SimpleClass {
 	}
@@ -40,6 +42,7 @@ public class TestCoercionTransducers extends TestCase {
 	public static class WrongSimpleClass {
 	}
 
+	@Test
 	public void testNominal01() throws DataTransducerException {
 		final SimpleClass source = new SimpleClass();
 
@@ -55,6 +58,7 @@ public class TestCoercionTransducers extends TestCase {
 		assertEquals(source, results.get(0));
 	}
 
+	@Test
 	public void testFailure01() {
 		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
 		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();

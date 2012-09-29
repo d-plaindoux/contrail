@@ -18,9 +18,10 @@
 
 package org.wolfgang.contrail.network.reference;
 
-import java.security.NoSuchAlgorithmException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
@@ -36,7 +37,7 @@ import org.wolfgang.contrail.reference.ReferenceTableImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestReferenceTable extends TestCase {
+public class TestReferenceTable {
 
 	@Test
 	public void testNominal01() throws NoSuchAlgorithmException, ReferenceEntryAlreadyExistException, ReferenceEntryNotFoundException {

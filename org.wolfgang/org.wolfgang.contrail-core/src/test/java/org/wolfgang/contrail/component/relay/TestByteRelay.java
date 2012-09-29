@@ -18,10 +18,11 @@
 
 package org.wolfgang.contrail.component.relay;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectedException;
@@ -41,7 +42,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestByteRelay extends TestCase {
+public class TestByteRelay {
 
 	@Test
 	public void testNominal01() throws DataFlowException, IOException, ComponentConnectionRejectedException, ComponentDisconnectionRejectedException, CannotCreateDataFlowException {

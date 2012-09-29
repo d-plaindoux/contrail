@@ -18,10 +18,10 @@
 
 package org.wolfgang.opala.micro;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -42,7 +42,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestLanguage extends TestCase {
+public class TestLanguage {
 
 	@Test
 	public void testNominal01() throws EntryAlreadyBoundException, ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {

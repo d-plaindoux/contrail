@@ -18,7 +18,8 @@
 
 package org.wolfgang.contrail.link;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -32,7 +33,7 @@ import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestComponentLink extends TestCase {
+public class TestComponentLink {
 
 	@Test
 	public void testLink01() throws CannotCreateDataFlowException {

@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.component.reverse;
 
-import java.util.concurrent.ExecutionException;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -44,7 +44,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestReverseComponent extends TestCase {
+public class TestReverseComponent {
 
 	@Test
 	public void testReverse01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {

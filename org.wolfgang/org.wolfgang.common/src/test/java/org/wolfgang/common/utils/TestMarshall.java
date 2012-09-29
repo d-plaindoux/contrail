@@ -18,9 +18,10 @@
 
 package org.wolfgang.common.utils;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import java.io.IOException;
 
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestMarshall extends TestCase {
+public class TestMarshall {
 
 	@Test
 	public void testInteger() throws IOException {
@@ -40,7 +41,7 @@ public class TestMarshall extends TestCase {
 	@Test
 	public void testIntegerFailure() {
 		try {
-			assertEquals(12,  Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
+			assertEquals(12, Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
 			fail();
 		} catch (IOException e) {
 			// OK

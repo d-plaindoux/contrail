@@ -18,11 +18,12 @@
 
 package org.wolfgang.contrail.codec.payload;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
@@ -34,8 +35,9 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.PayLoadTransd
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestPayLoadTransducers extends TestCase {
-
+public class TestPayLoadTransducers {
+	
+	@Test
 	public void testNominal() throws DataTransducerException {
 		final String source = "Hello, World!";
 
@@ -51,7 +53,8 @@ public class TestPayLoadTransducers extends TestCase {
 
 		assertEquals(source, new String(result.get(0).getContent()));
 	}
-
+	
+	@Test
 	public void testNominalSplit() throws DataTransducerException {
 		final String source = "Hello, World!";
 

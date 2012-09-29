@@ -19,14 +19,14 @@
 
 package org.wolfgang.contrail.dsl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
-import org.wolfgang.contrail.dsl.ESLLanguage;
-import org.wolfgang.contrail.dsl.ImportUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.opala.lexing.LexemeKind;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -42,7 +42,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestImportDSL extends TestCase {
+public class TestImportDSL {
 
 	@Test
 	public void testImport01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {

@@ -18,10 +18,12 @@
 
 package org.wolfgang.contrail.network.reference;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
@@ -36,7 +38,7 @@ import org.wolfgang.contrail.reference.ReferenceVisitor;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestReference extends TestCase {
+public class TestReference {
 
 	@Test
 	public void testEquals01() throws NoSuchAlgorithmException {

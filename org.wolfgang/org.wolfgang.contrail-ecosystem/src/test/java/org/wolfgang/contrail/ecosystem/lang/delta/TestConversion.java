@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
@@ -30,7 +30,7 @@ import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestConversion extends TestCase {
+public class TestConversion {
 
 	@Test
 	public void testNominal01() throws ConversionException {

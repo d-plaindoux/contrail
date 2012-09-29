@@ -38,6 +38,7 @@ import org.wolfgang.contrail.ecosystem.key.EcosystemKeyFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
+import org.wolfgang.contrail.ecosystem.lang.delta.Bootstrap;
 import org.wolfgang.contrail.ecosystem.lang.delta.CoreFunctions;
 import org.wolfgang.contrail.ecosystem.lang.delta.LibraryBuilder;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
@@ -103,11 +104,9 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 	 * @param factory
 	 */
 	@SuppressWarnings("rawtypes")
-	private void loadImportation(Logger logger, Import importation) {
+	private void loadImportation(Logger logger, Object object) {
+		final Class<? extends Object> aClass = object.getClass();
 		try {
-			final Class<?> aClass = classLoader.loadClass(importation.getElement());
-			final Constructor<?> constructor = aClass.getConstructor(ContextFactory.class);
-			final Object object = constructor.newInstance(this);
 			final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
 			for (Method init : initMethods) {
 				LibraryBuilder.create(object, init.getName(), this, this.symbolTableImpl);
@@ -116,35 +115,66 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 			for (Method method : declaredMethods) {
 				this.symbolTableImpl.putImportation(method.getName(), new FunctionImportation(this, object, method.getName()));
 			}
-
-		} catch (ClassNotFoundException e) {
-			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (CannotCreateComponentException e) {
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "no.component");
 			logger.log(Level.WARNING, message.format(), e);
 		} catch (SecurityException e) {
 			// TODO
+			e.printStackTrace();
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(aClass, e.getClass().getSimpleName()));
+		} catch (IllegalArgumentException e) {
+			// TODO
+			e.printStackTrace();
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(aClass, e.getClass().getSimpleName()));
+		}
+	}
+
+	/**
+	 * Method called whether an ecosystem importation must be managed. This
+	 * management is done using annotations.
+	 * 
+	 * @param loader
+	 * @param factory
+	 */
+	private void loadImportation(Logger logger, Import importation) {
+		try {
+			final Class<?> aClass = classLoader.loadClass(importation.getElement());
+			final Constructor<?> constructor = aClass.getConstructor(ContextFactory.class);
+			final Object object = constructor.newInstance(this);
+			this.loadImportation(logger, object);
+		} catch (ClassNotFoundException e) {
+			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+		} catch (SecurityException e) {
+			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (NoSuchMethodException e) {
 			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (IllegalArgumentException e) {
 			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (InstantiationException e) {
 			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (IllegalAccessException e) {
 			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (InvocationTargetException e) {
 			// TODO
+			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		}
@@ -158,10 +188,10 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 	 * @param factory
 	 */
 	private void loadImportations(Logger logger, EcosystemModel ecosystemModel) {
-		final Import pervasive = new Import();
+		loadImportation(logger, new Bootstrap(this, this.symbolTableImpl));
 
-		pervasive.setElement(CoreFunctions.class.getName());
-		loadImportation(logger, pervasive);
+		// TODO -- Remove this pervasive definition ASAP
+		loadImportation(logger, new CoreFunctions(this));
 
 		for (Import importation : ecosystemModel.getImportations()) {
 			loadImportation(logger, importation);

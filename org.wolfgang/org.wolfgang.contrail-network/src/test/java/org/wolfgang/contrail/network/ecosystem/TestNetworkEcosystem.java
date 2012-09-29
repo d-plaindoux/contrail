@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.ecosystem;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
@@ -30,8 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -63,7 +64,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkEcosystem extends TestCase {
+public class TestNetworkEcosystem {
 
 	@Test
 	public void testSimpleCLientServer() throws JAXBException, IOException, Exception {

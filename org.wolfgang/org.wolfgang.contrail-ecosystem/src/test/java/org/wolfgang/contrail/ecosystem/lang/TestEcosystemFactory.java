@@ -18,13 +18,15 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -48,7 +50,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestEcosystemFactory extends TestCase {
+public class TestEcosystemFactory {
 
 	@Test(timeout = 10000)
 	public void testSample01() {
@@ -402,6 +404,49 @@ public class TestEcosystemFactory extends TestCase {
 			assertEquals(new Integer(nbEventSent), response.get());
 
 			System.err.println("Sending+Receiving " + nbEventSent + " events in " + (System.currentTimeMillis() - t0) + "ms");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	// TODO @Test(timeout = 10000)
+	public void testSample10() {
+		final URL resource = TestEcosystemFactory.class.getClassLoader().getResource("sample10.xml");
+
+		assertNotNull(resource);
+
+		try {
+			final EcosystemModel decoded = EcosystemModel.decode(resource.openStream());
+			final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), decoded);
+
+			final FutureResponse<byte[]> futureResponse = new FutureResponse<byte[]>();
+			final DownStreamDataFlow<byte[]> dataReceiver = DataFlows.<byte[]> closable(new DownStreamDataFlowAdapter<byte[]>() {
+				@Override
+				public void handleData(byte[] data) throws DataFlowException {
+					futureResponse.setValue(data);
+				}
+			});
+
+			final ComponentFactory factory = ecosystem.getFactory(EcosystemKeyFactory.named("Main"));
+			final InitialComponent<byte[], byte[]> sender = Components.initial(dataReceiver);
+
+			ecosystem.getLinkManager().connect(sender, factory.create());
+
+			final String message = "Hello, World!";
+			final SerializationTransducerFactory serialization = new SerializationTransducerFactory();
+			final PayLoadTransducerFactory payload = new PayLoadTransducerFactory();
+			final List<byte[]> transformed = payload.getEncoder().transform(serialization.getEncoder().transform(message).get(0));
+
+			assertEquals(1, transformed.size());
+			sender.getUpStreamDataFlow().handleData(transformed.get(0));
+
+			final byte[] received = futureResponse.get(10, TimeUnit.SECONDS);
+			final List<Object> response = serialization.getDecoder().transform(payload.getDecoder().transform(received).get(0));
+
+			assertEquals(1, response.size());
+
+			assertEquals(message, response.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

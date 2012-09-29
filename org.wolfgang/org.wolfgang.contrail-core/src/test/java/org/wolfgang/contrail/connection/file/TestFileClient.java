@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.connection.file;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,8 +29,6 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -52,7 +52,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestFileClient extends TestCase {
+public class TestFileClient {
 
 	private String getContent(File file) throws IOException {
 		final InputStream inputStream = new FileInputStream(file);

@@ -18,12 +18,12 @@
 
 package org.wolfgang.contrail.network.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
@@ -52,7 +52,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkServer extends TestCase {
+public class TestNetworkServer {
 
 	private ComponentFactoryListener linker(final ComponentFactory factory) {
 		return new ComponentFactoryListener() {

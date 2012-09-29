@@ -18,10 +18,11 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.HashMap;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
@@ -32,8 +33,9 @@ import org.wolfgang.contrail.network.connection.web.WebServerPage;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestWebPage extends TestCase {
+public class TestWebPage {
 
+	@SuppressWarnings("serial")
 	@Test
 	public void testWebPage01() throws IOException {
 		final WebServerPage serverPage = new WebServerPage();

@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.event;
 
-import java.security.NoSuchAlgorithmException;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
@@ -34,7 +34,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestEvent extends TestCase {
+public class TestEvent {
 
 	@Test
 	public void testEvent01() {

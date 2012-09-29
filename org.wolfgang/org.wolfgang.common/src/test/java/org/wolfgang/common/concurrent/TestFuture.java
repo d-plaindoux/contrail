@@ -18,11 +18,12 @@
 
 package org.wolfgang.common.concurrent;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestFuture extends TestCase {
+public class TestFuture {
 
 	@Test
 	public void testNominal01() {

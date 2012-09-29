@@ -18,7 +18,8 @@
 
 package org.wolfgang.common.utils;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ import org.junit.Test;
  * @version 1.0
  * 
  */
-public class TestCoercion extends TestCase {
+public class TestCoercion {
 
 	@Test
 	public void testNominal01() {

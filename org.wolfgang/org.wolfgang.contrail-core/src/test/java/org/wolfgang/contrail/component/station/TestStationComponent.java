@@ -18,11 +18,12 @@
 
 package org.wolfgang.contrail.component.station;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -47,7 +48,7 @@ import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestStationComponent extends TestCase {
+public class TestStationComponent {
 
 	public static class StringDataStreamHandler implements IDataStreamHandler<String> {
 		private final String filter;

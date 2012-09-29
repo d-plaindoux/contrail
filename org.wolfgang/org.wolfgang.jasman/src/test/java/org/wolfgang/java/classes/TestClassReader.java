@@ -18,14 +18,14 @@
 
 package org.wolfgang.java.classes;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.Coercion;
@@ -40,7 +40,7 @@ import org.wolfgang.java.classes.ClassAttribute.VisibleParametersAnnotations;
  */
 @XmlRootElement(name = "root")
 @Deprecated
-public class TestClassReader extends TestCase {
+public class TestClassReader {
 
 	@XmlAttribute(name = "toto", namespace = "titi")
 	public int f(int j, @Deprecated int i) {

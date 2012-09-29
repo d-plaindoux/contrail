@@ -18,10 +18,11 @@
 
 package org.wolfgang.contrail.network.component;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.utils.UUIDUtils;
@@ -43,7 +44,7 @@ import org.wolfgang.contrail.reference.ReferenceFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkComponent extends TestCase {
+public class TestNetworkComponent {
 
 	private SourceComponent<Event, Event> getSourceComponent() {
 		return Components.initial(new DownStreamDataFlowAdapter<Event>());

@@ -18,14 +18,16 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -35,7 +37,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestModel extends TestCase {
+public class TestModel {
 
 	@SuppressWarnings("unchecked")
 	private <T> T decode(String content, Class<T> type) throws JAXBException, IOException {

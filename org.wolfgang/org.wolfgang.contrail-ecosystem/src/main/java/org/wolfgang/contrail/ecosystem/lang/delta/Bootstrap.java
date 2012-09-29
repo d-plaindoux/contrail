@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -43,19 +44,64 @@ import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 public class Bootstrap {
 
 	private final Map<String, Object> importations;
-	private final EcosystemSymbolTableImpl symbolTable;
 	private final EcosystemFactoryImpl factoryImpl;
+	private final EcosystemSymbolTableImpl symbolTable;
 
 	{
 		this.importations = new HashMap<String, Object>();
-		this.symbolTable = new EcosystemSymbolTableImpl();
 	}
 
-	public Bootstrap(EcosystemFactoryImpl factoryImpl) {
+	/**
+	 * Constructor
+	 * 
+	 * @param factoryImpl
+	 * @param symbolTableImpl
+	 */
+	public Bootstrap(EcosystemFactoryImpl factoryImpl, EcosystemSymbolTableImpl symbolTable) {
 		super();
 		this.factoryImpl = factoryImpl;
+		this.symbolTable = symbolTable;
 	}
 
+	/**
+	 * 
+	 * @param packageName
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	private Object getComponent(String packageName) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException {
+		if (!importations.containsKey(packageName)) {
+			final Class<?> forName = Class.forName(packageName);
+			Constructor<?> constructor;
+			try {
+				constructor = forName.getConstructor(ContextFactory.class);
+			} catch (SecurityException e) {
+				constructor = forName.getConstructor();
+			} catch (NoSuchMethodException e) {
+				constructor = forName.getConstructor();
+			}
+
+			Object object = constructor.newInstance(factoryImpl);
+			this.importations.put(packageName, object);
+		}
+
+		return this.importations.get(packageName);
+	}
+
+	/**
+	 * 
+	 * @param nativeName
+	 * @param component
+	 * @param methodName
+	 * @param arity
+	 */
 	@SuppressWarnings("rawtypes")
 	private void findAndRegisterMethod(String nativeName, Object component, String methodName, int arity) {
 		final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(methodName, component.getClass());
@@ -63,7 +109,7 @@ public class Bootstrap {
 		for (Method method : declaredMethods) {
 			if (method.getParameterTypes().length == arity) {
 				final String[] names = LibraryBuilder.getParametersName(method);
-				final ClosureValue closureValue = new ClosureValue(this.factoryImpl, symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
+				final ClosureValue closureValue = new ClosureValue(this.factoryImpl, this.symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
 
 				this.symbolTable.putImportation(nativeName, new MethodImportation(factoryImpl, component, method));
 				this.symbolTable.putDefinition(nativeName, closureValue);
@@ -75,19 +121,29 @@ public class Bootstrap {
 		throw new NoSuchMechanismException(nativeName);
 	}
 
-	public CodeValue extern(@ContrailArgument("package") String packageName, @ContrailArgument("name") String methodName, @ContrailArgument("arity") int arity) throws IllegalArgumentException,
+	/**
+	 * External method able to mount other external methods: the external
+	 * bootstrap
+	 * 
+	 * @param packageName
+	 * @param methodName
+	 * @param arity
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws ClassNotFoundException
+	 */
+	public CodeValue external(@ContrailArgument("object") String packageName, @ContrailArgument("method") String methodName, @ContrailArgument("arity") Integer arity) throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
 
 		final String nativeName = packageName + "#" + methodName + "/" + arity;
 
 		if (!symbolTable.hasDefinition(nativeName)) {
-			if (!importations.containsKey(packageName)) {
-				final Object object = Class.forName(packageName).getConstructor(ContextFactory.class).newInstance(factoryImpl);
-				this.importations.put(packageName, object);
-			}
-
-			final Object component = this.importations.get(packageName);
-			this.findAndRegisterMethod(nativeName, component, methodName, arity);
+			this.findAndRegisterMethod(nativeName, this.getComponent(packageName), methodName, arity);
 		}
 
 		return symbolTable.getDefinition(nativeName);

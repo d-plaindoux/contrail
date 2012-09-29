@@ -18,10 +18,10 @@
 
 package org.wolfgang.common.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @verision 1.0
  */
-public class TestUUDI extends TestCase {
+public class TestUUDI {
 
 	@Test
 	public void testUUDI01() throws NoSuchAlgorithmException {

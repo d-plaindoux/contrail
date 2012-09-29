@@ -142,7 +142,7 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 			return closure.apply(names, values);
 		} else {
 			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "function.required");
-			throw new EcosystemCodeValueGeneratorException(message.format());
+			throw new EcosystemCodeValueGeneratorException(message.format(interpreted.toString()));
 		}
 	}
 

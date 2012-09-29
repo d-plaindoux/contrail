@@ -18,10 +18,11 @@
 
 package org.wolfgang.contrail.codec.jaxb;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.jaxb.JAXBTransducerFactory;
@@ -33,8 +34,9 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestJAXBSerializer extends TestCase {
+public class TestJAXBSerializer {
 
+	@Test
 	public void testNominal() throws DataTransducerException {
 		final SimpleClass source = new SimpleClass();
 		source.setValue("Hello, World!");
@@ -51,6 +53,7 @@ public class TestJAXBSerializer extends TestCase {
 		assertEquals(source, result.get(0));
 	}
 
+	@Test
 	public void testFailure01() {
 		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
@@ -62,6 +65,7 @@ public class TestJAXBSerializer extends TestCase {
 		}
 	}
 
+	@Test
 	public void testFailure02() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 

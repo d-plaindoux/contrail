@@ -18,7 +18,8 @@
 
 package org.wolfgang.common.message;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestMessage extends TestCase {
+public class TestMessage {
 
 	@Test
 	public void testMessage01() throws Exception {

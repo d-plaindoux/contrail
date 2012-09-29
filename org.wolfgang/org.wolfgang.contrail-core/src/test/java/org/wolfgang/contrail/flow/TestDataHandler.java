@@ -18,9 +18,10 @@
 
 package org.wolfgang.contrail.flow;
 
-import java.util.concurrent.ExecutionException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import junit.framework.TestCase;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -31,7 +32,7 @@ import org.wolfgang.common.concurrent.FutureResponse;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestDataHandler extends TestCase {
+public class TestDataHandler {
 
 	@Test
 	public void testClosable01() throws InterruptedException, ExecutionException, DataFlowException {

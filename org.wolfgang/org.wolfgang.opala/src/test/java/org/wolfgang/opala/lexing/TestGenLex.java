@@ -18,10 +18,10 @@
 
 package org.wolfgang.opala.lexing;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.opala.lexing.impl.GenLex;
@@ -33,7 +33,7 @@ import org.wolfgang.opala.lexing.impl.Tokens;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestGenLex extends TestCase {
+public class TestGenLex {
 
 	@Test
 	public void testGenLex01() throws IOException {

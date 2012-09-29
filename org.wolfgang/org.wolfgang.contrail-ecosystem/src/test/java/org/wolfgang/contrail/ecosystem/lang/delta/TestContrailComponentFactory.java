@@ -18,9 +18,9 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta;
 
-import java.lang.reflect.Method;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @version 1.0
  */
 
-public class TestContrailComponentFactory extends TestCase {
+public class TestContrailComponentFactory {
 
 	public static class TestClass {
 		private final String i;

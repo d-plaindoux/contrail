@@ -19,6 +19,8 @@
 
 package org.wolfgang.contrail.connection;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.net.URI;
 
@@ -32,7 +34,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestServers extends TestCase {
+public class TestServers {
 
 	public static class MyServer implements Server {
 		@Override
@@ -56,7 +58,6 @@ public class TestServers extends TestCase {
 		}
 		servers.close();
 	}
-	
 
 	@Test
 	public void testServers02() throws ServerNotFoundException, IOException {
@@ -65,5 +66,5 @@ public class TestServers extends TestCase {
 		assertEquals(MyServer.class, servers.get("my").getClass());
 		servers.close();
 	}
-	
+
 }

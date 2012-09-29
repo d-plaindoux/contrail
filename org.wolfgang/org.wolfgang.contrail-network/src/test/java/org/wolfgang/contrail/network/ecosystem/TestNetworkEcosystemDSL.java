@@ -18,11 +18,12 @@
 
 package org.wolfgang.contrail.network.ecosystem;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.FutureResponse;
@@ -50,7 +51,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestNetworkEcosystemDSL extends TestCase {
+public class TestNetworkEcosystemDSL {
 
 	private EcosystemModel buildModel(String source) throws ScannerException, IOException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
 		final ESLLanguage celLanguage = new ESLLanguage();

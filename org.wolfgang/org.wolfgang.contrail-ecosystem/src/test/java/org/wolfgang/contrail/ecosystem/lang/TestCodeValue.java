@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.ecosystem.lang;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.wolfgang.contrail.connection.Clients;
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestCodeValue extends TestCase {
+public class TestCodeValue {
 
 	private static class TestContextFactory implements ContextFactory {
 		@Override

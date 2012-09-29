@@ -18,12 +18,13 @@
 
 package org.wolfgang.contrail.network.connection.web.resource;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestStringResource extends TestCase {
+public class TestStringResource {
 
 	@Test
 	public void testNominal01() {

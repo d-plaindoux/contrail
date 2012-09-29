@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.connection;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -28,12 +28,12 @@ import org.junit.Test;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestProcess extends TestCase {
+public class TestProcess {
 	
 	@Test
 	public void testProcess01() {
 		// TODO
-		assert(true);
+		assertTrue(true);
 	}
 
 }

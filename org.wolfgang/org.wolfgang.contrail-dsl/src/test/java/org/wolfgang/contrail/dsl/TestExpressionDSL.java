@@ -19,6 +19,7 @@
 
 package org.wolfgang.contrail.dsl;
 
+import static org.junit.Assert.assertEquals;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.apply;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.atom;
 import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.flow;
@@ -30,12 +31,7 @@ import static org.wolfgang.contrail.ecosystem.lang.model.ModelFactory.unit;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
-import org.wolfgang.contrail.dsl.ESLLanguage;
-import org.wolfgang.contrail.dsl.ExpressionUnit;
-import org.wolfgang.contrail.dsl.SimpleExpressionUnit;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Expression;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -51,7 +47,7 @@ import org.wolfgang.opala.scanner.exception.ScannerException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestExpressionDSL extends TestCase {
+public class TestExpressionDSL {
 
 	@Test
 	public void testAtom01() throws ScannerException, ParsingUnitNotFound, LexemeNotFoundException, ParsingException {
