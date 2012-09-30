@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.common.utils.ExceptionUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentFactory;
@@ -109,7 +110,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 		try {
 			final Method[] initMethods = LibraryBuilder.getDeclaredMethods("init", aClass);
 			for (Method init : initMethods) {
-				LibraryBuilder.create(object, init.getName(), this, this.symbolTableImpl);
+				LibraryBuilder.create(object, init, this, this.symbolTableImpl);
 			}
 			final Method[] declaredMethods = LibraryBuilder.getDeclaredMethods(null, aClass);
 			for (Method method : declaredMethods) {
@@ -118,16 +119,6 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 		} catch (CannotCreateComponentException e) {
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "no.component");
 			logger.log(Level.WARNING, message.format(), e);
-		} catch (SecurityException e) {
-			// TODO
-			e.printStackTrace();
-			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-			logger.log(Level.WARNING, message.format(aClass, e.getClass().getSimpleName()));
-		} catch (IllegalArgumentException e) {
-			// TODO
-			e.printStackTrace();
-			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-			logger.log(Level.WARNING, message.format(aClass, e.getClass().getSimpleName()));
 		}
 	}
 
@@ -153,30 +144,20 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (NoSuchMethodException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (IllegalArgumentException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (InstantiationException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (IllegalAccessException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (InvocationTargetException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
-			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
+			logger.log(Level.WARNING, message.format(importation.getElement(), e.getCause().getClass().getSimpleName()));
 		}
 	}
 
@@ -255,7 +236,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 							EcosystemFactoryImpl.this.addActiveComponent(component);
 							return component;
 						} catch (ConversionException e) {
-							throw new CannotCreateComponentException(e);
+							throw new CannotCreateComponentException(ExceptionUtils.getInitialCause(e));
 						}
 					}
 				};

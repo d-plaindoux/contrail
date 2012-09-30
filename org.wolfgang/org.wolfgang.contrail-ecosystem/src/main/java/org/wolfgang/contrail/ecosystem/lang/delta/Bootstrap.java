@@ -33,6 +33,7 @@ import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.MethodImportation;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
 import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 
 /**
@@ -46,9 +47,11 @@ public class Bootstrap {
 	private final Map<String, Object> importations;
 	private final EcosystemFactoryImpl factoryImpl;
 	private final EcosystemSymbolTableImpl symbolTable;
+	private final EcosystemSymbolTableImpl internalSymbolTable;
 
 	{
 		this.importations = new HashMap<String, Object>();
+		this.internalSymbolTable = new EcosystemSymbolTableImpl();
 	}
 
 	/**
@@ -108,11 +111,18 @@ public class Bootstrap {
 
 		for (Method method : declaredMethods) {
 			if (method.getParameterTypes().length == arity) {
-				final String[] names = LibraryBuilder.getParametersName(method);
-				final ClosureValue closureValue = new ClosureValue(this.factoryImpl, this.symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
+				final String[] names = LibraryBuilder.getParametersName(method);								
+				final CodeValue codeValue;
+				final MethodImportation importation = new MethodImportation(factoryImpl, component, method);
+				
+				if (names.length > 0) {
+					codeValue = new ClosureValue(this.factoryImpl, this.symbolTable, ModelFactory.function(ModelFactory.reference(nativeName), names));
+					this.symbolTable.putImportation(nativeName, importation);
+				} else {
+					codeValue = new EvaluableValue(internalSymbolTable, importation);
+				}
 
-				this.symbolTable.putImportation(nativeName, new MethodImportation(factoryImpl, component, method));
-				this.symbolTable.putDefinition(nativeName, closureValue);
+				this.internalSymbolTable.putDefinition(nativeName, codeValue);
 
 				return;
 			}
@@ -139,13 +149,12 @@ public class Bootstrap {
 	 */
 	public CodeValue external(@ContrailArgument("object") String packageName, @ContrailArgument("method") String methodName, @ContrailArgument("arity") Integer arity) throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
-
 		final String nativeName = packageName + "#" + methodName + "/" + arity;
 
-		if (!symbolTable.hasDefinition(nativeName)) {
+		if (!internalSymbolTable.hasDefinition(nativeName)) {
 			this.findAndRegisterMethod(nativeName, this.getComponent(packageName), methodName, arity);
 		}
 
-		return symbolTable.getDefinition(nativeName);
+		return internalSymbolTable.getDefinition(nativeName);
 	}
 }

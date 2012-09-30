@@ -51,4 +51,10 @@ public class MethodImportation<T> implements EcosystemImportation<T> {
 	public T create(EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		return LibraryBuilder.create(provider, method, factory, symbolTable);
 	}
+
+	@Override
+	public String toString() {
+		return provider.getClass().getName() + "#" + method.getName() + "/" + method.getParameterTypes().length;
+	}
+		
 }

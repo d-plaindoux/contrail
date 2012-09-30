@@ -64,4 +64,9 @@ public class EvaluableValue implements CodeValue {
 	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return entry.toString();
+	}	
 }

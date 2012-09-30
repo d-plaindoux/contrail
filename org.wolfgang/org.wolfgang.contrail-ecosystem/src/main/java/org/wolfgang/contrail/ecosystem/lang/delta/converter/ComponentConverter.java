@@ -18,12 +18,17 @@
 
 package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.common.utils.ExceptionUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
+import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
+import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
+import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.link.ComponentLinkManager;
 
 /**
@@ -47,16 +52,31 @@ public class ComponentConverter extends AbstractConverter<Component> {
 	}
 
 	@Override
+	public Component visit(ConstantValue value) throws ConversionException {
+		final Object result = value.getValue();
+		if (Coercion.canCoerce(result, Component.class)) {
+			return Coercion.coerce(result, Component.class);
+		} else {
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "component.required");
+			throw new ConversionException(message.format(result));
+		}
+	}
+
+	@Override
 	public Component visit(EvaluableValue value) throws ConversionException {
 		try {
 			final Object result = value.getValue();
 			if (Coercion.canCoerce(result, Component.class)) {
 				return Coercion.coerce(result, Component.class);
+			} else if (Coercion.canCoerce(result, CodeValue.class)) {
+				// An internal method providing an evaluable code so we continue
+				return Coercion.coerce(result, CodeValue.class).visit(this);
 			} else {
-				throw new ConversionException("TODO : Not a component");
+				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "component.required");
+				throw new ConversionException(message.format(result));
 			}
 		} catch (CannotCreateComponentException e) {
-			throw new ConversionException(e);
+			throw new ConversionException(ExceptionUtils.getInitialCause(e));
 		}
 	}
 
@@ -65,7 +85,7 @@ public class ComponentConverter extends AbstractConverter<Component> {
 		try {
 			return value.getValues(linkManager, this);
 		} catch (ComponentConnectionRejectedException e) {
-			throw new ConversionException(e);
+			throw new ConversionException(ExceptionUtils.getInitialCause(e));
 		}
 	}
 }

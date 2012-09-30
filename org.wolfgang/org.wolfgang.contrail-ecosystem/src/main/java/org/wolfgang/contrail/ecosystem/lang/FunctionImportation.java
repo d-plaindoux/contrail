@@ -49,4 +49,10 @@ class FunctionImportation<T> implements EcosystemImportation<T> {
 	public T create(EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		return LibraryBuilder.create(provider, name, factory, symbolTable);
 	}
+
+	@Override
+	public String toString() {
+		return provider.getClass().getName() + "#" + name;
+	}
+	
 }

@@ -60,7 +60,7 @@ public class TestEcosystemDSL {
 		return ecosystemModel;
 	}
 
-	// TODO -- @Test
+	@Test
 	public void testIdentity() throws Exception {
 
 		final Ecosystem ecosystem = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), buildModel("identity.esl"));

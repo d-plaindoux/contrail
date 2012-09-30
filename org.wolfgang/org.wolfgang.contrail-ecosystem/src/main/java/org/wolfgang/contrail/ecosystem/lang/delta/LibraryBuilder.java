@@ -29,6 +29,7 @@ import java.util.TreeSet;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.common.utils.ExceptionUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
@@ -222,22 +223,9 @@ public class LibraryBuilder {
 	@SuppressWarnings({ "unchecked" })
 	public static <T> T create(Object component, Method method, ContextFactory ecosystemFactory, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		try {
-			try {
-				return (T) method.invoke(component, getParameters(method, ecosystemFactory.getLinkManager(), symbolTable));
-			} catch (ClassCastException e) {
-				throw new CannotCreateComponentException(e);
-			} catch (ConversionException ignore) {
-				// Consume
-			}
-
-			final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
-			throw new CannotCreateComponentException(message.format(method.getName()));
-		} catch (CannotCreateComponentException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw new CannotCreateComponentException(e.getCause());
+			return (T) method.invoke(component, getParameters(method, ecosystemFactory.getLinkManager(), symbolTable));
 		} catch (Exception e) {
-			throw new CannotCreateComponentException(e);
+			throw new CannotCreateComponentException(ExceptionUtils.getInitialCause(e));
 		}
 	}
 
@@ -251,16 +239,17 @@ public class LibraryBuilder {
 	@SuppressWarnings({ "unchecked" })
 	public static <T> T create(Object component, String name, ContextFactory ecosystemFactory, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException {
 		final Method[] methods = getDeclaredMethods(name, component.getClass());
-
+		Throwable reason = null;
+		
 		for (Method method : methods) {
 			try {
 				return (T) create(component, method, ecosystemFactory, symbolTable);
 			} catch (CannotCreateComponentException e) {
-				// Ignore and try the next one
+				reason = ExceptionUtils.getInitialCause(e);
 			}
 		}
 
 		final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
-		throw new CannotCreateComponentException(message.format(name));
+		throw new CannotCreateComponentException(message.format(name), reason);
 	}
 }

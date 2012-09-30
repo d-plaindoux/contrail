@@ -32,7 +32,7 @@ public final class IntegerConverter extends AbstractConverter<Integer> {
 	/**
 	 * Constructor
 	 */
-	private IntegerConverter(ComponentLinkManager linkManager) {
+	public IntegerConverter(ComponentLinkManager linkManager) {
 		super(Integer.class);
 	}
 

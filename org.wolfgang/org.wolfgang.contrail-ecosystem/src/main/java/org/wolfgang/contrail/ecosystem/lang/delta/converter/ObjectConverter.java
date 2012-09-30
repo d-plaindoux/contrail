@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 import org.wolfgang.common.utils.Coercion;
+import org.wolfgang.common.utils.ExceptionUtils;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
@@ -63,7 +64,7 @@ public class ObjectConverter extends AbstractConverter<Object> {
 				throw new ConversionException("TODO : Not a component");
 			}
 		} catch (CannotCreateComponentException e) {
-			throw new ConversionException(e);
+			throw new ConversionException(ExceptionUtils.getInitialCause(e));
 		}
 	}
 

@@ -18,6 +18,8 @@
 
 package org.wolfgang.contrail.ecosystem.lang.code;
 
+import java.util.Arrays;
+
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.factory.Components;
@@ -71,5 +73,10 @@ public class FlowValue implements CodeValue {
 	@Override
 	public <T, E extends Exception> T visit(CodeValueVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(values);
 	}
 }
