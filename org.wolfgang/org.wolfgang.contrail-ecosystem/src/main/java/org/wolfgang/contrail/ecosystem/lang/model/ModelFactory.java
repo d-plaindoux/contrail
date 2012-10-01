@@ -32,6 +32,14 @@ public final class ModelFactory {
 		super();
 	}
 
+	public static Expression apply(String binding, Expression function, Expression expression) {
+		final Apply apply = new Apply();
+		apply.setBinding(binding);
+		apply.add(function);
+		apply.add(expression);
+		return apply;
+	}
+
 	public static Expression apply(Expression function, Expression... expressions) {
 		Expression resultat = function;
 		for (Expression expression : expressions) {
@@ -109,5 +117,17 @@ public final class ModelFactory {
 		definition.setName(name);
 		definition.add(value);
 		return definition;
+	}
+
+	public static Switch switchCase(Expression... value) {
+		final Switch switchCase = new Switch();
+
+		for (Expression expression : value) {
+			final Case aCase = new Case();
+			aCase.add(expression);
+			switchCase.add(aCase);
+		}
+
+		return switchCase;
 	}
 }

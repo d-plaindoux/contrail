@@ -36,8 +36,6 @@ public interface ExpressionVisitor<T, E extends Exception> {
 
 	T visit(Function expression) throws E;
 
-	T visit(Router expression) throws E;
-
 	T visit(Switch expression) throws E;
 
 	T visit(Definition definition) throws E;

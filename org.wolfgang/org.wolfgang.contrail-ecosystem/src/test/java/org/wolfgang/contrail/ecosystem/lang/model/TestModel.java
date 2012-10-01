@@ -19,8 +19,6 @@
 package org.wolfgang.contrail.ecosystem.lang.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -55,131 +53,48 @@ public class TestModel {
 	public void testReference() throws JAXBException, IOException, ValidationException {
 		final Reference decoded = decode("<ref>Value</ref>", Reference.class);
 		decoded.validate();
-		assertEquals("Value", decoded.getValue());
+		assertEquals(ModelFactory.reference("Value"), decoded);
 	}
 
 	@Test
-	public void testAtom() throws JAXBException, IOException {
+	public void testAtom() throws JAXBException, IOException, ValidationException {
 		final Atom decoded = decode("<atom>Value</atom>", Atom.class);
-		assertEquals("Value", decoded.getValue());
+		decoded.validate();
+		assertEquals(ModelFactory.atom("Value"), decoded);
 	}
 
 	@Test
 	public void testApply01() throws JAXBException, IOException, ValidationException {
 		final Apply decoded = decode("<apply><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
 		decoded.validate();
-		assertNull(decoded.getBinding());
-		assertEquals(2, decoded.getExpressions().size());
-		final Expression actual0 = decoded.getExpressions().get(0);
-		assertEquals(Reference.class, actual0.getClass());
-		assertEquals("Value0", ((Reference) actual0).getValue());
-		final Expression actual1 = decoded.getExpressions().get(1);
-		assertEquals(Atom.class, actual1.getClass());
-		assertEquals("Value1", ((Atom) actual1).getValue());
+		assertEquals(ModelFactory.apply(ModelFactory.reference("Value0"), ModelFactory.atom("Value1")), decoded);
 	}
 
 	@Test
 	public void testApply02() throws JAXBException, IOException, ValidationException {
 		final Apply decoded = decode("<apply bind='param1'><ref>Value0</ref><atom>Value1</atom></apply>", Apply.class);
 		decoded.validate();
-		assertEquals(decoded.getBinding(), "param1");
-		assertEquals(2, decoded.getExpressions().size());
-		final Expression actual0 = decoded.getExpressions().get(0);
-		assertEquals(Reference.class, actual0.getClass());
-		assertEquals("Value0", ((Reference) actual0).getValue());
-		final Expression actual1 = decoded.getExpressions().get(1);
-		assertEquals(Atom.class, actual1.getClass());
-		assertEquals("Value1", ((Atom) actual1).getValue());
+		assertEquals(ModelFactory.apply("param1", ModelFactory.reference("Value0"), ModelFactory.atom("Value1")), decoded);
 	}
 
 	@Test
 	public void testFunction() throws JAXBException, IOException, ValidationException {
 		final Function decoded = decode("<function><var>a</var><atom>Value</atom></function>", Function.class);
 		decoded.validate();
-		assertEquals("a", decoded.getParameters().get(0));
-		final Expression actual = decoded.getExpressions().get(0);
-		assertEquals(Atom.class, actual.getClass());
-		assertEquals("Value", ((Atom) actual).getValue());
+		assertEquals(ModelFactory.function(ModelFactory.atom("Value"), "a"), decoded);
 	}
 
 	@Test
 	public void testDefine() throws JAXBException, IOException, ValidationException {
 		final Definition decoded = decode("<define name='test'><function><var>a</var><atom>Value</atom></function></define>", Definition.class);
 		decoded.validate();
-		assertEquals("test", decoded.getName());
-		assertEquals(1, decoded.getExpressions().size());
-		assertEquals(Function.class, decoded.getExpressions().get(0).getClass());
-		final Function function = (Function) decoded.getExpressions().get(0);
-		assertEquals("a", function.getParameters().get(0));
-		assertEquals(1, function.getExpressions().size());
-		final Expression actual = function.getExpressions().get(0);
-		assertEquals(Atom.class, actual.getClass());
-		assertEquals("Value", ((Atom) actual).getValue());
+		assertEquals(ModelFactory.define("test", ModelFactory.function(ModelFactory.atom("Value"), "a")), decoded);
 	}
 
 	@Test
 	public void testCase() throws JAXBException, IOException, ValidationException {
-		final Case decoded = decode("<case><when>A.B</when><when>A.C</when><function><var>self</var><atom>Value</atom></function></case>", Case.class);
+		final Switch decoded = decode("<switch><case><function><var>self</var><atom>Value</atom></function></case></switch>", Switch.class);
 		decoded.validate();
-		assertEquals(2, decoded.getFilters().size());
-		assertEquals("A.B", decoded.getFilters().get(0));
-		assertEquals("A.C", decoded.getFilters().get(1));
-		assertEquals("self", decoded.getBody().getParameters().get(0));
-		final Expression actual = decoded.getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual.getClass());
-		assertEquals("Value", ((Atom) actual).getValue());
+		assertEquals(ModelFactory.switchCase(ModelFactory.function(ModelFactory.atom("Value"), "self")), decoded);
 	}
-
-	@Test
-	public void testDefault() throws JAXBException, IOException, ValidationException {
-		final Default decoded = decode("<default><function><var>self</var><atom>Value</atom></function></default>", Default.class);
-		decoded.validate();
-		assertEquals(1, decoded.getBody().getParameters().size());
-		assertEquals("self", decoded.getBody().getParameters().get(0));
-		final Expression actual = decoded.getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual.getClass());
-		assertEquals("Value", ((Atom) actual).getValue());
-	}
-
-	@Test
-	public void testSwitch() throws JAXBException, IOException, ValidationException {
-		final Switch decoded = decode(
-				"<switch><case><when>A.B</when><function><var>self</var><atom>Value1</atom></function></case><default><function><var>a</var><atom>Value2</atom></function></default></switch>",
-				Switch.class);
-		decoded.validate();
-		assertEquals(1, decoded.getCases().size());
-		assertEquals(1, decoded.getCases().get(0).getFilters().size());
-		assertEquals("A.B", decoded.getCases().get(0).getFilters().get(0));
-		assertEquals("self", decoded.getCases().get(0).getBody().getParameters().get(0));
-		final Expression actual1 = decoded.getCases().get(0).getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual1.getClass());
-		assertEquals("Value1", ((Atom) actual1).getValue());
-		assertNotNull(decoded.getDefaultCase());
-		assertEquals("a", decoded.getDefaultCase().getBody().getParameters().get(0));
-		final Expression actual2 = decoded.getDefaultCase().getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual2.getClass());
-		assertEquals("Value2", ((Atom) actual2).getValue());
-	}
-
-	@Test
-	public void testRouter() throws JAXBException, IOException, ValidationException {
-		final Router decoded = decode(
-				"<router self='A.A'><case><when>A.B</when><function><var>self</var><atom>Value1</atom></function></case><default><function><var>a</var><atom>Value2</atom></function></default></router>",
-				Router.class);
-		assertEquals("A.A", decoded.getSelf());
-		decoded.validate();
-		assertEquals(1, decoded.getCases().size());
-		assertEquals(1, decoded.getCases().get(0).getFilters().size());
-		assertEquals("A.B", decoded.getCases().get(0).getFilters().get(0));
-		assertEquals("self", decoded.getCases().get(0).getBody().getParameters().get(0));
-		final Expression actual1 = decoded.getCases().get(0).getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual1.getClass());
-		assertEquals("Value1", ((Atom) actual1).getValue());
-		assertNotNull(decoded.getDefaultCase());
-		assertEquals("a", decoded.getDefaultCase().getBody().getParameters().get(0));
-		final Expression actual2 = decoded.getDefaultCase().getBody().getExpressions().get(0);
-		assertEquals(Atom.class, actual2.getClass());
-		assertEquals("Value2", ((Atom) actual2).getValue());
-	}
-
 }

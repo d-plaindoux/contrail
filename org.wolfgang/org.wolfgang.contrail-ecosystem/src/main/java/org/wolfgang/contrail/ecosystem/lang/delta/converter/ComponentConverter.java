@@ -72,8 +72,7 @@ public class ComponentConverter extends AbstractConverter<Component> {
 				// An internal method providing an evaluable code so we continue
 				return Coercion.coerce(result, CodeValue.class).visit(this);
 			} else {
-				final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "component.required");
-				throw new ConversionException(message.format(result));
+				return super.visit(value);
 			}
 		} catch (CannotCreateComponentException e) {
 			throw new ConversionException(ExceptionUtils.getInitialCause(e));

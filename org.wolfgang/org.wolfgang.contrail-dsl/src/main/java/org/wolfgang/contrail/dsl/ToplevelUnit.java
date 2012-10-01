@@ -28,7 +28,6 @@ import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
-import org.wolfgang.contrail.ecosystem.lang.model.Router;
 import org.wolfgang.contrail.ecosystem.lang.model.Sequence;
 import org.wolfgang.contrail.ecosystem.lang.model.Switch;
 import org.wolfgang.opala.lexing.exception.LexemeNotFoundException;
@@ -78,11 +77,6 @@ public class ToplevelUnit implements CompilationUnit<Void, EcosystemModel>, Expr
 	@Override
 	public Definition visit(Function expression) throws Exception {
 		// Unreachable
-		return ModelFactory.define(null, expression);
-	}
-
-	@Override
-	public Definition visit(Router expression) throws Exception {
 		return ModelFactory.define(null, expression);
 	}
 

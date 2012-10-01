@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Switch implements Expression, Validation {
 
 	private List<Case> cases;
-	private Default defaultCase;
 
 	{
 		this.cases = new ArrayList<Case>();
@@ -67,26 +66,6 @@ public class Switch implements Expression, Validation {
 		this.cases.add(aCase);
 	}
 
-	/**
-	 * Return the value of defaultCase
-	 * 
-	 * @return the defaultCase
-	 */
-	@XmlElement(name = "default")
-	public Default getDefaultCase() {
-		return defaultCase;
-	}
-
-	/**
-	 * Set the value of defaultCase
-	 * 
-	 * @param defaultCse
-	 *            the defaultCase to set
-	 */
-	public void setDefaultCase(Default defaultCase) {
-		this.defaultCase = defaultCase;
-	}
-
 	@Override
 	public void validate() throws ValidationException {
 		// TODO
@@ -96,4 +75,30 @@ public class Switch implements Expression, Validation {
 	public <T, E extends Exception> T visit(ExpressionVisitor<T, E> visitor) throws E {
 		return visitor.visit(this);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cases == null) ? 0 : cases.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Switch other = (Switch) obj;
+		if (cases == null) {
+			if (other.cases != null)
+				return false;
+		} else if (!cases.equals(other.cases))
+			return false;
+		return true;
+	}
+
 }

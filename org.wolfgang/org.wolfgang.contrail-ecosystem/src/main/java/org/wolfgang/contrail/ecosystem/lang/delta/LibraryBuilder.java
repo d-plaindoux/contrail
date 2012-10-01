@@ -250,6 +250,6 @@ public class LibraryBuilder {
 		}
 
 		final Message message = MessagesProvider.message("org/wolfgang/contrail/ecosystem", "method.library.not.found");
-		throw new CannotCreateComponentException(message.format(name), reason);
+		throw new CannotCreateComponentException(message.format(reason==null?name:reason.getMessage()), reason);
 	}
 }

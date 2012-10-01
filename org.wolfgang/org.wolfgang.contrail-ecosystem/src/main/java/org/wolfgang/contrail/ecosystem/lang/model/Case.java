@@ -18,10 +18,6 @@
 
 package org.wolfgang.contrail.ecosystem.lang.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,64 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version 1.0
  */
 @XmlRootElement(name = "case")
-public class Case implements Validation {
-
-	private List<String> caseFilters;
-	private Function caseBody;
-
-	{
-		this.caseFilters = new ArrayList<String>();
-	}
-
-	/**
-	 * Constructor
-	 */
-	public Case() {
-		super();
-	}
-
-	/**
-	 * Return the value of filters
-	 * 
-	 * @return the filters
-	 */
-	@XmlElement(name = "when")
-	public List<String> getFilters() {
-		return caseFilters;
-	}
-
-	/**
-	 * Set the value of filters
-	 * 
-	 * @param caseFilters
-	 *            the filters to set
-	 */
-	public void add(String filter) {
-		this.caseFilters.add(filter);
-	}
-
-	/**
-	 * Return the value of body
-	 * 
-	 * @return the body
-	 */
-	@XmlElement(name = "function")
-	public Function getBody() {
-		return caseBody;
-	}
-
-	/**
-	 * Set the value of body
-	 * 
-	 * @param body
-	 *            the body to set
-	 */
-	public void setBody(Function body) {
-		this.caseBody = body;
-	}
+public class Case extends ContentExpressions implements Validation {
 
 	@Override
 	public void validate() throws ValidationException {
-		// TODO
+		// Nothing for the moment
 	}
+
 }

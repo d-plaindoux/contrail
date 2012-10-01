@@ -29,8 +29,8 @@ import org.wolfgang.contrail.connection.ContextFactory;
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
+import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
 import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
@@ -40,7 +40,6 @@ import org.wolfgang.contrail.ecosystem.lang.model.Flow;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.ModelFactory;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
-import org.wolfgang.contrail.ecosystem.lang.model.Router;
 import org.wolfgang.contrail.ecosystem.lang.model.Sequence;
 import org.wolfgang.contrail.ecosystem.lang.model.Switch;
 
@@ -154,11 +153,6 @@ public class EcosystemCodeValueGenerator implements ExpressionVisitor<CodeValue,
 	@Override
 	public CodeValue visit(Function expression) throws EcosystemCodeValueGeneratorException {
 		return new ClosureValue(this.contextFactory, this.symbolTable, expression);
-	}
-
-	@Override
-	public CodeValue visit(Router expression) throws EcosystemCodeValueGeneratorException {
-		return null;
 	}
 
 	@Override
