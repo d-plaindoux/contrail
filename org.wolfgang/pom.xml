@@ -66,7 +66,9 @@
 		<module>org.wolfgang.contrail-dsl</module>
 		<module>org.wolfgang.contrail-network</module>
 		<module>org.wolfgang.contrail-netty</module>
-    <module>org.wolfgang.zinc</module>
-  </modules>
+    
+    
+		<module>org.wolfgang.contrail-js</module>
+	</modules>
 
 </project>
