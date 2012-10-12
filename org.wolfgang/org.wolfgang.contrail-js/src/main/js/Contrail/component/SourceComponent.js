@@ -1,26 +1,40 @@
 /*global define*/
 
-define( [ "jquery", "./Component", "./ComponentLink" ] , function($, Component, ComponentLink) {
+define( [ "jquery", "require" ] , 
+function($, require) {
 
-	function SourceComponent() {
-		$.extend(this, new Component());
-		this.destination = null;
+	function SourceComponent(downStreamDataFlow) {
+		var Factory = require("../Factory");
+		$.extend(this, Factory.component());
+		this.downStreamDataFlow = downStreamDataFlow;
+		this.destinationLink = null;
 	}
 	
-	SourceComponent.prototype.getDownStreamDataFlow = undefined;
-	
-	SourceComponent.prototype.acceptDestination = function(ComponentId) {
-		if (this.destination !== null) {
-			return true;
-		} else {
-			return false;
-		}
+	SourceComponent.prototype.getDownStreamDataFlow = function () {
+		return this.downStreamDataFlow;
 	};
 	
-	SourceComponent.prototype.connectDestination = function(DestinationComponent) {
-		this.destination = DestinationComponent;
-		return new ComponentLink(this,this.destination);
+	SourceComponent.prototype.acceptDestination = function(ComponentId) {
+		return this.destinationLink === null;
+	};
+	
+	SourceComponent.prototype.connectDestination = function(destinationLink) {
+		var Factory = require("../Factory");
+		this.destinationLink = destinationLink;
+		return Factory.componentLink(this.destinationLink.getDestination(),this);
 	};	
+	
+	
+	SourceComponent.prototype.closeUpStream = function() {
+	    if (this.destinationLink !== null) {
+	        this.destinationLink.getSource().closeUpStream();
+	        this.destinationLink = null;
+	    }
+	};
+	
+	SourceComponent.prototype.closeDownStream = function() {
+		this.downStreamDataFlow.handleClose();
+	};
 	
 	return SourceComponent;
 });

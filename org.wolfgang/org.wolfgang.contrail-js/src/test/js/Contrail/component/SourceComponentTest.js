@@ -1,11 +1,13 @@
 /*global require */
 
-require([ "./SourceComponent", "qunit" ], function(SourceComponent, QUnit) {
+require([ "../Factory", "qunit" ], 
+function(Factory, QUnit) {
     /**
      * Test generation
      */
     QUnit.test("Check Component generation", function() {
-        var c1 = new SourceComponent(), c2 = new SourceComponent();
+        var c1 = Factory.sourceComponent(), 
+            c2 = Factory.sourceComponent();
         
         QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
     });
@@ -13,9 +15,21 @@ require([ "./SourceComponent", "qunit" ], function(SourceComponent, QUnit) {
     /**
      * Test source
      */
-    QUnit.test("Check Component generation", function() {
-        var c1 = new SourceComponent();        
-        QUnit.equal(c1.destination, null, "Source must be null");
+    QUnit.test("Check Component destination linkage acceptation", function() {
+        var c1 = Factory.destinationComponent(Factory.dataFlow()),
+            c2 = Factory.sourceComponent(Factory.dataFlow());
+        QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
     });
 
+    /**
+     * Test source
+     */
+    QUnit.test("Check Component source linkage", function() {
+        var c1 = Factory.destinationComponent(Factory.dataFlow()),
+            c2 = Factory.sourceComponent(Factory.dataFlow()),
+            lm = Factory.linkManager();
+        QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
+        lm.link(c2,c1);
+        QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");
+    });
 });

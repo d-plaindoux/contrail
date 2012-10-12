@@ -1,6 +1,7 @@
 /*global define*/
 
-define( [] , function() {
+define( [ ] , 
+function() {
 	
 	function ComponentLink(Source, Destination) {
         this.source = Source;

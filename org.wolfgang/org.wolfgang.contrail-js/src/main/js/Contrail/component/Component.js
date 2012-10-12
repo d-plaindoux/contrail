@@ -1,16 +1,23 @@
 /*global define*/
 
-define( [ "../utils/Utils" ] , function(Utils) {
+define( [ "../utils/Utils" ] , 
+function(Utils) {
 	
 	function Component() {
 		this.identifier = Utils.UUID();
 	}
-	
-	Component.prototype.type = { COMPONENT : 0x1 };
 
 	Component.prototype.getComponentId = function() {
 		return this.identifier;
 	};
 
+	Component.prototype.closeUpStream = function() {
+	    // Nothing
+	};
+
+	Component.prototype.closeDownStream = function() {
+	    // Nothing
+	};
+	
 	return Component;
 });
