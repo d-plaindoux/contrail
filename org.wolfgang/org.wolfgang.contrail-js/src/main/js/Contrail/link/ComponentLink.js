@@ -1,11 +1,14 @@
 /*global define*/
 
-define( [ ] , 
-function() {
+define( [ "../utils/Strict" ] , 
+function(Strict) {
 	
-	function ComponentLink(Source, Destination) {
-        this.source = Source;
-        this.destination = Destination;
+	function ComponentLink(source, destination) {
+        Strict.assertType(source,"SourceComponent");
+        Strict.assertType(destination,"DestinationComponent");
+
+        this.source = source;
+        this.destination = destination;
 	}
 	
 	ComponentLink.prototype.dispose = function () {

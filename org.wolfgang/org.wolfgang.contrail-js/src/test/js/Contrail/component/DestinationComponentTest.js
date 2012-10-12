@@ -17,7 +17,7 @@ function(Factory, QUnit) {
     QUnit.test("Check Component source linkage acceptation", function() {
         var c1 = Factory.destinationComponent(Factory.dataFlow()),
             c2 = Factory.sourceComponent(Factory.dataFlow());
-        QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be null");
+        QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
     });
 
     /**
@@ -27,7 +27,7 @@ function(Factory, QUnit) {
         var c1 = Factory.destinationComponent(Factory.dataFlow()),
             c2 = Factory.sourceComponent(Factory.dataFlow()),
             lm = Factory.linkManager();
-        QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be null");
+        QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
         lm.link(c2,c1);
         QUnit.equal(c1.acceptSource(c2.getComponentId()), false, "Source must be setup");
     });

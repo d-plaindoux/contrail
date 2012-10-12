@@ -1,12 +1,14 @@
 /*global define*/
 
-define( [ "jquery", "require" ] , 
-function($, require) {
+define( [ "jquery", "require", "../utils/Strict" ] , 
+function($, require, Strict) {
 
-	function DestinationComponent(upStreamDataFlow) {
+	function DestinationComponent(dataFlow) {
+        Strict.assertType(dataFlow,"DataFlow");
+        
 		var Factory = require("../Factory");
 		$.extend(this, Factory.component());
-		this.upStreamDataFlow = upStreamDataFlow;
+		this.upStreamDataFlow = dataFlow;
 		this.sourceLink = null;
 	}
 	
@@ -14,16 +16,17 @@ function($, require) {
 		return this.upStreamDataFlow;
 	};
 	
-	DestinationComponent.prototype.acceptSource = function(ComponentId) {
+	DestinationComponent.prototype.acceptSource = function(componentId) {
 		return (this.sourceLink === null);
 	};
 	
 	DestinationComponent.prototype.connectSource = function(sourceLink) {
+        Strict.assertType(sourceLink,"SourceLink");
+
 		var Factory = require("../Factory");
 		this.sourceLink = sourceLink;
 		return Factory.componentLink(this.sourceLink.getSource(),this);
 	};	
-	
 	
 	DestinationComponent.prototype.closeDownStream = function() {
 	    if (this.sourceLink !== null) {

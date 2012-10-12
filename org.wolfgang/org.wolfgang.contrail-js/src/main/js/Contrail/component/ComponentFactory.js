@@ -9,12 +9,12 @@ function(Component, SourceComponent, DestinationComponent) {
 	    return new Component();
 	};
 	
-	ComponentFactory.sourceComponent = function () {
-	    return new SourceComponent();
+	ComponentFactory.sourceComponent = function (dataFlow) {
+	    return new SourceComponent(dataFlow);
 	};
-	
-	ComponentFactory.destinationComponent = function () {
-	    return new DestinationComponent();
+
+	ComponentFactory.destinationComponent = function (dataFlow) {
+		return new DestinationComponent(dataFlow);
 	};
 	
 	return ComponentFactory;
