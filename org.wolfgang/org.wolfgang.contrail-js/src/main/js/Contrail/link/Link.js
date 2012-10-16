@@ -1,9 +1,11 @@
 /*global define*/
 
-define( [ ] ,
-function() {
+define( [ "../core/jObj" ] ,
+function(jObj) {
 
 	function Link(linkManager) {
+		jObj.bless(this);
+		
 		this.manager = linkManager;
 	}
 

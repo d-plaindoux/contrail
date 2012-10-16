@@ -1,30 +1,29 @@
 /*global require */
 
-require([ "jquery", "./Strict", "qunit" ], function($, Strict, QUnit) {
+require([ "../core/jObj", "./Strict", "qunit" ], 
+function(jObj, Strict, QUnit) {
     /**
      * Test Type Checking
      */
 	function A() {
+	    jObj.bless(this);
 	}
-	
-	function B() {
-		var a = new A();
-	    $.extend(new A());
-	}
-     
+
     QUnit.test("Check Subtype a:A <? A", function() {
         var a = new A();
-        QUnit.equal(Strict.subType(a,"A"),true, "Checking a:A instance of A");
+        Strict.assertType(a,"A");
+        QUnit.equal(true,true," a is an instance of A");
     });
 
-    QUnit.test("Check Subtype b:B <? B", function() {
-        var b = new B();
-        QUnit.equal(Strict.subType(b,"B"),true, "Checking b:B instance of B");
-    });
-
-    QUnit.test("Check Subtype b:B <? A", function() {
-        var b = new B();
-        QUnit.equal(Strict.subType(b,"A"),true, "Checking b:B extends A instance of A");
+    QUnit.test("Check Subtype a:A <? B", function() {
+        var a = new A();
+        try {
+            Strict.assertType(a,"B");
+            QUnit.equal(true,false,"a is not an instance of B");
+        } catch (e) {
+            QUnit.equal(true,true,"a is not an instance of B");
+            // TODO -- QUnit.equal(jObj.instanceOf(e,"TypeError"), true, "Checking throws error to be a TypeError");
+        }
     });
 });
 

@@ -7,7 +7,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>Contrail JS Library</name>
 	<packaging>js</packaging>
-	
+
 	<description>A JavaScript library dedicated to Contrail network management.</description>
 
 	<properties>

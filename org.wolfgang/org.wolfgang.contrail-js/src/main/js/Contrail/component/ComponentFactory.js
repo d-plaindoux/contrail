@@ -1,7 +1,7 @@
 /*global define*/
 
-define( [ "./Component", "./SourceComponent", "./DestinationComponent" ] , 
-function(Component, SourceComponent, DestinationComponent) {
+define( [ "../utils/Strict", "./Component", "./SourceComponent", "./DestinationComponent" ] , 
+function(Strict, Component, SourceComponent, DestinationComponent) {
 	
 	var ComponentFactory = {};
 

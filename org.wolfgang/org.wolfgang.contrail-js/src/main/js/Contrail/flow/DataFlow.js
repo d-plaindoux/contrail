@@ -1,10 +1,10 @@
 /*global define*/
 
-define( [ ] , 
-function() {
+define( [ "../core/jObj" ] , 
+function(jObj) {
     
     function DataFlow() {
-        // Nothing special
+        jObj.bless(this);
     }
 
     DataFlow.prototype.handleData = function(Data) {

@@ -1,13 +1,13 @@
 /*global define*/
 
-define( [ "jquery", "require", "../utils/Strict" ] , 
-function($, require, Strict) {
+define( [ "require",  "../core/jObj", "../utils/Strict" ] , 
+function(require, jObj, Strict) {
 
 	function SourceComponent(dataFlow) {
         Strict.assertType(dataFlow,"DataFlow");
 
-		var Factory = require("../Factory");
-		$.extend(this, Factory.component());
+		jObj.bless(this, require("../Factory").component());
+
 		this.downStreamDataFlow = dataFlow;
 		this.destinationLink = null;
 	}
@@ -21,11 +21,10 @@ function($, require, Strict) {
 	};
 	
 	SourceComponent.prototype.connectDestination = function(destinationLink) {
-        Strict.assertType(destinationLink,"DestinationLink");
+        Strict.assertType(destinationLink, "DestinationLink");
 
-		var Factory = require("../Factory");
 		this.destinationLink = destinationLink;
-		return Factory.componentLink(this, this.destinationLink.getDestination());
+		return require("../Factory").componentLink(this, this.destinationLink.getDestination());
 	};	
 	
 	

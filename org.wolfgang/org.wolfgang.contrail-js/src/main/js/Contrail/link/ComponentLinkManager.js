@@ -1,13 +1,17 @@
 /*global define*/
 
-define( [ "require" ] ,
-function(require) {
+define( [ "require", "../core/jObj", "../utils/Strict" ] ,
+function(require, jObj, Strict) {
 	
 	function ComponentLinkManager() {
+        jObj.bless(this);
+        
         this.links = [ ];
 	}
 	
 	ComponentLinkManager.prototype.link = function (source, destination) {
+	    // Check types
+		
 	    if (!source.acceptDestination(destination.getComponentId())) {
 	        throw new Error("Source cannot accept Destination");
 	    } else if (!destination.acceptSource(source.getComponentId())) {

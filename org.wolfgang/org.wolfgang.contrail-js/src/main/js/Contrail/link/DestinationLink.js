@@ -1,11 +1,11 @@
 /*global define*/
 
-define( [ "jquery", "require" ] ,
-function($, require) {
+define( [ "require", "../core/jObj", "../utils/Strict" ] ,
+function(require, jObj, Strict) {
 
 	function DestinationLink(destination,linkManager) {
-		var Factory = require("../Factory");
-		$.extend(this, Factory.link(linkManager));
+		jObj.bless(this, require("../Factory").link(linkManager));
+        
 		this.destination = destination;
 	}
 	
