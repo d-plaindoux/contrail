@@ -6,8 +6,8 @@ function(Factory, QUnit) {
      * Test generation
      */
     QUnit.test("Check Component generation", function() {
-        var c1 = Factory.destinationComponent(Factory.dataFlow()), 
-            c2 = Factory.destinationComponent(Factory.dataFlow());        
+        var c1 = Factory.destinationComponent(), 
+            c2 = Factory.destinationComponent();        
         QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
     });
 
@@ -15,8 +15,8 @@ function(Factory, QUnit) {
      * Test source
      */
     QUnit.test("Check Component source linkage acceptation", function() {
-        var c1 = Factory.destinationComponent(Factory.dataFlow()),
-            c2 = Factory.sourceComponent(Factory.dataFlow());
+        var c1 = Factory.destinationComponent(),
+            c2 = Factory.sourceComponent();
         QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
     });
 
@@ -24,8 +24,8 @@ function(Factory, QUnit) {
      * Test source
      */
     QUnit.test("Check Component source linkage", function() {
-        var c1 = Factory.destinationComponent(Factory.dataFlow()),
-            c2 = Factory.sourceComponent(Factory.dataFlow()),
+        var c1 = Factory.destinationComponent(),
+            c2 = Factory.sourceComponent(),
             lm = Factory.linkManager();
         QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
         lm.link(c2,c1);

@@ -3,18 +3,13 @@
 define( [ "require",  "../core/jObj", "../utils/Strict" ] , 
 function(require, jObj, Strict) {
 
-	function SourceComponent(dataFlow) {
-        Strict.assertType(dataFlow,"DataFlow");
-
+	function SourceComponent() {
 		jObj.bless(this, require("../Factory").component());
 
-		this.downStreamDataFlow = dataFlow;
 		this.destinationLink = null;
 	}
 	
-	SourceComponent.prototype.getDownStreamDataFlow = function () {
-		return this.downStreamDataFlow;
-	};
+	SourceComponent.prototype.getDownStreamDataFlow = undefined;
 	
 	SourceComponent.prototype.acceptDestination = function(componentId) {
 		return this.destinationLink === null;
@@ -35,9 +30,7 @@ function(require, jObj, Strict) {
 	    }
 	};
 	
-	SourceComponent.prototype.closeDownStream = function() {
-		this.downStreamDataFlow.handleClose();
-	};
+	SourceComponent.prototype.closeDownStream = undefined;
 	
 	return SourceComponent;
 });
