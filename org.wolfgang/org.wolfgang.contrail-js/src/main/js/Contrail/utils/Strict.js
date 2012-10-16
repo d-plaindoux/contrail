@@ -5,19 +5,19 @@ function (require) {
 	
     var Strict = {};
     
-    function TypeError () {
+    function TypeError(message) {
         require("../core/jObj").bless(this);
 
-        this.message = "the object has not the right type";
+        this.message = message;
     }
     
     Strict.assertType = function (obj, type) {
         var jObj = require("../core/jObj");
         
         if (jObj.getClass(type) !== "String") {
-            throw new Error(type + " must be an instance of String");
+            throw new TypeError(type + " must be an instance of String");
         } else if (!jObj.instanceOf(obj,type)) {
-            throw new Error(obj + " must be an instance of " + type);
+            throw new TypeError(obj + " must be an instance of " + type);
         }
     };
     

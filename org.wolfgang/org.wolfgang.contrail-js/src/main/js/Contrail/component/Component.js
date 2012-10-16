@@ -14,11 +14,11 @@ function(Utils, jObj) {
 	};
 
 	Component.prototype.closeUpStream = function() {
-	    // Nothing
+	    throw { Exception : "Not yet Implemented" };
 	};
 
 	Component.prototype.closeDownStream = function() {
-	    // Nothing
+	    throw { Exception : "Not yet Implemented" };
 	};
 	
 	return Component;

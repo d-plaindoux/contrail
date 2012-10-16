@@ -21,8 +21,7 @@ function(jObj, Strict, QUnit) {
             Strict.assertType(a,"B");
             QUnit.equal(true,false,"a is not an instance of B");
         } catch (e) {
-            QUnit.equal(true,true,"a is not an instance of B");
-            // TODO -- QUnit.equal(jObj.instanceOf(e,"TypeError"), true, "Checking throws error to be a TypeError");
+            QUnit.equal(jObj.instanceOf(e,"TypeError"), true, "Checking throws error to be a TypeError");
         }
     });
 });
