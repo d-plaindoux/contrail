@@ -9,8 +9,6 @@ function(require, jObj, Strict) {
 		this.destinationLink = null;
 	}
 	
-	SourceComponent.prototype.getDownStreamDataFlow = undefined;
-	
 	SourceComponent.prototype.acceptDestination = function(componentId) {
 		return this.destinationLink === null;
 	};
@@ -29,8 +27,6 @@ function(require, jObj, Strict) {
 	        this.destinationLink = null;
 	    }
 	};
-	
-	SourceComponent.prototype.closeDownStream = undefined;
 	
 	return SourceComponent;
 });

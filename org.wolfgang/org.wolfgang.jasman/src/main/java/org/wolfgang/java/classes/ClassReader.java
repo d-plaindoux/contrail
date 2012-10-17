@@ -309,10 +309,10 @@ public class ClassReader {
 				return new ClassAttribute.SourceFile(this.description.getConstantPool(), nameIndex, valueReader.getNextShort());
 			case ANNOTATION:
 				// Read Annotations now
-				return new ClassAttribute.VisibleAnnotations(this.description.getConstantPool(), nameIndex, getAnnotations(valueReader));
+				// return new ClassAttribute.VisibleAnnotations(this.description.getConstantPool(), nameIndex, getAnnotations(valueReader));
 			case PARAMETER_ANNOTATION:
 				// Read Parameter Annotations now
-				return new ClassAttribute.VisibleParametersAnnotations(this.description.getConstantPool(), nameIndex, getParametersAnnotations(valueReader));
+				// return new ClassAttribute.VisibleParametersAnnotations(this.description.getConstantPool(), nameIndex, getParametersAnnotations(valueReader));
 			default:
 				return new ClassAttribute.Generic(this.description.getConstantPool(), nameIndex, attributeValue);
 			}

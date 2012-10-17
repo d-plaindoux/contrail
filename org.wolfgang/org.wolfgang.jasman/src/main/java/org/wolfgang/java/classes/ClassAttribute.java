@@ -149,6 +149,10 @@ public interface ClassAttribute {
 			}
 		}
 
+		public String getSignature() {
+			return pool.getAt(signature).toExternal();
+		}
+
 		@Override
 		public <E> E visit(ClassAttributeVisitor<E> visitor) {
 			return visitor.visit(this);

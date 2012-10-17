@@ -33,8 +33,19 @@ public interface ClassField {
 	 */
 	int getAccessFlag();
 
+	/**
+	 * Provides the field name
+	 * 
+	 * @return a string
+	 */
 	String getName();
 
+	/**
+	 * Setup the field name
+	 * 
+	 * @param name
+	 *            a string
+	 */
 	void setName(int name);
 
 	String getDescription();

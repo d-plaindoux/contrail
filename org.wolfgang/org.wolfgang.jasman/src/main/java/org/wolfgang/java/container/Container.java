@@ -27,7 +27,7 @@ import java.util.Collection;
  */
 public interface Container {
 
-	Collection<ContainerEntry> getEntries(String[] packagesName);
+	Collection<ContainerEntry> getEntries(String... packagesName);
 
 	void dispose();
 

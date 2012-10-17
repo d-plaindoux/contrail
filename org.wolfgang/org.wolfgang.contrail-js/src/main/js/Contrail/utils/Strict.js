@@ -11,13 +11,13 @@ function (require) {
         this.message = message;
     }
     
-    Strict.assertType = function (obj, type) {
+    Strict.assertType = function (object, type) {
         var jObj = require("../core/jObj");
         
-        if (jObj.getClass(type) !== "String") {
+        if (!jObj.instanceOf(type, "String")) {
             throw new TypeError(type + " must be an instance of String");
-        } else if (!jObj.instanceOf(obj,type)) {
-            throw new TypeError(obj + " must be an instance of " + type);
+        } else if (!jObj.instanceOf(object,type)) {
+            throw new TypeError(object + " must be an instance of " + type);
         }
     };
     

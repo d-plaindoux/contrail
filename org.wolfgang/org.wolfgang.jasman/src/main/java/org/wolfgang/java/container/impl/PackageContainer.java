@@ -45,7 +45,7 @@ public class PackageContainer implements Container {
 	 * 
 	 * @param containerSpecification
 	 */
-	public PackageContainer(List<String> containerSpecification) {
+	public PackageContainer(String... containerSpecification) {
 		super();
 		this.containers = new ArrayList<Container>();
 		for (String string : containerSpecification) {
@@ -61,7 +61,7 @@ public class PackageContainer implements Container {
 	}
 
 	@Override
-	public Collection<ContainerEntry> getEntries(String[] packagesName) {
+	public Collection<ContainerEntry> getEntries(String... packagesName) {
 		final Set<ContainerEntry> entries = new HashSet<ContainerEntry>();
 
 		for (Container container : containers) {

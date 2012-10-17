@@ -47,7 +47,7 @@ public class FileContainer implements Container {
 	}
 
 	@Override
-	public Collection<ContainerEntry> getEntries(String[] packagesName) {
+	public Collection<ContainerEntry> getEntries(String... packagesName) {
 		final Set<ContainerEntry> entries = new HashSet<ContainerEntry>();
 
 		final List<File> visited = new ArrayList<File>();

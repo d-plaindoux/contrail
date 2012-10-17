@@ -2,7 +2,7 @@
 	
 define( [ "jquery" ], 
 function ($) {
-	
+
     var jObj = {};
     
     function TypeError () {
@@ -21,28 +21,53 @@ function ($) {
     };
 
     jObj.bless = function (/*arguments*/) {
-        if (arguments.length > 1) {
-            $.extend.apply($, arguments);
-        }
- 
+        var i, key;
+        
         if (arguments.length > 0) {
-            jObj.inheritance(arguments[0]);
+            $.extend.apply($, arguments);            
+
+            //
+            // Special traitments for inherit
+            //
+
+            arguments[0].inherit = {};
+                        
+            for(i = 1; i < arguments.length; i++) {
+                for(key in arguments[i].inherit) {
+                    arguments[0].inherit[key] = true;
+                }
+                arguments[0].inherit[jObj.getClass(arguments[i])] = true;
+            }
+        } 
+    };
+    
+    jObj.instanceOf = function (object, type) {
+        if (jObj.getClass(object) === type) {
+            return true;
+        } else if (object.inherit && object.inherit.hasOwnProperty(type)) {
+            return true;
+        } else {
+            return false;
         }
     };
     
-    jObj.inheritance = function (object) {
-        if (!object.ofType) {
-            object.ofType = [];
+    jObj.toString = function (object,indent) {
+        var nindent, key, content = "";
+    
+        if (indent === undefined) {
+            indent = "";
         }
-        
-        object.ofType[jObj.getClass(object)] = true;
-	};
 
-    jObj.instanceOf = function (object, type) {
-        if (!object.ofType) {
-            return false;
+        nindent = indent + "  ";
+       
+        if (typeof object === "object") {
+            
+            for(key in object) {
+                content += "\n" + nindent + key + ":" + jObj.toString(object[key],nindent);
+            }
+            return jObj.getClass(object) + " {" + content + "\n" + indent + "}";
         } else {
-            return object.ofType.hasOwnProperty(type);
+            return object + ";";
         }
     };
     
