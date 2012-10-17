@@ -4,7 +4,7 @@ define( [ "require", "../core/jObj", "../utils/Strict" ] ,
 function(require, jObj, Strict) {
 
 	function DestinationComponent() {
-		jObj.bless(this, require("../Factory").component());
+		jObj.bless(this, require("../factory/Factory").component());
 		
 		this.sourceLink = null;
 	}
@@ -19,7 +19,7 @@ function(require, jObj, Strict) {
         Strict.assertType(sourceLink, "SourceLink");
 
 		this.sourceLink = sourceLink;
-		return require("../Factory").componentLink(this.sourceLink.getSource(),this);
+		return require("../factory/Factory").componentLink(this.sourceLink.getSource(), this);
 	};	
 	
 	DestinationComponent.prototype.closeDownStream = function() {

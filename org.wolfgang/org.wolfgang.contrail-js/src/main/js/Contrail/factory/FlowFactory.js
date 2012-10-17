@@ -1,6 +1,6 @@
 /*global define*/
 
-define( [ "./DataFlow" ] , 
+define( [ "../flow/DataFlow" ] , 
 function(DataFlow, UpStreamDataFlow, DownStreamDataFlow) {
 	
 	var FlowFactory = {};

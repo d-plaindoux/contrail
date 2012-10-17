@@ -17,7 +17,7 @@ function(require, jObj, Strict) {
 	    } else if (!destination.acceptSource(source.getComponentId())) {
 	        throw new Error("Destination cannot accept Source");
 	    } else {
-	        var Factory = require("../Factory");
+	        var Factory = require("../factory/Factory");
 	        source.connectDestination(Factory.destinationLink(destination,this));
 	        destination.connectSource(Factory.sourceLink(source,this));
 	    }

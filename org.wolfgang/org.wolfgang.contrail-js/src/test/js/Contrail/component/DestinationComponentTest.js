@@ -1,7 +1,7 @@
 /*global require */
 
-require([ "../Factory", "qunit" ], 
-function(Factory, QUnit) {
+require([ "../factory/Factory", "../core/jObj", "qunit" ], 
+function(Factory, jObj, QUnit) {
     /**
      * Test generation
      */
@@ -30,5 +30,20 @@ function(Factory, QUnit) {
         QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
         lm.link(c2,c1);
         QUnit.equal(c1.acceptSource(c2.getComponentId()), false, "Source must be setup");
+    });
+    
+    /**
+     * Test type
+     */
+    QUnit.test("Check Component type #1", function() {
+        var c1 = Factory.destinationComponent();
+        
+       QUnit.equal(jObj.instanceOf(c1,"DestinationComponent"),true, "Checking c1 instance of DestinationComponent");
+    });
+
+    QUnit.test("Check Component type #2", function() {
+        var c1 = Factory.destinationComponent();
+        
+       QUnit.equal(jObj.instanceOf(c1,"Component"),true, "Checking c1 instance of Component");
     });
 });

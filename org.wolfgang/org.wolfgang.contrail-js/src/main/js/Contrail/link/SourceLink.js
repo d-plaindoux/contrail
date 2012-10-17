@@ -4,7 +4,7 @@ define( [ "require", "../core/jObj" ] ,
 function(require, jObj) {
 
 	function SourceLink(source,linkManager) {
-	    jObj.bless(this, require("../Factory").link(linkManager));
+	    jObj.bless(this, require("../factory/Factory").link(linkManager));
 		
 		this.source= source;
 	}

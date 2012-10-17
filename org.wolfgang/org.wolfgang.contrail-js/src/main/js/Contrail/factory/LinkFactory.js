@@ -1,6 +1,6 @@
 /*global define*/
 
-define( [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ] , 
+define( [ "../link/ComponentLinkManager", "../link/ComponentLink", "../link/Link", "../link/SourceLink", "../link/DestinationLink" ] , 
 function(ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
 	
 	var LinkFactory = {};

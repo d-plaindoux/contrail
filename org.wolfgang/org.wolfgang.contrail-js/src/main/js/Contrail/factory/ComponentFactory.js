@@ -1,6 +1,6 @@
 /*global define*/
 
-define( [ "../utils/Strict", "./Component", "./SourceComponent", "./DestinationComponent", "./pipeline/PipelineComponent" ] , 
+define( [ "../utils/Strict", "../component/Component", "../component/SourceComponent", "../component/DestinationComponent", "../component/pipeline/PipelineComponent" ] , 
 function(Strict, Component, SourceComponent, DestinationComponent, PipelineComponent) {
 	
 	var ComponentFactory = {};

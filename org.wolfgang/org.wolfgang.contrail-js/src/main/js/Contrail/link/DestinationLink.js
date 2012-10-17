@@ -4,7 +4,7 @@ define( [ "require", "../core/jObj", "../utils/Strict" ] ,
 function(require, jObj, Strict) {
 
 	function DestinationLink(destination,linkManager) {
-		jObj.bless(this, require("../Factory").link(linkManager));
+		jObj.bless(this, require("../factory/Factory").link(linkManager));
         
 		this.destination = destination;
 	}

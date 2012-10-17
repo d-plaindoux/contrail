@@ -4,7 +4,7 @@ define( [ "require",  "../core/jObj", "../utils/Strict" ] ,
 function(require, jObj, Strict) {
 
 	function SourceComponent() {
-		jObj.bless(this, require("../Factory").component());
+		jObj.bless(this, require("../factory/Factory").component());
 
 		this.destinationLink = null;
 	}
@@ -19,7 +19,7 @@ function(require, jObj, Strict) {
         Strict.assertType(destinationLink, "DestinationLink");
 
 		this.destinationLink = destinationLink;
-		return require("../Factory").componentLink(this, this.destinationLink.getDestination());
+		return require("../factory/Factory").componentLink(this, this.destinationLink.getDestination());
 	};	
 	
 	

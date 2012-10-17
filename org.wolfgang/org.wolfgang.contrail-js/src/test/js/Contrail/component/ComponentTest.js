@@ -1,6 +1,6 @@
 /*global require */
 
-require([ "../Factory", "qunit" ], 
+require([ "../factory/Factory", "qunit" ], 
 function(Factory, QUnit) {
     /**
      * Test generation
