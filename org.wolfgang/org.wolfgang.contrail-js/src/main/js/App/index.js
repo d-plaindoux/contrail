@@ -20,15 +20,16 @@
 
 $(function() {
 	require([ "Contrail/factory/Factory", "Contrail/core/jObj", "Contrail/core/jDom" ], function(Factory, jObj, jDom) {
+	try {
 		var key, classes, id, name, showHide, changeRepresentation;
 		
 		changeRepresentation = function (id, object) {
 			return function(e) {
 				if ($(id + " > pre").attr("display_toogle") === "type") {
-					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "object" }, jObj.toString(object)));
+					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "object" }, jObj.toString(object)).build());
 					$(id + " > pre").addClass("boxedArea");
 				} else {
-					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "type" }, jObj.toString(jObj.toType(object))));
+					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "type" }, jObj.toString(jObj.toType(object))).build());
 					$(id + " > pre").addClass("boxedArea");
 				}
 			};
@@ -44,15 +45,19 @@ $(function() {
 		for(key in classes) {
 			name = jObj.getClass(classes[key]);
 			id = "#main > #" + name;
-			$("#main").append(jDom("div", { id : name }));
+			$("#main").append(jDom("div", { id : name }).build());
 			$(id).hide();   
-			$(id).append(jDom("h3",{}, " " + name + " " + jDom("button", {}, "View")));
+			$(id).append(jDom("h3",{}, " " + name + " " + jDom("button", {}, "View").build()).build());
 			$(id + " > h3 > button").button().click(changeRepresentation(id, classes[key]));
-			$(id).append(jDom("pre", { display_toogle : "type" }, jObj.toString(jObj.getType(classes[key]))));
+			$(id).append(jDom("pre", { display_toogle : "object" }, jObj.toString(classes[key])).build());
+			$(id + " > pre").addClass("boxedArea");
 			$(id + " > h3").addClass("ui-widget-header");
 			$(id).css("position","fixed");
 			$(id).show("slice");
 			$(id).draggable({ opacity: 0.7, stack: "#main div" });
 		}
+	} catch (e) {
+		$("#error").prepend(e.toString());
+	}
 	});
 });

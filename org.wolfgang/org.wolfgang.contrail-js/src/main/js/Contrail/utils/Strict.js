@@ -23,7 +23,7 @@ function (require) {
 
 	var Strict = {};
     
-	function TypeError(message) {
+	function AssertTypeError(message) {
 		require("../core/jObj").bless(this);
 		this.message = message;
 	}
@@ -32,9 +32,9 @@ function (require) {
 		var jObj = require("../core/jObj");
         
 		if (!jObj.instanceOf(type, "String")) {
-			throw new TypeError(type + " must be an instance of String");
+			throw new AssertTypeError(type + " must be an instance of String");
 		} else if (!jObj.instanceOf(object,type)) {
-			throw new TypeError(object + " must be an instance of " + type);
+			throw new AssertTypeError(object + " must be an instance of " + type);
 		}
 	};
     

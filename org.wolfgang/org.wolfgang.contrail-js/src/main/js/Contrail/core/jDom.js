@@ -20,23 +20,39 @@
 
 define( [ ], 
 function () {
-	var jDom = function (tag, attributes, content) {
+
+	// Private package defintions
+
+	function PObject(tag, attributes, content) {
+		this.qname = tag;
+		this.attributes = attributes;
+		this.content = content;
+	}
+
+	PObject.prototype.toString = function () {
 		var key, result;
-        
-		result =  "<" + tag;
- 
-		for(key in attributes) {
-			result += " " + key + "='" + attributes[key] + "'";
+    
+		result =  "<" + this.qname;
+
+		for(key in this.attributes) {
+			result += " " + key + "='" + this.attributes[key] + "'";
 		}
 
-		if (content) {
-			result += ">" + content + "</" + tag + ">"; 
+		if (this.content) {
+			result += ">" + this.content.toString() + "</" + this.qname + ">"; 
 		} else {
 			result += "/>";
 		}        
-        
+    
 		return result;
+		
 	};
-        
-	return jDom;
+	
+	PObject.prototype.build = PObject.prototype.toString;
+
+	// Public package definition
+
+	return function (tag, attributes, content) {
+		return new PObject(tag, attributes, content);
+	};
 });

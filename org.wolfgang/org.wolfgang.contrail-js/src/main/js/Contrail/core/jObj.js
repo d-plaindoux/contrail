@@ -24,13 +24,6 @@ function ($) {
 	var jObj = {};
     
 	/**
-	 * class exception used to notify any type error
-	 */
-	function TypeError () {
-		this.message = "the object has not the right type";
-	}
-    
-	/**
 	 * Method called whether the class name nust be retrieved
 	 * 
 	 * @param object The object
@@ -103,12 +96,12 @@ function ($) {
 			var key, content = driver.enterObject(jObj.getClass(object));
 
 			for(key in object) {
-				driver.visitAttribute(content, key, jObj.transform(object[key], driver));
+				content = driver.visitAttribute(content, key, jObj.transform(object[key], driver));
 			}
 
 			return driver.exitObject(content);
 		} else {
-			return driver.visiteNative(object);
+			return driver.visitNative(object);
 		}
 	};
     
@@ -124,10 +117,10 @@ function ($) {
 				return "{";
 			},
 			visitAttribute : function (content, key, value) {
-				return content + " " + key + ":" + value + ";"; 
+				return content + " " + key + ":" + value + ";\n"; 
 			},
 			exitObject : function (content) {                
-				return content + " }";
+				return content + " }\n";
 			},
 			visitNative : function (value) {
 				return value;
@@ -149,7 +142,8 @@ function ($) {
 				return {};
 			},
 			visitAttribute : function (content, key, value) {
-				content[key] = value; 
+				content[key] = value;
+				return content;
 			},
 			exitObject : function (content) {
 				return this.content;
