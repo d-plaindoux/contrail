@@ -59,8 +59,7 @@
 		</plugins>
 	</build>
 
-	<!-- FIXME: Temporary declaration of Codehaus repos until this moves to 
-		Maven Central -->
+	<!-- FIXME: Temporary declaration of Codehaus repos until this moves to Maven Central -->
 	<repositories>
 		<repository>
 			<id>snapshots</id>

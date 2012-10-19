@@ -1,26 +1,44 @@
+/*
+ * Copyright (C)2012 D. Plaindoux.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 /*global define*/
 
 define( [ "require", "../core/jObj", "../utils/Strict" ] ,
 function(require, jObj, Strict) {
 	
 	function ComponentLinkManager() {
-        jObj.bless(this);
+		jObj.bless(this);
         
-        this.links = [ ];
+		this.links = [ ];
 	}
 	
 	ComponentLinkManager.prototype.link = function (source, destination) {
-	    // Check types
+		// Check types
 		
-	    if (!source.acceptDestination(destination.getComponentId())) {
-	        throw new Error("Source cannot accept Destination");
-	    } else if (!destination.acceptSource(source.getComponentId())) {
-	        throw new Error("Destination cannot accept Source");
-	    } else {
-	        var Factory = require("../factory/Factory");
-	        source.connectDestination(Factory.destinationLink(destination,this));
-	        destination.connectSource(Factory.sourceLink(source,this));
-	    }
+		if (!source.acceptDestination(destination.getComponentId())) {
+			throw new Error("Source cannot accept Destination");
+		} else if (!destination.acceptSource(source.getComponentId())) {
+			throw new Error("Destination cannot accept Source");
+		} else {
+			var Factory = require("../factory/Factory");
+			source.connectDestination(Factory.destinationLink(destination,this));
+			destination.connectSource(Factory.sourceLink(source,this));
+		}
 	};
 
 	return ComponentLinkManager;
