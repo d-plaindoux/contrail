@@ -53,6 +53,6 @@ function () {
 	// Public package definition
 
 	return function (tag, attributes, content) {
-		return new PObject(tag, attributes, content);
+		return new PObject(tag, attributes, content).build();
 	};
 });

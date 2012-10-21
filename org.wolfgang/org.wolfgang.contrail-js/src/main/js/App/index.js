@@ -21,20 +21,22 @@
 $(function() {
 	require([ "Contrail/factory/Factory", "Contrail/core/jObj", "Contrail/core/jDom" ], function(Factory, jObj, jDom) {
 	try {
-		var key, classes, id, name, showHide, changeRepresentation;
+		var key, classes, id, name, showHide, changeToType, changeToObject;
 		
-		changeRepresentation = function (id, object) {
-			return function(e) {
-				if ($(id + " > pre").attr("display_toogle") === "type") {
-					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "object" }, jObj.toString(object)).build());
-					$(id + " > pre").addClass("boxedArea");
-				} else {
-					$(id + " > pre").replaceWith(jDom("pre", { display_toogle : "type" }, jObj.toString(jObj.toType(object))).build());
-					$(id + " > pre").addClass("boxedArea");
-				}
+		changeToType = function (id, object) {
+			return function() {
+				$(id + " > pre").replaceWith(jDom("pre", { display_type : "type" }, jObj.toString(jObj.toType(object))));
+				$(id + " > pre").addClass("boxedArea");
 			};
 		};
 		
+		changeToObject = function (id, object) {
+			return function() {
+				$(id + " > pre").replaceWith(jDom("pre", { display_object : "object" }, jObj.toString(object)));
+				$(id + " > pre").addClass("boxedArea");
+			};
+		};
+
 		classes = {
 			Component : Factory.component(),
 			SourceComponent : Factory.sourceComponent(),
@@ -45,11 +47,12 @@ $(function() {
 		for(key in classes) {
 			name = jObj.getClass(classes[key]);
 			id = "#main > #" + name;
-			$("#main").append(jDom("div", { id : name }).build());
+			$("#main").append(jDom("div", { id : name }));
 			$(id).hide();   
-			$(id).append(jDom("h3",{}, " " + name + " " + jDom("button", {}, "View").build()).build());
-			$(id + " > h3 > button").button().click(changeRepresentation(id, classes[key]));
-			$(id).append(jDom("pre", { display_toogle : "object" }, jObj.toString(classes[key])).build());
+			$(id).append(jDom("h3",{}, " " + name + " " + jDom("input", { value: "Object" }) + jDom("input", { value: "Type" })));
+			$(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
+			$(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
+			$(id).append(jDom("pre", { display_classe : "type" }, jObj.toString(classes[key])));
 			$(id + " > pre").addClass("boxedArea");
 			$(id + " > h3").addClass("ui-widget-header");
 			$(id).css("position","fixed");

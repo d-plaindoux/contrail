@@ -22,6 +22,14 @@ define( [ "jquery" ],
 function ($) {
 
 	var jObj = {};
+	
+	jObj.types = {
+			Number : "number",
+			String : "string",
+			Boolean : "boolean",
+			Object : "object",
+			Undefined : "undefined"
+	};
     
 	/**
 	 * Method called whether the class name nust be retrieved
@@ -136,7 +144,7 @@ function ($) {
 	 * @param object The object
 	 * @return the type
 	 */
-	jObj.getType = function (object) {
+	jObj.toType = function (object) {
 		var driverToType = {
 			enterObject : function (object) {
 				return {};
@@ -146,7 +154,7 @@ function ($) {
 				return content;
 			},
 			exitObject : function (content) {
-				return this.content;
+				return content;
 			},
 			visitNative : function (value) {
 				return typeof value;
