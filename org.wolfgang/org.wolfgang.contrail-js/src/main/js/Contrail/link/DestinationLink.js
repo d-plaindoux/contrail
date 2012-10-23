@@ -18,17 +18,21 @@
 
 /*global define*/
 
-define( [ "require", "../core/jObj", "../utils/Strict" ] ,
-function(require, jObj, Strict) {
+define( [ "require", "Core/jObj", "Utils/jStrict" ] ,
+function(require, jObj, jStrict) {
 
 	function DestinationLink(destination,linkManager) {
-		jObj.bless(this, require("../factory/Factory").link(linkManager));       
+		jObj.bless(this, require("Contrail/Factory").link(linkManager));       
 		this.destination = destination;
 	}
 
-	DestinationLink.prototype.getDestination = function () {
+	DestinationLink.init = jObj.constructor(["DestinationComponent", "ComponentLinkManager"], function (destination,linkManager) {
+		return new DestinationLink(destination,linkManager);
+	});
+
+	DestinationLink.prototype.getDestination = jObj.method([],"DestinationComponent",function () {
 	    return this.destination;
-	};
+	});
 
 	return DestinationLink;
 });

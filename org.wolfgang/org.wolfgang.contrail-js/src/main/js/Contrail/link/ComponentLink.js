@@ -18,22 +18,23 @@
 
 /*global define*/
 
-define( [ "../core/jObj", "../utils/Strict" ] , 
-function(jObj, Strict) {
-	
+define( [ "Core/jObj"] , 
+function(jObj) {
+
 	function ComponentLink(source, destination) {
-		Strict.assertType(source,"SourceComponent");
-		Strict.assertType(destination,"DestinationComponent");
-
 		jObj.bless(this);
-
+		
 		this.source = source;
 		this.destination = destination;
 	}
-	
-	ComponentLink.prototype.dispose = function () {
+
+	ComponentLink.init = jObj.constructor(["SourceComponent", "DestinationComponent"], function(source,destination) {
+		return new ComponentLink(source,destination);
+	});
+
+	ComponentLink.prototype.dispose = jObj.procedure([], function () {
 		// TODO
-	};
+	});
 
 	return ComponentLink;
 });

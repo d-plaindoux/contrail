@@ -19,7 +19,7 @@
 /*global $, require, setTimeout */
 
 $(function() {
-	require([ "Contrail/factory/Factory", "Contrail/core/jObj", "Contrail/core/jDom" ], function(Factory, jObj, jDom) {
+	require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ], function(Factory, jObj, jDom) {
 	try {
 		var key, classes, id, name, showHide, changeToType, changeToObject;
 		

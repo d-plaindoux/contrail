@@ -18,25 +18,41 @@
 
 /*global define*/
 
-define( [ "require" ], 
-function (require) {
+define( "Core/jDom", [ ], 
+function () {
 
-	var Strict = {};
-    
-	function AssertTypeError(message) {
-		require("../core/jObj").bless(this);
-		this.message = message;
+	// Private package defintions
+
+	function PObject(tag, attributes, content) {
+		this.qname = tag;
+		this.attributes = attributes;
+		this.content = content;
 	}
+
+	PObject.prototype.toString = function () {
+		var key, result;
     
-	Strict.assertType = function (object, type) {
-		var jObj = require("../core/jObj");
-        
-		if (!jObj.instanceOf(type, "String")) {
-			throw new AssertTypeError(type + " must be an instance of String");
-		} else if (!jObj.instanceOf(object,type)) {
-			throw new AssertTypeError(object + " must be an instance of " + type);
+		result =  "<" + this.qname;
+
+		for(key in this.attributes) {
+			result += " " + key + "='" + this.attributes[key] + "'";
 		}
-	};
+
+		if (this.content) {
+			result += ">" + this.content.toString() + "</" + this.qname + ">"; 
+		} else {
+			result += "/>";
+		}        
     
-	return Strict;
+		return result;
+		
+	};
+	
+	PObject.prototype.build = PObject.prototype.toString;
+
+	// Public package definition
+
+	return function (tag, attributes, content) {
+		return new PObject(tag, attributes, content).build();
+	};
 });

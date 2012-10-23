@@ -1,6 +1,6 @@
 /*global require */
 
-require([ "../../factory/Factory", "../../core/jObj", "qunit" ], 
+require([ "Contrail/Factory", "Core/jObj", "qunit" ], 
 function(Factory, jObj, QUnit) {
     QUnit.test("Check Component generation", function() {
         var c1 = Factory.pipelineComponent(), 

@@ -18,25 +18,25 @@
 
 /*global define*/
 
-define( [ "../utils/Strict", "../component/Component", "../component/SourceComponent", "../component/DestinationComponent", "../component/pipeline/PipelineComponent" ] , 
-function(Strict, Component, SourceComponent, DestinationComponent, PipelineComponent) {
+define( [ "Utils/jStrict", "../component/Component", "../component/SourceComponent", "../component/DestinationComponent", "../component/pipeline/PipelineComponent" ] , 
+function(jStrict, Component, SourceComponent, DestinationComponent, PipelineComponent) {
 	
 	var ComponentFactory = {};
 
 	ComponentFactory.component = function () {
-	    return new Component();
+	    return Component.init();
 	};
 	
 	ComponentFactory.sourceComponent = function () {
-	    return new SourceComponent();
+	    return SourceComponent.init();
 	};
 
 	ComponentFactory.destinationComponent = function () {
-		return new DestinationComponent();
+		return DestinationComponent.init();
 	};
 	
 	ComponentFactory.pipelineComponent = function () {
-		return new PipelineComponent();
+		return PipelineComponent.init();
 	};
 	
 	return ComponentFactory;

@@ -18,41 +18,24 @@
 
 /*global define*/
 
-define( [ ], 
+define("Utils/jUtils", [  ], 
 function () {
 
-	// Private package defintions
+	var jUtils = {};
 
-	function PObject(tag, attributes, content) {
-		this.qname = tag;
-		this.attributes = attributes;
-		this.content = content;
-	}
+	jUtils.UUID = function () {
+		var S4 = function () {
+			return Math.floor(Math.random() * 0x10000).toString(16);
+		};
 
-	PObject.prototype.toString = function () {
-		var key, result;
-    
-		result =  "<" + this.qname;
-
-		for(key in this.attributes) {
-			result += " " + key + "='" + this.attributes[key] + "'";
-		}
-
-		if (this.content) {
-			result += ">" + this.content.toString() + "</" + this.qname + ">"; 
-		} else {
-			result += "/>";
-		}        
-    
-		return result;
-		
+		return (
+				S4() + S4() + "-" +
+				S4() + "-" +
+				S4() + "-" +
+				S4() + "-" +
+				S4() + S4() + S4()
+				);
 	};
-	
-	PObject.prototype.build = PObject.prototype.toString;
-
-	// Public package definition
-
-	return function (tag, attributes, content) {
-		return new PObject(tag, attributes, content).build();
-	};
+    
+	return jUtils;
 });

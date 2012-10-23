@@ -18,12 +18,17 @@
 
 /*global define*/
 
-define( [ "require", "../../core/jObj" ] , 
+define( [ "require", "Core/jObj" ] , 
 function(require, jObj) {
+
 	function PipelineComponent() {
-		var Factory = require("../../factory/Factory");
+		var Factory = require("Contrail/Factory");
 		jObj.bless(this, Factory.sourceComponent(), Factory.destinationComponent());
 	}
-	
+
+	PipelineComponent.init = jObj.constructor([], function () {
+		return new PipelineComponent();
+	});
+
 	return PipelineComponent;
 });

@@ -18,20 +18,24 @@
 
 /*global define*/
 
-define( [ "../core/jObj" ] , 
+define( [ "Core/jObj" ] , 
 function(jObj) {
     
 	function DataFlow() {
 		jObj.bless(this);
 	}
 
-	DataFlow.prototype.handleData = function(Data) {
-		// Nothing
-	};
+	DataFlow.init = jObj.constructor([], function() {
+		return new DataFlow();
+	});
 
-	DataFlow.prototype.handleClose = function() {
+	DataFlow.prototype.handleData = jObj.procedure([jObj.types.Any], function(Data) {
 		// Nothing
-	};
+	});
+
+	DataFlow.prototype.handleClose = jObj.procedure([], function() {
+		// Nothing
+	});
 
 	return DataFlow;
 });

@@ -18,12 +18,13 @@
 
 /*global define*/
 
-define( [ "jquery" ], 
-function ($) {
+define("Core/jObj", [ "require", "jquery" ], 
+function (require, $) {
 
 	var jObj = {};
 	
 	jObj.types = {
+			Any: "Any",
 			Number : "number",
 			String : "string",
 			Boolean : "boolean",
@@ -86,10 +87,12 @@ function ($) {
 	jObj.instanceOf = function (object, type) {
 		if (jObj.getClass(object) === type) {
 			return true;
-		} else if (object.inherit && object.inherit.hasOwnProperty(type)) {
+		} else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
+			return true;
+		} else if (type === jObj.types.Any) {
 			return true;
 		} else {
-			return false;
+			return typeof object === type;
 		}
 	};
         
@@ -98,7 +101,7 @@ function ($) {
 	* 
 	* @param object The object
 	* @return the transformation
-			*/
+	*/
 	jObj.transform = function (object, driver) {
 		if (typeof object === "object") {
 			var key, content = driver.enterObject(jObj.getClass(object));
@@ -163,6 +166,48 @@ function ($) {
 
 		return jObj.transform(object,driverToType);
 	};
-    
+	
+	jObj.exception = function (message, cause) {
+		throw { message : message, cause : cause };
+	};
+
+	jObj.constructor = function(profil, init) {
+		return function() {
+			if (arguments.length !== profil.length) {
+				throw jObj.exception("L.profil.error");
+			} else {
+				var jStrict, index;
+				jStrict = require("Utils/jStrict");
+
+				for(index = 0; index < arguments.length; index++) {
+					jStrict.assertType(arguments[index], profil[index]);
+				}
+
+				return init.apply(this, arguments);
+			}
+		};
+	};
+
+	jObj.procedure = function(profil, method) {
+		return jObj.method(profil, undefined, method); 
+	};
+
+	jObj.method = function(profil, returns, method) {
+		return function() {
+			if (arguments.length !== profil.length) {
+				throw jObj.exception("L.profil.error");
+			} else {
+				var jStrict, index;
+				jStrict = require("Utils/jStrict");
+
+				for(index = 0; index < arguments.length; index++) {
+					jStrict.assertType(arguments[index], profil[index]);
+				}
+
+				return jStrict.assertType(method.apply(this,arguments), returns);
+			}
+		};
+	};
+
 	return jObj;
 });

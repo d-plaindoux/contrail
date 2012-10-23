@@ -24,7 +24,7 @@ function(DataFlow, UpStreamDataFlow, DownStreamDataFlow) {
 	var FlowFactory = {};
 
 	FlowFactory.dataFlow = function () {
-	    return new DataFlow();
+	    return DataFlow.init();
 	};
 	
 	return FlowFactory;

@@ -18,18 +18,22 @@
 
 /*global define*/
 
-define( [ "require", "../core/jObj" ] ,
+define( [ "require", "Core/jObj" ] ,
 function(require, jObj) {
 
 	function SourceLink(source,linkManager) {
-	    jObj.bless(this, require("../factory/Factory").link(linkManager));
+		jObj.bless(this, require("Contrail/Factory").link(linkManager));
 		
 		this.source= source;
 	}
-	
-	SourceLink.prototype.getSource = function () {
+
+	SourceLink.init = jObj.constructor(["SourceComponent", "ComponentLinkManager"], function (source,linkManager) {
+		return new SourceLink(source,linkManager);
+	});
+
+	SourceLink.prototype.getSource = jObj.method([], "SourceComponent", function () {
 	    return this.source;
-	};
+	});
 
 	return SourceLink;
 });

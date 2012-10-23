@@ -1,6 +1,6 @@
 /*global require */
 
-require([ "./jObj", "qunit" ], function(jObj, QUnit) {
+require([ "Core/jObj", "qunit" ], function(jObj, QUnit) {
     /**
      * Test Type Checking
      */

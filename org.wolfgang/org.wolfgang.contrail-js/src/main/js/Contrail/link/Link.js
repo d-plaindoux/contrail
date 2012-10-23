@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define( [ "../core/jObj" ] ,
+define( [ "Core/jObj" ] ,
 function(jObj) {
 
 	function Link(linkManager) {
@@ -27,9 +27,13 @@ function(jObj) {
 		this.manager = linkManager;
 	}
 
-	Link.prototype.getLinkManager = function () {
+	Link.init = jObj.constructor(["ComponentLinkManager"], function (linkManager) {
+		return new Link(linkManager);
+	});
+
+	Link.prototype.getLinkManager = jObj.method([], "ComponentLinkManager", function () {
 	    return this.linkManager;
-	};
+	});
 
 	return Link;
 });

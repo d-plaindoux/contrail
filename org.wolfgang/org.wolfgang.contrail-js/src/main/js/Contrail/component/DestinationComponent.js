@@ -18,32 +18,36 @@
 
 /*global define*/
 
-define( [ "require", "../core/jObj", "../utils/Strict" ] , 
-function(require, jObj, Strict) {
+define( [ "require", "Core/jObj" ] , 
+function(require, jObj) {
 
 	function DestinationComponent() {
-		jObj.bless(this, require("../factory/Factory").component());
+		jObj.bless(this, require("Contrail/Factory").component());
 		
 		this.sourceLink = null;
 	}
-	
-	DestinationComponent.prototype.acceptSource = function(componentId) {
-		return (this.sourceLink === null);
-	};
-	
-	DestinationComponent.prototype.connectSource = function(sourceLink) {
-        Strict.assertType(sourceLink, "SourceLink");
 
-		this.sourceLink = sourceLink;
-		return require("../factory/Factory").componentLink(this.sourceLink.getSource(), this);
-	};	
+	DestinationComponent.init = jObj.constructor([], function () {
+		return new DestinationComponent();
+	});
+
+	DestinationComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean, function(componentId) {
+		return this.sourceLink === null;
+	});
 	
-	DestinationComponent.prototype.closeDownStream = function() {
-	    if (this.sourceLink !== null) {
-	        this.sourceLink.getSource().closeDownStream();
-	        this.sourceLink = null;
-	    }
-	};
+	DestinationComponent.prototype.connectSource = jObj.method(["SourceLink"], "ComponentLink", function(sourceLink) {
+		this.sourceLink = sourceLink;
+		return require("Contrail/Factory").componentLink(this.sourceLink.getSource(), this);
+	});
+	
+	DestinationComponent.prototype.closeDownStream = jObj.procedure([], function() {
+		if (this.sourceLink !== null) {
+			this.sourceLink.getSource().closeDownStream();
+			this.sourceLink = null;
+		} else {
+			throw jObj.exception("L.source.not.connected");
+		}
+	});
 	
 	return DestinationComponent;
 });

@@ -28,19 +28,19 @@ function(ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink)
 	};
 
 	LinkFactory.componentLink = function (source,destination) {
-	    return new ComponentLink(source,destination);
+	    return ComponentLink.init(source,destination);
 	};
 
-	LinkFactory.link = function (linkManager) {		
-	    return new Link(linkManager);
+	LinkFactory.link = function (linkManager) {
+	    return Link.init(linkManager);
 	};
 
-	LinkFactory.sourceLink = function (source,linkManager) {		
-	    return new SourceLink(source, linkManager);
+	LinkFactory.sourceLink = function (source,linkManager) {
+	    return SourceLink.init(source, linkManager);
 	};
 
-	LinkFactory.destinationLink = function (destination,linkManager) {		
-	    return new DestinationLink(destination, linkManager);
+	LinkFactory.destinationLink = function (destination,linkManager) {
+	    return DestinationLink.init(destination, linkManager);
 	};
 	
 	return LinkFactory;

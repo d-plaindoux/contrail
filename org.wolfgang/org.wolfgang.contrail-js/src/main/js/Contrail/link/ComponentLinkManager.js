@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define( [ "require", "../core/jObj", "../utils/Strict" ] ,
-function(require, jObj, Strict) {
+define( [ "require", "Core/jObj", "Utils/jStrict" ] ,
+function(require, jObj, jStrict) {
 	
 	function ComponentLinkManager() {
 		jObj.bless(this);
@@ -27,19 +27,21 @@ function(require, jObj, Strict) {
 		this.links = [ ];
 	}
 	
-	ComponentLinkManager.prototype.link = function (source, destination) {
-		// Check types
-		
+	ComponentLinkManager.init = jObj.constructor([], function () {
+		return new ComponentLinkManager();
+	});
+
+	ComponentLinkManager.prototype.link = jObj.procedure(["SourceComponent", "DestinationComponent"], function (source, destination) {
 		if (!source.acceptDestination(destination.getComponentId())) {
 			throw new Error("Source cannot accept Destination");
 		} else if (!destination.acceptSource(source.getComponentId())) {
 			throw new Error("Destination cannot accept Source");
 		} else {
-			var Factory = require("../factory/Factory");
+			var Factory = require("Contrail/Factory");
 			source.connectDestination(Factory.destinationLink(destination,this));
 			destination.connectSource(Factory.sourceLink(source,this));
 		}
-	};
+	});
 
 	return ComponentLinkManager;
 });
