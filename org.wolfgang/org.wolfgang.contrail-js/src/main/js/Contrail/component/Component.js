@@ -31,7 +31,7 @@ function(jUtils, jObj) {
 			return new Component();
 		});
 	
-	Component.prototype.getComponentId = jObj.method([], jObj.types.String,function() {
+	Component.prototype.getComponentId = jObj.method([], jObj.types.String, function() {
 		return this.identifier;
 	});
 
