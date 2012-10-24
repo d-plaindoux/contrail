@@ -40,6 +40,22 @@
 
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jslint-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<configuration>
+				   <disallowBitwiseOperators>false</disallowBitwiseOperators>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jslint</goal>
+							<goal>test-jslint</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.9</version>
@@ -59,7 +75,8 @@
 		</plugins>
 	</build>
 
-	<!-- FIXME: Temporary declaration of Codehaus repos until this moves to Maven Central -->
+	<!-- FIXME: Temporary declaration of Codehaus repos until this moves to 
+		Maven Central -->
 	<repositories>
 		<repository>
 			<id>snapshots</id>

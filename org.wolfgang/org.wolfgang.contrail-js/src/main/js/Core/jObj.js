@@ -24,11 +24,11 @@ function (require, $) {
 	var jObj = {};
 	
 	jObj.types = {
-			Any: "Any",
-			Number : "number",
-			String : "string",
-			Boolean : "boolean",
-			Object : "object",
+			Any       : "Any",
+			Number    : "number",
+			String    : "string",
+			Boolean   : "boolean",
+			Object    : "object",
 			Undefined : "undefined"
 	};
     
@@ -171,7 +171,7 @@ function (require, $) {
 		throw { message : message, cause : cause };
 	};
 
-	jObj.constructor = function(profil, init) {
+	jObj.constructor = function(profil, constructor) {
 		return function() {
 			if (arguments.length !== profil.length) {
 				throw jObj.exception("L.profil.error");
@@ -183,7 +183,7 @@ function (require, $) {
 					jStrict.assertType(arguments[index], profil[index]);
 				}
 
-				return init.apply(this, arguments);
+				return constructor.apply(this, arguments);
 			}
 		};
 	};
