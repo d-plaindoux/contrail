@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Core/jIO", [ "Core/jObj" ], 
+define("Core/jIOUtils", [ "Core/jObj" ], 
 function (jObj) {
 	var jIO = {};
 
