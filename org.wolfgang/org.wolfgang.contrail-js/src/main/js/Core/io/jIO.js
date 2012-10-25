@@ -18,28 +18,32 @@
 
 /*global define*/
 
-define("Core/jIO", [ ], 
-function () {
+define("Core/jIO", [ "Core/jObj" ], 
+function (jObj) {
 	var jIO = {};
 
+	jIO.readInt = function (i, bytes) {
+		if (bytes.length >= i + 2) {
+			return bytes[i] << 8 | bytes[i + 1];
+		} else {
+			throw jObj.exception("L.array.out.of.bound");
+		}
+	};
+
 	jIO.pack = function (bytes) {
-		var str = "", ch, i;
+		var str = "", i;
 		for(i = 0; i < bytes.length; i += 2) {
-			ch = bytes[i] << 8;
-			if (bytes[i + 1]) {
-				ch |= bytes[i + 1];
-				}
-			str += String.fromCharCode(ch);
+			str += String.fromCharCode(jObj.readInt(i, bytes));
 		}
 		return str;	
 	};
 
 	jIO.unpack = function (str) {
-		var bytes = [], ch, i;
+		var bytes = [], char, i;
 		for(i = 0; i < str.length; i++) {
-			ch = str.charCodeAt(i);
-			bytes.push(ch >>> 8);
-			bytes.push(ch & 0xFF);
+			char = str.charCodeAt(i);
+			bytes.push(char >>> 8);
+			bytes.push(char & 0xFF);
 		}
 		return bytes;
 	};

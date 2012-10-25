@@ -25,10 +25,11 @@ function (require, $) {
 	
 	jObj.types = {
 			Any       : "Any",
+			Array     : "Array",
+			Object    : "Object",
 			Number    : "number",
 			String    : "string",
 			Boolean   : "boolean",
-			Object    : "object",
 			Undefined : "undefined"
 	};
     
@@ -76,7 +77,17 @@ function (require, $) {
 			}
 		} 
 	};
-    
+
+	/**
+	 * Check if the parameter is an object with a given type
+	 * @param object
+	 * @param type
+	 * @return true if the object is a type of type; false otherwise 
+	 */
+	jObj.isObjectType = function (object,type)	{
+		return Object.prototype.toString.apply(object) === '[object ' + type + ']';
+	};
+
 	/**
 	 * Method called to check if a given object has a given type
 	 * 
@@ -85,14 +96,18 @@ function (require, $) {
 	 * @return true if the object is a type of type; false otherwise
 	 */
 	jObj.instanceOf = function (object, type) {
-		if (jObj.getClass(object) === type) {
+		if (typeof object === type) {
+			return true;
+		} else if(jObj.isObjectType(object,type)) {
+			return true;
+		} else if (jObj.getClass(object) === type) { 
 			return true;
 		} else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
 			return true;
 		} else if (type === jObj.types.Any) {
 			return true;
 		} else {
-			return typeof object === type;
+			return false;
 		}
 	};
         
