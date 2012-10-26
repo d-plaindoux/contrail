@@ -36,12 +36,16 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  */
 public class TestJAXBSerializer {
 
+	private JAXBTransducerFactory giveAJAXBTransducer() {
+		return new JAXBTransducerFactory(SimpleClass.class);
+	}
+
 	@Test
-	public void testNominal() throws DataTransducerException {
+	public void GivenAJAXBTransducerdAnExpectedClassEncodingMustSucceed() throws DataTransducerException {
 		final SimpleClass source = new SimpleClass();
 		source.setValue("Hello, World!");
 
-		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		final List<Bytes> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
@@ -54,8 +58,23 @@ public class TestJAXBSerializer {
 	}
 
 	@Test
-	public void testFailure01() {
-		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+	public void GivenAJAXBTransducerdAnExpectedClassDecodingMustSucceed() throws DataTransducerException {
+		final SimpleClass source = new SimpleClass();
+		source.setValue("Hello, World!");
+
+		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
+		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
+		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
+
+		final List<Bytes> bytes = encoder.transform(source);
+		final List<Object> result = decoder.transform(bytes.get(0));
+		assertEquals(1, result.size());
+		assertEquals(source, result.get(0));
+	}
+
+	@Test
+	public void GivenAJAXBTransducerdAnUnexpectedClassEncodingMustFail() {
+		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		try {
 			encoder.transform(this);
@@ -66,10 +85,10 @@ public class TestJAXBSerializer {
 	}
 
 	@Test
-	public void testFailure02() {
+	public void GivenACoercionTransducerdAnExpectedSequenceDecodingMustFail() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 
-		final JAXBTransducerFactory jaxbTransducerFactory = new JAXBTransducerFactory(SimpleClass.class);
+		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
 		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
 		try {
 			decoder.transform(new Bytes(bytes));

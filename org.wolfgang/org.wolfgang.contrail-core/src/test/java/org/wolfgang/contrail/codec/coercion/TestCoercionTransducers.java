@@ -36,17 +36,15 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
  */
 public class TestCoercionTransducers {
 
-	public static class SimpleClass {
-	}
-
-	public static class WrongSimpleClass {
+	private CoercionTransducerFactory<SimpleClass> giveAPayLoadTransducer() {
+		return new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
 	}
 
 	@Test
-	public void testNominal01() throws DataTransducerException {
+	public void GivenACoercionTransducerdAnExpectedClassEncodingMustSucceed() throws DataTransducerException {
 		final SimpleClass source = new SimpleClass();
 
-		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
 		final DataTransducer<SimpleClass, Object> encoder = payLoadTransducerFactory.getEncoder();
 		final List<Object> objects = encoder.transform(source);
 		assertEquals(1, objects.size());
@@ -59,8 +57,20 @@ public class TestCoercionTransducers {
 	}
 
 	@Test
-	public void testFailure01() {
-		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
+	public void GivenACoercionTransducerdAnExpectedClassDecodingMustSucceed() throws DataTransducerException {
+		final SimpleClass source = new SimpleClass();
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
+		final DataTransducer<SimpleClass, Object> encoder = payLoadTransducerFactory.getEncoder();
+		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
+		final List<Object> objects = encoder.transform(source);
+		final List<SimpleClass> results = decoder.transform(objects.get(0));
+		assertEquals(1, results.size());
+		assertEquals(source, results.get(0));
+	}
+
+	@Test
+	public void GivenACoercionTransducerdAnUnexpectedClassDecodingMustFail() {
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
 		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
 		try {
 			decoder.transform(new WrongSimpleClass());
