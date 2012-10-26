@@ -36,47 +36,64 @@ import org.wolfgang.contrail.component.pipeline.transducer.coercion.CoercionTran
  */
 public class TestCoercionTransducers {
 
-	private CoercionTransducerFactory<SimpleClass> giveAPayLoadTransducer() {
+	@Test
+	public void ShouldSucceedWhenEncodingAnExpectedData() throws DataTransducerException {
+
+		final SimpleClass source = givenASimpleData();
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = givenACoercionTransducer();
+		final List<Object> objects = whenEncodingAData(source, payLoadTransducerFactory);
+		thenEncodedDataMustBeASingleton(source, objects);
+	}
+
+	@Test
+	public void ShouldSucceedWhenDecodingAnExpectedData() throws DataTransducerException {
+		final SimpleClass source = givenASimpleData();
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = givenACoercionTransducer();
+		final List<SimpleClass> results = whenDecodingAData(source, payLoadTransducerFactory);
+		thenDataMustBeTheSource(source, results);
+	}
+
+	@Test(expected = DataTransducerException.class)
+	public void ShouldFailWhenDecodingAnUnexpectedData() throws DataTransducerException {
+		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = givenACoercionTransducer();
+		whenDecodingAnUnexpectedData(payLoadTransducerFactory);
+		fail();
+	}
+
+	private CoercionTransducerFactory<SimpleClass> givenACoercionTransducer() {
 		return new CoercionTransducerFactory<SimpleClass>(SimpleClass.class);
 	}
 
-	@Test
-	public void GivenACoercionTransducerdAnExpectedClassEncodingMustSucceed() throws DataTransducerException {
-		final SimpleClass source = new SimpleClass();
+	private SimpleClass givenASimpleData() {
+		return new SimpleClass();
+	}
 
-		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
+	private List<Object> whenEncodingAData(final SimpleClass source, final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory) throws DataTransducerException {
 		final DataTransducer<SimpleClass, Object> encoder = payLoadTransducerFactory.getEncoder();
 		final List<Object> objects = encoder.transform(source);
+		return objects;
+	}
+
+	private void thenEncodedDataMustBeASingleton(final SimpleClass source, final List<Object> objects) {
 		assertEquals(1, objects.size());
 		assertEquals(source, objects.get(0));
+	}
 
-		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
-		final List<SimpleClass> results = decoder.transform(objects.get(0));
+	private void thenDataMustBeTheSource(final SimpleClass source, final List<SimpleClass> results) {
 		assertEquals(1, results.size());
 		assertEquals(source, results.get(0));
 	}
 
-	@Test
-	public void GivenACoercionTransducerdAnExpectedClassDecodingMustSucceed() throws DataTransducerException {
-		final SimpleClass source = new SimpleClass();
-		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
+	private void whenDecodingAnUnexpectedData(final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory) throws DataTransducerException {
+		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
+		decoder.transform(new WrongSimpleClass());
+	}
+	
+	private List<SimpleClass> whenDecodingAData(final SimpleClass source, final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory) throws DataTransducerException {
 		final DataTransducer<SimpleClass, Object> encoder = payLoadTransducerFactory.getEncoder();
 		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
 		final List<Object> objects = encoder.transform(source);
 		final List<SimpleClass> results = decoder.transform(objects.get(0));
-		assertEquals(1, results.size());
-		assertEquals(source, results.get(0));
-	}
-
-	@Test
-	public void GivenACoercionTransducerdAnUnexpectedClassDecodingMustFail() {
-		final CoercionTransducerFactory<SimpleClass> payLoadTransducerFactory = giveAPayLoadTransducer();
-		final DataTransducer<Object, SimpleClass> decoder = payLoadTransducerFactory.getDecoder();
-		try {
-			decoder.transform(new WrongSimpleClass());
-			fail();
-		} catch (DataTransducerException e) {
-			// OK
-		}
+		return results;
 	}
 }
