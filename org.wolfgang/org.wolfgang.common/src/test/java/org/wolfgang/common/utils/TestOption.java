@@ -32,25 +32,25 @@ import org.junit.Test;
 public class TestOption {
 
 	@Test
-	public void testOption01() {
+	public void GivenAnUnreferencedOptionProvidesNone() {
 		final Option<Integer> option = Option.none();
 		assertEquals(Option.Kind.None, option.getKind());
 	}
 
 	@Test
-	public void testOption02() {
+	public void GivenAReferencedOptionProvidesSome() {
 		final Option<Integer> option = Option.some(1);
 		assertEquals(Option.Kind.Some, option.getKind());
 	}
 
 	@Test
-	public void testOption03() {
+	public void GivenAReferencedOptionProvidesTheValue() {
 		final Option<Integer> option = Option.some(1);
 		assertEquals(new Integer(1), option.getValue());
 	}
 
 	@Test
-	public void testOption04() {
+	public void GivenAnUnreferencedOptionThrowAnErroWhenGetValue() {
 		final Option<Integer> option = Option.none();
 		try {
 			option.getValue();

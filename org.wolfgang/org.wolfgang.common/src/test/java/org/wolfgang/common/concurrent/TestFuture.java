@@ -36,8 +36,8 @@ import org.junit.Test;
 public class TestFuture {
 
 	@Test
-	public void testNominal01() {
-		final FutureResponse<String> futureResponse = new FutureResponse<String>();
+	public void GivenAFutureSetProvideTheCorrespondingValue() {
+		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final String value = "Hello, World!";
 		futureResponse.setValue(value);
 		try {
@@ -50,8 +50,8 @@ public class TestFuture {
 	}
 
 	@Test
-	public void testNominal02() {
-		final FutureResponse<String> futureResponse = new FutureResponse<String>();
+	public void GivenAFutureWithErrorThrowTheError() {
+		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final Throwable value = new Throwable();
 		futureResponse.setError(value);
 		try {
@@ -65,8 +65,8 @@ public class TestFuture {
 	}
 
 	@Test
-	public void testNominal03() {
-		final FutureResponse<String> futureResponse = new FutureResponse<String>();
+	public void GivenAFutureWithNoValueFailWithATimeOut() {
+		final FutureResponse<String> futureResponse = givenAStringFuture();
 		try {
 			futureResponse.get(1, TimeUnit.SECONDS);
 			fail();
@@ -80,20 +80,11 @@ public class TestFuture {
 	}
 
 	@Test
-	public void testNominal04() {
-		final FutureResponse<String> futureResponse = new FutureResponse<String>();
+	public void GivenAFutureSetWithDelayProvideTheValueOnTime() {
+		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final String value = "Hello, World!";
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
-				} catch (InterruptedException e) {
-					futureResponse.setError(e);
-				}
-				futureResponse.setValue(value);
-			}
-		}.start();
+		
+		setAValueWithOneSecondDelay(futureResponse, value);
 
 		try {
 			assertEquals(value, futureResponse.get(4, TimeUnit.SECONDS));
@@ -106,10 +97,11 @@ public class TestFuture {
 		}
 	}
 
-	@Test
-	public void testNominal05() {
-		final FutureResponse<String> futureResponse = new FutureResponse<String>();
-		final Throwable value = new Throwable();
+	/**
+	 * @param futureResponse
+	 * @param value
+	 */
+	private void setAValueWithOneSecondDelay(final FutureResponse<String> futureResponse, final String value) {
 		new Thread() {
 			@Override
 			public void run() {
@@ -118,9 +110,17 @@ public class TestFuture {
 				} catch (InterruptedException e) {
 					futureResponse.setError(e);
 				}
-				futureResponse.setError(value);
+				futureResponse.setValue(value);
 			}
 		}.start();
+	}
+
+	@Test
+	public void GivenAFutureSetWithDelayToErrorThrowThError() {
+		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Throwable value = new Throwable();
+
+		setAnErrorWithOneSecondDelay(futureResponse, value);
 
 		try {
 			futureResponse.get(2, TimeUnit.SECONDS);
@@ -132,5 +132,30 @@ public class TestFuture {
 		} catch (TimeoutException e) {
 			fail();
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	private FutureResponse<String> givenAStringFuture() {
+		return new FutureResponse<String>();
+	}
+
+	/**
+	 * @param futureResponse
+	 * @param value
+	 */
+	private void setAnErrorWithOneSecondDelay(final FutureResponse<String> futureResponse, final Throwable value) {
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
+				} catch (InterruptedException e) {
+					futureResponse.setError(e);
+				}
+				futureResponse.setError(value);
+			}
+		}.start();
 	}
 }

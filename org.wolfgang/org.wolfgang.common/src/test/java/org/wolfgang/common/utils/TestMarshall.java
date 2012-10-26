@@ -34,12 +34,12 @@ import org.junit.Test;
 public class TestMarshall {
 
 	@Test
-	public void testInteger() throws IOException {
+	public void GivenAnIntegerUnmarshallMarshallMustBeIdentity() throws IOException {
 		assertEquals(12, Marshall.bytesToInt(Marshall.intToBytes(12)));
 	}
 
 	@Test
-	public void testIntegerFailure() {
+	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAnInteger() {
 		try {
 			assertEquals(12, Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
 			fail();
@@ -49,7 +49,7 @@ public class TestMarshall {
 	}
 
 	@Test
-	public void testObject() throws IOException, ClassNotFoundException {
+	public void GivenAStringUnmarshallMarshallCannotBeAnInteger() throws IOException, ClassNotFoundException {
 		assertEquals("Hello, World!", Marshall.bytesToObject(Marshall.objectToBytes("Hello, World!")));
 	}
 

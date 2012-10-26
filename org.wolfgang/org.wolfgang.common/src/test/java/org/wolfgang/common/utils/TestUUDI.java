@@ -34,12 +34,19 @@ import org.junit.Test;
 public class TestUUDI {
 
 	@Test
-	public void testUUDI01() throws NoSuchAlgorithmException {
-		
+	public void GivenTwoIdenticalUUIDEqualityMustSucceed() throws NoSuchAlgorithmException {
 		final UUID uuid1 = UUIDUtils.digestBased("test");
 		final UUID uuid2 = UUIDUtils.digestBased("test");
 
 		assertEquals(uuid1, uuid2);
+	}
+
+	@Test
+	public void GivenTwoIdenticalUUIDHashCodingMustBeTheSame() throws NoSuchAlgorithmException {
+		final UUID uuid1 = UUIDUtils.digestBased("test");
+		final UUID uuid2 = UUIDUtils.digestBased("test");
+
+		assertEquals(uuid1.hashCode(), uuid2.hashCode());
 	}
 
 }

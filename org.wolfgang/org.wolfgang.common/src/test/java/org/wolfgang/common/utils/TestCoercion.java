@@ -31,7 +31,7 @@ import org.junit.Test;
 public class TestCoercion {
 
 	@Test
-	public void testNominal01() {
+	public void GivenAnObjectAndACorrectCoercionMustSucceed() {
 		final Object object = new Integer(1);
 		assertTrue(Coercion.canCoerce(object, Integer.class));
 		try {
@@ -42,7 +42,7 @@ public class TestCoercion {
 	}
 
 	@Test
-	public void testNominal02() {
+	public void GivenAnObjectAndAnIncorrectCoercionMustFail() {
 		final Object object = new Integer(1);
 		assertTrue(Coercion.canCoerce(object, Number.class));
 		try {

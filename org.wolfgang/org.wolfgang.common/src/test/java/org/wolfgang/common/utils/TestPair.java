@@ -19,7 +19,6 @@
 package org.wolfgang.common.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 
 import org.junit.Test;
@@ -33,18 +32,34 @@ import org.junit.Test;
 public class TestPair {
 
 	@Test
-	public void testPair01() {
+	public void GivenTwoIdenticalPairsEqualityMustSucceed() {
 		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
-		assertEquals(pair1, pair1);
-		assertEquals(new Integer(1), pair1.getFirst());
-		assertEquals("a", pair1.getSecond());
-		assertFalse(pair1.equals(null));
-		assertFalse(pair1.equals("a"));
-
 		final Pair<Integer, String> pair2 = new Pair<Integer, String>(1, "a");
 		assertEquals(pair1, pair2);
+	}
+	
+	@Test
+	public void GivenTwoIdenticalPairsHashCodingMustBeTheSame() {
+		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
+		final Pair<Integer, String> pair2 = new Pair<Integer, String>(1, "a");
 		assertEquals(pair1.hashCode(), pair2.hashCode());
+	}
 
+	@Test
+	public void GivenTwoIdenticalPairsFirstEqualityMustSucceed() {
+		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
+		assertEquals(new Integer(1), pair1.getFirst());
+	}
+
+	@Test
+	public void GivenTwoIdenticalPairsSecondEqualityMustSucceed() {
+		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
+		assertEquals("a", pair1.getSecond());
+	}
+
+	@Test
+	public void GivenTwoDifferentPairsSecondEqualityMustFail() {
+		final Pair<Integer, String> pair1 = new Pair<Integer, String>(1, "a");
 		final Pair<Integer, String> pair3 = new Pair<Integer, String>(1, "b");
 		assertNotSame(pair1, pair3);
 	}

@@ -32,7 +32,7 @@ import org.junit.Test;
 public class TestMessage {
 
 	@Test
-	public void testMessage01() throws Exception {
+	public void GivenAValidMessageEntryReturnTheCorrectMessage() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message");
 			final String text = message.format();
@@ -43,7 +43,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void testMessage02() throws Exception {
+	public void GivenAValidMessageEntryWithArgumentsReturnTheCorrectMessage() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.with.args");
 			final String text = message.format("'Hello, World!'");
@@ -54,7 +54,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void testMessage03() throws Exception {
+	public void GivenAMessageEntryInAnInvalidMessageProviderReturnTheDefaultErrorMessage() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/undef", "message.undefined");
 			final String text = message.format("'Hello, World!'");
@@ -65,7 +65,7 @@ public class TestMessage {
 	}
 
 	@Test
-	public void testMessage04() throws Exception {
+	public void GivenAnInvalidMessageEntryInAValidMessageProviderReturnTheDefaultErrorMessage() throws Exception {
 		try {
 			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.undefined");
 			final String text = message.format("'Hello, World!'");
