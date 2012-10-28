@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define( [ "Utils/jStrict", "../component/Component", "../component/SourceComponent", "../component/DestinationComponent", "../component/pipeline/PipelineComponent" ] , 
-function(jStrict, Component, SourceComponent, DestinationComponent, PipelineComponent) {
+define( [ "../component/Component", "../component/SourceComponent", "../component/DestinationComponent", "../component/pipeline/PipelineComponent" ] , 
+function(Component, SourceComponent, DestinationComponent, PipelineComponent) {
 	
 	var ComponentFactory = {};
 

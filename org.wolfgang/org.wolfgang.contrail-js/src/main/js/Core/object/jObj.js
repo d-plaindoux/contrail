@@ -219,7 +219,7 @@ function (require, $) {
 					jStrict.assertType(arguments[index], profil[index]);
 				}
 
-				return jStrict.assertType(method.shift.apply(this,arguments), returns);
+				return jStrict.assertType(method.apply(this,arguments), returns);
 			}
 		};
 	};
