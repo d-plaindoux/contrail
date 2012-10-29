@@ -32,6 +32,14 @@ function (require, $) {
 			Boolean   : "boolean",
 			Undefined : "undefined"
 	};
+	
+	jObj.set = function(v,d) {
+		if (v === undefined) {
+			return d;
+		} else {
+			return v;
+		}
+	};
     
 	/**
 	 * Method called whether the class name nust be retrieved

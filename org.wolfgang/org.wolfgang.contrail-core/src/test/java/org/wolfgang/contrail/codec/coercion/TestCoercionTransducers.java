@@ -59,6 +59,8 @@ public class TestCoercionTransducers {
 		whenDecodingAnUnexpectedData(data, transducerFactory);
 		fail();
 	}
+	
+	// ------------------------------------------------------------------------------------
 
 	private WrongSimpleClass givenAWrongSimpleData() {
 		return new WrongSimpleClass();
