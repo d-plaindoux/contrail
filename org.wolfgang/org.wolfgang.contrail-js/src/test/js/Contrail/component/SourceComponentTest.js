@@ -30,7 +30,7 @@ function(Factory, jObj, QUnit) {
             lm = Factory.linkManager();
         QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
         lm.link(c2,c1);
-        // QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");
+        QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");
     });
         
     /**

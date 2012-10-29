@@ -30,7 +30,7 @@ function(jObj, jMarshaller) {
 	});
 
 	Encoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function(bytes) {
-		return [ jMarshaller.intToBytes(bytes.length).join(bytes) ];
+		return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
 	}); 
 
 	return Encoder;

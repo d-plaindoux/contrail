@@ -18,9 +18,19 @@
 
 /*global define*/
 
-define( "Contrail/Factory", [ "jquery", "../component/Factory", "../link/Factory", "../flow/Factory" ] , 
-function($, ComponentFactory, LinkFactory, flowFactory) {
+define( [ "./Encoder", "./Decoder" ] , 
+function(PayloadEncoder, PayloadDecoder) {
 	
-	return $.extend({}, ComponentFactory, LinkFactory, flowFactory);
+	var Factory = { payload : {} };
+
+	Factory.payload.Encoder = function () {
+	    return PayloadEncoder.init();
+	};
+	
+	Factory.payload.Decoder = function () {
+	    return PayloadDecoder.init();
+	};
+
+	return Factory;
 	
 });

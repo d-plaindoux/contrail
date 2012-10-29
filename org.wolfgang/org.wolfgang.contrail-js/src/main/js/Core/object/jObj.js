@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/jObj", [ "require", "jquery" ], 
-function (require, $) {
+define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ], 
+function (require, $, jStrict) {
 
 	var jObj = {};
 	
@@ -189,7 +189,7 @@ function (require, $) {
 
 		return jObj.transform(object,driverToType);
 	};
-	
+
 	jObj.exception = function (message, cause) {
 		throw { message : message, cause : cause };
 	};
@@ -199,8 +199,7 @@ function (require, $) {
 			if (arguments.length !== profil.length) {
 				throw jObj.exception("L.profil.error");
 			} else {
-				var jStrict, index;
-				jStrict = require("Utils/jStrict");
+				var index;
 
 				for(index = 0; index < arguments.length; index++) {
 					jStrict.assertType(arguments[index], profil[index]);
@@ -220,8 +219,7 @@ function (require, $) {
 			if (arguments.length !== profil.length) {
 				throw jObj.exception("L.profil.error");
 			} else {
-				var jStrict, index;
-				jStrict = require("Utils/jStrict");
+				var index;
 
 				for(index = 0; index < arguments.length; index++) {
 					jStrict.assertType(arguments[index], profil[index]);

@@ -18,15 +18,15 @@
 
 /*global define*/
 
-define( [ "../flow/DataFlow" ] , 
-function(DataFlow, UpStreamDataFlow, DownStreamDataFlow) {
+define( [ "./DataFlow" ] , 
+function(DataFlow) {
 	
-	var FlowFactory = {};
+	var Factory = {};
 
-	FlowFactory.dataFlow = function () {
+	Factory.dataFlow = function () {
 	    return DataFlow.init();
 	};
 	
-	return FlowFactory;
+	return Factory;
 	
 });
