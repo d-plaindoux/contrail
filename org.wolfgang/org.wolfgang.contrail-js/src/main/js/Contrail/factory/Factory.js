@@ -19,8 +19,14 @@
 /*global define*/
 
 define( "Contrail/Factory", [ "jquery", "../component/Factory", "../link/Factory", "../flow/Factory" ] , 
-function($, ComponentFactory, LinkFactory, flowFactory) {
+function($, ComponentFactory, LinkFactory, FlowFactory) {
 	
-	return $.extend({}, ComponentFactory, LinkFactory, flowFactory);
+	var Factory = {};
+	
+	Factory.component = ComponentFactory;
+	Factory.link = LinkFactory;
+	Factory.flow = FlowFactory;
+
+	return Factory;
 	
 });

@@ -22,7 +22,7 @@ define( [ "require", "Core/jObj", "Utils/jStrict" ] ,
 function(require, jObj, jStrict) {
 
 	function DestinationLink(destination,linkManager) {
-		jObj.bless(this, require("Contrail/Factory").link(linkManager));       
+		jObj.bless(this, require("Contrail/Factory").link.basic(linkManager));       
 		this.destination = destination;
 	}
 

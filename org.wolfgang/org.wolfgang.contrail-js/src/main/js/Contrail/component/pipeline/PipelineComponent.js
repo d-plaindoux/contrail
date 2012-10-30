@@ -23,7 +23,7 @@ function(require, jObj) {
 
 	function PipelineComponent() {
 		var Factory = require("Contrail/Factory");
-		jObj.bless(this, Factory.sourceComponent(), Factory.destinationComponent());
+		jObj.bless(this, Factory.component.source(), Factory.component.destination());
 	}
 
 	PipelineComponent.init = jObj.constructor([], function () {

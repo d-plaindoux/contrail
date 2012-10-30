@@ -19,7 +19,7 @@
 /*global define*/
 
 define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ], 
-function (require, $, jStrict) {
+function (require, jQuery, jStrict) {
 
 	var jObj = {};
 	
@@ -66,17 +66,17 @@ function (require, $, jStrict) {
 	 * @param arguments[1..] The extensions
 	 */
 	jObj.bless = function (/*arguments*/) {
-		var i, key;
-        
+		var i, key;        
+		
 		if (arguments.length > 0) {
-			$.extend.apply($, arguments);            
+			// Extension and supers
+			for(i = 1; i < arguments.length; i++) {
+				jQuery.extend(arguments[0],arguments[i]);
+			}
 
-			//
-			// Special traitments for inherit
-			//
-
+			// Inheritance
 			arguments[0].inherit = {};
-                        
+			
 			for(i = 1; i < arguments.length; i++) {
 				for(key in arguments[i].inherit) {
 					arguments[0].inherit[key] = true;

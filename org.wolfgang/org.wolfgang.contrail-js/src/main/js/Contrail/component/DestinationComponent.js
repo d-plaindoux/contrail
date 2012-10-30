@@ -22,7 +22,7 @@ define( [ "require", "Core/jObj" ] ,
 function(require, jObj) {
 
 	function DestinationComponent() {
-		jObj.bless(this, require("Contrail/Factory").component());
+		jObj.bless(this, require("Contrail/Factory").component.basic());
 		
 		this.sourceLink = null;
 	}
@@ -37,7 +37,7 @@ function(require, jObj) {
 	
 	DestinationComponent.prototype.connectSource = jObj.method(["SourceLink"], "ComponentLink", function(sourceLink) {
 		this.sourceLink = sourceLink;
-		return require("Contrail/Factory").componentLink(this.sourceLink.getSource(), this);
+		return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
 	});
 	
 	DestinationComponent.prototype.closeDownStream = jObj.procedure([], function() {

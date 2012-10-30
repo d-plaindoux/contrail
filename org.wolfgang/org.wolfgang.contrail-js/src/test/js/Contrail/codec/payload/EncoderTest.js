@@ -1,10 +1,10 @@
 /*global require */
 
-require([ "Core/jObj", "./Factory", "qunit" ], function(jObj, Factory, QUnit) {
+require([ "Core/jObj", "Codec/Factory", "qunit" ], function(jObj, Factory, QUnit) {
           
     QUnit.test("String encoding ", function() {
         var bytes = "Hello, World!".split(""), encoder, result;
-        encoder = Factory.payload.Encoder();
+        encoder = Factory.payload.encoder();
         result = encoder.transform(bytes);        
         QUnit.equal(result.length, 1, "Checking result length");
         QUnit.equal(jObj.instanceOf(result[0], jObj.types.Array), true, "Checking result type");

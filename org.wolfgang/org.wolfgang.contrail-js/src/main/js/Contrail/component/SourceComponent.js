@@ -18,10 +18,11 @@
 
 /*global define*/
 
-define( [ "require",  "Core/jObj" ] , function(require, jObj) {
+define( [ "require",  "Core/jObj" ] , 
+function(require, jObj) {
 
 	function SourceComponent() {
-		jObj.bless(this, require("Contrail/Factory").component());
+		jObj.bless(this, require("Contrail/Factory").component.basic());
 
 		this.destinationLink = null;
 	}
@@ -36,7 +37,7 @@ define( [ "require",  "Core/jObj" ] , function(require, jObj) {
 
 	SourceComponent.prototype.connectDestination = jObj.method(["DestinationLink"], "ComponentLink", function(destinationLink) {
 		this.destinationLink = destinationLink;
-		return require("Contrail/Factory").componentLink(this, this.destinationLink.getDestination());
+		return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
 	});
 
 	SourceComponent.prototype.closeUpStream = jObj.procedure([], function() {

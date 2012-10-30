@@ -22,7 +22,7 @@ define( [ "require", "Core/jObj" ] ,
 function(require, jObj) {
 
 	function SourceLink(source,linkManager) {
-		jObj.bless(this, require("Contrail/Factory").link(linkManager));
+		jObj.bless(this, require("Contrail/Factory").link.basic(linkManager));
 		
 		this.source= source;
 	}

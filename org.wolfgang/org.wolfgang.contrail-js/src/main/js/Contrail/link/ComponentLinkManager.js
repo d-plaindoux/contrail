@@ -38,8 +38,8 @@ function(require, jObj, jStrict) {
 			throw new Error("Destination cannot accept Source");
 		} else {
 			var Factory = require("Contrail/Factory");
-			source.connectDestination(Factory.destinationLink(destination,this));
-			destination.connectSource(Factory.sourceLink(source,this));
+			source.connectDestination(Factory.link.destination(destination,this));
+			destination.connectSource(Factory.link.source(source,this));
 		}
 	});
 

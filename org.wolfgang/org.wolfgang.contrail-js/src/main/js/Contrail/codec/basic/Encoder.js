@@ -18,27 +18,24 @@
 
 /*global define*/
 
-define( [ "./Component", "./SourceComponent", "./DestinationComponent", "./pipeline/PipelineComponent" ] , 
-function(Component, SourceComponent, DestinationComponent, PipelineComponent) {
-	
-	var Factory = {};
+define( [ "Core/jObj", "IO/jMarshaller" ] , 
+function(jObj, jMarshaller) {
 
-	Factory.basic = function () {
-	    return Component.init();
-	};
-	
-	Factory.source = function () {
-	    return SourceComponent.init();
-	};
+	function Encoder() {
+		jObj.bless(this);
+	}
 
-	Factory.destination = function () {
-		return DestinationComponent.init();
-	};
+	Encoder.init = jObj.constructor([], function () {
+		return new Encoder();
+	});
+/*
+	Encoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function(bytes) {
+		throw jObj.exception("L.not.available");
+	}); 
 	
-	Factory.pipeline = function () {
-		return PipelineComponent.init();
-	};
-	
-	return Factory;
-	
+	Encoder.prototype.finish = jObj.method([], jObj.types.Array, function() {
+		throw jObj.exception("L.not.available");
+	});
+*/
+	return Encoder;
 });

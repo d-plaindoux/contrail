@@ -18,11 +18,11 @@
 
 /*global define*/
 
-define( [ "Core/jObj", "IO/jMarshaller" ] , 
-function(jObj, jMarshaller) {
+define( [ "require", "Core/jObj", "IO/jMarshaller" ] , 
+function(require, jObj, jMarshaller) {
 
 	function Decoder() {
-		jObj.bless(this);
+		jObj.bless(this, require("Codec/Factory").basic.decoder());
 		this.buffer = [];
 	}
 

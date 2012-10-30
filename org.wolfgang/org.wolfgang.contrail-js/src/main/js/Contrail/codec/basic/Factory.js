@@ -18,27 +18,19 @@
 
 /*global define*/
 
-define( [ "./Component", "./SourceComponent", "./DestinationComponent", "./pipeline/PipelineComponent" ] , 
-function(Component, SourceComponent, DestinationComponent, PipelineComponent) {
+define( [ "./Encoder", "./Decoder" ] , 
+function(Encoder, Decoder) {
 	
 	var Factory = {};
 
-	Factory.basic = function () {
-	    return Component.init();
+	Factory.encoder = function () {
+	    return Encoder.init();
 	};
 	
-	Factory.source = function () {
-	    return SourceComponent.init();
+	Factory.decoder = function () {
+	    return Decoder.init();
 	};
 
-	Factory.destination = function () {
-		return DestinationComponent.init();
-	};
-	
-	Factory.pipeline = function () {
-		return PipelineComponent.init();
-	};
-	
 	return Factory;
-	
+
 });

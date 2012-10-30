@@ -23,23 +23,23 @@ function(ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink)
 	
 	var Factory = {};
 
-	Factory.linkManager = function () {
+	Factory.manager = function () {
 	    return new ComponentLinkManager();
 	};
 
-	Factory.componentLink = function (source,destination) {
+	Factory.components = function (source,destination) {
 	    return ComponentLink.init(source,destination);
 	};
 
-	Factory.link = function (linkManager) {
+	Factory.basic = function (linkManager) {
 	    return Link.init(linkManager);
 	};
 
-	Factory.sourceLink = function (source,linkManager) {
+	Factory.source = function (source,linkManager) {
 	    return SourceLink.init(source, linkManager);
 	};
 
-	Factory.destinationLink = function (destination,linkManager) {
+	Factory.destination = function (destination,linkManager) {
 	    return DestinationLink.init(destination, linkManager);
 	};
 	

@@ -21,13 +21,13 @@
 define( [ "./Encoder", "./Decoder" ] , 
 function(PayloadEncoder, PayloadDecoder) {
 	
-	var Factory = { payload : {} };
+	var Factory = {};
 
-	Factory.payload.Encoder = function () {
+	Factory.encoder = function () {
 	    return PayloadEncoder.init();
 	};
 	
-	Factory.payload.Decoder = function () {
+	Factory.decoder = function () {
 	    return PayloadDecoder.init();
 	};
 
