@@ -219,13 +219,15 @@ function (require, $, jStrict) {
 			if (arguments.length !== profil.length) {
 				throw jObj.exception("L.profil.error");
 			} else {
-				var index;
+				var index, result;
 
 				for(index = 0; index < arguments.length; index++) {
 					jStrict.assertType(arguments[index], profil[index]);
 				}
 
-				return jStrict.assertType(method.apply(this,arguments), returns);
+				result = method.apply(this,arguments);
+
+				return jStrict.assertType(result, returns);
 			}
 		};
 	};

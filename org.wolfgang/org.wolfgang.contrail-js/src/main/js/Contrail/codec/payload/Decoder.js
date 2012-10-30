@@ -26,7 +26,7 @@ function(jObj, jMarshaller) {
 		this.buffer = [];
 	}
 
-	Decoder.prototype.INT_LEN = 4;
+	Decoder.INT_LEN = 4;
 
 	Decoder.init = jObj.constructor([], function () {
 		return new Decoder();
@@ -34,13 +34,14 @@ function(jObj, jMarshaller) {
 	
 	Decoder.prototype.getNext = jObj.method([], jObj.types.Array, function() {
 		if (this.buffer.length < Decoder.INT_LEN) {
-			return undefined;
+			return [];
 		} else {
 			var payload = jMarshaller.bytesToInt(this.buffer);
 			if (this.buffer.length - Decoder.INT_LEN < payload) {
-				return undefined;
+				return [];
 			} else {
-				return this.buffer.slice(Decoder.INT_LEN, payload);
+				this.buffer.splice(0, Decoder.INT_LEN);
+				return this.buffer.splice(0, payload);
 			}
 		}
 	});
@@ -50,7 +51,7 @@ function(jObj, jMarshaller) {
 		
 		this.buffer = this.buffer.concat(bytes);
 		
-		for(result = Decoder.getNext(); result !== undefined;result = Decoder.getNext()) {
+		for(result = this.getNext(); result.length > 0; result = this.getNext()) {
 			results.push(result);
 		}
 		
