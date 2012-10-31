@@ -18,29 +18,25 @@
 
 /*global define*/
 
-define( [ "Core/jObj" ] , 
-function(jObj) {
+define( [ "Core/jObj", "./TransducerDataFlow" ] , 
+function(jObj,TransducerDataFlow) {
     
-	function DataFlow(type) {
-		jObj.bless(this);
-		if (type === undefined) {
-			this.type = jObj.types.Any;
-		} else {
-			this.type = type;
-		}
+	function TransducerDownStreamDataFlow(type, component, transducer) {
+		jObj.bless(this, TransducerDataFlow.init(type,transducer));
+		this.component = component;
 	}
 
-	DataFlow.init = jObj.constructor([jObj.types.Any], function(type) {
-		return new DataFlow(type);
-	});
-/*
-	DataFlow.prototype.handleData = jObj.procedure([this.type], function(Data) {
-		// Nothing
+	TransducerDownStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function(type, component, transducer) {
+		return new TransducerDownStreamDataFlow(type, component, transducer);
 	});
 
-	DataFlow.prototype.handleClose = jObj.procedure([], function() {
-		// Nothing
-	});
-*/
-	return DataFlow;
+	TransducerDownStreamDataFlow.prototype.getDataFlow = function() {
+		if (this.component.getSourceComponentLink() !== undefined) {
+			throw jObj.exception("L.source.not.yet.connected");
+		} else {
+			return this.component.getSourceComponentLink().getDownStreamDataFlow();
+		}
+	};
+
+	return TransducerDownStreamDataFlow;
 });

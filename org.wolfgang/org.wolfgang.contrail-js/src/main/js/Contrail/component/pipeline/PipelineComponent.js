@@ -26,9 +26,30 @@ function(require, jObj) {
 		jObj.bless(this, Factory.component.source(), Factory.component.destination());
 	}
 
+	/**
+	 * Construction initialisation
+	 */
 	PipelineComponent.init = jObj.constructor([], function () {
 		return new PipelineComponent();
 	});
+
+	/**
+	 * Provides the embedded upstream source component (internal use only)
+	 * 
+	 * @return the current up stream source component
+	 */
+	PipelineComponent.prototype.getSourceComponentLink = function () {
+		return this.sourceLink;
+	};
+
+	/**
+	 * Provides the embedded upstream source component (internal use only)
+	 * 
+	 * @return the current up stream source component
+	 */
+	PipelineComponent.prototype.getDestinationComponentLink = function () {
+		return this.destinationLink;
+	};
 
 	return PipelineComponent;
 });

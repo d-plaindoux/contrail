@@ -20,27 +20,17 @@
 
 define( [ "Core/jObj" ] , 
 function(jObj) {
-    
-	function DataFlow(type) {
+
+	function DataTransducer() {
 		jObj.bless(this);
-		if (type === undefined) {
-			this.type = jObj.types.Any;
-		} else {
-			this.type = type;
-		}
 	}
 
-	DataFlow.init = jObj.constructor([jObj.types.Any], function(type) {
-		return new DataFlow(type);
-	});
-/*
-	DataFlow.prototype.handleData = jObj.procedure([this.type], function(Data) {
-		// Nothing
+	DataTransducer.init = jObj.constructor([], function () {
+		return new DataTransducer();
 	});
 
-	DataFlow.prototype.handleClose = jObj.procedure([], function() {
-		// Nothing
-	});
-*/
-	return DataFlow;
+	// DataTransducer.prototype.transform = A -> List<E>; 
+	// DataTransducer.prototype.finish = -> List<E>;
+
+	return DataTransducer;
 });

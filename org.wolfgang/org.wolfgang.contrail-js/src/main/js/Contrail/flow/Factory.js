@@ -23,8 +23,8 @@ function(DataFlow) {
 	
 	var Factory = {};
 
-	Factory.dataFlow = function () {
-	    return DataFlow.init();
+	Factory.basic = function (type) {
+	    return DataFlow.init(type);
 	};
 	
 	return Factory;

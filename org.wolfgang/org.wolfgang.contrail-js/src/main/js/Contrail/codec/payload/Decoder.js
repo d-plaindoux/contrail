@@ -22,7 +22,7 @@ define( [ "require", "Core/jObj", "IO/jMarshaller" ] ,
 function(require, jObj, jMarshaller) {
 
 	function Decoder() {
-		jObj.bless(this, require("Codec/Factory").basic.decoder());
+		jObj.bless(this, require("Codec/Factory").basic.transducer());
 		this.buffer = [];
 	}
 
