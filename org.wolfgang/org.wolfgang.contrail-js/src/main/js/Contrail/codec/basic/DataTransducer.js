@@ -29,8 +29,8 @@ function(jObj) {
 		return new DataTransducer();
 	});
 
-	// DataTransducer.prototype.transform = A -> List<E>; 
-	// DataTransducer.prototype.finish = -> List<E>;
+	DataTransducer.prototype.transform = jObj.method([jObj.types.Any],jObj.types.Array); 
+	DataTransducer.prototype.finish = jObj.method([jObj.types.Any],jObj.types.Array);
 
 	return DataTransducer;
 });

@@ -241,21 +241,25 @@ function (require, jQuery, jStrict) {
 	 * @return a method 
 	 */
 	jObj.method = function(profil, returns, method) {
-		return function() {
-			if (arguments.length !== profil.length) {
-				throw jObj.exception("L.profil.error");
-			} else {
-				var index, result;
-
-				for(index = 0; index < arguments.length; index++) {
-					jStrict.assertType(arguments[index], profil[index]);
+		if (method === undefined) {
+			return undefined;
+		} else {
+			return function() {
+				if (arguments.length !== profil.length) {
+					throw jObj.exception("L.profil.error");
+				} else {
+					var index, result;
+    
+					for(index = 0; index < arguments.length; index++) {
+						jStrict.assertType(arguments[index], profil[index]);
+					}
+    
+					result = method.apply(this,arguments);
+    
+					return jStrict.assertType(result, returns);
 				}
-
-				result = method.apply(this,arguments);
-
-				return jStrict.assertType(result, returns);
-			}
-		};
+			};
+		}
 	};
 
 	/**

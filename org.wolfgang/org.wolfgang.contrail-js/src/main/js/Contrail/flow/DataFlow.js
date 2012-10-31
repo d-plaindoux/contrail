@@ -23,6 +23,7 @@ function(jObj) {
     
 	function DataFlow(type) {
 		jObj.bless(this);
+		
 		if (type === undefined) {
 			this.type = jObj.types.Any;
 		} else {
@@ -33,14 +34,9 @@ function(jObj) {
 	DataFlow.init = jObj.constructor([jObj.types.Any], function(type) {
 		return new DataFlow(type);
 	});
-/*
-	DataFlow.prototype.handleData = jObj.procedure([this.type], function(Data) {
-		// Nothing
-	});
 
-	DataFlow.prototype.handleClose = jObj.procedure([], function() {
-		// Nothing
-	});
-*/
+	DataFlow.prototype.handleData = jObj.procedure([this.type]);
+	DataFlow.prototype.handleClose = jObj.procedure([]);
+	
 	return DataFlow;
 });

@@ -30,7 +30,7 @@ function(require, jObj) {
 		return new TransducerDataFlow(type, transducer);
 	});
 
-	// TransducerDownStreamDataFlow.prototype.getDataFlow = -> DataFlow;
+	TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
 
 	TransducerDataFlow.prototype.handleData = jObj.procedure([this.type], function(data) {
 		var dataFlow = this.getDataFlow(),

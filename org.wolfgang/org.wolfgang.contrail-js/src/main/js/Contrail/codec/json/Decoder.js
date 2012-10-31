@@ -31,7 +31,7 @@ function(require, jObj, JSon) {
 	});
 
 	Decoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function(string) {
-		return [ JSON.parse(string) ];
+		return [ JSon.parse(string) ];
 	});
 
 	Decoder.prototype.finish = jObj.method([], jObj.types.Array, function() {

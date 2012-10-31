@@ -2,7 +2,7 @@
 
 require([ "Core/jObj", "Codec/Factory", "qunit" ], function(jObj, Factory, QUnit) {
           
-    QUnit.test("String encoding ", function() {
+    QUnit.test("String encoding", function() {
         var bytes = "Hello, World!".split(""), encoder, result;
         encoder = Factory.payload.encoder();
         result = encoder.transform(bytes);        

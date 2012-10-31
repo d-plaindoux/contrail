@@ -40,7 +40,7 @@ function(require, jObj) {
 		return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
 	});
 
-	// SourceComponent.prototype.getDownStreamDataFlow = ???;
+	SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "?");
 
 	SourceComponent.prototype.closeUpStream = jObj.procedure([], function() {
 		if (this.destinationLink !== null) {
