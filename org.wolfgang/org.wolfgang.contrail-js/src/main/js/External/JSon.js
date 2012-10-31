@@ -18,15 +18,9 @@
 
 /*global define*/
 
-define( "Codec/Factory", [ "./basic/Factory", "./payload/Factory", "./json/Factory" ] , 
-function(BasicFactory, PayloadFactory, JSonFactory) {
-	
-	var Factory = {};
-
-	Factory.basic = BasicFactory;
-	Factory.payload = PayloadFactory;
-	Factory.json = JSonFactory;
-
-	return Factory;
-	
+define( "External/JSon", [ "require" ], 
+function(require) {
+	require("/lib/JSon.js", function() {
+		return JSON;
+	});
 });

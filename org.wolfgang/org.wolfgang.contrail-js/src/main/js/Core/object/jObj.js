@@ -23,6 +23,9 @@ function (require, jQuery, jStrict) {
 
 	var jObj = {};
 	
+	/**
+	 * 
+	 */
 	jObj.types = {
 			Any       : "Any",
 			Array     : "Array",
@@ -31,14 +34,6 @@ function (require, jQuery, jStrict) {
 			String    : "string",
 			Boolean   : "boolean",
 			Undefined : "undefined"
-	};
-	
-	jObj.set = function(v,d) {
-		if (v === undefined) {
-			return d;
-		} else {
-			return v;
-		}
 	};
     
 	/**
@@ -190,10 +185,24 @@ function (require, jQuery, jStrict) {
 		return jObj.transform(object,driverToType);
 	};
 
+	/**
+	 * Facility used when an exception must be created
+	 * 
+	 * @param message
+	 * @param cause
+	 * @return an exception
+	 */
 	jObj.exception = function (message, cause) {
 		throw { message : message, cause : cause };
 	};
 
+	/**
+	 * Method called whether a construction must be defined
+	 * 
+	 * @param profil
+	 * @param constructor
+	 * @return a constructor function 
+	 */
 	jObj.constructor = function(profil, constructor) {
 		return function() {
 			if (arguments.length !== profil.length) {
@@ -210,10 +219,27 @@ function (require, jQuery, jStrict) {
 		};
 	};
 
+
+	/**
+	 * Method called whether a procedure must be defined
+	 * 
+	 * @param profil
+	 * @param method
+	 * @return a prodecure
+	 */
 	jObj.procedure = function(profil, method) {
 		return jObj.method(profil, undefined, method); 
 	};
 
+
+	/**
+	 * Method called whether a method must be defined
+	 * 
+	 * @param profil
+	 * @param returns
+	 * @param method
+	 * @return a method 
+	 */
 	jObj.method = function(profil, returns, method) {
 		return function() {
 			if (arguments.length !== profil.length) {
@@ -232,5 +258,22 @@ function (require, jQuery, jStrict) {
 		};
 	};
 
+	/**
+	 * Facility used to determine a value using a default one when
+	 * the parametric one is undefined.
+	 * 
+	 * @param v the value
+	 * @param d the default
+	 * @return v if not undefined; d otherwise
+	 */
+	jObj.value = function(v,d) {
+		if (v === undefined) {
+			return d;
+		} else {
+			return v;
+		}
+	};
+
 	return jObj;
+
 });

@@ -44,7 +44,10 @@
 				<artifactId>jslint-maven-plugin</artifactId>
 				<version>1.0.1</version>
 				<configuration>
-				   <disallowBitwiseOperators>false</disallowBitwiseOperators>
+					<disallowBitwiseOperators>false</disallowBitwiseOperators>
+					<excludes>
+					   <exclude>lib/JSon.js</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>

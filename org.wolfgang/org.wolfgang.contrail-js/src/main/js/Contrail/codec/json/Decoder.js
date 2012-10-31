@@ -18,15 +18,25 @@
 
 /*global define*/
 
-define( "Codec/Factory", [ "./basic/Factory", "./payload/Factory", "./json/Factory" ] , 
-function(BasicFactory, PayloadFactory, JSonFactory) {
-	
-	var Factory = {};
+define( [ "require", "Core/jObj", "External/JSon" ] , 
+function(require, jObj, JSon) {
 
-	Factory.basic = BasicFactory;
-	Factory.payload = PayloadFactory;
-	Factory.json = JSonFactory;
+	function Decoder() {
+		jObj.bless(this, require("Codec/Factory").basic.transducer());
+		this.buffer = [];
+	}
 
-	return Factory;
-	
+	Decoder.init = jObj.constructor([], function () {
+		return new Decoder();
+	});
+
+	Decoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function(string) {
+		return [ JSON.parse(string) ];
+	});
+
+	Decoder.prototype.finish = jObj.method([], jObj.types.Array, function() {
+		return [];
+	});
+
+	return Decoder;
 });

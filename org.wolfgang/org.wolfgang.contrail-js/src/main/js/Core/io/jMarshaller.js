@@ -23,7 +23,7 @@ function (jObj) {
 	var jMarshaller = {};
 	
 	jMarshaller.bytesToInt = function (bytes, offset) {
-		var i = jObj.set(offset,0);
+		var i = jObj.value(offset,0);
 		
 		if (bytes.length >= i + 4) {
 			return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3]; 
