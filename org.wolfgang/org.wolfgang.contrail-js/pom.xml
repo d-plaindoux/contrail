@@ -46,7 +46,7 @@
 				<configuration>
 					<disallowBitwiseOperators>false</disallowBitwiseOperators>
 					<excludes>
-					   <exclude>lib/JSon.js</exclude>
+					   <exclude>lib/*.js</exclude>
 					</excludes>
 				</configuration>
 				<executions>

@@ -23,6 +23,12 @@ function (require, jQuery, jStrict) {
 
 	var jObj = {};
 	
+	jObj.modelisation = true;
+	
+	jObj.enableModelisation = function (value) {
+		jObj.modelisation = value;
+	};
+	
 	/**
 	 * 
 	 */
@@ -204,19 +210,23 @@ function (require, jQuery, jStrict) {
 	 * @return a constructor function 
 	 */
 	jObj.constructor = function(profil, constructor) {
-		return function() {
-			if (arguments.length !== profil.length) {
-				throw jObj.exception("L.profil.error");
-			} else {
-				var index;
-
-				for(index = 0; index < arguments.length; index++) {
-					jStrict.assertType(arguments[index], profil[index]);
+		if (!jObj.modelisation) {
+			return constructor;
+		} else {
+			return function() {
+				if (arguments.length !== profil.length) {
+					throw jObj.exception("L.profil.error");
+				} else {
+					var index;
+    
+					for(index = 0; index < arguments.length; index++) {
+						jStrict.assertType(arguments[index], profil[index]);
+					}
+    
+					return constructor.apply(this, arguments);
 				}
-
-				return constructor.apply(this, arguments);
-			}
-		};
+			};
+		}
 	};
 
 
@@ -243,6 +253,8 @@ function (require, jQuery, jStrict) {
 	jObj.method = function(profil, returns, method) {
 		if (method === undefined) {
 			return undefined;
+		} else if (!jObj.modelisation) {
+			return method;
 		} else {
 			return function() {
 				if (arguments.length !== profil.length) {
