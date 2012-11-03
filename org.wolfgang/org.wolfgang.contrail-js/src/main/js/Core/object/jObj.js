@@ -22,15 +22,15 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
 function (require, jQuery, jStrict) {
 
 	var jObj = {};
-	
+
 	jObj.modelisation = true;
 	
-	jObj.enableModelisation = function (value) {
+	jObj.activateModelisation = function (value) {
 		jObj.modelisation = value;
 	};
 	
 	/**
-	 * 
+	 * Type definitions
 	 */
 	jObj.types = {
 			Any       : "Any",
@@ -68,7 +68,7 @@ function (require, jQuery, jStrict) {
 	 */
 	jObj.bless = function (/*arguments*/) {
 		var i, key;        
-		
+
 		if (arguments.length > 0) {
 			// Extension and supers
 			for(i = 1; i < arguments.length; i++) {
