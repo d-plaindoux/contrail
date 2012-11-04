@@ -22,7 +22,7 @@ import java.io.Closeable;
 
 import org.wolfgang.contrail.component.ComponentFactory;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * An <code>Ecosystem</code> is able to provide components based on criterion.
@@ -37,7 +37,7 @@ public interface Ecosystem extends Closeable {
 	/**
 	 * @return
 	 */
-	ComponentLinkManager getLinkManager();
+	ComponentManager getLinkManager();
 
 	/**
 	 * Method called whether an component binder is required

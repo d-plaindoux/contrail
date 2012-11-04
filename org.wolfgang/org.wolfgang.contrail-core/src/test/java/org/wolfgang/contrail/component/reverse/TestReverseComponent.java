@@ -36,7 +36,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestComposeComponent</code>
@@ -49,7 +49,7 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
@@ -86,7 +86,7 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
@@ -122,7 +122,7 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse03() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();

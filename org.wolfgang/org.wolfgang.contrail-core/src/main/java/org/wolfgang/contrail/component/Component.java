@@ -63,4 +63,15 @@ public interface Component {
 	 */
 	void closeDownStream() throws DataFlowCloseException;
 
+	/**
+	 * Method called whether the current component must be linked to a new
+	 * component
+	 * 
+	 * @param components
+	 *            The components to be connected
+	 * @return a new component based on the required connection
+	 * @throws ComponentConnectionRejectedException
+	 */
+	Component connect(Component... components) throws ComponentConnectionRejectedException;
+
 }

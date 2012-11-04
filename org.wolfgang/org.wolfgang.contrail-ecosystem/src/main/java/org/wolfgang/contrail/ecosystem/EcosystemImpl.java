@@ -35,8 +35,7 @@ import org.wolfgang.contrail.ecosystem.key.RegisteredUnitEcosystemKey;
 import org.wolfgang.contrail.ecosystem.key.UnitEcosystemKey;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * The <code>EcosystemImpl</code> proposes an implementation using standard
@@ -60,7 +59,7 @@ public class EcosystemImpl implements Ecosystem {
 	/**
 	 * The related link manager
 	 */
-	private final ComponentLinkManager linkManager;
+	private final ComponentManager linkManager;
 
 	{
 		this.hooks = new HashMap<RegisteredUnitEcosystemKey, ComponentFactory>();
@@ -71,7 +70,7 @@ public class EcosystemImpl implements Ecosystem {
 	 * Constructor
 	 */
 	public EcosystemImpl() {
-		this(new ComponentLinkManagerImpl());
+		this(new ComponentManager());
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class EcosystemImpl implements Ecosystem {
 	 * @param manager
 	 * @param activeComponents
 	 */
-	public EcosystemImpl(ComponentLinkManager manager) {
+	public EcosystemImpl(ComponentManager manager) {
 		super();
 		this.linkManager = manager;
 	}
@@ -99,7 +98,7 @@ public class EcosystemImpl implements Ecosystem {
 	 * 
 	 * @return the link manager
 	 */
-	public ComponentLinkManager getLinkManager() {
+	public ComponentManager getLinkManager() {
 		return linkManager;
 	}
 

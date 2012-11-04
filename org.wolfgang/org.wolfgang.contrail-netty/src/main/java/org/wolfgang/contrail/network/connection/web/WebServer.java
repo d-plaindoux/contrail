@@ -35,8 +35,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -87,10 +86,10 @@ public final class WebServer extends NIOServer {
 		};
 
 		final ComponentFactory destinationComponentFactory = new ComponentFactory() {
-			final ComponentLinkManager linkManager = new ComponentLinkManagerImpl();
+			final ComponentManager linkManager = new ComponentManager();
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return linkManager;
 			}
 

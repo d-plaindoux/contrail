@@ -39,7 +39,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>BoundComponents</code>
@@ -73,7 +73,7 @@ public final class Components {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Component compose(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public static Component compose(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		if (components.length == 0) {
 			throw new ComponentConnectionRejectedException("TODO");
 		} else if (components.length == 1) {
@@ -92,7 +92,7 @@ public final class Components {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Component reverse(ComponentLinkManager linkManager, Component component) throws ComponentConnectionRejectedException {
+	public static Component reverse(ComponentManager linkManager, Component component) throws ComponentConnectionRejectedException {
 		if (Coercion.canCoerce(component, PipelineComponent.class)) {
 			return new ReversedPipelIneComponent(linkManager, Coercion.coerce(component, PipelineComponent.class));
 		} else if (Coercion.canCoerce(component, SourceComponent.class)) {

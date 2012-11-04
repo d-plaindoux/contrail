@@ -44,7 +44,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestFileClient</code>
@@ -104,7 +104,7 @@ public class TestFileClient {
 			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
 				final InitialComponent<byte[], byte[]> initialComponent = Components.initial(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = Components.terminal(terminalReceiver);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+				final ComponentManager componentsLinkManagerImpl = new ComponentManager();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {
@@ -156,7 +156,7 @@ public class TestFileClient {
 			public UpStreamDataFlow<byte[]> create(DownStreamDataFlow<byte[]> initialReceiver) throws CannotCreateDataFlowException {
 				final InitialComponent<byte[], byte[]> initialComponent = Components.initial(initialReceiver);
 				final TerminalComponent<byte[], byte[]> terminalComponent = Components.terminal(terminalReceiverFactory);
-				final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+				final ComponentManager componentsLinkManagerImpl = new ComponentManager();
 				try {
 					componentsLinkManagerImpl.connect(initialComponent, terminalComponent);
 				} catch (ComponentConnectionRejectedException e) {

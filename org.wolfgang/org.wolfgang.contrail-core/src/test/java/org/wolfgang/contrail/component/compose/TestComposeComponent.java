@@ -37,7 +37,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.serializer.Serializat
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestComposeComponent</code>
@@ -64,7 +64,7 @@ public class TestComposeComponent {
 			}
 		});
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
@@ -107,7 +107,7 @@ public class TestComposeComponent {
 		final Component[] components = { initialComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 
 		Components.compose(componentLinkManagerImpl, components);
 
@@ -141,7 +141,7 @@ public class TestComposeComponent {
 		final Component[] components = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 
 		final Component compose = Components.compose(componentLinkManagerImpl, components);
 
@@ -177,7 +177,7 @@ public class TestComposeComponent {
 		final Component[] components = { initialComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 
 		final Component compose = Components.compose(componentLinkManagerImpl, components);
 
@@ -214,7 +214,7 @@ public class TestComposeComponent {
 
 		final Component[] components2 = { new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 
 		final Component compose1 = Components.compose(componentLinkManagerImpl, components1);
 		final Component compose2 = Components.compose(componentLinkManagerImpl, components2);
@@ -233,7 +233,7 @@ public class TestComposeComponent {
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>());
 		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
 

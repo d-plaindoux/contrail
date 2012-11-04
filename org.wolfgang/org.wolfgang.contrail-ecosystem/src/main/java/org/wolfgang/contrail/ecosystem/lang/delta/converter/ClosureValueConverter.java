@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>StringConverter</code>
@@ -32,7 +32,7 @@ public final class ClosureValueConverter extends AbstractConverter<ClosureValue>
 	/**
 	 * Constructor
 	 */
-	public ClosureValueConverter(ComponentLinkManager linkManager) {
+	public ClosureValueConverter(ComponentManager linkManager) {
 		super(ClosureValue.class);
 	}
 

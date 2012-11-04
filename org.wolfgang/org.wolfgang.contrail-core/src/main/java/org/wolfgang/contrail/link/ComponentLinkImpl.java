@@ -46,7 +46,7 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 	 */
 	private final DestinationComponent<U, D> destination;
 	private final ComponentLink destinationConnection;
-	private final ComponentLinkManager componentLinkManager;
+	private final ComponentManager componentLinkManager;
 
 	private final AtomicBoolean disposed;
 
@@ -64,7 +64,7 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 	 * @throws ComponentConnectionRejectedException
 	 *             thrown if the connection cannot be performed
 	 */
-	ComponentLinkImpl(ComponentLinkManager componentLinkManager, SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
+	ComponentLinkImpl(ComponentManager componentLinkManager, SourceComponent<U, D> source, DestinationComponent<U, D> destination) throws ComponentConnectionRejectedException {
 		super();
 		this.componentLinkManager = componentLinkManager;
 		this.source = source;
@@ -85,7 +85,7 @@ public class ComponentLinkImpl<U, D> implements SourceComponentLink<U, D>, Desti
 	}
 
 	@Override
-	public ComponentLinkManager getComponentLinkManager() {
+	public ComponentManager getComponentLinkManager() {
 		return this.componentLinkManager;
 	}
 

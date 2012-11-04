@@ -37,7 +37,7 @@ import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 import org.wolfgang.contrail.reference.DirectReference;
@@ -87,7 +87,7 @@ public class OnReceiveAcceptanceComponent extends AbstractComponent implements P
 					try {
 						// Retrieve the component reference
 						final DirectReference senderReference = data.getSender();
-						final ComponentLinkManager linkManager = destinationComponentLink.getComponentLinkManager();
+						final ComponentManager linkManager = destinationComponentLink.getComponentLinkManager();
 						final SourceComponent<Event, Event> source = sourceComponentLink.getSourceComponent();
 						final DestinationComponent<Event, Event> destination = destinationComponentLink.getDestinationComponent();
 

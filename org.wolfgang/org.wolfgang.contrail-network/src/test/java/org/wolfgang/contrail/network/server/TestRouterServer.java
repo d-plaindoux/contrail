@@ -53,8 +53,8 @@ import org.wolfgang.contrail.event.Event;
 import org.wolfgang.contrail.event.EventImpl;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
+import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 
@@ -100,7 +100,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
+		final ComponentManager manager01 = new ComponentManager();
 		final RouterComponent router01 = new RouterComponent(DataFlowStationFactory.forRouter(reference01));
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
@@ -144,7 +144,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 		final RouterComponent router01 = new RouterComponent(DataFlowStationFactory.forRouter(reference01));
-		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
+		final ComponentManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(router01, terminalComponent01);
@@ -161,7 +161,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final RouterComponent router02 = new RouterComponent(DataFlowStationFactory.forRouter(reference02));
-		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
+		final ComponentManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent02 = Components.terminal(new Receiver(reference02, futureResponse));
 		manager02.connect(router02, terminalComponent02);
@@ -208,7 +208,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem01 = new EcosystemImpl();
 		final RouterComponent router01 = new RouterComponent(DataFlowStationFactory.forRouter(reference01));
-		final ComponentLinkManager manager01 = ecosystem01.getLinkManager();
+		final ComponentManager manager01 = ecosystem01.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
 		manager01.connect(router01, terminalComponent01);
@@ -225,7 +225,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		final RouterComponent router02 = new RouterComponent(DataFlowStationFactory.forRouter(reference02));
-		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
+		final ComponentManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent02 = Components.terminal(new Receiver(reference02, futureResponse));
 		manager02.connect(router02, terminalComponent02);
@@ -271,7 +271,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
+		final ComponentManager manager01 = new ComponentManager();
 		final RouterComponent router01 = new RouterComponent(DataFlowStationFactory.forRouter(reference01));
 		// ------------------------------------------------------------------------------------------------
 		RouterUtils.client(router01, manager01, new URI("tcp://localhost:6667"), reference02);
@@ -283,7 +283,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final RouterComponent router02 = new RouterComponent(DataFlowStationFactory.forRouter(reference02));
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
-		final ComponentLinkManager manager02 = ecosystem02.getLinkManager();
+		final ComponentManager manager02 = ecosystem02.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		RouterUtils.client(router02, manager02, new URI("tcp://localhost:6668"), reference03);
 		manager02.connect(router02, Components.terminal(new Receiver(reference02, futureResponse)));
@@ -299,7 +299,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		final RouterComponent router03 = new RouterComponent(DataFlowStationFactory.forRouter(reference03));
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
-		final ComponentLinkManager manager03 = ecosystem03.getLinkManager();
+		final ComponentManager manager03 = ecosystem03.getLinkManager();
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent03 = Components.terminal(new Receiver(reference03, futureResponse));
 		manager03.connect(router03, terminalComponent03);
@@ -349,7 +349,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		// Component 01 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManager manager01 = new ComponentLinkManagerImpl();
+		final ComponentManager manager01 = new ComponentManager();
 		final RouterComponent router01 = new RouterComponent(DataFlowStationFactory.forRouter(reference01));
 		// ------------------------------------------------------------------------------------------------
 		final TerminalComponent<Event, Event> terminalComponent01 = Components.terminal(new Receiver(reference01, futureResponse));
@@ -360,7 +360,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		// Component 02 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManager manager02 = new ComponentLinkManagerImpl();
+		final ComponentManager manager02 = new ComponentManager();
 		final RouterComponent router02 = new RouterComponent(DataFlowStationFactory.forRouter(reference02));
 		final EcosystemImpl ecosystem02 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ public class TestRouterServer {
 		// ------------------------------------------------------------------------------------------------
 		// Component 03 definition
 		// ------------------------------------------------------------------------------------------------
-		final ComponentLinkManager manager03 = new ComponentLinkManagerImpl();
+		final ComponentManager manager03 = new ComponentManager();
 		final RouterComponent router03 = new RouterComponent(DataFlowStationFactory.forRouter(reference03));
 		final EcosystemImpl ecosystem03 = new EcosystemImpl();
 		// ------------------------------------------------------------------------------------------------

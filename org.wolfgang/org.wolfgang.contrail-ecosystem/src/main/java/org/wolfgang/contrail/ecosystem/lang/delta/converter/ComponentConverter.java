@@ -29,7 +29,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
 import org.wolfgang.contrail.ecosystem.lang.code.EvaluableValue;
 import org.wolfgang.contrail.ecosystem.lang.code.FlowValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>ComponentConverter</code>
@@ -39,14 +39,14 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  */
 public class ComponentConverter extends AbstractConverter<Component> {
 
-	private final ComponentLinkManager linkManager;
+	private final ComponentManager linkManager;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param type
 	 */
-	public ComponentConverter(ComponentLinkManager linkManager) {
+	public ComponentConverter(ComponentManager linkManager) {
 		super(Component.class);
 		this.linkManager = linkManager;
 	}

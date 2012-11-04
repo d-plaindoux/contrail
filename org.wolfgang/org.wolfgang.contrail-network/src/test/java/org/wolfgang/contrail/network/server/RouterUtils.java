@@ -37,7 +37,7 @@ import org.wolfgang.contrail.component.router.RouterSourceTable;
 import org.wolfgang.contrail.connection.CannotCreateClientException;
 import org.wolfgang.contrail.connection.net.NetClient;
 import org.wolfgang.contrail.event.Event;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.reference.DirectReference;
 import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
 
@@ -49,7 +49,7 @@ import org.wolfgang.contrail.reference.ReferenceEntryAlreadyExistException;
  */
 class RouterUtils extends TestCase {
 
-	static void client(final RouterComponent router, final ComponentLinkManager linkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
+	static void client(final RouterComponent router, final ComponentManager linkManager, final URI uri, final DirectReference mainReference, final DirectReference... references)
 			throws ReferenceEntryAlreadyExistException {
 		final RouterSourceTable.Entry entry = new RouterSourceTable.Entry() {
 			@SuppressWarnings({ "resource" })
@@ -82,7 +82,7 @@ class RouterUtils extends TestCase {
 		router.getRouterSourceTable().insert(entry, mainReference, references);
 	}
 
-	static ComponentFactory serverBinder(final RouterComponent router, final ComponentLinkManager linkManager) {
+	static ComponentFactory serverBinder(final RouterComponent router, final ComponentManager linkManager) {
 		return new ComponentFactory() {
 			@Override
 			public Component create(Object... arguments) throws CannotCreateComponentException {
@@ -105,7 +105,7 @@ class RouterUtils extends TestCase {
 			}
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return linkManager;
 			}
 		};

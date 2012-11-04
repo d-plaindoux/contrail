@@ -38,7 +38,7 @@ import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.CoercionConverter;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.Converter;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>LibraryBuilder</code>
@@ -55,12 +55,12 @@ public class LibraryBuilder {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	static <E> Converter<E> getConverter(ComponentLinkManager linkManager, Class<E> type) {
+	static <E> Converter<E> getConverter(ComponentManager linkManager, Class<E> type) {
 		final Class<LibraryBuilder> aClass = LibraryBuilder.class;
 		final String name = aClass.getPackage().getName() + ".converter." + type.getSimpleName() + "Converter";
 		try {
 			final Class<?> converter = aClass.getClassLoader().loadClass(name);
-			final Constructor<?> constructor = converter.getConstructor(ComponentLinkManager.class);
+			final Constructor<?> constructor = converter.getConstructor(ComponentManager.class);
 			return (Converter<E>) constructor.newInstance(linkManager);
 		} catch (ClassNotFoundException e) {
 			return new CoercionConverter<E>(type);
@@ -88,7 +88,7 @@ public class LibraryBuilder {
 	 * @return
 	 * @throws ConversionException
 	 */
-	public static <T> T convert(ComponentLinkManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
+	public static <T> T convert(ComponentManager linkManager, Class<T> type, CodeValue value) throws ConversionException {
 		return getConverter(linkManager, type).performConversion(value);
 	}
 
@@ -155,7 +155,7 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 * @throws ConversionException
 	 */
-	static Object[] getParameters(ComponentLinkManager linkManager, Class<?>[] parameters, CodeValue[] values) throws ConversionException {
+	static Object[] getParameters(ComponentManager linkManager, Class<?>[] parameters, CodeValue[] values) throws ConversionException {
 		assert parameters.length == values.length;
 
 		final Object[] objects = new Object[parameters.length];
@@ -192,7 +192,7 @@ public class LibraryBuilder {
 	 * @throws CannotCreateComponentException
 	 * @throws ConversionException
 	 */
-	static Object[] getParameters(Method method, ComponentLinkManager linkManager, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException, ConversionException {
+	static Object[] getParameters(Method method, ComponentManager linkManager, EcosystemSymbolTable symbolTable) throws CannotCreateComponentException, ConversionException {
 		final Annotation[][] parameterTypes = method.getParameterAnnotations();
 		final Object[] parameters = new Object[parameterTypes.length];
 

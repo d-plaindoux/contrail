@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 
 /**
@@ -47,7 +47,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	public CompositionSourceComponent(ComponentLinkManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionSourceComponent(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;

@@ -31,7 +31,7 @@ import org.wolfgang.contrail.ecosystem.lang.model.Apply;
 import org.wolfgang.contrail.ecosystem.lang.model.Atom;
 import org.wolfgang.contrail.ecosystem.lang.model.Function;
 import org.wolfgang.contrail.ecosystem.lang.model.Reference;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestCodeValue</code>
@@ -43,7 +43,7 @@ public class TestCodeValue {
 
 	private static class TestContextFactory implements ContextFactory {
 		@Override
-		public ComponentLinkManager getLinkManager() {
+		public ComponentManager getLinkManager() {
 			return null;
 		}
 

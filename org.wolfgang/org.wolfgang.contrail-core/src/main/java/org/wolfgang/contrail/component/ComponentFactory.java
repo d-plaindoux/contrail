@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>ComponentFactory</code> specifies the minimal behaviors required for a
@@ -44,5 +44,5 @@ public interface ComponentFactory {
 	 * 
 	 * @return a link manager (nerver <code>null</code>)
 	 */
-	ComponentLinkManager getLinkManager();
+	ComponentManager getLinkManager();
 }

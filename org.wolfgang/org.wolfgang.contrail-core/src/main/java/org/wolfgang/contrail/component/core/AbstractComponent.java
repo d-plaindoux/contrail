@@ -20,9 +20,14 @@ package org.wolfgang.contrail.component.core;
 
 import static org.wolfgang.common.message.MessagesProvider.message;
 
+import java.util.Arrays;
+
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
+import org.wolfgang.contrail.component.factory.Components;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * The <code>AbstractComponent</code> is the basic component implementation
@@ -45,11 +50,11 @@ public abstract class AbstractComponent implements Component {
 
 	static {
 		final String category = "org.wolfgang.contrail.message";
-		
+
 		ALREADY_CONNECTED = message(category, "already.connected");
 		NOT_YET_CONNECTED = message(category, "not.yet.connected");
 	}
-	
+
 	/**
 	 * The component identifier
 	 */
@@ -71,4 +76,11 @@ public abstract class AbstractComponent implements Component {
 		return this.componentId;
 	}
 
+	@Override
+	public Component connect(Component... components) throws ComponentConnectionRejectedException {
+		final Component[] allComponents = new Component[components.length + 1];
+		allComponents[0] = this;
+		System.arraycopy(components, 0, allComponents, 1, components.length);
+		return Components.compose(null, allComponents);
+	}
 }

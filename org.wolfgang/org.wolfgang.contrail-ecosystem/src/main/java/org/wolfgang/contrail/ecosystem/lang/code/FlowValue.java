@@ -24,7 +24,7 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>FlowValue</code>
@@ -56,7 +56,7 @@ public class FlowValue implements CodeValue {
 	 * @throws ConversionException
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public Component getValues(ComponentLinkManager linkManager, CodeValueVisitor<Component, ConversionException> visitor) throws ConversionException, ComponentConnectionRejectedException {
+	public Component getValues(ComponentManager linkManager, CodeValueVisitor<Component, ConversionException> visitor) throws ConversionException, ComponentConnectionRejectedException {
 		if (component == null) {
 			final Component[] components = new Component[values.length];
 

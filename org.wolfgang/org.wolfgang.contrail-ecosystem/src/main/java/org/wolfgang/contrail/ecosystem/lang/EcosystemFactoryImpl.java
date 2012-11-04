@@ -46,8 +46,7 @@ import org.wolfgang.contrail.ecosystem.lang.delta.converter.ConversionException;
 import org.wolfgang.contrail.ecosystem.lang.model.Definition;
 import org.wolfgang.contrail.ecosystem.lang.model.EcosystemModel;
 import org.wolfgang.contrail.ecosystem.lang.model.Import;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>EcosystemFactory</code>
@@ -94,7 +93,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 	 * Constructor
 	 */
 	private EcosystemFactoryImpl() {
-		super(new ComponentLinkManagerImpl());
+		super(new ComponentManager());
 	}
 
 	/**
@@ -139,8 +138,6 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (SecurityException e) {
-			// TODO
-			e.printStackTrace();
 			final Message message = MessagesProvider.message("org.wolfgang.contrail.ecosystem", "undefined.type");
 			logger.log(Level.WARNING, message.format(importation.getElement(), e.getClass().getSimpleName()));
 		} catch (NoSuchMethodException e) {
@@ -208,7 +205,7 @@ public final class EcosystemFactoryImpl extends EcosystemImpl implements Context
 				this.symbolTableImpl.putDefinition(name, generated);
 				final ComponentFactory factory = new ComponentFactory() {
 					@Override
-					public ComponentLinkManager getLinkManager() {
+					public ComponentManager getLinkManager() {
 						return EcosystemFactoryImpl.this.getLinkManager();
 					}
 

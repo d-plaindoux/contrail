@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.pipeline.concurrent.ParallelSourceCompone
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestConcurrentComponent</code>
@@ -49,7 +49,7 @@ public class TestConcurrentComponent {
 	public void testConcurrent01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final InitialComponent<Integer, Integer> initialComponent = Components.initial(new DownStreamDataFlowAdapter<Integer>());
 		final TerminalComponent<Integer, Integer> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
@@ -91,7 +91,7 @@ public class TestConcurrentComponent {
 	public void testConcurrent02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final int iterations = 1024;
 		final FutureResponse<int[]> responseFuture = new FutureResponse<int[]>();
-		final ComponentLinkManagerImpl componentLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final InitialComponent<Integer, Integer> initialComponent = Components.initial(new DownStreamDataFlowAdapter<Integer>() {
 			private int location = 0;
 			final int[] responses = new int[iterations];

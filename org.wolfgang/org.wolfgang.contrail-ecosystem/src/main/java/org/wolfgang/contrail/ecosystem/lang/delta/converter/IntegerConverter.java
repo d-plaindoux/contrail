@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.ecosystem.lang.delta.converter;
 
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>IntegerConverter</code>
@@ -32,7 +32,7 @@ public final class IntegerConverter extends AbstractConverter<Integer> {
 	/**
 	 * Constructor
 	 */
-	public IntegerConverter(ComponentLinkManager linkManager) {
+	public IntegerConverter(ComponentManager linkManager) {
 		super(Integer.class);
 	}
 

@@ -54,7 +54,7 @@ public final class ComponentLinkFactory {
 			}
 
 			@Override
-			public ComponentLinkManager getComponentLinkManager() {
+			public ComponentManager getComponentLinkManager() {
 				throw new IllegalAccessError();
 			}
 		};
@@ -77,7 +77,7 @@ public final class ComponentLinkFactory {
 			}
 
 			@Override
-			public ComponentLinkManager getComponentLinkManager() {
+			public ComponentManager getComponentLinkManager() {
 				throw new IllegalAccessError();
 			}
 		};

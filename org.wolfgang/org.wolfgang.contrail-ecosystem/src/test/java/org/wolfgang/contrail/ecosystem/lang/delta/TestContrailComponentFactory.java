@@ -30,7 +30,7 @@ import org.wolfgang.contrail.connection.Servers;
 import org.wolfgang.contrail.ecosystem.annotation.ContrailArgument;
 import org.wolfgang.contrail.ecosystem.lang.EcosystemSymbolTableImpl;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestContrailComponentFactory</code>
@@ -94,7 +94,7 @@ public class TestContrailComponentFactory {
 			}
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return null;
 			}
 		}, new EcosystemSymbolTableImpl());
@@ -121,7 +121,7 @@ public class TestContrailComponentFactory {
 			}
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return null;
 			}
 		}, new EcosystemSymbolTableImpl() {
@@ -152,7 +152,7 @@ public class TestContrailComponentFactory {
 			}
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return null;
 			}
 		}, new EcosystemSymbolTableImpl() {

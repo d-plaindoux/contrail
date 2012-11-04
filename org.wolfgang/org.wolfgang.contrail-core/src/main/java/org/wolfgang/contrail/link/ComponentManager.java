@@ -19,7 +19,6 @@
 package org.wolfgang.contrail.link;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.wolfgang.common.message.MessagesProvider;
@@ -37,22 +36,12 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ComponentLinkManagerImpl implements ComponentLinkManager {
+public class ComponentManager {
 
-	/**
-	 * Created links
-	 */
 	private final List<ComponentLinkImpl<?, ?>> links;
 
 	{
-		links = Collections.synchronizedList(new ArrayList<ComponentLinkImpl<?, ?>>());
-	}
-
-	/**
-	 * Constructor
-	 */
-	public ComponentLinkManagerImpl() {
-		// Nothing
+		this.links = new ArrayList<ComponentLinkImpl<?, ?>>();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -68,7 +57,6 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		}
 	}
 
-	@Override
 	public ComponentLink[] getExistingLinks() {
 		return links.toArray(new ComponentLink[links.size()]);
 	}
@@ -91,7 +79,6 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		return link;
 	}
 
-	@Override
 	public final boolean disconnect(ComponentId sourceId, ComponentId destinationId) throws ComponentDisconnectionRejectedException {
 		for (ComponentLinkImpl<?, ?> link : links) {
 			if (link.getSourceComponent().getComponentId().equals(sourceId) && link.getDestinationComponent().getComponentId().equals(destinationId)) {
@@ -104,7 +91,6 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		return false;
 	}
 
-	@Override
 	public SourceComponent<?, ?>[] getSources(ComponentId componentId) {
 		final List<SourceComponent<?, ?>> sources = new ArrayList<SourceComponent<?, ?>>();
 		for (ComponentLinkImpl<?, ?> link : links) {
@@ -115,7 +101,6 @@ public class ComponentLinkManagerImpl implements ComponentLinkManager {
 		return sources.toArray(new SourceComponent[links.size()]);
 	}
 
-	@Override
 	public DestinationComponent<?, ?>[] getDestinations(ComponentId componentId) {
 		final List<DestinationComponent<?, ?>> destinations = new ArrayList<DestinationComponent<?, ?>>();
 		for (ComponentLinkImpl<?, ?> link : links) {

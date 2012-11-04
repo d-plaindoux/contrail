@@ -25,7 +25,7 @@ import org.wolfgang.contrail.ecosystem.lang.EcosystemCodeValueGeneratorException
 import org.wolfgang.contrail.ecosystem.lang.code.ClosureValue;
 import org.wolfgang.contrail.ecosystem.lang.code.CodeValue;
 import org.wolfgang.contrail.ecosystem.lang.code.ConstantValue;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>ComponentFactoryListenerConverter</code>
@@ -35,12 +35,12 @@ import org.wolfgang.contrail.link.ComponentLinkManager;
  */
 public class ComponentFactoryListenerConverter extends AbstractConverter<ComponentFactoryListener> {
 
-	private final ComponentLinkManager linkManager;
+	private final ComponentManager linkManager;
 
 	/**
 	 * Constructor
 	 */
-	public ComponentFactoryListenerConverter(ComponentLinkManager linkManager) {
+	public ComponentFactoryListenerConverter(ComponentManager linkManager) {
 		super(ComponentFactoryListener.class);
 		this.linkManager = linkManager;
 	}

@@ -55,8 +55,8 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestNetworkEcosystem</code>
@@ -71,7 +71,7 @@ public class TestNetworkEcosystem {
 		final NetServer netServer = new NetServer();
 
 		try {
-			final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+			final ComponentManager manager = new ComponentManager();
 			netServer.bind(new URI("tcp://localhost:6666"), new ComponentFactoryListener() {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {
@@ -118,7 +118,7 @@ public class TestNetworkEcosystem {
 		final Ecosystem ecosystem02 = EcosystemFactoryImpl.build(Logger.getAnonymousLogger(), EcosystemModel.decode(resource02.openStream()));
 
 		try {
-			final ComponentLinkManager manager = new ComponentLinkManagerImpl();
+			final ComponentManager manager = new ComponentManager();
 			netServer.bind(new URI("tcp://localhost:6666"), new ComponentFactoryListener() {
 				@Override
 				public void notifyCreation(Component client) throws CannotCreateComponentException {

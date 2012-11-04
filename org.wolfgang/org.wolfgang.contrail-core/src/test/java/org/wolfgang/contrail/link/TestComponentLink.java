@@ -37,7 +37,7 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink01() throws CannotCreateDataFlowException {
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
@@ -49,7 +49,7 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink02() throws CannotCreateDataFlowException {
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
@@ -66,7 +66,7 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink03() throws CannotCreateDataFlowException {
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
@@ -90,7 +90,7 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink04() throws CannotCreateDataFlowException {
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();

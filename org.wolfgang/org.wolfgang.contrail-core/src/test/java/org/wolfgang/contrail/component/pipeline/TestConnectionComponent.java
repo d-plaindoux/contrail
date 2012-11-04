@@ -34,7 +34,7 @@ import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.link.ComponentLink;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test
@@ -52,8 +52,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		initial.getUpStreamDataFlow().handleData("3");
 		assertEquals("9", stringReference.get());
@@ -70,8 +70,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		initial.getUpStreamDataFlow().handleData("0");
 		assertEquals("0", stringReference.get());
@@ -88,8 +88,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		initial.closeUpStream();
 		terminal.getDownStreamDataHandler().handleData(9);
@@ -107,8 +107,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			initial.closeUpStream();
@@ -130,8 +130,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			connection.closeUpStream();
@@ -153,8 +153,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			terminal.closeUpStream();
@@ -176,8 +176,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			initial.closeDownStream();
@@ -199,8 +199,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			connection.closeDownStream();
@@ -222,8 +222,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			terminal.closeDownStream();
@@ -245,8 +245,8 @@ public class TestConnectionComponent {
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			initial.getUpStreamDataFlow().handleData("NaN");
@@ -289,7 +289,7 @@ public class TestConnectionComponent {
 		final AtomicReference<String> stringReference = new AtomicReference<String>();
 		final InitialComponent<String, String> initial = StringSourceComponent.create(stringReference);
 
-		final ComponentLink initialConnection = new ComponentLinkManagerImpl().connect(initial, connection);
+		final ComponentLink initialConnection = new ComponentManager().connect(initial, connection);
 
 		try {
 			initial.getUpStreamDataFlow().handleData("123");
@@ -307,7 +307,7 @@ public class TestConnectionComponent {
 
 		final TerminalComponent<Integer, Integer> terminal = new IntegerDestinationComponent();
 
-		final ComponentLink terminalConnection = new ComponentLinkManagerImpl().connect(connection, terminal);
+		final ComponentLink terminalConnection = new ComponentManager().connect(connection, terminal);
 
 		try {
 			terminal.getDownStreamDataHandler().handleData(123);

@@ -45,8 +45,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManager;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestComponentEcosystem</code>
@@ -79,11 +78,11 @@ public class TestComponentEcosystem {
 			}
 		};
 
-		final ComponentLinkManagerImpl componentsLinkManagerImpl = new ComponentLinkManagerImpl();
+		final ComponentManager componentsLinkManagerImpl = new ComponentManager();
 		final ComponentFactory destinationComponentFactory = new ComponentFactory() {
 
 			@Override
-			public ComponentLinkManager getLinkManager() {
+			public ComponentManager getLinkManager() {
 				return componentsLinkManagerImpl;
 			}
 

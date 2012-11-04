@@ -40,7 +40,7 @@ import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLinkManagerImpl;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>TestStationComponent</code>
@@ -99,7 +99,7 @@ public class TestStationComponent {
 		final Component initialPipeline = new StationPipeline<String, String>(null, new StringDataStreamHandler("Hello, World!"));
 		final Component terminalPipeline = new StationPipeline<String, String>(new StringDataStreamHandler("Hello"), null);
 		final Component stationComponent = new StationComponent<String, String>();
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 
 		Components.compose(linkManager, initialComponent, initialPipeline, stationComponent, terminalPipeline, terminalComponent);
 
@@ -141,7 +141,7 @@ public class TestStationComponent {
 		final Component initialPipeline2 = new StationPipeline<String, String>(null, new StringDataStreamHandler("Hello, World! <2>"));
 		final Component stationComponent = new RouterComponent<String, String>();
 
-		final ComponentLinkManagerImpl linkManager = new ComponentLinkManagerImpl();
+		final ComponentManager linkManager = new ComponentManager();
 		final Component station = Components.compose(linkManager, stationComponent, terminalComponent);
 		Components.compose(linkManager, initialComponent1, initialPipeline1, station);
 		Components.compose(linkManager, initialComponent2, initialPipeline2, station);

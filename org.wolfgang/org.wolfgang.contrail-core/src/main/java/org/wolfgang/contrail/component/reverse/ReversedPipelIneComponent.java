@@ -29,7 +29,7 @@ import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLinkManager;
+import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>ReversedPipelIneComponent</code>
@@ -48,7 +48,7 @@ public class ReversedPipelIneComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	 * @param component
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public ReversedPipelIneComponent(ComponentLinkManager manager, PipelineComponent<D2, U2, D1, U1> component) throws ComponentConnectionRejectedException {
+	public ReversedPipelIneComponent(ComponentManager manager, PipelineComponent<D2, U2, D1, U1> component) throws ComponentConnectionRejectedException {
 		super();
 
 		this.initialComponent = new InitialComponent<D2, U2>(DataFlows.closable(new DownStreamDataFlow<U2>() {
