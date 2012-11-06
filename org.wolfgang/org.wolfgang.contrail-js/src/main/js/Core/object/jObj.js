@@ -77,11 +77,14 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
                 parameters[0].inherit = {};
 
                 for (i = 1; i < parameters.length; i += 1) {
-                    // TODO -- Prevent missing inherit attribute
-                    for (key in parameters[i].inherit) {
-                        parameters[0].inherit[key] = true;
+                    if (parameters[i] && parameters[i].inherit) {
+                        for (key in parameters[i].inherit) {
+                            if (parameters[i].inherit.hasOwnProperty(key)) {
+                                parameters[0].inherit[key] = true;
+                            }
+                        }
+                        parameters[0].inherit[jObj.getClass(parameters[i])] = true;
                     }
-                    parameters[0].inherit[jObj.getClass(parameters[i])] = true;
                 }
             }
         };
@@ -105,6 +108,7 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          */
         jObj.instanceOf = function (object, type) {
             var result = false;
+
             if (typeof object === type) {
                 result = true;
             } else if (jObj.isObjectType(object, type)) {
@@ -124,20 +128,27 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          * Return an object transformation
          *
          * @param object The object
+         * @param driver The transformation driver
          * @return the transformation
          */
         jObj.transform = function (object, driver) {
+            var result, key, content;
+
             if (typeof object === "object") {
-                var key, content = driver.enterObject(jObj.getClass(object));
+                content = driver.enterObject(jObj.getClass(object));
 
                 for (key in object) {
-                    content = driver.visitAttribute(content, key, jObj.transform(object[key], driver));
+                    if (object.hasOwnProperty(key)) {
+                        content = driver.visitAttribute(content, key, jObj.transform(object[key], driver));
+                    }
                 }
 
-                return driver.exitObject(content);
+                result = driver.exitObject(content);
             } else {
-                return driver.visitNative(object);
+                result = driver.visitNative(object);
             }
+
+            return result;
         };
 
         /**
@@ -221,7 +232,7 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
                     } else {
                         var index;
 
-                        for (index = 0; index < arguments.length; index++) {
+                        for (index = 0; index < arguments.length; index += 1) {
                             jStrict.assertType(arguments[index], profil[index]);
                         }
 
@@ -268,7 +279,7 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
                     } else {
                         var index, result;
 
-                        for (index = 0; index < arguments.length; index++) {
+                        for (index = 0; index < arguments.length; index += 1) {
                             jStrict.assertType(arguments[index], profil[index]);
                         }
 
@@ -304,5 +315,4 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
 
         return jObj;
 
-    })
-;
+    });
