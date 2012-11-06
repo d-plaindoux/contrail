@@ -18,16 +18,15 @@
 
 /*global require */
 
-require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
+require([ "qunit", "Contrail/Factory" ], function (QUnit, Factory) {
     "use strict";
 
-    QUnit.test("Object decoding", function () {
-        var string = '{"a":true}', decoder, result;
-        decoder = Factory.json.decoder();
-        result = decoder.transform(string);
-        QUnit.equal(result.length, 1, "Checking result length");
-        QUnit.equal(jObj.instanceOf(result[0], jObj.types.Object), true, "Checking result type");
-        QUnit.equal(result[0].a, true, "Checking decoding value");
+    /**
+     * Test generation
+     */
+    QUnit.test("Check Component generation", function () {
+        var c1 = Factory.component.bound.initial(),
+            c2 = Factory.component.bound.initial();
+        QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
     });
 });
-
