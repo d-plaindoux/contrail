@@ -18,19 +18,16 @@
 
 /*global define*/
 
-define([ "./InitialComponent", "./TerminalComponent" ],
-    function (InitialComponent, TerminalComponent) {
+define("Component/Factory", [ "./basic/BasicComponentFactory", "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory", "./transducer/TransducerComponentFactory" ],
+    function (Basic, Bound, Pipeline, Transducer) {
         "use strict";
 
         var Factory = {};
 
-        Factory.initial = function () {
-            return InitialComponent.init();
-        };
-
-        Factory.terminal = function () {
-            return TerminalComponent.init();
-        };
+        Factory.basic = Basic;
+        Factory.bound = Bound;
+        Factory.pipeline = Pipeline;
+        Factory.transducer = Transducer;
 
         return Factory;
 

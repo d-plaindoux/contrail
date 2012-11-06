@@ -22,10 +22,10 @@ define([ "require", "Core/jObj"],
     function (require, jObj) {
         "use strict";
 
-        function TerminalComponent(upStream) {
+        function TerminalComponent(dataFlow) {
             jObj.bless(this, require("Component/Factory").basic.destination());
 
-            this.dataFlow = upStream;
+            this.dataFlow = dataFlow;
         }
 
         TerminalComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {

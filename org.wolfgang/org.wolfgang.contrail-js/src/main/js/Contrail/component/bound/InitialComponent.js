@@ -22,10 +22,10 @@ define([ "require", "Core/jObj"],
     function (require, jObj) {
         "use strict";
 
-        function InitialComponent(upStream) {
+        function InitialComponent(dataFlow) {
             jObj.bless(this, require("Component/Factory").basic.source());
 
-            this.dataFlow = upStream;
+            this.dataFlow = dataFlow;
         }
 
         InitialComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {

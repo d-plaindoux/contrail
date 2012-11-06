@@ -18,6 +18,16 @@
 
 /*global require */
 
-require([ "qunit" ], function (QUnit) {
-    "use strict";
-});
+require([ "qunit", "Contrail/Factory" ],
+    function (QUnit, Factory) {
+        "use strict";
+
+        /**
+         * Test generation
+         */
+        QUnit.test("Check Component generation", function () {
+            var c1 = Factory.component.bound.terminal(Factory.flow.basic()),
+                c2 = Factory.component.bound.terminal(Factory.flow.basic());
+            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+        });
+    });
