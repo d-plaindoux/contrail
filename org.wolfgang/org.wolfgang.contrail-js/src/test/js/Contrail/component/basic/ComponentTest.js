@@ -2,6 +2,8 @@
 
 require([ "Contrail/Factory", "qunit" ],
     function (Factory, QUnit) {
+        "use strict";
+
         /**
          * Test generation
          */

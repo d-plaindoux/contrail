@@ -20,19 +20,20 @@
 
 define([ "require", "Core/jObj" ],
     function (require, jObj) {
+        "use strict";
 
-        function TransducerDataFlow(type, transducer) {
-            jObj.bless(this, require("Contrail/Factory").flow.basic(type));
+        function TransducerDataFlow(transducer) {
+            jObj.bless(this, require("Contrail/Factory").flow.basic());
             this.transducer = transducer;
         }
 
-        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"], function (type, transducer) {
-            return new TransducerDataFlow(type, transducer);
+        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"], function (transducer) {
+            return new TransducerDataFlow(transducer);
         });
 
         TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
 
-        TransducerDataFlow.prototype.handleData = jObj.procedure([this.type], function (data) {
+        TransducerDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any], function (data) {
             var dataFlow = this.getDataFlow(),
                 transformed = this.transducer.transform(data),
                 newData;

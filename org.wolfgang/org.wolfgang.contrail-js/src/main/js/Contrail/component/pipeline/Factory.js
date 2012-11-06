@@ -20,6 +20,7 @@
 
 define([ "./PipelineComponent" ],
     function (PipelineComponent) {
+        "use strict";
 
         var Factory = {};
 

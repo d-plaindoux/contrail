@@ -20,6 +20,7 @@
 
 define([ "./Encoder", "./Decoder" ],
     function (JSonEncoder, JSonDecoder) {
+        "use strict";
 
         var Factory = {};
 

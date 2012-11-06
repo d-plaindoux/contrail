@@ -20,8 +20,7 @@
 
 define("Core/jDom", [ ],
     function () {
-
-        // Private package defintions
+        "use strict";
 
         function PObject(tag, attributes, content) {
             this.qname = tag;

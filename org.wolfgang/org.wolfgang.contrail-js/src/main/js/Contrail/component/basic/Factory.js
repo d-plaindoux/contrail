@@ -20,6 +20,7 @@
 
 define([ "./Component", "./SourceComponent", "./DestinationComponent" ],
     function (Component, SourceComponent, DestinationComponent) {
+        "use strict";
 
         var Factory = {};
 

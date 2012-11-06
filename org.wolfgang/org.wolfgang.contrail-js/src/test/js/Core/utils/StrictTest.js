@@ -2,6 +2,8 @@
 
 require([ "Core/jObj", "Utils/jStrict", "qunit" ],
     function (jObj, jStrict, QUnit) {
+        "use strict";
+
         /**
          * Test Type Checking
          */

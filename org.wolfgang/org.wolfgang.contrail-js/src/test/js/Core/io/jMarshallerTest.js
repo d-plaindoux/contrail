@@ -1,6 +1,7 @@
 /*global require */
 
 require([ "IO/jMarshaller", "qunit" ], function (jMarshaller, QUnit) {
+    "use strict";
 
     QUnit.test("Checking intToBytes length", function () {
         var i = 0x89ABCDEF, b;

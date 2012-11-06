@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj", "External/JSon" ],
     function (require, jObj, JSon) {
+        "use strict";
 
         function Decoder() {
             jObj.bless(this, require("Codec/Factory").basic.decoder());

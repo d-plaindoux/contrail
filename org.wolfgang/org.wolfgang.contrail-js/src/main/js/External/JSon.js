@@ -20,6 +20,9 @@
 
 define("External/JSon", [ "require" ],
     function (require) {
-        require("/lib/JSon.js");
+        "use strict";
+
+        require("../lib/JSon.js");
+
         return JSON;
     });

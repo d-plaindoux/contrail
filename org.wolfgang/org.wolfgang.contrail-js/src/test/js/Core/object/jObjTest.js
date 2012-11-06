@@ -1,6 +1,8 @@
 /*global require */
 
 require([ "Core/jObj", "qunit" ], function (jObj, QUnit) {
+    "use strict";
+
     /**
      * Test Type Checking
      */

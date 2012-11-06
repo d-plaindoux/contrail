@@ -20,6 +20,7 @@
 
 define("Contrail/Factory", [ "Component/Factory", "Link/Factory", "Flow/Factory" ],
     function (Component, Link, Flow) {
+        "use strict";
 
         var Factory = {};
 

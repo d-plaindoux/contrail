@@ -20,6 +20,7 @@
 
 define([ "./InitialComponent", "./TerminalComponent" ],
     function (InitialComponent, TerminalComponent) {
+        "use strict";
 
         var Factory = {};
 

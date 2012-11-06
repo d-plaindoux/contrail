@@ -20,6 +20,7 @@
 
 define("Utils/jUtils", [  ],
     function () {
+        "use strict";
 
         var jUtils = {};
 

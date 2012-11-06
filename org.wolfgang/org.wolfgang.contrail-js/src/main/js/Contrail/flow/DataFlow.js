@@ -20,22 +20,17 @@
 
 define([ "Core/jObj" ],
     function (jObj) {
+        "use strict";
 
-        function DataFlow(type) {
+        function DataFlow() {
             jObj.bless(this);
-
-            if (type === undefined) {
-                this.type = jObj.types.Any;
-            } else {
-                this.type = type;
-            }
         }
 
-        DataFlow.init = jObj.constructor([jObj.types.Any], function (type) {
-            return new DataFlow(type);
+        DataFlow.init = jObj.constructor([], function () {
+            return new DataFlow();
         });
 
-        DataFlow.prototype.handleData = jObj.procedure([this.type]);
+        DataFlow.prototype.handleData = jObj.procedure([jObj.types.Any]);
         DataFlow.prototype.handleClose = jObj.procedure([]);
 
         return DataFlow;

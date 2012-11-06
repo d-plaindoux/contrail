@@ -20,8 +20,11 @@
 
 define([ "./TransducerComponent" ],
     function (TransducerComponent) {
+        "use strict";
 
-        var Factory = {};
+        var Factory;
+
+        Factory = {};
 
         Factory.component = function (encoder, decoder) {
             return TransducerComponent.init(encoder, decoder);

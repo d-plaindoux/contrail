@@ -20,6 +20,7 @@
 
 define("Component/Factory", [ "./basic/Factory", "./bound/Factory", "./pipeline/Factory", "./transducer/Factory" ],
     function (Basic, Bound, Pipeline, Transducer) {
+        "use strict";
 
         var Factory = {};
 

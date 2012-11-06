@@ -20,6 +20,7 @@
 
 define([ "Core/jObj", "./Transducer" ],
     function (jObj, Transducer) {
+        "use strict";
 
         function Encoder() {
             jObj.bless(this, Transducer.init());

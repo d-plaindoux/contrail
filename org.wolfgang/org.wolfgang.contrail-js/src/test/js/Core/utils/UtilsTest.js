@@ -1,6 +1,8 @@
 /*global require */
 
 require([ "Utils/jUtils", "qunit" ], function (jUtils, QUnit) {
+    "use strict";
+
     /**
      * Test UUID generation
      */

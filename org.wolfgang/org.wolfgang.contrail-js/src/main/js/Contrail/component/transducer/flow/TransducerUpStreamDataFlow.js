@@ -20,14 +20,15 @@
 
 define([ "Core/jObj", "./TransducerDataFlow" ],
     function (jObj, TransducerDataFlow) {
+        "use strict";
 
-        function TransducerUpStreamDataFlow(type, component, transducer) {
-            jObj.bless(this, TransducerDataFlow.init(type, transducer));
+        function TransducerUpStreamDataFlow(component, transducer) {
+            jObj.bless(this, TransducerDataFlow.init(transducer));
             this.component = component;
         }
 
-        TransducerUpStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function (type, component, transducer) {
-            return new TransducerUpStreamDataFlow(type, component, transducer);
+        TransducerUpStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function (component, transducer) {
+            return new TransducerUpStreamDataFlow(component, transducer);
         });
 
         TransducerUpStreamDataFlow.prototype.getDataFlow = function () {

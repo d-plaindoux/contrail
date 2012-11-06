@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/TransducerDownStreamDataFlow"],
     function (require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow) {
+        "use strict";
 
         function TransducerComponent(encoder, decoder) {
             var Factory = require("Component/Factory");

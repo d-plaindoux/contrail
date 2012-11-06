@@ -20,6 +20,7 @@
 
 define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ],
     function (ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
+        "use strict";
 
         var Factory = {};
 

@@ -20,6 +20,7 @@
 
 define("Codec/Factory", [ "./basic/Factory", "./payload/Factory", "./json/Factory" ],
     function (BasicFactory, PayloadFactory, JSonFactory) {
+        "use strict";
 
         var Factory = {};
 

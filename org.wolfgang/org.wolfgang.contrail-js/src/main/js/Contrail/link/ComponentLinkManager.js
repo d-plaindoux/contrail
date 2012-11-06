@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj", "Utils/jStrict" ],
     function (require, jObj, jStrict) {
+        "use strict";
 
         function ComponentLinkManager() {
             jObj.bless(this);

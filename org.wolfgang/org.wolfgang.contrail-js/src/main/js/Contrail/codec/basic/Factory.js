@@ -20,6 +20,7 @@
 
 define([ "./Encoder", "./Decoder" ],
     function (Encoder, Decoder) {
+        "use strict";
 
         var Factory = {};
 

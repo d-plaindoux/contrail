@@ -2,6 +2,8 @@
 
 require([ "Contrail/Factory", "Core/jObj", "qunit" ],
     function (Factory, jObj, QUnit) {
+        "use strict";
+
         QUnit.test("Check Component generation", function () {
             var c1 = Factory.component.pipeline.component(),
                 c2 = Factory.component.pipeline.component();

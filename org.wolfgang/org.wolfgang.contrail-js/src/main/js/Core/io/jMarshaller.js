@@ -20,44 +20,66 @@
 
 define("IO/jMarshaller", [ "Core/jObj" ],
     function (jObj) {
+        "use strict";
+
         var jMarshaller = {};
 
+        /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
         jMarshaller.bytesToInt = function (bytes, offset) {
             var i = jObj.value(offset, 0);
 
-            if (bytes.length >= i + 4) {
-                return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
-            } else {
+            if (bytes.length < i + 4) {
                 throw jObj.exception("L.array.out.of.bound");
             }
+
+            return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
         };
 
-
+        /**
+         * Concert an integer to a byte array
+         *
+         * @param i
+         * @return {Array}
+         */
         jMarshaller.intToBytes = function (i) {
             return [i >>> 24 & 0xFF, i >>> 16 & 0xFF, i >>> 8 & 0xFF, i & 0xFF];
         };
 
         /**
          * Convert a byte array to string
+         *
+         * @param bytes
+         * @return {String}
          */
         jMarshaller.byteToString = function (bytes) {
             var str = "", i;
             for (i = 0; i < bytes.length; i += 2) {
                 str += String.fromCharCode(jObj.readInt(i, bytes));
             }
+
             return str;
         };
 
         /**
          * Convert a string to a byte array
+         *
+         * @param str
+         * @return {Array}
          */
         jMarshaller.stringToBytes = function (str) {
             var bytes = [], char, i;
-            for (i = 0; i < str.length; i++) {
+            for (i = 0; i < str.length; i += 1) {
                 char = str.charCodeAt(i);
                 bytes.push(char >>> 8);
                 bytes.push(char & 0xFF);
             }
+
             return bytes;
         };
 

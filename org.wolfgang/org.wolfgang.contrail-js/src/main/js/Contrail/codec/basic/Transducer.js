@@ -20,6 +20,7 @@
 
 define([ "Core/jObj" ],
     function (jObj) {
+        "use strict";
 
         function Transducer() {
             jObj.bless(this);

@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj", "Utils/jStrict" ],
     function (require, jObj, jStrict) {
+        "use strict";
 
         function DestinationLink(destination, linkManager) {
             jObj.bless(this, require("Contrail/Factory").link.basic(linkManager));

@@ -1,6 +1,7 @@
 /*global require */
 
 require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
+    "use strict";
 
     QUnit.test("Object encoding", function () {
         var object = { a:true }, encoder, result;

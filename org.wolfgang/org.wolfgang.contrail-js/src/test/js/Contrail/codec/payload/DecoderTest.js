@@ -1,6 +1,7 @@
 /*global require */
 
 require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
+    "use strict";
 
     QUnit.test("String decoding", function () {
         var bytes = [0, 0, 0, 13].concat("Hello, World!".split("").concat([0, 0, 0, 50]).concat("Bla".split(""))), decoder, result;

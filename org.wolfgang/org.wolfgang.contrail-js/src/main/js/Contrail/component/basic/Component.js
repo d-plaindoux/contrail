@@ -20,6 +20,7 @@
 
 define([ "Utils/jUtils", "Core/jObj" ],
     function (jUtils, jObj) {
+        "use strict";
 
         function Component() {
             jObj.bless(this);

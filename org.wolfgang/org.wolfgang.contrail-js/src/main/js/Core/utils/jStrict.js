@@ -20,6 +20,7 @@
 
 define("Utils/jStrict", [ "require" ],
     function (require) {
+        "use strict";
 
         var jStrict = {};
 

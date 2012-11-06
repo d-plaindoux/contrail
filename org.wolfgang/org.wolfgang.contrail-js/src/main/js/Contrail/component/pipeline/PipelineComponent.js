@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj" ],
     function (require, jObj) {
+        "use strict";
 
         function PipelineComponent() {
             var Factory = require("Component/Factory");

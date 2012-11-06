@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj", "IO/jMarshaller" ],
     function (require, jObj, jMarshaller) {
+        "use strict";
 
         function Decoder() {
             jObj.bless(this, require("Codec/Factory").basic.decoder());

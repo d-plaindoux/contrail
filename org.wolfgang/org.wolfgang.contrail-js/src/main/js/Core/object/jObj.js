@@ -20,6 +20,7 @@
 
 define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
     function (require, jQuery, jStrict) {
+        "use strict";
 
         var jObj = {};
 
@@ -62,27 +63,25 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
         /**
          * Method called whether an object must be extended and blessed as an instance
          * of the extended class model.
-         *
-         * @param arguments[0] The object to be blessed
-         * @param arguments[1..] The extensions
          */
         jObj.bless = function (/*arguments*/) {
-            var i, key;
+            var i, key, parameters = arguments;
 
             if (arguments.length > 0) {
                 // Extension and supers
-                for (i = 1; i < arguments.length; i++) {
-                    jQuery.extend(arguments[0], arguments[i]);
+                for (i = 1; i < parameters.length; i += 1) {
+                    jQuery.extend(parameters[0], parameters[i]);
                 }
 
                 // Inheritance
-                arguments[0].inherit = {};
+                parameters[0].inherit = {};
 
-                for (i = 1; i < arguments.length; i++) {
-                    for (key in arguments[i].inherit) {
-                        arguments[0].inherit[key] = true;
+                for (i = 1; i < parameters.length; i += 1) {
+                    // TODO -- Prevent missing inherit attribute
+                    for (key in parameters[i].inherit) {
+                        parameters[0].inherit[key] = true;
                     }
-                    arguments[0].inherit[jObj.getClass(arguments[i])] = true;
+                    parameters[0].inherit[jObj.getClass(parameters[i])] = true;
                 }
             }
         };
@@ -105,19 +104,20 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          * @return true if the object is a type of type; false otherwise
          */
         jObj.instanceOf = function (object, type) {
+            var result = false;
             if (typeof object === type) {
-                return true;
+                result = true;
             } else if (jObj.isObjectType(object, type)) {
-                return true;
+                result = true;
             } else if (jObj.getClass(object) === type) {
-                return true;
+                result = true;
             } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
-                return true;
+                result = true;
             } else if (type === jObj.types.Any) {
-                return true;
-            } else {
-                return false;
+                result = true;
             }
+
+            return result;
         };
 
         /**
@@ -210,10 +210,12 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          * @return a constructor function
          */
         jObj.constructor = function (profil, constructor) {
+            var result;
+
             if (!jObj.modelisation) {
-                return constructor;
+                result = constructor;
             } else {
-                return function () {
+                result = function () {
                     if (arguments.length !== profil.length) {
                         throw jObj.exception("L.profil.error");
                     } else {
@@ -227,6 +229,8 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
                     }
                 };
             }
+
+            return result;
         };
 
 
@@ -251,12 +255,14 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          * @return a method
          */
         jObj.method = function (profil, returns, method) {
+            var result;
+
             if (method === undefined) {
-                return undefined;
+                result = undefined;
             } else if (!jObj.modelisation) {
-                return method;
+                result = method;
             } else {
-                return function () {
+                result = function () {
                     if (arguments.length !== profil.length) {
                         throw jObj.exception("L.profil.error");
                     } else {
@@ -272,6 +278,8 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
                     }
                 };
             }
+
+            return result;
         };
 
         /**
@@ -283,13 +291,18 @@ define("Core/jObj", [ "require", "jquery", "Utils/jStrict" ],
          * @return v if not undefined; d otherwise
          */
         jObj.value = function (v, d) {
+            var result;
+
             if (v === undefined) {
-                return d;
+                result = d;
             } else {
-                return v;
+                result = v;
             }
+
+            return result;
         };
 
         return jObj;
 
-    });
+    })
+;

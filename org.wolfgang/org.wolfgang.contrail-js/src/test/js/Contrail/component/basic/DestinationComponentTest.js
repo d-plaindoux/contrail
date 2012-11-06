@@ -2,6 +2,8 @@
 
 require([ "Contrail/Factory", "Core/jObj", "qunit" ],
     function (Factory, jObj, QUnit) {
+        "use strict";
+
         /**
          * Test generation
          */

@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj"],
     function (require, jObj) {
+        "use strict";
 
         function InitialComponent(upStream) {
             jObj.bless(this, require("Component/Factory").basic.source());

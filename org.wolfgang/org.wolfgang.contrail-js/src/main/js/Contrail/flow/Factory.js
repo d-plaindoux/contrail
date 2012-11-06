@@ -20,6 +20,7 @@
 
 define("Flow/Factory", [ "./DataFlow" ],
     function (DataFlow) {
+        "use strict";
 
         var Factory = {};
 

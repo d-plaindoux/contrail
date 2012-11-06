@@ -20,6 +20,7 @@
 
 define([ "require", "Core/jObj"],
     function (require, jObj) {
+        "use strict";
 
         function TerminalComponent(upStream) {
             jObj.bless(this, require("Component/Factory").basic.destination());
