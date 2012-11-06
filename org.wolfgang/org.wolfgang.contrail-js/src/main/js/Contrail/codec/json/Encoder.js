@@ -18,24 +18,24 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "External/JSon" ] , 
-function(require, jObj, JSon) {
+define([ "require", "Core/jObj", "External/JSon" ],
+    function (require, jObj, JSon) {
 
-	function Encoder() {
-		jObj.bless(this, require("Codec/Factory").basic.encoder());
-	}
+        function Encoder() {
+            jObj.bless(this, require("Codec/Factory").basic.encoder());
+        }
 
-	Encoder.init = jObj.constructor([], function () {
-		return new Encoder();
-	});
+        Encoder.init = jObj.constructor([], function () {
+            return new Encoder();
+        });
 
-	Encoder.prototype.transform = jObj.method([jObj.types.Object], jObj.types.Array, function(object) {
-		return [ JSon.stringify(object) ];
-	}); 
+        Encoder.prototype.transform = jObj.method([jObj.types.Object], jObj.types.Array, function (object) {
+            return [ JSon.stringify(object) ];
+        });
 
-	Encoder.prototype.finish = jObj.method([], jObj.types.Array, function() {
-		return [];
-	});
+        Encoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
+            return [];
+        });
 
-	return Encoder;
-});
+        return Encoder;
+    });

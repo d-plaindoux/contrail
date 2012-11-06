@@ -18,25 +18,25 @@
 
 /*global define*/
 
-define( [ "Core/jObj" ] , 
-function(jObj) {
-    
-	function DataFlow(type) {
-		jObj.bless(this);
-		
-		if (type === undefined) {
-			this.type = jObj.types.Any;
-		} else {
-			this.type = type;
-		}
-	}
+define([ "Core/jObj" ],
+    function (jObj) {
 
-	DataFlow.init = jObj.constructor([jObj.types.Any], function(type) {
-		return new DataFlow(type);
-	});
+        function DataFlow(type) {
+            jObj.bless(this);
 
-	DataFlow.prototype.handleData = jObj.procedure([this.type]);
-	DataFlow.prototype.handleClose = jObj.procedure([]);
-	
-	return DataFlow;
-});
+            if (type === undefined) {
+                this.type = jObj.types.Any;
+            } else {
+                this.type = type;
+            }
+        }
+
+        DataFlow.init = jObj.constructor([jObj.types.Any], function (type) {
+            return new DataFlow(type);
+        });
+
+        DataFlow.prototype.handleData = jObj.procedure([this.type]);
+        DataFlow.prototype.handleClose = jObj.procedure([]);
+
+        return DataFlow;
+    });

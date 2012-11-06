@@ -18,25 +18,25 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "External/JSon" ] , 
-function(require, jObj, JSon) {
+define([ "require", "Core/jObj", "External/JSon" ],
+    function (require, jObj, JSon) {
 
-	function Decoder() {
-		jObj.bless(this, require("Codec/Factory").basic.decoder());
-		this.buffer = [];
-	}
+        function Decoder() {
+            jObj.bless(this, require("Codec/Factory").basic.decoder());
+            this.buffer = [];
+        }
 
-	Decoder.init = jObj.constructor([], function () {
-		return new Decoder();
-	});
+        Decoder.init = jObj.constructor([], function () {
+            return new Decoder();
+        });
 
-	Decoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function(string) {
-		return [ JSon.parse(string) ];
-	});
+        Decoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function (string) {
+            return [ JSon.parse(string) ];
+        });
 
-	Decoder.prototype.finish = jObj.method([], jObj.types.Array, function() {
-		return [];
-	});
+        Decoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
+            return [];
+        });
 
-	return Decoder;
-});
+        return Decoder;
+    });

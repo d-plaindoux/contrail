@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define( "External/JSon", [ "require" ], 
-function(require) {
-	require("/lib/JSon.js");
-	return JSON;
-});
+define("External/JSon", [ "require" ],
+    function (require) {
+        require("/lib/JSon.js");
+        return JSON;
+    });

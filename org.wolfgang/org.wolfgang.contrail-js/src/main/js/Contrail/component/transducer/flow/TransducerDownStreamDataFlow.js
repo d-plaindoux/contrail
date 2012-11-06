@@ -18,25 +18,25 @@
 
 /*global define*/
 
-define( [ "Core/jObj", "./TransducerDataFlow" ] , 
-function(jObj,TransducerDataFlow) {
-    
-	function TransducerDownStreamDataFlow(type, component, transducer) {
-		jObj.bless(this, TransducerDataFlow.init(type,transducer));
-		this.component = component;
-	}
+define([ "Core/jObj", "./TransducerDataFlow" ],
+    function (jObj, TransducerDataFlow) {
 
-	TransducerDownStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function(type, component, transducer) {
-		return new TransducerDownStreamDataFlow(type, component, transducer);
-	});
+        function TransducerDownStreamDataFlow(type, component, transducer) {
+            jObj.bless(this, TransducerDataFlow.init(type, transducer));
+            this.component = component;
+        }
 
-	TransducerDownStreamDataFlow.prototype.getDataFlow = function() {
-		if (this.component.getSourceComponentLink() !== undefined) {
-			throw jObj.exception("L.source.not.yet.connected");
-		} else {
-			return this.component.getSourceComponentLink().getDownStreamDataFlow();
-		}
-	};
+        TransducerDownStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function (type, component, transducer) {
+            return new TransducerDownStreamDataFlow(type, component, transducer);
+        });
 
-	return TransducerDownStreamDataFlow;
-});
+        TransducerDownStreamDataFlow.prototype.getDataFlow = function () {
+            if (this.component.getSourceComponentLink() !== undefined) {
+                throw jObj.exception("L.source.not.yet.connected");
+            } else {
+                return this.component.getSourceComponentLink().getDownStreamDataFlow();
+            }
+        };
+
+        return TransducerDownStreamDataFlow;
+    });

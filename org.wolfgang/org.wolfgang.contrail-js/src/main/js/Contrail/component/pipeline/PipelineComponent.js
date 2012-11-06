@@ -18,38 +18,38 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj" ] , 
-function(require, jObj) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
 
-	function PipelineComponent() {
-		var Factory = require("Component/Factory");
-		jObj.bless(this, Factory.basic.source(), Factory.basic.destination());
-	}
+        function PipelineComponent() {
+            var Factory = require("Component/Factory");
+            jObj.bless(this, Factory.basic.source(), Factory.basic.destination());
+        }
 
-	/**
-	 * Construction initialisation
-	 */
-	PipelineComponent.init = jObj.constructor([], function () {
-		return new PipelineComponent();
-	});
+        /**
+         * Construction initialisation
+         */
+        PipelineComponent.init = jObj.constructor([], function () {
+            return new PipelineComponent();
+        });
 
-	/**
-	 * Provides the embedded upstream source component (internal use only)
-	 * 
-	 * @return the current up stream source component
-	 */
-	PipelineComponent.prototype.getSourceComponentLink = function () {
-		return this.sourceLink;
-	};
+        /**
+         * Provides the embedded upstream source component (internal use only)
+         *
+         * @return the current up stream source component
+         */
+        PipelineComponent.prototype.getSourceComponentLink = function () {
+            return this.sourceLink;
+        };
 
-	/**
-	 * Provides the embedded upstream source component (internal use only)
-	 * 
-	 * @return the current up stream source component
-	 */
-	PipelineComponent.prototype.getDestinationComponentLink = function () {
-		return this.destinationLink;
-	};
+        /**
+         * Provides the embedded upstream source component (internal use only)
+         *
+         * @return the current up stream source component
+         */
+        PipelineComponent.prototype.getDestinationComponentLink = function () {
+            return this.destinationLink;
+        };
 
-	return PipelineComponent;
-});
+        return PipelineComponent;
+    });

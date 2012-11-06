@@ -18,23 +18,23 @@
 
 /*global define*/
 
-define( [ "./Component", "./SourceComponent", "./DestinationComponent" ] , 
-function(Component, SourceComponent, DestinationComponent) {
+define([ "./Component", "./SourceComponent", "./DestinationComponent" ],
+    function (Component, SourceComponent, DestinationComponent) {
 
-	var Factory = {};
+        var Factory = {};
 
-	Factory.component = function () {
-	    return Component.init();
-	};
+        Factory.component = function () {
+            return Component.init();
+        };
 
-	Factory.source = function () {
-	    return SourceComponent.init();
-	};
+        Factory.source = function () {
+            return SourceComponent.init();
+        };
 
-	Factory.destination = function () {
-		return DestinationComponent.init();
-	};
+        Factory.destination = function () {
+            return DestinationComponent.init();
+        };
 
-	return Factory;
-	
-});
+        return Factory;
+
+    });

@@ -18,42 +18,42 @@
 
 /*global define*/
 
-define( [ "require",  "Core/jObj" ] , 
-function(require, jObj) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
 
-	function SourceComponent() {
-		jObj.bless(this, require("Component/Factory").basic.component());
+        function SourceComponent() {
+            jObj.bless(this, require("Component/Factory").basic.component());
 
-		this.destinationLink = null;
-	}
+            this.destinationLink = null;
+        }
 
-	SourceComponent.init = jObj.constructor([], function () {
-		return new SourceComponent();
-	});
+        SourceComponent.init = jObj.constructor([], function () {
+            return new SourceComponent();
+        });
 
-	SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean, function(componentId) {
-		return this.destinationLink === null;
-	});
+        SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean, function (componentId) {
+            return this.destinationLink === null;
+        });
 
-	SourceComponent.prototype.connectDestination = jObj.method(["DestinationLink"], "ComponentLink", function(destinationLink) {
-		this.destinationLink = destinationLink;
-		return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
-	});
+        SourceComponent.prototype.connectDestination = jObj.method(["DestinationLink"], "ComponentLink", function (destinationLink) {
+            this.destinationLink = destinationLink;
+            return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
+        });
 
-	SourceComponent.prototype.closeUpStream = jObj.procedure([], function() {
-		if (this.destinationLink !== null) {
-			this.destinationLink.getSource().closeUpStream();
-			this.destinationLink = null;
-		} else {
-			throw jObj.exception("L.destination.not.connected");
-		}
-	});
+        SourceComponent.prototype.closeUpStream = jObj.procedure([], function () {
+            if (this.destinationLink !== null) {
+                this.destinationLink.getSource().closeUpStream();
+                this.destinationLink = null;
+            } else {
+                throw jObj.exception("L.destination.not.connected");
+            }
+        });
 
-	/**
-	 * Abstract methods
-	 */
+        /**
+         * Abstract methods
+         */
 
-	SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
+        SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
 
-	return SourceComponent;
-});
+        return SourceComponent;
+    });

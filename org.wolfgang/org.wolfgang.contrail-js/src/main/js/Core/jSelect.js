@@ -18,12 +18,12 @@
 
 /*global define*/
 
-define( [ "jquery" ], 
-function ($) {
+define([ "jquery" ],
+    function ($) {
 
-    var jSelect = {};
-    
-    // TODO
-    
-    return jSelect;
-});
+        var jSelect = {};
+
+        // TODO
+
+        return jSelect;
+    });

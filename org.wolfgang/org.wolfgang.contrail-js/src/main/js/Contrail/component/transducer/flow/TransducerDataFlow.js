@@ -18,39 +18,39 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj" ] , 
-function(require, jObj) {
-    
-	function TransducerDataFlow(type, transducer) {
-		jObj.bless(this, require("Contrail/Factory").flow.basic(type));
-		this.transducer = transducer;
-	}
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
 
-	TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"], function(type, transducer) {
-		return new TransducerDataFlow(type, transducer);
-	});
+        function TransducerDataFlow(type, transducer) {
+            jObj.bless(this, require("Contrail/Factory").flow.basic(type));
+            this.transducer = transducer;
+        }
 
-	TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
+        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"], function (type, transducer) {
+            return new TransducerDataFlow(type, transducer);
+        });
 
-	TransducerDataFlow.prototype.handleData = jObj.procedure([this.type], function(data) {
-		var dataFlow = this.getDataFlow(),
-			transformed= this.transducer.transform(data),
-			newData;
-		
-		for(newData in transformed) {
-			dataFlow.handleData(newData);
-		}
-	});
+        TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
 
-	TransducerDataFlow.prototype.handleClose = jObj.procedure([], function() {
-		var dataFlow = this.getDataFlow(),
-			transformed= this.transducer.finish(),
-			newData;
-			
-		for(newData in transformed) {
-			dataFlow.handleData(newData);
-		}
-	});
+        TransducerDataFlow.prototype.handleData = jObj.procedure([this.type], function (data) {
+            var dataFlow = this.getDataFlow(),
+                transformed = this.transducer.transform(data),
+                newData;
 
-	return TransducerDataFlow;
-});
+            for (newData in transformed) {
+                dataFlow.handleData(newData);
+            }
+        });
+
+        TransducerDataFlow.prototype.handleClose = jObj.procedure([], function () {
+            var dataFlow = this.getDataFlow(),
+                transformed = this.transducer.finish(),
+                newData;
+
+            for (newData in transformed) {
+                dataFlow.handleData(newData);
+            }
+        });
+
+        return TransducerDataFlow;
+    });

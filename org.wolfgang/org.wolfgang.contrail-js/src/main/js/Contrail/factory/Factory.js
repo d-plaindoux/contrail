@@ -18,15 +18,15 @@
 
 /*global define*/
 
-define( "Contrail/Factory", [ "Component/Factory", "Link/Factory", "Flow/Factory" ] , 
-function(Component, Link, Flow) {
-	
-	var Factory = {};
-	
-	Factory.component = Component;
-	Factory.link = Link;
-	Factory.flow = Flow;
+define("Contrail/Factory", [ "Component/Factory", "Link/Factory", "Flow/Factory" ],
+    function (Component, Link, Flow) {
 
-	return Factory;
-	
-});
+        var Factory = {};
+
+        Factory.component = Component;
+        Factory.link = Link;
+        Factory.flow = Flow;
+
+        return Factory;
+
+    });

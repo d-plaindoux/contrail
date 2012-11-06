@@ -18,19 +18,19 @@
 
 /*global define*/
 
-define( [ "Core/jObj" ] , 
-function(jObj) {
+define([ "Core/jObj" ],
+    function (jObj) {
 
-	function Transducer() {
-		jObj.bless(this);
-	}
+        function Transducer() {
+            jObj.bless(this);
+        }
 
-	Transducer.init = jObj.constructor([], function () {
-		return new Transducer();
-	});
+        Transducer.init = jObj.constructor([], function () {
+            return new Transducer();
+        });
 
-	Transducer.prototype.transform = jObj.method([jObj.types.Any],jObj.types.Array); 
-	Transducer.prototype.finish = jObj.method([jObj.types.Any],jObj.types.Array);
+        Transducer.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array);
+        Transducer.prototype.finish = jObj.method([jObj.types.Any], jObj.types.Array);
 
-	return Transducer;
-});
+        return Transducer;
+    });

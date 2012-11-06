@@ -18,19 +18,19 @@
 
 /*global define*/
 
-define( [ "./Encoder", "./Decoder" ] , 
-function(PayloadEncoder, PayloadDecoder) {
-	
-	var Factory = {};
+define([ "./Encoder", "./Decoder" ],
+    function (PayloadEncoder, PayloadDecoder) {
 
-	Factory.encoder = function () {
-	    return PayloadEncoder.init();
-	};
-	
-	Factory.decoder = function () {
-	    return PayloadDecoder.init();
-	};
+        var Factory = {};
 
-	return Factory;
-	
-});
+        Factory.encoder = function () {
+            return PayloadEncoder.init();
+        };
+
+        Factory.decoder = function () {
+            return PayloadDecoder.init();
+        };
+
+        return Factory;
+
+    });

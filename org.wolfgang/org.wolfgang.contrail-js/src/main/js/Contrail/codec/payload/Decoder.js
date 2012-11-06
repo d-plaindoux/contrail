@@ -18,53 +18,53 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "IO/jMarshaller" ] , 
-function(require, jObj, jMarshaller) {
+define([ "require", "Core/jObj", "IO/jMarshaller" ],
+    function (require, jObj, jMarshaller) {
 
-	function Decoder() {
-		jObj.bless(this, require("Codec/Factory").basic.decoder());
-		this.buffer = [];
-	}
+        function Decoder() {
+            jObj.bless(this, require("Codec/Factory").basic.decoder());
+            this.buffer = [];
+        }
 
-	Decoder.INT_LEN = 4;
+        Decoder.INT_LEN = 4;
 
-	Decoder.init = jObj.constructor([], function () {
-		return new Decoder();
-	});
-	
-	Decoder.prototype.getNext = jObj.method([], jObj.types.Array, function() {
-		if (this.buffer.length < Decoder.INT_LEN) {
-			return [];
-		} else {
-			var payload = jMarshaller.bytesToInt(this.buffer);
-			if (this.buffer.length - Decoder.INT_LEN < payload) {
-				return [];
-			} else {
-				this.buffer.splice(0, Decoder.INT_LEN);
-				return this.buffer.splice(0, payload);
-			}
-		}
-	});
+        Decoder.init = jObj.constructor([], function () {
+            return new Decoder();
+        });
 
-	Decoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function(bytes) {
-		var results = [], result;
-		
-		this.buffer = this.buffer.concat(bytes);
-		
-		for(result = this.getNext(); result.length > 0; result = this.getNext()) {
-			results.push(result);
-		}
-		
-		return results;
-	});
+        Decoder.prototype.getNext = jObj.method([], jObj.types.Array, function () {
+            if (this.buffer.length < Decoder.INT_LEN) {
+                return [];
+            } else {
+                var payload = jMarshaller.bytesToInt(this.buffer);
+                if (this.buffer.length - Decoder.INT_LEN < payload) {
+                    return [];
+                } else {
+                    this.buffer.splice(0, Decoder.INT_LEN);
+                    return this.buffer.splice(0, payload);
+                }
+            }
+        });
 
-	Decoder.prototype.finish = jObj.method([], jObj.types.Array, function() {
-		if (this.buffer.length > 0) {
-			throw jObj.exception("L.array.must.be.empty");
-		} else {
-			return [];
-		}
-	});
+        Decoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
+            var results = [], result;
 
-	return Decoder;
-});
+            this.buffer = this.buffer.concat(bytes);
+
+            for (result = this.getNext(); result.length > 0; result = this.getNext()) {
+                results.push(result);
+            }
+
+            return results;
+        });
+
+        Decoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
+            if (this.buffer.length > 0) {
+                throw jObj.exception("L.array.must.be.empty");
+            } else {
+                return [];
+            }
+        });
+
+        return Decoder;
+    });

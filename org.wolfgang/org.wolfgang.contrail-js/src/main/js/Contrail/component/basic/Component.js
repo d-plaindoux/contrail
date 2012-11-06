@@ -18,29 +18,29 @@
 
 /*global define*/
 
-define( [ "Utils/jUtils", "Core/jObj" ] , 
-function(jUtils, jObj) {
+define([ "Utils/jUtils", "Core/jObj" ],
+    function (jUtils, jObj) {
 
-	function Component() {
-		jObj.bless(this);        
-		this.identifier = jUtils.UUID();
-	}
+        function Component() {
+            jObj.bless(this);
+            this.identifier = jUtils.UUID();
+        }
 
-	Component.init = jObj.constructor([] , function() {
-			return new Component();
-		});
-	
-	Component.prototype.getComponentId = jObj.method([], jObj.types.String, function() {
-		return this.identifier;
-	});
+        Component.init = jObj.constructor([], function () {
+            return new Component();
+        });
 
-	Component.prototype.closeUpStream = jObj.procedure([], function() {
-		throw jObj.exception("L.not.available");
-	});
+        Component.prototype.getComponentId = jObj.method([], jObj.types.String, function () {
+            return this.identifier;
+        });
 
-	Component.prototype.closeDownStream = jObj.procedure([], function() {
-		throw jObj.exception("L.not.available");
-	});
-	
-	return Component;
-});
+        Component.prototype.closeUpStream = jObj.procedure([], function () {
+            throw jObj.exception("L.not.available");
+        });
+
+        Component.prototype.closeDownStream = jObj.procedure([], function () {
+            throw jObj.exception("L.not.available");
+        });
+
+        return Component;
+    });

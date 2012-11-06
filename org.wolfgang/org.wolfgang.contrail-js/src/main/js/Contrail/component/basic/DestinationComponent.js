@@ -18,41 +18,41 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj" ] , 
-function(require, jObj) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
 
-	function DestinationComponent() {
-		jObj.bless(this, require("Component/Factory").basic.component());
-		
-		this.sourceLink = null;
-	}
+        function DestinationComponent() {
+            jObj.bless(this, require("Component/Factory").basic.component());
 
-	DestinationComponent.init = jObj.constructor([], function () {
-		return new DestinationComponent();
-	});
+            this.sourceLink = null;
+        }
 
-	DestinationComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean, function(componentId) {
-		return this.sourceLink === null;
-	});
-	
-	DestinationComponent.prototype.connectSource = jObj.method(["SourceLink"], "ComponentLink", function(sourceLink) {
-		this.sourceLink = sourceLink;
-		return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
-	});
+        DestinationComponent.init = jObj.constructor([], function () {
+            return new DestinationComponent();
+        });
 
-	DestinationComponent.prototype.closeDownStream = jObj.procedure([], function() {
-		if (this.sourceLink !== null) {
-			this.sourceLink.getSource().closeDownStream();
-			this.sourceLink = null;
-		} else {
-			throw jObj.exception("L.source.not.connected");
-		}
-	});
+        DestinationComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean, function (componentId) {
+            return this.sourceLink === null;
+        });
 
-	/**
-	 * Abstract methods
-	 */
-	DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow");
+        DestinationComponent.prototype.connectSource = jObj.method(["SourceLink"], "ComponentLink", function (sourceLink) {
+            this.sourceLink = sourceLink;
+            return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
+        });
 
-	return DestinationComponent;
-});
+        DestinationComponent.prototype.closeDownStream = jObj.procedure([], function () {
+            if (this.sourceLink !== null) {
+                this.sourceLink.getSource().closeDownStream();
+                this.sourceLink = null;
+            } else {
+                throw jObj.exception("L.source.not.connected");
+            }
+        });
+
+        /**
+         * Abstract methods
+         */
+        DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow");
+
+        return DestinationComponent;
+    });

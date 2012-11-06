@@ -18,22 +18,22 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj"] , 
-function(require, jObj) {
-	
-	function InitialComponent(upStream) {
-		jObj.bless(this, require("Component/Factory").basic.source());
-	
-		this.dataFlow = upStream;
-	}
+define([ "require", "Core/jObj"],
+    function (require, jObj) {
 
-	InitialComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
-		return new InitialComponent(dataFlow);
-	});
+        function InitialComponent(upStream) {
+            jObj.bless(this, require("Component/Factory").basic.source());
 
-	InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function() {
-		return this.dataFlow;
-	});
+            this.dataFlow = upStream;
+        }
 
-	return InitialComponent;
-});
+        InitialComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+            return new InitialComponent(dataFlow);
+        });
+
+        InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function () {
+            return this.dataFlow;
+        });
+
+        return InitialComponent;
+    });

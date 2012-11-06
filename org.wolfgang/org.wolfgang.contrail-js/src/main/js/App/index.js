@@ -18,49 +18,49 @@
 
 /*global $, require, setTimeout */
 
-$(function() {
-	require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ], function(Factory, jObj, jDom) {
-	try {
-		var key, classes, id, name, showHide, changeToType, changeToObject;
-		
-		changeToType = function (id, object) {
-			return function() {
-				$(id + " > pre").replaceWith(jDom("pre", { display_type : "type" }, jObj.toString(jObj.toType(object))));
-				$(id + " > pre").addClass("boxedArea");
-			};
-		};
-		
-		changeToObject = function (id, object) {
-			return function() {
-				$(id + " > pre").replaceWith(jDom("pre", { display_object : "object" }, jObj.toString(object)));
-				$(id + " > pre").addClass("boxedArea");
-			};
-		};
+$(function () {
+    require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ], function (Factory, jObj, jDom) {
+        try {
+            var key, classes, id, name, showHide, changeToType, changeToObject;
 
-		classes = {
-			Component : Factory.component.basic(),
-			SourceComponent : Factory.component.source(),
-			DestinationComponent : Factory.component.destination(),
-			PipelineComponent : Factory.component.pipeline()
-		};
+            changeToType = function (id, object) {
+                return function () {
+                    $(id + " > pre").replaceWith(jDom("pre", { display_type:"type" }, jObj.toString(jObj.toType(object))));
+                    $(id + " > pre").addClass("boxedArea");
+                };
+            };
 
-		for(key in classes) {
-			name = jObj.getClass(classes[key]);
-			id = "#main > #" + name;
-			$("#main").append(jDom("div", { id : name }));
-			$(id).hide();   
-			$(id).append(jDom("h3",{}, " " + name + " " + jDom("input", { value: "Object" }) + jDom("input", { value: "Type" })));
-			$(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
-			$(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
-			$(id).append(jDom("pre", { display_classe : "type" }, jObj.toString(classes[key])));
-			$(id + " > pre").addClass("boxedArea");
-			$(id + " > h3").addClass("ui-widget-header");
-			$(id).css("position","fixed");
-			$(id).show("slice");
-			$(id).draggable({ opacity: 0.7, stack: "#main div" });
-		}
-	} catch (e) {
-		$("#error").prepend(e.toString());
-	}
-	});
+            changeToObject = function (id, object) {
+                return function () {
+                    $(id + " > pre").replaceWith(jDom("pre", { display_object:"object" }, jObj.toString(object)));
+                    $(id + " > pre").addClass("boxedArea");
+                };
+            };
+
+            classes = {
+                Component:Factory.component.basic(),
+                SourceComponent:Factory.component.source(),
+                DestinationComponent:Factory.component.destination(),
+                PipelineComponent:Factory.component.pipeline()
+            };
+
+            for (key in classes) {
+                name = jObj.getClass(classes[key]);
+                id = "#main > #" + name;
+                $("#main").append(jDom("div", { id:name }));
+                $(id).hide();
+                $(id).append(jDom("h3", {}, " " + name + " " + jDom("input", { value:"Object" }) + jDom("input", { value:"Type" })));
+                $(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
+                $(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
+                $(id).append(jDom("pre", { display_classe:"type" }, jObj.toString(classes[key])));
+                $(id + " > pre").addClass("boxedArea");
+                $(id + " > h3").addClass("ui-widget-header");
+                $(id).css("position", "fixed");
+                $(id).show("slice");
+                $(id).draggable({ opacity:0.7, stack:"#main div" });
+            }
+        } catch (e) {
+            $("#error").prepend(e.toString());
+        }
+    });
 });

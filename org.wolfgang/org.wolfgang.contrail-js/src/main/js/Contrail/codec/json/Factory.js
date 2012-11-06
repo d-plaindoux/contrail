@@ -18,19 +18,19 @@
 
 /*global define*/
 
-define( [ "./Encoder", "./Decoder" ] , 
-function(JSonEncoder, JSonDecoder) {
-	
-	var Factory = {};
+define([ "./Encoder", "./Decoder" ],
+    function (JSonEncoder, JSonDecoder) {
 
-	Factory.encoder = function () {
-	    return JSonEncoder.init();
-	};
-	
-	Factory.decoder = function () {
-	    return JSonDecoder.init();
-	};
+        var Factory = {};
 
-	return Factory;
-	
-});
+        Factory.encoder = function () {
+            return JSonEncoder.init();
+        };
+
+        Factory.decoder = function () {
+            return JSonDecoder.init();
+        };
+
+        return Factory;
+
+    });

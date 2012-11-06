@@ -18,22 +18,22 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj"] , 
-function(require, jObj) {
-	
-	function TerminalComponent(upStream) {
-		jObj.bless(this, require("Component/Factory").basic.destination());
-	
-		this.dataFlow = upStream;
-	}
+define([ "require", "Core/jObj"],
+    function (require, jObj) {
 
-	TerminalComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
-		return new TerminalComponent(dataFlow);
-	});
+        function TerminalComponent(upStream) {
+            jObj.bless(this, require("Component/Factory").basic.destination());
 
-	TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function() {
-		return this.dataFlow;
-	});
+            this.dataFlow = upStream;
+        }
 
-	return TerminalComponent;
-});
+        TerminalComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+            return new TerminalComponent(dataFlow);
+        });
+
+        TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function () {
+            return this.dataFlow;
+        });
+
+        return TerminalComponent;
+    });

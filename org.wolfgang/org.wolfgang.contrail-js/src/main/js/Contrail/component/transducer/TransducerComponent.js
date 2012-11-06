@@ -18,29 +18,29 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/TransducerDownStreamDataFlow"] , 
-function(require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow) {
+define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/TransducerDownStreamDataFlow"],
+    function (require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow) {
 
-	function TransducerComponent(encoder,decoder) {
-		var Factory = require("Component/Factory");
+        function TransducerComponent(encoder, decoder) {
+            var Factory = require("Component/Factory");
 
-		jObj.bless(this, Factory.pipeline.component());
-	
-		this.upStreamDataFlow = TransducerUpStreamDataFlow.init(this, encoder);
-		this.downStreamDataFlow = TransducerDownStreamDataFlow.init(this, decoder);
-	}
+            jObj.bless(this, Factory.pipeline.component());
 
-	TransducerComponent.init = jObj.constructor(["Encoder", "Decoder"], function (encoder,decoder) {
-		return new TransducerComponent(encoder,decoder);
-	});
+            this.upStreamDataFlow = TransducerUpStreamDataFlow.init(this, encoder);
+            this.downStreamDataFlow = TransducerDownStreamDataFlow.init(this, decoder);
+        }
 
-	TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function() {
-		return this.upStreamDataFlow;
-	});
+        TransducerComponent.init = jObj.constructor(["Encoder", "Decoder"], function (encoder, decoder) {
+            return new TransducerComponent(encoder, decoder);
+        });
 
-	TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function() {
-		return this.downStreamDataFlow;
-	});
+        TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function () {
+            return this.upStreamDataFlow;
+        });
 
-	return TransducerComponent;
-});
+        TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function () {
+            return this.downStreamDataFlow;
+        });
+
+        return TransducerComponent;
+    });

@@ -18,27 +18,27 @@
 
 /*global define*/
 
-define( "Utils/jStrict", [ "require" ], 
-function (require) {
+define("Utils/jStrict", [ "require" ],
+    function (require) {
 
-	var jStrict = {};
-    
-	function AssertTypeError(message) {
-		require("Core/jObj").bless(this);
-		this.message = message;
-	}
-    
-	jStrict.assertType = function (object, type) {
-		var jObj = require("Core/jObj");
-        
-		if (type !== undefined && !jObj.instanceOf(type, jObj.types.String)) {
-			throw new AssertTypeError(type + " must be an instance of String");
-		} else if (!jObj.instanceOf(object,type)) {
-			throw new AssertTypeError(object + " must be an instance of " + type);
-		} else {
-			return object;
-		}
-	};
-    
-	return jStrict;
-});
+        var jStrict = {};
+
+        function AssertTypeError(message) {
+            require("Core/jObj").bless(this);
+            this.message = message;
+        }
+
+        jStrict.assertType = function (object, type) {
+            var jObj = require("Core/jObj");
+
+            if (type !== undefined && !jObj.instanceOf(type, jObj.types.String)) {
+                throw new AssertTypeError(type + " must be an instance of String");
+            } else if (!jObj.instanceOf(object, type)) {
+                throw new AssertTypeError(object + " must be an instance of " + type);
+            } else {
+                return object;
+            }
+        };
+
+        return jStrict;
+    });

@@ -18,31 +18,31 @@
 
 /*global define*/
 
-define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ], 
-function(ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
-	
-	var Factory = {};
+define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ],
+    function (ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
 
-	Factory.manager = function () {
-	    return new ComponentLinkManager();
-	};
+        var Factory = {};
 
-	Factory.components = function (source,destination) {
-	    return ComponentLink.init(source,destination);
-	};
+        Factory.manager = function () {
+            return new ComponentLinkManager();
+        };
 
-	Factory.basic = function (linkManager) {
-	    return Link.init(linkManager);
-	};
+        Factory.components = function (source, destination) {
+            return ComponentLink.init(source, destination);
+        };
 
-	Factory.source = function (source,linkManager) {
-	    return SourceLink.init(source, linkManager);
-	};
+        Factory.basic = function (linkManager) {
+            return Link.init(linkManager);
+        };
 
-	Factory.destination = function (destination,linkManager) {
-	    return DestinationLink.init(destination, linkManager);
-	};
-	
-	return Factory;
-	
-});
+        Factory.source = function (source, linkManager) {
+            return SourceLink.init(source, linkManager);
+        };
+
+        Factory.destination = function (destination, linkManager) {
+            return DestinationLink.init(destination, linkManager);
+        };
+
+        return Factory;
+
+    });

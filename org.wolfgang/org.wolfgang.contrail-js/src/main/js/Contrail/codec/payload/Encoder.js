@@ -18,20 +18,20 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "IO/jMarshaller" ] , 
-function(require, jObj, jMarshaller) {
+define([ "require", "Core/jObj", "IO/jMarshaller" ],
+    function (require, jObj, jMarshaller) {
 
-	function Encoder() {
-		jObj.bless(this, require("Codec/Factory").basic.encoder());
-	}
+        function Encoder() {
+            jObj.bless(this, require("Codec/Factory").basic.encoder());
+        }
 
-	Encoder.init = jObj.constructor([], function () {
-		return new Encoder();
-	});
+        Encoder.init = jObj.constructor([], function () {
+            return new Encoder();
+        });
 
-	Encoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function(bytes) {
-		return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
-	}); 
+        Encoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
+            return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
+        });
 
-	return Encoder;
-});
+        return Encoder;
+    });

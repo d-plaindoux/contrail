@@ -18,16 +18,16 @@
 
 /*global define*/
 
-define( "Component/Factory", [ "./basic/Factory", "./bound/Factory", "./pipeline/Factory", "./transducer/Factory" ] , 
-function(Basic, Bound, Pipeline, Transducer) {
+define("Component/Factory", [ "./basic/Factory", "./bound/Factory", "./pipeline/Factory", "./transducer/Factory" ],
+    function (Basic, Bound, Pipeline, Transducer) {
 
-	var Factory = {};
+        var Factory = {};
 
-	Factory.basic = Basic;
-	Factory.bound = Bound;
-	Factory.pipeline = Pipeline;
-	Factory.transducer = Transducer;
+        Factory.basic = Basic;
+        Factory.bound = Bound;
+        Factory.pipeline = Pipeline;
+        Factory.transducer = Transducer;
 
-	return Factory;
+        return Factory;
 
-});
+    });

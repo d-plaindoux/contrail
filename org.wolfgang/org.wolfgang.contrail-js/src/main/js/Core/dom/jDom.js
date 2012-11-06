@@ -18,41 +18,41 @@
 
 /*global define*/
 
-define( "Core/jDom", [ ], 
-function () {
+define("Core/jDom", [ ],
+    function () {
 
-	// Private package defintions
+        // Private package defintions
 
-	function PObject(tag, attributes, content) {
-		this.qname = tag;
-		this.attributes = attributes;
-		this.content = content;
-	}
+        function PObject(tag, attributes, content) {
+            this.qname = tag;
+            this.attributes = attributes;
+            this.content = content;
+        }
 
-	PObject.prototype.toString = function () {
-		var key, result;
-    
-		result =  "<" + this.qname;
+        PObject.prototype.toString = function () {
+            var key, result;
 
-		for(key in this.attributes) {
-			result += " " + key + "='" + this.attributes[key] + "'";
-		}
+            result = "<" + this.qname;
 
-		if (this.content) {
-			result += ">" + this.content.toString() + "</" + this.qname + ">"; 
-		} else {
-			result += "/>";
-		}        
-    
-		return result;
-		
-	};
-	
-	PObject.prototype.build = PObject.prototype.toString;
+            for (key in this.attributes) {
+                result += " " + key + "='" + this.attributes[key] + "'";
+            }
 
-	// Public package definition
+            if (this.content) {
+                result += ">" + this.content.toString() + "</" + this.qname + ">";
+            } else {
+                result += "/>";
+            }
 
-	return function (tag, attributes, content) {
-		return new PObject(tag, attributes, content).build();
-	};
-});
+            return result;
+
+        };
+
+        PObject.prototype.build = PObject.prototype.toString;
+
+        // Public package definition
+
+        return function (tag, attributes, content) {
+            return new PObject(tag, attributes, content).build();
+        };
+    });

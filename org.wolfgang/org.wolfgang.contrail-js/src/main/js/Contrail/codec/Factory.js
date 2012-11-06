@@ -18,15 +18,15 @@
 
 /*global define*/
 
-define( "Codec/Factory", [ "./basic/Factory", "./payload/Factory", "./json/Factory" ] , 
-function(BasicFactory, PayloadFactory, JSonFactory) {
-	
-	var Factory = {};
+define("Codec/Factory", [ "./basic/Factory", "./payload/Factory", "./json/Factory" ],
+    function (BasicFactory, PayloadFactory, JSonFactory) {
 
-	Factory.basic = BasicFactory;
-	Factory.payload = PayloadFactory;
-	Factory.json = JSonFactory;
+        var Factory = {};
 
-	return Factory;
-	
-});
+        Factory.basic = BasicFactory;
+        Factory.payload = PayloadFactory;
+        Factory.json = JSonFactory;
+
+        return Factory;
+
+    });

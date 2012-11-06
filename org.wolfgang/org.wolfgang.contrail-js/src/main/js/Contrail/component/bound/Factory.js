@@ -18,19 +18,19 @@
 
 /*global define*/
 
-define( [ "./InitialComponent", "./TerminalComponent" ] , 
-function(InitialComponent, TerminalComponent) {
+define([ "./InitialComponent", "./TerminalComponent" ],
+    function (InitialComponent, TerminalComponent) {
 
-	var Factory = {};
+        var Factory = {};
 
-	Factory.initial = function () {
-	    return InitialComponent.init();
-	};
+        Factory.initial = function () {
+            return InitialComponent.init();
+        };
 
-	Factory.terminal = function () {
-	    return TerminalComponent.init();
-	};
+        Factory.terminal = function () {
+            return TerminalComponent.init();
+        };
 
-	return Factory;
-	
-});
+        return Factory;
+
+    });

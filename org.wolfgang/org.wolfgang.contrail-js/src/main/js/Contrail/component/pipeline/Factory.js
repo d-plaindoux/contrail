@@ -18,15 +18,15 @@
 
 /*global define*/
 
-define( [ "./PipelineComponent" ] , 
-function(PipelineComponent) {
+define([ "./PipelineComponent" ],
+    function (PipelineComponent) {
 
-	var Factory = {};
+        var Factory = {};
 
-	Factory.component = function () {
-		return PipelineComponent.init();
-	};
+        Factory.component = function () {
+            return PipelineComponent.init();
+        };
 
-	return Factory;
-	
-});
+        return Factory;
+
+    });

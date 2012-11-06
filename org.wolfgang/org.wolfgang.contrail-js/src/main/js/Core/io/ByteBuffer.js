@@ -18,52 +18,52 @@
 
 /*global define*/
 
-define([ "Core/jObj" ], 
-function (jObj) {
+define([ "Core/jObj" ],
+    function (jObj) {
 
-	function ByteBuffer() {
-		jObj.bless(this);
-		this.buffer = [];
-		this.finished = false;
-	}
+        function ByteBuffer() {
+            jObj.bless(this);
+            this.buffer = [];
+            this.finished = false;
+        }
 
-	ByteBuffer.init = jObj.constructor([], function () {
-		return new ByteBuffer();
-	});
+        ByteBuffer.init = jObj.constructor([], function () {
+            return new ByteBuffer();
+        });
 
-	ByteBuffer.prototype.put = jObj.procedure([jObj.types.Object], function (bytes) {
-		if (this.finished) {
-			throw jObj.exception("L.byte.buffer.closed");
-		} else {
-			this.buffer.concat(bytes);
-		}
-	});
+        ByteBuffer.prototype.put = jObj.procedure([jObj.types.Object], function (bytes) {
+            if (this.finished) {
+                throw jObj.exception("L.byte.buffer.closed");
+            } else {
+                this.buffer.concat(bytes);
+            }
+        });
 
-	ByteBuffer.prototype.finish = jObj.procedure([], function () {
-		this.finished = true;
-	});
+        ByteBuffer.prototype.finish = jObj.procedure([], function () {
+            this.finished = true;
+        });
 
-	ByteBuffer.prototype.size = jObj.method([], jObj.types.Number, function (bytes) {
-		return this.buffer.lenght;
-	});
+        ByteBuffer.prototype.size = jObj.method([], jObj.types.Number, function (bytes) {
+            return this.buffer.lenght;
+        });
 
-	ByteBuffer.prototype.read = jObj.method([jObj.types.Object], jObj.types.Number, function (array) {
-		var len;
-		
-		if (this.size() === 0 && this.finished) {
-			len = -1; // End Of Buffer as been reached
-		} else if (this.size() === 0) {
-			len = 0;  // Nothing new in this buffer
-		} else {
-			if (this.size() < array.lenght) {
-				len = this.size();
-			} else {
-				len = array.lenght;
-			}
+        ByteBuffer.prototype.read = jObj.method([jObj.types.Object], jObj.types.Number, function (array) {
+            var len;
 
-			array.splice(0, len, this.buffer.splice(0, len));
-		}
-		
-		return len;
-	});
-});
+            if (this.size() === 0 && this.finished) {
+                len = -1; // End Of Buffer as been reached
+            } else if (this.size() === 0) {
+                len = 0;  // Nothing new in this buffer
+            } else {
+                if (this.size() < array.lenght) {
+                    len = this.size();
+                } else {
+                    len = array.lenght;
+                }
+
+                array.splice(0, len, this.buffer.splice(0, len));
+            }
+
+            return len;
+        });
+    });

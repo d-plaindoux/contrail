@@ -18,22 +18,22 @@
 
 /*global define*/
 
-define( [ "Core/jObj" ] ,
-function(jObj) {
+define([ "Core/jObj" ],
+    function (jObj) {
 
-	function Link(linkManager) {
-		jObj.bless(this);
-		
-		this.manager = linkManager;
-	}
+        function Link(linkManager) {
+            jObj.bless(this);
 
-	Link.init = jObj.constructor(["ComponentLinkManager"], function (linkManager) {
-		return new Link(linkManager);
-	});
+            this.manager = linkManager;
+        }
 
-	Link.prototype.getLinkManager = jObj.method([], "ComponentLinkManager", function () {
-	    return this.linkManager;
-	});
+        Link.init = jObj.constructor(["ComponentLinkManager"], function (linkManager) {
+            return new Link(linkManager);
+        });
 
-	return Link;
-});
+        Link.prototype.getLinkManager = jObj.method([], "ComponentLinkManager", function () {
+            return this.linkManager;
+        });
+
+        return Link;
+    });

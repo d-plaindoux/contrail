@@ -18,30 +18,30 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "Utils/jStrict" ] ,
-function(require, jObj, jStrict) {
-	
-	function ComponentLinkManager() {
-		jObj.bless(this);
-        
-		this.links = [ ];
-	}
-	
-	ComponentLinkManager.init = jObj.constructor([], function () {
-		return new ComponentLinkManager();
-	});
+define([ "require", "Core/jObj", "Utils/jStrict" ],
+    function (require, jObj, jStrict) {
 
-	ComponentLinkManager.prototype.link = jObj.procedure(["SourceComponent", "DestinationComponent"], function (source, destination) {
-		if (!source.acceptDestination(destination.getComponentId())) {
-			throw new Error("Source cannot accept Destination");
-		} else if (!destination.acceptSource(source.getComponentId())) {
-			throw new Error("Destination cannot accept Source");
-		} else {
-			var Factory = require("Contrail/Factory");
-			source.connectDestination(Factory.link.destination(destination,this));
-			destination.connectSource(Factory.link.source(source,this));
-		}
-	});
+        function ComponentLinkManager() {
+            jObj.bless(this);
 
-	return ComponentLinkManager;
-});
+            this.links = [ ];
+        }
+
+        ComponentLinkManager.init = jObj.constructor([], function () {
+            return new ComponentLinkManager();
+        });
+
+        ComponentLinkManager.prototype.link = jObj.procedure(["SourceComponent", "DestinationComponent"], function (source, destination) {
+            if (!source.acceptDestination(destination.getComponentId())) {
+                throw new Error("Source cannot accept Destination");
+            } else if (!destination.acceptSource(source.getComponentId())) {
+                throw new Error("Destination cannot accept Source");
+            } else {
+                var Factory = require("Contrail/Factory");
+                source.connectDestination(Factory.link.destination(destination, this));
+                destination.connectSource(Factory.link.source(source, this));
+            }
+        });
+
+        return ComponentLinkManager;
+    });
