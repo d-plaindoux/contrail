@@ -22,8 +22,8 @@ define( [ "require", "Core/jObj" ] ,
 function(require, jObj) {
 
 	function PipelineComponent() {
-		var Factory = require("Contrail/Factory");
-		jObj.bless(this, Factory.component.source(), Factory.component.destination());
+		var Factory = require("Component/Factory");
+		jObj.bless(this, Factory.basic.source(), Factory.basic.destination());
 	}
 
 	/**

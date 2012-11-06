@@ -18,19 +18,15 @@
 
 /*global define*/
 
-define( [ "Core/jObj" ] , 
-function(jObj) {
+define( [ "./PipelineComponent" ] , 
+function(PipelineComponent) {
 
-	function DataTransducer() {
-		jObj.bless(this);
-	}
+	var Factory = {};
 
-	DataTransducer.init = jObj.constructor([], function () {
-		return new DataTransducer();
-	});
+	Factory.component = function () {
+		return PipelineComponent.init();
+	};
 
-	DataTransducer.prototype.transform = jObj.method([jObj.types.Any],jObj.types.Array); 
-	DataTransducer.prototype.finish = jObj.method([jObj.types.Any],jObj.types.Array);
-
-	return DataTransducer;
+	return Factory;
+	
 });

@@ -18,13 +18,13 @@
 
 /*global define*/
 
-define( [ "require", "Core/jObj", "./TransducerUpStreamDataFlow", "./TransducerDownStreamDataFlow"] , 
+define( [ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/TransducerDownStreamDataFlow"] , 
 function(require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow) {
 
 	function TransducerComponent(encoder,decoder) {
-		var Factory = require("Contrail/Factory");
+		var Factory = require("Component/Factory");
 
-		jObj.bless(this, Factory.component.pipeline());
+		jObj.bless(this, Factory.pipeline.component());
 	
 		this.upStreamDataFlow = TransducerUpStreamDataFlow.init(this, encoder);
 		this.downStreamDataFlow = TransducerDownStreamDataFlow.init(this, decoder);
@@ -34,11 +34,11 @@ function(require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow
 		return new TransducerComponent(encoder,decoder);
 	});
 
-	TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], "TransducerUpStreamDataFlow", function() {
+	TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function() {
 		return this.upStreamDataFlow;
 	});
 
-	TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], "TransducerDownStreamDataFlow", function() {
+	TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function() {
 		return this.downStreamDataFlow;
 	});
 

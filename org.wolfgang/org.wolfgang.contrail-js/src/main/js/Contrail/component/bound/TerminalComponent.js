@@ -18,19 +18,22 @@
 
 /*global define*/
 
-define( [ "./Encoder", "./Decoder" ] , 
-function(Encoder, Decoder) {
+define( [ "require", "Core/jObj"] , 
+function(require, jObj) {
 	
-	var Factory = {};
+	function TerminalComponent(upStream) {
+		jObj.bless(this, require("Component/Factory").basic.destination());
+	
+		this.dataFlow = upStream;
+	}
 
-	Factory.encoder = function () {
-	    return Encoder.init();
-	};
-	
-	Factory.decoder = function () {
-	    return Decoder.init();
-	};
-	
-	return Factory;
+	TerminalComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+		return new TerminalComponent(dataFlow);
+	});
 
+	TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function() {
+		return this.dataFlow;
+	});
+
+	return TerminalComponent;
 });

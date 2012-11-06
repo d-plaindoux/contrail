@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define( [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ] , 
+define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ], 
 function(ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
 	
 	var Factory = {};

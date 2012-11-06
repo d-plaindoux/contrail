@@ -22,7 +22,7 @@ define( [ "require",  "Core/jObj" ] ,
 function(require, jObj) {
 
 	function SourceComponent() {
-		jObj.bless(this, require("Contrail/Factory").component.basic());
+		jObj.bless(this, require("Component/Factory").basic.component());
 
 		this.destinationLink = null;
 	}
@@ -40,8 +40,6 @@ function(require, jObj) {
 		return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
 	});
 
-	SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
-
 	SourceComponent.prototype.closeUpStream = jObj.procedure([], function() {
 		if (this.destinationLink !== null) {
 			this.destinationLink.getSource().closeUpStream();
@@ -50,6 +48,12 @@ function(require, jObj) {
 			throw jObj.exception("L.destination.not.connected");
 		}
 	});
-	
+
+	/**
+	 * Abstract methods
+	 */
+
+	SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
+
 	return SourceComponent;
 });

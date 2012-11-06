@@ -18,19 +18,19 @@
 
 /*global define*/
 
-define( [ "./Encoder", "./Decoder" ] , 
-function(Encoder, Decoder) {
-	
+define( [ "./InitialComponent", "./TerminalComponent" ] , 
+function(InitialComponent, TerminalComponent) {
+
 	var Factory = {};
 
-	Factory.encoder = function () {
-	    return Encoder.init();
+	Factory.initial = function () {
+	    return InitialComponent.init();
 	};
-	
-	Factory.decoder = function () {
-	    return Decoder.init();
-	};
-	
-	return Factory;
 
+	Factory.terminal = function () {
+	    return TerminalComponent.init();
+	};
+
+	return Factory;
+	
 });

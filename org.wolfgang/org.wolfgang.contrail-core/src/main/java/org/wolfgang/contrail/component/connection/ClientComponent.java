@@ -69,11 +69,11 @@ public class ClientComponent extends AbstractPipelineComponent<byte[], byte[], b
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<byte[], byte[]> handler) throws ComponentConnectionRejectedException {
-		final ComponentLink connectDestination = super.connectDestination(handler);
+	public ComponentLink connectDestination(DestinationComponentLink<byte[], byte[]> link) throws ComponentConnectionRejectedException {
+		final ComponentLink connectDestination = super.connectDestination(link);
 
 		try {
-			handler.getComponentLinkManager().connect(client.connect(uri), this);
+			link.getComponentLinkManager().connect(client.connect(uri), this);
 		} catch (ComponentConnectionRejectedException e) {
 			try {
 				connectDestination.dispose();

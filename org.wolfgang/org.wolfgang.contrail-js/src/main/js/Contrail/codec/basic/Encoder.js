@@ -18,19 +18,16 @@
 
 /*global define*/
 
-define( [ "./Encoder", "./Decoder" ] , 
-function(Encoder, Decoder) {
-	
-	var Factory = {};
+define( [ "Core/jObj", "./Transducer" ] , 
+function(jObj, Transducer) {
 
-	Factory.encoder = function () {
-	    return Encoder.init();
-	};
-	
-	Factory.decoder = function () {
-	    return Decoder.init();
-	};
-	
-	return Factory;
+	function Encoder() {
+		jObj.bless(this, Transducer.init());
+	}
 
+	Encoder.init = jObj.constructor([], function () {
+		return new Encoder();
+	});
+
+	return Encoder;
 });

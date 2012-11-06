@@ -18,14 +18,14 @@
 
 /*global define*/
 
-define( "Contrail/Factory", [ "jquery", "../component/Factory", "../link/Factory", "../flow/Factory" ] , 
-function($, ComponentFactory, LinkFactory, FlowFactory) {
+define( "Contrail/Factory", [ "Component/Factory", "Link/Factory", "Flow/Factory" ] , 
+function(Component, Link, Flow) {
 	
 	var Factory = {};
 	
-	Factory.component = ComponentFactory;
-	Factory.link = LinkFactory;
-	Factory.flow = FlowFactory;
+	Factory.component = Component;
+	Factory.link = Link;
+	Factory.flow = Flow;
 
 	return Factory;
 	

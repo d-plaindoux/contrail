@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C)2012 D. Plaindoux.
  *
@@ -19,29 +18,23 @@
 
 /*global define*/
 
-define( [ "Utils/jUtils", "Core/jObj" ] , 
-function(jUtils, jObj) {
+define( [ "./Component", "./SourceComponent", "./DestinationComponent" ] , 
+function(Component, SourceComponent, DestinationComponent) {
 
-	function Component() {
-		jObj.bless(this);        
-		this.identifier = jUtils.UUID();
-	}
+	var Factory = {};
 
-	Component.init = jObj.constructor([] , function() {
-			return new Component();
-		});
+	Factory.component = function () {
+	    return Component.init();
+	};
+
+	Factory.source = function () {
+	    return SourceComponent.init();
+	};
+
+	Factory.destination = function () {
+		return DestinationComponent.init();
+	};
+
+	return Factory;
 	
-	Component.prototype.getComponentId = jObj.method([], jObj.types.String, function() {
-		return this.identifier;
-	});
-
-	Component.prototype.closeUpStream = jObj.procedure([], function() {
-		throw jObj.exception("L.not.available");
-	});
-
-	Component.prototype.closeDownStream = jObj.procedure([], function() {
-		throw jObj.exception("L.not.available");
-	});
-	
-	return Component;
 });

@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define( [ "./DataFlow" ] , 
+define( "Flow/Factory", [ "./DataFlow" ] , 
 function(DataFlow) {
 	
 	var Factory = {};

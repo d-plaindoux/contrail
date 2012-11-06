@@ -22,7 +22,7 @@ define( [ "require", "Core/jObj", "External/JSon" ] ,
 function(require, jObj, JSon) {
 
 	function Decoder() {
-		jObj.bless(this, require("Codec/Factory").basic.transducer());
+		jObj.bless(this, require("Codec/Factory").basic.decoder());
 		this.buffer = [];
 	}
 
