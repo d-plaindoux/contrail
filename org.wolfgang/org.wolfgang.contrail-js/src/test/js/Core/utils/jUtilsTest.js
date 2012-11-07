@@ -16,32 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global require */
 
-define([ "Utils/jUtils", "Core/jObj" ],
-    function (jUtils, jObj) {
+require([ "Utils/jUtils", "qunit" ],
+    function (jUtils, QUnit) {
         "use strict";
 
-        function Component() {
-            jObj.bless(this);
-            this.identifier = jUtils.uuid();
-        }
-
-        Component.init = jObj.constructor([], function () {
-            return new Component();
+        /**
+         * Test UUID generation
+         */
+        QUnit.test("Check UUID generation", function () {
+            var uuid1 = jUtils.uuid(), uuid2 = jUtils.uuid();
+            QUnit.notEqual(uuid1, uuid2, "Two fresh UUID must be dfferent");
         });
-
-        Component.prototype.getComponentId = jObj.method([], jObj.types.String, function () {
-            return this.identifier;
-        });
-
-        Component.prototype.closeUpStream = jObj.procedure([], function () {
-            throw jObj.exception("L.not.available");
-        });
-
-        Component.prototype.closeDownStream = jObj.procedure([], function () {
-            throw jObj.exception("L.not.available");
-        });
-
-        return Component.init;
     });

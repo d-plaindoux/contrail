@@ -18,35 +18,21 @@
 
 /*global define*/
 
-define("Utils/jUtils", [  ],
+define("test/jCC", [],
     function () {
-        "use strict";
 
-        var jUtils = {};
+        var jCC = {};
 
-        jUtils.uuid = function () {
-            var S4 = function () {
-                return Math.floor(Math.random() * 0x10000).toString(16);
-            };
-
-            return (
-                S4() + S4() + "-" +
-                    S4() + "-" +
-                    S4() + "-" +
-                    S4() + "-" +
-                    S4() + S4() + S4()
-                );
+        jCC.Given = function (theGiven) {
+            theGiven();
+            return { When:function (theWhen) {
+                theWhen();
+                return { Then:function (theThen) {
+                    theThen();
+                }};
+            }};
         };
 
-        jUtils.array = function (len) {
-            var array = [], i;
+        return jCC;
 
-            for (i = 0; i < len; i += 1) {
-                array.push(undefined);
-            }
-
-            return array;
-        };
-
-        return jUtils;
     });

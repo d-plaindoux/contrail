@@ -22,7 +22,7 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransObj" ],
     function (jQuery, jModel, jType, jTransObj) {
         "use strict";
 
-        var jObj = jQuery.extend({}, jModel, jType, jTransObj);
+        var jObj = {};
 
         /**
          * Method called whether an object must be extended and blessed as an instance
@@ -51,6 +51,8 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransObj" ],
                     }
                 }
             }
+
+            return parameters[0];
         };
 
         /**
@@ -73,6 +75,5 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransObj" ],
             return result;
         };
 
-        return jObj;
-
+        return jObj.bless(jObj, jModel, jType, jTransObj);
     });

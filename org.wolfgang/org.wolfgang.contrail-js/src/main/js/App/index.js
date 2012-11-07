@@ -40,10 +40,10 @@ $(function () {
             };
 
             classes = {
-                Component:Factory.component.basic(),
-                SourceComponent:Factory.component.source(),
-                DestinationComponent:Factory.component.destination(),
-                PipelineComponent:Factory.component.pipeline()
+                Component:Factory.component.basic.component(),
+                SourceComponent:Factory.component.basic.source(),
+                DestinationComponent:Factory.component.basic.destination(),
+                PipelineComponent:Factory.component.pipeline.component()
             };
 
             for (key in classes) {

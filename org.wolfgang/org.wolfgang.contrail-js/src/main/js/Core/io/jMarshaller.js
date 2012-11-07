@@ -42,6 +42,21 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         });
 
         /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToChar = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number, function (bytes, offset) {
+            if (bytes.length < offset + 2) {
+                throw jObj.exception("L.array.out.of.bound");
+            }
+
+            return bytes[offset] << 8 | bytes[offset + 1];
+        });
+
+        /**
          * Concert an integer to a byte array
          *
          * @param i
@@ -52,15 +67,25 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         });
 
         /**
+         * Concert an integer to a byte array
+         *
+         * @param i
+         * @return {Array}
+         */
+        jMarshaller.charToBytes = jObj.method([jObj.types.Number], jObj.types.Array, function (i) {
+            return [i >>> 8 & 0xFF, i & 0xFF];
+        });
+
+        /**
          * Convert a byte array to string
          *
          * @param bytes
          * @return {String}
          */
-        jMarshaller.byteToString = jObj.method([jObj.types.Array], jObj.types.String, function (bytes) {
+        jMarshaller.bytesToString = jObj.method([jObj.types.Array], jObj.types.String, function (bytes) {
             var str = "", i;
             for (i = 0; i < bytes.length; i += 2) {
-                str += String.fromCharCode(jObj.readInt(i, bytes));
+                str += String.fromCharCode(jMarshaller.bytesToChar(bytes, i));
             }
 
             return str;
@@ -75,9 +100,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array, function (str) {
             var bytes = [], char, i;
             for (i = 0; i < str.length; i += 1) {
-                char = str.charCodeAt(i);
-                bytes.push(char >>> 8);
-                bytes.push(char & 0xFF);
+                bytes = bytes.concat(jMarshaller.charToBytes(str.charCodeAt(i)));
             }
 
             return bytes;

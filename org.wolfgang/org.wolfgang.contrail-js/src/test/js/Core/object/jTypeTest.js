@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/jObj", "./jType", "qunit" ],
-    function (jObj, jType, QUnit) {
+require([ "Core/jObj", "qunit" ],
+    function (jObj, QUnit) {
         "use strict";
 
         /**
@@ -31,14 +31,14 @@ require([ "Core/jObj", "./jType", "qunit" ],
 
         QUnit.test("Check Subtype a:A <? A", function () {
             var a = new A();
-            jType.checkType(a, "A");
+            jObj.checkType(a, "A");
             QUnit.equal(true, true, " a is an instance of A");
         });
 
         QUnit.test("Check Subtype a:A <? B", function () {
             var a = new A();
             try {
-                jType.checkType(a, "B");
+                jObj.checkType(a, "B");
                 QUnit.equal(true, false, "a is not an instance of B");
             } catch (e) {
                 QUnit.equal(jObj.instanceOf(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
