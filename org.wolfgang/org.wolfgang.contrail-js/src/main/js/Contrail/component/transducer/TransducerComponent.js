@@ -31,15 +31,15 @@ define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/Tr
             this.downStreamDataFlow = transducerDownStreamDataFlow(this, decoder);
         }
 
-        TransducerComponent.init = jObj.constructor(["Encoder", "Decoder"], function (encoder, decoder) {
+        TransducerComponent.init = jObj.constructor([jObj.types.Named("Encoder"), jObj.types.Named("Decoder")], function (encoder, decoder) {
             return new TransducerComponent(encoder, decoder);
         });
 
-        TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function () {
+        TransducerComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
             return this.upStreamDataFlow;
         });
 
-        TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function () {
+        TransducerComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
             return this.downStreamDataFlow;
         });
 

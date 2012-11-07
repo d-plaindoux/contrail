@@ -27,11 +27,11 @@ define([ "require", "Core/jObj" ],
             this.destination = destination;
         }
 
-        DestinationLink.init = jObj.constructor(["DestinationComponent", "ComponentLinkManager"], function (destination, linkManager) {
+        DestinationLink.init = jObj.constructor([jObj.types.Named("DestinationComponent"), jObj.types.Named("ComponentLinkManager")], function (destination, linkManager) {
             return new DestinationLink(destination, linkManager);
         });
 
-        DestinationLink.prototype.getDestination = jObj.method([], "DestinationComponent", function () {
+        DestinationLink.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"), function () {
             return this.destination;
         });
 

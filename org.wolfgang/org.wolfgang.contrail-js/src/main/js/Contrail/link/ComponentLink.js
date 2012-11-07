@@ -29,7 +29,7 @@ define([ "Core/jObj"],
             this.destination = destination;
         }
 
-        ComponentLink.init = jObj.constructor(["SourceComponent", "DestinationComponent"], function (source, destination) {
+        ComponentLink.init = jObj.constructor([jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")], function (source, destination) {
             return new ComponentLink(source, destination);
         });
 

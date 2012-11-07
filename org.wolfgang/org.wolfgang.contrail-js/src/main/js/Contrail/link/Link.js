@@ -28,11 +28,11 @@ define([ "Core/jObj" ],
             this.manager = linkManager;
         }
 
-        Link.init = jObj.constructor(["ComponentLinkManager"], function (linkManager) {
+        Link.init = jObj.constructor([jObj.types.Named("ComponentLinkManager")], function (linkManager) {
             return new Link(linkManager);
         });
 
-        Link.prototype.getLinkManager = jObj.method([], "ComponentLinkManager", function () {
+        Link.prototype.getLinkManager = jObj.method([], jObj.types.Named("ComponentLinkManager"), function () {
             return this.linkManager;
         });
 

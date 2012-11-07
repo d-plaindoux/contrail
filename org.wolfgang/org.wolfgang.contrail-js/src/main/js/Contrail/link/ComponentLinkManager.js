@@ -32,7 +32,7 @@ define([ "require", "Core/jObj" ],
             return new ComponentLinkManager();
         });
 
-        ComponentLinkManager.prototype.link = jObj.procedure(["SourceComponent", "DestinationComponent"], function (source, destination) {
+        ComponentLinkManager.prototype.link = jObj.procedure([jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")], function (source, destination) {
             if (!source.acceptDestination(destination.getComponentId())) {
                 throw jObj.exception("L.source.cannot.accept.destination");
             } else if (!destination.acceptSource(source.getComponentId())) {

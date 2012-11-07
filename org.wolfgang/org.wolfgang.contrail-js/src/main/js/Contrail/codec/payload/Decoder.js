@@ -22,32 +22,32 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
     function (require, jObj, jMarshaller) {
         "use strict";
 
-        function Decoder() {
+        function PayloadDecoder() {
             jObj.bless(this, require("Codec/Factory").basic.decoder());
             this.buffer = [];
         }
 
-        Decoder.INT_LEN = 4;
+        PayloadDecoder.INT_LEN = 4;
 
-        Decoder.init = jObj.constructor([], function () {
-            return new Decoder();
+        PayloadDecoder.init = jObj.constructor([], function () {
+            return new PayloadDecoder();
         });
 
-        Decoder.prototype.getNext = jObj.method([], jObj.types.Array, function () {
-            if (this.buffer.length < Decoder.INT_LEN) {
+        PayloadDecoder.prototype.getNext = jObj.method([], jObj.types.Array, function () {
+            if (this.buffer.length < PayloadDecoder.INT_LEN) {
                 return [];
             } else {
-                var payload = jMarshaller.bytesToInt(this.buffer);
-                if (this.buffer.length - Decoder.INT_LEN < payload) {
+                var payload = jMarshaller.bytesToInt(this.buffer, 0);
+                if (this.buffer.length - PayloadDecoder.INT_LEN < payload) {
                     return [];
                 } else {
-                    this.buffer.splice(0, Decoder.INT_LEN);
+                    this.buffer.splice(0, PayloadDecoder.INT_LEN);
                     return this.buffer.splice(0, payload);
                 }
             }
         });
 
-        Decoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
+        PayloadDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
             var results = [], result;
 
             this.buffer = this.buffer.concat(bytes);
@@ -59,7 +59,7 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
             return results;
         });
 
-        Decoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
+        PayloadDecoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
             if (this.buffer.length > 0) {
                 throw jObj.exception("L.array.must.be.empty");
             } else {
@@ -67,5 +67,5 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
             }
         });
 
-        return Decoder.init;
+        return PayloadDecoder.init;
     });

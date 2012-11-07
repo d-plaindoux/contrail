@@ -31,7 +31,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param offset The initial position
          * @return {*}
          */
-        jMarshaller.bytesToInt = function (bytes, offset) {
+        jMarshaller.bytesToInt = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number, function (bytes, offset) {
             var i = jObj.value(offset, 0);
 
             if (bytes.length < i + 4) {
@@ -39,7 +39,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
             }
 
             return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
-        };
+        });
 
         /**
          * Concert an integer to a byte array
@@ -47,9 +47,9 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param i
          * @return {Array}
          */
-        jMarshaller.intToBytes = function (i) {
+        jMarshaller.intToBytes = jObj.method([jObj.types.Number], jObj.types.Array, function (i) {
             return [i >>> 24 & 0xFF, i >>> 16 & 0xFF, i >>> 8 & 0xFF, i & 0xFF];
-        };
+        });
 
         /**
          * Convert a byte array to string
@@ -57,14 +57,14 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param bytes
          * @return {String}
          */
-        jMarshaller.byteToString = function (bytes) {
+        jMarshaller.byteToString = jObj.method([jObj.types.Array], jObj.types.String, function (bytes) {
             var str = "", i;
             for (i = 0; i < bytes.length; i += 2) {
                 str += String.fromCharCode(jObj.readInt(i, bytes));
             }
 
             return str;
-        };
+        });
 
         /**
          * Convert a string to a byte array
@@ -72,7 +72,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param str
          * @return {Array}
          */
-        jMarshaller.stringToBytes = function (str) {
+        jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array, function (str) {
             var bytes = [], char, i;
             for (i = 0; i < str.length; i += 1) {
                 char = str.charCodeAt(i);
@@ -81,7 +81,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
             }
 
             return bytes;
-        };
+        });
 
         return jMarshaller;
     });

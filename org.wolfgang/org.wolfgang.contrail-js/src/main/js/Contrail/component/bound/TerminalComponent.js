@@ -28,11 +28,11 @@ define([ "require", "Core/jObj"],
             this.dataFlow = dataFlow;
         }
 
-        TerminalComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+        TerminalComponent.init = jObj.constructor([jObj.types.Named("DataFlow")], function (dataFlow) {
             return new TerminalComponent(dataFlow);
         });
 
-        TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow", function () {
+        TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
             return this.dataFlow;
         });
 

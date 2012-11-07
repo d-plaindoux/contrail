@@ -28,11 +28,11 @@ define([ "require", "Core/jObj"],
             this.dataFlow = dataFlow;
         }
 
-        InitialComponent.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+        InitialComponent.init = jObj.constructor([jObj.types.Named("DataFlow")], function (dataFlow) {
             return new InitialComponent(dataFlow);
         });
 
-        InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow", function () {
+        InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
             return this.dataFlow;
         });
 

@@ -28,7 +28,7 @@ define([ "require", "Core/jObj" ],
             this.dataFlow = dataFlow;
         }
 
-        CloseableDataFlow.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+        CloseableDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow")], function (dataFlow) {
             return new CloseableDataFlow(dataFlow);
         });
 
