@@ -67,5 +67,5 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
             }
         });
 
-        return Decoder;
+        return Decoder.init;
     });

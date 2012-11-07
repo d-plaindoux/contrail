@@ -43,5 +43,5 @@ define([ "Utils/jUtils", "Core/jObj" ],
             throw jObj.exception("L.not.available");
         });
 
-        return Component;
+        return Component.init;
     });

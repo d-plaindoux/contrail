@@ -19,7 +19,7 @@
 /*global define*/
 
 define([ "require", "Core/jObj", "Utils/jStrict" ],
-    function (require, jObj, jStrict) {
+    function (require, jObj) {
         "use strict";
 
         function ComponentLinkManager() {
@@ -44,5 +44,5 @@ define([ "require", "Core/jObj", "Utils/jStrict" ],
             }
         });
 
-        return ComponentLinkManager;
+        return ComponentLinkManager.init;
     });

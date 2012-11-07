@@ -26,8 +26,8 @@ require([ "qunit", "Contrail/Factory" ],
          * Test generation
          */
         QUnit.test("Check Component generation", function () {
-            var c1 = Factory.component.bound.terminal(Factory.flow.basic()),
-                c2 = Factory.component.bound.terminal(Factory.flow.basic());
-            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+            var component1 = Factory.component.bound.terminal(Factory.flow.basic()),
+                component2 = Factory.component.bound.terminal(Factory.flow.basic());
+            QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
         });
     });

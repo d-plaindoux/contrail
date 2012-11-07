@@ -19,30 +19,16 @@
 /*global define*/
 
 define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ],
-    function (ComponentLinkManager, ComponentLink, Link, SourceLink, DestinationLink) {
+    function (componentLinkManager, componentLink, link, sourceLink, destinationLink) {
         "use strict";
 
         var Factory = {};
 
-        Factory.manager = function () {
-            return new ComponentLinkManager();
-        };
-
-        Factory.components = function (source, destination) {
-            return ComponentLink.init(source, destination);
-        };
-
-        Factory.basic = function (linkManager) {
-            return Link.init(linkManager);
-        };
-
-        Factory.source = function (source, linkManager) {
-            return SourceLink.init(source, linkManager);
-        };
-
-        Factory.destination = function (destination, linkManager) {
-            return DestinationLink.init(destination, linkManager);
-        };
+        Factory.manager = componentLinkManager;
+        Factory.components = componentLink;
+        Factory.basic = link;
+        Factory.source = sourceLink;
+        Factory.destination = destinationLink;
 
         return Factory;
 

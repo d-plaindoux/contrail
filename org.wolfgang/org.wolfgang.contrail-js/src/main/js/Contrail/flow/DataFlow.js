@@ -33,5 +33,5 @@ define([ "Core/jObj" ],
         DataFlow.prototype.handleData = jObj.procedure([jObj.types.Any]);
         DataFlow.prototype.handleClose = jObj.procedure([]);
 
-        return DataFlow;
+        return DataFlow.init;
     });

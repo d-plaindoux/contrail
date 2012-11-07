@@ -37,5 +37,5 @@ define([ "Core/jObj"],
             // TODO
         });
 
-        return ComponentLink;
+        return ComponentLink.init;
     });

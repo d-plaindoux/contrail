@@ -19,16 +19,14 @@
 /*global define*/
 
 define([ "./TransducerComponent" ],
-    function (TransducerComponent) {
+    function (transducerComponent) {
         "use strict";
 
         var Factory;
 
         Factory = {};
 
-        Factory.component = function (encoder, decoder) {
-            return TransducerComponent.init(encoder, decoder);
-        };
+        Factory.component = transducerComponent;
 
         return Factory;
 

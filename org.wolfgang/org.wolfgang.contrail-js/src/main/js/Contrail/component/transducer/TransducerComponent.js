@@ -19,7 +19,7 @@
 /*global define*/
 
 define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/TransducerDownStreamDataFlow"],
-    function (require, jObj, TransducerUpStreamDataFlow, TransducerDownStreamDataFlow) {
+    function (require, jObj, transducerUpStreamDataFlow, transducerDownStreamDataFlow) {
         "use strict";
 
         function TransducerComponent(encoder, decoder) {
@@ -27,8 +27,8 @@ define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/Tr
 
             jObj.bless(this, Factory.pipeline.component());
 
-            this.upStreamDataFlow = TransducerUpStreamDataFlow.init(this, encoder);
-            this.downStreamDataFlow = TransducerDownStreamDataFlow.init(this, decoder);
+            this.upStreamDataFlow = transducerUpStreamDataFlow(this, encoder);
+            this.downStreamDataFlow = transducerDownStreamDataFlow(this, decoder);
         }
 
         TransducerComponent.init = jObj.constructor(["Encoder", "Decoder"], function (encoder, decoder) {

@@ -52,5 +52,5 @@ define([ "require", "Core/jObj" ],
             return this.destinationLink;
         };
 
-        return PipelineComponent;
+        return PipelineComponent.init;
     });

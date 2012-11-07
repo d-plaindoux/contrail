@@ -56,5 +56,5 @@ define([ "require", "Core/jObj" ],
 
         SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
 
-        return SourceComponent;
+        return SourceComponent.init;
     });

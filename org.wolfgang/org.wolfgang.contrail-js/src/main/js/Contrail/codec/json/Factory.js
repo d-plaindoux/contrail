@@ -19,17 +19,17 @@
 /*global define*/
 
 define([ "./Encoder", "./Decoder" ],
-    function (JSonEncoder, JSonDecoder) {
+    function (jSonEncoder, jSonDecoder) {
         "use strict";
 
         var Factory = {};
 
         Factory.encoder = function () {
-            return JSonEncoder.init();
+            return jSonEncoder();
         };
 
         Factory.decoder = function () {
-            return JSonDecoder.init();
+            return jSonDecoder();
         };
 
         return Factory;

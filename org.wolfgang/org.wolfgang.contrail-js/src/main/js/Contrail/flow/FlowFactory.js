@@ -18,15 +18,14 @@
 
 /*global define*/
 
-define("Flow/Factory", [ "./DataFlow" ],
-    function (DataFlow) {
+define("Flow/Factory", [ "./DataFlow", "./CloseableDataFlow" ],
+    function (dataFlow, closeableDataFlow) {
         "use strict";
 
         var Factory = {};
 
-        Factory.basic = function (type) {
-            return DataFlow.init(type);
-        };
+        Factory.basic = dataFlow;
+        Factory.closeable = closeableDataFlow;
 
         return Factory;
 

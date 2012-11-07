@@ -36,5 +36,5 @@ define([ "require", "Core/jObj" ],
             return this.source;
         });
 
-        return SourceLink;
+        return SourceLink.init;
     });

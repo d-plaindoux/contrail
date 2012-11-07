@@ -25,33 +25,37 @@ define([ "Core/jObj" ],
         function ByteBuffer() {
             jObj.bless(this);
             this.buffer = [];
-            this.finished = false;
+            this.closed = false;
         }
 
         ByteBuffer.init = jObj.constructor([], function () {
             return new ByteBuffer();
         });
 
-        ByteBuffer.prototype.put = jObj.procedure([jObj.types.Object], function (bytes) {
-            if (this.finished) {
+        ByteBuffer.prototype.write = jObj.procedure([jObj.types.Array], function (bytes) {
+            if (this.closed) {
                 throw jObj.exception("L.byte.buffer.closed");
             } else {
                 this.buffer.concat(bytes);
             }
         });
 
-        ByteBuffer.prototype.finish = jObj.procedure([], function () {
-            this.finished = true;
+        ByteBuffer.prototype.isClosed = jObj.method([], jObj.types.Boolean, function () {
+            return this.closed;
+        });
+
+        ByteBuffer.prototype.closed = jObj.procedure([], function () {
+            this.closed = true;
         });
 
         ByteBuffer.prototype.size = jObj.method([], jObj.types.Number, function (bytes) {
             return this.buffer.lenght;
         });
 
-        ByteBuffer.prototype.read = jObj.method([jObj.types.Object], jObj.types.Number, function (array) {
+        ByteBuffer.prototype.read = jObj.method([jObj.types.Array], jObj.types.Number, function (array) {
             var len;
 
-            if (this.size() === 0 && this.finished) {
+            if (this.size() === 0 && this.closed) {
                 len = -1; // End Of Buffer as been reached
             } else if (this.size() === 0) {
                 len = 0;  // Nothing new in this buffer
@@ -67,4 +71,6 @@ define([ "Core/jObj" ],
 
             return len;
         });
+
+        return ByteBuffer.init;
     });

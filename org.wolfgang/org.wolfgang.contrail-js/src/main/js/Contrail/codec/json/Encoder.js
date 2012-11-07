@@ -38,5 +38,5 @@ define([ "require", "Core/jObj", "External/JSon" ],
             return [];
         });
 
-        return Encoder;
+        return Encoder.init;
     });

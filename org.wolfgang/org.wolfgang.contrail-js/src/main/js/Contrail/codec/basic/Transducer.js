@@ -33,5 +33,5 @@ define([ "Core/jObj" ],
         Transducer.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array);
         Transducer.prototype.finish = jObj.method([jObj.types.Any], jObj.types.Array);
 
-        return Transducer;
+        return Transducer.init;
     });

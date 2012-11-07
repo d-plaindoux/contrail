@@ -19,21 +19,21 @@
 /*global define*/
 
 define([ "./Component", "./SourceComponent", "./DestinationComponent" ],
-    function (Component, SourceComponent, DestinationComponent) {
+    function (component, sourceComponent, destinationComponent) {
         "use strict";
 
         var Factory = {};
 
         Factory.component = function () {
-            return Component.init();
+            return component();
         };
 
         Factory.source = function () {
-            return SourceComponent.init();
+            return sourceComponent();
         };
 
         Factory.destination = function () {
-            return DestinationComponent.init();
+            return destinationComponent();
         };
 
         return Factory;

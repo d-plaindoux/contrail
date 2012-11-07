@@ -18,26 +18,31 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj", "External/JSon" ],
-    function (require, jObj, JSon) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
         "use strict";
 
-        function Decoder() {
-            jObj.bless(this, require("Codec/Factory").basic.decoder());
-            this.buffer = [];
+        function CloseableDataFlow(dataFlow) {
+            jObj.bless(this, require("Flow/Factory").basic());
+            this.closed = false;
+            this.dataFlow = dataFlow;
         }
 
-        Decoder.init = jObj.constructor([], function () {
-            return new Decoder();
+        CloseableDataFlow.init = jObj.constructor(["DataFlow"], function (dataFlow) {
+            return new CloseableDataFlow(dataFlow);
         });
 
-        Decoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function (string) {
-            return [ JSon.parse(string) ];
+        CloseableDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any], function (data) {
+            if (this.closed) {
+                throw jObj.exception("L.data.flow.closed");
+            } else {
+                this.dataFlow.handleData(data);
+            }
         });
 
-        Decoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
-            return [];
+        CloseableDataFlow.prototype.handleClose = jObj.procedure([], function () {
+            this.closed = true;
         });
 
-        return Decoder.init;
+        return CloseableDataFlow.init;
     });

@@ -19,18 +19,13 @@
 /*global define*/
 
 define([ "./InitialComponent", "./TerminalComponent" ],
-    function (InitialComponent, TerminalComponent) {
+    function (initialComponent, terminalComponent) {
         "use strict";
 
         var Factory = {};
 
-        Factory.initial = function (dataFlow) {
-            return InitialComponent.init(dataFlow);
-        };
-
-        Factory.terminal = function (dataFlow) {
-            return TerminalComponent.init(dataFlow);
-        };
+        Factory.initial = initialComponent;
+        Factory.terminal = terminalComponent;
 
         return Factory;
 

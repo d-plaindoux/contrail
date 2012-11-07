@@ -53,5 +53,5 @@ define([ "require", "Core/jObj" ],
             }
         });
 
-        return TransducerDataFlow;
+        return TransducerDataFlow.init;
     });

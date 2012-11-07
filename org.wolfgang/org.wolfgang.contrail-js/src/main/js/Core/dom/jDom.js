@@ -22,19 +22,21 @@ define("Core/jDom", [ ],
     function () {
         "use strict";
 
-        function PObject(tag, attributes, content) {
+        function JDOm(tag, attributes, content) {
             this.qname = tag;
             this.attributes = attributes;
             this.content = content;
         }
 
-        PObject.prototype.toString = function () {
+        JDOm.prototype.toString = function () {
             var key, result;
 
             result = "<" + this.qname;
 
             for (key in this.attributes) {
-                result += " " + key + "='" + this.attributes[key] + "'";
+                if (this.attributes.hasOwnProperty(key)) {
+                    result += " " + key + "='" + this.attributes[key] + "'";
+                }
             }
 
             if (this.content) {
@@ -47,11 +49,11 @@ define("Core/jDom", [ ],
 
         };
 
-        PObject.prototype.build = PObject.prototype.toString;
+        JDOm.prototype.build = JDOm.prototype.toString;
 
         // Public package definition
 
         return function (tag, attributes, content) {
-            return new PObject(tag, attributes, content).build();
+            return new JDOm(tag, attributes, content).build();
         };
     });

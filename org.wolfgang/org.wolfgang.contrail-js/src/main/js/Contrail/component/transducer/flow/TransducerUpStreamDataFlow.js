@@ -19,11 +19,11 @@
 /*global define*/
 
 define([ "Core/jObj", "./TransducerDataFlow" ],
-    function (jObj, TransducerDataFlow) {
+    function (jObj, transducerDataFlow) {
         "use strict";
 
         function TransducerUpStreamDataFlow(component, transducer) {
-            jObj.bless(this, TransducerDataFlow.init(transducer));
+            jObj.bless(this, transducerDataFlow(transducer));
             this.component = component;
         }
 
@@ -39,5 +39,5 @@ define([ "Core/jObj", "./TransducerDataFlow" ],
             }
         };
 
-        return TransducerUpStreamDataFlow;
+        return TransducerUpStreamDataFlow.init;
     });

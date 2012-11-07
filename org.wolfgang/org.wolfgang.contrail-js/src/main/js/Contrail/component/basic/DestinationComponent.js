@@ -55,5 +55,5 @@ define([ "require", "Core/jObj" ],
          */
         DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow");
 
-        return DestinationComponent;
+        return DestinationComponent.init;
     });

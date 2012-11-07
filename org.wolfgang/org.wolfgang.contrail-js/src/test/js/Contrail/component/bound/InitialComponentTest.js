@@ -18,16 +18,32 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/Factory" ],
-    function (QUnit, Factory) {
+require([ "qunit", "Core/jObj", "Contrail/Factory" ],
+    function (QUnit, jObj, Factory) {
         "use strict";
 
         /**
          * Test generation
          */
         QUnit.test("Check Component generation", function () {
-            var c1 = Factory.component.bound.initial(Factory.flow.basic()),
-                c2 = Factory.component.bound.initial(Factory.flow.basic());
-            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+            var component1, component2;
+            component1 = Factory.component.bound.initial(Factory.flow.basic());
+            component2 = Factory.component.bound.initial(Factory.flow.basic());
+            QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
+        });
+
+        /**
+         * Test generation
+         */
+        QUnit.test("Check Component down stream mechanism", function () {
+            var component, dataFlow;
+            dataFlow = Factory.flow.basic();
+            dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                this.content = jObj.value(this.content, "") + data;
+            });
+            component = Factory.component.bound.initial(dataFlow);
+            component.getDownStreamDataFlow().handleData("Hello, World!");
+
+            QUnit.equal(dataFlow.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
         });
     });

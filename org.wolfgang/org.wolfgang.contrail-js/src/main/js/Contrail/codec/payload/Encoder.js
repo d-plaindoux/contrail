@@ -34,5 +34,5 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
             return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
         });
 
-        return Encoder;
+        return Encoder.init;
     });

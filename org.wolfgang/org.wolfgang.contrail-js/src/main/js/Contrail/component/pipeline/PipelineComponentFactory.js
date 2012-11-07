@@ -19,14 +19,12 @@
 /*global define*/
 
 define([ "./PipelineComponent" ],
-    function (PipelineComponent) {
+    function (pipelineComponent) {
         "use strict";
 
         var Factory = {};
 
-        Factory.component = function () {
-            return PipelineComponent.init();
-        };
+        Factory.component = pipelineComponent;
 
         return Factory;
 

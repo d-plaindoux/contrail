@@ -19,17 +19,17 @@
 /*global define*/
 
 define([ "./Encoder", "./Decoder" ],
-    function (Encoder, Decoder) {
+    function (encoder, decoder) {
         "use strict";
 
         var Factory = {};
 
         Factory.encoder = function () {
-            return Encoder.init();
+            return encoder();
         };
 
         Factory.decoder = function () {
-            return Decoder.init();
+            return decoder();
         };
 
         return Factory;

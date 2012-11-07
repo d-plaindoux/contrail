@@ -36,5 +36,5 @@ define([ "require", "Core/jObj"],
             return this.dataFlow;
         });
 
-        return TerminalComponent;
+        return TerminalComponent.init;
     });

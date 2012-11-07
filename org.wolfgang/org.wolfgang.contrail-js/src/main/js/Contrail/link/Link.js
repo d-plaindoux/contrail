@@ -36,5 +36,5 @@ define([ "Core/jObj" ],
             return this.linkManager;
         });
 
-        return Link;
+        return Link.init;
     });

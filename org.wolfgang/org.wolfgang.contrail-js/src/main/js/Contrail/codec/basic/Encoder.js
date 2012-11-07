@@ -19,16 +19,16 @@
 /*global define*/
 
 define([ "Core/jObj", "./Transducer" ],
-    function (jObj, Transducer) {
+    function (jObj, transducer) {
         "use strict";
 
         function Encoder() {
-            jObj.bless(this, Transducer.init());
+            jObj.bless(this, transducer());
         }
 
         Encoder.init = jObj.constructor([], function () {
             return new Encoder();
         });
 
-        return Encoder;
+        return Encoder.init;
     });

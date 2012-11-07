@@ -19,7 +19,7 @@
 /*global define*/
 
 define([ "require", "Core/jObj", "Utils/jStrict" ],
-    function (require, jObj, jStrict) {
+    function (require, jObj) {
         "use strict";
 
         function DestinationLink(destination, linkManager) {
@@ -35,5 +35,5 @@ define([ "require", "Core/jObj", "Utils/jStrict" ],
             return this.destination;
         });
 
-        return DestinationLink;
+        return DestinationLink.init;
     });
