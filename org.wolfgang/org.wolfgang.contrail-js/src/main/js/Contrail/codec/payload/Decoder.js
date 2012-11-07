@@ -34,17 +34,21 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
         });
 
         PayloadDecoder.prototype.getNext = jObj.method([], jObj.types.Array, function () {
+            var result, payload;
+
             if (this.buffer.length < PayloadDecoder.INT_LEN) {
-                return [];
+                result = [];
             } else {
-                var payload = jMarshaller.bytesToInt(this.buffer, 0);
+                payload = jMarshaller.bytesToInt(this.buffer, 0);
                 if (this.buffer.length - PayloadDecoder.INT_LEN < payload) {
-                    return [];
+                    result = [];
                 } else {
                     this.buffer.splice(0, PayloadDecoder.INT_LEN);
-                    return this.buffer.splice(0, payload);
+                    result = this.buffer.splice(0, payload);
                 }
             }
+
+            return result;
         });
 
         PayloadDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
