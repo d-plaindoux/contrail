@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "Core/jObj" ],
+define("IO/ByteBuffer", [ "Core/jObj" ],
     function (jObj) {
         "use strict";
 
@@ -36,7 +36,7 @@ define([ "Core/jObj" ],
             if (this.closed) {
                 throw jObj.exception("L.byte.buffer.closed");
             } else {
-                this.buffer.concat(bytes);
+                this.buffer = this.buffer.concat(bytes);
             }
         });
 
@@ -49,24 +49,30 @@ define([ "Core/jObj" ],
         });
 
         ByteBuffer.prototype.size = jObj.method([], jObj.types.Number, function (bytes) {
-            return this.buffer.lenght;
+            return this.buffer.length;
         });
 
         ByteBuffer.prototype.read = jObj.method([jObj.types.Array], jObj.types.Number, function (array) {
-            var len;
+            var len, i;
 
-            if (this.size() === 0 && this.closed) {
-                len = -1; // End Of Buffer as been reached
-            } else if (this.size() === 0) {
-                len = 0;  // Nothing new in this buffer
+            if (this.size() === 0) {
+                if (this.closed) {
+                    len = -1; // End Of Buffer
+                } else {
+                    len = 0;  // Nothing new
+                }
             } else {
                 if (this.size() < array.lenght) {
                     len = this.size();
                 } else {
-                    len = array.lenght;
+                    len = array.length;
                 }
 
-                array.splice(0, len, this.buffer.splice(0, len));
+                for (i = 0; i < len; i += 1) {
+                    array[i] = this.buffer[i];
+                }
+
+                this.buffer.splice(0, len);   // Prepend len characters from the buffer
             }
 
             return len;
