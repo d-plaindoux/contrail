@@ -16,24 +16,33 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global require */
 
-define([ "require", "Core/jObj" ],
-    function (require, jObj) {
+require([ "Core/jObj", "./jType", "qunit" ],
+    function (jObj, jType, QUnit) {
         "use strict";
 
-        function DestinationLink(destination, linkManager) {
-            jObj.bless(this, require("Contrail/Factory").link.basic(linkManager));
-            this.destination = destination;
+        /**
+         * Test Type Checking
+         */
+        function A() {
+            jObj.bless(this);
         }
 
-        DestinationLink.init = jObj.constructor(["DestinationComponent", "ComponentLinkManager"], function (destination, linkManager) {
-            return new DestinationLink(destination, linkManager);
+        QUnit.test("Check Subtype a:A <? A", function () {
+            var a = new A();
+            jType.checkType(a, "A");
+            QUnit.equal(true, true, " a is an instance of A");
         });
 
-        DestinationLink.prototype.getDestination = jObj.method([], "DestinationComponent", function () {
-            return this.destination;
+        QUnit.test("Check Subtype a:A <? B", function () {
+            var a = new A();
+            try {
+                jType.checkType(a, "B");
+                QUnit.equal(true, false, "a is not an instance of B");
+            } catch (e) {
+                QUnit.equal(jObj.instanceOf(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+            }
         });
-
-        return DestinationLink.init;
     });
+

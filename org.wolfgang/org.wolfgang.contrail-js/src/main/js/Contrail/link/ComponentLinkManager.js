@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj", "Utils/jStrict" ],
+define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
@@ -34,9 +34,9 @@ define([ "require", "Core/jObj", "Utils/jStrict" ],
 
         ComponentLinkManager.prototype.link = jObj.procedure(["SourceComponent", "DestinationComponent"], function (source, destination) {
             if (!source.acceptDestination(destination.getComponentId())) {
-                throw new Error("Source cannot accept Destination");
+                throw jObj.exception("L.source.cannot.accept.destination");
             } else if (!destination.acceptSource(source.getComponentId())) {
-                throw new Error("Destination cannot accept Source");
+                throw jObj.exception("L.destination.cannot.accept.source");
             } else {
                 var Factory = require("Contrail/Factory");
                 source.connectDestination(Factory.link.destination(destination, this));

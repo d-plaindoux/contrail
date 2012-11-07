@@ -24,13 +24,8 @@ define([ "./Encoder", "./Decoder" ],
 
         var Factory = {};
 
-        Factory.encoder = function () {
-            return encoder();
-        };
-
-        Factory.decoder = function () {
-            return decoder();
-        };
+        Factory.encoder = encoder;
+        Factory.decoder = decoder;
 
         return Factory;
 

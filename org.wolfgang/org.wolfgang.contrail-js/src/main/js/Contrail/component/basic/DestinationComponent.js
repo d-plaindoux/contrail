@@ -36,7 +36,7 @@ define([ "require", "Core/jObj" ],
             return this.sourceLink === null;
         });
 
-        DestinationComponent.prototype.connectSource = jObj.method(["SourceLink"], "ComponentLink", function (sourceLink) {
+        DestinationComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"), function (sourceLink) {
             this.sourceLink = sourceLink;
             return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
         });
@@ -53,7 +53,7 @@ define([ "require", "Core/jObj" ],
         /**
          * Abstract methods
          */
-        DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow");
+        DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"));
 
         return DestinationComponent.init;
     });

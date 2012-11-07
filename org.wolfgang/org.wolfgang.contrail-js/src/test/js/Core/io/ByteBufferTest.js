@@ -16,22 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global require */
 
-define([ "./Encoder", "./Decoder" ],
-    function (jSonEncoder, jSonDecoder) {
+require([ "qunit", "./ByteBuffer" ],
+    function (QUnit, byteBuffer) {
         "use strict";
 
-        var Factory = {};
+        QUnit.test("Checking Byte buffer creation", function () {
+            var buffer;
 
-        Factory.encoder = function () {
-            return jSonEncoder();
-        };
+            buffer = byteBuffer();
 
-        Factory.decoder = function () {
-            return jSonDecoder();
-        };
-
-        return Factory;
-
+            QUnit.equal(buffer.isClosed(), false, "New buffer is not closed");
+        });
     });

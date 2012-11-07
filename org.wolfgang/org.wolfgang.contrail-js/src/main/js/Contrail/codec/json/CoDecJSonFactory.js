@@ -18,28 +18,15 @@
 
 /*global define*/
 
-define("Utils/jStrict", [ "require" ],
-    function (require) {
+define([ "./Encoder", "./Decoder" ],
+    function (encoder, decoder) {
         "use strict";
 
-        var jStrict = {};
+        var Factory = {};
 
-        function AssertTypeError(message) {
-            require("Core/jObj").bless(this);
-            this.message = message;
-        }
+        Factory.encoder = encoder;
+        Factory.decoder = decoder;
 
-        jStrict.assertType = function (object, type) {
-            var jObj = require("Core/jObj");
+        return Factory;
 
-            if (type !== undefined && !jObj.instanceOf(type, jObj.types.String)) {
-                throw new AssertTypeError(type + " must be an instance of String");
-            } else if (!jObj.instanceOf(object, type)) {
-                throw new AssertTypeError(object + " must be an instance of " + type);
-            } else {
-                return object;
-            }
-        };
-
-        return jStrict;
     });

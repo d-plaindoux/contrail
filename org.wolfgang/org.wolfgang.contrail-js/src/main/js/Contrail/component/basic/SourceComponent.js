@@ -36,7 +36,7 @@ define([ "require", "Core/jObj" ],
             return this.destinationLink === null;
         });
 
-        SourceComponent.prototype.connectDestination = jObj.method(["DestinationLink"], "ComponentLink", function (destinationLink) {
+        SourceComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"), function (destinationLink) {
             this.destinationLink = destinationLink;
             return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
         });
