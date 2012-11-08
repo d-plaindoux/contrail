@@ -18,16 +18,32 @@
 
 /*global require */
 
-require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
-    "use strict";
+require([ "Core/jObj", "Codec/Factory", "qunit" , "test/jCC" ],
+    function (jObj, Factory, QUnit, jCC) {
+        "use strict";
 
-    QUnit.test("String decoding", function () {
-        var bytes = [0, 0, 0, 13].concat("Hello, World!".split("").concat([0, 0, 0, 50]).concat("Bla".split(""))), decoder, result;
-        decoder = Factory.payload.decoder();
-        result = decoder.transform(bytes);
-        QUnit.equal(result.length, 1, "Checking result length");
-        QUnit.equal(jObj.instanceOf(result[0], jObj.types.Array), true, "Checking result type");
-        QUnit.equal(result[0].join(""), "Hello, World!".split("").join(""), "Checking decoding value");
+        jCC.scenario("String decoding", function () {
+            var bytes, decoder, result;
+
+            jCC.
+                Given(function () {
+                    bytes = [0, 0, 0, 13].concat("Hello, World!".split("").concat([0, 0, 0, 50]).concat("Bla".split("")));
+                }).
+                And(function () {
+                    decoder = Factory.payload.decoder();
+                }).
+                When(function () {
+                    result = decoder.transform(bytes);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.instanceOf(result[0], jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].join(""), "Hello, World!".split("").join(""), "Checking decoding value");
+                });
+        });
     });
-});
 

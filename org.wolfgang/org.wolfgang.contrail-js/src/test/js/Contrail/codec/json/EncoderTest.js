@@ -18,16 +18,30 @@
 
 /*global require */
 
-require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
-    "use strict";
+require([ "Core/jObj", "Codec/Factory", "qunit", "test/jCC" ],
+    function (jObj, Factory, QUnit, jCC) {
+        "use strict";
 
-    QUnit.test("Object encoding", function () {
-        var object = { a:true }, encoder, result;
-        encoder = Factory.json.encoder();
-        result = encoder.transform(object);
-        QUnit.equal(result.length, 1, "Checking result length");
-        QUnit.equal(jObj.instanceOf(result[0], jObj.types.String), true, "Checking result type");
-        QUnit.equal(result[0], '{"a":true}', "Checking encoding length");
+        jCC.scenario("Object encoding", function () {
+            var object, encoder, result;
+
+            jCC.
+                Given(function () {
+                    object = { a:true };
+                }).
+                And(function () {
+                    encoder = Factory.json.encoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                    QUnit.equal(jObj.instanceOf(result[0], jObj.types.String), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0], '{"a":true}', "Checking encoding length");
+                });
+        });
     });
-});
 
