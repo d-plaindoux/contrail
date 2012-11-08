@@ -18,6 +18,7 @@
 
 /*global require */
 
+
 require([ "Core/jObj", "Codec/Factory", "qunit" ], function (jObj, Factory, QUnit) {
     "use strict";
 

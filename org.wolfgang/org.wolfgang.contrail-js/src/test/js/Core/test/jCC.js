@@ -18,19 +18,90 @@
 
 /*global define*/
 
-define("test/jCC", [],
-    function () {
+define("test/jCC", [ "qunit" ],
+    function (QUnit) {
+        "use strict";
 
-        var jCC = {};
+        var jCC;
+
+        jCC = {};
+
+        jCC.scenario = function (name, scenario) {
+            QUnit.test(name, scenario);
+        };
+
+        jCC.Nothing = function () {
+            // Nothing to do
+        };
+
+        /*
+         * Then block definition
+         */
+
+        jCC.ThenSomething = function () {
+            return { And:jCC.AndThen };
+        };
+
+        jCC.Then = function (theThen) {
+            theThen();
+            return jCC.ThenSomething();
+        };
+
+        jCC.AndThen = function (theThen) {
+            theThen();
+            return jCC.ThenSomething();
+        };
+
+        /*
+         * When block definition
+         */
+
+        jCC.WhenNothing = function () {
+            return { Then:jCC.Then };
+        };
+
+        jCC.WhenSomething = function () {
+            return {
+                And:jCC.AndWhen,
+                Then:jCC.Then
+            };
+        };
+
+        jCC.When = function (theWhen) {
+            theWhen();
+            return jCC.WhenSomething();
+        };
+
+        jCC.AndWhen = function (theWhen) {
+            theWhen();
+            return jCC.WhenSomething();
+        };
+
+        /*
+         * Given block definition
+         */
+
+        jCC.GivenNothing = {
+            When:jCC.When,
+            WhenNothing:jCC.WhenNothing()
+        };
+
+        jCC.GivenSomething = function () {
+            return {
+                And:jCC.AndGiven,
+                When:jCC.When,
+                WhenNothing:jCC.WhenNothing()
+            };
+        };
 
         jCC.Given = function (theGiven) {
             theGiven();
-            return { When:function (theWhen) {
-                theWhen();
-                return { Then:function (theThen) {
-                    theThen();
-                }};
-            }};
+            return jCC.GivenSomething();
+        };
+
+        jCC.AndGiven = function (theGiven) {
+            theGiven();
+            return jCC.GivenSomething();
         };
 
         return jCC;

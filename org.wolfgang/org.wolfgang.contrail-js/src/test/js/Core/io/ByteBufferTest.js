@@ -22,39 +22,96 @@ require([ "qunit", "test/jCC", "Utils/jUtils", "IO/jMarshaller", "IO/ByteBuffer"
     function (QUnit, jCC, jUtils, jMarshaller, byteBuffer) {
         "use strict";
 
-        QUnit.test("Checking Byte buffer creation", function () {
+        jCC.scenario("Checking Byte buffer creation", function () {
             var buffer;
 
-            buffer = byteBuffer();
-
-            QUnit.equal(buffer.isClosed(), false, "New buffer is not closed");
-            QUnit.equal(buffer.size(), 0, "New buffer is empty");
+            jCC.
+                Given(function () {
+                    buffer = byteBuffer();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(buffer.isClosed(), false, "New buffer is not closed");
+                }).
+                And(function () {
+                    QUnit.equal(buffer.size(), 0, "New buffer is empty");
+                });
         });
 
-        QUnit.test("Checking Byte buffer write", function () {
+        jCC.scenario("Checking Byte buffer write", function () {
             var buffer, message;
 
-            buffer = byteBuffer();
-            message = "Hello, World!";
-
-            buffer.write(jMarshaller.stringToBytes(message));
-
-            QUnit.equal(buffer.size(), message.length * 2, "Buffer must contain the written array");
+            jCC.
+                Given(function () {
+                    buffer = byteBuffer();
+                }).
+                And(function () {
+                    message = "Hello, World!";
+                }).
+                When(function () {
+                    buffer.write(jMarshaller.stringToBytes(message));
+                }).
+                Then(function () {
+                    QUnit.equal(buffer.size(), message.length * 2, "Buffer must contain the written array");
+                });
         });
 
-        QUnit.test("Checking Byte buffer read", function () {
+        jCC.scenario("Checking Byte buffer read", function () {
             var buffer, message, bytes;
 
-            jCC.Given(function () {
-                buffer = byteBuffer();
-                message = "Hello, World!";
-                bytes = jUtils.array(message.length * 2);
-            }).When(function () {
+            jCC.
+                Given(function () {
+                    buffer = byteBuffer();
+                }).
+                And(function () {
+                    message = "Hello, World!";
+                }).
+                And(function () {
+                    bytes = jUtils.array(message.length * 2);
+                }).
+                When(function () {
                     buffer.write(jMarshaller.stringToBytes(message));
-                }).Then(function () {
+                }).
+                Then(function () {
                     QUnit.equal(buffer.read(bytes), message.length * 2, "Buffer must provide the written array with the same length");
+                }).
+                And(function () {
                     QUnit.equal(jMarshaller.bytesToString(bytes), message, "Buffer must provide the same written array");
                 });
         });
 
+        jCC.scenario("Checking Empty Byte buffer read ", function () {
+            var buffer, message, bytes;
+
+            jCC.
+                Given(function () {
+                    buffer = byteBuffer();
+                }).
+                And(function () {
+                    bytes = jUtils.array(10);
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(buffer.read(bytes), 0, "Buffer must provide nothing");
+                });
+        });
+
+
+        jCC.scenario("Checking Closed Empty Byte buffer read ", function () {
+            var buffer, message, bytes;
+
+            jCC.
+                Given(function () {
+                    buffer = byteBuffer();
+                }).
+                And(function () {
+                    bytes = jUtils.array(10);
+                }).
+                When(function () {
+                    buffer.close();
+                }).
+                Then(function () {
+                    QUnit.equal(buffer.read(bytes), -1, "Buffer must provide nothing");
+                });
+        });
     });

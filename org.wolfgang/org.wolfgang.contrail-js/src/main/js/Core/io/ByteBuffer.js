@@ -44,7 +44,7 @@ define("IO/ByteBuffer", [ "Core/jObj" ],
             return this.closed;
         });
 
-        ByteBuffer.prototype.closed = jObj.procedure([], function () {
+        ByteBuffer.prototype.close = jObj.procedure([], function () {
             this.closed = true;
         });
 
