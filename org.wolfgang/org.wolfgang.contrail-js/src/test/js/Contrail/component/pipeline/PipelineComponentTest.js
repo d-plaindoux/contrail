@@ -18,38 +18,75 @@
 
 /*global require */
 
-require([ "Contrail/Factory", "Core/jObj", "qunit" ],
-    function (Factory, jObj, QUnit) {
+require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
+    function (Factory, jObj, QUnit, jCC) {
         "use strict";
 
         QUnit.test("Check Component generation", function () {
-            var c1 = Factory.component.pipeline.component(),
-                c2 = Factory.component.pipeline.component();
+            var c1, c2;
 
-            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.pipeline.component();
+                }).
+                And(function () {
+                    c2 = Factory.component.pipeline.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                });
         });
 
-        QUnit.test("Check Component type #1", function () {
-            var c1 = Factory.component.pipeline.component();
+        QUnit.test("Check Component type to be a PipelineComponent", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "PipelineComponent"), true, "Checking c1 instance of PipelineComponent");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.pipeline.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
+                });
         });
 
-        QUnit.test("Check Component type #2", function () {
-            var c1 = Factory.component.pipeline.component();
+        QUnit.test("Check Component type to be a SourceComponent", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "SourceComponent"), true, "Checking c1 instance of SourceComponent");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.pipeline.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
+                });
         });
 
-        QUnit.test("Check Component type #3", function () {
-            var c1 = Factory.component.pipeline.component();
+        QUnit.test("Check Component type to be a DestinationComponent", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "DestinationComponent"), true, "Checking c1 instance of DestinationComponent");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.pipeline.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
+                });
         });
 
-        QUnit.test("Check Component type #4", function () {
-            var c1 = Factory.component.pipeline.component();
+        QUnit.test("Check Component type to be a Component", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "Component"), true, "Checking c1 instance of Component");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.pipeline.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                });
         });
     });

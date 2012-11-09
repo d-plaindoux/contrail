@@ -18,52 +18,103 @@
 
 /*global require */
 
-require([ "Contrail/Factory", "Core/jObj", "qunit" ],
-    function (Factory, jObj, QUnit) {
+require([ "Contrail/Factory", "Core/jObj", "qunit" , "test/jCC" ],
+    function (Factory, jObj, QUnit, jCC) {
         "use strict";
 
         /**
          * Test generation
          */
-        QUnit.test("Check Component generation", function () {
-            var c1 = Factory.component.basic.source(),
-                c2 = Factory.component.basic.source();
-            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+        jCC.scenario("Check Component generation", function () {
+            var c1, c2;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.source();
+                }).
+                And(function () {
+                    c2 = Factory.component.basic.source();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                });
         });
 
         /**
          * Test source
          */
-        QUnit.test("Check Component destination linkage acceptation", function () {
-            var c1 = Factory.component.basic.destination(),
-                c2 = Factory.component.basic.source();
-            QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
+        jCC.scenario("Check Component destination linkage acceptation", function () {
+            var c1, c2;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.destination();
+                }).
+                And(function () {
+                    c2 = Factory.component.basic.source();
+
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
+                });
         });
 
         /**
          * Test source
          */
-        QUnit.test("Check Component source linkage", function () {
-            var c1 = Factory.component.basic.destination(),
-                c2 = Factory.component.basic.source(),
-                lm = Factory.link.manager();
-            QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
-            lm.link(c2, c1);
-            QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");
+        jCC.scenario("Check Component source linkage", function () {
+            var c1, c2, lm;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.destination();
+                }).
+                And(function () {
+                    c2 = Factory.component.basic.source();
+                }).
+                And(function () {
+                    lm = Factory.link.manager();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
+                }).
+                When(function () {
+                    lm.link(c2, c1);
+                }).
+                Then(function () {
+                    QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");
+                });
         });
 
         /**
          * Test type
          */
-        QUnit.test("Check Component type #1", function () {
-            var c1 = Factory.component.basic.source();
+        jCC.scenario("Check Component type to be a SourceComponent", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "SourceComponent"), true, "Checking c1 instance of SourceComponent");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.source();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
+                });
         });
 
-        QUnit.test("Check Component type #2", function () {
-            var c1 = Factory.component.basic.source();
+        jCC.scenario("Check Component type to be a Component", function () {
+            var c1;
 
-            QUnit.equal(jObj.instanceOf(c1, "Component"), true, "Checking c1 instance of Component");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.source();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                });
         });
     });

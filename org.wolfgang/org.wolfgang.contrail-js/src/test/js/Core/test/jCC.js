@@ -39,7 +39,7 @@ define("test/jCC", [ "qunit" ],
          */
 
         jCC.ThenSomething = function () {
-            return { And:jCC.AndThen };
+            return { And:jCC.AndThen, When:jCC.When };
         };
 
         jCC.Then = function (theThen) {

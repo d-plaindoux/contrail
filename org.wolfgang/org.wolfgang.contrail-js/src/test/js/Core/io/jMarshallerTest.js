@@ -18,37 +18,48 @@
 
 /*global require */
 
-require([ "IO/jMarshaller", "qunit" ],
-    function (jMarshaller, QUnit) {
+require([ "IO/jMarshaller", "qunit", "test/jCC" ],
+    function (jMarshaller, QUnit, jCC) {
         "use strict";
 
-        QUnit.test("Checking intToBytes length", function () {
-            var i = 0x89ABCDEF, b;
-            b = jMarshaller.intToBytes(i);
-            QUnit.equal(b.length, 4, "Size of bytes from int is 4");
+        jCC.scenario("Checking intToBytes length", function () {
+            var i, b;
+
+            jCC.
+                Given(function () {
+                    i = 0x89ABCDEF;
+                }).
+                And(function () {
+                    b = jMarshaller.intToBytes(i);
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(b.length, 4, "Size of bytes from int is 4");
+                });
         });
 
-        QUnit.test("Checking intToBytes content at index 0", function () {
-            var i = 0x89ABCDEF, b;
-            b = jMarshaller.intToBytes(i);
-            QUnit.equal(b[0], 0x89, "Content of bytes at index 0");
-        });
+        jCC.scenario("Checking intToBytes content", function () {
+            var i, b;
 
-        QUnit.test("Checking intToBytes content at index 1", function () {
-            var i = 0x89ABCDEF, b;
-            b = jMarshaller.intToBytes(i);
-            QUnit.equal(b[1], 0xAB, "Content of bytes at index 1");
-        });
-
-        QUnit.test("Checking intToBytes content at index 2", function () {
-            var i = 0x89ABCDEF, b;
-            b = jMarshaller.intToBytes(i);
-            QUnit.equal(b[2], 0xCD, "Content of bytes at index 2");
-        });
-
-        QUnit.test("Checking intToBytes content at index 3", function () {
-            var i = 0x89ABCDEF, b;
-            b = jMarshaller.intToBytes(i);
-            QUnit.equal(b[3], 0xEF, "Content of bytes at index 3");
+            jCC.
+                Given(function () {
+                    i = 0x89ABCDEF;
+                }).
+                And(function () {
+                    b = jMarshaller.intToBytes(i);
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(b[0], 0x89, "Content of bytes at index 0");
+                }).
+                And(function () {
+                    QUnit.equal(b[1], 0xAB, "Content of bytes at index 1");
+                }).
+                And(function () {
+                    QUnit.equal(b[2], 0xCD, "Content of bytes at index 2");
+                }).
+                And(function () {
+                    QUnit.equal(b[3], 0xEF, "Content of bytes at index 3");
+                });
         });
     });

@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/jObj", "qunit" ],
-    function (jObj, QUnit) {
+require([ "Core/jObj", "qunit", "test/jCC" ],
+    function (jObj, QUnit, jCC) {
         "use strict";
 
         /**
@@ -35,58 +35,140 @@ require([ "Core/jObj", "qunit" ],
             this.b = { hello:"World!"};
         }
 
-        QUnit.test("Check Subtype a:A <? A", function () {
-            var a = new A();
-            QUnit.equal(jObj.instanceOf(a, "A"), true, "Checking a:A instance of A");
+        jCC.scenario("Check Subtype a:A <? A", function () {
+            var a;
+
+            jCC.
+                Given(function () {
+                    a = new A();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(a, "A"), true, "Checking a:A instance of A");
+                });
         });
 
-        QUnit.test("Check Subtype b:B <? B", function () {
-            var b = new B();
-            QUnit.equal(jObj.instanceOf(b, "B"), true, "Checking b:B instance of B");
+        jCC.scenario("Check Subtype b:B <? B", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, "B"), true, "Checking b:B instance of B");
+                });
         });
 
-        QUnit.test("Check Subtype b:B <? A", function () {
-            var b = new B();
-            QUnit.equal(jObj.instanceOf(b, "A"), true, "Checking b:B extends A instance of A");
+        jCC.scenario("Check Subtype b:B <? A", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, "A"), true, "Checking b:B extends A instance of A");
+                });
         });
 
-        QUnit.test("CheckType(<string>)", function () {
-            var b = "b";
-            QUnit.equal(jObj.instanceOf(b, jObj.types.String), true, "Checking Type(<string>)");
+        jCC.scenario("CheckType(<string>)", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = "b";
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.String), true, "Checking Type(<string>)");
+                });
         });
 
-        QUnit.test("CheckType(<number>)", function () {
-            var b = 123;
-            QUnit.equal(jObj.instanceOf(b, jObj.types.Number), true, "Checking Type(<number>)");
+        jCC.scenario("CheckType(<number>)", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = 123;
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.Number), true, "Checking Type(<number>)");
+                });
         });
 
-        QUnit.test("CheckType(<boolean>)", function () {
-            var b = true;
-            QUnit.equal(jObj.instanceOf(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
+        jCC.scenario("CheckType(<boolean>)", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = true;
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
+                });
         });
 
-        QUnit.test("CheckType(<undefined>)", function () {
+        jCC.scenario("CheckType(<undefined>)", function () {
             var b; // = undefined;
-            QUnit.equal(jObj.instanceOf(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
+
+            jCC.
+                GivenNothing.
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
+                });
         });
 
-        QUnit.test("CheckType(<object>)", function () {
-            var b = {};
-            QUnit.equal(jObj.instanceOf(b, jObj.types.Object), true, "Checking Type(<object>)");
+        jCC.scenario("CheckType(<object>)", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = {};
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.Object), true, "Checking Type(<object>)");
+                });
         });
 
-        QUnit.test("CheckType(<array>)", function () {
-            var b = [];
-            QUnit.equal(jObj.instanceOf(b, jObj.types.Array), true, "Checking Type(<array>)");
+        jCC.scenario("CheckType(<array>)", function () {
+            var b;
+
+            jCC.
+                Given(function () {
+                    b = [];
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(b, jObj.types.Array), true, "Checking Type(<array>)");
+                });
         });
 
-        QUnit.test("CheckType(<object>)", function () {
+        jCC.scenario("CheckType(<object>)", function () {
             var b, tb;
-            b = new B();
-            tb = jObj.toType(b);
-            QUnit.equal(tb.a, jObj.types.String, "Checking Type(<object>)");
-            QUnit.equal(jObj.instanceOf(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
-            QUnit.equal(tb.b.hello, jObj.types.String, "Checking getType(<object>)");
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                When(function () {
+                    tb = jObj.toType(b);
+                }).
+                Then(function () {
+                    QUnit.equal(tb.a, jObj.types.String, "Checking Type(<object>)");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.instanceOf(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
+                }).
+                And(function () {
+                    QUnit.equal(tb.b.hello, jObj.types.String, "Checking getType(<object>)");
+                });
         });
     });
 

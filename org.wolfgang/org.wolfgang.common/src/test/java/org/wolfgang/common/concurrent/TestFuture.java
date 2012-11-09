@@ -36,7 +36,7 @@ import org.junit.Test;
 public class TestFuture {
 
 	@Test
-	public void GivenAFutureSetProvideTheCorrespondingValue() {
+	public void ShouldProvideAValueWhenSettingAFuture() {
 		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final String value = "Hello, World!";
 		futureResponse.setValue(value);
@@ -50,7 +50,7 @@ public class TestFuture {
 	}
 
 	@Test
-	public void GivenAFutureWithErrorThrowTheError() {
+	public void ShouldRaiseAnErrorWhenSettingAnError() {
 		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final Throwable value = new Throwable();
 		futureResponse.setError(value);
@@ -65,7 +65,7 @@ public class TestFuture {
 	}
 
 	@Test
-	public void GivenAFutureWithNoValueFailWithATimeOut() {
+	public void ShouldRaiseATimeOutWhenNoValueSet() {
 		final FutureResponse<String> futureResponse = givenAStringFuture();
 		try {
 			futureResponse.get(1, TimeUnit.SECONDS);
@@ -80,14 +80,14 @@ public class TestFuture {
 	}
 
 	@Test
-	public void GivenAFutureSetWithDelayProvideTheValueOnTime() {
+	public void ShouldProvideAValueWhenSettingAFutureAfter1SecondDelay() {
 		final FutureResponse<String> futureResponse = givenAStringFuture();
 		final String value = "Hello, World!";
 		
 		setAValueWithOneSecondDelay(futureResponse, value);
 
 		try {
-			assertEquals(value, futureResponse.get(4, TimeUnit.SECONDS));
+			assertEquals(value, futureResponse.get(2, TimeUnit.SECONDS));
 		} catch (InterruptedException e) {
 			fail();
 		} catch (ExecutionException e) {

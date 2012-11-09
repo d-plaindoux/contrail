@@ -18,16 +18,44 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/Factory" ],
-    function (QUnit, Factory) {
+require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
+    function (QUnit, Factory, jObj, jCC) {
         "use strict";
 
-        /**
-         * Test generation
-         */
-        QUnit.test("Check Component generation", function () {
-            var component1 = Factory.component.bound.terminal(Factory.flow.basic()),
-                component2 = Factory.component.bound.terminal(Factory.flow.basic());
-            QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
+        jCC.scenario("Check Component generation", function () {
+            var component1, component2;
+
+            jCC.
+                Given(function () {
+                    component1 = Factory.component.bound.terminal(Factory.flow.basic());
+                }).
+                And(function () {
+                    component2 = Factory.component.bound.terminal(Factory.flow.basic());
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
+                });
+        });
+
+        jCC.scenario("Check Component up stream mechanism", function () {
+            var component, dataFlow;
+
+            jCC.
+                Given(function () {
+                    dataFlow = Factory.flow.basic();
+                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = jObj.value(this.content, "") + data;
+                    });
+                }).
+                And(function () {
+                    component = Factory.component.bound.terminal(dataFlow);
+                }).
+                When(function () {
+                    component.getUpStreamDataFlow().handleData("Hello, World!");
+                }).
+                Then(function () {
+                    QUnit.equal(dataFlow.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                });
         });
     });

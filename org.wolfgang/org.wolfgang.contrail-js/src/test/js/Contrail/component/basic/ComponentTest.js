@@ -18,17 +18,39 @@
 
 /*global require */
 
-require([ "Contrail/Factory", "qunit" ],
-    function (Factory, QUnit) {
+require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
+    function (Factory, QUnit, jObj, jCC) {
         "use strict";
 
         /**
          * Test generation
          */
-        QUnit.test("Check Component generation", function () {
-            var c1 = Factory.component.basic.component(),
-                c2 = Factory.component.basic.component();
+        jCC.scenario("Check Component generation", function () {
+            var c1, c2;
 
-            QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.component();
+                }).
+                And(function () {
+                    c2 = Factory.component.basic.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                });
+        });
+
+        jCC.scenario("Check Component type to be a Component", function () {
+            var c1;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.basic.component();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                });
         });
     });

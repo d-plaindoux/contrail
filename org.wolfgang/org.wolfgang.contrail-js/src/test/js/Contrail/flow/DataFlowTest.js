@@ -18,44 +18,65 @@
 
 /*global require */
 
-require([ "qunit", "Core/jObj", "Contrail/Factory" ],
-    function (QUnit, jObj, Factory) {
+require([ "qunit", "Core/jObj", "Contrail/Factory", "test/jCC" ],
+    function (QUnit, jObj, Factory, jCC) {
         "use strict";
 
-        QUnit.test("Checking data flow", function () {
-            var dataFlow = Factory.flow.basic();
+        jCC.scenario("Checking data flow", function () {
 
-            dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                this.content = jObj.value(this.content, "") + data;
-            });
+            var dataFlow;
 
-            dataFlow.handleData("Hello,");
-            QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
 
-            dataFlow.handleData(" World!");
-            QUnit.equal(dataFlow.content, "Hello, World!", "Checking content after handling 'Hello,' and ' World!'");
+            jCC.
+                Given(function () {
+                    dataFlow = Factory.flow.basic();
+                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = jObj.value(this.content, "") + data;
+                    });
+                }).
+                When(function () {
+                    dataFlow.handleData("Hello,");
+                }).
+                Then(function () {
+                    QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
+                }).
+                When(function () {
+                    dataFlow.handleData(" World!");
+                }).
+                Then(function () {
+                    QUnit.equal(dataFlow.content, "Hello, World!", "Checking content after handling 'Hello,' and ' World!'");
+                });
         });
 
         QUnit.test("Checking closed data flow", function () {
             var dataFlow, closeableDataFlow;
 
-            dataFlow = Factory.flow.basic();
-            closeableDataFlow = Factory.flow.closeable(dataFlow);
-
-            dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                this.content = jObj.value(this.content, "") + data;
-            });
-
-            closeableDataFlow.handleData("Hello,");
-            QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
-
-            closeableDataFlow.handleClose();
-
-            try {
-                closeableDataFlow.handleData(" World!");
-                QUnit.ok(false, "An Exception hasn't been raised");
-            } catch (e) {
-                QUnit.ok(true, "An Exception has been raised");
-            }
+            jCC.
+                Given(function () {
+                    dataFlow = Factory.flow.basic();
+                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = jObj.value(this.content, "") + data;
+                    });
+                }).
+                And(function () {
+                    closeableDataFlow = Factory.flow.closeable(dataFlow);
+                }).
+                When(function () {
+                    closeableDataFlow.handleData("Hello,");
+                }).
+                Then(function () {
+                    QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
+                }).
+                When(function () {
+                    closeableDataFlow.handleClose();
+                }).
+                Then(function () {
+                    try {
+                        closeableDataFlow.handleData(" World!");
+                        QUnit.ok(false, "An Exception hasn't been raised");
+                    } catch (e) {
+                        QUnit.ok(true, "An Exception has been raised");
+                    }
+                });
         });
     });

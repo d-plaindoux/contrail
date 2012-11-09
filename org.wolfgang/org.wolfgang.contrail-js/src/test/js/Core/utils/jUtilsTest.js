@@ -18,15 +18,26 @@
 
 /*global require */
 
-require([ "Utils/jUtils", "qunit" ],
-    function (jUtils, QUnit) {
+require([ "Utils/jUtils", "qunit", "test/jCC" ],
+    function (jUtils, QUnit, jCC) {
         "use strict";
 
         /**
          * Test UUID generation
          */
-        QUnit.test("Check UUID generation", function () {
-            var uuid1 = jUtils.uuid(), uuid2 = jUtils.uuid();
-            QUnit.notEqual(uuid1, uuid2, "Two fresh UUID must be dfferent");
+        jCC.scenario("Check UUID generation", function () {
+            var uuid1, uuid2;
+
+            jCC.
+                Given(function () {
+                    uuid1 = jUtils.uuid();
+                }).
+                And(function () {
+                    uuid2 = jUtils.uuid();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
+                });
         });
     });
