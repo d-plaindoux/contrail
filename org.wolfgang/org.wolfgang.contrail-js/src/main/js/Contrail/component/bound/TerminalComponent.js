@@ -36,5 +36,13 @@ define([ "require", "Core/jObj"],
             return this.dataFlow;
         });
 
+        TerminalComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
+            if (this.sourceLink === null) {
+                throw jObj.exception("L.source.not.connected");
+            } else {
+                return this.sourceLink.getSource().getDownStreamDataFlow();
+            }
+        });
+
         return TerminalComponent.init;
     });

@@ -47,19 +47,21 @@ $(function () {
             };
 
             for (key in classes) {
-                name = jObj.getClass(classes[key]);
-                id = "#main > #" + name;
-                $("#main").append(jDom("div", { id:name }));
-                $(id).hide();
-                $(id).append(jDom("h3", {}, " " + name + " " + jDom("input", { value:"Object" }) + jDom("input", { value:"Type" })));
-                $(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
-                $(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
-                $(id).append(jDom("pre", { display_classe:"type" }, jObj.toString(classes[key])));
-                $(id + " > pre").addClass("boxedArea");
-                $(id + " > h3").addClass("ui-widget-header");
-                $(id).css("position", "fixed");
-                $(id).show("slice");
-                $(id).draggable({ opacity:0.7, stack:"#main div" });
+                if (classes.hasOwnProperty(key)) {
+                    name = jObj.getClass(classes[key]);
+                    id = "#main > #" + name;
+                    $("#main").append(jDom("div", { id:name }));
+                    $(id).hide();
+                    $(id).append(jDom("h3", {}, " " + name + " " + jDom("input", { value:"Object" }) + jDom("input", { value:"Type" })));
+                    $(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
+                    $(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
+                    $(id).append(jDom("pre", { display_classe:"type" }, jObj.toString(classes[key])));
+                    $(id + " > pre").addClass("boxedArea");
+                    $(id + " > h3").addClass("ui-widget-header");
+                    $(id).css("position", "fixed");
+                    $(id).show("slice");
+                    $(id).draggable({ opacity:0.7, stack:"#main div" });
+                }
             }
         } catch (e) {
             $("#error").prepend(e.toString());

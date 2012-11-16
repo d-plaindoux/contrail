@@ -36,5 +36,13 @@ define([ "require", "Core/jObj"],
             return this.dataFlow;
         });
 
+        InitialComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
+            if (this.destinationLink === null) {
+                throw jObj.exception("L.destination.not.connected");
+            } else {
+                return this.destinationLink.getDestination().getUpStreamDataFlow();
+            }
+        });
+
         return InitialComponent.init;
     });
