@@ -22,7 +22,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
     function (QUnit, jObj, Factory, jCC) {
         "use strict";
 
-        jCC.scenario("Linking an initial with a terminal component", function () {
+        jCC.scenario("Linking an initial with a terminal component and up message", function () {
             var initialStream, initialComponent, terminalComponent, terminalStream;
 
             jCC.
@@ -55,4 +55,37 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 });
         });
 
+
+        jCC.scenario("Linking an initial with a terminal component and down message", function () {
+            var initialStream, initialComponent, terminalComponent, terminalStream;
+
+            jCC.
+                Given(function () {
+                    initialStream = Factory.flow.basic();
+                    initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        initialComponent.getUpStreamDataFlow().handleData(data);
+                    });
+                }).
+                And(function () {
+                    initialComponent = Factory.component.bound.initial(initialStream);
+                }).
+                And(function () {
+                    terminalStream = Factory.flow.basic();
+                    terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = jObj.value(this.content, "") + data;
+                    });
+                }).
+                And(function () {
+                    terminalComponent = Factory.component.bound.terminal(terminalStream);
+                }).
+                And(function () {
+                    Factory.link.manager().link(initialComponent, terminalComponent);
+                }).
+                When(function () {
+                    terminalComponent.getDownStreamDataFlow().handleData("Hello, World!");
+                }).
+                Then(function () {
+                    QUnit.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                });
+        });
     });
