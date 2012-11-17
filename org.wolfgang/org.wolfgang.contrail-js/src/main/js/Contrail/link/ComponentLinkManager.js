@@ -41,6 +41,7 @@ define([ "require", "Core/jObj" ],
                 var Factory = require("Contrail/Factory");
                 source.connectDestination(Factory.link.destination(destination, this));
                 destination.connectSource(Factory.link.source(source, this));
+                this.links.slice(Factory.link.components(source,destination));
             }
         });
 
