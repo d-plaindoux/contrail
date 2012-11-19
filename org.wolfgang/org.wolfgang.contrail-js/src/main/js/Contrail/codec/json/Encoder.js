@@ -23,7 +23,7 @@ define([ "require", "Core/jObj", "External/JSon" ],
         "use strict";
 
         function JSonEncoder() {
-            jObj.bless(this, require("Codec/Factory").basic.encoder());
+            jObj.bless(this, require("Codec/Factory").core.encoder());
         }
 
         JSonEncoder.init = jObj.constructor([], function () {

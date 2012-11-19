@@ -26,7 +26,7 @@ define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", 
 
         Factory.manager = componentLinkManager;
         Factory.components = componentLink;
-        Factory.basic = link;
+        Factory.core = link;
         Factory.source = sourceLink;
         Factory.destination = destinationLink;
 

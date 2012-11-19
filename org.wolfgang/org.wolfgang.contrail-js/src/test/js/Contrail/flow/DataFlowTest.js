@@ -29,7 +29,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    dataFlow = Factory.flow.basic();
+                    dataFlow = Factory.flow.core();
                     dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });
@@ -53,7 +53,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    dataFlow = Factory.flow.basic();
+                    dataFlow = Factory.flow.core();
                     dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });

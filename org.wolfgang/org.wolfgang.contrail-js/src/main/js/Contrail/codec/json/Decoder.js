@@ -23,7 +23,7 @@ define([ "require", "Core/jObj", "External/JSon" ],
         "use strict";
 
         function JSonDecoder() {
-            jObj.bless(this, require("Codec/Factory").basic.decoder());
+            jObj.bless(this, require("Codec/Factory").core.decoder());
             this.buffer = [];
         }
 

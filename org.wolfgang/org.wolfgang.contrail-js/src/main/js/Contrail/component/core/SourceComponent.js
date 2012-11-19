@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function SourceComponent() {
-            jObj.bless(this, require("Component/Factory").basic.component());
+            jObj.bless(this, require("Component/Factory").core.component());
 
             this.destinationLink = null;
         }

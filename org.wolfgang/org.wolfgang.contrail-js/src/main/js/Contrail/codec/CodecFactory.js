@@ -24,7 +24,7 @@ define("Codec/Factory", [ "./basic/CoDecBasicFactory", "./payload/CoDecPayloadFa
 
         var Factory = {};
 
-        Factory.basic = BasicFactory;
+        Factory.core = BasicFactory;
         Factory.payload = PayloadFactory;
         Factory.json = JSonFactory;
 

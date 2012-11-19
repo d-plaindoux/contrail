@@ -40,9 +40,9 @@ $(function () {
             };
 
             classes = {
-                Component:Factory.component.basic.component(),
-                SourceComponent:Factory.component.basic.source(),
-                DestinationComponent:Factory.component.basic.destination(),
+                Component:Factory.component.core.component(),
+                SourceComponent:Factory.component.core.source(),
+                DestinationComponent:Factory.component.core.destination(),
                 PipelineComponent:Factory.component.pipeline.component()
             };
 

@@ -23,7 +23,7 @@ define([ "require", "Core/jObj"],
         "use strict";
 
         function TerminalComponent(dataFlow) {
-            jObj.bless(this, require("Component/Factory").basic.destination());
+            jObj.bless(this, require("Component/Factory").core.destination());
 
             this.dataFlow = dataFlow;
         }

@@ -30,10 +30,10 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.component();
+                    c1 = Factory.component.core.component();
                 }).
                 And(function () {
-                    c2 = Factory.component.basic.component();
+                    c2 = Factory.component.core.component();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -46,7 +46,7 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.component();
+                    c1 = Factory.component.core.component();
                 }).
                 WhenNothing.
                 Then(function () {

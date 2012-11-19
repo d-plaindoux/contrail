@@ -27,7 +27,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    initialStream = Factory.flow.basic();
+                    initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });
@@ -36,7 +36,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     initialComponent = Factory.component.bound.initial(initialStream);
                 }).
                 And(function () {
-                    terminalStream = Factory.flow.basic();
+                    terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         terminalComponent.getDownStreamDataFlow().handleData(data);
                     });
@@ -61,7 +61,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    initialStream = Factory.flow.basic();
+                    initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });
@@ -70,7 +70,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     initialComponent = Factory.component.bound.initial(initialStream);
                 }).
                 And(function () {
-                    terminalStream = Factory.flow.basic();
+                    terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         terminalComponent.getDownStreamDataFlow().handleData(data);
                     });
@@ -97,7 +97,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    initialStream = Factory.flow.basic();
+                    initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         initialComponent.getUpStreamDataFlow().handleData(data);
                     });
@@ -106,7 +106,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     initialComponent = Factory.component.bound.initial(initialStream);
                 }).
                 And(function () {
-                    terminalStream = Factory.flow.basic();
+                    terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });
@@ -131,7 +131,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    initialStream = Factory.flow.basic();
+                    initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         initialComponent.getUpStreamDataFlow().handleData(data);
                     });
@@ -140,7 +140,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     initialComponent = Factory.component.bound.initial(initialStream);
                 }).
                 And(function () {
-                    terminalStream = Factory.flow.basic();
+                    terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });

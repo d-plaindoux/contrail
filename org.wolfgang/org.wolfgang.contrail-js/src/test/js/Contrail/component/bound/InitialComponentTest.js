@@ -30,10 +30,10 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.bound.initial(Factory.flow.basic());
+                    component1 = Factory.component.bound.initial(Factory.flow.core());
                 }).
                 And(function () {
-                    component2 = Factory.component.bound.initial(Factory.flow.basic());
+                    component2 = Factory.component.bound.initial(Factory.flow.core());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -49,7 +49,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    dataFlow = Factory.flow.basic();
+                    dataFlow = Factory.flow.core();
                     dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });

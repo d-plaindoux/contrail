@@ -23,7 +23,7 @@ define([ "require", "Core/jObj"],
         "use strict";
 
         function InitialComponent(dataFlow) {
-            jObj.bless(this, require("Component/Factory").basic.source());
+            jObj.bless(this, require("Component/Factory").core.source());
 
             this.dataFlow = dataFlow;
         }

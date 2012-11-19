@@ -30,10 +30,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.destination();
+                    c1 = Factory.component.core.destination();
                 }).
                 And(function () {
-                    c2 = Factory.component.basic.destination();
+                    c2 = Factory.component.core.destination();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -49,10 +49,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.destination();
+                    c1 = Factory.component.core.destination();
                 }).
                 And(function () {
-                    c2 = Factory.component.basic.source();
+                    c2 = Factory.component.core.source();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -68,10 +68,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.destination();
+                    c1 = Factory.component.core.destination();
                 }).
                 And(function () {
-                    c2 = Factory.component.basic.source();
+                    c2 = Factory.component.core.source();
                 }).
                 And(function () {
                     lm = Factory.link.manager();
@@ -97,7 +97,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.destination();
+                    c1 = Factory.component.core.destination();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -110,7 +110,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.basic.destination();
+                    c1 = Factory.component.core.destination();
                 }).
                 WhenNothing.
                 Then(function () {

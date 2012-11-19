@@ -24,7 +24,7 @@ define("Flow/Factory", [ "./DataFlow", "./CloseableDataFlow" ],
 
         var Factory = {};
 
-        Factory.basic = dataFlow;
+        Factory.core = dataFlow;
         Factory.closeable = closeableDataFlow;
 
         return Factory;
