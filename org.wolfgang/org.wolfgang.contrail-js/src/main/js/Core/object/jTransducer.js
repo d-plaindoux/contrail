@@ -22,7 +22,7 @@ define([ "./jType" ],
     function (jType) {
         "use strict";
 
-        var jTransObj = {};
+        var jTransducer = {};
 
         /**
          * Return an object transformation
@@ -31,7 +31,7 @@ define([ "./jType" ],
          * @param driver The transformation driver
          * @return the transformation
          */
-        jTransObj.transform = function (object, driver) {
+        jTransducer.transform = function (object, driver) {
             var result, key, content;
 
             if (typeof object === "object") {
@@ -39,7 +39,7 @@ define([ "./jType" ],
 
                 for (key in object) {
                     if (object.hasOwnProperty(key)) {
-                        content = driver.visitAttribute(content, key, jTransObj.transform(object[key], driver));
+                        content = driver.visitAttribute(content, key, jTransducer.transform(object[key], driver));
                     }
                 }
 
@@ -57,7 +57,7 @@ define([ "./jType" ],
          * @param object The object
          * @return the type
          */
-        jTransObj.toString = function (object) {
+        jTransducer.toString = function (object) {
             var driverToString = {
                 enterObject:function (name) {
                     return "{";
@@ -73,7 +73,7 @@ define([ "./jType" ],
                 }
             };
 
-            return jTransObj.transform(object, driverToString);
+            return jTransducer.transform(object, driverToString);
         };
 
         /**
@@ -82,7 +82,7 @@ define([ "./jType" ],
          * @param object The object
          * @return the type
          */
-        jTransObj.toType = function (object) {
+        jTransducer.toType = function (object) {
             var driverToType = {
                 enterObject:function (name) {
                     return {};
@@ -99,9 +99,9 @@ define([ "./jType" ],
                 }
             };
 
-            return jTransObj.transform(object, driverToType);
+            return jTransducer.transform(object, driverToType);
         };
 
-        return jTransObj;
+        return jTransducer;
 
     });

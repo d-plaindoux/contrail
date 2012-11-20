@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransObj" ],
-    function (jQuery, jModel, jType, jTransObj) {
+define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransducer" ],
+    function (jQuery, jModel, jType, jTransducer) {
         "use strict";
 
         var jObj = {};
@@ -75,5 +75,5 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransObj" ],
             return result;
         };
 
-        return jObj.bless(jObj, jModel, jType, jTransObj);
+        return jObj.bless(jObj, jModel, jType, jTransducer);
     });
