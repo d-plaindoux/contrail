@@ -26,13 +26,15 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
             jObj.bless(this, require("Codec/Factory").core.encoder());
         }
 
-        PayloadEncoder.init = jObj.constructor([], function () {
-            return new PayloadEncoder();
-        });
+        PayloadEncoder.init = jObj.constructor([],
+            function () {
+                return new PayloadEncoder();
+            });
 
-        PayloadEncoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
-            return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
-        });
+        PayloadEncoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
+            function (bytes) {
+                return [ jMarshaller.intToBytes(bytes.length).concat(bytes) ];
+            });
 
         return PayloadEncoder.init;
     });

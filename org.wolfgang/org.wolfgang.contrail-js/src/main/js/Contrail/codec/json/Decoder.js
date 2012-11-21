@@ -27,17 +27,20 @@ define([ "require", "Core/jObj", "External/JSon" ],
             this.buffer = [];
         }
 
-        JSonDecoder.init = jObj.constructor([], function () {
-            return new JSonDecoder();
-        });
+        JSonDecoder.init = jObj.constructor([],
+            function () {
+                return new JSonDecoder();
+            });
 
-        JSonDecoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array, function (string) {
-            return [ JSon.parse(string) ];
-        });
+        JSonDecoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array,
+            function (string) {
+                return [ JSon.parse(string) ];
+            });
 
-        JSonDecoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
-            return [];
-        });
+        JSonDecoder.prototype.finish = jObj.method([], jObj.types.Array,
+            function () {
+                return [];
+            });
 
         return JSonDecoder.init;
     });

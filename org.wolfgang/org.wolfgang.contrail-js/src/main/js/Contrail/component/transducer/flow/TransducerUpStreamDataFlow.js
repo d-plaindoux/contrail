@@ -27,17 +27,19 @@ define([ "Core/jObj", "./TransducerDataFlow" ],
             this.component = component;
         }
 
-        TransducerUpStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"], function (component, transducer) {
-            return new TransducerUpStreamDataFlow(component, transducer);
-        });
+        TransducerUpStreamDataFlow.init = jObj.constructor([jObj.types.Any, "TransducerComponent", "DataTransducer"],
+            function (component, transducer) {
+                return new TransducerUpStreamDataFlow(component, transducer);
+            });
 
-        TransducerUpStreamDataFlow.prototype.getDataFlow = function () {
-            if (this.component.getDestinationComponentLink() !== undefined) {
-                throw jObj.exception("L.source.not.yet.connected");
-            } else {
-                return this.component.getDestinationComponentLink().getUpStreamDataFlow();
-            }
-        };
+        TransducerUpStreamDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow",
+            function () {
+                if (this.component.getDestinationComponentLink() !== undefined) {
+                    throw jObj.exception("L.source.not.yet.connected");
+                } else {
+                    return this.component.getDestinationComponentLink().getUpStreamDataFlow();
+                }
+            });
 
         return TransducerUpStreamDataFlow.init;
     });

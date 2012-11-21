@@ -26,9 +26,10 @@ define([ "Core/jObj", "./Transducer" ],
             jObj.bless(this, transducer());
         }
 
-        Encoder.init = jObj.constructor([], function () {
-            return new Encoder();
-        });
+        Encoder.init = jObj.constructor([],
+            function () {
+                return new Encoder();
+            });
 
         return Encoder.init;
     });

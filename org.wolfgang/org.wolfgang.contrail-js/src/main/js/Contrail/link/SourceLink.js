@@ -28,13 +28,15 @@ define([ "require", "Core/jObj" ],
             this.source = source;
         }
 
-        SourceLink.init = jObj.constructor([jObj.types.Named("SourceComponent"), jObj.types.Named("ComponentLinkManager")], function (source, linkManager) {
-            return new SourceLink(source, linkManager);
-        });
+        SourceLink.init = jObj.constructor([jObj.types.Named("SourceComponent"), jObj.types.Named("ComponentLinkManager")],
+            function (source, linkManager) {
+                return new SourceLink(source, linkManager);
+            });
 
-        SourceLink.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"), function () {
-            return this.source;
-        });
+        SourceLink.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),
+            function () {
+                return this.source;
+            });
 
         return SourceLink.init;
     });

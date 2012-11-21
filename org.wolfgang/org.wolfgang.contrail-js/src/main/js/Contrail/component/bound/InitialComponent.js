@@ -28,21 +28,24 @@ define([ "require", "Core/jObj"],
             this.dataFlow = dataFlow;
         }
 
-        InitialComponent.init = jObj.constructor([jObj.types.Named("DataFlow")], function (dataFlow) {
-            return new InitialComponent(dataFlow);
-        });
+        InitialComponent.init = jObj.constructor([jObj.types.Named("DataFlow")],
+            function (dataFlow) {
+                return new InitialComponent(dataFlow);
+            });
 
-        InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
-            return this.dataFlow;
-        });
+        InitialComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                return this.dataFlow;
+            });
 
-        InitialComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"), function () {
-            if (this.destinationLink === null) {
-                throw jObj.exception("L.destination.not.connected");
-            } else {
-                return this.destinationLink.getDestination().getUpStreamDataFlow();
-            }
-        });
+        InitialComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                if (this.destinationLink === null) {
+                    throw jObj.exception("L.destination.not.connected");
+                } else {
+                    return this.destinationLink.getDestination().getUpStreamDataFlow();
+                }
+            });
 
         return InitialComponent.init;
     });

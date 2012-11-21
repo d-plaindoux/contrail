@@ -28,21 +28,24 @@ define([ "require", "Core/jObj" ],
             this.dataFlow = dataFlow;
         }
 
-        CloseableDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow")], function (dataFlow) {
-            return new CloseableDataFlow(dataFlow);
-        });
+        CloseableDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow")],
+            function (dataFlow) {
+                return new CloseableDataFlow(dataFlow);
+            });
 
-        CloseableDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any], function (data) {
-            if (this.closed) {
-                throw jObj.exception("L.data.flow.closed");
-            } else {
-                this.dataFlow.handleData(data);
-            }
-        });
+        CloseableDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+            function (data) {
+                if (this.closed) {
+                    throw jObj.exception("L.data.flow.closed");
+                } else {
+                    this.dataFlow.handleData(data);
+                }
+            });
 
-        CloseableDataFlow.prototype.handleClose = jObj.procedure([], function () {
-            this.closed = true;
-        });
+        CloseableDataFlow.prototype.handleClose = jObj.procedure([],
+            function () {
+                this.closed = true;
+            });
 
         return CloseableDataFlow.init;
     });

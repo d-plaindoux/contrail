@@ -28,18 +28,21 @@ define([ "require", "Core/jObj" ],
             this.destinationLink = null;
         }
 
-        SourceComponent.init = jObj.constructor([], function () {
-            return new SourceComponent();
-        });
+        SourceComponent.init = jObj.constructor([],
+            function () {
+                return new SourceComponent();
+            });
 
-        SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean, function (componentId) {
-            return this.destinationLink === null;
-        });
+        SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
+            function (componentId) {
+                return this.destinationLink === null;
+            });
 
-        SourceComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"), function (destinationLink) {
-            this.destinationLink = destinationLink;
-            return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
-        });
+        SourceComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
+            function (destinationLink) {
+                this.destinationLink = destinationLink;
+                return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
+            });
 
         SourceComponent.prototype.closeUpStream = jObj.procedure([], function () {
             if (this.destinationLink !== null) {

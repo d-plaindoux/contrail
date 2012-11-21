@@ -30,9 +30,9 @@ define([ "require" ],
         }
 
         jType.checkType = function (object, type) {
-            if (type !== undefined && !jType.instanceOf(type, jType.types.String)) {
+            if (type !== undefined && !jType.isAType(type, jType.types.String)) {
                 throw new RuntimeTypeError(type + " must be an instance of String");
-            } else if (!jType.instanceOf(object, type)) {
+            } else if (!jType.isAType(object, type)) {
                 throw new RuntimeTypeError(object + " must be an instance of " + type);
             } else {
                 return object;
@@ -89,7 +89,7 @@ define([ "require" ],
          * @param type
          * @return true if the object is a type of type; false otherwise
          */
-        jType.instanceOf = function (object, type) {
+        jType.isAType = function (object, type) {
             var result = false;
 
             if (typeof object === type) {
@@ -105,6 +105,24 @@ define([ "require" ],
             }
 
             return result;
+        };
+
+
+        /**
+         * Method called to check if a given object has a given type
+         *
+         * @param object
+         * @param type
+         * @return true if the object is a type of type; false otherwise
+         */
+        jType.isATypes = function (object, types) {
+            var instance, type = types.length > 0;
+
+            for(type = 0; type < types.length; type += 1) {
+                instance = instance && jType.isAType(object,types[type]);
+            }
+
+            return instance;
         };
 
         return jType;

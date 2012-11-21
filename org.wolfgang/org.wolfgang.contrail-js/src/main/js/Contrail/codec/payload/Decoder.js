@@ -29,47 +29,51 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
 
         PayloadDecoder.INT_LEN = 4;
 
-        PayloadDecoder.init = jObj.constructor([], function () {
-            return new PayloadDecoder();
-        });
+        PayloadDecoder.init = jObj.constructor([],
+            function () {
+                return new PayloadDecoder();
+            });
 
-        PayloadDecoder.prototype.getNext = jObj.method([], jObj.types.Array, function () {
-            var result, payload;
+        PayloadDecoder.prototype.getNext = jObj.method([], jObj.types.Array,
+            function () {
+                var result, payload;
 
-            if (this.buffer.length < PayloadDecoder.INT_LEN) {
-                result = [];
-            } else {
-                payload = jMarshaller.bytesToInt(this.buffer, 0);
-                if (this.buffer.length - PayloadDecoder.INT_LEN < payload) {
+                if (this.buffer.length < PayloadDecoder.INT_LEN) {
                     result = [];
                 } else {
-                    this.buffer.splice(0, PayloadDecoder.INT_LEN);
-                    result = this.buffer.splice(0, payload);
+                    payload = jMarshaller.bytesToInt(this.buffer, 0);
+                    if (this.buffer.length - PayloadDecoder.INT_LEN < payload) {
+                        result = [];
+                    } else {
+                        this.buffer.splice(0, PayloadDecoder.INT_LEN);
+                        result = this.buffer.splice(0, payload);
+                    }
                 }
-            }
 
-            return result;
-        });
+                return result;
+            });
 
-        PayloadDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array, function (bytes) {
-            var results = [], result;
+        PayloadDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
+            function (bytes) {
+                var results = [], result;
 
-            this.buffer = this.buffer.concat(bytes);
+                this.buffer = this.buffer.concat(bytes);
 
-            for (result = this.getNext(); result.length > 0; result = this.getNext()) {
-                results.push(result);
-            }
+                for (result = this.getNext(); result.length > 0; result = this.getNext()) {
+                    results.push(result);
+                }
 
-            return results;
-        });
+                return results;
+            });
 
-        PayloadDecoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
-            if (this.buffer.length > 0) {
-                throw jObj.exception("L.array.must.be.empty");
-            } else {
-                return [];
-            }
-        });
+        PayloadDecoder.prototype.finish = jObj.method([], jObj.types.Array,
+            function () {
+                if (this.buffer.length > 0) {
+                    throw jObj.exception("L.array.must.be.empty");
+                } else {
+                    return [];
+                }
+            });
 
         return PayloadDecoder.init;
     });

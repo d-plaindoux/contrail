@@ -57,7 +57,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                         QUnit.equal(true, false, "a is not an instance of B");
                     });
             } catch (e) {
-                QUnit.equal(jObj.instanceOf(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+                QUnit.equal(jObj.isAType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
             }
         });
     });

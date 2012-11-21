@@ -26,17 +26,20 @@ define([ "require", "Core/jObj", "External/JSon" ],
             jObj.bless(this, require("Codec/Factory").core.encoder());
         }
 
-        JSonEncoder.init = jObj.constructor([], function () {
-            return new JSonEncoder();
-        });
+        JSonEncoder.init = jObj.constructor([],
+            function () {
+                return new JSonEncoder();
+            });
 
-        JSonEncoder.prototype.transform = jObj.method([jObj.types.Object], jObj.types.Array, function (object) {
-            return [ JSon.stringify(object) ];
-        });
+        JSonEncoder.prototype.transform = jObj.method([jObj.types.Object], jObj.types.Array,
+            function (object) {
+                return [ JSon.stringify(object) ];
+            });
 
-        JSonEncoder.prototype.finish = jObj.method([], jObj.types.Array, function () {
-            return [];
-        });
+        JSonEncoder.prototype.finish = jObj.method([], jObj.types.Array,
+            function () {
+                return [];
+            });
 
         return JSonEncoder.init;
     });

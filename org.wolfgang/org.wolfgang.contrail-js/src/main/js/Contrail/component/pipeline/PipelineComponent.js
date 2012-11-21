@@ -30,9 +30,10 @@ define([ "require", "Core/jObj" ],
         /**
          * Construction initialisation
          */
-        PipelineComponent.init = jObj.constructor([], function () {
-            return new PipelineComponent();
-        });
+        PipelineComponent.init = jObj.constructor([],
+            function () {
+                return new PipelineComponent();
+            });
 
         return PipelineComponent.init;
     });

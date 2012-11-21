@@ -48,7 +48,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of PipelineComponent");
+                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
         });
 
@@ -61,7 +61,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
+                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
         });
 
@@ -74,7 +74,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
+                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
                 });
         });
 
@@ -87,7 +87,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
+                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
                 });
         });
 
@@ -100,7 +100,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.instanceOf(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
     });

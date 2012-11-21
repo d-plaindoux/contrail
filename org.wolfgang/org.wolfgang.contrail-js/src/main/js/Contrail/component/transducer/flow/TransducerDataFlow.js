@@ -27,31 +27,34 @@ define([ "require", "Core/jObj" ],
             this.transducer = transducer;
         }
 
-        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"], function (transducer) {
-            return new TransducerDataFlow(transducer);
-        });
+        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"],
+            function (transducer) {
+                return new TransducerDataFlow(transducer);
+            });
 
         TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
 
-        TransducerDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any], function (data) {
-            var dataFlow = this.getDataFlow(),
-                transformed = this.transducer.transform(data),
-                newData;
+        TransducerDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+            function (data) {
+                var dataFlow = this.getDataFlow(),
+                    transformed = this.transducer.transform(data),
+                    newData;
 
-            for (newData in transformed) {
-                dataFlow.handleData(newData);
-            }
-        });
+                for (newData in transformed) {
+                    dataFlow.handleData(newData);
+                }
+            });
 
-        TransducerDataFlow.prototype.handleClose = jObj.procedure([], function () {
-            var dataFlow = this.getDataFlow(),
-                transformed = this.transducer.finish(),
-                newData;
+        TransducerDataFlow.prototype.handleClose = jObj.procedure([],
+            function () {
+                var dataFlow = this.getDataFlow(),
+                    transformed = this.transducer.finish(),
+                    newData;
 
-            for (newData in transformed) {
-                dataFlow.handleData(newData);
-            }
-        });
+                for (newData in transformed) {
+                    dataFlow.handleData(newData);
+                }
+            });
 
         return TransducerDataFlow.init;
     });

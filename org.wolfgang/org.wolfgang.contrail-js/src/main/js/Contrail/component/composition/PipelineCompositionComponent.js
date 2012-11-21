@@ -18,26 +18,18 @@
 
 /*global define*/
 
-define([ "Core/jObj"],
-    function (jObj) {
+define(["require", "Core/jObj" ],
+    function (require, jObj) {
         "use strict";
 
-        function ComponentLink(source, destination) {
-            jObj.bless(this);
+        var PipelineCompositionComponent = function (linkManager, components) {
+            jObj.bless(this, require("Contrail/Factory").pipeline.component());
+        };
 
-            this.source = source;
-            this.destination = destination;
-        }
-
-        ComponentLink.init = jObj.constructor([jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")],
-            function (source, destination) {
-                return new ComponentLink(source, destination);
+        PipelineCompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],
+            function (linkManager, components) {
+                return new PipelineCompositionComponent(linkManager, components);
             });
 
-        ComponentLink.prototype.dispose = jObj.procedure([],
-            function () {
-                // TODO
-            });
-
-        return ComponentLink.init;
+        return PipelineCompositionComponent.init;
     });

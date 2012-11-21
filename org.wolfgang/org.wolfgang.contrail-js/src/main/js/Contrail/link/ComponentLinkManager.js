@@ -28,22 +28,24 @@ define([ "require", "Core/jObj" ],
             this.links = [ ];
         }
 
-        ComponentLinkManager.init = jObj.constructor([], function () {
-            return new ComponentLinkManager();
-        });
+        ComponentLinkManager.init = jObj.constructor([],
+            function () {
+                return new ComponentLinkManager();
+            });
 
-        ComponentLinkManager.prototype.link = jObj.procedure([jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")], function (source, destination) {
-            if (!source.acceptDestination(destination.getComponentId())) {
-                throw jObj.exception("L.source.cannot.accept.destination");
-            } else if (!destination.acceptSource(source.getComponentId())) {
-                throw jObj.exception("L.destination.cannot.accept.source");
-            } else {
-                var Factory = require("Contrail/Factory");
-                source.connectDestination(Factory.link.destination(destination, this));
-                destination.connectSource(Factory.link.source(source, this));
-                this.links.slice(Factory.link.components(source,destination));
-            }
-        });
+        ComponentLinkManager.prototype.link = jObj.procedure([jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")],
+            function (source, destination) {
+                if (!source.acceptDestination(destination.getComponentId())) {
+                    throw jObj.exception("L.source.cannot.accept.destination");
+                } else if (!destination.acceptSource(source.getComponentId())) {
+                    throw jObj.exception("L.destination.cannot.accept.source");
+                } else {
+                    var Factory = require("Contrail/Factory");
+                    source.connectDestination(Factory.link.destination(destination, this));
+                    destination.connectSource(Factory.link.source(source, this));
+                    this.links.slice(Factory.link.components(source, destination));
+                }
+            });
 
         return ComponentLinkManager.init;
     });

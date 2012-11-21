@@ -26,9 +26,10 @@ define([ "Core/jObj" ],
             jObj.bless(this);
         }
 
-        DataFlow.init = jObj.constructor([], function () {
-            return new DataFlow();
-        });
+        DataFlow.init = jObj.constructor([],
+            function () {
+                return new DataFlow();
+            });
 
         DataFlow.prototype.handleData = jObj.procedure([jObj.types.Any]);
         DataFlow.prototype.handleClose = jObj.procedure([]);

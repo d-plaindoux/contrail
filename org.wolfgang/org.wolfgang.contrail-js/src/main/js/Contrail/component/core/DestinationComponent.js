@@ -28,27 +28,31 @@ define([ "require", "Core/jObj" ],
             this.sourceLink = null;
         }
 
-        DestinationComponent.init = jObj.constructor([], function () {
-            return new DestinationComponent();
-        });
+        DestinationComponent.init = jObj.constructor([],
+            function () {
+                return new DestinationComponent();
+            });
 
-        DestinationComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean, function (componentId) {
-            return this.sourceLink === null;
-        });
+        DestinationComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
+            function (componentId) {
+                return this.sourceLink === null;
+            });
 
-        DestinationComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"), function (sourceLink) {
-            this.sourceLink = sourceLink;
-            return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
-        });
+        DestinationComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
+            function (sourceLink) {
+                this.sourceLink = sourceLink;
+                return require("Contrail/Factory").link.components(this.sourceLink.getSource(), this);
+            });
 
-        DestinationComponent.prototype.closeDownStream = jObj.procedure([], function () {
-            if (this.sourceLink !== null) {
-                this.sourceLink.getSource().closeDownStream();
-                this.sourceLink = null;
-            } else {
-                throw jObj.exception("L.source.not.connected");
-            }
-        });
+        DestinationComponent.prototype.closeDownStream = jObj.procedure([],
+            function () {
+                if (this.sourceLink !== null) {
+                    this.sourceLink.getSource().closeDownStream();
+                    this.sourceLink = null;
+                } else {
+                    throw jObj.exception("L.source.not.connected");
+                }
+            });
 
         /**
          * Abstract methods

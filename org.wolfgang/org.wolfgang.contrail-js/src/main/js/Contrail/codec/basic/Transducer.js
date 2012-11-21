@@ -26,9 +26,10 @@ define([ "Core/jObj" ],
             jObj.bless(this);
         }
 
-        Transducer.init = jObj.constructor([], function () {
-            return new Transducer();
-        });
+        Transducer.init = jObj.constructor([],
+            function () {
+                return new Transducer();
+            });
 
         Transducer.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array);
         Transducer.prototype.finish = jObj.method([jObj.types.Any], jObj.types.Array);
