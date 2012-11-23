@@ -27,10 +27,10 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.bound.terminal(Factory.flow.core());
+                    component1 = Factory.component.terminal(Factory.flow.core());
                 }).
                 And(function () {
-                    component2 = Factory.component.bound.terminal(Factory.flow.core());
+                    component2 = Factory.component.terminal(Factory.flow.core());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -49,7 +49,7 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
                     });
                 }).
                 And(function () {
-                    component = Factory.component.bound.terminal(dataFlow);
+                    component = Factory.component.terminal(dataFlow);
                 }).
                 When(function () {
                     component.getUpStreamDataFlow().handleData("Hello, World!");

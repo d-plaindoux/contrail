@@ -27,10 +27,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 And(function () {
-                    c2 = Factory.component.transducer.component();
+                    c2 = Factory.component.transducer();
                 }).
                 When(function () {
                 }).
@@ -44,7 +44,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -57,7 +57,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -70,7 +70,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -83,7 +83,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -96,7 +96,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer.component();
+                    c1 = Factory.component.transducer();
                 }).
                 WhenNothing.
                 Then(function () {

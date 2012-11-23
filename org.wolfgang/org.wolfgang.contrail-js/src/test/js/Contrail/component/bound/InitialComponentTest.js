@@ -22,18 +22,15 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
     function (QUnit, jObj, Factory, jCC) {
         "use strict";
 
-        /**
-         * Test generation
-         */
         jCC.scenario("Check Component generation", function () {
             var component1, component2;
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.bound.initial(Factory.flow.core());
+                    component1 = Factory.component.initial(Factory.flow.core());
                 }).
                 And(function () {
-                    component2 = Factory.component.bound.initial(Factory.flow.core());
+                    component2 = Factory.component.initial(Factory.flow.core());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -41,9 +38,6 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 });
         });
 
-        /**
-         * Test generation
-         */
         jCC.scenario("Check Component down stream mechanism", function () {
             var component, dataFlow;
 
@@ -55,7 +49,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    component = Factory.component.bound.initial(dataFlow);
+                    component = Factory.component.initial(dataFlow);
                 }).
                 When(function () {
                     component.getDownStreamDataFlow().handleData("Hello, World!");

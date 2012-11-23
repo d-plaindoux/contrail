@@ -27,10 +27,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline.component();
+                    c1 = Factory.component.pipeline();
                 }).
                 And(function () {
-                    c2 = Factory.component.pipeline.component();
+                    c2 = Factory.component.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -43,7 +43,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline.component();
+                    c1 = Factory.component.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -56,7 +56,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline.component();
+                    c1 = Factory.component.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -69,7 +69,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline.component();
+                    c1 = Factory.component.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -82,7 +82,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline.component();
+                    c1 = Factory.component.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {

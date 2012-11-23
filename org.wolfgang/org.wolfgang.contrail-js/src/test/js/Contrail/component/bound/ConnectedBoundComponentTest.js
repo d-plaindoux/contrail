@@ -33,7 +33,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    initialComponent = Factory.component.bound.initial(initialStream);
+                    initialComponent = Factory.component.initial(initialStream);
                 }).
                 And(function () {
                     terminalStream = Factory.flow.core();
@@ -42,7 +42,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    terminalComponent = Factory.component.bound.terminal(terminalStream);
+                    terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
                     Factory.link.manager().link(initialComponent, terminalComponent);
@@ -67,7 +67,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    initialComponent = Factory.component.bound.initial(initialStream);
+                    initialComponent = Factory.component.initial(initialStream);
                 }).
                 And(function () {
                     terminalStream = Factory.flow.core();
@@ -76,7 +76,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    terminalComponent = Factory.component.bound.terminal(terminalStream);
+                    terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
                     Factory.link.manager().link(initialComponent, terminalComponent);
@@ -103,7 +103,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    initialComponent = Factory.component.bound.initial(initialStream);
+                    initialComponent = Factory.component.initial(initialStream);
                 }).
                 And(function () {
                     terminalStream = Factory.flow.core();
@@ -112,7 +112,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    terminalComponent = Factory.component.bound.terminal(terminalStream);
+                    terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
                     Factory.link.manager().link(initialComponent, terminalComponent);
@@ -137,7 +137,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    initialComponent = Factory.component.bound.initial(initialStream);
+                    initialComponent = Factory.component.initial(initialStream);
                 }).
                 And(function () {
                     terminalStream = Factory.flow.core();
@@ -146,7 +146,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     });
                 }).
                 And(function () {
-                    terminalComponent = Factory.component.bound.terminal(terminalStream);
+                    terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
                     Factory.link.manager().link(initialComponent, terminalComponent);

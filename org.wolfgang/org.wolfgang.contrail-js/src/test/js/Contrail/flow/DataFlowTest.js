@@ -70,13 +70,11 @@ require([ "qunit", "Core/jObj", "Contrail/Factory", "test/jCC" ],
                 When(function () {
                     closeableDataFlow.handleClose();
                 }).
-                Then(function () {
-                    try {
-                        closeableDataFlow.handleData(" World!");
-                        QUnit.ok(false, "An Exception hasn't been raised");
-                    } catch (e) {
-                        QUnit.ok(true, "An Exception has been raised");
-                    }
+                And(function () {
+                    closeableDataFlow.handleData(" World!");
+                }).
+                ThenError(function () {
+                    QUnit.ok(true, "An Exception has been raised");
                 });
         });
     });

@@ -39,42 +39,65 @@ define("test/jCC", [ "qunit" ],
          */
 
         jCC.ThenSomething = function () {
-            return { And:jCC.AndThen, When:jCC.When };
+            return {
+                And:jCC.AndThen,
+                When:jCC.When(jCC.Nothing)
+            };
         };
 
-        jCC.Then = function (theThen) {
-            theThen();
+
+        jCC.AndThen = function (previous) {
+            previous();
             return jCC.ThenSomething();
         };
 
-        jCC.AndThen = function (theThen) {
-            theThen();
-            return jCC.ThenSomething();
+        jCC.Then = function (previous) {
+            return function (aThen) {
+                previous();
+                aThen();
+                return jCC.ThenSomething();
+            };
+        };
+
+        jCC.ThenError = function (previous) {
+            return function (aThen) {
+                try {
+                    previous();
+                    throw { message:"expecting and exception"};
+                } catch (e) {
+                    aThen();
+                    return jCC.ThenSomething();
+                }
+            };
         };
 
         /*
          * When block definition
          */
 
-        jCC.WhenNothing = function () {
-            return { Then:jCC.Then };
-        };
-
-        jCC.WhenSomething = function () {
+        jCC.WhenNothing = function (previous) {
             return {
-                And:jCC.AndWhen,
-                Then:jCC.Then
+                Then:jCC.Then(previous),
+                ThenError:jCC.ThenError(previous)
             };
         };
 
-        jCC.When = function (theWhen) {
-            theWhen();
-            return jCC.WhenSomething();
+        jCC.WhenSomething = function (previous) {
+            return {
+                And:jCC.When(previous),
+                Then:jCC.Then(previous),
+                ThenError:jCC.ThenError(previous)
+            };
         };
 
-        jCC.AndWhen = function (theWhen) {
-            theWhen();
-            return jCC.WhenSomething();
+        jCC.When = function (previousGiven) {
+            return function (currentWhen) {
+                var newWhen = function () {
+                    previousGiven();
+                    currentWhen();
+                };
+                return jCC.WhenSomething(newWhen);
+            };
         };
 
         /*
@@ -82,25 +105,20 @@ define("test/jCC", [ "qunit" ],
          */
 
         jCC.GivenNothing = {
-            When:jCC.When,
-            WhenNothing:jCC.WhenNothing()
+            When:jCC.When(jCC.Nothing),
+            WhenNothing:jCC.WhenNothing(jCC.Nothing)
         };
 
         jCC.GivenSomething = function () {
             return {
-                And:jCC.AndGiven,
-                When:jCC.When,
-                WhenNothing:jCC.WhenNothing()
+                And:jCC.Given,
+                When:jCC.When(jCC.Nothing),
+                WhenNothing:jCC.WhenNothing(jCC.Nothing)
             };
         };
 
-        jCC.Given = function (theGiven) {
-            theGiven();
-            return jCC.GivenSomething();
-        };
-
-        jCC.AndGiven = function (theGiven) {
-            theGiven();
+        jCC.Given = function (given) {
+            given();
             return jCC.GivenSomething();
         };
 
