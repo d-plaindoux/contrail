@@ -24,12 +24,15 @@ define("Component/Factory", [ "./composition/CompositionComponentFactory", "./co
 
         var Factory = {};
 
-        Factory.core = Basic;
+        Factory.core = {};
+        Factory.core.component = Basic.component;
+        Factory.core.source = Basic.source;
+        Factory.core.destination = Basic.destination;
+        Factory.core.pipeline = Pipeline.component;
 
         Factory.initial = Bound.initial;
         Factory.terminal = Bound.terminal;
-        Factory.pipeline = Pipeline.component;
-        Factory.transducer = Transducer.compose;
+        Factory.transducer = Transducer.component;
         Factory.compose = Composition.compose;
 
         return Factory;

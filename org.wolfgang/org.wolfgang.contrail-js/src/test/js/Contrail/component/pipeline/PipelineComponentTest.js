@@ -27,10 +27,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline();
+                    c1 = Factory.component.core.pipeline();
                 }).
                 And(function () {
-                    c2 = Factory.component.pipeline();
+                    c2 = Factory.component.core.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -43,7 +43,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline();
+                    c1 = Factory.component.core.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -56,7 +56,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline();
+                    c1 = Factory.component.core.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -69,7 +69,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline();
+                    c1 = Factory.component.core.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -82,11 +82,24 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.pipeline();
+                    c1 = Factory.component.core.pipeline();
                 }).
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                });
+        });
+
+        QUnit.test("Check Component type to be a SourceComponent and a DestinationComponent", function () {
+            var c1;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.core.pipeline();
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.ofTypes(c1, [ jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")]), true, "Checking c1 instance of SourceComponent and DestinationComponent");
                 });
         });
     });

@@ -25,7 +25,7 @@ define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/Tr
         function TransducerComponent(encoder, decoder) {
             var Factory = require("Component/Factory");
 
-            jObj.bless(this, Factory.pipeline());
+            jObj.bless(this, Factory.core.pipeline());
 
             this.upStreamDataFlow = transducerUpStreamDataFlow(this, encoder);
             this.downStreamDataFlow = transducerDownStreamDataFlow(this, decoder);

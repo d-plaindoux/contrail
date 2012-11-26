@@ -116,14 +116,14 @@ define([ "require" ],
 
 
         /**
-         * Method called to check if a given object has a given type
+         * Method called to check if a given object has a given type set
          *
          * @param object
-         * @param type
-         * @return true if the object is a type of type; false otherwise
+         * @param types
+         * @return true if the object is a type of types; false otherwise
          */
         jType.ofTypes = function (object, types) {
-            var instance, type = types.length > 0;
+            var type, instance = types.length > 0;
 
             for (type = 0; type < types.length; type += 1) {
                 instance = instance && jType.ofType(object, types[type]);

@@ -33,7 +33,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     compose = Factory.component.compose(linkManager, [ ]);
                 }).
                 ThenError(function (exception) {
-                    QUnit.equal(true, true, "Expected Exception " + exception + " catched");
+                    QUnit.equal(true, true, "Expected Exception " + exception + " catch");
                 });
         });
 
@@ -51,10 +51,9 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     compose = Factory.component.compose(linkManager, [ component ]);
                 }).
                 Then(function () {
-                    QUnit.equal(compose, component, " Composition One component => the component itself");
+                    QUnit.equal(compose, component, " Composition One component is the component itself");
                 });
         });
-
 
         jCC.scenario("Create composition with 2 components - Source | Destination", function () {
             var component1, component2, linkManager, compose;
@@ -73,13 +72,94 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     compose = Factory.component.compose(linkManager, [ component1, component2 ]);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination => a component");
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | destination not a source component");
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | destination not a destination component");
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
+                });
+        });
+
+        jCC.scenario("Create composition with 2 components - Pipeline | Destination", function () {
+            var component1, component2, linkManager, compose;
+
+            jCC.
+                Given(function () {
+                    component1 = Factory.component.core.pipeline();
+                }).
+                And(function () {
+                    component2 = Factory.component.core.destination();
+                }).
+                And(function () {
+                    linkManager = Factory.link.manager();
+                }).
+                When(function () {
+                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                }).
+                Then(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
+                });
+        });
+
+        jCC.scenario("Create composition with 2 components - Source | Pipeline", function () {
+            var component1, component2, linkManager, compose;
+
+            jCC.
+                Given(function () {
+                    component1 = Factory.component.core.source();
+                }).
+                And(function () {
+                    component2 = Factory.component.core.pipeline();
+                }).
+                And(function () {
+                    linkManager = Factory.link.manager();
+                }).
+                When(function () {
+                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                }).
+                Then(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | not a source component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
+                });
+        });
+
+        jCC.scenario("Create composition with 2 components - Pipeline | Pipeline", function () {
+            var component1, component2, linkManager, compose;
+
+            jCC.
+                Given(function () {
+                    component1 = Factory.component.core.pipeline();
+                }).
+                And(function () {
+                    component2 = Factory.component.core.pipeline();
+                }).
+                And(function () {
+                    linkManager = Factory.link.manager();
+                }).
+                When(function () {
+                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                }).
+                Then(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | is a source component");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
                 });
         });
     });

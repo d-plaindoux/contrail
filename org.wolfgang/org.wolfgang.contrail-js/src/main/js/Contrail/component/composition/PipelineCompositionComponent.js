@@ -23,7 +23,7 @@ define(["require", "Core/jObj" ],
         "use strict";
 
         var PipelineCompositionComponent = function (linkManager, components) {
-            jObj.bless(this, require("Component/Factory").pipeline.component());
+            jObj.bless(this, require("Component/Factory").core.pipeline());
             this.components = components;
         };
 
