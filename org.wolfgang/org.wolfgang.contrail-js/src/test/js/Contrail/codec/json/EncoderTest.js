@@ -37,7 +37,7 @@ require([ "Core/jObj", "Codec/Factory", "qunit", "test/jCC" ],
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
-                    QUnit.equal(jObj.isAType(result[0], jObj.types.String), true, "Checking result type");
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
                 }).
                 And(function () {
                     QUnit.equal(result[0], '{"a":true}', "Checking encoding length");

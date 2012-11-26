@@ -23,7 +23,8 @@ define(["require", "Core/jObj" ],
         "use strict";
 
         var SourceCompositionComponent = function (linkManager, components) {
-            jObj.bless(this, require("Contrail/Factory").core.source());
+            jObj.bless(this, require("Component/Factory").core.source());
+            this.components = components;
         };
 
         SourceCompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],

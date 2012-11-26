@@ -22,9 +22,7 @@ define("test/jCC", [ "qunit" ],
     function (QUnit) {
         "use strict";
 
-        var jCC;
-
-        jCC = {};
+        var jCC = {};
 
         jCC.scenario = function (name, scenario) {
             QUnit.test(name, scenario);
@@ -63,11 +61,12 @@ define("test/jCC", [ "qunit" ],
             return function (aThen) {
                 try {
                     previous();
-                    throw { message:"expecting and exception"};
                 } catch (e) {
-                    aThen();
+                    aThen(e);
                     return jCC.ThenSomething();
                 }
+
+                throw { message:"expecting and exception"};
             };
         };
 

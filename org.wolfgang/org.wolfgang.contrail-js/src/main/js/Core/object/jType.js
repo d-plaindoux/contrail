@@ -29,10 +29,17 @@ define([ "require" ],
             this.message = message;
         }
 
+        /**
+         * Method dedicated to dynamic type checking
+         *
+         * @param object
+         * @param type
+         * @return {*}
+         */
         jType.checkType = function (object, type) {
-            if (type !== undefined && !jType.isAType(type, jType.types.String)) {
+            if (type !== undefined && !jType.ofType(type, jType.types.String)) {
                 throw new RuntimeTypeError(type + " must be an instance of String");
-            } else if (!jType.isAType(object, type)) {
+            } else if (!jType.ofType(object, type)) {
                 throw new RuntimeTypeError(object + " must be an instance of " + type);
             } else {
                 return object;
@@ -89,7 +96,7 @@ define([ "require" ],
          * @param type
          * @return true if the object is a type of type; false otherwise
          */
-        jType.isAType = function (object, type) {
+        jType.ofType = function (object, type) {
             var result = false;
 
             if (typeof object === type) {
@@ -115,11 +122,11 @@ define([ "require" ],
          * @param type
          * @return true if the object is a type of type; false otherwise
          */
-        jType.isATypes = function (object, types) {
+        jType.ofTypes = function (object, types) {
             var instance, type = types.length > 0;
 
-            for(type = 0; type < types.length; type += 1) {
-                instance = instance && jType.isAType(object,types[type]);
+            for (type = 0; type < types.length; type += 1) {
+                instance = instance && jType.ofType(object, types[type]);
             }
 
             return instance;

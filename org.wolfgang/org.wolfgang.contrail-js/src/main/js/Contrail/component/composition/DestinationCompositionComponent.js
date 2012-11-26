@@ -23,7 +23,8 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         var DestinationCompositionComponent = function (linkManager, components) {
-            jObj.bless(this, require("Contrail/Factory").core.destination());
+            jObj.bless(this, require("Component/Factory").core.destination());
+            this.components = components;
         };
 
         DestinationCompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],

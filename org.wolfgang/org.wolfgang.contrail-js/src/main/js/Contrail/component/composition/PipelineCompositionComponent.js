@@ -23,7 +23,8 @@ define(["require", "Core/jObj" ],
         "use strict";
 
         var PipelineCompositionComponent = function (linkManager, components) {
-            jObj.bless(this, require("Contrail/Factory").pipeline.component());
+            jObj.bless(this, require("Component/Factory").pipeline.component());
+            this.components = components;
         };
 
         PipelineCompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],

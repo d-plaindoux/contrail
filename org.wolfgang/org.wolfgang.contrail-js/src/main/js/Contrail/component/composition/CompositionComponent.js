@@ -22,10 +22,16 @@ define(["require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        var CompositionComponent = function (linkManager, components) {
-            jObj.bless(this, require("Contrail/Factory").core.component());
-        };
+        function CompositionComponent(linkManager, components) {
+            jObj.bless(this, require("Component/Factory").core.component());
+            this.components = components;
+        }
 
+        /**
+         * Constructor
+         *
+         * @type {*|void}
+         */
         CompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],
             function (linkManager, components) {
                 return new CompositionComponent(linkManager, components);

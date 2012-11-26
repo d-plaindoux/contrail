@@ -22,16 +22,21 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
     function (jObj, pipelineComposition, sourceComposition, destinationComposition, componentComposition) {
         "use strict";
 
-        var CompositionFactory = {}, linkAll;
+        var CompositionFactory = {}, linkAll, sourceType, destinationType;
+
+        // Static and private definitions
+
+        sourceType = jObj.types.Named("SourceComponent");
+        destinationType = jObj.types.Named("DestinationComponent");
 
         /**
-         * Private metohd dedicated to composition creation
+         * Private method dedicated to composition creation
          *
          * @param linkManager
          * @param components
          * @return {*}
          */
-        linkAll = jObj.method([jObj.types.Named("ComponentLinkManager"), jObj.types.Array ], jObj.types.Named("Component"),
+        linkAll = jObj.method([jObj.types.Named("ComponentLinkManager"), jObj.types.Array ], jObj.types.Array,
             function (linkManager, components) {
                 var index, current = components[0];
 
@@ -45,7 +50,7 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
 
         CompositionFactory.compose = jObj.method([jObj.types.Named("ComponentLinkManager"), jObj.types.Array ], jObj.types.Named("Component"),
             function (linkManager, components) {
-                var result;
+                var result, first, last;
 
                 if (components.length === 0) {
 
@@ -55,28 +60,33 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
 
                     result = components[0];
 
-                } else if (jObj.isATypes(components[0], [ jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent")]) &&
-                    jObj.isATypes(components[components.length - 1], [ jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent") ])) {
-
-                    result = pipelineComposition(linkManager, linkAll(linkManager, components));
-
-                } else if (jObj.isATypes(components[0], [ jObj.types.Named("SourceComponent") ]) &&
-                    jObj.isATypes(components[components.length - 1], [ jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent") ])) {
-
-                    result = sourceComposition(linkManager, linkAll(linkManager, components));
-
-                } else if (jObj.isATypes(components[0], [ jObj.types.Named("SourceComponent"), jObj.types.Named("DestinationComponent") ]) &&
-                    jObj.isATypes(components[components.length - 1], [ jObj.types.Named("DestinationComponent")])) {
-
-                    result = destinationComposition(linkManager, linkAll(linkManager, components));
-
-                } else if (jObj.isATypes(components[0], [ jObj.types.Named("SourceComponent") ]) &&
-                    jObj.isATypes(components[components.length - 1], [ jObj.types.Named("DestinationComponent") ])) {
-
-                    result = componentComposition(linkManager, linkAll(linkManager, components));
-
                 } else {
-                    throw jObj.exception("L.not.compatible.components");
+                    first = components[0];
+                    last = components[components.length - 1];
+
+                    if (jObj.ofTypes(first, [ sourceType, destinationType]) &&
+                        jObj.ofTypes(last, [ sourceType, destinationType ])) {
+
+                        result = pipelineComposition(linkManager, linkAll(linkManager, components));
+
+                    } else if (jObj.ofType(first, sourceType) &&
+                        jObj.ofTypes(last, [ sourceType, destinationType ])) {
+
+                        result = sourceComposition(linkManager, linkAll(linkManager, components));
+
+                    } else if (jObj.ofTypes(first, [ sourceType, destinationType ]) &&
+                        jObj.ofType(last, destinationType)) {
+
+                        result = destinationComposition(linkManager, linkAll(linkManager, components));
+
+                    } else if (jObj.ofType(first, sourceType) &&
+                        jObj.ofType(last, jObj.types.Named("DestinationComponent"))) {
+
+                        result = componentComposition(linkManager, linkAll(linkManager, components));
+
+                    } else {
+                        throw jObj.exception("L.not.compatible.components");
+                    }
                 }
 
                 return result;
@@ -84,4 +94,5 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
 
         return CompositionFactory;
 
-    });
+    })
+;

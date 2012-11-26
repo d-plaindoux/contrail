@@ -44,7 +44,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(a, "A"), true, "Checking a:A instance of A");
+                    QUnit.equal(jObj.ofType(a, "A"), true, "Checking a:A instance of A");
                 });
         });
 
@@ -57,7 +57,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, "B"), true, "Checking b:B instance of B");
+                    QUnit.equal(jObj.ofType(b, "B"), true, "Checking b:B instance of B");
                 });
         });
 
@@ -70,7 +70,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, "A"), true, "Checking b:B extends A instance of A");
+                    QUnit.equal(jObj.ofType(b, "A"), true, "Checking b:B extends A instance of A");
                 });
         });
 
@@ -83,7 +83,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.String), true, "Checking Type(<string>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.String), true, "Checking Type(<string>)");
                 });
         });
 
@@ -96,7 +96,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.Number), true, "Checking Type(<number>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.Number), true, "Checking Type(<number>)");
                 });
         });
 
@@ -109,7 +109,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
                 });
         });
 
@@ -120,7 +120,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 GivenNothing.
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
                 });
         });
 
@@ -133,7 +133,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.Object), true, "Checking Type(<object>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.Object), true, "Checking Type(<object>)");
                 });
         });
 
@@ -146,7 +146,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(b, jObj.types.Array), true, "Checking Type(<array>)");
+                    QUnit.equal(jObj.ofType(b, jObj.types.Array), true, "Checking Type(<array>)");
                 });
         });
 
@@ -164,7 +164,7 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                     QUnit.equal(tb.a, jObj.types.String, "Checking Type(<object>)");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.isAType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
+                    QUnit.equal(jObj.ofType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
                 }).
                 And(function () {
                     QUnit.equal(tb.b.hello, jObj.types.String, "Checking getType(<object>)");

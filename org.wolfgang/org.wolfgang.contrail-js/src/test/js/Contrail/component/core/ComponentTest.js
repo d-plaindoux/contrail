@@ -50,7 +50,7 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.isAType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
     });
