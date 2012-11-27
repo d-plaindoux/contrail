@@ -18,17 +18,22 @@
 
 /*global define*/
 
-define("Contrail/Factory", [ "Codec/Factory", "Component/Factory", "Link/Factory", "Flow/Factory" ],
-    function (Codec, Component, Link, Flow) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
         "use strict";
 
-        var Factory = {};
+        function SwitchComponent() {
+            var Factory = require("Component/Factory");
+            jObj.bless(this, Factory.core.pipeline());
+        }
 
-        Factory.codec = Codec;
-        Factory.component = Component;
-        Factory.link = Link;
-        Factory.flow = Flow;
+        /**
+         * Construction initialisation
+         */
+        SwitchComponent.init = jObj.constructor([],
+            function () {
+                return new SwitchComponent();
+            });
 
-        return Factory;
-
+        return SwitchComponent.init;
     });

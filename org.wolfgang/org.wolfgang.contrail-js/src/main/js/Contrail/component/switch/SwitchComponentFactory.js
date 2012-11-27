@@ -18,16 +18,13 @@
 
 /*global define*/
 
-define("Contrail/Factory", [ "Codec/Factory", "Component/Factory", "Link/Factory", "Flow/Factory" ],
-    function (Codec, Component, Link, Flow) {
+define([ "./SwitchComponent" ],
+    function (switchComponent) {
         "use strict";
 
         var Factory = {};
 
-        Factory.codec = Codec;
-        Factory.component = Component;
-        Factory.link = Link;
-        Factory.flow = Flow;
+        Factory.component = switchComponent;
 
         return Factory;
 

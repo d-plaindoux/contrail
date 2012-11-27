@@ -27,28 +27,14 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 And(function () {
-                    c2 = Factory.component.transducer();
-                }).
-                When(function () {
-                }).
-                Then(function () {
-                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
-                });
-        });
-
-        jCC.scenario("Check Component type to be a TransducerComponent", function () {
-            var c1;
-
-            jCC.
-                Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of PipelineComponent");
+                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -57,11 +43,24 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
+                });
+        });
+
+        jCC.scenario("Check Component type to be a TransducerComponent", function () {
+            var c1;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of TransducerComponent");
                 });
         });
 
@@ -70,7 +69,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -83,7 +82,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -96,7 +95,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer();
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {

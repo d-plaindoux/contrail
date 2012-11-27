@@ -21,50 +21,51 @@
 $(function () {
     "use strict";
 
-    require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ], function (Factory, jObj, jDom) {
-        try {
-            var key, classes, id, name, showHide, changeToType, changeToObject;
+    require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ],
+        function (Factory, jObj, jDom) {
+            try {
+                var key, classes, id, name, showHide, changeToType, changeToObject;
 
-            changeToType = function (id, object) {
-                return function () {
-                    $(id + " > pre").replaceWith(jDom("pre", { display_type:"type" }, jObj.toString(jObj.toType(object))));
-                    $(id + " > pre").addClass("boxedArea");
+                changeToType = function (id, object) {
+                    return function () {
+                        $(id + " > pre").replaceWith(jDom("pre", { display_type:"type" }, jObj.toString(jObj.toType(object))));
+                        $(id + " > pre").addClass("boxedArea");
+                    };
                 };
-            };
 
-            changeToObject = function (id, object) {
-                return function () {
-                    $(id + " > pre").replaceWith(jDom("pre", { display_object:"object" }, jObj.toString(object)));
-                    $(id + " > pre").addClass("boxedArea");
+                changeToObject = function (id, object) {
+                    return function () {
+                        $(id + " > pre").replaceWith(jDom("pre", { display_object:"object" }, jObj.toString(object)));
+                        $(id + " > pre").addClass("boxedArea");
+                    };
                 };
-            };
 
-            classes = {
-                Component:Factory.component.core.component(),
-                SourceComponent:Factory.component.core.source(),
-                DestinationComponent:Factory.component.core.destination(),
-                PipelineComponent:Factory.component.pipeline.component()
-            };
+                classes = {
+                    Component:Factory.component.core.component(),
+                    SourceComponent:Factory.component.core.source(),
+                    DestinationComponent:Factory.component.core.destination(),
+                    PipelineComponent:Factory.component.core.pipeline()
+                };
 
-            for (key in classes) {
-                if (classes.hasOwnProperty(key)) {
-                    name = jObj.getClass(classes[key]);
-                    id = "#main > #" + name;
-                    $("#main").append(jDom("div", { id:name }));
-                    $(id).hide();
-                    $(id).append(jDom("h3", {}, " " + name + " " + jDom("input", { value:"Object" }) + jDom("input", { value:"Type" })));
-                    $(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
-                    $(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
-                    $(id).append(jDom("pre", { display_classe:"type" }, jObj.toString(classes[key])));
-                    $(id + " > pre").addClass("boxedArea");
-                    $(id + " > h3").addClass("ui-widget-header");
-                    $(id).css("position", "fixed");
-                    $(id).show("slice");
-                    $(id).draggable({ opacity:0.7, stack:"#main div" });
+                for (key in classes) {
+                    if (classes.hasOwnProperty(key)) {
+                        name = jObj.getClass(classes[key]);
+                        id = "#main > #" + name;
+                        $("#main").append(jDom("div", { id:name }));
+                        $(id).hide();
+                        $(id).append(jDom("h3", {}, " " + name + " " + jDom("input", { value:"Object" }) + jDom("input", { value:"Type" })));
+                        $(id + " > h3 > input[value='Object']").button().click(changeToObject(id, classes[key]));
+                        $(id + " > h3 > input[value='Type']").button().click(changeToType(id, classes[key]));
+                        $(id).append(jDom("pre", { display_classe:"type" }, jObj.toString(classes[key])));
+                        $(id + " > pre").addClass("boxedArea");
+                        $(id + " > h3").addClass("ui-widget-header");
+                        $(id).css("position", "fixed");
+                        $(id).show("slice");
+                        $(id).draggable({ opacity:0.7, stack:"#main div" });
+                    }
                 }
+            } catch (e) {
+                $("#error").prepend(e.toString());
             }
-        } catch (e) {
-            $("#error").prepend(e.toString());
-        }
-    });
+        });
 });

@@ -35,7 +35,7 @@ define([ "Core/jObj", "./TransducerDataFlow" ],
         TransducerUpStreamDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow",
             function () {
                 if (this.component.getDestinationComponentLink() !== undefined) {
-                    throw jObj.exception("L.source.not.yet.connected");
+                    throw jObj.exception("L.destination.not.yet.connected");
                 } else {
                     return this.component.getDestinationComponentLink().getUpStreamDataFlow();
                 }

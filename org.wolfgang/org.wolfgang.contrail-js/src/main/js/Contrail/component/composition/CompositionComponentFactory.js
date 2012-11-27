@@ -24,7 +24,9 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
 
         var CompositionFactory = {}, linkAll, sourceType, destinationType;
 
-        // Static and private definitions
+        /*
+         * Static and private definitions
+         */
 
         sourceType = jObj.types.Named("SourceComponent");
         destinationType = jObj.types.Named("DestinationComponent");
@@ -64,23 +66,19 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
                     first = components[0];
                     last = components[components.length - 1];
 
-                    if (jObj.ofTypes(first, [ sourceType, destinationType]) &&
-                        jObj.ofTypes(last, [ sourceType, destinationType ])) {
+                    if (jObj.ofTypes(first, [ sourceType, destinationType]) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
 
                         result = pipelineComposition(linkManager, linkAll(linkManager, components));
 
-                    } else if (jObj.ofType(first, sourceType) &&
-                        jObj.ofTypes(last, [ sourceType, destinationType ])) {
+                    } else if (jObj.ofType(first, sourceType) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
 
                         result = sourceComposition(linkManager, linkAll(linkManager, components));
 
-                    } else if (jObj.ofTypes(first, [ sourceType, destinationType ]) &&
-                        jObj.ofType(last, destinationType)) {
+                    } else if (jObj.ofTypes(first, [ sourceType, destinationType ]) && jObj.ofType(last, destinationType)) {
 
                         result = destinationComposition(linkManager, linkAll(linkManager, components));
 
-                    } else if (jObj.ofType(first, sourceType) &&
-                        jObj.ofType(last, jObj.types.Named("DestinationComponent"))) {
+                    } else if (jObj.ofType(first, sourceType) && jObj.ofType(last, destinationType)) {
 
                         result = componentComposition(linkManager, linkAll(linkManager, components));
 
