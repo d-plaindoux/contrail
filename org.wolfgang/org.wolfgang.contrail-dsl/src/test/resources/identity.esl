@@ -1,7 +1,0 @@
-def native = fun object method arity -> external;
-
-def echo = native "org.wolfgang.contrail.ecosystem.Echo" "echo" "0";
-def Pipeline = fun upstream downstream ->pipeline;
-
-def Identity = fun () ->  Pipeline (fun e -> e ) (fun e -> e);
-def Main = fun b ->  b <> Identity () <> echo;

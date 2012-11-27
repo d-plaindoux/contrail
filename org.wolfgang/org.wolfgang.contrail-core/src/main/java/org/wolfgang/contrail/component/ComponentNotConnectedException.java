@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
+
 /**
  * <code>ComponentNotConnectedException</code>
  * 
