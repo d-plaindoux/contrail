@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.pipeline;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;

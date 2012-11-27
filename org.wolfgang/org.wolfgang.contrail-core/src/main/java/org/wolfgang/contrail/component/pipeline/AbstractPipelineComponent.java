@@ -60,8 +60,8 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	 */
 	protected AbstractPipelineComponent() {
 		super();
-		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
-		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		this.sourceComponentLink = ComponentLinkFactory.unboundSourceComponentLink();
+		this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
 		if (!acceptSource(componentId) && sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
-			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+			this.sourceComponentLink = ComponentLinkFactory.unboundSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}
@@ -134,7 +134,7 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		if (!this.acceptDestination(componentId) && destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
-			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+			this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}

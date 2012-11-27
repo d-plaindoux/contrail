@@ -52,7 +52,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	private final UpStreamDataFlow<U> upstreamDataHandler;
 
 	{
-		this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+		this.sourceComponentLink = ComponentLinkFactory.unboundSourceComponentLink();
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 
 	private void disconnectSource(ComponentId componentId) throws ComponentDisconnectionRejectedException {
 		if (!acceptSource(componentId) && this.sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
-			this.sourceComponentLink = ComponentLinkFactory.undefSourceComponentLink();
+			this.sourceComponentLink = ComponentLinkFactory.unboundSourceComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}

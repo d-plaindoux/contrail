@@ -53,7 +53,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	private final DownStreamDataFlow<D> downStreamDataHandler;
 
 	{
-		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
-			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+			this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}

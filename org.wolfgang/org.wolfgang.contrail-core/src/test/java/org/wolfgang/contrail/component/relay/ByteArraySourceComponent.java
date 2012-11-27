@@ -21,8 +21,8 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;

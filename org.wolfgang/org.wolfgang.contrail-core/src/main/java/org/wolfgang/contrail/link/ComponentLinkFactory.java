@@ -40,7 +40,7 @@ public final class ComponentLinkFactory {
 	/**
 	 * Undefined source component link
 	 */
-	public static <U, D> SourceComponentLink<U, D> undefSourceComponentLink() {
+	public static <U, D> SourceComponentLink<U, D> unboundSourceComponentLink() {
 		return new SourceComponentLink<U, D>() {
 
 			@Override
@@ -63,7 +63,7 @@ public final class ComponentLinkFactory {
 	/**
 	 * Undefined destination component link
 	 */
-	public static <U, D> DestinationComponentLink<U, D> undefDestinationComponentLink() {
+	public static <U, D> DestinationComponentLink<U, D> unboundDestinationComponentLink() {
 		return new DestinationComponentLink<U, D>() {
 
 			@Override

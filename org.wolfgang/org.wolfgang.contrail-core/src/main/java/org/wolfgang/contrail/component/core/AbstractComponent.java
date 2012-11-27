@@ -20,14 +20,11 @@ package org.wolfgang.contrail.component.core;
 
 import static org.wolfgang.common.message.MessagesProvider.message;
 
-import java.util.Arrays;
-
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
-import org.wolfgang.contrail.component.factory.Components;
-import org.wolfgang.contrail.link.ComponentManager;
+import org.wolfgang.contrail.component.Components;
 
 /**
  * The <code>AbstractComponent</code> is the basic component implementation

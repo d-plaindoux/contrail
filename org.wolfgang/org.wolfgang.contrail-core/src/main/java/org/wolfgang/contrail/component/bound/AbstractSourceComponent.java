@@ -44,7 +44,7 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 	private DestinationComponentLink<U, D> destinationComponentLink;
 
 	{
-		this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+		this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 
 	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
 		if (!acceptDestination(componentId) && this.destinationComponentLink.getDestinationComponent().getComponentId().equals(componentId)) {
-			this.destinationComponentLink = ComponentLinkFactory.undefDestinationComponentLink();
+			this.destinationComponentLink = ComponentLinkFactory.unboundDestinationComponentLink();
 		} else {
 			throw new ComponentNotConnectedException(NOT_YET_CONNECTED.format());
 		}

@@ -41,7 +41,9 @@ define([ "require", "Core/jObj" ],
                     newData;
 
                 for (newData in transformed) {
-                    dataFlow.handleData(newData);
+                    if (transformed.hasOwnProperty(newData)) {
+                        dataFlow.handleData(newData);
+                    }
                 }
             });
 
@@ -52,7 +54,9 @@ define([ "require", "Core/jObj" ],
                     newData;
 
                 for (newData in transformed) {
-                    dataFlow.handleData(newData);
+                    if (transformed.hasOwnProperty(newData)) {
+                        dataFlow.handleData(newData);
+                    }
                 }
             });
 

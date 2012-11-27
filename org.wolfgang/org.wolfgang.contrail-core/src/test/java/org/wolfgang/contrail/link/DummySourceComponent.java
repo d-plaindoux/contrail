@@ -18,8 +18,8 @@
 
 package org.wolfgang.contrail.link;
 
+import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.component.factory.Components;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
