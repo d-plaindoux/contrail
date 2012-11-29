@@ -19,15 +19,13 @@
 /*global define*/
 
 define("Component/Factory", [ "./composition/CompositionComponentFactory", "./core/CoreComponentFactory", "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory", "./transducer/TransducerComponentFactory" ],
-    function (Composition, Basic, Bound, Pipeline, Transducer) {
+    function (Composition, Core, Bound, Pipeline, Transducer) {
         "use strict";
 
         var Factory = {};
 
         Factory.core = {};
-        Factory.core.component = Basic.component;
-        Factory.core.source = Basic.source;
-        Factory.core.destination = Basic.destination;
+        Factory.core = Core;
         Factory.core.pipeline = Pipeline.component;
 
         Factory.initial = Bound.initial;

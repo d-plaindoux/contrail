@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DestinationComponentLink<U, D> extends ComponentLink {
+public interface DestinationComponentLink<U, D> extends DisposableLink {
 
 	/**
 	 * Method providing the destination
@@ -35,12 +35,5 @@ public interface DestinationComponentLink<U, D> extends ComponentLink {
 	 * @return the upstream destination
 	 */
 	DestinationComponent<U, D> getDestinationComponent();
-
-	/**
-	 * Method called whether the component link manager must be retrieved
-	 * 
-	 * @return the component link manager
-	 */
-	ComponentManager getComponentLinkManager();
 
 }

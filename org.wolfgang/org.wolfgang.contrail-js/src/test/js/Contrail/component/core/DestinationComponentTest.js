@@ -49,10 +49,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.destination();
+                    c1 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    c2 = Factory.component.core.source();
+                    c2 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -68,20 +68,20 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.destination();
+                    c1 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    c2 = Factory.component.core.source();
+                    c2 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    lm = Factory.link.manager();
+                    lm = Factory.link;
                 }).
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
                 }).
                 When(function () {
-                    lm.link(c2, c1);
+                    lm.connect(c2, c1);
                 }).
                 Then(function () {
                     QUnit.equal(c1.acceptSource(c2.getComponentId()), false, "Source must be setup");
@@ -97,7 +97,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.destination();
+                    c1 = Factory.component.core.destinationWithSingleSource();
                 }).
                 WhenNothing.
                 Then(function () {

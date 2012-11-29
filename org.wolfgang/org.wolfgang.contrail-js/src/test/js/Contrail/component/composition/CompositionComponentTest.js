@@ -27,10 +27,10 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ ]);
+                    compose = Factory.component.compose([ ]);
                 }).
                 ThenError(function (exception) {
                     QUnit.equal(true, true, "Expected Exception " + exception + " catch");
@@ -42,13 +42,13 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    component = Factory.component.core.source();
+                    component = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ component ]);
+                    compose = Factory.component.compose([ component ]);
                 }).
                 Then(function () {
                     QUnit.equal(compose, component, " Composition One component is the component itself");
@@ -60,16 +60,16 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.core.source();
+                    component1 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    component2 = Factory.component.core.destination();
+                    component2 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                    compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
                     QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
@@ -90,13 +90,13 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     component1 = Factory.component.core.pipeline();
                 }).
                 And(function () {
-                    component2 = Factory.component.core.destination();
+                    component2 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                    compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
                     QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
@@ -114,16 +114,16 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.core.source();
+                    component1 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
                     component2 = Factory.component.core.pipeline();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                    compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
                     QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
@@ -147,10 +147,10 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     component2 = Factory.component.core.pipeline();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager();
+                    linkManager = Factory.link.manager;
                 }).
                 When(function () {
-                    compose = Factory.component.compose(linkManager, [ component1, component2 ]);
+                    compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
                     QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");

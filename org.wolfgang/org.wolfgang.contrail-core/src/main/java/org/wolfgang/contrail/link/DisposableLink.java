@@ -16,27 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+package org.wolfgang.contrail.link;
 
-define([ "Core/jObj" ],
-    function (jObj) {
-        "use strict";
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 
-        function Link(linkManager) {
-            jObj.bless(this);
+/**
+ * The <code>Disposable</code> defines disposable capability
+ * 
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public interface DisposableLink {
 
-            this.manager = linkManager;
-        }
+	/**
+	 * Method called whether the connection must be disposed.
+	 * 
+	 * @throws ComponentDisconnectionRejectedException
+	 *             thrown if the dispose cannot be performed
+	 */
+	void dispose() throws ComponentDisconnectionRejectedException;
 
-        Link.init = jObj.constructor([jObj.types.Named("ComponentLinkManager")],
-            function (linkManager) {
-                return new Link(linkManager);
-            });
-
-        Link.prototype.getLinkManager = jObj.method([], jObj.types.Named("ComponentLinkManager"),
-            function () {
-                return this.linkManager;
-            });
-
-        return Link.init;
-    });
+}

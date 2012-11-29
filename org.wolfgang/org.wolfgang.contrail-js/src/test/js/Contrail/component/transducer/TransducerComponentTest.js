@@ -25,29 +25,19 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
         jCC.scenario("Check Component generation", function () {
             var c1, c2;
 
+            c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+            c2 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+
             jCC.
                 Given(function () {
                     c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 And(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c2 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
                     QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
-                });
-        });
-
-        jCC.scenario("Check Component type to be a PipelineComponent", function () {
-            var c1;
-
-            jCC.
-                Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
-                }).
-                WhenNothing.
-                Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
         });
 
@@ -61,6 +51,19 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of TransducerComponent");
+                });
+        });
+
+        jCC.scenario("Check Component type to be a PipelineComponent", function () {
+            var c1;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                }).
+                WhenNothing.
+                Then(function () {
+                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
         });
 

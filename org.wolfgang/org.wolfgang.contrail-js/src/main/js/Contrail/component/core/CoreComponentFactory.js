@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define([ "./Component", "./SourceComponent", "./DestinationComponent" ],
-    function (component, sourceComponent, destinationComponent) {
+define([ "./Component", "./SourceComponent", "./SourceComponentWithSingleDestination", "./DestinationComponent", "./DestinationComponentWithSingleSource" ],
+    function (component, sourceComponent, sourceComponentWithSingleDestination, destinationComponent, destinationComponentWithSingleSource) {
         "use strict";
 
         var Factory = {};
@@ -34,6 +34,14 @@ define([ "./Component", "./SourceComponent", "./DestinationComponent" ],
 
         Factory.destination = function () {
             return destinationComponent();
+        };
+
+        Factory.sourceWithSingleDestination = function () {
+            return sourceComponentWithSingleDestination();
+        };
+
+        Factory.destinationWithSingleSource = function () {
+            return destinationComponentWithSingleSource();
         };
 
         return Factory;

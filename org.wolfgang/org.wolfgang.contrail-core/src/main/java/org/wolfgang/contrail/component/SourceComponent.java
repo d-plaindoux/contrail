@@ -19,8 +19,8 @@
 package org.wolfgang.contrail.component;
 
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 
 /**
  * The <code>SourceComponent</code> is capable to send event in the framework.
@@ -59,6 +59,6 @@ public interface SourceComponent<U, D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             is the connection cannot be performed
 	 */
-	ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
+	DisposableLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
 
 }

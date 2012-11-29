@@ -46,7 +46,7 @@ public class ReversedSourceComponent<U, D> extends AbstractDestinationComponent<
 	 * @param component
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public ReversedSourceComponent(ComponentManager manager, SourceComponent<D, U> component) throws ComponentConnectionRejectedException {
+	public ReversedSourceComponent(SourceComponent<D, U> component) throws ComponentConnectionRejectedException {
 		super();
 
 		this.terminalComponent = new TerminalComponent<D, U>(DataFlows.closable(new UpStreamDataFlowAdapter<D>() {
@@ -57,7 +57,7 @@ public class ReversedSourceComponent<U, D> extends AbstractDestinationComponent<
 			}
 		}));
 
-		manager.connect(component, terminalComponent);
+		ComponentManager.connect(component, terminalComponent);
 	}
 
 	@Override

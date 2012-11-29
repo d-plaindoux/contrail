@@ -38,17 +38,17 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 And(function () {
                     terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                        terminalComponent.getDownStreamDataFlow().handleData(data);
+                        terminalComponent.getSource().getDownStreamDataFlow().handleData(data);
                     });
                 }).
                 And(function () {
                     terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
-                    Factory.link.manager().link(initialComponent, terminalComponent);
+                    Factory.link.connect(initialComponent, terminalComponent);
                 }).
                 When(function () {
-                    initialComponent.getUpStreamDataFlow().handleData("Hello, World!");
+                    initialComponent.getDestination().getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
                     QUnit.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
@@ -72,20 +72,20 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 And(function () {
                     terminalStream = Factory.flow.core();
                     terminalStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                        terminalComponent.getDownStreamDataFlow().handleData(data);
+                        terminalComponent.getSource().getDownStreamDataFlow().handleData(data);
                     });
                 }).
                 And(function () {
                     terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
-                    Factory.link.manager().link(initialComponent, terminalComponent);
+                    Factory.link.connect(initialComponent, terminalComponent);
                 }).
                 When(function () {
-                    initialComponent.getUpStreamDataFlow().handleData("Hello,");
+                    initialComponent.getDestination().getUpStreamDataFlow().handleData("Hello,");
                 }).
                 And(function () {
-                    initialComponent.getUpStreamDataFlow().handleData(" World!");
+                    initialComponent.getDestination().getUpStreamDataFlow().handleData(" World!");
                 }).
                 Then(function () {
                     QUnit.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
@@ -99,7 +99,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 Given(function () {
                     initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                        initialComponent.getUpStreamDataFlow().handleData(data);
+                        initialComponent.getDestination().getUpStreamDataFlow().handleData(data);
                     });
                 }).
                 And(function () {
@@ -115,10 +115,10 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
-                    Factory.link.manager().link(initialComponent, terminalComponent);
+                    Factory.link.connect(initialComponent, terminalComponent);
                 }).
                 When(function () {
-                    terminalComponent.getDownStreamDataFlow().handleData("Hello, World!");
+                    terminalComponent.getSource().getDownStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
                     QUnit.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
@@ -133,7 +133,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                 Given(function () {
                     initialStream = Factory.flow.core();
                     initialStream.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                        initialComponent.getUpStreamDataFlow().handleData(data);
+                        initialComponent.getDestination().getUpStreamDataFlow().handleData(data);
                     });
                 }).
                 And(function () {
@@ -149,13 +149,13 @@ require([ "qunit", "Core/jObj", "Contrail/Factory" , "test/jCC"],
                     terminalComponent = Factory.component.terminal(terminalStream);
                 }).
                 And(function () {
-                    Factory.link.manager().link(initialComponent, terminalComponent);
+                    Factory.link.connect(initialComponent, terminalComponent);
                 }).
                 When(function () {
-                    terminalComponent.getDownStreamDataFlow().handleData("Hello,");
+                    terminalComponent.getSource().getDownStreamDataFlow().handleData("Hello,");
                 }).
                 And(function () {
-                    terminalComponent.getDownStreamDataFlow().handleData(" World!");
+                    terminalComponent.getSource().getDownStreamDataFlow().handleData(" World!");
                 }).
                 Then(function () {
                     QUnit.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");

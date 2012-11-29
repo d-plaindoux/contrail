@@ -31,24 +31,26 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransducer" ],
         jObj.bless = function (/*arguments*/) {
             var i, key, parameters = arguments;
 
-            if (arguments.length > 0) {
-                // Extension and supers
-                for (i = 1; i < parameters.length; i += 1) {
-                    jQuery.extend(parameters[0], parameters[i]);
-                }
+            if (arguments.length === 0) {
+                throw { message:"L.bless.requires.one.element.at.least"};
+            }
 
-                // Inheritance
-                parameters[0].inherit = {};
+            // Extension and supers
+            for (i = 1; i < parameters.length; i += 1) {
+                jQuery.extend(parameters[0], parameters[i]);
+            }
 
-                for (i = 1; i < parameters.length; i += 1) {
-                    if (parameters[i] && parameters[i].inherit) {
-                        for (key in parameters[i].inherit) {
-                            if (parameters[i].inherit.hasOwnProperty(key)) {
-                                parameters[0].inherit[key] = true;
-                            }
+            // Inheritance
+            parameters[0].inherit = {};
+
+            for (i = 1; i < parameters.length; i += 1) {
+                if (parameters[i] && parameters[i].inherit) {
+                    for (key in parameters[i].inherit) {
+                        if (parameters[i].inherit.hasOwnProperty(key)) {
+                            parameters[0].inherit[key] = true;
                         }
-                        parameters[0].inherit[jType.getClass(parameters[i])] = true;
                     }
+                    parameters[0].inherit[jType.getClass(parameters[i])] = true;
                 }
             }
 

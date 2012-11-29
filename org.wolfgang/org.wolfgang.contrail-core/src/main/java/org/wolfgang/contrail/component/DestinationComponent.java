@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.component;
 
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
@@ -60,6 +60,6 @@ public interface DestinationComponent<U, D> extends Component {
 	 * @throws ComponentConnectionRejectedException
 	 *             if the connection cannot be performed
 	 */
-	ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
+	DisposableLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException;
 
 }

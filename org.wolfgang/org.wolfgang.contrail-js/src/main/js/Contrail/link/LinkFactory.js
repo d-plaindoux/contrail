@@ -18,15 +18,14 @@
 
 /*global define*/
 
-define("Link/Factory", [ "./ComponentLinkManager", "./ComponentLink", "./Link", "./SourceLink", "./DestinationLink" ],
-    function (componentLinkManager, componentLink, link, sourceLink, destinationLink) {
+define("Link/Factory", [ "./ComponentManager", "./ComponentLink", "./SourceLink", "./DestinationLink" ],
+    function (componentLinkManager, componentLink, sourceLink, destinationLink) {
         "use strict";
 
         var Factory = {};
 
-        Factory.manager = componentLinkManager;
+        Factory.connect = componentLinkManager;
         Factory.components = componentLink;
-        Factory.core = link;
         Factory.source = sourceLink;
         Factory.destination = destinationLink;
 

@@ -22,14 +22,14 @@ define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        var DestinationCompositionComponent = function (linkManager, components) {
+        var DestinationCompositionComponent = function (components) {
             jObj.bless(this, require("Component/Factory").core.destination());
             this.components = components;
         };
 
-        DestinationCompositionComponent.init = jObj.constructor([ jObj.types.Named("ComponentLinkManager"), jObj.types.Array ],
-            function (linkManager, components) {
-                return new DestinationCompositionComponent(linkManager, components);
+        DestinationCompositionComponent.init = jObj.constructor([ jObj.types.Array ],
+            function (components) {
+                return new DestinationCompositionComponent(components);
             });
 
         return DestinationCompositionComponent.init;

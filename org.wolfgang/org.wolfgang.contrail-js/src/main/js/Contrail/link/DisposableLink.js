@@ -18,23 +18,21 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj" ],
-    function (require, jObj) {
+define([ "Core/jObj"],
+    function (jObj) {
         "use strict";
 
-        function PipelineComponent() {
-            var Factory = require("Component/Factory");
-            jObj.bless(this, Factory.core.sourceWithSingleDestination(), Factory.core.destinationWithSingleSource());
+        function DisposableLink() {
+            jObj.bless(this);
         }
 
-        /**
-         * Construction initialisation
-         */
-        PipelineComponent.init = jObj.constructor([],
+        DisposableLink.init = jObj.constructor([],
             function () {
-                return new PipelineComponent();
-            });
+                // Nothing to do
+            }
+        );
 
+        DisposableLink.prototype.dispose = jObj.procedure([]);
 
-        return PipelineComponent.init;
+        return DisposableLink.init;
     });

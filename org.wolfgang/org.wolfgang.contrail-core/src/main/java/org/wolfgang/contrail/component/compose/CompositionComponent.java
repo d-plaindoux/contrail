@@ -43,7 +43,7 @@ public class CompositionComponent extends AbstractComponent implements Component
 	 * 
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public CompositionComponent(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionComponent(Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;
@@ -51,7 +51,7 @@ public class CompositionComponent extends AbstractComponent implements Component
 		initialComponent = Coercion.coerce(components[0], SourceComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
-			linkManager.connect(components[i - 1], components[i]);
+			ComponentManager.connect(components[i - 1], components[i]);
 		}
 
 		terminalComponent = Coercion.coerce(components[components.length - 1], DestinationComponent.class);

@@ -49,10 +49,10 @@ require([ "Contrail/Factory", "Core/jObj", "qunit" , "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.destination();
+                    c1 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    c2 = Factory.component.core.source();
+                    c2 = Factory.component.core.sourceWithSingleDestination();
 
                 }).
                 WhenNothing.
@@ -69,20 +69,20 @@ require([ "Contrail/Factory", "Core/jObj", "qunit" , "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.destination();
+                    c1 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    c2 = Factory.component.core.source();
+                    c2 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    lm = Factory.link.manager();
+                    lm = Factory.link;
                 }).
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(c2.acceptDestination(c1.getComponentId()), true, "Destination must be unbound");
                 }).
                 When(function () {
-                    lm.link(c2, c1);
+                    lm.connect(c2, c1);
                 }).
                 Then(function () {
                     QUnit.equal(c2.acceptDestination(c1.getComponentId()), false, "Destination must be setup");

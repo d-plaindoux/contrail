@@ -26,9 +26,9 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
@@ -88,11 +88,11 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
+	public DisposableLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (this.acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
-			return new ComponentLink() {
+			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
 					disconnectSource(componentId);
@@ -117,11 +117,11 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
+	public DisposableLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (this.acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;
-			return new ComponentLink() {
+			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
 					disconnectDestination(componentId);

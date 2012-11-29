@@ -23,7 +23,7 @@ define([ "require", "Core/jObj"],
         "use strict";
 
         function TerminalComponent(dataFlow) {
-            jObj.bless(this, require("Component/Factory").core.destination());
+            jObj.bless(this, require("Component/Factory").core.destinationWithSingleSource());
 
             this.dataFlow = dataFlow;
         }
@@ -36,15 +36,6 @@ define([ "require", "Core/jObj"],
         TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.dataFlow;
-            });
-
-        TerminalComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
-            function () {
-                if (this.sourceLink === null) {
-                    throw jObj.exception("L.source.not.connected");
-                } else {
-                    return this.sourceLink.getSource().getDownStreamDataFlow();
-                }
             });
 
         return TerminalComponent.init;

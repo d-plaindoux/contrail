@@ -48,7 +48,7 @@ public class ReversedPipelIneComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	 * @param component
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public ReversedPipelIneComponent(ComponentManager manager, PipelineComponent<D2, U2, D1, U1> component) throws ComponentConnectionRejectedException {
+	public ReversedPipelIneComponent(PipelineComponent<D2, U2, D1, U1> component) throws ComponentConnectionRejectedException {
 		super();
 
 		this.initialComponent = new InitialComponent<D2, U2>(DataFlows.closable(new DownStreamDataFlow<U2>() {
@@ -76,8 +76,8 @@ public class ReversedPipelIneComponent<U1, D1, U2, D2> extends AbstractPipelineC
 			}
 		}));
 
-		manager.connect(initialComponent, component);
-		manager.connect(component, terminalComponent);
+		ComponentManager.connect(initialComponent, component);
+		ComponentManager.connect(component, terminalComponent);
 	}
 
 	@Override

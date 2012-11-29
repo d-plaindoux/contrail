@@ -26,9 +26,9 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 
 /**
  * <code>ComposedPipelineComponent</code>
@@ -47,7 +47,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	public CompositionSourceComponent(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionSourceComponent(Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;
@@ -55,7 +55,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 		initialComponent = Coercion.coerce(components[0], SourceComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
-			linkManager.connect(components[i - 1], components[i]);
+			ComponentManager.connect(components[i - 1], components[i]);
 		}
 
 		terminalComponent = Coercion.coerce(components[components.length - 1], SourceComponent.class);
@@ -82,7 +82,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
+	public DisposableLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
 		return this.terminalComponent.connectDestination(handler);
 	}
 

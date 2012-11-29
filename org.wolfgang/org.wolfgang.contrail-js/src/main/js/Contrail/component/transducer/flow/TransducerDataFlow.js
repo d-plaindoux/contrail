@@ -27,12 +27,12 @@ define([ "require", "Core/jObj" ],
             this.transducer = transducer;
         }
 
-        TransducerDataFlow.init = jObj.constructor([jObj.types.Any, "DataTransducer"],
+        TransducerDataFlow.init = jObj.constructor([ jObj.types.Named("Transducer") ],
             function (transducer) {
                 return new TransducerDataFlow(transducer);
             });
 
-        TransducerDataFlow.prototype.getDataFlow = jObj.method([], "DataFlow");
+        TransducerDataFlow.prototype.getDataFlow = jObj.method([], jObj.types.Named("DataFlow"));
 
         TransducerDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
             function (data) {

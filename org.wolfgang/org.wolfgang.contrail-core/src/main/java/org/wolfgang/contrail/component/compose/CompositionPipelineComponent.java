@@ -29,9 +29,9 @@ import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
@@ -51,7 +51,7 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	 * @throws ComponentConnectionRejectedException
 	 */
 	@SuppressWarnings("unchecked")
-	public CompositionPipelineComponent(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public CompositionPipelineComponent(Component... components) throws ComponentConnectionRejectedException {
 		super();
 
 		assert components.length > 1;
@@ -59,7 +59,7 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 		initialComponent = Coercion.coerce(components[0], DestinationComponent.class);
 
 		for (int i = 1; i < components.length; i++) {
-			linkManager.connect(components[i - 1], components[i]);
+			ComponentManager.connect(components[i - 1], components[i]);
 		}
 
 		terminalComponent = Coercion.coerce(components[components.length - 1], SourceComponent.class);
@@ -81,7 +81,7 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
+	public DisposableLink connectSource(SourceComponentLink<U1, D1> handler) throws ComponentConnectionRejectedException {
 		return this.initialComponent.connectSource(handler);
 	}
 
@@ -101,7 +101,7 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
+	public DisposableLink connectDestination(DestinationComponentLink<U2, D2> handler) throws ComponentConnectionRejectedException {
 		return this.terminalComponent.connectDestination(handler);
 	}
 

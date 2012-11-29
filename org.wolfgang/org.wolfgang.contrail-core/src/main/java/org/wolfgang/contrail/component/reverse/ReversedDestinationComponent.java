@@ -46,7 +46,7 @@ public class ReversedDestinationComponent<U, D> extends AbstractSourceComponent<
 	 * @param component
 	 * @throws ComponentConnectionRejectedException
 	 */
-	public ReversedDestinationComponent(ComponentManager manager, DestinationComponent<D, U> component) throws ComponentConnectionRejectedException {
+	public ReversedDestinationComponent(DestinationComponent<D, U> component) throws ComponentConnectionRejectedException {
 		super();
 
 		this.initialComponent = new InitialComponent<D, U>(DataFlows.closable(new DownStreamDataFlowAdapter<U>() {
@@ -56,7 +56,7 @@ public class ReversedDestinationComponent<U, D> extends AbstractSourceComponent<
 			}
 		}));
 
-		manager.connect(initialComponent, component);
+		ComponentManager.connect(initialComponent, component);
 	}
 
 	@Override

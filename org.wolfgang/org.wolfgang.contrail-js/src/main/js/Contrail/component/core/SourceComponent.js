@@ -24,8 +24,6 @@ define([ "require", "Core/jObj" ],
 
         function SourceComponent() {
             jObj.bless(this, require("Component/Factory").core.component());
-
-            this.destinationLink = null;
         }
 
         SourceComponent.init = jObj.constructor([],
@@ -33,29 +31,15 @@ define([ "require", "Core/jObj" ],
                 return new SourceComponent();
             });
 
-        SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
-            function (componentId) {
-                return this.destinationLink === null;
-            });
-
-        SourceComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
-            function (destinationLink) {
-                this.destinationLink = destinationLink;
-                return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
-            });
-
-        SourceComponent.prototype.closeUpStream = jObj.procedure([], function () {
-            if (this.destinationLink !== null) {
-                this.destinationLink.getSource().closeUpStream();
-                this.destinationLink = null;
-            } else {
-                throw jObj.exception("L.destination.not.connected");
-            }
-        });
-
         /**
          * Abstract methods
          */
+
+        SourceComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean);
+
+        SourceComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"));
+
+        SourceComponent.prototype.closeUpStream = jObj.procedure([]);
 
         SourceComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow");
 

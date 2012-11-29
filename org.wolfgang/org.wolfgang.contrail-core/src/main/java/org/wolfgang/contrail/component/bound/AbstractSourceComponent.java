@@ -26,9 +26,9 @@ import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 
 /**
  * <code>AbstractSourceComponent</code>
@@ -78,11 +78,11 @@ public abstract class AbstractSourceComponent<U, D> extends AbstractComponent im
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
+	public DisposableLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
 		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;
-			return new ComponentLink() {
+			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
 					disconnectDestination(componentId);

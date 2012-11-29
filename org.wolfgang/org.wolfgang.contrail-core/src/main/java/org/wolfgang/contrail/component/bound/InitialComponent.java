@@ -29,9 +29,9 @@ import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 import org.wolfgang.contrail.link.DestinationComponentLink;
+import org.wolfgang.contrail.link.DisposableLink;
 
 /**
  * The <code>InitialComponent</code> is capable to send only event in the
@@ -99,11 +99,11 @@ public class InitialComponent<U, D> extends AbstractComponent implements SourceC
 	}
 
 	@Override
-	public ComponentLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
+	public DisposableLink connectDestination(DestinationComponentLink<U, D> handler) throws ComponentConnectedException {
 		final ComponentId componentId = handler.getDestinationComponent().getComponentId();
 		if (acceptDestination(componentId)) {
 			this.destinationComponentLink = handler;
-			return new ComponentLink() {
+			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
 					disconnectDestination(componentId);

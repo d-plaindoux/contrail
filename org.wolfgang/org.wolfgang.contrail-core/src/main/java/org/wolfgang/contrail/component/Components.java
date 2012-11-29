@@ -34,7 +34,6 @@ import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentManager;
 
 /**
  * <code>BoundComponents</code>
@@ -68,32 +67,32 @@ public final class Components {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Component compose(ComponentManager linkManager, Component... components) throws ComponentConnectionRejectedException {
+	public static Component compose(Component... components) throws ComponentConnectionRejectedException {
 		if (components.length == 0) {
 			throw new ComponentConnectionRejectedException("TODO");
 		} else if (components.length == 1) {
 			return components[0];
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class, DestinationComponent.class) && Coercion.canCoerce(components[components.length - 1], SourceComponent.class, DestinationComponent.class)) {
-			return new CompositionPipelineComponent(linkManager, components);
+			return new CompositionPipelineComponent(components);
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], SourceComponent.class, DestinationComponent.class)) {
-			return new CompositionSourceComponent(linkManager, components);
+			return new CompositionSourceComponent(components);
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class, DestinationComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
-			return new CompositionDestinationComponent(linkManager, components);
+			return new CompositionDestinationComponent(components);
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
-			return new CompositionComponent(linkManager, components);
+			return new CompositionComponent(components);
 		} else {
 			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Component reverse(ComponentManager linkManager, Component component) throws ComponentConnectionRejectedException {
+	public static Component reverse(Component component) throws ComponentConnectionRejectedException {
 		if (Coercion.canCoerce(component, PipelineComponent.class)) {
-			return new ReversedPipelIneComponent(linkManager, Coercion.coerce(component, PipelineComponent.class));
+			return new ReversedPipelIneComponent(Coercion.coerce(component, PipelineComponent.class));
 		} else if (Coercion.canCoerce(component, SourceComponent.class)) {
-			return new ReversedSourceComponent(linkManager, Coercion.coerce(component, SourceComponent.class));
+			return new ReversedSourceComponent(Coercion.coerce(component, SourceComponent.class));
 		} else if (Coercion.canCoerce(component, DestinationComponent.class)) {
-			return new ReversedDestinationComponent(linkManager, Coercion.coerce(component, DestinationComponent.class));
+			return new ReversedDestinationComponent(Coercion.coerce(component, DestinationComponent.class));
 		} else {
 			return null;
 		}

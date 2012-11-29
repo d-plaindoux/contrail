@@ -24,10 +24,10 @@ define([ "./jType" ],
 
         var jModel = {};
 
-        jModel.modelisation = true;
+        jModel.specificationIsEnable = true;
 
-        jModel.activateModelisation = function (value) {
-            jModel.modelisation = value;
+        jModel.enableSpecification = function (value) {
+            jModel.specificationIsEnable = value;
         };
 
         /**
@@ -38,7 +38,7 @@ define([ "./jType" ],
          * @return an exception
          */
         jModel.exception = function (message, cause) {
-            throw { message:message, cause:cause };
+            return { message:message, cause:cause };
         };
 
         /**
@@ -51,12 +51,12 @@ define([ "./jType" ],
         jModel.constructor = function (profil, constructor) {
             var result;
 
-            if (!jModel.modelisation) {
+            if (!jModel.specificationIsEnable) {
                 result = constructor;
             } else {
                 result = function () {
                     if (arguments.length !== profil.length) {
-                        throw jModel.exception("L.profil.error");
+                        throw jModel.exception("L.profil.arguments.length.error", { method:constructor, expect:profil.length, actual:arguments.length});
                     } else {
                         var index;
 
@@ -98,12 +98,12 @@ define([ "./jType" ],
 
             if (method === undefined) {
                 result = undefined;
-            } else if (!jModel.modelisation) {
+            } else if (!jModel.specificationIsEnable) {
                 result = method;
             } else {
                 result = function () {
                     if (arguments.length !== profil.length) {
-                        throw jModel.exception("L.profil.error");
+                        throw jModel.exception("L.profil.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length});
                     } else {
                         var index, result;
 

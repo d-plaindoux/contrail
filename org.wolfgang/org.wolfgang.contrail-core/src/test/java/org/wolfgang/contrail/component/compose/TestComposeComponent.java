@@ -63,9 +63,7 @@ public class TestComposeComponent {
 				sourceFuture.setValue(data);
 			}
 		});
-
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
-		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = Components.compose(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
@@ -74,8 +72,8 @@ public class TestComposeComponent {
 			}
 		});
 
-		componentLinkManagerImpl.connect(initialComponent, composedComponent);
-		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
+		ComponentManager.connect(initialComponent, composedComponent);
+		ComponentManager.connect(composedComponent, terminalComponent);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
@@ -107,9 +105,7 @@ public class TestComposeComponent {
 		final Component[] components = { initialComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
-
-		Components.compose(componentLinkManagerImpl, components);
+		Components.compose(components);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
@@ -141,11 +137,9 @@ public class TestComposeComponent {
 		final Component[] components = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
+		final Component compose = Components.compose(components);
 
-		final Component compose = Components.compose(componentLinkManagerImpl, components);
-
-		componentLinkManagerImpl.connect(initialComponent, compose);
+		ComponentManager.connect(initialComponent, compose);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
@@ -177,11 +171,9 @@ public class TestComposeComponent {
 		final Component[] components = { initialComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
+		final Component compose = Components.compose(components);
 
-		final Component compose = Components.compose(componentLinkManagerImpl, components);
-
-		componentLinkManagerImpl.connect(compose, terminalComponent);
+		ComponentManager.connect(compose, terminalComponent);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
@@ -214,12 +206,10 @@ public class TestComposeComponent {
 
 		final Component[] components2 = { new CoercionTransducerFactory<String>(String.class).createComponent(), terminalComponent };
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
+		final Component compose1 = Components.compose(components1);
+		final Component compose2 = Components.compose(components2);
 
-		final Component compose1 = Components.compose(componentLinkManagerImpl, components1);
-		final Component compose2 = Components.compose(componentLinkManagerImpl, components2);
-
-		componentLinkManagerImpl.connect(compose1, compose2);
+		ComponentManager.connect(compose1, compose2);
 
 		terminalComponent.getDownStreamDataHandler().handleData(source);
 		initialComponent.getUpStreamDataFlow().handleData(sourceFuture.get());
@@ -233,14 +223,13 @@ public class TestComposeComponent {
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new CoercionTransducerFactory<String>(String.class).createComponent() };
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DownStreamDataFlowAdapter<byte[]>());
-		final Component composedComponent = Components.compose(componentLinkManagerImpl, pipelines);
+		final Component composedComponent = Components.compose(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = Components.terminal(new UpStreamDataFlowAdapter<String>());
 
-		componentLinkManagerImpl.connect(initialComponent, composedComponent);
-		componentLinkManagerImpl.connect(composedComponent, terminalComponent);
+		ComponentManager.connect(initialComponent, composedComponent);
+		ComponentManager.connect(composedComponent, terminalComponent);
 
 		try {
 			terminalComponent.getDownStreamDataHandler().handleData(source);

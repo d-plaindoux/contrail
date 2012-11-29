@@ -49,7 +49,6 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
@@ -71,10 +70,10 @@ public class TestReverseComponent {
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
-		final Component reversedComponent = Components.reverse(componentLinkManagerImpl, Components.compose(componentLinkManagerImpl, pipelines));
+		final Component reversedComponent = Components.reverse(Components.compose(pipelines));
 
-		componentLinkManagerImpl.connect(pingComponent, reversedComponent);
-		componentLinkManagerImpl.connect(reversedComponent, pongComponent);
+		ComponentManager.connect(pingComponent, reversedComponent);
+		ComponentManager.connect(reversedComponent, pongComponent);
 
 		pingComponent.getUpStreamDataFlow().handleData(source);
 		pongComponent.getDownStreamDataHandler().handleData(pongFuture.get());
@@ -86,7 +85,6 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
@@ -108,9 +106,9 @@ public class TestReverseComponent {
 
 		final Component[] pipelines = { pongComponent, new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
-		final Component reversedComponent = Components.reverse(componentLinkManagerImpl, Components.compose(componentLinkManagerImpl, pipelines));
+		final Component reversedComponent = Components.reverse(Components.compose(pipelines));
 
-		componentLinkManagerImpl.connect(pingComponent, reversedComponent);
+		ComponentManager.connect(pingComponent, reversedComponent);
 
 		pingComponent.getUpStreamDataFlow().handleData(source);
 		pongComponent.getUpStreamDataFlow().handleData(pongFuture.get());
@@ -122,7 +120,6 @@ public class TestReverseComponent {
 	@Test
 	public void testReverse03() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
-		final ComponentManager componentLinkManagerImpl = new ComponentManager();
 		final String source = new String("Hello, World!");
 		final FutureResponse<String> pingFuture = new FutureResponse<String>();
 		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
@@ -144,9 +141,9 @@ public class TestReverseComponent {
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent(), pingComponent };
-		final Component reversedComponent = Components.reverse(componentLinkManagerImpl, Components.compose(componentLinkManagerImpl, pipelines));
+		final Component reversedComponent = Components.reverse(Components.compose(pipelines));
 
-		componentLinkManagerImpl.connect(reversedComponent, pongComponent);
+		ComponentManager.connect(reversedComponent, pongComponent);
 
 		pingComponent.getDownStreamDataHandler().handleData(source);
 		pongComponent.getDownStreamDataHandler().handleData(pongFuture.get());

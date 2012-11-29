@@ -29,8 +29,8 @@ import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
+import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 
 /**
@@ -101,11 +101,11 @@ public class TerminalComponent<U, D> extends AbstractComponent implements Destin
 	}
 
 	@Override
-	public ComponentLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
+	public DisposableLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectedException {
 		final ComponentId componentId = handler.getSourceComponent().getComponentId();
 		if (acceptSource(componentId)) {
 			this.sourceComponentLink = handler;
-			return new ComponentLink() {
+			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
 					disconnectSource(componentId);

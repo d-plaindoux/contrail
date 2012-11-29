@@ -18,11 +18,11 @@
 
 /*global define*/
 
-define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComponent", "./DestinationCompositionComponent", "./CompositionComponent" ],
-    function (jObj, pipelineComposition, sourceComposition, destinationComposition, componentComposition) {
+define([ "require", "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComponent", "./DestinationCompositionComponent", "./CompositionComponent" ],
+    function (require, jObj, pipelineComposition, sourceComposition, destinationComposition, componentComposition) {
         "use strict";
 
-        var CompositionFactory = {}, linkAll, sourceType, destinationType;
+        var CompositionFactory = {}, linkComponents, sourceType, destinationType;
 
         /*
          * Static and private definitions
@@ -38,20 +38,23 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
          * @param components
          * @return {*}
          */
-        linkAll = jObj.method([jObj.types.Named("ComponentLinkManager"), jObj.types.Array ], jObj.types.Array,
-            function (linkManager, components) {
-                var index, current = components[0];
+        linkComponents = jObj.method([ jObj.types.Array ], jObj.types.Array,
+            function (components) {
+                var linkManager, index, current;
+
+                current = components[0];
+                linkManager = require("Contrail/Factory").link;
 
                 for (index = 1; index < components.length; index += 1) {
-                    linkManager.link(current, components[index]);
+                    linkManager.connect(current, components[index]);
                     current = components[index];
                 }
 
                 return components;
             });
 
-        CompositionFactory.compose = jObj.method([jObj.types.Named("ComponentLinkManager"), jObj.types.Array ], jObj.types.Named("Component"),
-            function (linkManager, components) {
+        CompositionFactory.compose = jObj.method([ jObj.types.Array ], jObj.types.Named("Component"),
+            function (components) {
                 var result, first, last;
 
                 if (components.length === 0) {
@@ -68,19 +71,19 @@ define([ "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComp
 
                     if (jObj.ofTypes(first, [ sourceType, destinationType]) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
 
-                        result = pipelineComposition(linkManager, linkAll(linkManager, components));
+                        result = pipelineComposition(linkComponents(components));
 
                     } else if (jObj.ofType(first, sourceType) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
 
-                        result = sourceComposition(linkManager, linkAll(linkManager, components));
+                        result = sourceComposition(linkComponents(components));
 
                     } else if (jObj.ofTypes(first, [ sourceType, destinationType ]) && jObj.ofType(last, destinationType)) {
 
-                        result = destinationComposition(linkManager, linkAll(linkManager, components));
+                        result = destinationComposition(linkComponents(components));
 
                     } else if (jObj.ofType(first, sourceType) && jObj.ofType(last, destinationType)) {
 
-                        result = componentComposition(linkManager, linkAll(linkManager, components));
+                        result = componentComposition(linkComponents(components));
 
                     } else {
                         throw jObj.exception("L.not.compatible.components");

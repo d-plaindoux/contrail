@@ -78,6 +78,6 @@ public abstract class AbstractComponent implements Component {
 		final Component[] allComponents = new Component[components.length + 1];
 		allComponents[0] = this;
 		System.arraycopy(components, 0, allComponents, 1, components.length);
-		return Components.compose(null, allComponents);
+		return Components.compose(allComponents);
 	}
 }

@@ -18,12 +18,12 @@
 
 /*global define*/
 
-define([ "Core/jObj"],
-    function (jObj) {
+define([ "Core/jObj", "./DisposableLink"],
+    function (jObj, disposable) {
         "use strict";
 
         function ComponentLink(source, destination) {
-            jObj.bless(this);
+            jObj.bless(this, disposable());
 
             this.source = source;
             this.destination = destination;

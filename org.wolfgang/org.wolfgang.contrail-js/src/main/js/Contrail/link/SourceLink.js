@@ -18,24 +18,29 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj" ],
-    function (require, jObj) {
+define([ "require", "Core/jObj", "./DisposableLink"],
+    function (require, jObj, disposable) {
         "use strict";
 
-        function SourceLink(source, linkManager) {
-            jObj.bless(this, require("Contrail/Factory").link.core(linkManager));
+        function SourceLink(source) {
+            jObj.bless(this, disposable());
 
             this.source = source;
         }
 
-        SourceLink.init = jObj.constructor([jObj.types.Named("SourceComponent"), jObj.types.Named("ComponentLinkManager")],
-            function (source, linkManager) {
-                return new SourceLink(source, linkManager);
+        SourceLink.init = jObj.constructor([jObj.types.Named("SourceComponent")],
+            function (source) {
+                return new SourceLink(source);
             });
 
         SourceLink.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),
             function () {
                 return this.source;
+            });
+
+        SourceLink.prototype.dispose = jObj.procedure([],
+            function () {
+                // TODO
             });
 
         return SourceLink.init;

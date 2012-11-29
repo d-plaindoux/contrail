@@ -27,7 +27,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface SourceComponentLink<U, D> extends ComponentLink {
+public interface SourceComponentLink<U, D> extends DisposableLink {
 
 	/**
 	 * Method providing the source
@@ -35,12 +35,5 @@ public interface SourceComponentLink<U, D> extends ComponentLink {
 	 * @return the upstream source
 	 */
 	SourceComponent<U, D> getSourceComponent();
-
-	/**
-	 * Method called whether the component link manager must be retrieved
-	 * 
-	 * @return the component link manager
-	 */
-	ComponentManager getComponentLinkManager();
 
 }

@@ -18,7 +18,6 @@
 
 package org.wolfgang.contrail.link;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -37,11 +36,10 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink01() throws CannotCreateDataFlowException {
-		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
-			linkManager.connect(source, destination);
+			ComponentManager.connect(source, destination);
 		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
@@ -49,40 +47,15 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink02() throws CannotCreateDataFlowException {
-		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
-			final ComponentLink connect = linkManager.connect(source, destination);
+			final DisposableLink connect = ComponentManager.connect(source, destination);
 			try {
 				connect.dispose();
 			} catch (ComponentDisconnectionRejectedException e) {
 				fail(e.getMessage());
 			}
-		} catch (ComponentConnectionRejectedException e) {
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testLink03() throws CannotCreateDataFlowException {
-		final ComponentManager linkManager = new ComponentManager();
-		try {
-			final InitialComponent<Void, Void> source = DummySourceComponent.create();
-			final DummyDestinationComponent destination = new DummyDestinationComponent();
-			final ComponentLink connect = linkManager.connect(source, destination);
-
-			assertEquals(1, linkManager.getDestinations(source.getComponentId()).length);
-			assertEquals(1, linkManager.getSources(destination.getComponentId()).length);
-
-			try {
-				connect.dispose();
-			} catch (ComponentDisconnectionRejectedException e) {
-				fail(e.getMessage());
-			}
-
-			assertEquals(0, linkManager.getDestinations(source.getComponentId()).length);
-			assertEquals(0, linkManager.getSources(destination.getComponentId()).length);
 		} catch (ComponentConnectionRejectedException e) {
 			fail(e.getMessage());
 		}
@@ -90,11 +63,10 @@ public class TestComponentLink {
 
 	@Test
 	public void testLink04() throws CannotCreateDataFlowException {
-		final ComponentManager linkManager = new ComponentManager();
 		try {
 			final InitialComponent<Void, Void> source = DummySourceComponent.create();
 			final DummyDestinationComponent destination = new DummyDestinationComponent();
-			final ComponentLink connect = linkManager.connect(source, destination);
+			final DisposableLink connect = ComponentManager.connect(source, destination);
 
 			try {
 				connect.dispose();

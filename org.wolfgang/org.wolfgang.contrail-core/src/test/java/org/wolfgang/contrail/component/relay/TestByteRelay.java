@@ -33,8 +33,8 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.link.ComponentLink;
 import org.wolfgang.contrail.link.ComponentManager;
+import org.wolfgang.contrail.link.DisposableLink;
 
 /**
  * <code>TestByteRelay</code>
@@ -51,7 +51,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+			final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
 			source.getUpStreamDataFlow().handleData(" World!".getBytes());
@@ -72,7 +72,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+			final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 			source.closeUpStream();
 			destination.getDownStreamDataHandler().handleData("Hello,".getBytes());
@@ -94,7 +94,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+			final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 			source.closeUpStream();
 			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
@@ -117,7 +117,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentManager().connect(source, destination);
+			ComponentManager.connect(source, destination);
 
 			destination.closeUpStream();
 			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
@@ -137,7 +137,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentManager().connect(source, destination);
+			ComponentManager.connect(source, destination);
 
 			source.closeDownStream();
 			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
@@ -158,7 +158,7 @@ public class TestByteRelay {
 		try {
 			final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(output);
 			final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-			new ComponentManager().connect(source, destination);
+			ComponentManager.connect(source, destination);
 
 			destination.closeDownStream();
 			source.getUpStreamDataFlow().handleData("Hello,".getBytes());
@@ -206,12 +206,12 @@ public class TestByteRelay {
 
 		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+		final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 		final InitialComponent<byte[], byte[]> source1 = ByteArraySourceComponent.create(null);
 
 		try {
-			new ComponentManager().connect(source1, destination);
+			ComponentManager.connect(source1, destination);
 			fail();
 		} catch (ComponentConnectedException e) {
 			// OK
@@ -225,12 +225,12 @@ public class TestByteRelay {
 
 		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+		final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 		final ByteArrayDestinationComponent destination1 = new ByteArrayDestinationComponent();
 
 		try {
-			new ComponentManager().connect(source, destination1);
+			ComponentManager.connect(source, destination1);
 			fail();
 		} catch (ComponentConnectedException e) {
 			// OK
@@ -244,7 +244,7 @@ public class TestByteRelay {
 
 		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+		final DisposableLink interconnection = ComponentManager.connect(source, destination);
 		interconnection.dispose();
 
 		try {
@@ -260,7 +260,7 @@ public class TestByteRelay {
 
 		final InitialComponent<byte[], byte[]> source = ByteArraySourceComponent.create(null);
 		final ByteArrayDestinationComponent destination = new ByteArrayDestinationComponent();
-		final ComponentLink interconnection = new ComponentManager().connect(source, destination);
+		final DisposableLink interconnection = ComponentManager.connect(source, destination);
 		interconnection.dispose();
 
 		try {
