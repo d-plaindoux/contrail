@@ -46,12 +46,8 @@ define([ "require", "Core/jObj" ],
 
         SourceComponentWithSingleDestination.prototype.closeUpStream = jObj.procedure([],
             function () {
-                if (this.destinationLink !== null) {
-                    this.destinationLink.getDestination().closeUpStream();
-                    this.destinationLink = null;
-                } else {
-                    throw jObj.exception("L.destination.not.connected");
-                }
+                this.getDestination().closeUpStream();
+                this.destinationLink = null;
             });
 
         SourceComponentWithSingleDestination.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),

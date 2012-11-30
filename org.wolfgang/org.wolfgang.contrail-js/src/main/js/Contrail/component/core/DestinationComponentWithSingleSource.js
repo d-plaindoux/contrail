@@ -46,12 +46,8 @@ define([ "require", "Core/jObj" ],
 
         DestinationComponentWithSingleSource.prototype.closeDownStream = jObj.procedure([],
             function () {
-                if (this.sourceLink !== null) {
-                    this.sourceLink.getSource().closeDownStream();
-                    this.sourceLink = null;
-                } else {
-                    throw jObj.exception("L.source.not.connected");
-                }
+                this.getSource().closeDownStream();
+                this.sourceLink = null;
             });
 
         DestinationComponentWithSingleSource.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),

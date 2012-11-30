@@ -20,7 +20,7 @@
 
 require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
     function (Factory, jObj, QUnit, jCC) {
-        "use strict";
+        // "use strict";
 
         jCC.scenario("Check Component generation", function () {
             var c1, c2;
@@ -103,6 +103,36 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
                 WhenNothing.
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                });
+        });
+
+        jCC.scenario("Check Component type to be Component", function () {
+            var initial, transducer, terminal, terminalFlow, composition;
+
+            jCC.
+                Given(function () {
+                    initial = Factory.component.initial(Factory.flow.core());
+                }).
+                And(function () {
+                    transducer = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                }).
+                And(function () {
+                    terminalFlow = Factory.flow.core();
+                    terminalFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = data;
+                    });
+                }).
+                And(function () {
+                    terminal = Factory.component.terminal(terminalFlow);
+                }).
+                And(function () {
+                    Factory.component.compose([initial, transducer, terminal]);
+                }).
+                When(function () {
+                    initial.getDestination().getUpStreamDataFlow().handleData('{"a":true}');
+                }).
+                Then(function () {
+                    QUnit.equal(terminalFlow.content.a, true, "Deserialise JSON object");
                 });
         });
     });
