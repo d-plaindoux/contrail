@@ -25,8 +25,8 @@ define([ "require", "Core/jObj", "./flow/TransducerUpStreamDataFlow", "./flow/Tr
         function TransducerComponent(encoder, decoder) {
             jObj.bless(this, require("Component/Factory").core.pipeline());
 
-            this.upStreamDataFlow = transducerUpStreamDataFlow(this, encoder);
-            this.downStreamDataFlow = transducerDownStreamDataFlow(this, decoder);
+            this.upStreamDataFlow = transducerUpStreamDataFlow(this, decoder);
+            this.downStreamDataFlow = transducerDownStreamDataFlow(this, encoder);
         }
 
         TransducerComponent.init = jObj.constructor([jObj.types.Named("Encoder"), jObj.types.Named("Decoder")],
