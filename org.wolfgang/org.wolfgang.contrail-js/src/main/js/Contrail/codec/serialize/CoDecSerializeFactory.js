@@ -18,23 +18,15 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj", "IO/jMarshaller" ],
-    function (require, jObj, jMarshaller) {
+define([ "./Encoder", "./Decoder" ],
+    function (encoder, decoder) {
         "use strict";
 
-        function PayloadEncoder() {
-            jObj.bless(this, require("Codec/Factory").core.encoder());
-        }
+        var Factory = {};
 
-        PayloadEncoder.init = jObj.constructor([],
-            function () {
-                return new PayloadEncoder();
-            });
+        Factory.encoder = encoder;
+        Factory.decoder = decoder;
 
-        PayloadEncoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
-            function (bytes) {
-                return [ jMarshaller.numberToBytes(bytes.length).concat(bytes) ];
-            });
+        return Factory;
 
-        return PayloadEncoder.init;
     });

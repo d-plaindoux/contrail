@@ -18,22 +18,27 @@
 
 /*global require */
 
-require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
-    function (Factory, jObj, QUnit, jCC) {
-        // "use strict";
+require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
+    function (QUnit, Factory, jObj, jCC) {
+        "use strict";
+
+        var JSon = Factory.codec.json,
+            PayLoad = Factory.codec.payload,
+            Serialize = Factory.codec.serialize,
+            Component = Factory.component;
 
         jCC.scenario("Check Component generation", function () {
             var c1, c2;
 
-            c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
-            c2 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+            c1 = Component.transducer(JSon.encoder(), JSon.decoder());
+            c2 = Component.transducer(JSon.encoder(), JSon.decoder());
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 And(function () {
-                    c2 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c2 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -46,7 +51,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -59,7 +64,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -72,7 +77,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -85,7 +90,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -98,7 +103,7 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
+                    c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
                 WhenNothing.
                 Then(function () {
@@ -107,32 +112,39 @@ require([ "Contrail/Factory", "Core/jObj", "qunit", "test/jCC" ],
         });
 
         jCC.scenario("Check Component type to be Component", function () {
-            var initial, transducer, terminal, terminalFlow, composition;
+            var terminalFlow, composition, testInit, loopTest, index;
 
-            jCC.
+            testInit = jCC.
                 Given(function () {
-                    initial = Factory.component.initial(Factory.flow.core());
-                }).
-                And(function () {
-                    transducer = Factory.component.transducer(Factory.codec.json.encoder(), Factory.codec.json.decoder());
-                }).
-                And(function () {
                     terminalFlow = Factory.flow.core();
                     terminalFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
                         this.content = data;
                     });
                 }).
                 And(function () {
-                    terminal = Factory.component.terminal(terminalFlow);
-                }).
-                And(function () {
-                    Factory.component.compose([initial, transducer, terminal]);
-                }).
-                When(function () {
-                    initial.getDestination().getUpStreamDataFlow().handleData('{"a":true}');
-                }).
-                Then(function () {
-                    QUnit.equal(terminalFlow.content.a, true, "Deserialise JSON object");
+                    composition = Component.compose([
+                        Component.initial(Factory.flow.core()),
+                        Component.transducer(JSon.decoder(), JSon.encoder()),
+                        Component.transducer(Serialize.decoder(), Serialize.encoder()),
+                        Component.transducer(PayLoad.decoder(), PayLoad.encoder()),
+                        Component.transducer(PayLoad.encoder(), PayLoad.decoder()),
+                        Component.transducer(Serialize.encoder(), Serialize.decoder()),
+                        Component.transducer(JSon.encoder(), JSon.decoder()),
+                        Component.terminal(terminalFlow)]);
                 });
+
+            loopTest = function (index) {
+                testInit.
+                    When(function () {
+                        composition.getDestination().getUpStreamDataFlow().handleData({ a:index });
+                    }).
+                    Then(function () {
+                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                    });
+            };
+
+            for (index = 0; index < 10; index += 1) {
+                loopTest(index);
+            }
         });
     });

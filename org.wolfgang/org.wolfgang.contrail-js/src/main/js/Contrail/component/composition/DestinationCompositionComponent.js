@@ -24,12 +24,32 @@ define([ "require", "Core/jObj" ],
 
         var DestinationCompositionComponent = function (components) {
             jObj.bless(this, require("Component/Factory").core.destination());
-            this.components = components;
+            this.component = components[0];
         };
 
         DestinationCompositionComponent.init = jObj.constructor([ jObj.types.Array ],
             function (components) {
                 return new DestinationCompositionComponent(components);
+            });
+
+        DestinationCompositionComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
+            function (componentId) {
+                return this.components[this.components.length - 1].acceptSource(componentId);
+            });
+
+        DestinationCompositionComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
+            function (sourceLink) {
+                return this.components[this.components.length - 1].connectSource(sourceLink);
+            });
+
+        DestinationCompositionComponent.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),
+            function () {
+                return this.components[this.components.length - 1].getSource();
+            });
+
+        DestinationCompositionComponent.prototype.closeDownStream = jObj.procedure([],
+            function () {
+                this.getSource().closeDownStream();
             });
 
         return DestinationCompositionComponent.init;

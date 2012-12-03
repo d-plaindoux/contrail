@@ -20,7 +20,7 @@
 
 define([ "require" ],
     function (require) {
-        // "use strict";
+        "use strict";
 
         var jType = {};
 

@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Codec/Factory", [ "./basic/CoDecBasicFactory", "./payload/CoDecPayloadFactory", "./json/CoDecJSonFactory" ],
-    function (BasicFactory, PayloadFactory, JSonFactory) {
+define("Codec/Factory", [ "./basic/CoDecBasicFactory", "./payload/CoDecPayloadFactory", "./json/CoDecJSonFactory",  "./serialize/CoDecSerializeFactory" ],
+    function (BasicFactory, PayloadFactory, JSonFactory, SerializeFactory) {
         "use strict";
 
         var Factory = {};
@@ -27,6 +27,7 @@ define("Codec/Factory", [ "./basic/CoDecBasicFactory", "./payload/CoDecPayloadFa
         Factory.core = BasicFactory;
         Factory.payload = PayloadFactory;
         Factory.json = JSonFactory;
+        Factory.serialize = SerializeFactory;
 
         return Factory;
 

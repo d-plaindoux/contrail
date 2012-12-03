@@ -25,21 +25,18 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         var jMarshaller = {};
 
         /**
-         * Convert an array of bytes to an integer
+         * Type object encoding
          *
-         * @param bytes The source
-         * @param offset The initial position
-         * @return {*}
+         * @type {Object}
          */
-        jMarshaller.bytesToInt = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number, function (bytes, offset) {
-            var i = jObj.value(offset, 0);
-
-            if (bytes.length < i + 4) {
-                throw jObj.exception("L.array.out.of.bound");
-            }
-
-            return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
-        });
+        jMarshaller.types = {
+            Array:0x1,
+            Object:0x2,
+            Number:0x3,
+            String:0x4,
+            Boolean:0x5,
+            Undefined:0x6
+        };
 
         /**
          * Convert an array of bytes to an integer
@@ -48,13 +45,67 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param offset The initial position
          * @return {*}
          */
-        jMarshaller.bytesToChar = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number, function (bytes, offset) {
-            if (bytes.length < offset + 2) {
-                throw jObj.exception("L.array.out.of.bound");
-            }
+        jMarshaller.bytesToNumberWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
+            function (bytes, offset) {
+                var i = jObj.value(offset, 0);
 
-            return bytes[offset] << 8 | bytes[offset + 1];
-        });
+                if (bytes.length < i + 4) {
+                    throw jObj.exception("L.array.out.of.bound");
+                }
+
+                return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
+            });
+
+        /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToNumber = jObj.method([jObj.types.Array], jObj.types.Number,
+            function (bytes) {
+                return jMarshaller.bytesToNumberWithOffset(bytes, 0);
+            });
+
+        /**
+         * Convert an array of bytes to a number
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToCharWithOffSet = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
+            function (bytes, offset) {
+                if (bytes.length < offset + 2) {
+                    throw jObj.exception("L.array.out.of.bound");
+                }
+
+                return bytes[offset] << 8 | bytes[offset + 1];
+            });
+
+        /**
+         * Convert an array of bytes to a number
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToChar = jObj.method([jObj.types.Array], jObj.types.Number,
+            function (bytes) {
+                return jMarshaller.bytesToCharWithOffSet(bytes, 0);
+            });
+
+        /**
+         * Concert a number to a byte array
+         *
+         * @param i
+         * @return {Array}
+         */
+        jMarshaller.numberToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
+            function (i) {
+                return [i >>> 24 & 0xFF, i >>> 16 & 0xFF, i >>> 8 & 0xFF, i & 0xFF];
+            });
 
         /**
          * Concert an integer to a byte array
@@ -62,19 +113,10 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param i
          * @return {Array}
          */
-        jMarshaller.intToBytes = jObj.method([jObj.types.Number], jObj.types.Array, function (i) {
-            return [i >>> 24 & 0xFF, i >>> 16 & 0xFF, i >>> 8 & 0xFF, i & 0xFF];
-        });
-
-        /**
-         * Concert an integer to a byte array
-         *
-         * @param i
-         * @return {Array}
-         */
-        jMarshaller.charToBytes = jObj.method([jObj.types.Number], jObj.types.Array, function (i) {
-            return [i >>> 8 & 0xFF, i & 0xFF];
-        });
+        jMarshaller.charToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
+            function (i) {
+                return [i >>> 8 & 0xFF, i & 0xFF];
+            });
 
         /**
          * Convert a byte array to string
@@ -82,14 +124,15 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param bytes
          * @return {String}
          */
-        jMarshaller.bytesToString = jObj.method([jObj.types.Array], jObj.types.String, function (bytes) {
-            var str = "", i;
-            for (i = 0; i < bytes.length; i += 2) {
-                str += String.fromCharCode(jMarshaller.bytesToChar(bytes, i));
-            }
+        jMarshaller.bytesToString = jObj.method([jObj.types.Array], jObj.types.String,
+            function (bytes) {
+                var str = "", i;
+                for (i = 0; i < bytes.length; i += 2) {
+                    str += String.fromCharCode(jMarshaller.bytesToCharWithOffSet(bytes, i));
+                }
 
-            return str;
-        });
+                return str;
+            });
 
         /**
          * Convert a string to a byte array
@@ -97,14 +140,15 @@ define("IO/jMarshaller", [ "Core/jObj" ],
          * @param str
          * @return {Array}
          */
-        jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array, function (str) {
-            var bytes = [], char, i;
-            for (i = 0; i < str.length; i += 1) {
-                bytes = bytes.concat(jMarshaller.charToBytes(str.charCodeAt(i)));
-            }
+        jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array,
+            function (str) {
+                var bytes = [], char, i;
+                for (i = 0; i < str.length; i += 1) {
+                    bytes = bytes.concat(jMarshaller.charToBytes(str.charCodeAt(i)));
+                }
 
-            return bytes;
-        });
+                return bytes;
+            });
 
         return jMarshaller;
     });

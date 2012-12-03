@@ -30,7 +30,7 @@ require([ "IO/jMarshaller", "qunit", "test/jCC" ],
                     i = 0x89ABCDEF;
                 }).
                 And(function () {
-                    b = jMarshaller.intToBytes(i);
+                    b = jMarshaller.numberToBytes(i);
                 }).
                 WhenNothing.
                 Then(function () {
@@ -46,7 +46,7 @@ require([ "IO/jMarshaller", "qunit", "test/jCC" ],
                     i = 0x89ABCDEF;
                 }).
                 And(function () {
-                    b = jMarshaller.intToBytes(i);
+                    b = jMarshaller.numberToBytes(i);
                 }).
                 WhenNothing.
                 Then(function () {

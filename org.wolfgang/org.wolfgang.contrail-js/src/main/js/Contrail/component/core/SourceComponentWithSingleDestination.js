@@ -44,12 +44,6 @@ define([ "require", "Core/jObj" ],
                 return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
             });
 
-        SourceComponentWithSingleDestination.prototype.closeUpStream = jObj.procedure([],
-            function () {
-                this.getDestination().closeUpStream();
-                this.destinationLink = null;
-            });
-
         SourceComponentWithSingleDestination.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
             function () {
                 var result;
@@ -61,6 +55,12 @@ define([ "require", "Core/jObj" ],
                 }
 
                 return result;
+            });
+
+        SourceComponentWithSingleDestination.prototype.closeUpStream = jObj.procedure([],
+            function () {
+                this.getDestination().closeUpStream();
+                this.destinationLink = null;
             });
 
         return SourceComponentWithSingleDestination.init;

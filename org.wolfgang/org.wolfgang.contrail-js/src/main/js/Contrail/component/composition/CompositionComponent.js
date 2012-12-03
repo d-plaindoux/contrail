@@ -37,5 +37,25 @@ define(["require", "Core/jObj" ],
                 return new CompositionComponent(components);
             });
 
+        CompositionComponent.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),
+            function () {
+                return this.components[this.components.length - 1].getSource();
+            });
+
+        CompositionComponent.prototype.closeDownStream = jObj.procedure([],
+            function () {
+                this.getSource().closeDownStream();
+            });
+
+        CompositionComponent.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
+            function () {
+                return this.components[0].getDestination();
+            });
+
+        CompositionComponent.prototype.closeUpStream = jObj.procedure([],
+            function () {
+                this.getDestination().closeUpStream();
+            });
+
         return CompositionComponent.init;
     });

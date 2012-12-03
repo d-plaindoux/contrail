@@ -41,7 +41,7 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
                 if (this.buffer.length < PayloadDecoder.INT_LEN) {
                     result = [];
                 } else {
-                    payload = jMarshaller.bytesToInt(this.buffer, 0);
+                    payload = jMarshaller.bytesToNumber(this.buffer);
                     if (this.buffer.length - PayloadDecoder.INT_LEN < payload) {
                         result = [];
                     } else {

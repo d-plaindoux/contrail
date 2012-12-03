@@ -18,17 +18,17 @@
 
 /*global define*/
 
-define(["require", "Core/jObj" ],
-    function (require, jObj) {
+define(["require", "Core/jObj", "./SourceCompositionComponent", "./DestinationCompositionComponent" ],
+    function (require, jObj, source, destination) {
         "use strict";
 
         var PipelineCompositionComponent = function (components) {
-            jObj.bless(this, require("Component/Factory").core.pipeline());
+            jObj.bless(this, source(components), destination(components));
             this.components = components;
         };
 
         PipelineCompositionComponent.init = jObj.constructor([ jObj.types.Array ],
-            function (linkManager, components) {
+            function (components) {
                 return new PipelineCompositionComponent(components);
             });
 

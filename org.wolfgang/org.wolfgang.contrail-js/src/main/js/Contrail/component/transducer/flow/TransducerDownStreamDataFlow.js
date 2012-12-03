@@ -27,7 +27,7 @@ define([ "Core/jObj", "./TransducerDataFlow" ],
             this.component = component;
         }
 
-        TransducerDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("PipelineComponent"), jObj.types.Named("Encoder") ],
+        TransducerDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("PipelineComponent"), jObj.types.Named("Transducer") ],
             function (component, transducer) {
                 return new TransducerDownStreamDataFlow(component, transducer);
             });

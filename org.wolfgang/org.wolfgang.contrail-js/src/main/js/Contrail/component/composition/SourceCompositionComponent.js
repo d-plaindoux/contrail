@@ -32,5 +32,25 @@ define(["require", "Core/jObj" ],
                 return new SourceCompositionComponent(components);
             });
 
+        SourceCompositionComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
+            function (componentId) {
+                return this.components[0].acceptDestination(componentId);
+            });
+
+        SourceCompositionComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
+            function (destinationLink) {
+                return this.components[0].connectDestination(destinationLink);
+            });
+
+        SourceCompositionComponent.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
+            function () {
+                return this.components[0].getDestination();
+            });
+
+        SourceCompositionComponent.prototype.closeUpStream = jObj.procedure([],
+            function () {
+                this.getDestination().closeUpStream();
+            });
+
         return SourceCompositionComponent.init;
     });
