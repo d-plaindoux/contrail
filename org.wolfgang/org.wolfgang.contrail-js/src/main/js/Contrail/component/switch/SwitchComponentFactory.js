@@ -18,13 +18,14 @@
 
 /*global define*/
 
-define([ "./SwitchComponent" ],
-    function (switchComponent) {
+define([ "./SwitchUpComponent", "./SwitchDownComponent" ],
+    function (switchUpComponent, switchDownComponent) {
         "use strict";
 
         var Factory = {};
 
-        Factory.component = switchComponent;
+        Factory.switchUp = switchUpComponent;
+        Factory.switchDown = switchDownComponent;
 
         return Factory;
 

@@ -41,7 +41,7 @@ define([ "require", "Core/jObj" ],
         SourceComponentWithSingleDestination.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
                 this.destinationLink = destinationLink;
-                return require("Contrail/Factory").link.components(this, this.destinationLink.getDestination());
+                return require("Contrail/Factory").link.components(this, destinationLink.getDestination());
             });
 
         SourceComponentWithSingleDestination.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
@@ -61,6 +61,11 @@ define([ "require", "Core/jObj" ],
             function () {
                 this.getDestination().closeUpStream();
                 this.destinationLink = null;
+            });
+
+        SourceComponentWithSingleDestination.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow",
+            function () {
+                return this.getDestination().getUpStreamDataFlow();
             });
 
         return SourceComponentWithSingleDestination.init;

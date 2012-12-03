@@ -47,6 +47,11 @@ define(["require", "Core/jObj" ],
                 this.getSource().closeDownStream();
             });
 
+        CompositionComponent.prototype.getDownStreamDataFlow = jObj.method([], "DataFlow",
+            function () {
+                return this.getSource().getDownStreamDataFlow();
+            });
+
         CompositionComponent.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
             function () {
                 return this.components[0].getDestination();
@@ -55,6 +60,11 @@ define(["require", "Core/jObj" ],
         CompositionComponent.prototype.closeUpStream = jObj.procedure([],
             function () {
                 this.getDestination().closeUpStream();
+            });
+
+        CompositionComponent.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow",
+            function () {
+                return this.getDestination().getUpStreamDataFlow();
             });
 
         return CompositionComponent.init;

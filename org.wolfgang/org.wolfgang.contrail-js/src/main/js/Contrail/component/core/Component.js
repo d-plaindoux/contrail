@@ -37,15 +37,13 @@ define([ "Utils/jUtils", "Core/jObj" ],
                 return this.identifier;
             });
 
-        Component.prototype.closeUpStream = jObj.procedure([],
-            function () {
-                throw jObj.exception("L.not.available");
-            });
+        Component.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"));
 
-        Component.prototype.closeDownStream = jObj.procedure([],
-            function () {
-                throw jObj.exception("L.not.available");
-            });
+        Component.prototype.closeDownStream = jObj.procedure([]);
+
+        Component.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"));
+
+        Component.prototype.closeUpStream = jObj.procedure([]);
 
         return Component.init;
     });

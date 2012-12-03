@@ -23,9 +23,7 @@ require([ "qunit", "Core/jObj", "Contrail/Factory", "test/jCC" ],
         "use strict";
 
         jCC.scenario("Checking data flow", function () {
-
             var dataFlow;
-
 
             jCC.
                 Given(function () {

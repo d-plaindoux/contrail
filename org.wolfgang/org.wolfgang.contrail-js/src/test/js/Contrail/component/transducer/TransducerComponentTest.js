@@ -112,7 +112,7 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
         });
 
         jCC.scenario("Check Component type to be Component", function () {
-            var terminalFlow, composition, testInit, loopTest, index;
+            var terminalFlow, composition, testInit, loopTest, index, object;
 
             testInit = jCC.
                 Given(function () {
@@ -136,14 +136,14 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
             loopTest = function (index) {
                 testInit.
                     When(function () {
-                        composition.getDestination().getUpStreamDataFlow().handleData({ a:index });
+                        composition.getUpStreamDataFlow().handleData({ a:index });
                     }).
                     Then(function () {
                         QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
                     });
             };
 
-            for (index = 0; index < 10; index += 1) {
+            for (index = 0; index < 100; index += 1) {
                 loopTest(index);
             }
         });

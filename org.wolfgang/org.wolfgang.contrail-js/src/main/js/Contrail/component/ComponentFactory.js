@@ -18,8 +18,13 @@
 
 /*global define*/
 
-define("Component/Factory", [ "./composition/CompositionComponentFactory", "./core/CoreComponentFactory", "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory", "./transducer/TransducerComponentFactory" ],
-    function (Composition, Core, Bound, Pipeline, Transducer) {
+define("Component/Factory",
+    [
+        "./composition/CompositionComponentFactory", "./core/CoreComponentFactory",
+        "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory",
+        "./transducer/TransducerComponentFactory", "./switch/SwitchComponentFactory"
+    ],
+    function (Composition, Core, Bound, Pipeline, Transducer, Switch) {
         "use strict";
 
         var Factory = {};
@@ -28,10 +33,12 @@ define("Component/Factory", [ "./composition/CompositionComponentFactory", "./co
         Factory.core = Core;
         Factory.core.pipeline = Pipeline.component;
 
+        Factory.compose = Composition.compose;
         Factory.initial = Bound.initial;
         Factory.terminal = Bound.terminal;
         Factory.transducer = Transducer.component;
-        Factory.compose = Composition.compose;
+        Factory.switchUp = Switch.switchUp;
+        Factory.switchDown = Switch.switchDown;
 
         return Factory;
 
