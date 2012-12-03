@@ -46,7 +46,6 @@ require([ "Core/jObj", "Codec/Factory", "qunit", "test/jCC", "IO/jMarshaller"],
                 });
         });
 
-
         jCC.scenario("Number decoding", function () {
             var object, encoder, result;
 
@@ -68,6 +67,78 @@ require([ "Core/jObj", "Codec/Factory", "qunit", "test/jCC", "IO/jMarshaller"],
                 }).
                 And(function () {
                     QUnit.equal(result[0], -256, "Checking encoding length");
+                });
+        });
+
+        jCC.scenario("Undefined decoding", function () {
+            var object, encoder, result;
+
+            jCC.
+                Given(function () {
+                    object = [ Marshaller.types.Undefined ];
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Undefined), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0], undefined, "Checking encoding length");
+                });
+        });
+
+        jCC.scenario("Boolean true decoding", function () {
+            var object, encoder, result;
+
+            jCC.
+                Given(function () {
+                    object = [ Marshaller.types.BooleanTrue ];
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0], true, "Checking encoding length");
+                });
+        });
+
+        jCC.scenario("Boolean false decoding", function () {
+            var object, encoder, result;
+
+            jCC.
+                Given(function () {
+                    object = [ Marshaller.types.BooleanFalse ];
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0], false, "Checking encoding length");
                 });
         });
     });

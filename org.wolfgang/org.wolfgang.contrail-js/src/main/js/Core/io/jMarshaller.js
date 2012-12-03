@@ -34,8 +34,9 @@ define("IO/jMarshaller", [ "Core/jObj" ],
             Object:0x2,
             Number:0x3,
             String:0x4,
-            Boolean:0x5,
-            Undefined:0x6
+            BooleanTrue:0x5,
+            BooleanFalse:0x6,
+            Undefined:0x7
         };
 
         /**

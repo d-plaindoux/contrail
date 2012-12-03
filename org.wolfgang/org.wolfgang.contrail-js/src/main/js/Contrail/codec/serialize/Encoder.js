@@ -41,6 +41,16 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
                 } else if (jObj.ofType(value, jObj.types.String)) {
                     type = Marshaller.types.String;
                     result = Marshaller.stringToBytes(value);
+                } else if (jObj.ofType(value, jObj.types.Undefined)) {
+                    type = Marshaller.types.Undefined;
+                    result = [];
+                } else if (jObj.ofType(value, jObj.types.Boolean)) {
+                    if (value) {
+                        type = Marshaller.types.BooleanTrue;
+                    } else {
+                        type = Marshaller.types.BooleanFalse;
+                    }
+                    result = [];
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
                 }
