@@ -18,14 +18,14 @@
 
 /*global define*/
 
-define([ "./SwitchUpComponent", "./SwitchDownComponent" ],
-    function (switchUpComponent, switchDownComponent) {
+define([ "./MultiDestinationComponent", "./MultiSourceComponent" ],
+    function (multiDestinationComponent, multiSourceComponent) {
         "use strict";
 
         var Factory = {};
 
-        Factory.switchUp = switchUpComponent;
-        Factory.switchDown = switchDownComponent;
+        Factory.multi = multiDestinationComponent;
+        Factory.switchSource = multiSourceComponent;
 
         return Factory;
 

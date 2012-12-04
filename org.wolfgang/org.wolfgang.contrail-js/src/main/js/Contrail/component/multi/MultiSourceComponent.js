@@ -22,7 +22,7 @@ define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        function SwitchDownComponent() {
+        function MultiSourceComponent() {
             var Factory = require("Component/Factory");
             jObj.bless(this, Factory.core.sourceWithSingleDestination(), Factory.core.destination());
             this.sourceLink = [];
@@ -32,31 +32,31 @@ define([ "require", "Core/jObj" ],
         /**
          * Construction initialisation
          */
-        SwitchDownComponent.init = jObj.constructor([],
+        MultiSourceComponent.init = jObj.constructor([],
             function () {
-                return new SwitchDownComponent();
+                return new MultiSourceComponent();
             });
 
-        SwitchDownComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
+        MultiSourceComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
                 return this.sourceLink[componentId] === null;
             });
 
-        SwitchDownComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
+        MultiSourceComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
             function (sourceLink) {
                 this.sourceLink[sourceLink.getSource().getComponentId()] = sourceLink;
                 return require("Contrail/Factory").link.components(sourceLink.getSource(), this);
             });
 
-        SwitchDownComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        MultiSourceComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
-                return this.upStreamDataFlow;
+                return this.downStreamDataFlow;
             });
 
-        SwitchDownComponent.prototype.closeDownStream = jObj.procedure([],
+        MultiSourceComponent.prototype.closeDownStream = jObj.procedure([],
             function () {
-                // TODO;
+                // nothing for the moment -- TODO
             });
 
-        return SwitchDownComponent.init;
+        return MultiSourceComponent.init;
     });

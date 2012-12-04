@@ -22,7 +22,7 @@ define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        function SwitchUpComponent() {
+        function MultiDestinationComponent() {
             var Factory = require("Component/Factory");
             jObj.bless(this, Factory.core.source(), Factory.core.destinationWithSingleSource());
             this.destinationLink = [];
@@ -32,31 +32,31 @@ define([ "require", "Core/jObj" ],
         /**
          * Construction initialisation
          */
-        SwitchUpComponent.init = jObj.constructor([],
+        MultiDestinationComponent.init = jObj.constructor([],
             function () {
-                return new SwitchUpComponent();
+                return new MultiDestinationComponent();
             });
 
-        SwitchUpComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
+        MultiDestinationComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
                 return this.destinationLink[componentId] === null;
             });
 
-        SwitchUpComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
+        MultiDestinationComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
                 this.destinationLink[destinationLink.getDestination().getComponentId()] = destinationLink;
                 return require("Contrail/Factory").link.components(destinationLink.getDestination(), this);
             });
 
-        SwitchUpComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        MultiDestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
             });
 
-        SwitchUpComponent.prototype.closeUpStream = jObj.procedure([],
+        MultiDestinationComponent.prototype.closeUpStream = jObj.procedure([],
             function () {
-                // TODO;
+                // nothing for the moment -- TODO
             });
 
-        return SwitchUpComponent.init;
+        return MultiDestinationComponent.init;
     });

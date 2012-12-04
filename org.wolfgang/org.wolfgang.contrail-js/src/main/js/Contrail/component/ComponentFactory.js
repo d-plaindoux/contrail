@@ -22,7 +22,7 @@ define("Component/Factory",
     [
         "./composition/CompositionComponentFactory", "./core/CoreComponentFactory",
         "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory",
-        "./transducer/TransducerComponentFactory", "./switch/SwitchComponentFactory"
+        "./transducer/TransducerComponentFactory", "./switch/MultiComponentFactory"
     ],
     function (Composition, Core, Bound, Pipeline, Transducer, Switch) {
         "use strict";
@@ -37,8 +37,7 @@ define("Component/Factory",
         Factory.initial = Bound.initial;
         Factory.terminal = Bound.terminal;
         Factory.transducer = Transducer.component;
-        Factory.switchUp = Switch.switchUp;
-        Factory.switchDown = Switch.switchDown;
+        Factory.multi = Switch.multi;
 
         return Factory;
 

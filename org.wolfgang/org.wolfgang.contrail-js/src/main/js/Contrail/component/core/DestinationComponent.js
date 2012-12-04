@@ -39,8 +39,6 @@ define([ "require", "Core/jObj" ],
 
         DestinationComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"));
 
-        DestinationComponent.prototype.closeDownStream = jObj.procedure([]);
-
         DestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"));
 
         return DestinationComponent.init;
