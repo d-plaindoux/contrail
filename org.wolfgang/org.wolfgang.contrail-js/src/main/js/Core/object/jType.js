@@ -49,9 +49,28 @@ define([ "require" ],
         /**
          * Type definitions
          */
+        jType.primitives = {
+            Any:"Any",
+            Array:"Array",
+            Object:"Object",
+            Number:"number",
+            String:"string",
+            Boolean:"boolean",
+            Undefined:"undefined",
+            Named:function (str) {
+                return str;
+            }
+        };
+
+        /**
+         * Type definitions
+         */
         jType.types = {
             Any:"Any",
             Array:"Array",
+            ArrayOf:function (type) {
+                return type;
+            },
             Object:"Object",
             Number:"number",
             String:"string",
@@ -69,24 +88,26 @@ define([ "require" ],
          * @return the type if it's an object; undefined otherwise
          */
         jType.getClass = function (object) {
-            if (object && object.constructor && object.constructor.toString) {
-                var arr = object.constructor.toString().match(/function\s*(\w+)/);
-                if (arr && arr.length === 2) {
-                    return arr[1];
+            var arr;
+
+            if (object) {
+                if (object.constructor && object.constructor.toString) {
+                    arr = object.constructor.toString().match(/function\s*(\w+)/);
+                    if (arr && arr.length === 2) {
+                        return arr[1];
+                    }
+                }
+
+                if (Object.prototype.toString.apply(object)) {
+                    arr = Object.prototype.toString.apply(object).match(/\[object\s*(\w+)\]/);
+                    if (arr && arr.length === 2) {
+                        return arr[1];
+                    }
                 }
             }
 
-            return undefined;
-        };
 
-        /**
-         * Check if the parameter is an object with a given type
-         * @param object
-         * @param type
-         * @return true if the object is a type of type; false otherwise
-         */
-        jType.isObjectType = function (object, type) {
-            return Object.prototype.toString.apply(object) === '[object ' + type + ']';
+            return undefined;
         };
 
         /**
@@ -100,8 +121,6 @@ define([ "require" ],
             var result = false;
 
             if (typeof object === type) {
-                result = true;
-            } else if (jType.isObjectType(object, type)) {
                 result = true;
             } else if (jType.getClass(object) === type) {
                 result = true;
