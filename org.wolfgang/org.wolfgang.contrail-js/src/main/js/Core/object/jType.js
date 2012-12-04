@@ -32,29 +32,26 @@ define([ "require" ],
         /**
          * Method called to check if a given object has a given type
          *
-         * @param object
          * @param type
-         * @return true if the object is a type of type; false otherwise
+         * @return Function
          */
-        function ofPrimitiveType(object, type) {
-            var result = false;
-
-            if (typeof object === type) {
-                result = true;
-            } else if (jType.getClass(object) === type) {
-                result = true;
-            } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
-                result = true;
-            } else if (type === jType.types.Any) {
-                result = true;
-            }
-
-            return result;
-        }
-
-        function namedType(name) {
+        function ofPrimitiveType(type) {
             return function (object) {
-                return ofPrimitiveType(object, name);
+                var result;
+
+                if (typeof object === type) {
+                    result = true;
+                } else if (jType.getClass(object) === type) {
+                    result = true;
+                } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
+                    result = true;
+                } else if (type === jType.types.Any) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+
+                return result;
             };
         }
 
@@ -79,13 +76,13 @@ define([ "require" ],
                 return true;
             },
 
-            Array:namedType(jType.primitives.Array),
-            Object:namedType(jType.primitives.Object),
-            Number:namedType(jType.primitives.Number),
-            String:namedType(jType.primitives.String),
-            Boolean:namedType(jType.primitives.Boolean),
-            Undefined:namedType(jType.primitives.Undefined),
-            Named:namedType,
+            Array:ofPrimitiveType(jType.primitives.Array),
+            Object:ofPrimitiveType(jType.primitives.Object),
+            Number:ofPrimitiveType(jType.primitives.Number),
+            String:ofPrimitiveType(jType.primitives.String),
+            Boolean:ofPrimitiveType(jType.primitives.Boolean),
+            Undefined:ofPrimitiveType(jType.primitives.Undefined),
+            Named:ofPrimitiveType,
 
             // Complex types
             ArrayOf:function (type) {
@@ -104,7 +101,7 @@ define([ "require" ],
             },
             CanBeUndefined:function (type) {
                 return function (object) {
-                    return jType.ofPrimitiveType(object, jType.primitives.Undefined) || jType.ofType(object, type);
+                    return jType.types.Undefined(object) || jType.ofType(object, type);
                 };
             }
         };
@@ -151,7 +148,7 @@ define([ "require" ],
             if (typeof type === "function") {
                 result = type(object);
             } else {
-                result = ofPrimitiveType(object, type);
+                result = ofPrimitiveType(type)(object);
             }
 
             return result;
