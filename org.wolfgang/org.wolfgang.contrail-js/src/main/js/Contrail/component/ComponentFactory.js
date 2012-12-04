@@ -27,12 +27,11 @@ define("Component/Factory",
         "./transducer/TransducerComponentFactory",
         "./multi/MultiComponentFactory"
     ],
-    function (Composition, Core, Bound, Pipeline, Transducer, Switch) {
+    function (Composition, Core, Bound, Pipeline, Transducer, Multi) {
         "use strict";
 
         var Factory = {};
 
-        Factory.core = {};
         Factory.core = Core;
         Factory.core.pipeline = Pipeline.component;
 
@@ -40,7 +39,7 @@ define("Component/Factory",
         Factory.initial = Bound.initial;
         Factory.terminal = Bound.terminal;
         Factory.transducer = Transducer.component;
-        Factory.multi = Switch.multi;
+        Factory.multi = Multi;
 
         return Factory;
 

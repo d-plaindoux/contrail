@@ -60,7 +60,7 @@ define([ "./jType" ],
                     } else {
                         var index;
 
-                        for (index = 0; index < arguments.length; index += 1) {
+                        for (index = 0; index < profil.length; index += 1) {
                             jType.checkType(arguments[index], profil[index]);
                         }
 
@@ -107,7 +107,7 @@ define([ "./jType" ],
                     } else {
                         var index, result;
 
-                        for (index = 0; index < arguments.length; index += 1) {
+                        for (index = 0; index < profil.length; index += 1) {
                             jType.checkType(arguments[index], profil[index]);
                         }
 

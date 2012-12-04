@@ -45,8 +45,6 @@ define([ "require" ],
                     result = true;
                 } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
                     result = true;
-                } else if (type === jType.types.Any) {
-                    result = true;
                 } else {
                     result = false;
                 }
@@ -72,10 +70,6 @@ define([ "require" ],
          * Type definitions
          */
         jType.types = {
-            Any:function (object) {
-                return true;
-            },
-
             Array:ofPrimitiveType(jType.primitives.Array),
             Object:ofPrimitiveType(jType.primitives.Object),
             Number:ofPrimitiveType(jType.primitives.Number),
@@ -84,25 +78,60 @@ define([ "require" ],
             Undefined:ofPrimitiveType(jType.primitives.Undefined),
             Named:ofPrimitiveType,
 
+            // Root type
+            Any:function (object) {
+                return true;
+            },
+
             // Complex types
             ArrayOf:function (type) {
                 return function (object) {
-                    if (jType.types.Array(object)) {
-                        var index;
-                        for (index = 0; index < object.length; index += 1) {
-                            if (!jType.ofType(object, type)) {
-                                return false;
-                            }
-                        }
+                    var result = jType.types.Array(object);
+
+                    if (result) {
+                        object.forEach(function (value) {
+                            result &= jType.ofType(object, type);
+                        });
                     }
 
-                    return true;
+                    return result;
                 };
             },
-            CanBeUndefined:function (type) {
+
+            Choice:function (type1, type2) {
                 return function (object) {
-                    return jType.types.Undefined(object) || jType.ofType(object, type);
+                    var result;
+
+                    if (jType.ofType(object, type2)) {
+                        result = true;
+                    } else {
+                        result = jType.ofType(object, type2);
+                    }
+
+                    return result;
                 };
+            },
+
+            And:function (type1, type2) {
+                return function (object) {
+                    var result;
+
+                    if (jType.ofType(object, type2)) {
+                        result = jType.ofType(object, type2);
+                    } else {
+                        result = false;
+                    }
+
+                    return result;
+                };
+            },
+
+            Option:function (type) {
+                return jType.types.Choice(jType.types.Undefined, type);
+            },
+
+            VarArgs:function (type) {
+                return jType.types.Choice(jType.types.Undefined, type);
             }
         };
 
