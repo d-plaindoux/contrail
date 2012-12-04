@@ -30,24 +30,36 @@ define([ "require" ],
         }
 
         /**
-         * Method dedicated to dynamic type checking
+         * Method called to check if a given object has a given type
          *
          * @param object
          * @param type
-         * @return {*}
+         * @return true if the object is a type of type; false otherwise
          */
-        jType.checkType = function (object, type) {
-            if (type !== undefined && !jType.ofType(type, jType.types.String)) {
-                throw new RuntimeTypeError(type + " must be an instance of String");
-            } else if (!jType.ofType(object, type)) {
-                throw new RuntimeTypeError(object + " must be an instance of " + type);
-            } else {
-                return object;
+        function ofPrimitiveType(object, type) {
+            var result = false;
+
+            if (typeof object === type) {
+                result = true;
+            } else if (jType.getClass(object) === type) {
+                result = true;
+            } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
+                result = true;
+            } else if (type === jType.types.Any) {
+                result = true;
             }
-        };
+
+            return result;
+        }
+
+        function namedType(name) {
+            return function (object) {
+                return ofPrimitiveType(object, name);
+            };
+        }
 
         /**
-         * Type definitions
+         * Type primitives
          */
         jType.primitives = {
             Any:"Any",
@@ -56,28 +68,44 @@ define([ "require" ],
             Number:"number",
             String:"string",
             Boolean:"boolean",
-            Undefined:"undefined",
-            Named:function (str) {
-                return str;
-            }
+            Undefined:"undefined"
         };
 
         /**
          * Type definitions
          */
         jType.types = {
-            Any:"Any",
-            Array:"Array",
-            ArrayOf:function (type) {
-                return type;
+            Any:function (object) {
+                return true;
             },
-            Object:"Object",
-            Number:"number",
-            String:"string",
-            Boolean:"boolean",
-            Undefined:"undefined",
-            Named:function (str) {
-                return str;
+
+            Array:namedType(jType.primitives.Array),
+            Object:namedType(jType.primitives.Object),
+            Number:namedType(jType.primitives.Number),
+            String:namedType(jType.primitives.String),
+            Boolean:namedType(jType.primitives.Boolean),
+            Undefined:namedType(jType.primitives.Undefined),
+            Named:namedType,
+
+            // Complex types
+            ArrayOf:function (type) {
+                return function (object) {
+                    if (jType.types.Array(object)) {
+                        var index;
+                        for (index = 0; index < object.length; index += 1) {
+                            if (!jType.ofType(object, type)) {
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
+                };
+            },
+            CanBeUndefined:function (type) {
+                return function (object) {
+                    return jType.ofPrimitiveType(object, jType.primitives.Undefined) || jType.ofType(object, type);
+                };
             }
         };
 
@@ -118,21 +146,16 @@ define([ "require" ],
          * @return true if the object is a type of type; false otherwise
          */
         jType.ofType = function (object, type) {
-            var result = false;
+            var result;
 
-            if (typeof object === type) {
-                result = true;
-            } else if (jType.getClass(object) === type) {
-                result = true;
-            } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
-                result = true;
-            } else if (type === jType.types.Any) {
-                result = true;
+            if (typeof type === "function") {
+                result = type(object);
+            } else {
+                result = ofPrimitiveType(object, type);
             }
 
             return result;
         };
-
 
         /**
          * Method called to check if a given object has a given type set
@@ -149,6 +172,21 @@ define([ "require" ],
             }
 
             return instance;
+        };
+
+        /**
+         * Method dedicated to dynamic type checking
+         *
+         * @param object
+         * @param type
+         * @return {*}
+         */
+        jType.checkType = function (object, type) {
+            if (!jType.ofType(object, type)) {
+                throw new RuntimeTypeError(object + " must be an instance of " + type);
+            } else {
+                return object;
+            }
         };
 
         return jType;

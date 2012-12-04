@@ -161,13 +161,13 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                     tb = jObj.toType(b);
                 }).
                 Then(function () {
-                    QUnit.equal(tb.a, jObj.types.String, "Checking Type(<object>)");
+                    QUnit.equal(jObj.ofType(tb.a, jObj.types.String), true, "Checking Type(<string>)");
                 }).
                 And(function () {
                     QUnit.equal(jObj.ofType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
                 }).
                 And(function () {
-                    QUnit.equal(tb.b.hello, jObj.types.String, "Checking getType(<object>)");
+                    QUnit.equal(jObj.ofType(tb.b.hello, jObj.types.String), true, "Checking getType(<string>)");
                 });
         });
     });
