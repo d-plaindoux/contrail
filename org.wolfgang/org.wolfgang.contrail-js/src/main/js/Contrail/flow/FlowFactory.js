@@ -18,7 +18,11 @@
 
 /*global define*/
 
-define("Flow/Factory", [ "./DataFlow", "./CloseableDataFlow" ],
+define("Flow/Factory",
+    [
+        "./DataFlow",
+        "./CloseableDataFlow"
+    ],
     function (dataFlow, closeableDataFlow) {
         "use strict";
 

@@ -20,9 +20,12 @@
 
 define("Component/Factory",
     [
-        "./composition/CompositionComponentFactory", "./core/CoreComponentFactory",
-        "./bound/BoundComponentFactory", "./pipeline/PipelineComponentFactory",
-        "./transducer/TransducerComponentFactory", "./multi/MultiComponentFactory"
+        "./composition/CompositionComponentFactory",
+        "./core/CoreComponentFactory",
+        "./bound/BoundComponentFactory",
+        "./pipeline/PipelineComponentFactory",
+        "./transducer/TransducerComponentFactory",
+        "./multi/MultiComponentFactory"
     ],
     function (Composition, Core, Bound, Pipeline, Transducer, Switch) {
         "use strict";

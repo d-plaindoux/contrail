@@ -18,7 +18,13 @@
 
 /*global define*/
 
-define("Link/Factory", [ "./ComponentManager", "./ComponentLink", "./SourceLink", "./DestinationLink" ],
+define("Link/Factory",
+    [
+        "./ComponentManager",
+        "./ComponentLink",
+        "./SourceLink",
+        "./DestinationLink"
+    ],
     function (componentLinkManager, componentLink, sourceLink, destinationLink) {
         "use strict";
 

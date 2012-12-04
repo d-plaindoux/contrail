@@ -18,7 +18,13 @@
 
 /*global define*/
 
-define("Codec/Factory", [ "./basic/CoDecBasicFactory", "./payload/CoDecPayloadFactory", "./json/CoDecJSonFactory",  "./serialize/CoDecSerializeFactory" ],
+define("Codec/Factory",
+    [
+        "./basic/CoDecBasicFactory",
+        "./payload/CoDecPayloadFactory",
+        "./json/CoDecJSonFactory",
+        "./serialize/CoDecSerializeFactory"
+    ],
     function (BasicFactory, PayloadFactory, JSonFactory, SerializeFactory) {
         "use strict";
 

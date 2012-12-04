@@ -18,7 +18,15 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj", "./PipelineCompositionComponent", "./SourceCompositionComponent", "./DestinationCompositionComponent", "./CompositionComponent" ],
+define(
+    [
+        "require",
+        "Core/jObj",
+        "./PipelineCompositionComponent",
+        "./SourceCompositionComponent",
+        "./DestinationCompositionComponent",
+        "./CompositionComponent"
+    ],
     function (require, jObj, pipelineComposition, sourceComposition, destinationComposition, componentComposition) {
         "use strict";
 
