@@ -27,10 +27,10 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    c2 = Factory.component.multi.sources();
+                    c2 = Factory.component.multi.destinations();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -43,7 +43,7 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 WhenNothing.
                 Then(function () {
@@ -51,85 +51,85 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                 });
         });
 
-        jCC.scenario("Check Component type to be a MultiSourceComponent", function () {
+        jCC.scenario("Check Component type to be a MultiDestinationComponent", function () {
             var c1;
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 WhenNothing.
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("MultiSourceComponent")), true, "Checking c1 instance of MultiSourceComponent");
+                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("MultiDestinationComponent")), true, "Checking c1 instance of MultiDestinationComponent");
                 });
         });
 
-        jCC.scenario("Test component with a single source", function () {
-            var c1, i1;
+        jCC.scenario("Test component with a single destination", function () {
+            var c1, t1;
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.accumulated());
+                    t1 = Factory.component.terminal(Factory.flow.accumulated());
                 }).
                 When(function () {
-                    Factory.link.connect(i1, c1);
+                    Factory.link.connect(c1, t1);
                 }).
                 And(function () {
-                    c1.getDownStreamDataFlow().handleData("Hello, World!");
+                    c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
-        jCC.scenario("Test component with two sources", function () {
-            var c1, i1, i2;
+        jCC.scenario("Test component with two destinations", function () {
+            var c1, t1, t2;
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.accumulated());
+                    t1 = Factory.component.terminal(Factory.flow.accumulated());
                 }).
                 And(function () {
-                    i2 = Factory.component.initial(Factory.flow.accumulated());
+                    t2 = Factory.component.terminal(Factory.flow.accumulated());
                 }).
                 When(function () {
-                    Factory.link.connect(i1, c1);
+                    Factory.link.connect(c1, t1);
                 }).
                 And(function () {
-                    Factory.link.connect(i2, c1);
+                    Factory.link.connect(c1, t2);
                 }).
                 And(function () {
-                    c1.getDownStreamDataFlow().handleData("Hello, World!");
+                    c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    QUnit.equal(i2.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    QUnit.equal(t2.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(i2.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    QUnit.equal(t2.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
-        jCC.scenario("Test component with two sources and guarded data flows", function () {
-            var c1, i1, i2, d1, d2;
+        jCC.scenario("Test component with two destinations and guarded data flows", function () {
+            var c1, t1, t2, d1, d2;
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.multi.sources();
+                    c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
                     d1 = Factory.flow.accumulated();
@@ -138,23 +138,23 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                     d2 = Factory.flow.accumulated();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.guarded(d1, function (data) {
+                    t1 = Factory.component.terminal(Factory.flow.guarded(d1, function (data) {
                         return true;
                     }));
                 }).
                 And(function () {
-                    i2 = Factory.component.initial(Factory.flow.guarded(d2, function (data) {
+                    t2 = Factory.component.terminal(Factory.flow.guarded(d2, function (data) {
                         return false;
                     }));
                 }).
                 When(function () {
-                    Factory.link.connect(i1, c1);
+                    Factory.link.connect(c1, t1);
                 }).
                 And(function () {
-                    Factory.link.connect(i2, c1);
+                    Factory.link.connect(c1, t2);
                 }).
                 And(function () {
-                    c1.getDownStreamDataFlow().handleData("Hello, World!");
+                    c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
                     QUnit.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");

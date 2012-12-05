@@ -43,9 +43,9 @@ define([ "require" ],
             return typeRule(type, function (object) {
                 var result;
 
-                if (type === jType.primitives.Any) {
+                if (typeof object === type) {
                     result = true;
-                } else if (typeof object === type) {
+                } else if (type === jType.primitives.Any) {
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
@@ -69,7 +69,8 @@ define([ "require" ],
             Number:"number",
             String:"string",
             Boolean:"boolean",
-            Undefined:"undefined"
+            Undefined:"undefined",
+            Function:"function"
         };
 
         /**
@@ -82,6 +83,8 @@ define([ "require" ],
             String:ofPrimitiveType(jType.primitives.String),
             Boolean:ofPrimitiveType(jType.primitives.Boolean),
             Undefined:ofPrimitiveType(jType.primitives.Undefined),
+            Function:ofPrimitiveType(jType.primitives.Function),
+
             Named:ofPrimitiveType,
 
             // Root type

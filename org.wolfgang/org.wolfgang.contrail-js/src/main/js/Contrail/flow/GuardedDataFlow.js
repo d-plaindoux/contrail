@@ -18,24 +18,32 @@
 
 /*global define*/
 
-define([ "Core/jObj", "./TransducerDataFlow" ],
-    function (jObj, transducerDataFlow) {
+define([ "require", "Core/jObj" ],
+    function (require, jObj) {
         "use strict";
 
-        function TransducerUpStreamDataFlow(component, transducer) {
-            jObj.bless(this, transducerDataFlow(transducer));
-            this.component = component;
+        function GuardedDataFlow(dataFlow, predicate) {
+            jObj.bless(this, require("Flow/Factory").core());
+            this.dataFlow = dataFlow;
+            this.predicate = predicate;
         }
 
-        TransducerUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("TransducerComponent"), jObj.types.Named("Transducer") ],
-            function (component, transducer) {
-                return new TransducerUpStreamDataFlow(component, transducer);
+        GuardedDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function],
+            function (dataFlow, predicate) {
+                return new GuardedDataFlow(dataFlow, predicate);
             });
 
-        TransducerUpStreamDataFlow.prototype.getDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        GuardedDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+            function (data) {
+                if (this.predicate(data)) {
+                    this.dataFlow.handleData(data);
+                }
+            });
+
+        GuardedDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                return this.component.getDestination().getUpStreamDataFlow();
+                // Ignore
             });
 
-        return TransducerUpStreamDataFlow.init;
+        return GuardedDataFlow.init;
     });

@@ -39,7 +39,7 @@ define([ "require", "Core/jObj", "./flow/MultiUpStreamDataFlow" ],
 
         MultiDestinationComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
-                var result = this.destinationLink.length === 0;
+                var result = true;
 
                 this.destinationLink.forEach(function (link) {
                     result = result && link.getDestination().getComponentId() !== componentId;
@@ -51,7 +51,7 @@ define([ "require", "Core/jObj", "./flow/MultiUpStreamDataFlow" ],
         MultiDestinationComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
                 this.destinationLink = this.destinationLink.concat(destinationLink);
-                return require("Contrail/Factory").link.components(destinationLink.getDestination(), this);
+                return require("Link/Factory").components(this, destinationLink.getDestination());
             });
 
         MultiDestinationComponent.prototype.getDestinations = jObj.method([], jObj.types.Array,
