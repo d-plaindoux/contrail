@@ -124,7 +124,7 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                 });
         });
 
-        jCC.scenario("Test component with two sources and guarded data flows", function () {
+        jCC.scenario("Test component with two sources and filtered data flows", function () {
             var c1, i1, i2, d1, d2;
 
             jCC.
@@ -138,13 +138,13 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                     d2 = Factory.flow.accumulated();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.guarded(d1, function (data) {
-                        return true;
+                    i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {
+                        return data;
                     }));
                 }).
                 And(function () {
-                    i2 = Factory.component.initial(Factory.flow.guarded(d2, function (data) {
-                        return false;
+                    i2 = Factory.component.initial(Factory.flow.filtered(d2, function (data) {
+                        return undefined;
                     }));
                 }).
                 When(function () {
@@ -164,6 +164,55 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                 }).
                 And(function () {
                     QUnit.equal(d2.getAccumulation().length, 0, "Checking accumulated number of data");
+                });
+        });
+
+        jCC.scenario("Test component with two sources and routing filtered data flows", function () {
+            var c1, i1, i2, d1, d2;
+
+            jCC.
+                Given(function () {
+                    c1 = Factory.component.multi.sources();
+                }).
+                And(function () {
+                    d1 = Factory.flow.accumulated();
+                }).
+                And(function () {
+                    d2 = Factory.flow.accumulated();
+                }).
+                And(function () {
+                    i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {
+                        return data && data.to === "T1" && data.what;
+                    }));
+                }).
+                And(function () {
+                    i2 = Factory.component.initial(Factory.flow.filtered(d2, function (data) {
+                        return data && data.to === "T2" && data.what;
+                    }));
+                }).
+                When(function () {
+                    Factory.link.connect(i1, c1);
+                }).
+                And(function () {
+                    Factory.link.connect(i2, c1);
+                }).
+                And(function () {
+                    c1.getDownStreamDataFlow().handleData({to:"T1", what:"Hello"});
+                }).
+                And(function () {
+                    c1.getDownStreamDataFlow().handleData({to:"T2", what:"World!"});
+                }).
+                Then(function () {
+                    QUnit.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");
+                }).
+                And(function () {
+                    QUnit.equal(d1.getAccumulation()[0], "Hello", "Checking accumulated data");
+                }).
+                And(function () {
+                    QUnit.equal(d2.getAccumulation().length, 1, "Checking accumulated number of data");
+                }).
+                And(function () {
+                    QUnit.equal(d2.getAccumulation()[0], "World!", "Checking accumulated data");
                 });
         });
     });

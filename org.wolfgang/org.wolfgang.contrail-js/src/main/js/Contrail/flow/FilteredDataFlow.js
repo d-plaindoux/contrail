@@ -22,28 +22,29 @@ define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        function GuardedDataFlow(dataFlow, predicate) {
+        function FilteredDataFlow(dataFlow, predicate) {
             jObj.bless(this, require("Flow/Factory").core());
             this.dataFlow = dataFlow;
-            this.predicate = predicate;
+            this.filter = predicate;
         }
 
-        GuardedDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function],
+        FilteredDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function],
             function (dataFlow, predicate) {
-                return new GuardedDataFlow(dataFlow, predicate);
+                return new FilteredDataFlow(dataFlow, predicate);
             });
 
-        GuardedDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+        FilteredDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
             function (data) {
-                if (this.predicate(data)) {
-                    this.dataFlow.handleData(data);
+                var value = this.filter(data);
+                if (value) {
+                    this.dataFlow.handleData(value);
                 }
             });
 
-        GuardedDataFlow.prototype.handleClose = jObj.procedure([],
+        FilteredDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
                 // Ignore
             });
 
-        return GuardedDataFlow.init;
+        return FilteredDataFlow.init;
     });

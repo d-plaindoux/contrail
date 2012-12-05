@@ -23,9 +23,9 @@ define("Flow/Factory",
         "./DataFlow",
         "./CloseableDataFlow",
         "./AccumulatedDataFlow",
-        "./GuardedDataFlow"
+        "./FilteredDataFlow"
     ],
-    function (dataFlow, closeableDataFlow, accumulatedDataFlow, guardedDataFlow) {
+    function (dataFlow, closeableDataFlow, accumulatedDataFlow, filteredDataFlow) {
         "use strict";
 
         var Factory = {};
@@ -33,7 +33,7 @@ define("Flow/Factory",
         Factory.core = dataFlow;
         Factory.closeable = closeableDataFlow;
         Factory.accumulated = accumulatedDataFlow;
-        Factory.guarded = guardedDataFlow;
+        Factory.filtered = filteredDataFlow;
 
         return Factory;
 
