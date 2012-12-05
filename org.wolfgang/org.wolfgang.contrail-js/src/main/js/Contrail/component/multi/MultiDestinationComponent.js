@@ -18,15 +18,15 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj" ],
-    function (require, jObj) {
+define([ "require", "Core/jObj", "./flow/MultiUpStreamDataFlow" ],
+    function (require, jObj, upStreamDataFlow) {
         "use strict";
 
         function MultiDestinationComponent() {
             var Factory = require("Component/Factory");
             jObj.bless(this, Factory.core.source(), Factory.core.destinationWithSingleSource());
             this.destinationLink = [];
-            this.upStreamDataFlow = undefined; // TODO
+            this.upStreamDataFlow = upStreamDataFlow(this);
         }
 
         /**
@@ -39,13 +39,26 @@ define([ "require", "Core/jObj" ],
 
         MultiDestinationComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
-                return this.destinationLink[componentId] === null;
+                var result = this.destinationLink.length === 0;
+
+                this.destinationLink.forEach(function (link) {
+                    result = result && link.getDestination().getComponentId() !== componentId;
+                });
+
+                return result;
             });
 
         MultiDestinationComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
-                this.destinationLink[destinationLink.getDestination().getComponentId()] = destinationLink;
+                this.destinationLink = this.destinationLink.concat(destinationLink);
                 return require("Contrail/Factory").link.components(destinationLink.getDestination(), this);
+            });
+
+        MultiDestinationComponent.prototype.getDestinations = jObj.method([], jObj.types.Array,
+            function () {
+                return this.destinationLink.map(function (link) {
+                    return link.getDestination();
+                });
             });
 
         MultiDestinationComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
@@ -55,7 +68,11 @@ define([ "require", "Core/jObj" ],
 
         MultiDestinationComponent.prototype.closeUpStream = jObj.procedure([],
             function () {
-                // nothing for the moment -- TODO
+                this.upStreamDataFlow.handleClose();
+                this.destinationLink.forEach(function (link) {
+                    link.dispose();
+                });
+                this.destinationLink = [];
             });
 
         return MultiDestinationComponent.init;

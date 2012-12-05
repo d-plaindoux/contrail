@@ -21,15 +21,17 @@
 define("Flow/Factory",
     [
         "./DataFlow",
-        "./CloseableDataFlow"
+        "./CloseableDataFlow",
+        "./AccumulatedDataFlow"
     ],
-    function (dataFlow, closeableDataFlow) {
+    function (dataFlow, closeableDataFlow, accumulatedDataFlow) {
         "use strict";
 
         var Factory = {};
 
         Factory.core = dataFlow;
         Factory.closeable = closeableDataFlow;
+        Factory.accumulated = accumulatedDataFlow;
 
         return Factory;
 

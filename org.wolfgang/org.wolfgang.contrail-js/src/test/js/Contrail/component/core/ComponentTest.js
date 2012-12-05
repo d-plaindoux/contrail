@@ -22,9 +22,6 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
     function (Factory, QUnit, jObj, jCC) {
         "use strict";
 
-        /**
-         * Test generation
-         */
         jCC.scenario("Check Component generation", function () {
             var c1, c2;
 

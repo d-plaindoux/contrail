@@ -18,20 +18,17 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj" ],
-    function (require, jObj) {
+define([ "require", "Core/jObj", "./flow/MultiDownStreamDataFlow" ],
+    function (require, jObj, downStreamDataFlow) {
         "use strict";
 
         function MultiSourceComponent() {
             var Factory = require("Component/Factory");
             jObj.bless(this, Factory.core.sourceWithSingleDestination(), Factory.core.destination());
             this.sourceLink = [];
-            this.downStreamDataFlow = undefined; // TODO
+            this.downStreamDataFlow = downStreamDataFlow(this);
         }
 
-        /**
-         * Construction initialisation
-         */
         MultiSourceComponent.init = jObj.constructor([],
             function () {
                 return new MultiSourceComponent();
@@ -39,13 +36,26 @@ define([ "require", "Core/jObj" ],
 
         MultiSourceComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
-                return this.sourceLink[componentId] === null;
+                var result = this.sourceLink.length === 0;
+
+                this.sourceLink.forEach(function (link) {
+                    result = result && link.getSource().getComponentId() !== componentId;
+                });
+
+                return result;
             });
 
         MultiSourceComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
             function (sourceLink) {
-                this.sourceLink[sourceLink.getSource().getComponentId()] = sourceLink;
+                this.sourceLink = this.sourceLink.concat(sourceLink);
                 return require("Contrail/Factory").link.components(sourceLink.getSource(), this);
+            });
+
+        MultiSourceComponent.prototype.getSources = jObj.method([], jObj.types.Array,
+            function () {
+                return this.sourceLink.map(function (link) {
+                    return link.getSource();
+                });
             });
 
         MultiSourceComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
@@ -55,7 +65,12 @@ define([ "require", "Core/jObj" ],
 
         MultiSourceComponent.prototype.closeDownStream = jObj.procedure([],
             function () {
-                // nothing for the moment -- TODO
+                var key;
+                this.downStreamDataFlow.handleClose();
+                this.sourceLink.forEach(function (link) {
+                    link.dispose();
+                });
+                this.sourceLink = [];
             });
 
         return MultiSourceComponent.init;

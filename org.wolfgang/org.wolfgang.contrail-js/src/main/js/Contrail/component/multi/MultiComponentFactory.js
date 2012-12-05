@@ -24,8 +24,8 @@ define([ "./MultiDestinationComponent", "./MultiSourceComponent" ],
 
         var Factory = {};
 
-        Factory.destination = multiDestinationComponent;
-        Factory.source = multiSourceComponent;
+        Factory.destinations = multiDestinationComponent;
+        Factory.sources = multiSourceComponent;
 
         return Factory;
 

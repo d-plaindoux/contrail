@@ -29,6 +29,10 @@ define([ "require" ],
             this.message = message;
         }
 
+        function typeRule(type, fun) {
+            return {typingRule:true, type:type, check:fun};
+        }
+
         /**
          * Method called to check if a given object has a given type
          *
@@ -36,10 +40,12 @@ define([ "require" ],
          * @return Function
          */
         function ofPrimitiveType(type) {
-            return function (object) {
+            return typeRule(type, function (object) {
                 var result;
 
-                if (typeof object === type) {
+                if (type === jType.primitives.Any) {
+                    result = true;
+                } else if (typeof object === type) {
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
@@ -50,7 +56,7 @@ define([ "require" ],
                 }
 
                 return result;
-            };
+            });
         }
 
         /**
@@ -79,27 +85,28 @@ define([ "require" ],
             Named:ofPrimitiveType,
 
             // Root type
-            Any:function (object) {
+            Any:typeRule(jType.primitives.Any, function (object) {
                 return true;
-            },
+            }),
 
             // Complex types
             ArrayOf:function (type) {
-                return function (object) {
-                    var result = jType.types.Array(object);
+                return typeRule(jType.primitives.Array,
+                    function (object) {
+                        var result = jType.types.Array(object);
 
-                    if (result) {
-                        object.forEach(function (value) {
-                            result &= jType.ofType(object, type);
-                        });
-                    }
+                        if (result) {
+                            object.forEach(function (value) {
+                                result &= jType.ofType(object, type);
+                            });
+                        }
 
-                    return result;
-                };
+                        return result;
+                    });
             },
 
             Choice:function (type1, type2) {
-                return function (object) {
+                return typeRule("Choice", function (object) {
                     var result;
 
                     if (jType.ofType(object, type2)) {
@@ -109,11 +116,11 @@ define([ "require" ],
                     }
 
                     return result;
-                };
+                });
             },
 
             And:function (type1, type2) {
-                return function (object) {
+                return typeRule("And", function (object) {
                     var result;
 
                     if (jType.ofType(object, type2)) {
@@ -123,7 +130,7 @@ define([ "require" ],
                     }
 
                     return result;
-                };
+                });
             },
 
             Option:function (type) {
@@ -174,10 +181,30 @@ define([ "require" ],
         jType.ofType = function (object, type) {
             var result;
 
-            if (typeof type === "function") {
-                result = type(object);
+            if (type && type.typingRule) {
+                result = type.check(object);
             } else {
-                result = ofPrimitiveType(type)(object);
+                result = ofPrimitiveType(type).check(object);
+            }
+
+            return result;
+        };
+
+
+        /**
+         * Method called to check if a given object has a given type
+         *
+         * @param object
+         * @param type
+         * @return true if the object is a type of type; false otherwise
+         */
+        jType.getType = function (type) {
+            var result;
+
+            if (type && type.typingRule) {
+                result = type.type;
+            } else {
+                result = type;
             }
 
             return result;
@@ -191,11 +218,11 @@ define([ "require" ],
          * @return true if the object is a type of types; false otherwise
          */
         jType.ofTypes = function (object, types) {
-            var type, instance = types.length > 0;
+            var instance = types.length > 0;
 
-            for (type = 0; type < types.length; type += 1) {
-                instance = instance && jType.ofType(object, types[type]);
-            }
+            types.forEach(function (type) {
+                instance = instance && jType.ofType(object, type);
+            });
 
             return instance;
         };
@@ -209,7 +236,7 @@ define([ "require" ],
          */
         jType.checkType = function (object, type) {
             if (!jType.ofType(object, type)) {
-                throw new RuntimeTypeError(object + " must be an instance of " + type);
+                throw new RuntimeTypeError(object + " must be an instance of " + jType.getType(type));
             } else {
                 return object;
             }
