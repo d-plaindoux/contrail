@@ -18,19 +18,15 @@
 
 /*global define*/
 
-define(["require", "Core/jObj", "./SourceCompositionComponent", "./DestinationCompositionComponent" ],
-    function (require, jObj, source, destination) {
+define([ "./EncoderDecoder" ],
+    function (encoderDecoder) {
         "use strict";
 
-        var PipelineCompositionComponent = function (components) {
-            jObj.bless(this, source(components), destination(components));
-            this.components = components;
-        };
+        var Factory = {};
 
-        PipelineCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
-            function (components) {
-                return new PipelineCompositionComponent(components);
-            });
+        Factory.encoder = encoderDecoder;
+        Factory.decoder = encoderDecoder;
 
-        return PipelineCompositionComponent.init;
+        return Factory;
+
     });

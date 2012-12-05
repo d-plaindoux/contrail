@@ -31,7 +31,7 @@ define([ "require", "Core/jObj", "External/JSon" ],
                 return new JSonEncoder();
             });
 
-        JSonEncoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,
+        JSonEncoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.ArrayOf(jObj.types.String),
             function (object) {
                 return [ JSon.stringify(object) ];
             });

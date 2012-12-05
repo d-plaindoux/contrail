@@ -22,9 +22,7 @@ define([ "./TransducerComponent" ],
     function (transducerComponent) {
         "use strict";
 
-        var Factory;
-
-        Factory = {};
+        var Factory = {};
 
         Factory.component = transducerComponent;
 

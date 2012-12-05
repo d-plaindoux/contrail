@@ -24,25 +24,11 @@ define([ "./Component", "./SourceComponent", "./SourceComponentWithSingleDestina
 
         var Factory = {};
 
-        Factory.component = function () {
-            return component();
-        };
-
-        Factory.source = function () {
-            return sourceComponent();
-        };
-
-        Factory.destination = function () {
-            return destinationComponent();
-        };
-
-        Factory.sourceWithSingleDestination = function () {
-            return sourceComponentWithSingleDestination();
-        };
-
-        Factory.destinationWithSingleSource = function () {
-            return destinationComponentWithSingleSource();
-        };
+        Factory.component = component;
+        Factory.source = sourceComponent;
+        Factory.destination = destinationComponent;
+        Factory.sourceWithSingleDestination = sourceComponentWithSingleDestination;
+        Factory.destinationWithSingleSource = destinationComponentWithSingleSource;
 
         return Factory;
 

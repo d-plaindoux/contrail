@@ -21,16 +21,18 @@
 define("Codec/Factory",
     [
         "./basic/CoDecBasicFactory",
+        "./identity/CoDecIdentityFactory",
         "./payload/CoDecPayloadFactory",
         "./json/CoDecJSonFactory",
         "./serialize/CoDecSerializeFactory"
     ],
-    function (BasicFactory, PayloadFactory, JSonFactory, SerializeFactory) {
+    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory) {
         "use strict";
 
         var Factory = {};
 
         Factory.core = BasicFactory;
+        Factory.identity = IdentityFactory;
         Factory.payload = PayloadFactory;
         Factory.json = JSonFactory;
         Factory.serialize = SerializeFactory;

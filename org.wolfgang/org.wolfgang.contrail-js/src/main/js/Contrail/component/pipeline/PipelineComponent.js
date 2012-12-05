@@ -35,6 +35,5 @@ define([ "require", "Core/jObj" ],
                 return new PipelineComponent();
             });
 
-
         return PipelineComponent.init;
     });

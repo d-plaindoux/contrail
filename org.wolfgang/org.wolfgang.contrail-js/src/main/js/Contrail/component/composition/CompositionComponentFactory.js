@@ -46,7 +46,7 @@ define(
          * @param components
          * @return {*}
          */
-        linkComponents = jObj.method([ jObj.types.Array ], jObj.types.Array,
+        linkComponents = jObj.method([ jObj.types.ArrayOf(jObj.types.Named("Component")) ], jObj.types.ArrayOf(jObj.types.Named("Component")),
             function (components) {
                 var linkManager, index, current;
 
@@ -61,7 +61,7 @@ define(
                 return components;
             });
 
-        CompositionFactory.compose = jObj.method([ jObj.types.Array ], jObj.types.Named("Component"),
+        CompositionFactory.compose = jObj.method([ jObj.types.ArrayOf(jObj.types.Named("Component")) ], jObj.types.Named("Component"),
             function (components) {
                 var result, first, last;
 

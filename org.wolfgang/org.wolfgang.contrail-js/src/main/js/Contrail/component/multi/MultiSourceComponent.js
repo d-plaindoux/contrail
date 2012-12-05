@@ -20,7 +20,7 @@
 
 define([ "require", "Core/jObj", "./flow/MultiDownStreamDataFlow" ],
     function (require, jObj, downStreamDataFlow) {
-        // "use strict";
+        "use strict";
 
         function MultiSourceComponent() {
             var Factory = require("Component/Factory");
@@ -51,7 +51,7 @@ define([ "require", "Core/jObj", "./flow/MultiDownStreamDataFlow" ],
                 return require("Link/Factory").components(sourceLink.getSource(), this);
             });
 
-        MultiSourceComponent.prototype.getSources = jObj.method([], jObj.types.Array,
+        MultiSourceComponent.prototype.getSources = jObj.method([], jObj.types.ArrayOf(jObj.types.Named("SourceComponent")),
             function () {
                 return this.sourceLink.map(function (link) {
                     return link.getSource();

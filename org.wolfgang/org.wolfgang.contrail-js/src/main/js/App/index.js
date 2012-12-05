@@ -21,7 +21,7 @@
 $(function () {
     "use strict";
 
-    require([ "Component/Factory", "Core/jObj", "Core/jDom" ],
+    require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ],
         function (Factory, jObj, jDom) {
             try {
                 var key, classes, id, name, showHide, changeToType, changeToObject;
@@ -41,10 +41,10 @@ $(function () {
                 };
 
                 classes = {
-                    Component:Factory.core.component(),
-                    SourceComponent:Factory.core.source(),
-                    DestinationComponent:Factory.core.destination(),
-                    PipelineComponent:Factory.pipeline()
+                    Component:Factory.component.core.component(),
+                    SourceComponent:Factory.component.core.source(),
+                    DestinationComponent:Factory.component.core.destination(),
+                    PipelineComponent:Factory.component.core.pipeline()
                 };
 
                 for (key in classes) {

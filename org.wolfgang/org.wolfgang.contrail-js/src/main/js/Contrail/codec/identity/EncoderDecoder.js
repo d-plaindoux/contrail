@@ -18,19 +18,29 @@
 
 /*global define*/
 
-define(["require", "Core/jObj", "./SourceCompositionComponent", "./DestinationCompositionComponent" ],
-    function (require, jObj, source, destination) {
+define([ "require", "Core/jObj", "External/JSon" ],
+    function (require, jObj, JSon) {
         "use strict";
 
-        var PipelineCompositionComponent = function (components) {
-            jObj.bless(this, source(components), destination(components));
-            this.components = components;
-        };
+        function IdentityDecoder() {
+            jObj.bless(this, require("Codec/Factory").core.encoder(), require("Codec/Factory").core.decoder());
+            this.buffer = [];
+        }
 
-        PipelineCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
-            function (components) {
-                return new PipelineCompositionComponent(components);
+        IdentityDecoder.init = jObj.constructor([],
+            function () {
+                return new IdentityDecoder();
             });
 
-        return PipelineCompositionComponent.init;
+        IdentityDecoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,
+            function (data) {
+                return [ data ];
+            });
+
+        IdentityDecoder.prototype.finish = jObj.method([], jObj.types.Array,
+            function () {
+                return [];
+            });
+
+        return IdentityDecoder.init;
     });

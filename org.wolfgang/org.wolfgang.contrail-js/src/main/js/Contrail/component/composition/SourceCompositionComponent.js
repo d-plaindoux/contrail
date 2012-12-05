@@ -27,7 +27,7 @@ define(["require", "Core/jObj" ],
             this.components = components;
         };
 
-        SourceCompositionComponent.init = jObj.constructor([ jObj.types.Array ],
+        SourceCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
             function (components) {
                 return new SourceCompositionComponent(components);
             });

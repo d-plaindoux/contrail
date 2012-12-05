@@ -96,11 +96,11 @@ define([ "require" ],
             ArrayOf:function (type) {
                 return typeRule(jType.primitives.Array,
                     function (object) {
-                        var result = jType.types.Array(object);
+                        var result = jType.ofType(object, jType.types.Array);
 
                         if (result) {
                             object.forEach(function (value) {
-                                result &= jType.ofType(object, type);
+                                result = result && jType.ofType(value, type);
                             });
                         }
 

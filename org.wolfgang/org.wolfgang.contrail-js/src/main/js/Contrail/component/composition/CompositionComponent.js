@@ -32,7 +32,7 @@ define(["require", "Core/jObj" ],
          *
          * @type {*|void}
          */
-        CompositionComponent.init = jObj.constructor([ jObj.types.Array ],
+        CompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
             function (components) {
                 return new CompositionComponent(components);
             });

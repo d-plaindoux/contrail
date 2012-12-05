@@ -54,7 +54,7 @@ define([ "require", "Core/jObj", "./flow/MultiUpStreamDataFlow" ],
                 return require("Link/Factory").components(this, destinationLink.getDestination());
             });
 
-        MultiDestinationComponent.prototype.getDestinations = jObj.method([], jObj.types.Array,
+        MultiDestinationComponent.prototype.getDestinations = jObj.method([], jObj.types.ArrayOf(jObj.types.Named("DestinationComponent")),
             function () {
                 return this.destinationLink.map(function (link) {
                     return link.getDestination();
