@@ -81,7 +81,7 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                     c1.getDownStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation(), 1, "Checking accumulated number of data");
+                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
                     QUnit.equal(i1.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
@@ -111,13 +111,13 @@ require([ "Contrail/Factory", "qunit", "Core/jObj", "test/jCC"],
                     c1.getDownStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation(), 1, "Checking accumulated number of data");
+                    QUnit.equal(i1.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
                     QUnit.equal(i1.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    QUnit.equal(i2.getDownStreamDataFlow().getAccumulation(), 1, "Checking accumulated number of data");
+                    QUnit.equal(i2.getDownStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
                     QUnit.equal(i2.getDownStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
