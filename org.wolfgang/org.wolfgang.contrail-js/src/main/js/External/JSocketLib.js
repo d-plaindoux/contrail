@@ -16,11 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define, window*/
 
-define("External/JSon", [],
+define("External/WebSocket", [],
     function () {
         "use strict";
 
-        return JSON;
+        return window.WebSocket; // WebSocket;
     });

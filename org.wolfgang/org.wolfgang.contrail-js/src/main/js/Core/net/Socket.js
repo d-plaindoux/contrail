@@ -18,16 +18,15 @@
 
 /*global define*/
 
-define("Core/Socket", ["require", "Core/jObj"],
-    function (require, jObj) {
+define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
+    function (WebSocket, require, jObj) {
         "use strict";
 
         function Socket(host, dataFlow) {
             jObj.bless(this);
 
-            var WS = require("WebSocket");
+            this.socket = new WebSocket(host);
 
-            this.socket = new WS(host);
             this.socket.onopen = function () {
                 // Review -- TODO
             };
@@ -48,6 +47,11 @@ define("Core/Socket", ["require", "Core/jObj"],
         Socket.init = jObj.constructor([ jObj.types.String, jObj.types.Named("DataFlow") ],
             function (host, dataFlow) {
                 return new Socket(host, dataFlow);
+            });
+
+        Socket.prototype.send = jObj.procedure([ jObj.types.Any],
+            function (data) {
+                this.socket.send(data);
             });
 
         Socket.prototype.close = jObj.procedure([],

@@ -30,7 +30,7 @@ require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
                     dataFlow = Factory.flow.accumulated();
                 }).
                 And(function () {
-                    client = socket("ws:ws://127.0.0.1:1337", dataFlow);
+                    client = socket("ws://127.0.0.1:1337", dataFlow);
                 }).
                 When(function () {
                     client.send("Ping");
