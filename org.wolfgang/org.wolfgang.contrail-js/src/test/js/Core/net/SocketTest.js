@@ -16,19 +16,27 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global require */
 
-define("Contrail/Factory", [ "Codec/Factory", "Component/Factory", "Link/Factory", "Core/Flow" ],
-    function (Codec, Component, Link, Flow) {
+require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
+    function (QUnit, Factory, socket, jCC) {
         "use strict";
 
-        var Factory = {};
+        jCC.scenario("Trying code", function () {
+            var dataFlow, client;
 
-        Factory.codec = Codec;
-        Factory.component = Component;
-        Factory.link = Link;
-        Factory.flow = Flow;
-
-        return Factory;
-
+            jCC.
+                Given(function () {
+                    dataFlow = Factory.flow.accumulated();
+                }).
+                And(function () {
+                    client = socket("ws:ws://127.0.0.1:1337", dataFlow);
+                }).
+                When(function () {
+                    client.send("Ping");
+                }).
+                Then(function () {
+                    // review -- TODO
+                });
+        });
     });
