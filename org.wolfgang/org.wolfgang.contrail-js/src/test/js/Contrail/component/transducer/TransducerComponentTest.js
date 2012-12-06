@@ -23,6 +23,7 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
         "use strict";
 
         var JSon = Factory.codec.json,
+            Identity = Factory.codec.identity,
             PayLoad = Factory.codec.payload,
             Serialize = Factory.codec.serialize,
             Component = Factory.component;
@@ -127,6 +128,7 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
                         Component.transducer(JSon.decoder(), JSon.encoder()),
                         Component.transducer(Serialize.decoder(), Serialize.encoder()),
                         Component.transducer(PayLoad.decoder(), PayLoad.encoder()),
+                        Component.transducer(Identity.encoder(), Identity.decoder()),
                         Component.transducer(PayLoad.encoder(), PayLoad.decoder()),
                         Component.transducer(Serialize.encoder(), Serialize.decoder()),
                         Component.transducer(JSon.encoder(), JSon.decoder()),
