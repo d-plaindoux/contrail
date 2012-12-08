@@ -18,9 +18,8 @@
 
 /*global define, window*/
 
-define("External/WebSocket", [],
-    function () {
+define("External/WebSocket", [ "Core/jObj" ],
+    function (jObj) {
         "use strict";
-
-        return window.WebSocket; // WebSocket;
+        return window.WebSocket || window.MozWebSocket || jObj.throwError(jObj.exception("L.web.socket.not.defined"));
     });

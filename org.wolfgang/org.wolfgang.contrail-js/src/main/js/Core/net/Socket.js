@@ -22,41 +22,67 @@ define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
     function (WebSocket, require, jObj) {
         "use strict";
 
-        function Socket(host, dataFlow) {
+        function Socket(endpoint, dataFlow) {
+
             jObj.bless(this);
 
-            this.socket = new WebSocket(host);
+            this.webSocket = new WebSocket(endpoint);
 
-            this.socket.onopen = function () {
-                // Review -- TODO
-            };
+            this.webSocket.onopen = jObj.procedure([],
+                function () {
+                    // Nothing
+                });
 
-            this.socket.onerror = function (evt) {
-                // Review -- TODO
-            };
+            this.webSocket.onerror = jObj.procedure([ jObj.types.Object ],
+                function (error) {
+                    dataFlow.handleClose();
+                });
 
-            this.socket.onclose = function () {
-                dataFlow.handleClose();
-            };
+            this.webSocket.onclose = jObj.procedure([],
+                function () {
+                    dataFlow.handleClose();
+                });
 
-            this.socket.onmessage = function (data) {
-                dataFlow.handleData(data);
-            };
+            this.webSocket.onmessage = jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
+                function (message) {
+                    if (message.data) {
+                        dataFlow.handleData(message.data);
+                    }
+                });
         }
 
         Socket.init = jObj.constructor([ jObj.types.String, jObj.types.Named("DataFlow") ],
-            function (host, dataFlow) {
-                return new Socket(host, dataFlow);
+            function (endPoint, dataFlow) {
+                return new Socket(endPoint, dataFlow);
             });
 
-        Socket.prototype.send = jObj.procedure([ jObj.types.Any],
-            function (data) {
-                this.socket.send(data);
+        Socket.prototype.ensureOpen = jObj.procedure([ ],
+            function () {
+                if (this.webSocket.readyState !== WebSocket.OPEN) {
+                    if (this.webSocket.readyState === WebSocket.CLOSING) {
+                        throw jObj.exception("L.web.socket.closing");
+                    } else if (this.webSocket.readyState === WebSocket.CLOSED) {
+                        throw jObj.exception("L.web.socket.closed");
+                    } else {
+                        throw jObj.exception("L.web.socket.not.established");
+                    }
+                }
+            });
+
+        Socket.prototype.send = jObj.procedure([ jObj.types.String ],
+            function (message) {
+                this.ensureOpen();
+                this.webSocket.send(message);
             });
 
         Socket.prototype.close = jObj.procedure([],
             function () {
-                this.socket.close();
+                this.webSocket.close();
+            });
+
+        Socket.prototype.getStatus = jObj.method([], jObj.types.Number,
+            function () {
+                return this.status;
             });
 
         return Socket.init;

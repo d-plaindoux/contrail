@@ -93,16 +93,31 @@ define([ "require" ],
             }),
 
             // Complex types
+            ObjectOf:function (objectType) {
+                return typeRule(jType.primitives.Object,
+                    function (object) {
+                        var entry, result = true;
+
+                        for (entry in objectType) {
+                            if (objectType.hasOwnProperty(entry)) {
+                                result = result && jType.ofType(object[entry], objectType[entry]);
+                            }
+                        }
+
+                        return result;
+                    });
+            },
+
+
+            // Complex types
             ArrayOf:function (type) {
                 return typeRule(jType.primitives.Array,
                     function (object) {
-                        var result = jType.ofType(object, jType.types.Array);
+                        var result = true;
 
-                        if (result) {
-                            object.forEach(function (value) {
-                                result = result && jType.ofType(value, type);
-                            });
-                        }
+                        object.forEach(function (value) {
+                            result = result && jType.ofType(value, type);
+                        });
 
                         return result;
                     });

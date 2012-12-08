@@ -23,20 +23,68 @@ require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
         "use strict";
 
         jCC.scenario("Trying code", function () {
-            var dataFlow, client;
+            var dataFlow, client, i;
 
             jCC.
                 Given(function () {
                     dataFlow = Factory.flow.accumulated();
                 }).
                 And(function () {
-                    client = socket("ws://127.0.0.1:1337", dataFlow);
+                    client = socket("ws://localhost:1337", dataFlow);
                 }).
                 When(function () {
-                    client.send("Ping");
+                    for(i = 0; i < 100000; i += 1) {
+                        try {
+                            client.send("Ping");
+                        } catch (e) {
+                            // nothing
+                        }
+                    }
                 }).
                 Then(function () {
-                    // review -- TODO
+                    QUnit.equal(dataFlow.getAccumulation().length, 1);
+                }).
+                And(function () {
+                    QUnit.equal(dataFlow.getAccumulation()[0], "Pong");
                 });
         });
     });
+
+/* NODE JS server side - npm install websocket required first
+ ------------------------------------------------------------
+
+ var http = require('http');
+
+ var server = http.createServer(function(request, response) {
+    // process HTTP request. Since we're writing just WebSockets server
+    // we don't have to implement anything.
+ });
+
+ // create the server
+ var WebSocketServer = require('websocket').server;
+ var wsServer = new WebSocketServer({
+    httpServer: server
+ });
+
+ // WebSocket server
+ wsServer.on('request', function(request) {
+
+    console.log((new Date()) + ' Accept ' + connection + '.');
+    var connection = request.accept(null, request.origin);
+    console.log((new Date()) + ' Start ' + connection + '.');
+
+    // This is the most important callback for us, we'll handle
+    // all messages from users here.
+    connection.on('message', function(message) {
+        console.log("RECV : " + message + "/n");
+        connection.send("Pong");
+    });
+
+    connection.on('close', function(connection) {
+        console.log((new Date()) + ' Finish ' + connection + '.');
+        // close user connection
+    });
+ });
+
+ server.listen(1337);
+ */

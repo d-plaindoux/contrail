@@ -42,6 +42,14 @@ define([ "./jType" ],
         };
 
         /**
+         * Method called whether a given exception must be thrown
+         * @param e
+         */
+        jModel.throwError = function (e) {
+            throw e;
+        };
+
+        /**
          * Method called whether a construction must be defined
          *
          * @param profil
