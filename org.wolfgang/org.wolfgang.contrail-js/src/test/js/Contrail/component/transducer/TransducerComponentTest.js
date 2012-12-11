@@ -112,7 +112,77 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
                 });
         });
 
-        jCC.scenario("Check Component type to be Component", function () {
+        jCC.scenario("Check JSon transducer", function () {
+            var terminalFlow, composition, testInit, loopTest, index, object;
+
+            testInit = jCC.
+                Given(function () {
+                    terminalFlow = Factory.flow.core();
+                    terminalFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = data;
+                    });
+                }).
+                And(function () {
+                    composition = Component.compose([
+                        Component.initial(Factory.flow.core()),
+                        Component.transducer(JSon.decoder(), JSon.encoder()),
+                        Component.transducer(JSon.encoder(), JSon.decoder()),
+                        Component.terminal(terminalFlow)]);
+                });
+
+            loopTest = function (index) {
+                testInit.
+                    When(function () {
+                        composition.getUpStreamDataFlow().handleData({ a:index });
+                    }).
+                    Then(function () {
+                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                    });
+            };
+
+            for (index = 0; index < 10; index += 1) {
+                loopTest(index);
+            }
+        });
+
+
+        jCC.scenario("Check JSon/Serialize transducer", function () {
+            var terminalFlow, composition, testInit, loopTest, index, object;
+
+            testInit = jCC.
+                Given(function () {
+                    terminalFlow = Factory.flow.core();
+                    terminalFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = data;
+                    });
+                }).
+                And(function () {
+                    composition = Component.compose([
+                        Component.initial(Factory.flow.core()),
+                        Component.transducer(JSon.decoder(), JSon.encoder()),
+                        Component.transducer(Serialize.decoder(), Serialize.encoder()),
+                        Component.transducer(Serialize.encoder(), Serialize.decoder()),
+                        Component.transducer(JSon.encoder(), JSon.decoder()),
+                        Component.terminal(terminalFlow)]);
+                });
+
+            loopTest = function (index) {
+                testInit.
+                    When(function () {
+                        composition.getUpStreamDataFlow().handleData({ a:index });
+                    }).
+                    Then(function () {
+                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                    });
+            };
+
+            for (index = 0; index < 10; index += 1) {
+                loopTest(index);
+            }
+        });
+
+
+        jCC.scenario("Check JSon/Serialize/Payload transducer", function () {
             var terminalFlow, composition, testInit, loopTest, index, object;
 
             testInit = jCC.
@@ -128,6 +198,44 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
                         Component.transducer(JSon.decoder(), JSon.encoder()),
                         Component.transducer(Serialize.decoder(), Serialize.encoder()),
                         Component.transducer(PayLoad.decoder(), PayLoad.encoder()),
+                        Component.transducer(PayLoad.encoder(), PayLoad.decoder()),
+                        Component.transducer(Serialize.encoder(), Serialize.decoder()),
+                        Component.transducer(JSon.encoder(), JSon.decoder()),
+                        Component.terminal(terminalFlow)]);
+                });
+
+            loopTest = function (index) {
+                testInit.
+                    When(function () {
+                        composition.getUpStreamDataFlow().handleData({ a:index });
+                    }).
+                    Then(function () {
+                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                    });
+            };
+
+            for (index = 0; index < 10; index += 1) {
+                loopTest(index);
+            }
+        });
+
+        jCC.scenario("Check JSon/Serialize/Payload/Identity transducer", function () {
+            var terminalFlow, composition, testInit, loopTest, index, object;
+
+            testInit = jCC.
+                Given(function () {
+                    terminalFlow = Factory.flow.core();
+                    terminalFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = data;
+                    });
+                }).
+                And(function () {
+                    composition = Component.compose([
+                        Component.initial(Factory.flow.core()),
+                        Component.transducer(JSon.decoder(), JSon.encoder()),
+                        Component.transducer(Serialize.decoder(), Serialize.encoder()),
+                        Component.transducer(PayLoad.decoder(), PayLoad.encoder()),
+                        Component.transducer(Identity.decoder(), Identity.encoder()),
                         Component.transducer(Identity.encoder(), Identity.decoder()),
                         Component.transducer(PayLoad.encoder(), PayLoad.decoder()),
                         Component.transducer(Serialize.encoder(), Serialize.decoder()),
@@ -145,7 +253,7 @@ require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
                     });
             };
 
-            for (index = 0; index < 100; index += 1) {
+            for (index = 0; index < 10; index += 1) {
                 loopTest(index);
             }
         });
