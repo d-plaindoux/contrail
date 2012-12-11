@@ -20,7 +20,7 @@
 
 define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
     function (jModel, jType, jTransducer) {
-        // "use strict";
+        "use strict";
 
         var jObj = {};
 

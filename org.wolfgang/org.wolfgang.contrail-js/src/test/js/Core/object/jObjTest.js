@@ -20,11 +20,10 @@
 
 require([ "Core/jObj", "qunit", "test/jCC" ],
     function (jObj, QUnit, jCC) {
-        // "use strict";
+        "use strict";
 
-        /**
-         * Test Type Checking
-         */
+        // ---------------------------------------------------------
+
         function A() {
             jObj.bless(this);
             this.a = "a";
@@ -38,6 +37,8 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
             return "A.m()";
         };
 
+        // ---------------------------------------------------------
+
         function B() {
             jObj.bless(this, new A());
             this.b = { hello:"World!"};
@@ -46,6 +47,8 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
         B.prototype.m = function () {
             return "B.m()";
         };
+
+        // ---------------------------------------------------------
 
         jCC.scenario("Check Subtype a:A <? A", function () {
             var a;
