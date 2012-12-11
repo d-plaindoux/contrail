@@ -18,13 +18,13 @@
 
 /*global define*/
 
-define([ "Utils/jUtils", "Core/jObj" ],
-    function (jUtils, jObj) {
+define([ "Utils/jUUID", "Core/jObj" ],
+    function (jUUID, jObj) {
         "use strict";
 
         function Component() {
             jObj.bless(this);
-            this.identifier = jUtils.generate();
+            this.identifier = jUUID.generate();
         }
 
         Component.init = jObj.constructor([],

@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "test/jCC", "Utils/jUtils", "IO/jMarshaller", "IO/ByteBuffer" ],
-    function (QUnit, jCC, jUtils, jMarshaller, byteBuffer) {
+require([ "qunit", "test/jCC", "Utils/jUUID", "IO/jMarshaller", "IO/ByteBuffer" ],
+    function (QUnit, jCC, jUUID, jMarshaller, byteBuffer) {
         "use strict";
 
         jCC.scenario("Checking Byte buffer creation", function () {
@@ -67,7 +67,7 @@ require([ "qunit", "test/jCC", "Utils/jUtils", "IO/jMarshaller", "IO/ByteBuffer"
                     message = "Hello, World!";
                 }).
                 And(function () {
-                    bytes = jUtils.array(message.length * 2);
+                    bytes = jUUID.array(message.length * 2);
                 }).
                 When(function () {
                     buffer.write(jMarshaller.stringToBytes(message));
@@ -88,7 +88,7 @@ require([ "qunit", "test/jCC", "Utils/jUtils", "IO/jMarshaller", "IO/ByteBuffer"
                     buffer = byteBuffer();
                 }).
                 And(function () {
-                    bytes = jUtils.array(10);
+                    bytes = jUUID.array(10);
                 }).
                 WhenNothing.
                 Then(function () {
@@ -105,7 +105,7 @@ require([ "qunit", "test/jCC", "Utils/jUtils", "IO/jMarshaller", "IO/ByteBuffer"
                     buffer = byteBuffer();
                 }).
                 And(function () {
-                    bytes = jUtils.array(10);
+                    bytes = jUUID.array(10);
                 }).
                 When(function () {
                     buffer.close();

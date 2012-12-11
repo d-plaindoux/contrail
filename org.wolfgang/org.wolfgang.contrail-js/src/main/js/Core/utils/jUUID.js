@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Utils/jUtils", [  ],
+define("Utils/jUUID", [  ],
     function () {
         "use strict";
 

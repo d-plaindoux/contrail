@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Utils/jUtils", "qunit", "test/jCC" ],
-    function (jUtils, QUnit, jCC) {
+require([ "Utils/jUUID", "qunit", "test/jCC" ],
+    function (jUUID, QUnit, jCC) {
         "use strict";
 
         /**
@@ -30,10 +30,10 @@ require([ "Utils/jUtils", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    uuid1 = jUtils.generate();
+                    uuid1 = jUUID.generate();
                 }).
                 And(function () {
-                    uuid2 = jUtils.generate();
+                    uuid2 = jUUID.generate();
                 }).
                 WhenNothing.
                 Then(function () {
