@@ -111,5 +111,5 @@ define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
         };
 
         return jObj.bless(jObj, jModel, jType, jTransducer);
-    })
-;
+
+    });

@@ -22,9 +22,9 @@ define("Utils/jUtils", [  ],
     function () {
         "use strict";
 
-        var jUtils = {};
+        var jUUID = {};
 
-        jUtils.uuid = function () {
+        jUUID.generate = function () {
             var S4 = function () {
                 return Math.floor(Math.random() * 0x10000).toString(16);
             };
@@ -38,7 +38,7 @@ define("Utils/jUtils", [  ],
                 );
         };
 
-        jUtils.array = function (len) {
+        jUUID.array = function (len) {
             var array = [], i;
 
             for (i = 0; i < len; i += 1) {
@@ -48,5 +48,5 @@ define("Utils/jUtils", [  ],
             return array;
         };
 
-        return jUtils;
+        return jUUID;
     });

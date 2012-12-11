@@ -24,7 +24,7 @@ define([ "Utils/jUtils", "Core/jObj" ],
 
         function Component() {
             jObj.bless(this);
-            this.identifier = jUtils.uuid();
+            this.identifier = jUtils.generate();
         }
 
         Component.init = jObj.constructor([],

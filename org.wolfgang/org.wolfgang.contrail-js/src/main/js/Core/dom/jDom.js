@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/jDom", [ ],
-    function () {
+define("Core/jDom", [ "Core/jObj" ],
+    function (jObj) {
         "use strict";
 
         function JDOm(tag, attributes, content) {
@@ -46,14 +46,11 @@ define("Core/jDom", [ ],
             }
 
             return result;
-
         };
-
-        JDOm.prototype.build = JDOm.prototype.toString;
 
         // Public package definition
 
         return function (tag, attributes, content) {
-            return new JDOm(tag, attributes, content).build();
+            return new JDOm(tag, attributes, content).toString();
         };
     });

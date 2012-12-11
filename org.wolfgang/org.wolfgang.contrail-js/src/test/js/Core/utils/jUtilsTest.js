@@ -30,10 +30,10 @@ require([ "Utils/jUtils", "qunit", "test/jCC" ],
 
             jCC.
                 Given(function () {
-                    uuid1 = jUtils.uuid();
+                    uuid1 = jUtils.generate();
                 }).
                 And(function () {
-                    uuid2 = jUtils.uuid();
+                    uuid2 = jUtils.generate();
                 }).
                 WhenNothing.
                 Then(function () {
