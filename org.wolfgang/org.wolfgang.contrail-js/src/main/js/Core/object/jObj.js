@@ -18,43 +18,76 @@
 
 /*global define*/
 
-define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransducer" ],
-    function (jQuery, jModel, jType, jTransducer) {
-        "use strict";
+define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
+    function (jModel, jType, jTransducer) {
+        // "use strict";
 
         var jObj = {};
+
+        /**
+         * Private method for the inheritance mechanism
+         *
+         * @param instance
+         * @param parameters
+         * @param getDefinition
+         */
+        function inheritance(instance, parameters, getDefinition) {
+            parameters.forEach(function (inherited) {
+                var key, definition = getDefinition(inherited);
+                for (key in definition) {
+                    if (definition.hasOwnProperty(key) && !instance.hasOwnProperty(key)) {
+                        instance[key] = definition[key];
+                    }
+                }
+            });
+        }
 
         /**
          * Method called whether an object must be extended and blessed as an instance
          * of the extended class model.
          */
         jObj.bless = function (/*arguments*/) {
-            var i, key, parameters = arguments;
+            var instance, parameters = arguments;
 
-            if (arguments.length === 0) {
-                throw { message:"L.bless.requires.one.element.at.least"};
+            if (parameters.length === 0) {
+                throw { message:"L.bless.requires.at.least.one.object"};
+            } else if (!jType.ofType(parameters[0], jType.types.Object)) {
+                throw { message:"L.bless.applied.to.object.only"};
             }
 
-            // Extension and supers
-            for (i = 1; i < parameters.length; i += 1) {
-                jQuery.extend(parameters[0], parameters[i]);
-            }
+            /*
+             parameters.forEach(function (value) {
+             if (!jType.ofType(value, jType.types.Object)) {
+             throw { message:"L.bless.applied.to.object.only"};
+             }
+             });
+             */
 
-            // Inheritance
-            parameters[0].inherit = {};
+            instance = parameters[0];
+            parameters = Array.prototype.slice.call(parameters, 1);
 
-            for (i = 1; i < parameters.length; i += 1) {
-                if (parameters[i] && parameters[i].inherit) {
-                    for (key in parameters[i].inherit) {
-                        if (parameters[i].inherit.hasOwnProperty(key)) {
-                            parameters[0].inherit[key] = true;
-                        }
+            inheritance(instance, parameters, function (parameter) {
+                return parameter;
+            });
+
+            inheritance(Object.getPrototypeOf(instance), parameters, function (parameter) {
+                return Object.getPrototypeOf(parameter);
+            });
+
+            // Inheritance definition
+            instance.inherit = {};
+
+            parameters.forEach(function (inherited) {
+                var key;
+                for (key in inherited.inherit) {
+                    if (inherited.inherit.hasOwnProperty(key)) {
+                        instance.inherit[key] = true;
                     }
-                    parameters[0].inherit[jType.getClass(parameters[i])] = true;
                 }
-            }
+                instance.inherit[jType.getClass(inherited)] = true;
+            });
 
-            return parameters[0];
+            return instance;
         };
 
         /**
@@ -78,4 +111,5 @@ define("Core/jObj", [ "jquery", "./jModel", "./jType", "./jTransducer" ],
         };
 
         return jObj.bless(jObj, jModel, jType, jTransducer);
-    });
+    })
+;

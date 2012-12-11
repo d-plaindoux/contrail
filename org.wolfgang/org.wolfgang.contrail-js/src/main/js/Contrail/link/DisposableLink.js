@@ -28,7 +28,7 @@ define([ "Core/jObj"],
 
         DisposableLink.init = jObj.constructor([],
             function () {
-                // Nothing to do
+                return new DisposableLink();
             }
         );
 

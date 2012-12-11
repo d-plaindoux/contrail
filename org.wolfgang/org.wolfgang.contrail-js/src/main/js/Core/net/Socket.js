@@ -80,10 +80,6 @@ define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
                 this.webSocket.close();
             });
 
-        Socket.prototype.getStatus = jObj.method([], jObj.types.Number,
-            function () {
-                return this.status;
-            });
-
         return Socket.init;
+
     });

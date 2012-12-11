@@ -22,7 +22,7 @@ define([ "require" ],
     function (require) {
         "use strict";
 
-        var jType = {};
+        var jType = {}, Primitives;
 
         function RuntimeTypeError(message) {
             require("Core/jObj").bless(this);
@@ -45,7 +45,7 @@ define([ "require" ],
 
                 if (typeof object === type) {
                     result = true;
-                } else if (type === jType.primitives.Any) {
+                } else if (type === Primitives.Any) {
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
@@ -62,7 +62,7 @@ define([ "require" ],
         /**
          * Type primitives
          */
-        jType.primitives = {
+        Primitives = {
             Any:"Any",
             Array:"Array",
             Object:"Object",
@@ -77,24 +77,28 @@ define([ "require" ],
          * Type definitions
          */
         jType.types = {
-            Array:ofPrimitiveType(jType.primitives.Array),
-            Object:ofPrimitiveType(jType.primitives.Object),
-            Number:ofPrimitiveType(jType.primitives.Number),
-            String:ofPrimitiveType(jType.primitives.String),
-            Boolean:ofPrimitiveType(jType.primitives.Boolean),
-            Undefined:ofPrimitiveType(jType.primitives.Undefined),
-            Function:ofPrimitiveType(jType.primitives.Function),
+            Array:ofPrimitiveType(Primitives.Array),
+            Number:ofPrimitiveType(Primitives.Number),
+            String:ofPrimitiveType(Primitives.String),
+            Boolean:ofPrimitiveType(Primitives.Boolean),
+            Undefined:ofPrimitiveType(Primitives.Undefined),
+            Function:ofPrimitiveType(Primitives.Function),
 
             Named:ofPrimitiveType,
 
             // Root type
-            Any:typeRule(jType.primitives.Any, function (object) {
+            Any:typeRule(Primitives.Any, function (object) {
                 return true;
             }),
 
-            // Complex types
+            // Object type only
+            Object:typeRule(Primitives.Object, function (object) {
+                return typeof object === "object";
+            }),
+
+            // Complex object type (Structural sub-typing)
             ObjectOf:function (objectType) {
-                return typeRule(jType.primitives.Object,
+                return typeRule(Primitives.Object,
                     function (object) {
                         var entry, result = true;
 
@@ -108,10 +112,9 @@ define([ "require" ],
                     });
             },
 
-
-            // Complex types
+            // Complex object type (Array generic type)
             ArrayOf:function (type) {
-                return typeRule(jType.primitives.Array,
+                return typeRule(Primitives.Array,
                     function (object) {
                         var result = true;
 
@@ -123,8 +126,9 @@ define([ "require" ],
                     });
             },
 
-            Choice:function (type1, type2) {
-                return typeRule("Choice", function (object) {
+            // Disjunction
+            Or:function (type1, type2) {
+                return typeRule("Or", function (object) {
                     var result;
 
                     if (jType.ofType(object, type2)) {
@@ -137,6 +141,7 @@ define([ "require" ],
                 });
             },
 
+            // Conjunction
             And:function (type1, type2) {
                 return typeRule("And", function (object) {
                     var result;
@@ -151,12 +156,20 @@ define([ "require" ],
                 });
             },
 
-            Option:function (type) {
-                return jType.types.Choice(jType.types.Undefined, type);
+            // Negation
+            Not:function (type) {
+                return typeRule("And", function (object) {
+                    return !jType.ofType(object, type);
+                });
+            },
+
+            // Nullable
+            Nullable:function (type) {
+                return jType.types.Or(jType.types.Undefined, type);
             },
 
             VarArgs:function (type) {
-                return jType.types.Choice(jType.types.Undefined, type);
+                return jType.types.Or(jType.types.Undefined, type);
             }
         };
 
@@ -192,6 +205,24 @@ define([ "require" ],
         /**
          * Method called to check if a given object has a given type
          *
+         * @param type
+         * @return true if the object is a type of type; false otherwise
+         */
+        jType.getTypeName = function (type) {
+            var result;
+
+            if (type && type.typingRule) {
+                result = type.type;
+            } else {
+                result = type;
+            }
+
+            return result;
+        };
+
+        /**
+         * Method called to check if a given object has a given type
+         *
          * @param object
          * @param type
          * @return true if the object is a type of type; false otherwise
@@ -203,26 +234,6 @@ define([ "require" ],
                 result = type.check(object);
             } else {
                 result = ofPrimitiveType(type).check(object);
-            }
-
-            return result;
-        };
-
-
-        /**
-         * Method called to check if a given object has a given type
-         *
-         * @param object
-         * @param type
-         * @return true if the object is a type of type; false otherwise
-         */
-        jType.getType = function (type) {
-            var result;
-
-            if (type && type.typingRule) {
-                result = type.type;
-            } else {
-                result = type;
             }
 
             return result;
@@ -254,7 +265,7 @@ define([ "require" ],
          */
         jType.checkType = function (object, type) {
             if (!jType.ofType(object, type)) {
-                throw new RuntimeTypeError(object + " must be an instance of " + jType.getType(type));
+                throw new RuntimeTypeError(object + " must be an instance of " + jType.getTypeName(type));
             } else {
                 return object;
             }

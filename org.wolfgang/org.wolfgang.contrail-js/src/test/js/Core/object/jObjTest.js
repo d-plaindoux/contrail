@@ -20,7 +20,7 @@
 
 require([ "Core/jObj", "qunit", "test/jCC" ],
     function (jObj, QUnit, jCC) {
-        "use strict";
+        // "use strict";
 
         /**
          * Test Type Checking
@@ -30,10 +30,22 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
             this.a = "a";
         }
 
+        A.prototype.n = function () {
+            return "A.n()";
+        };
+
+        A.prototype.m = function () {
+            return "A.m()";
+        };
+
         function B() {
             jObj.bless(this, new A());
             this.b = { hello:"World!"};
         }
+
+        B.prototype.m = function () {
+            return "B.m()";
+        };
 
         jCC.scenario("Check Subtype a:A <? A", function () {
             var a;
@@ -168,6 +180,36 @@ require([ "Core/jObj", "qunit", "test/jCC" ],
                 }).
                 And(function () {
                     QUnit.equal(jObj.ofType(tb.b.hello, jObj.types.String), true, "Checking getType(<string>)");
+                });
+        });
+
+        jCC.scenario("Method polymorphism without override", function () {
+            var b, r;
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                When(function () {
+                    r = b.n();
+                }).
+                Then(function () {
+                    QUnit.equal(r, "A.n()", "Method polymorphism without override is A.n()");
+                });
+        });
+
+        jCC.scenario("Method polymorphism without override", function () {
+            var b, r;
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                When(function () {
+                    r = b.m();
+                }).
+                Then(function () {
+                    QUnit.equal(r, "B.m()", "Method polymorphism without override is B.m()");
                 });
         });
     });

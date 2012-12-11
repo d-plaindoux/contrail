@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
-    function (QUnit, Factory, socket, jCC) {
+require([ "jquery", "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
+    function (jQuery, QUnit, Factory, socket, jCC) {
         "use strict";
 
         jCC.scenario("Trying code", function () {
@@ -33,13 +33,7 @@ require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
                     client = socket("ws://localhost:1337", dataFlow);
                 }).
                 When(function () {
-                    for(i = 0; i < 100000; i += 1) {
-                        try {
-                            client.send("Ping");
-                        } catch (e) {
-                            // nothing
-                        }
-                    }
+                    client.send("Ping");
                 }).
                 Then(function () {
                     QUnit.equal(dataFlow.getAccumulation().length, 1);
@@ -48,7 +42,9 @@ require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
                     QUnit.equal(dataFlow.getAccumulation()[0], "Pong");
                 });
         });
+
     });
+
 
 /* NODE JS server side - npm install websocket required first
  ------------------------------------------------------------
@@ -56,34 +52,34 @@ require([ "qunit", "Contrail/Factory", "Core/Socket", "test/jCC" ],
  var http = require('http');
 
  var server = http.createServer(function(request, response) {
-    // process HTTP request. Since we're writing just WebSockets server
-    // we don't have to implement anything.
+     // process HTTP request. Since we're writing just WebSockets server
+     // we don't have to implement anything.
  });
 
  // create the server
  var WebSocketServer = require('websocket').server;
  var wsServer = new WebSocketServer({
-    httpServer: server
+     httpServer: server
  });
 
  // WebSocket server
  wsServer.on('request', function(request) {
 
-    console.log((new Date()) + ' Accept ' + connection + '.');
-    var connection = request.accept(null, request.origin);
-    console.log((new Date()) + ' Start ' + connection + '.');
+     console.log((new Date()) + ' Accept ' + connection + '.');
+     var connection = request.accept(null, request.origin);
+     console.log((new Date()) + ' Start ' + connection + '.');
 
-    // This is the most important callback for us, we'll handle
-    // all messages from users here.
-    connection.on('message', function(message) {
-        console.log("RECV : " + message + "/n");
-        connection.send("Pong");
-    });
+     // This is the most important callback for us, we'll handle
+     // all messages from users here.
+     connection.on('message', function(message) {
+         console.log("RECV : " + message + "/n");
+         connection.send("Pong");
+     });
 
-    connection.on('close', function(connection) {
-        console.log((new Date()) + ' Finish ' + connection + '.');
-        // close user connection
-    });
+     connection.on('close', function(connection) {
+         console.log((new Date()) + ' Finish ' + connection + '.');
+         // close user connection
+     });
  });
 
  server.listen(1337);
