@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
+define("Core/Socket", ["External/SocketFactory", "require", "Core/jObj"],
     function (WebSocket, require, jObj) {
         "use strict";
 
@@ -26,29 +26,29 @@ define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
 
             jObj.bless(this);
 
-            this.webSocket = new WebSocket(endpoint);
+            this.client = WebSocket.client(endpoint, {
+                onopen:jObj.procedure([],
+                    function () {
+                        // Nothing
+                    }),
 
-            this.webSocket.onopen = jObj.procedure([],
-                function () {
-                    // Nothing
-                });
+                onerror:jObj.procedure([ jObj.types.Object ],
+                    function (error) {
+                        dataFlow.handleClose();
+                    }),
 
-            this.webSocket.onerror = jObj.procedure([ jObj.types.Object ],
-                function (error) {
-                    dataFlow.handleClose();
-                });
+                onclose:jObj.procedure([],
+                    function () {
+                        dataFlow.handleClose();
+                    }),
 
-            this.webSocket.onclose = jObj.procedure([],
-                function () {
-                    dataFlow.handleClose();
-                });
-
-            this.webSocket.onmessage = jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
-                function (message) {
-                    if (message.data) {
-                        dataFlow.handleData(message.data);
-                    }
-                });
+                onmessage:jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
+                    function (message) {
+                        if (message.data) {
+                            dataFlow.handleData(message.data);
+                        }
+                    })
+            });
         }
 
         Socket.init = jObj.constructor([ jObj.types.String, jObj.types.Named("DataFlow") ],
@@ -58,10 +58,8 @@ define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
 
         Socket.prototype.ensureOpen = jObj.procedure([ ],
             function () {
-                if (this.webSocket.readyState !== WebSocket.OPEN) {
-                    if (this.webSocket.readyState === WebSocket.CLOSING) {
-                        throw jObj.exception("L.web.socket.closing");
-                    } else if (this.webSocket.readyState === WebSocket.CLOSED) {
+                if (!this.client.isOpen()) {
+                    if (this.client.isClosed()) {
                         throw jObj.exception("L.web.socket.closed");
                     } else {
                         throw jObj.exception("L.web.socket.not.established");
@@ -69,15 +67,15 @@ define("Core/Socket", ["External/WebSocket", "require", "Core/jObj"],
                 }
             });
 
-        Socket.prototype.send = jObj.procedure([ jObj.types.String ],
+        Socket.prototype.send = jObj.procedure([ jObj.types.String  ],
             function (message) {
                 this.ensureOpen();
-                this.webSocket.send(message);
+                this.client.send(message);
             });
 
         Socket.prototype.close = jObj.procedure([],
             function () {
-                this.webSocket.close();
+                this.client.close();
             });
 
         return Socket.init;

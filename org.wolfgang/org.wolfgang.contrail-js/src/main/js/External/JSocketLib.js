@@ -18,8 +18,72 @@
 
 /*global define, window*/
 
-define("External/WebSocket", [ "Core/jObj" ],
-    function (jObj) {
+define("External/SocketFactory", [ "require", "Core/jObj" ],
+    function (require, jObj) {
         "use strict";
-        return window.WebSocket || window.MozWebSocket || jObj.throwError(jObj.exception("L.web.socket.not.defined"));
+
+        var Factory = {};
+
+        Factory.client = jObj.method([ jObj.types.String, jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}) ], jObj.types.Object,
+            function (endpoint, callbacks) {
+                var WebSocket, client, key;
+
+                WebSocket = window.WebSocket || window.MozWebSocket || jObj.throwError(jObj.exception("L.web.socket.not.defined"));
+                client = new WebSocket(endpoint);
+
+                client.onopen = function () {
+                    // Nothing for the moment
+                };
+                client.onerror = function () {
+                    // Nothing for the moment
+                };
+
+                client.onmessage = callbacks.onmessage;
+                client.onclose = callbacks.onclose;
+
+                client.isOpen = function () {
+                    return this.readyState === WebSocket.OPEN;
+                };
+
+                client.isClosed = function () {
+                    return this.readyState === WebSocket.CLOSED || this.readyState === WebSocket.CLOSING;
+                };
+
+                return client;
+            }
+
+        )
+        ;
+
+        /* NODE JS server side - "npm install websocket" - required first */
+        Factory.server = jObj.method([ jObj.types.Number, jObj.types.ObjectOf({accept:jObj.types.Function}) ], jObj.types.Object,
+            function (port, accept) {
+                var httpServer, WebSocketServer, client;
+
+                httpServer = require("http").createServer(function (request, response) {
+                    // process HTTP request. Since we're writing just WebSockets server
+                    // we don't have to implement anything.
+                });
+
+                WebSocketServer = require('websocket').server;
+                client = new WebSocketServer({httpServer:httpServer});
+
+                client.on('request', function (request) {
+                    var connection, callbacks;
+
+                    connection = request.accept(null, request.origin);
+                    callbacks = accept(connection);
+
+                    connection.on('message', callbacks.onmessage);
+                    connection.on('close', callbacks.onclose);
+                });
+
+                httpServer.listen(port);
+
+                return httpServer;
+            });
+
+        return Factory;
+
     });
+

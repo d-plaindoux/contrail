@@ -6,72 +6,11 @@
     <meta charset="utf-8">
     <title>Contrail Demonstration Home Page</title>
     <script type="text/javascript" src="js/org/codehaus/mojo/almond/0.0.2-alpha-1/almond-0.0.2-alpha-1.js"></script>
-    <script type="text/javascript" src="js/org/codehaus/mojo/jquery-amd/1.7.1-alpha-1/jquery-amd-1.7.1-alpha-1.js"></script>
-    <script type="text/javascript" src="js/org/codehaus/mojo/jquery-ui-amd/1.8.16-alpha-1/jquery-ui-amd-1.8.16-alpha-1.js"></script>
-    <script type="text/javascript" src="js/Core/object/jType.js"></script>
-    <script type="text/javascript" src="js/Core/object/jTransducer.js"></script>
-    <script type="text/javascript" src="js/Core/object/jModel.js"></script>
-    <script type="text/javascript" src="js/Core/object/jObj.js"></script>
-    <script type="text/javascript" src="js/Core/flow/AccumulatedDataFlow.js"></script>
-    <script type="text/javascript" src="js/Core/flow/CloseableDataFlow.js"></script>
-    <script type="text/javascript" src="js/Core/flow/FilteredDataFlow.js"></script>
-    <script type="text/javascript" src="js/Core/flow/DataFlow.js"></script>
-    <script type="text/javascript" src="js/Core/flow/FlowFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/DisposableLink.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/SourceLink.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/DestinationLink.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/ComponentLink.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/ComponentManager.js"></script>
-    <script type="text/javascript" src="js/Contrail/link/LinkFactory.js"></script>
-    <script type="text/javascript" src="js/External/JSonLib.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/identity/EncoderDecoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/identity/CoDecIdentityFactory.js"></script>
-    <script type="text/javascript" src="js/Core/io/jMarshaller.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/serialize/Decoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/serialize/Encoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/serialize/CoDecSerializeFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/payload/Encoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/payload/Decoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/payload/CoDecPayloadFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/json/Encoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/json/Decoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/json/CoDecJSonFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/basic/Transducer.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/basic/Decoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/basic/Encoder.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/basic/CoDecBasicFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/codec/CodecFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/pipeline/PipelineComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/pipeline/PipelineComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/bound/TerminalComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/bound/InitialComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/bound/BoundComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/composition/CompositionComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/composition/SourceCompositionComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/composition/DestinationCompositionComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/composition/PipelineCompositionComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/composition/CompositionComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/multi/flow/MultiUpStreamDataFlow.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/multi/MultiDestinationComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/multi/flow/MultiDownStreamDataFlow.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/multi/MultiSourceComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/multi/MultiComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/DestinationComponentWithSingleSource.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/DestinationComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/SourceComponentWithSingleDestination.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/SourceComponent.js"></script>
-    <script type="text/javascript" src="js/Core/utils/jUtils.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/Component.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/core/CoreComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/transducer/flow/TransducerDataFlow.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/transducer/flow/TransducerUpStreamDataFlow.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/transducer/flow/TransducerDownStreamDataFlow.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/transducer/TransducerComponent.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/transducer/TransducerComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/component/ComponentFactory.js"></script>
-    <script type="text/javascript" src="js/Contrail/factory/Factory.js"></script>
-    <script type="text/javascript" src="js/Core/dom/jDom.js"></script>
-    <script type="text/javascript" src="js/App/index.js"></script>
+    <script type="text/javascript"
+            src="js/org/codehaus/mojo/jquery-amd/1.7.1-alpha-1/jquery-amd-1.7.1-alpha-1.js"></script>
+    <script type="text/javascript"
+            src="js/org/codehaus/mojo/jquery-ui-amd/1.8.16-alpha-1/jquery-ui-amd-1.8.16-alpha-1.js"></script>
+    <script type="text/javascript" src="${App/client.js}"></script>
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <style>
         .boxedArea {
@@ -82,10 +21,14 @@
             Box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.4);
         }
     </style>
+    <script>
+        // TODO
+    </script>
 </head>
 
 <body>
 <div id="main" class="height:800px"></div>
+<hr/>
 <div id="error"></div>
 </body>
 
