@@ -67,7 +67,12 @@ define("Core/Socket", ["External/SocketFactory", "require", "Core/jObj"],
                 }
             });
 
-        Socket.prototype.send = jObj.procedure([ jObj.types.String  ],
+        Socket.prototype.isOpen = jObj.method([], jObj.types.Boolean,
+            function () {
+                return this.client.isOpen();
+            });
+
+        Socket.prototype.send = jObj.procedure([ jObj.types.String ],
             function (message) {
                 this.ensureOpen();
                 this.client.send(message);
