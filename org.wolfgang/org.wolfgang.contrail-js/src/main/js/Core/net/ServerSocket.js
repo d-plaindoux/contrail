@@ -18,28 +18,37 @@
 
 /*global define*/
 
-define("Core/ServerSocket", [ "External/SocketFactory", "require", "Core/jObj"],
-    function (WebSocket, require, jObj) {
+define("Core/ServerSocket", [ "External/SocketFactory", "require", "Core/jObj", "Contrail"],
+    function (WebSocket, require, jObj, Contrail) {
         "use strict";
 
-        function ServerSocket(port, builder) {
+        function ServerSocket(port, handler) {
             jObj.bless(this);
-            this.builder = builder;
+
+            this.handler = handler;
             this.server = WebSocket.server(port, {accept:this.accept});
         }
 
-        ServerSocket.init = jObj.constructor([ jObj.types.Number, jObj.types.Named("DataFlowBuilder") ],
-            function (port, builder) {
-                return new ServerSocket(port, builder);
+        ServerSocket.init = jObj.constructor([ jObj.types.Number, jObj.types.Named("DataFlowHandler") ],
+            function (port, handler) {
+                return new ServerSocket(port, handler);
             });
 
-        ServerSocket.prototype.accept = jObj.method([ jObj.types.Object ], jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}),
+        ServerSocket.prototype.accept = jObj.method([ jObj.types.ObjectOf({send:jObj.types.Function}) ], jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}),
             function (client) {
-                var dataFlow = this.builder.create(client);
+                var dataFlowIn, dataFlowOut;
+
+                dataFlowOut = Contrail.flow.core();
+                dataFlowOut.handleData = jObj.procedure([ jObj.types.Any ],
+                    function (data) {
+                        client.send(data);
+                    });
+
+                dataFlowIn = this.handler.handle(dataFlowOut);
 
                 return {
-                    onmessage:dataFlow.handleData,
-                    onclose:dataFlow.handleClose()
+                    onmessage:dataFlowIn.handleData,
+                    onclose:dataFlowIn.handleClose
                 };
             });
 

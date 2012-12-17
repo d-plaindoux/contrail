@@ -26,7 +26,7 @@ define("External/SocketFactory", [ "require", "Core/jObj" ],
 
         Factory.client = jObj.method([ jObj.types.String, jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}) ], jObj.types.Object,
             function (endpoint, callbacks) {
-                var WebSocket, client, key;
+                var WebSocket, client;
 
                 WebSocket = window.WebSocket || window.MozWebSocket || jObj.throwError(jObj.exception("L.web.socket.not.defined"));
                 client = new WebSocket(endpoint);
@@ -50,10 +50,7 @@ define("External/SocketFactory", [ "require", "Core/jObj" ],
                 };
 
                 return client;
-            }
-
-        )
-        ;
+            });
 
         /* NODE JS server side - "npm install websocket" - required first */
         Factory.server = jObj.method([ jObj.types.Number, jObj.types.ObjectOf({accept:jObj.types.Function}) ], jObj.types.Object,

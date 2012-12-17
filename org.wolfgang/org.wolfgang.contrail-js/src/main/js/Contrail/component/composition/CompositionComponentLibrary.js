@@ -51,7 +51,7 @@ define(
                 var linkManager, index, current;
 
                 current = components[0];
-                linkManager = require("Contrail/Factory").link;
+                linkManager = require("Contrail").link;
 
                 for (index = 1; index < components.length; index += 1) {
                     linkManager.connect(current, components[index]);

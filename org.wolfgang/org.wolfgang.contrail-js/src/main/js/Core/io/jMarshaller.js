@@ -128,6 +128,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         jMarshaller.bytesToString = jObj.method([jObj.types.Array], jObj.types.String,
             function (bytes) {
                 var str = "", i;
+
                 for (i = 0; i < bytes.length; i += 2) {
                     str += String.fromCharCode(jMarshaller.bytesToCharWithOffSet(bytes, i));
                 }
@@ -144,6 +145,7 @@ define("IO/jMarshaller", [ "Core/jObj" ],
         jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array,
             function (str) {
                 var bytes = [], char, i;
+
                 for (i = 0; i < str.length; i += 1) {
                     bytes = bytes.concat(jMarshaller.charToBytes(str.charCodeAt(i)));
                 }

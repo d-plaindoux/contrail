@@ -21,7 +21,7 @@
 $(function () {
     "use strict";
 
-    require([ "Contrail/Factory", "Core/jObj", "Core/jDom" ],
+    require([ "Contrail", "Core/jObj", "Core/jDom" ],
         function (Factory, jObj, jDom) {
             try {
                 var key, classes, id, name, showHide, changeToType, changeToObject;

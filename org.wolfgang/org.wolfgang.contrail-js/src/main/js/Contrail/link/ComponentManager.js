@@ -29,7 +29,7 @@ define([ "require", "Core/jObj" ],
                 } else if (!destination.acceptSource(source.getComponentId())) {
                     throw jObj.exception("L.destination.cannot.accept.source");
                 } else {
-                    var Factory = require("Contrail/Factory");
+                    var Factory = require("Contrail");
                     source.connectDestination(Factory.link.destination(destination));
                     destination.connectSource(Factory.link.source(source));
                 }

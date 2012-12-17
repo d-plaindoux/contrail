@@ -18,16 +18,28 @@
 
 /*global define*/
 
-define("Contrail/Factory", [ "Codec/Factory", "Component/Factory", "Link/Factory", "Core/Flow" ],
-    function (Codec, Component, Link, Flow) {
+define("Contrail/component",
+    [
+        "./composition/CompositionComponentLibrary",
+        "./core/CoreComponentLibrary",
+        "./bound/BoundComponentLibrary",
+        "./pipeline/PipelineComponentLibrary",
+        "./transducer/TransducerComponentLibrary",
+        "./multi/MultiComponentLibrary"
+    ],
+    function (Composition, Core, Bound, Pipeline, Transducer, Multi) {
         "use strict";
 
         var Factory = {};
 
-        Factory.codec = Codec;
-        Factory.component = Component;
-        Factory.link = Link;
-        Factory.flow = Flow;
+        Factory.core = Core;
+        Factory.core.pipeline = Pipeline.component;
+
+        Factory.compose = Composition.compose;
+        Factory.initial = Bound.initial;
+        Factory.terminal = Bound.terminal;
+        Factory.transducer = Transducer.component;
+        Factory.multi = Multi;
 
         return Factory;
 

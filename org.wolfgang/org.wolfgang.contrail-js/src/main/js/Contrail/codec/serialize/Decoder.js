@@ -23,7 +23,7 @@ define([ "require", "Core/jObj", "IO/jMarshaller" ],
         "use strict";
 
         function SerializeDecoder() {
-            jObj.bless(this, require("Codec/Factory").core.decoder());
+            jObj.bless(this, require("Contrail/codec").core.decoder());
             this.buffer = [];
         }
 

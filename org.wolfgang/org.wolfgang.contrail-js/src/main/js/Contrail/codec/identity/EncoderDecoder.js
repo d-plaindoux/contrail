@@ -23,7 +23,7 @@ define([ "require", "Core/jObj", "External/JSon" ],
         "use strict";
 
         function IdentityDecoder() {
-            jObj.bless(this, require("Codec/Factory").core.encoder(), require("Codec/Factory").core.decoder());
+            jObj.bless(this, require("Contrail/codec").core.encoder(), require("Contrail/codec").core.decoder());
             this.buffer = [];
         }
 

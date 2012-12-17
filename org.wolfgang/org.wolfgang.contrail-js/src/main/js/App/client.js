@@ -21,7 +21,7 @@
 $(function () {
     "use strict";
 
-    require([ "Core/jDom", "Core/jObj", "Core/Socket", "Core/Flow" ],
+    require([ "Core/jDom", "Core/jObj", "Core/Socket", "Core/flow" ],
         function (jDom, jObj, socket, Flow) {
             try {
                 var client, dataFlow;

@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function FilteredDataFlow(dataFlow, predicate) {
-            jObj.bless(this, require("Core/Flow").core());
+            jObj.bless(this, require("Core/flow").core());
             this.dataFlow = dataFlow;
             this.filter = predicate;
         }

@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function AccumulatedDataFlow() {
-            jObj.bless(this, require("Core/Flow").core());
+            jObj.bless(this, require("Core/flow").core());
             this.data = [];
         }
 

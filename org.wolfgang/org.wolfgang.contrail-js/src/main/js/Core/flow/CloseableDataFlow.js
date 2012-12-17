@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function CloseableDataFlow(dataFlow) {
-            jObj.bless(this, require("Core/Flow").core());
+            jObj.bless(this, require("Core/flow").core());
             this.closed = false;
             this.dataFlow = dataFlow;
         }

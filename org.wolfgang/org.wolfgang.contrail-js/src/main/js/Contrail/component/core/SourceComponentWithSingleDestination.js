@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function SourceComponentWithSingleDestination() {
-            jObj.bless(this, require("Component/Factory").core.source());
+            jObj.bless(this, require("Contrail/component").core.source());
 
             this.destinationLink = null;
         }
@@ -41,7 +41,7 @@ define([ "require", "Core/jObj" ],
         SourceComponentWithSingleDestination.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
                 this.destinationLink = destinationLink;
-                return require("Contrail/Factory").link.components(this, destinationLink.getDestination());
+                return require("Contrail").link.components(this, destinationLink.getDestination());
             });
 
         SourceComponentWithSingleDestination.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),

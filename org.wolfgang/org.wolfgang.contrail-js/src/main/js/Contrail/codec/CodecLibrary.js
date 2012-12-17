@@ -18,13 +18,13 @@
 
 /*global define*/
 
-define("Codec/Factory",
+define("Contrail/codec",
     [
-        "./basic/CoDecBasicFactory",
-        "./identity/CoDecIdentityFactory",
-        "./payload/CoDecPayloadFactory",
-        "./json/CoDecJSonFactory",
-        "./serialize/CoDecSerializeFactory"
+        "./basic/CoDecBasicLibrary",
+        "./identity/CoDecIdentityLibrary",
+        "./payload/CoDecPayloadLibrary",
+        "./json/CoDecJSonLibrary",
+        "./serialize/CoDecSerializeLibrary"
     ],
     function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory) {
         "use strict";

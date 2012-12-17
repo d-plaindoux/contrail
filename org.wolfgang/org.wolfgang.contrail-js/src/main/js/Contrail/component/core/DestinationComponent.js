@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function DestinationComponent() {
-            jObj.bless(this, require("Component/Factory").core.component());
+            jObj.bless(this, require("Contrail/component").core.component());
         }
 
         DestinationComponent.init = jObj.constructor([],

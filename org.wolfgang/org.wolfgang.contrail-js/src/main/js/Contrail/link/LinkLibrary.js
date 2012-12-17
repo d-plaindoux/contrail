@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Link/Factory",
+define("Contrail/link",
     [
         "./ComponentManager",
         "./ComponentLink",

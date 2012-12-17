@@ -23,7 +23,7 @@ define([ "require", "Core/jObj" ],
         "use strict";
 
         function MultiUpStreamDataFlow(component) {
-            jObj.bless(this, require("Contrail/Factory").flow.core());
+            jObj.bless(this, require("Contrail").flow.core());
             this.component = component;
         }
 

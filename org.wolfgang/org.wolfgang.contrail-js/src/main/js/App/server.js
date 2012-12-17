@@ -16,27 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global $, require, setTimeout */
 
-define([ "require", "Core/jObj"],
-    function (require, jObj) {
-        "use strict";
+$(function () {
+    "use strict";
 
-        function TerminalComponent(dataFlow) {
-            jObj.bless(this, require("Contrail/component").core.destinationWithSingleSource());
+    require([ "Core/jDom", "Core/jObj", "Core/ServerSocket", "Core/flow" ],
+        function (jDom, jObj, socket, Flow) {
+            try {
+                var client, dataFlow;
 
-            this.dataFlow = dataFlow;
-        }
+                dataFlow = Flow.core();
+                dataFlow.handleData = jObj.procedure([jObj.types.Any],
+                    function (data) {
+                        $("#main").prepend(jObj.toString(data));
+                        client.send("Ping");
+                    });
 
-        TerminalComponent.init = jObj.constructor([jObj.types.Named("DataFlow")],
-            function (dataFlow) {
-                return new TerminalComponent(dataFlow);
-            });
 
-        TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
-            function () {
-                return this.dataFlow;
-            });
 
-        return TerminalComponent.init;
-    });
+                client = socket("ws://localhost:1337", dataFlow);
+
+            } catch (e) {
+                $("#error").prepend(jDom("pre", [], jObj.toString(e)));
+            }
+        });
+});

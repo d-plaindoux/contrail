@@ -18,25 +18,22 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj"],
-    function (require, jObj) {
+define("Contrail",
+    [
+        "Contrail/codec",
+        "Contrail/component",
+        "Contrail/link",
+        "Core/flow"
+    ],
+    function (Codec, Component, Link, Flow) {
         "use strict";
 
-        function TerminalComponent(dataFlow) {
-            jObj.bless(this, require("Contrail/component").core.destinationWithSingleSource());
+        var Factory = {};
 
-            this.dataFlow = dataFlow;
-        }
+        Factory.codec = Codec;
+        Factory.component = Component;
+        Factory.link = Link;
+        Factory.flow = Flow;
 
-        TerminalComponent.init = jObj.constructor([jObj.types.Named("DataFlow")],
-            function (dataFlow) {
-                return new TerminalComponent(dataFlow);
-            });
-
-        TerminalComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
-            function () {
-                return this.dataFlow;
-            });
-
-        return TerminalComponent.init;
+        return Factory;
     });

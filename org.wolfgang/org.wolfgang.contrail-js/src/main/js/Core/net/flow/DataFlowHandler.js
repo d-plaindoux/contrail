@@ -18,29 +18,19 @@
 
 /*global define*/
 
-define("Component/Factory",
-    [
-        "./composition/CompositionComponentFactory",
-        "./core/CoreComponentFactory",
-        "./bound/BoundComponentFactory",
-        "./pipeline/PipelineComponentFactory",
-        "./transducer/TransducerComponentFactory",
-        "./multi/MultiComponentFactory"
-    ],
-    function (Composition, Core, Bound, Pipeline, Transducer, Multi) {
+define([ "Core/jObj" ],
+    function (jObj) {
         "use strict";
 
-        var Factory = {};
+        var DataFlowHandler = function () {
+            jObj.bless(this);
+        };
 
-        Factory.core = Core;
-        Factory.core.pipeline = Pipeline.component;
+        DataFlowHandler.init = jObj.constructor([], function () {
+            return new DataFlowHandler();
+        });
 
-        Factory.compose = Composition.compose;
-        Factory.initial = Bound.initial;
-        Factory.terminal = Bound.terminal;
-        Factory.transducer = Transducer.component;
-        Factory.multi = Multi;
+        DataFlowHandler.prototype.handle = jObj.method([ jObj.types.Named('DataFlow') ], jObj.types.Named('DataFlow'));
 
-        return Factory;
-
+        return DataFlowHandler.init;
     });

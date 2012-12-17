@@ -23,7 +23,7 @@ define(["require", "Core/jObj" ],
         "use strict";
 
         var SourceCompositionComponent = function (components) {
-            jObj.bless(this, require("Component/Factory").core.source());
+            jObj.bless(this, require("Contrail/component").core.source());
             this.components = components;
         };
 

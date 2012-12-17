@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Core/Flow",
+define("Core/flow",
     [
         "./DataFlow",
         "./CloseableDataFlow",

@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/Factory", "Core/jObj", "test/jCC" ],
+require([ "qunit", "Contrail", "Core/jObj", "test/jCC" ],
     function (QUnit, Factory, jObj, jCC) {
         "use strict";
 
