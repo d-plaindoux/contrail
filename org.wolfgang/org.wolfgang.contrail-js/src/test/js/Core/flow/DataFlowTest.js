@@ -75,4 +75,30 @@ require([ "qunit", "Core/jObj", "Contrail", "test/jCC" ],
                     QUnit.ok(true, "An Exception has been raised");
                 });
         });
+
+        QUnit.test("Checking filtered data flow", function () {
+            var dataFlow, filteredDataFlow;
+
+            jCC.
+                Given(function () {
+                    dataFlow = Factory.flow.core();
+                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                        this.content = jObj.value(this.content, "") + data;
+                    });
+                }).
+                And(function () {
+                    filteredDataFlow = Factory.flow.filtered(dataFlow, function (data) {
+                        return (data === "Hello,") ? null : data;
+                    });
+                }).
+                When(function () {
+                    filteredDataFlow.handleData("Hello,");
+                }).
+                And(function () {
+                    filteredDataFlow.handleData(" World!");
+                }).
+                Then(function () {
+                    QUnit.equal(dataFlow.content, " World!", "Checking content after handling 'removed[Hello,] World!'");
+                });
+        });
     });

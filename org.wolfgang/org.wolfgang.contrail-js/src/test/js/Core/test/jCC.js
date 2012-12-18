@@ -66,7 +66,7 @@ define("test/jCC", [ "qunit" ],
                     return jCC.ThenSomething();
                 }
 
-                throw { message:"expecting and exception"};
+                throw { message:"expecting an exception"};
             };
         };
 

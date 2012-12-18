@@ -28,7 +28,7 @@ define([ "require", "Core/jObj" ],
             this.filter = predicate;
         }
 
-        FilteredDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function],
+        FilteredDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function/*A -> null|A*/],
             function (dataFlow, predicate) {
                 return new FilteredDataFlow(dataFlow, predicate);
             });
@@ -36,6 +36,7 @@ define([ "require", "Core/jObj" ],
         FilteredDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
             function (data) {
                 var value = this.filter(data);
+
                 if (value) {
                     this.dataFlow.handleData(value);
                 }
