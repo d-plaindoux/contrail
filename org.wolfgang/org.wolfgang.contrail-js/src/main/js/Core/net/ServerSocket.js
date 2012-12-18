@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Core/ServerSocket", [ "External/SocketFactory", "require", "Core/jObj", "Contrail"],
+define([ "External/SocketFactory", "require", "Core/jObj", "Contrail"],
     function (WebSocket, require, jObj, Contrail) {
         "use strict";
 

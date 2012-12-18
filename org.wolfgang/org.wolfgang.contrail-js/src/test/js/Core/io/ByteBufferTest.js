@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "qunit", "test/jCC", "Utils/jUUID", "IO/jMarshaller", "IO/ByteBuffer" ],
+require([ "qunit", "test/jCC", "Utils/jUUID", "Core/io/jMarshaller", "Core/io/ByteBuffer" ],
     function (QUnit, jCC, jUUID, jMarshaller, byteBuffer) {
         "use strict";
 

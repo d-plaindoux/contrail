@@ -22,30 +22,30 @@ define([ "require", "Core/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        function FilteredDataFlow(dataFlow, predicate) {
+        function CumulatedDataFlow() {
             jObj.bless(this, require("Core/flow/jFlow").core());
-            this.dataFlow = dataFlow;
-            this.filter = predicate;
+            this.data = [];
         }
 
-        FilteredDataFlow.init = jObj.constructor([jObj.types.Named("DataFlow"), jObj.types.Function/*A -> null|A*/],
-            function (dataFlow, predicate) {
-                return new FilteredDataFlow(dataFlow, predicate);
-            });
-
-        FilteredDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
-            function (data) {
-                var value = this.filter(data);
-
-                if (value) {
-                    this.dataFlow.handleData(value);
-                }
-            });
-
-        FilteredDataFlow.prototype.handleClose = jObj.procedure([],
+        CumulatedDataFlow.init = jObj.constructor([],
             function () {
-                // Ignore
+                return new CumulatedDataFlow();
             });
 
-        return FilteredDataFlow.init;
+        CumulatedDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+            function (data) {
+                this.data = this.data.concat(data);
+            });
+
+        CumulatedDataFlow.prototype.handleClose = jObj.procedure([],
+            function () {
+                this.data = [];
+            });
+
+        CumulatedDataFlow.prototype.getAccumulation = jObj.method([], jObj.types.Array,
+            function () {
+                return this.data; // Can be modified -- TODO
+            });
+
+        return CumulatedDataFlow.init;
     });

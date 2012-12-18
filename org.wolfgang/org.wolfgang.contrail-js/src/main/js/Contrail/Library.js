@@ -23,7 +23,7 @@ define("Contrail",
         "Contrail/codec",
         "Contrail/component",
         "Contrail/link",
-        "Core/flow"
+        "Core/flow/jFlow"
     ],
     function (Codec, Component, Link, Flow) {
         "use strict";

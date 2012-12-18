@@ -72,7 +72,7 @@ require([ "Contrail", "qunit", "Core/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.accumulated());
+                    i1 = Factory.component.initial(Factory.flow.cumulated());
                 }).
                 When(function () {
                     Factory.link.connect(i1, c1);
@@ -96,10 +96,10 @@ require([ "Contrail", "qunit", "Core/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.accumulated());
+                    i1 = Factory.component.initial(Factory.flow.cumulated());
                 }).
                 And(function () {
-                    i2 = Factory.component.initial(Factory.flow.accumulated());
+                    i2 = Factory.component.initial(Factory.flow.cumulated());
                 }).
                 When(function () {
                     Factory.link.connect(i1, c1);
@@ -132,10 +132,10 @@ require([ "Contrail", "qunit", "Core/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    d1 = Factory.flow.accumulated();
+                    d1 = Factory.flow.cumulated();
                 }).
                 And(function () {
-                    d2 = Factory.flow.accumulated();
+                    d2 = Factory.flow.cumulated();
                 }).
                 And(function () {
                     i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {
@@ -175,10 +175,10 @@ require([ "Contrail", "qunit", "Core/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    d1 = Factory.flow.accumulated();
+                    d1 = Factory.flow.cumulated();
                 }).
                 And(function () {
-                    d2 = Factory.flow.accumulated();
+                    d2 = Factory.flow.cumulated();
                 }).
                 And(function () {
                     i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {

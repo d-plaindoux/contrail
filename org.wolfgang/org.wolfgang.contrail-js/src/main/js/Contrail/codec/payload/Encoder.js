@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "require", "Core/jObj", "IO/jMarshaller" ],
+define([ "require", "Core/jObj", "Core/io/jMarshaller" ],
     function (require, jObj, jMarshaller) {
         "use strict";
 

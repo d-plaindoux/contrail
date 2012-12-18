@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("IO/ByteBuffer", [ "Core/jObj" ],
+define("Core/io/ByteBuffer", [ "Core/jObj" ],
     function (jObj) {
         "use strict";
 

@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "IO/jMarshaller", "qunit", "test/jCC" ],
+require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
     function (jMarshaller, QUnit, jCC) {
         "use strict";
 
