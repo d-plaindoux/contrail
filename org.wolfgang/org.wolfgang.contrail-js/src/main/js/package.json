@@ -1,0 +1,21 @@
+{
+    "name":"wolfgang",
+    "description":"Provide basic core library for object, io and net support",
+    "version":"0.0.1",
+    "homepage":"https://github.com/d-plaindoux/wolfgang/tree/master/org.wolfgang/org.wolfgang.contrail-js",
+    "author":"Didier Plaindoux <d.plaindoux@free.fr> (http://github.com/d-plaindoux)",
+    "licenses":[
+        {
+            "type":"LGPL",
+            "url":"https://github.com/d-plaindoux/wolfgang/blob/master/LICENSE"
+        }
+    ],
+    "main":"./wolfgang.js",
+    "dependencies":{
+        "amdefine":">=0.0.2",
+        "requirejs":">=2.1.1"
+    },
+    "engines":{
+        "node":">=0.4.2"
+    }
+}

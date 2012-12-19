@@ -16,9 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define:true, require, module*/
 
-define([ "./Component", "./SourceComponent", "./SourceComponentWithSingleDestination", "./DestinationComponent", "./DestinationComponentWithSingleSource" ],
+if (typeof define !== "function") {
+    var define = require("amdefine")(module);
+}
+
+define(
+    [
+        "./Component",
+        "./SourceComponent",
+        "./SourceComponentWithSingleDestination",
+        "./DestinationComponent",
+        "./DestinationComponentWithSingleSource"
+    ],
     function (component, sourceComponent, sourceComponentWithSingleDestination, destinationComponent, destinationComponentWithSingleSource) {
         "use strict";
 
