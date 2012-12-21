@@ -16,7 +16,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 /*global define:true, require, module*/
 
 if (typeof define !== "function") {
@@ -54,7 +53,7 @@ define([ "require" ],
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
-                } else if (object && object.inherit && object.inherit.hasOwnProperty(type)) {
+                } else if (object && object.inherits && object.inherits.hasOwnProperty(type)) {
                     result = true;
                 } else {
                     result = false;

@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
+define( "Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
     function (jModel, jType, jTransducer) {
         "use strict";
 
@@ -59,14 +59,6 @@ define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
                 throw { message:"L.bless.applied.to.object.only"};
             }
 
-            /*
-             parameters.forEach(function (value) {
-             if (!jType.ofType(value, jType.types.Object)) {
-             throw { message:"L.bless.applied.to.object.only"};
-             }
-             });
-             */
-
             instance = parameters[0];
             parameters = Array.prototype.slice.call(parameters, 1);
 
@@ -79,16 +71,16 @@ define("Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
             });
 
             // Inheritance definition
-            instance.inherit = {};
+            instance.inherits = {};
 
             parameters.forEach(function (inherited) {
                 var key;
-                for (key in inherited.inherit) {
-                    if (inherited.inherit.hasOwnProperty(key)) {
-                        instance.inherit[key] = true;
+                for (key in inherited.inherits) {
+                    if (inherited.inherits.hasOwnProperty(key)) {
+                        instance.inherits[key] = true;
                     }
                 }
-                instance.inherit[jType.getClass(inherited)] = true;
+                instance.inherits[jType.getClass(inherited)] = true;
             });
 
             return instance;
