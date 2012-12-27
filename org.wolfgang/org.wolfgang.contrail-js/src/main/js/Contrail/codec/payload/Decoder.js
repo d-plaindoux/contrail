@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
         "use strict";
 
         function PayloadDecoder() {
-            jObj.bless(this, require("Contrail/codec").core.decoder());
+            jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
             this.buffer = [];
         }
 

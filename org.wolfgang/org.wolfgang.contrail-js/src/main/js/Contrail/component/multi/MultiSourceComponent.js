@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj", "./flow/MultiDownStreamDataFlow" ],
         "use strict";
 
         function MultiSourceComponent() {
-            var Factory = require("Contrail/component");
+            var Factory = require("Contrail/component/jComponent");
             jObj.bless(this, Factory.core.sourceWithSingleDestination(), Factory.core.destination());
             this.sourceLink = [];
             this.downStreamDataFlow = downStreamDataFlow(this);
@@ -52,7 +52,7 @@ define([ "require", "Core/object/jObj", "./flow/MultiDownStreamDataFlow" ],
         MultiSourceComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
             function (sourceLink) {
                 this.sourceLink = this.sourceLink.concat(sourceLink);
-                return require("Contrail/link").components(sourceLink.getSource(), this);
+                return require("Contrail/link/jLink").components(sourceLink.getSource(), this);
             });
 
         MultiSourceComponent.prototype.getSources = jObj.method([], jObj.types.ArrayOf(jObj.types.Named("SourceComponent")),

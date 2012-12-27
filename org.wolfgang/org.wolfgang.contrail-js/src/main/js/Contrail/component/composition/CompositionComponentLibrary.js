@@ -55,7 +55,7 @@ define(
                 var linkManager, index, current;
 
                 current = components[0];
-                linkManager = require("Contrail").link;
+                linkManager = require("Contrail/jContrail").link;
 
                 for (index = 1; index < components.length; index += 1) {
                     linkManager.connect(current, components[index]);

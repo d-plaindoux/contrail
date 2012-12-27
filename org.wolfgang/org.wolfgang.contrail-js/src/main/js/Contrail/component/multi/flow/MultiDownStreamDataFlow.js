@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj" ],
         "use strict";
 
         function MultiDownStreamDataFlow(component) {
-            jObj.bless(this, require("Contrail").flow.core());
+            jObj.bless(this, require("Contrail/jContrail").flow.core());
             this.component = component;
         }
 

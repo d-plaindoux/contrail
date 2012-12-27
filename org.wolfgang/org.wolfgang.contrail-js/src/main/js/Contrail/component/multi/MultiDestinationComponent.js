@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj", "./flow/MultiUpStreamDataFlow" ],
         "use strict";
 
         function MultiDestinationComponent() {
-            var Factory = require("Contrail/component");
+            var Factory = require("Contrail/component/jComponent");
             jObj.bless(this, Factory.core.source(), Factory.core.destinationWithSingleSource());
             this.destinationLink = [];
             this.upStreamDataFlow = upStreamDataFlow(this);
@@ -55,7 +55,7 @@ define([ "require", "Core/object/jObj", "./flow/MultiUpStreamDataFlow" ],
         MultiDestinationComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
                 this.destinationLink = this.destinationLink.concat(destinationLink);
-                return require("Contrail/link").components(this, destinationLink.getDestination());
+                return require("Contrail/link/jLink").components(this, destinationLink.getDestination());
             });
 
         MultiDestinationComponent.prototype.getDestinations = jObj.method([], jObj.types.ArrayOf(jObj.types.Named("DestinationComponent")),

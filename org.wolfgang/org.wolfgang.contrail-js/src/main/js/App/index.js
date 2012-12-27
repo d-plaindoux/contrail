@@ -21,10 +21,10 @@
 $(function () {
     "use strict";
 
-    require([ "Contrail", "Core/object/jObj", "Core/dom/jDom" ],
+    require([ "Contrail/jContrail", "Core/object/jObj", "Core/dom/jDom" ],
         function (Factory, jObj, jDom) {
             try {
-                var key, classes, id, name, showHide, changeToType, changeToObject;
+                var key, classes, id, name, changeToType, changeToObject;
 
                 changeToType = function (id, object) {
                     return function () {

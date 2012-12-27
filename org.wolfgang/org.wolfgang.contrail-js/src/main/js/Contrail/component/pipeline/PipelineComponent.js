@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj" ],
         "use strict";
 
         function PipelineComponent() {
-            var Factory = require("Contrail/component");
+            var Factory = require("Contrail/component/jComponent");
             jObj.bless(this, Factory.core.sourceWithSingleDestination(), Factory.core.destinationWithSingleSource());
         }
 

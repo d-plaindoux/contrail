@@ -22,22 +22,28 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Contrail/link",
+define("Contrail/component/jComponent",
     [
-        "./ComponentManager",
-        "./ComponentLink",
-        "./SourceLink",
-        "./DestinationLink"
+        "./composition/CompositionComponentLibrary",
+        "./core/CoreComponentLibrary",
+        "./bound/BoundComponentLibrary",
+        "./pipeline/PipelineComponentLibrary",
+        "./transducer/TransducerComponentLibrary",
+        "./multi/MultiComponentLibrary"
     ],
-    function (componentLinkManager, componentLink, sourceLink, destinationLink) {
+    function (Composition, Core, Bound, Pipeline, Transducer, Multi) {
         "use strict";
 
         var Factory = {};
 
-        Factory.connect = componentLinkManager;
-        Factory.components = componentLink;
-        Factory.source = sourceLink;
-        Factory.destination = destinationLink;
+        Factory.core = Core;
+        Factory.core.pipeline = Pipeline.component;
+
+        Factory.compose = Composition.compose;
+        Factory.initial = Bound.initial;
+        Factory.terminal = Bound.terminal;
+        Factory.transducer = Transducer.component;
+        Factory.multi = Multi;
 
         return Factory;
 

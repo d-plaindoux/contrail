@@ -27,7 +27,7 @@ define(["require", "Core/object/jObj" ],
         "use strict";
 
         function CompositionComponent(components) {
-            jObj.bless(this, require("Contrail/component").core.component());
+            jObj.bless(this, require("Contrail/component/jComponent").core.component());
             this.components = components;
         }
 

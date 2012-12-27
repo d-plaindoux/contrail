@@ -22,24 +22,22 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Contrail/codec",
+define("Contrail/link/jLink",
     [
-        "./basic/CoDecBasicLibrary",
-        "./identity/CoDecIdentityLibrary",
-        "./payload/CoDecPayloadLibrary",
-        "./json/CoDecJSonLibrary",
-        "./serialize/CoDecSerializeLibrary"
+        "./ComponentManager",
+        "./ComponentLink",
+        "./SourceLink",
+        "./DestinationLink"
     ],
-    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory) {
+    function (componentLinkManager, componentLink, sourceLink, destinationLink) {
         "use strict";
 
         var Factory = {};
 
-        Factory.core = BasicFactory;
-        Factory.identity = IdentityFactory;
-        Factory.payload = PayloadFactory;
-        Factory.json = JSonFactory;
-        Factory.serialize = SerializeFactory;
+        Factory.connect = componentLinkManager;
+        Factory.components = componentLink;
+        Factory.source = sourceLink;
+        Factory.destination = destinationLink;
 
         return Factory;
 

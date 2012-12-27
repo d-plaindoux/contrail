@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj"],
         "use strict";
 
         function InitialComponent(dataFlow) {
-            jObj.bless(this, require("Contrail/component").core.sourceWithSingleDestination());
+            jObj.bless(this, require("Contrail/component/jComponent").core.sourceWithSingleDestination());
 
             this.dataFlow = dataFlow;
         }

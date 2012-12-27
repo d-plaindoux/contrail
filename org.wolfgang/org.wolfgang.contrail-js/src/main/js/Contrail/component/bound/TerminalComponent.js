@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj"],
         "use strict";
 
         function TerminalComponent(dataFlow) {
-            jObj.bless(this, require("Contrail/component").core.destinationWithSingleSource());
+            jObj.bless(this, require("Contrail/component/jComponent").core.destinationWithSingleSource());
 
             this.dataFlow = dataFlow;
         }
