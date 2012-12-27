@@ -29,7 +29,7 @@ define([ "require" ],
         var jType = {}, Primitives;
 
         function RuntimeTypeError(message) {
-            require("Core/jObj").bless(this);
+            require("Core/object/jObj").bless(this);
             this.message = message;
         }
 

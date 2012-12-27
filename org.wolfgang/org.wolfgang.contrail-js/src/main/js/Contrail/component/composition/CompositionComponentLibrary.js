@@ -25,7 +25,7 @@ if (typeof define !== "function") {
 define(
     [
         "require",
-        "Core/jObj",
+        "Core/object/jObj",
         "./PipelineCompositionComponent",
         "./SourceCompositionComponent",
         "./DestinationCompositionComponent",

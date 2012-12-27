@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("External/SocketFactory", [ "require", "Core/jObj" ],
+define("External/SocketFactory", [ "require", "Core/object/jObj" ],
     function (require, jObj) {
         "use strict";
 

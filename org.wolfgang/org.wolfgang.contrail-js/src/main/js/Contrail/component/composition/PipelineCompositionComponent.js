@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define(["require", "Core/jObj", "./SourceCompositionComponent", "./DestinationCompositionComponent" ],
+define(["require", "Core/object/jObj", "./SourceCompositionComponent", "./DestinationCompositionComponent" ],
     function (require, jObj, source, destination) {
         "use strict";
 

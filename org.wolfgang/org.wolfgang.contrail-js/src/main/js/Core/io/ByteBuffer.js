@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Core/io/ByteBuffer", [ "Core/jObj" ],
+define("Core/io/ByteBuffer", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 

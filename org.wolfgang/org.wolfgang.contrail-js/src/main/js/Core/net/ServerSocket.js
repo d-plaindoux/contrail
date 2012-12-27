@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "External/SocketFactory", "require", "Core/jObj", "Contrail"],
+define([ "External/SocketFactory", "require", "Core/object/jObj", "Contrail"],
     function (WebSocket, require, jObj, Contrail) {
         "use strict";
 

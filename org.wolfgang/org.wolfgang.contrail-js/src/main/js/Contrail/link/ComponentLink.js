@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Core/jObj", "./DisposableLink"],
+define([ "Core/object/jObj", "./DisposableLink"],
     function (jObj, disposable) {
         "use strict";
 

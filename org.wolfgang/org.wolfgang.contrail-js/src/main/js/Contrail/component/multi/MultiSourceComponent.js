@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "require", "Core/jObj", "./flow/MultiDownStreamDataFlow" ],
+define([ "require", "Core/object/jObj", "./flow/MultiDownStreamDataFlow" ],
     function (require, jObj, downStreamDataFlow) {
         "use strict";
 

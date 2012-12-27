@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define( "Core/jObj", [ "./jModel", "./jType", "./jTransducer" ],
+define( "Core/object/jObj", [ "./jModel", "./jType", "./jTransducer" ],
     function (jModel, jType, jTransducer) {
         "use strict";
 

@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Utils/jUUID", "Core/jObj" ],
+define([ "Utils/jUUID", "Core/object/jObj" ],
     function (jUUID, jObj) {
         "use strict";
 

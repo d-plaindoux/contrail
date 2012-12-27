@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Core/net/jSocket", [ "Core/jObj", "./Socket", "./ServerSocket" ],
+define("Core/net/jSocket", [ "Core/object/jObj", "./Socket", "./ServerSocket" ],
     function (jObj, socket, server) {
         "use strict";
 

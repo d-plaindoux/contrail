@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "require", "Core/jObj", "External/JSon" ],
+define([ "require", "Core/object/jObj", "External/JSon" ],
     function (require, jObj, JSon) {
         "use strict";
 
