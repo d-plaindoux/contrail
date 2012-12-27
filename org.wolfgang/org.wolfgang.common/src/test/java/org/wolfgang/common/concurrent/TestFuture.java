@@ -37,11 +37,11 @@ public class TestFuture {
 
 	@Test
 	public void ShouldProvideAValueWhenSettingAFuture() {
-		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Promise<String> promise = Promise.create();
 		final String value = "Hello, World!";
-		futureResponse.setValue(value);
+		promise.success(value);
 		try {
-			assertEquals(value, futureResponse.get());
+			assertEquals(value, promise.getFuture().get());
 		} catch (InterruptedException e) {
 			fail();
 		} catch (ExecutionException e) {
@@ -51,11 +51,11 @@ public class TestFuture {
 
 	@Test
 	public void ShouldRaiseAnErrorWhenSettingAnError() {
-		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Promise<String> promise = Promise.create();
 		final Throwable value = new Throwable();
-		futureResponse.setError(value);
+		promise.error(value);
 		try {
-			futureResponse.get();
+			promise.getFuture().get();
 			fail();
 		} catch (InterruptedException e) {
 			fail();
@@ -66,9 +66,9 @@ public class TestFuture {
 
 	@Test
 	public void ShouldRaiseATimeOutWhenNoValueSet() {
-		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Promise<String> promise = Promise.create();
 		try {
-			futureResponse.get(1, TimeUnit.SECONDS);
+			promise.getFuture().get(1, TimeUnit.SECONDS);
 			fail();
 		} catch (InterruptedException e) {
 			fail();
@@ -81,13 +81,13 @@ public class TestFuture {
 
 	@Test
 	public void ShouldProvideAValueWhenSettingAFutureAfter1SecondDelay() {
-		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Promise<String> promise = Promise.create();
 		final String value = "Hello, World!";
-		
-		setAValueWithOneSecondDelay(futureResponse, value);
+
+		setAValueWithOneSecondDelay(promise, value);
 
 		try {
-			assertEquals(value, futureResponse.get(2, TimeUnit.SECONDS));
+			assertEquals(value, promise.getFuture().get(2, TimeUnit.SECONDS));
 		} catch (InterruptedException e) {
 			fail();
 		} catch (ExecutionException e) {
@@ -98,32 +98,32 @@ public class TestFuture {
 	}
 
 	/**
-	 * @param futureResponse
+	 * @param promise
 	 * @param value
 	 */
-	private void setAValueWithOneSecondDelay(final FutureResponse<String> futureResponse, final String value) {
+	private void setAValueWithOneSecondDelay(final Promise<String> promise, final String value) {
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
-					futureResponse.setError(e);
+					promise.error(e);
 				}
-				futureResponse.setValue(value);
+				promise.success(value);
 			}
 		}.start();
 	}
 
 	@Test
 	public void GivenAFutureSetWithDelayToErrorThrowThError() {
-		final FutureResponse<String> futureResponse = givenAStringFuture();
+		final Promise<String> promise = Promise.create();
 		final Throwable value = new Throwable();
 
-		setAnErrorWithOneSecondDelay(futureResponse, value);
+		setAnErrorWithOneSecondDelay(promise, value);
 
 		try {
-			futureResponse.get(2, TimeUnit.SECONDS);
+			promise.getFuture().get(2, TimeUnit.SECONDS);
 			fail();
 		} catch (InterruptedException e) {
 			fail();
@@ -135,26 +135,19 @@ public class TestFuture {
 	}
 
 	/**
-	 * @return
-	 */
-	private FutureResponse<String> givenAStringFuture() {
-		return new FutureResponse<String>();
-	}
-
-	/**
-	 * @param futureResponse
+	 * @param promise
 	 * @param value
 	 */
-	private void setAnErrorWithOneSecondDelay(final FutureResponse<String> futureResponse, final Throwable value) {
+	private void setAnErrorWithOneSecondDelay(final Promise<String> promise, final Throwable value) {
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
-					futureResponse.setError(e);
+					promise.error(e);
 				}
-				futureResponse.setError(value);
+				promise.error(value);
 			}
 		}.start();
 	}

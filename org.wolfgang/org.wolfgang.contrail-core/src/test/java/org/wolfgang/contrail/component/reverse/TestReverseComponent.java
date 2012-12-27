@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
-import org.wolfgang.common.concurrent.FutureResponse;
+import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
@@ -50,13 +50,13 @@ public class TestReverseComponent {
 	public void testReverse01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
 		final String source = new String("Hello, World!");
-		final FutureResponse<String> pingFuture = new FutureResponse<String>();
-		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
+		final Promise<String> pingFuture = Promise.create();
+		final Promise<byte[]> pongFuture = Promise.create();
 
 		final InitialComponent<String, String> pingComponent = Components.initial(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
-				pingFuture.setValue(data);
+				pingFuture.success(data);
 			}
 		});
 
@@ -64,7 +64,7 @@ public class TestReverseComponent {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
-				pongFuture.setValue(data);
+				pongFuture.success(data);
 			}
 		});
 
@@ -76,9 +76,9 @@ public class TestReverseComponent {
 		ComponentManager.connect(reversedComponent, pongComponent);
 
 		pingComponent.getUpStreamDataFlow().handleData(source);
-		pongComponent.getDownStreamDataHandler().handleData(pongFuture.get());
+		pongComponent.getDownStreamDataHandler().handleData(pongFuture.getFuture().get());
 
-		assertEquals(source, pingFuture.get());
+		assertEquals(source, pingFuture.getFuture().get());
 
 	}
 
@@ -86,13 +86,13 @@ public class TestReverseComponent {
 	public void testReverse02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
 		final String source = new String("Hello, World!");
-		final FutureResponse<String> pingFuture = new FutureResponse<String>();
-		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
+		final Promise<String> pingFuture = Promise.create();
+		final Promise<byte[]> pongFuture = Promise.create();
 
 		final InitialComponent<String, String> pingComponent = Components.initial(new DownStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
-				pingFuture.setValue(data);
+				pingFuture.success(data);
 			}
 		});
 
@@ -100,7 +100,7 @@ public class TestReverseComponent {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
-				pongFuture.setValue(data);
+				pongFuture.success(data);
 			}
 		});
 
@@ -111,23 +111,23 @@ public class TestReverseComponent {
 		ComponentManager.connect(pingComponent, reversedComponent);
 
 		pingComponent.getUpStreamDataFlow().handleData(source);
-		pongComponent.getUpStreamDataFlow().handleData(pongFuture.get());
+		pongComponent.getUpStreamDataFlow().handleData(pongFuture.getFuture().get());
 
-		assertEquals(source, pingFuture.get());
+		assertEquals(source, pingFuture.getFuture().get());
 
 	}
-	
+
 	@Test
 	public void testReverse03() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 
 		final String source = new String("Hello, World!");
-		final FutureResponse<String> pingFuture = new FutureResponse<String>();
-		final FutureResponse<byte[]> pongFuture = new FutureResponse<byte[]>();
+		final Promise<String> pingFuture = Promise.create();
+		final Promise<byte[]> pongFuture = Promise.create();
 
 		final TerminalComponent<String, String> pingComponent = Components.terminal(new UpStreamDataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
-				pingFuture.setValue(data);
+				pingFuture.success(data);
 			}
 		});
 
@@ -135,7 +135,7 @@ public class TestReverseComponent {
 			@Override
 			public void handleData(byte[] data) throws DataFlowException {
 				super.handleData(data);
-				pongFuture.setValue(data);
+				pongFuture.success(data);
 			}
 		});
 
@@ -146,9 +146,9 @@ public class TestReverseComponent {
 		ComponentManager.connect(reversedComponent, pongComponent);
 
 		pingComponent.getDownStreamDataHandler().handleData(source);
-		pongComponent.getDownStreamDataHandler().handleData(pongFuture.get());
+		pongComponent.getDownStreamDataHandler().handleData(pongFuture.getFuture().get());
 
-		assertEquals(source, pingFuture.get());
+		assertEquals(source, pingFuture.getFuture().get());
 
 	}
 

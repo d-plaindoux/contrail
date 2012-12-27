@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class FutureResponse<V> implements Future<V>, Response<V> {
+final class PromisedFuture<V> implements Future<V> {
 
 	private enum Status {
 		CANCEL, VALUE, ERROR
@@ -161,8 +161,7 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		}
 	}
 
-	@Override
-	public void setValue(V value) {
+	void setValue(V value) {
 		barrier.lock();
 		try {
 			if (!this.isCancelled() && !this.isDone()) {
@@ -175,8 +174,7 @@ public class FutureResponse<V> implements Future<V>, Response<V> {
 		}
 	}
 
-	@Override
-	public void setError(Throwable error) {
+	void setError(Throwable error) {
 		barrier.lock();
 		try {
 			if (!this.isCancelled() && !this.isDone()) {

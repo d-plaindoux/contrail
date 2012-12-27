@@ -62,8 +62,7 @@ define("External/SocketFactory", [ "require", "Core/object/jObj" ],
                 var httpServer, WebSocketServer, client;
 
                 httpServer = require("http").createServer(function (request, response) {
-                    // process HTTP request. Since we're writing just WebSockets server
-                    // we don't have to implement anything.
+                    // process HTTP request.
                 });
 
                 WebSocketServer = require('websocket').server;

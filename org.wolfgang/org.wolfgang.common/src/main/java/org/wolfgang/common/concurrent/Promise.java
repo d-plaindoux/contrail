@@ -18,28 +18,41 @@
 
 package org.wolfgang.common.concurrent;
 
+import java.util.concurrent.Future;
+
+
 /**
- * <code>Response</code> defines basic behaviors for response handlers.
+ * <code>Promise</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Response<V> {
+public class Promise<V> {
+	
+	private final PromisedFuture<V> future;
+	
+	{
+		this.future = new PromisedFuture<V>();
+	}
+	
+	public static <V> Promise<V> create() {
+		return new Promise<V>();
+	}
 
-	/**
-	 * Method called whether a value must be a response
-	 * 
-	 * @param value
-	 *            The value to setup
-	 */
-	void setValue(V value);
+	private Promise() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-	/**
-	 * Method called whether an error must be a response
-	 * 
-	 * @param value
-	 *            The error to setup
-	 */
-	void setError(Throwable error);
+	public Future<V> getFuture() {
+		return this.future;
+	}
+	
+	public void success(V value) {
+		future.setValue(value);
+	}
 
+	public void error(Throwable error) {
+		future.setError(error);
+	}
 }
