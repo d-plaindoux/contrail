@@ -23,11 +23,11 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         "use strict";
 
         jCC.scenario("String decoding", function () {
-            var object, encoder, result;
+            var object, encoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
-                    object = [ Marshaller.types.String ].concat(Marshaller.stringToBytes("Hello, World!"));
+                    object = [ Marshaller.types.String ].concat(Marshaller.numberToBytes(message.length)).concat(Marshaller.stringToBytes(message));
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -42,7 +42,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], "Hello, World!", "Checking encoding length");
+                    QUnit.equal(result[0], message, "Checking encoding length");
                 });
         });
 

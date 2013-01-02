@@ -44,11 +44,10 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             Undefined:0x8
         };
 
-        jMarshaller.typeLen = {
+        jMarshaller.sizeOf = {
             Character:2,
             Number:4,
-            BooleanTrue:1,
-            BooleanFalse:1
+            Boolean:1
         };
 
         // -------------------------------------------------------------------------------------------------------------
@@ -64,13 +63,11 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          */
         jMarshaller.bytesToNumberWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
-                var i = jObj.value(offset, 0);
-
-                if (bytes.length < i + jMarshaller.typeLen.Number) {
+                if (bytes.length < offset + jMarshaller.sizeOf.Number) {
                     throw jObj.exception("L.array.out.of.bound");
                 }
 
-                return bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3];
+                return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | bytes[offset + 3];
             });
 
         /**
@@ -94,7 +91,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          */
         jMarshaller.bytesToCharWithOffSet = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
-                if (bytes.length < offset + jMarshaller.typeLen.Character) {
+                if (bytes.length < offset + jMarshaller.sizeOf.Character) {
                     throw jObj.exception("L.array.out.of.bound");
                 }
 
@@ -119,11 +116,11 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          * @param bytes
          * @return {String}
          */
-        jMarshaller.bytesToStringWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.String,
-            function (bytes, offset) {
+        jMarshaller.bytesToStringWithOffset = jObj.method([jObj.types.Array, jObj.types.Number, jObj.types.Number], jObj.types.String,
+            function (bytes, offset, length) {
                 var str = "", i;
 
-                for (i = 0; i < bytes.length; i += 2) {
+                for (i = 0; i < length * jMarshaller.sizeOf.Character; i += 2) {
                     str += String.fromCharCode(jMarshaller.bytesToCharWithOffSet(bytes, i + offset));
                 }
 
@@ -138,7 +135,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          */
         jMarshaller.bytesToString = jObj.method([jObj.types.Array], jObj.types.String,
             function (bytes) {
-                return jMarshaller.bytesToStringWithOffset(bytes, 0);
+                return jMarshaller.bytesToStringWithOffset(bytes, 0, bytes.length / 2);
             });
 
         // -------------------------------------------------------------------------------------------------------------
@@ -152,19 +149,19 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          * @return {Array}
          */
         jMarshaller.numberToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
-            function (i) {
-                return [i >>> 24 & 0xFF, i >>> 16 & 0xFF, i >>> 8 & 0xFF, i & 0xFF];
+            function (value) {
+                return [value >>> 24 & 0xFF, value >>> 16 & 0xFF, value >>> 8 & 0xFF, value & 0xFF];
             });
 
         /**
-         * Concert an integer to a byte array
+         * Convert a char to a byte array
          *
          * @param i
          * @return {Array}
          */
         jMarshaller.charToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
-            function (i) {
-                return [i >>> 8 & 0xFF, i & 0xFF];
+            function (value) {
+                return [value >>> 8 & 0xFF, value & 0xFF];
             });
 
         /**
@@ -174,11 +171,11 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          * @return {Array}
          */
         jMarshaller.stringToBytes = jObj.method([jObj.types.String], jObj.types.Array,
-            function (str) {
-                var bytes = [], char, i;
+            function (value) {
+                var bytes = [], i;
 
-                for (i = 0; i < str.length; i += 1) {
-                    bytes = bytes.concat(jMarshaller.charToBytes(str.charCodeAt(i)));
+                for (i = 0; i < value.length; i += 1) {
+                    bytes = bytes.concat(jMarshaller.charToBytes(value.charCodeAt(i)));
                 }
 
                 return bytes;

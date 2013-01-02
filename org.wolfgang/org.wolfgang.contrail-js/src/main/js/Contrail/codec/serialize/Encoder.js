@@ -35,16 +35,17 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                 return new SerializeEncoder();
             });
 
-        SerializeEncoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,
+        SerializeEncoder.prototype.encode = jObj.method([jObj.types.Any], jObj.types.Array,
             function (value) {
-                var type, result;
+                var type, result = [];
 
                 if (jObj.ofType(value, jObj.types.Number)) {
                     type = Marshaller.types.Number;
                     result = Marshaller.numberToBytes(value);
                 } else if (jObj.ofType(value, jObj.types.String)) {
                     type = Marshaller.types.String;
-                    result = Marshaller.stringToBytes(value);
+                    result = Marshaller.numberToBytes(value.length);
+                    result = result.concat(Marshaller.stringToBytes(value));
                 } else if (jObj.ofType(value, jObj.types.Undefined)) {
                     type = Marshaller.types.Undefined;
                     result = [];
@@ -55,11 +56,22 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         type = Marshaller.types.BooleanFalse;
                     }
                     result = [];
+                } else if (jObj.ofType(value, jObj.types.Array)) {
+                    type = Marshaller.types.Array;
+                    result = Marshaller.numberToBytes(value.length);
+                    value.forEach(function (element) {
+                        result = result.concat(this.transform(element));
+                    });
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
                 }
 
-                return [ [type].concat(result) ];
+                return [type].concat(result);
+            });
+
+        SerializeEncoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,
+            function (value) {
+                return [ this.encode(value) ];
             });
 
         SerializeEncoder.prototype.finish = jObj.method([], jObj.types.Array,

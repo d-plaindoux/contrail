@@ -23,7 +23,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         "use strict";
 
         jCC.scenario("String encoding", function () {
-            var value, decoder, result;
+            var value, decoder, length, result;
 
             jCC.
                 Given(function () {
@@ -45,14 +45,19 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking first result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, value.length * 2 + 1, "Checking first result length");
+                    QUnit.equal(result[0].length, value.length * 2 + 1 + Marshaller.sizeOf.Number, "Checking first result length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], Marshaller.types.String, "Checking encoding type");
+                    QUnit.equal(result[0][0], Marshaller.types.String, "Checking encoded type");
+                }).
+                When(function() {
+                   length = Marshaller.bytesToNumberWithOffset(result[0], 1);
+                }).
+                Then(function() {
+                    QUnit.equal(length, value.length, "Checking encoded size");
                 }).
                 And(function () {
-                    result[0].splice(0, 1);
-                    QUnit.equal(Marshaller.bytesToString(result[0]), value, "Checking first result value");
+                    QUnit.equal(Marshaller.bytesToStringWithOffset(result[0], 1 + Marshaller.sizeOf.Number, length), value, "Checking first result value");
                 });
         });
 
@@ -85,8 +90,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0][0], Marshaller.types.Number, "Checking encoding type");
                 }).
                 And(function () {
-                    result[0].splice(0, 1);
-                    QUnit.equal(Marshaller.bytesToNumber(result[0]), value, "Checking first result value");
+                    QUnit.equal(Marshaller.bytesToNumberWithOffset(result[0], 1), value, "Checking first result value");
                 });
         });
 

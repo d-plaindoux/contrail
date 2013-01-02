@@ -23,7 +23,7 @@ if (typeof define !== "function") {
 }
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
-    function (require, jObj, Marshaller) {
+    function (require, jObj, jMarshaller) {
         "use strict";
 
         function SerializeDecoder() {
@@ -36,28 +36,36 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                 return new SerializeDecoder();
             });
 
-        SerializeDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
+        SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array], jObj.types.Any,
             function (array) {
-                var type, bytes = array, result;
+                var type, result, length;
 
                 type = array[0];
-                bytes.splice(0, 1);
 
-                if (type === Marshaller.types.String) {
-                    result = Marshaller.bytesToString(bytes);
-                } else if (type === Marshaller.types.Number) {
-                    result = Marshaller.bytesToNumber(bytes);
-                } else if (type === Marshaller.types.Undefined) {
+                if (type === jMarshaller.types.String) {
+                    length = jMarshaller.bytesToNumberWithOffset(array, 1);
+                    result = jMarshaller.bytesToStringWithOffset(array, 1 + jMarshaller.sizeOf.Number, length);
+                } else if (type === jMarshaller.types.Number) {
+                    result = jMarshaller.bytesToNumberWithOffset(array, 1);
+                } else if (type === jMarshaller.types.Undefined) {
                     result = undefined;
-                } else if (type === Marshaller.types.BooleanTrue) {
+                } else if (type === jMarshaller.types.BooleanTrue) {
                     result = true;
-                } else if (type === Marshaller.types.BooleanFalse) {
+                } else if (type === jMarshaller.types.BooleanFalse) {
                     result = false;
+                } else if (type === jMarshaller.types.Array) {
+                    length = jMarshaller.bytesToNumberWithOffset(array, 1);
+                    result = [];
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
                 }
 
-                return [ result ];
+                return result;
+            });
+
+        SerializeDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
+            function (array) {
+                return [ this.decode(array) ];
             });
 
         SerializeDecoder.prototype.finish = jObj.method([], jObj.types.Array,
