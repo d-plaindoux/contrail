@@ -37,7 +37,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         SerializeEncoder.prototype.encode = jObj.method([jObj.types.Any], jObj.types.Array,
             function (value) {
-                var type, result = [];
+                var type, i, result = [];
 
                 if (jObj.ofType(value, jObj.types.Number)) {
                     type = Marshaller.types.Number;
@@ -59,9 +59,9 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                 } else if (jObj.ofType(value, jObj.types.Array)) {
                     type = Marshaller.types.Array;
                     result = Marshaller.numberToBytes(value.length);
-                    value.forEach(function (element) {
-                        result = result.concat(this.transform(element));
-                    });
+                    for (i = 0; i < value.length; i += 1) {
+                        result = result.concat(this.encode(value[i]));
+                    }
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
                 }

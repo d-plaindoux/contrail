@@ -50,10 +50,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                 And(function () {
                     QUnit.equal(result[0][0], Marshaller.types.String, "Checking encoded type");
                 }).
-                When(function() {
-                   length = Marshaller.bytesToNumberWithOffset(result[0], 1);
+                When(function () {
+                    length = Marshaller.bytesToNumberWithOffset(result[0], 1);
                 }).
-                Then(function() {
+                Then(function () {
                     QUnit.equal(length, value.length, "Checking encoded size");
                 }).
                 And(function () {
@@ -87,7 +87,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0].length, 4 + 1, "Checking first result length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], Marshaller.types.Number, "Checking encoding type");
+                    QUnit.equal(result[0][0], Marshaller.types.Number, "Checking encoded type");
                 }).
                 And(function () {
                     QUnit.equal(Marshaller.bytesToNumberWithOffset(result[0], 1), value, "Checking first result value");
@@ -120,7 +120,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0].length, 1, "Checking first result length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], Marshaller.types.Undefined, "Checking encoding type");
+                    QUnit.equal(result[0][0], Marshaller.types.Undefined, "Checking encoded type");
                 });
         });
 
@@ -150,7 +150,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0].length, 1, "Checking first result length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], Marshaller.types.BooleanTrue, "Checking encoding type");
+                    QUnit.equal(result[0][0], Marshaller.types.BooleanTrue, "Checking encoded type");
                 });
         });
 
@@ -180,7 +180,89 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0].length, 1, "Checking first result length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], Marshaller.types.BooleanFalse, "Checking encoding type");
+                    QUnit.equal(result[0][0], Marshaller.types.BooleanFalse, "Checking encoded type");
+                });
+        });
+
+        jCC.scenario("Empty array encoding", function () {
+            var value, decoder, result, length;
+
+            jCC.
+                Given(function () {
+                    value = [];
+                }).
+                And(function () {
+                    decoder = Factory.serialize.encoder();
+                }).
+                When(function () {
+                    result = decoder.transform(value);
+                }).
+                Then(function () {
+                    QUnit.equal(jObj.ofType(result, jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking first result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].length, 5, "Checking first result length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0], Marshaller.types.Array, "Checking encoded type");
+                }).
+                When(function () {
+                    length = Marshaller.bytesToNumberWithOffset(result[0], 1);
+                }).
+                Then(function () {
+                    QUnit.equal(length, 0, "Checking encoded length");
+                });
+        });
+
+
+        jCC.scenario("Not empty array encoding", function () {
+            var value, decoder, result, length;
+
+            jCC.
+                Given(function () {
+                    value = [ true , 2013];
+                }).
+                And(function () {
+                    decoder = Factory.serialize.encoder();
+                }).
+                When(function () {
+                    result = decoder.transform(value);
+                }).
+                Then(function () {
+                    QUnit.equal(jObj.ofType(result, jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking first result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].length, 5 + 1 + 5, "Checking first result length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0], Marshaller.types.Array, "Checking encoded type");
+                }).
+                When(function () {
+                    length = Marshaller.bytesToNumberWithOffset(result[0], 1);
+                }).
+                Then(function () {
+                    QUnit.equal(length, 2, "Checking encoded length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][5], Marshaller.types.BooleanTrue, "Checking encoded type for value[0]");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][5 + 1], Marshaller.types.Number, "Checking encoded type for value[0]");
+                }).
+                And(function () {
+                    QUnit.equal(Marshaller.bytesToNumberWithOffset(result[0], 5 + 2), 2013, "Checking encoded type for value[0]");
                 });
         });
     });
