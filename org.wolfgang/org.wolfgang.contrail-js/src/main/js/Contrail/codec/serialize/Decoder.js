@@ -24,7 +24,7 @@ if (typeof define !== "function") {
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
     function (require, jObj, jMarshaller) {
-        // "use strict";
+        "use strict";
 
         function SerializeDecoder() {
             jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
@@ -43,9 +43,10 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                 type = array[offset];
 
                 if (type === jMarshaller.types.String) {
-                    length = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
-                    result = jMarshaller.bytesToStringWithOffset(array, offset + 1 + jMarshaller.sizeOf.Number, length);
-                    size = 1 + jMarshaller.sizeOf.Number + length * jMarshaller.sizeOf.Character;
+                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                    size = 1 + jMarshaller.sizeOf.ShortNumber;
+                    result = jMarshaller.bytesToStringWithOffset(array, offset + size, length);
+                    size += length * jMarshaller.sizeOf.Character;
                 } else if (type === jMarshaller.types.Number) {
                     result = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
                     size = 1 + jMarshaller.sizeOf.Number;
@@ -59,16 +60,16 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     result = false;
                     size = 1;
                 } else if (type === jMarshaller.types.Array) {
-                    length = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
                     result = [];
-                    size = 1 + jMarshaller.sizeOf.Number;
+                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                    size = 1 + jMarshaller.sizeOf.ShortNumber;
                     for (i = 0; i < length; i += 1) {
                         decoded = this.decode(array, offset + size);
                         result.push(decoded.value);
                         size += decoded.offset;
                     }
                 } else {
-                    throw jObj.exception("L.not.yet.implemented");
+                    throw jObj.exception("L.cannot.decode");
                 }
 
                 return { value:result, offset:size };

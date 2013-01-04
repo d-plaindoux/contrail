@@ -27,9 +27,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.String ].
-                        concat(jMarshaller.numberToBytes(message.length)).
-                        concat(jMarshaller.stringToBytes(message));
+                    object = [jMarshaller.types.String].concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message));
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -150,7 +148,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 0 ];
+                    object = [ jMarshaller.types.Array, 0, 0 ];
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -174,7 +172,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 1, jMarshaller.types.BooleanTrue ];
+                    object = [ jMarshaller.types.Array, 0, 1, jMarshaller.types.BooleanTrue ];
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -201,7 +199,9 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 1, jMarshaller.types.String, 0, 0, 0, message.length ].concat(jMarshaller.stringToBytes(message));
+                    object = [ jMarshaller.types.Array, 0, 1 ].
+                        concat([ jMarshaller.types.String ]).concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message));
+
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -228,7 +228,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 2, jMarshaller.types.BooleanTrue, jMarshaller.types.BooleanFalse ];
+                    object = [ jMarshaller.types.Array, 0, 2, jMarshaller.types.BooleanTrue, jMarshaller.types.BooleanFalse ];
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -258,7 +258,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 2, jMarshaller.types.Number, 0, 0, 0, 128, jMarshaller.types.BooleanFalse ];
+                    object = [ jMarshaller.types.Array, 0, 2, jMarshaller.types.Number, 0, 0, 0, 128, jMarshaller.types.BooleanFalse ];
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -289,7 +289,8 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 1].concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message));
+                    object = [ jMarshaller.types.Array, 0, 1].
+                        concat([ jMarshaller.types.String ]).concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message));
                 }).
                 And(function () {
                     encoder = Factory.serialize.decoder();
@@ -316,8 +317,8 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 3 ].
-                        concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message)).
+                    object = [ jMarshaller.types.Array, 0, 3 ].
+                        concat([ jMarshaller.types.String ]).concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message)).
                         concat([ jMarshaller.types.Number ]).concat(jMarshaller.numberToBytes(2013)).
                         concat([ jMarshaller.types.BooleanTrue ]);
                 }).
@@ -353,9 +354,9 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
             jCC.
                 Given(function () {
-                    object = [ jMarshaller.types.Array, 0, 0, 0, 2 ].
-                        concat([ jMarshaller.types.Array, 0, 0, 0, 2 ]).
-                        concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message)).
+                    object = [ jMarshaller.types.Array, 0, 2 ].
+                        concat([ jMarshaller.types.Array, 0, 2 ]).
+                        concat([ jMarshaller.types.String ]).concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message)).
                         concat([ jMarshaller.types.Number ]).concat(jMarshaller.numberToBytes(2013)).
                         concat([ jMarshaller.types.BooleanTrue ]);
                 }).

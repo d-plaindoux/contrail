@@ -44,7 +44,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     result = Marshaller.numberToBytes(value);
                 } else if (jObj.ofType(value, jObj.types.String)) {
                     type = Marshaller.types.String;
-                    result = Marshaller.numberToBytes(value.length);
+                    result = Marshaller.shortNumberToBytes(value.length);
                     result = result.concat(Marshaller.stringToBytes(value));
                 } else if (jObj.ofType(value, jObj.types.Undefined)) {
                     type = Marshaller.types.Undefined;
@@ -58,7 +58,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     result = [];
                 } else if (jObj.ofType(value, jObj.types.Array)) {
                     type = Marshaller.types.Array;
-                    result = Marshaller.numberToBytes(value.length);
+                    result = Marshaller.shortNumberToBytes(value.length);
                     for (i = 0; i < value.length; i += 1) {
                         result = result.concat(this.encode(value[i]));
                     }

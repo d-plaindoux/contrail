@@ -37,16 +37,18 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             Array:0x1,
             Object:0x2,
             Character:0x3,
-            Number:0x4,
-            String:0x5,
-            BooleanTrue:0x6,
-            BooleanFalse:0x7,
-            Undefined:0x8
+            Number:0x4, // Number coded using 4 bytes
+            ShortNumber:0x5, // Number coded using 2 bytes
+            String:0x6,
+            BooleanTrue:0x7,
+            BooleanFalse:0x8,
+            Undefined:0x9
         };
 
         jMarshaller.sizeOf = {
             Character:2,
             Number:4,
+            ShortNumber:2,
             Boolean:1
         };
 
@@ -80,6 +82,35 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
         jMarshaller.bytesToNumber = jObj.method([jObj.types.Array], jObj.types.Number,
             function (bytes) {
                 return jMarshaller.bytesToNumberWithOffset(bytes, 0);
+            });
+
+
+        /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToShortNumberWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
+            function (bytes, offset) {
+                if (bytes.length < offset + jMarshaller.sizeOf.ShortNumber) {
+                    throw jObj.exception("L.array.out.of.bound");
+                }
+
+                return bytes[offset] << 8 | bytes[offset + 1];
+            });
+
+        /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToShortNumber = jObj.method([jObj.types.Array], jObj.types.Number,
+            function (bytes) {
+                return jMarshaller.bytesToShortNumberWithOffset(bytes, 0);
             });
 
         /**
@@ -153,6 +184,16 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 return [value >>> 24 & 0xFF, value >>> 16 & 0xFF, value >>> 8 & 0xFF, value & 0xFF];
             });
 
+        /**
+         * Concert a number to a byte array
+         *
+         * @param i
+         * @return {Array}
+         */
+        jMarshaller.shortNumberToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
+            function (value) {
+                return [value >>> 8 & 0xFF, value & 0xFF];
+            });
         /**
          * Convert a char to a byte array
          *
