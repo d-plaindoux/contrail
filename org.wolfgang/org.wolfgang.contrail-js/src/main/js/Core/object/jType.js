@@ -86,7 +86,6 @@ define([ "require" ],
             String:ofPrimitiveType(Primitives.String),
             Boolean:ofPrimitiveType(Primitives.Boolean),
             Undefined:ofPrimitiveType(Primitives.Undefined),
-            Function:ofPrimitiveType(Primitives.Function),
 
             Named:ofPrimitiveType,
 
@@ -95,6 +94,20 @@ define([ "require" ],
                 return true;
             }),
 
+            // Function type only
+            Function:ofPrimitiveType(Primitives.Function),
+
+            // Complex function type
+            FunctionOf:function (parameters, result) {
+                return typeRule(Primitives.Function,
+                    function (object) {
+                        var result = true;
+
+                        // parameter type checking TODO
+
+                        return result;
+                    });
+            },
             // Object type only
             Object:typeRule(Primitives.Object, function (object) {
                 return typeof object === "object";

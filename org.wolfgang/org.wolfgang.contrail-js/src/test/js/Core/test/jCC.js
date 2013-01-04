@@ -43,7 +43,6 @@ define("test/jCC", [ "qunit" ],
             };
         };
 
-
         jCC.AndThen = function (previous) {
             previous();
             return jCC.ThenSomething();
@@ -91,11 +90,10 @@ define("test/jCC", [ "qunit" ],
 
         jCC.When = function (previousGiven) {
             return function (currentWhen) {
-                var newWhen = function () {
+                return jCC.WhenSomething(function () {
                     previousGiven();
                     currentWhen();
-                };
-                return jCC.WhenSomething(newWhen);
+                });
             };
         };
 
