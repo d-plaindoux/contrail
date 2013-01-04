@@ -41,7 +41,6 @@ public class Promise<V> {
 
 	private Promise() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Future<V> getFuture() {

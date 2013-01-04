@@ -259,7 +259,6 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                 });
         });
 
-
         jCC.scenario("Number array encoding", function () {
             var value, decoder, result, length;
 

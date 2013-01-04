@@ -22,15 +22,13 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
     function (jObj, QUnit, jCC) {
         "use strict";
 
-        /**
-         * Test Type Checking
-         */
         function A() {
             jObj.bless(this);
         }
 
         jCC.scenario("Check Subtype a:A <? A", function () {
             var a;
+
             jCC.
                 Given(function () {
                     a = new A();
@@ -45,24 +43,22 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
 
         jCC.scenario("Check Subtype a:A <? B", function () {
             var a;
-            try {
-                jCC.
-                    Given(function () {
-                        a = new A();
-                    }).
-                    When(function () {
-                        jObj.checkType(a, "B");
-                    }).
-                    Then(function () {
-                        QUnit.equal(true, false, "a is not an instance of B");
-                    });
-            } catch (e) {
-                QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
-            }
+
+            jCC.
+                Given(function () {
+                    a = new A();
+                }).
+                When(function () {
+                    jObj.checkType(a, "B");
+                }).
+                ThenError(function (e) {
+                    QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+                });
         });
 
         jCC.scenario("Check Subtype a:A <? {}", function () {
             var a;
+
             jCC.
                 Given(function () {
                     a = new A();
@@ -78,20 +74,16 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
         jCC.scenario("Check wrong Subtype a:A <? {m:Function}", function () {
             var a;
 
-            try {
-                jCC.
-                    Given(function () {
-                        a = new A();
-                    }).
-                    When(function () {
-                        jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
-                    }).
-                    Then(function () {
-                        QUnit.equal(true, false, "a is not an instance of {m:Function}");
-                    });
-            } catch (e) {
-                QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
-            }
+            jCC.
+                Given(function () {
+                    a = new A();
+                }).
+                When(function () {
+                    jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
+                }).
+                ThenError(function (e) {
+                    QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+                });
         });
 
         jCC.scenario("Check Subtype a:A <? {m:Function}", function () {
@@ -100,6 +92,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
             jCC.
                 Given(function () {
                     A.prototype.m = function () {
+                        // Empty constructor
                     };
                 }).
                 And(function () {
