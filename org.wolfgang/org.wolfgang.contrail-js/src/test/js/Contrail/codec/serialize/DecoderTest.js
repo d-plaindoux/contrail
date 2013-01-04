@@ -282,5 +282,111 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                     QUnit.equal(result[0][1], false, "Checking encoded value[1]");
                 });
         });
+
+
+        jCC.scenario("String array decoding", function () {
+            var object, encoder, result, message = "Hello, World!";
+
+            jCC.
+                Given(function () {
+                    object = [ jMarshaller.types.Array, 0, 0, 0, 1].concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message));
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].length, 1, "Checking encoding length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0], message, "Checking encoded value[0]");
+                });
+        });
+
+        jCC.scenario("Mixed String, Boolean, Number array decoding", function () {
+            var object, encoder, result, message = "Hello, World!";
+
+            jCC.
+                Given(function () {
+                    object = [ jMarshaller.types.Array, 0, 0, 0, 3 ].
+                        concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message)).
+                        concat([ jMarshaller.types.Number ]).concat(jMarshaller.numberToBytes(2013)).
+                        concat([ jMarshaller.types.BooleanTrue ]);
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].length, 3, "Checking encoding length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0], message, "Checking encoded value[0]");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][1], 2013, "Checking encoded value[0]");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][2], true, "Checking encoded value[1]");
+                });
+        });
+
+
+        jCC.scenario("Array of array decoding", function () {
+            var object, encoder, result, message = "Hello, World!";
+
+            jCC.
+                Given(function () {
+                    object = [ jMarshaller.types.Array, 0, 0, 0, 2 ].
+                        concat([ jMarshaller.types.Array, 0, 0, 0, 2 ]).
+                        concat([ jMarshaller.types.String, 0, 0, 0, message.length ]).concat(jMarshaller.stringToBytes(message)).
+                        concat([ jMarshaller.types.Number ]).concat(jMarshaller.numberToBytes(2013)).
+                        concat([ jMarshaller.types.BooleanTrue ]);
+                }).
+                And(function () {
+                    encoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = encoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].length, 2, "Checking encoding length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0].length, 2, "Checking encoding length");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0][0], message, "Checking encoded value[0][0]");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][0][1], 2013, "Checking encoded value[0][1]");
+                }).
+                And(function () {
+                    QUnit.equal(result[0][1], true, "Checking encoded value[1]");
+                });
+        });
+
     });
 
