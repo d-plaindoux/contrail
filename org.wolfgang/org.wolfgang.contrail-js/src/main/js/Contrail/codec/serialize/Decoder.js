@@ -24,7 +24,7 @@ if (typeof define !== "function") {
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
     function (require, jObj, jMarshaller) {
-        "use strict";
+        // "use strict";
 
         function SerializeDecoder() {
             jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
@@ -36,7 +36,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                 return new SerializeDecoder();
             });
 
-        SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array,jObj.types.Number], jObj.types.Any,
+        SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Any,
             function (array, offset) {
                 var type, result, i, decoded, length, size;
 
@@ -62,16 +62,16 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     length = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
                     result = [];
                     size = 1 + jMarshaller.sizeOf.Number;
-                    for(i = 0; i < length; i+=1) {
+                    for (i = 0; i < length; i += 1) {
                         decoded = this.decode(array, offset + size);
-                        result = decoded.concat(decoded.value);
+                        result.push(decoded.value);
                         size += decoded.offset;
                     }
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
                 }
 
-                return { value : result, offset: size };
+                return { value:result, offset:size };
             });
 
         SerializeDecoder.prototype.transform = jObj.method([jObj.types.Array], jObj.types.Array,
