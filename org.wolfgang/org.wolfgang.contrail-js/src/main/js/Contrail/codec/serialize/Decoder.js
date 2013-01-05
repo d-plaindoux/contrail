@@ -38,7 +38,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Any,
             function (array, offset) {
-                var type, result, i, decoded, length, size;
+                var type, result, i, decoded, length, size, key;
 
                 type = array[offset];
 
@@ -66,6 +66,19 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     for (i = 0; i < length; i += 1) {
                         decoded = this.decode(array, offset + size);
                         result.push(decoded.value);
+                        size += decoded.offset;
+                    }
+                } else if (type === jMarshaller.types.Object) {
+                    result = {};
+                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                    size = 1 + jMarshaller.sizeOf.ShortNumber;
+                    for (i = 0; i < length; i += 1) {
+                        length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                        size += jMarshaller.sizeOf.ShortNumber;
+                        key = jMarshaller.bytesToStringWithOffset(array, offset + size, length);
+                        size += length * jMarshaller.sizeOf.Character;
+                        decoded = this.decode(array, offset + size);
+                        result[key] = decoded.value;
                         size += decoded.offset;
                     }
                 } else {

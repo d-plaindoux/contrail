@@ -348,7 +348,6 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                 });
         });
 
-
         jCC.scenario("Array of array decoding", function () {
             var object, decoder, result, message = "Hello, World!";
 
