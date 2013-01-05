@@ -23,17 +23,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         "use strict";
 
         jCC.scenario("String decoding", function () {
-            var object, encoder, result, message = "Hello, World!";
+            var object, decoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
                     object = [jMarshaller.types.String].concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message));
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -47,17 +47,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Number decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Number ].concat(jMarshaller.numberToBytes(-256));
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -71,17 +71,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Undefined decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Undefined ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -95,17 +95,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Boolean true decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.BooleanTrue ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -119,17 +119,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Boolean false decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.BooleanFalse ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -144,17 +144,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
 
         jCC.scenario("Empty array decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Array, 0, 0 ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -168,17 +168,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Boolean array decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Array, 0, 1, jMarshaller.types.BooleanTrue ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -195,7 +195,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("String array decoding", function () {
-            var object, encoder, result, message = "Hello, World!";
+            var object, decoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
@@ -204,10 +204,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -224,17 +224,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Booleans array decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Array, 0, 2, jMarshaller.types.BooleanTrue, jMarshaller.types.BooleanFalse ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -254,17 +254,17 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Mixed Boolean and Number array decoding", function () {
-            var object, encoder, result;
+            var object, decoder, result;
 
             jCC.
                 Given(function () {
                     object = [ jMarshaller.types.Array, 0, 2, jMarshaller.types.Number, 0, 0, 0, 128, jMarshaller.types.BooleanFalse ];
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -285,7 +285,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
 
         jCC.scenario("String array decoding", function () {
-            var object, encoder, result, message = "Hello, World!";
+            var object, decoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
@@ -293,10 +293,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                         concat([ jMarshaller.types.String ]).concat(jMarshaller.shortNumberToBytes(message.length)).concat(jMarshaller.stringToBytes(message));
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -313,7 +313,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
         });
 
         jCC.scenario("Mixed String, Boolean, Number array decoding", function () {
-            var object, encoder, result, message = "Hello, World!";
+            var object, decoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
@@ -323,10 +323,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                         concat([ jMarshaller.types.BooleanTrue ]);
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");
@@ -350,7 +350,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
 
 
         jCC.scenario("Array of array decoding", function () {
-            var object, encoder, result, message = "Hello, World!";
+            var object, decoder, result, message = "Hello, World!";
 
             jCC.
                 Given(function () {
@@ -361,10 +361,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                         concat([ jMarshaller.types.BooleanTrue ]);
                 }).
                 And(function () {
-                    encoder = Factory.serialize.decoder();
+                    decoder = Factory.serialize.decoder();
                 }).
                 When(function () {
-                    result = encoder.transform(object);
+                    result = decoder.transform(object);
                 }).
                 Then(function () {
                     QUnit.equal(result.length, 1, "Checking result length");

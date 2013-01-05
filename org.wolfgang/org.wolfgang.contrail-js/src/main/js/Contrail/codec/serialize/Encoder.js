@@ -23,7 +23,7 @@ if (typeof define !== "function") {
 }
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
-    function (require, jObj, Marshaller) {
+    function (require, jObj, jMarshaller) {
         "use strict";
 
         function SerializeEncoder() {
@@ -37,30 +37,44 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         SerializeEncoder.prototype.encode = jObj.method([jObj.types.Any], jObj.types.Array,
             function (value) {
-                var type, i, result = [];
+                var type, i, result = [], keys;
 
                 if (jObj.ofType(value, jObj.types.Number)) {
-                    type = Marshaller.types.Number;
-                    result = Marshaller.numberToBytes(value);
+                    type = jMarshaller.types.Number;
+                    result = jMarshaller.numberToBytes(value);
                 } else if (jObj.ofType(value, jObj.types.String)) {
-                    type = Marshaller.types.String;
-                    result = Marshaller.shortNumberToBytes(value.length);
-                    result = result.concat(Marshaller.stringToBytes(value));
+                    type = jMarshaller.types.String;
+                    result = jMarshaller.shortNumberToBytes(value.length);
+                    result = result.concat(jMarshaller.stringToBytes(value));
                 } else if (jObj.ofType(value, jObj.types.Undefined)) {
-                    type = Marshaller.types.Undefined;
+                    type = jMarshaller.types.Undefined;
                     result = [];
                 } else if (jObj.ofType(value, jObj.types.Boolean)) {
                     if (value) {
-                        type = Marshaller.types.BooleanTrue;
+                        type = jMarshaller.types.BooleanTrue;
                     } else {
-                        type = Marshaller.types.BooleanFalse;
+                        type = jMarshaller.types.BooleanFalse;
                     }
                     result = [];
                 } else if (jObj.ofType(value, jObj.types.Array)) {
-                    type = Marshaller.types.Array;
-                    result = Marshaller.shortNumberToBytes(value.length);
+                    type = jMarshaller.types.Array;
+                    result = jMarshaller.shortNumberToBytes(value.length);
                     for (i = 0; i < value.length; i += 1) {
                         result = result.concat(this.encode(value[i]));
+                    }
+                } else if (jObj.ofType(value, jObj.types.Object)) {
+                    type = jMarshaller.types.Object;
+                    keys = [];
+                    Object.keys(value).forEach(function (key) {
+                        if (value.hasOwnProperty(key)) {
+                            keys.push(key);
+                        }
+                    });
+                    result = jMarshaller.shortNumberToBytes(keys.length);
+                    for (i = 0; i < keys.length; i += 1) {
+                        result = result.concat(jMarshaller.shortNumberToBytes(keys[i].length));
+                        result = result.concat(jMarshaller.stringToBytes(keys[i]));
+                        result = result.concat(this.encode(value[keys[i]]));
                     }
                 } else {
                     throw jObj.exception("L.not.yet.implemented");
