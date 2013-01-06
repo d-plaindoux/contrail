@@ -16,44 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.coercion;
+package org.wolfgang.contrail.codec.coercion;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 
 /**
- * <code>Encoder</code> is capable to transform objects to payload based byte
- * array.
+ * <code>Decoder</code> is able to transform a payload based array to an object
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder<T> implements DataTransducer<T, Object> {
+public class Decoder<T> implements DataTransducer<Object, T> {
 
 	/**
-	 * An array of accepted types
+	 * Accepted types for the decoding
 	 */
-	@SuppressWarnings("unused")
 	private final Class<T> coercionType;
 
 	/**
 	 * Constructor
 	 */
-	Encoder(Class<T> coercionType) {
+	public Decoder(Class<T> coercionType) {
 		super();
 		this.coercionType = coercionType;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> transform(T source) throws DataTransducerException {
-		return Arrays.asList((Object) source);
+	public List<T> transform(Object source) throws DataTransducerException {
+		if (source == null || coercionType.isAssignableFrom(source.getClass())) {
+			return Arrays.asList(coercionType.cast(source));
+		} else {
+			final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "transducer.coercion.error");
+			throw new DataTransducerException(message.format(source.getClass(), coercionType));
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> finish() throws DataTransducerException {
+	public List<T> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }
