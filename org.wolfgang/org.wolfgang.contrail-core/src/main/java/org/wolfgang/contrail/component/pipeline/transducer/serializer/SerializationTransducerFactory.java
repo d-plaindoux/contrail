@@ -19,10 +19,12 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.serializer;
 
+import org.wolfgang.contrail.codec.payload.Bytes;
+import org.wolfgang.contrail.codec.serialize.Decoder;
+import org.wolfgang.contrail.codec.serialize.Encoder;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream

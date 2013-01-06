@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
+package org.wolfgang.contrail.codec.jaxb;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,9 +28,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>Decoder</code> is able to transform a byte stream to an object using
@@ -39,7 +39,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Decoder implements DataTransducer<Bytes, Object> {
+public class Decoder implements DataTransducer<Bytes, Object> {
 
 	/**
 	 * Types used for the JAXB decoding process

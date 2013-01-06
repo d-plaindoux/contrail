@@ -24,10 +24,10 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.junit.Test;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.jaxb.JAXBTransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>TestSerializer</code>
@@ -37,16 +37,12 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  */
 public class TestJAXBSerializer {
 
-	private JAXBTransducerFactory giveAJAXBTransducer() {
-		return new JAXBTransducerFactory(SimpleClass.class);
-	}
-
 	@Test
 	public void GivenAJAXBTransducerdAnExpectedClassEncodingMustSucceed() throws DataTransducerException {
 		final SimpleClass source = new SimpleClass();
 		source.setValue("Hello, World!");
 
-		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
+		final JAXBTransducerFactory jaxbTransducerFactory = givenAJAXBTransducer();
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		final List<Bytes> bytes = encoder.transform(source);
 		assertEquals(1, bytes.size());
@@ -63,7 +59,7 @@ public class TestJAXBSerializer {
 		final SimpleClass source = new SimpleClass();
 		source.setValue("Hello, World!");
 
-		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
+		final JAXBTransducerFactory jaxbTransducerFactory = givenAJAXBTransducer();
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
 
@@ -75,7 +71,7 @@ public class TestJAXBSerializer {
 
 	@Test
 	public void GivenAJAXBTransducerdAnUnexpectedClassEncodingMustFail() {
-		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
+		final JAXBTransducerFactory jaxbTransducerFactory = givenAJAXBTransducer();
 		final DataTransducer<Object, Bytes> encoder = jaxbTransducerFactory.getEncoder();
 		try {
 			encoder.transform(this);
@@ -89,7 +85,7 @@ public class TestJAXBSerializer {
 	public void GivenACoercionTransducerdAnExpectedSequenceDecodingMustFail() {
 		final byte[] bytes = { 0, 0, 0, 2, 'X', 'X', 'X', 'X' };
 
-		final JAXBTransducerFactory jaxbTransducerFactory = giveAJAXBTransducer();
+		final JAXBTransducerFactory jaxbTransducerFactory = givenAJAXBTransducer();
 		final DataTransducer<Bytes, Object> decoder = jaxbTransducerFactory.getDecoder();
 		try {
 			decoder.transform(new Bytes(bytes));
@@ -97,5 +93,9 @@ public class TestJAXBSerializer {
 		} catch (DataTransducerException e) {
 			// OK
 		}
+	}
+
+	private JAXBTransducerFactory givenAJAXBTransducer() {
+		return new JAXBTransducerFactory(SimpleClass.class);
 	}
 }

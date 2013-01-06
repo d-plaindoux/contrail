@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.payload;
 
+import org.wolfgang.contrail.codec.payload.Bytes;
+import org.wolfgang.contrail.codec.payload.Decoder;
+import org.wolfgang.contrail.codec.payload.Encoder;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;

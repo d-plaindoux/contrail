@@ -16,11 +16,39 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.codec.payload;
+
+
 /**
- * Packet based on JAXB. Dedicated JAXB encoder and decoder are provided for 
- * this purpose.
- *
+ * <code>Bytes</code> contains a consistent byte array in term of coding and
+ * decoding
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
+public final class Bytes {
+
+	/**
+	 * The content
+	 */
+	private final byte[] content;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param content
+	 */
+	public Bytes(byte[] content) {
+		super();
+		this.content = content;
+	}
+
+	/**
+	 * Provides the byte array
+	 * 
+	 * @return a byte array
+	 */
+	public byte[] getContent() {
+		return content;
+	}
+}

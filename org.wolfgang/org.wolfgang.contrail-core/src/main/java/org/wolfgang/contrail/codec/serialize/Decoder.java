@@ -16,52 +16,52 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.payload;
+package org.wolfgang.contrail.codec.serialize;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 
 /**
- * <code>Encoder</code> is capable to transform a byte array to another one with
- * a prefix as a payload.
+ * <code>Decoder</code> is able to transform a payload based array to an object
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Bytes, byte[]> {
+public class Decoder implements DataTransducer<Bytes, Object> {
+
+	/**
+	 * Accepted types for the decoding
+	 */
+	@SuppressWarnings("unused")
+	private final Class<?>[] acceptedTypes;
 
 	/**
 	 * Constructor
 	 */
-	Encoder() {
+	public Decoder(Class<?>... acceptedTypes) {
 		super();
+		this.acceptedTypes = acceptedTypes;
 	}
 
 	@Override
-	public List<byte[]> transform(Bytes source) throws DataTransducerException {
+	public List<Object> transform(Bytes source) throws DataTransducerException {
 		try {
-			final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			try {
-				final byte[] bytes = source.getContent();
-				stream.write(Marshall.intToBytes(bytes.length));
-				stream.write(bytes);
-			} finally {
-				stream.close();
-			}
-			return Arrays.asList(stream.toByteArray());
+			return Arrays.asList(Marshall.bytesToObject(source.getContent()));
 		} catch (IOException e) {
+			throw new DataTransducerException(e);
+		} catch (ClassNotFoundException e) {
 			throw new DataTransducerException(e);
 		}
 	}
 
 	@Override
-	public List<byte[]> finish() throws DataTransducerException {
+	public List<Object> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

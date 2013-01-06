@@ -16,52 +16,68 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.serializer;
+package org.wolfgang.contrail.codec.jaxb;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.wolfgang.common.utils.Marshall;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
- * <code>Decoder</code> is able to transform a payload based array to an object
+ * <code>Encoder</code> is capable to transform an object to a byte array using
+ * JAXB
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Decoder implements DataTransducer<Bytes, Object> {
+public class Encoder implements DataTransducer<Object, Bytes> {
 
 	/**
-	 * Accepted types for the decoding
+	 * Types used for the JAXB encoding process
 	 */
-	@SuppressWarnings("unused")
-	private final Class<?>[] acceptedTypes;
+	private final Class<?>[] types;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param types
+	 *            Types used for the encoding
 	 */
-	Decoder(Class<?>... acceptedTypes) {
+	public Encoder(Class<?>[] types) {
 		super();
-		this.acceptedTypes = acceptedTypes;
+		this.types = types.clone();
 	}
 
 	@Override
-	public List<Object> transform(Bytes source) throws DataTransducerException {
+	public List<Bytes> transform(Object source) throws DataTransducerException {
 		try {
-			return Arrays.asList(Marshall.bytesToObject(source.getContent()));
+			// TODO - Cache Object
+			final JAXBContext context = JAXBContext.newInstance(types);
+			final Marshaller marshaller = context.createMarshaller();
+			final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			try {
+				marshaller.marshal(source, stream);
+			} finally {
+				stream.close();
+			}
+			return Arrays.asList(new Bytes(stream.toByteArray()));
 		} catch (IOException e) {
 			throw new DataTransducerException(e);
-		} catch (ClassNotFoundException e) {
+		} catch (JAXBException e) {
 			throw new DataTransducerException(e);
 		}
 	}
 
 	@Override
-	public List<Object> finish() throws DataTransducerException {
+	public List<Bytes> finish() throws DataTransducerException {
 		return Arrays.asList();
 	}
 }

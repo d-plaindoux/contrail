@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.payload;
+package org.wolfgang.contrail.codec.payload;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerExcepti
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Decoder implements DataTransducer<byte[], Bytes> {
+public class Decoder implements DataTransducer<byte[], Bytes> {
 
 	/**
 	 * Static definition for integer length representation (32 bits)
@@ -55,7 +55,7 @@ class Decoder implements DataTransducer<byte[], Bytes> {
 	/**
 	 * Constructor
 	 */
-	Decoder() {
+	public Decoder() {
 		super();
 		this.buffer = EMPTY_BUFFER;
 	}

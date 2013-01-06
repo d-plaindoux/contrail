@@ -16,16 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.serializer;
+package org.wolfgang.contrail.codec.serialize;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>Encoder</code> is capable to transform objects to payload based byte array.
@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class Encoder implements DataTransducer<Object, Bytes> {
+public class Encoder implements DataTransducer<Object, Bytes> {
 
 	/**
 	 * An array of accepted types
@@ -44,7 +44,7 @@ class Encoder implements DataTransducer<Object, Bytes> {
 	/**
 	 * Constructor
 	 */
-	Encoder(Class<?>... acceptedTypes) {
+	public Encoder(Class<?>... acceptedTypes) {
 		super();
 		this.acceptedTypes = acceptedTypes;
 	}

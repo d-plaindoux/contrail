@@ -18,10 +18,12 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
 
+import org.wolfgang.contrail.codec.jaxb.Decoder;
+import org.wolfgang.contrail.codec.jaxb.Encoder;
+import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.payload.Bytes;
 
 /**
  * <code>JAXBTransducerFactory</code> is in charge of transforming upstream
