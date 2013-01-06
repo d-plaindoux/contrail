@@ -24,7 +24,7 @@ if (typeof define !== "function") {
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
     function (require, jObj, jMarshaller) {
-        "use strict";
+        // "use strict";
 
         function SerializeDecoder() {
             jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
@@ -38,7 +38,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Any,
             function (array, offset) {
-                var type, result, i, decoded, length, size, key;
+                var type, result, i, decoded, length, name_length, size, key;
 
                 type = array[offset];
 
@@ -73,10 +73,10 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
                     size = 1 + jMarshaller.sizeOf.ShortNumber;
                     for (i = 0; i < length; i += 1) {
-                        length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                        name_length = jMarshaller.bytesToShortNumberWithOffset(array, offset + size);
                         size += jMarshaller.sizeOf.ShortNumber;
-                        key = jMarshaller.bytesToStringWithOffset(array, offset + size, length);
-                        size += length * jMarshaller.sizeOf.Character;
+                        key = jMarshaller.bytesToStringWithOffset(array, offset + size, name_length);
+                        size += name_length * jMarshaller.sizeOf.Character;
                         decoded = this.decode(array, offset + size);
                         result[key] = decoded.value;
                         size += decoded.offset;

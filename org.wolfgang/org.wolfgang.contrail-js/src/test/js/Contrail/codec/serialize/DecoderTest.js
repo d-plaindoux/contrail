@@ -388,5 +388,61 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Cor
                 });
         });
 
-    });
+        jCC.scenario("Empty object decoding", function () {
+            var object, decoder, result;
 
+            jCC.
+                Given(function () {
+                    object = [ jMarshaller.types.Object, 0, 0 ];
+                }).
+                And(function () {
+                    decoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = decoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
+                });
+        });
+
+        jCC.scenario("Not empty object decoding", function () {
+            var object, decoder, result, foo = "foo", bar = "bar";
+
+            jCC.
+                Given(function () {
+                    object = [ jMarshaller.types.Object, 0, 2 ].
+                        concat(jMarshaller.shortNumberToBytes(foo.length)).concat(jMarshaller.stringToBytes(foo)).
+                        concat([ jMarshaller.types.Number ]).concat(jMarshaller.numberToBytes(2013)).
+                        concat(jMarshaller.shortNumberToBytes(bar.length)).concat(jMarshaller.stringToBytes(bar)).
+                        concat([ jMarshaller.types.BooleanTrue ]);
+                }).
+                And(function () {
+                    decoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = decoder.transform(object);
+                }).
+                Then(function () {
+                    QUnit.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    QUnit.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].hasOwnProperty(foo), true, "Checking foo property existence");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].foo, 2013, "Checking foo property value");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].hasOwnProperty(bar), true, "Checking bar property existence");
+                }).
+                And(function () {
+                    QUnit.equal(result[0].bar, true, "Checking bar property value");
+                });
+        });
+    });

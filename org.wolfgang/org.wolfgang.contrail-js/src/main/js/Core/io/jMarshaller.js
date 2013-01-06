@@ -37,14 +37,18 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             Array:0x1,
             Object:0x2,
             Character:0x3,
-            Number:0x4, // Number coded using 4 bytes
-            ShortNumber:0x5, // Number coded using 2 bytes
+            Number:0x4,
+            ShortNumber:0x5,
             String:0x6,
             BooleanTrue:0x7,
             BooleanFalse:0x8,
             Undefined:0x9
         };
 
+        /**
+         * Define size for simple data types like numbers, chars, etc.
+         * @type {Object}
+         */
         jMarshaller.sizeOf = {
             Character:2,
             Number:4,
