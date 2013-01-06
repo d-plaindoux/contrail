@@ -28,7 +28,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * <code>FutureResponse</code>
+ * <code>PromisedFuture</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
