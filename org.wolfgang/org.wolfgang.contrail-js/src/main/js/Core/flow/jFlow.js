@@ -26,17 +26,17 @@ define("Core/flow/jFlow",
     [
         "./DataFlow",
         "./CloseableDataFlow",
-        "./CumulatedDataFlow",
+        "./BufferedDataFlow",
         "./FilteredDataFlow"
     ],
-    function (dataFlow, closeableDataFlow, cumulatedDataFlow, filteredDataFlow) {
+    function (dataFlow, closeableDataFlow, bufferedDataFlow, filteredDataFlow) {
         "use strict";
 
         var jFlow = {};
 
         jFlow.core = dataFlow;
         jFlow.closeable = closeableDataFlow;
-        jFlow.cumulated = cumulatedDataFlow;
+        jFlow.buffered = bufferedDataFlow;
         jFlow.filtered = filteredDataFlow;
 
         return jFlow;

@@ -72,7 +72,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    t1 = Factory.component.terminal(Factory.flow.cumulated());
+                    t1 = Factory.component.terminal(Factory.flow.buffered());
                 }).
                 When(function () {
                     Factory.link.connect(c1, t1);
@@ -96,10 +96,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    t1 = Factory.component.terminal(Factory.flow.cumulated());
+                    t1 = Factory.component.terminal(Factory.flow.buffered());
                 }).
                 And(function () {
-                    t2 = Factory.component.terminal(Factory.flow.cumulated());
+                    t2 = Factory.component.terminal(Factory.flow.buffered());
                 }).
                 When(function () {
                     Factory.link.connect(c1, t1);
@@ -132,10 +132,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    d1 = Factory.flow.cumulated();
+                    d1 = Factory.flow.buffered();
                 }).
                 And(function () {
-                    d2 = Factory.flow.cumulated();
+                    d2 = Factory.flow.buffered();
                 }).
                 And(function () {
                     t1 = Factory.component.terminal(Factory.flow.filtered(d1, function (data) {
@@ -175,10 +175,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.destinations();
                 }).
                 And(function () {
-                    d1 = Factory.flow.cumulated();
+                    d1 = Factory.flow.buffered();
                 }).
                 And(function () {
-                    d2 = Factory.flow.cumulated();
+                    d2 = Factory.flow.buffered();
                 }).
                 And(function () {
                     t1 = Factory.component.terminal(Factory.flow.filtered(d1, function (data) {

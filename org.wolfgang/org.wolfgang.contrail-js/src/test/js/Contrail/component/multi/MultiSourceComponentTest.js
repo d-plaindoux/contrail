@@ -72,7 +72,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.cumulated());
+                    i1 = Factory.component.initial(Factory.flow.buffered());
                 }).
                 When(function () {
                     Factory.link.connect(i1, c1);
@@ -96,10 +96,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    i1 = Factory.component.initial(Factory.flow.cumulated());
+                    i1 = Factory.component.initial(Factory.flow.buffered());
                 }).
                 And(function () {
-                    i2 = Factory.component.initial(Factory.flow.cumulated());
+                    i2 = Factory.component.initial(Factory.flow.buffered());
                 }).
                 When(function () {
                     Factory.link.connect(i1, c1);
@@ -132,10 +132,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    d1 = Factory.flow.cumulated();
+                    d1 = Factory.flow.buffered();
                 }).
                 And(function () {
-                    d2 = Factory.flow.cumulated();
+                    d2 = Factory.flow.buffered();
                 }).
                 And(function () {
                     i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {
@@ -175,10 +175,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1 = Factory.component.multi.sources();
                 }).
                 And(function () {
-                    d1 = Factory.flow.cumulated();
+                    d1 = Factory.flow.buffered();
                 }).
                 And(function () {
-                    d2 = Factory.flow.cumulated();
+                    d2 = Factory.flow.buffered();
                 }).
                 And(function () {
                     i1 = Factory.component.initial(Factory.flow.filtered(d1, function (data) {

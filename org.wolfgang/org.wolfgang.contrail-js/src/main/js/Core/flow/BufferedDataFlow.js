@@ -26,30 +26,30 @@ define([ "require", "Core/object/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        function CumulatedDataFlow() {
+        function BufferedDataFlow() {
             jObj.bless(this, require("Core/flow/jFlow").core());
             this.data = [];
         }
 
-        CumulatedDataFlow.init = jObj.constructor([],
+        BufferedDataFlow.init = jObj.constructor([],
             function () {
-                return new CumulatedDataFlow();
+                return new BufferedDataFlow();
             });
 
-        CumulatedDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
+        BufferedDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
             function (data) {
                 this.data = this.data.concat(data);
             });
 
-        CumulatedDataFlow.prototype.handleClose = jObj.procedure([],
+        BufferedDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
                 this.data = [];
             });
 
-        CumulatedDataFlow.prototype.getAccumulation = jObj.method([], jObj.types.Array,
+        BufferedDataFlow.prototype.getAccumulation = jObj.method([], jObj.types.Array,
             function () {
                 return this.data; // Can be modified -- TODO
             });
 
-        return CumulatedDataFlow.init;
+        return BufferedDataFlow.init;
     });
