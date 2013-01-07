@@ -30,9 +30,9 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DisposableLink;
 
@@ -75,8 +75,8 @@ public class TestByteRelay {
 			final DisposableLink interconnection = ComponentManager.connect(source, destination);
 
 			source.closeUpStream();
-			destination.getDownStreamDataHandler().handleData("Hello,".getBytes());
-			destination.getDownStreamDataHandler().handleData(" World!".getBytes());
+			destination.getDownStreamDataFlow().handleData("Hello,".getBytes());
+			destination.getDownStreamDataFlow().handleData(" World!".getBytes());
 
 			interconnection.dispose();
 		} finally {

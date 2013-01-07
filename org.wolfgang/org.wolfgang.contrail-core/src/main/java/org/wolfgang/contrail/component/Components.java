@@ -26,14 +26,9 @@ import org.wolfgang.contrail.component.compose.CompositionComponent;
 import org.wolfgang.contrail.component.compose.CompositionDestinationComponent;
 import org.wolfgang.contrail.component.compose.CompositionPipelineComponent;
 import org.wolfgang.contrail.component.compose.CompositionSourceComponent;
-import org.wolfgang.contrail.component.reverse.ReversedDestinationComponent;
-import org.wolfgang.contrail.component.reverse.ReversedPipelIneComponent;
-import org.wolfgang.contrail.component.reverse.ReversedSourceComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowFactory;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
  * <code>BoundComponents</code>
@@ -50,19 +45,19 @@ public final class Components {
 		super();
 	}
 
-	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlow<D> flow) {
+	public static <U, D> InitialComponent<U, D> initial(DataFlow<D> flow) {
 		return new InitialComponent<U, D>(flow);
 	}
 
-	public static <U, D> InitialComponent<U, D> initial(DownStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+	public static <U, D> InitialComponent<U, D> initial(DataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
 		return new InitialComponent<U, D>(factory);
 	}
 
-	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlow<U> flow) {
+	public static <U, D> TerminalComponent<U, D> terminal(DataFlow<U> flow) {
 		return new TerminalComponent<U, D>(flow);
 	}
 
-	public static <U, D> TerminalComponent<U, D> terminal(UpStreamDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+	public static <U, D> TerminalComponent<U, D> terminal(DataFlowFactory<D, U> factory) throws CannotCreateDataFlowException {
 		return new TerminalComponent<U, D>(factory);
 	}
 
@@ -85,6 +80,7 @@ public final class Components {
 		}
 	}
 
+	/** TODO
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Component reverse(Component component) throws ComponentConnectionRejectedException {
 		if (Coercion.canCoerce(component, PipelineComponent.class)) {
@@ -97,4 +93,5 @@ public final class Components {
 			return null;
 		}
 	}
+	*/
 }

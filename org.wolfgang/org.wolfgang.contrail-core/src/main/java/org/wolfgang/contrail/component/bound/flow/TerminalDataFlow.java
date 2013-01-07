@@ -16,22 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
+package org.wolfgang.contrail.component.bound.flow;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 
 /**
- * <code>TerminalDownStreamDataFlow</code>
+ * <code>TerminalDataFlow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TerminalDownStreamDataFlow<D> extends DownStreamDataFlowAdapter<D> {
+public class TerminalDataFlow<D> extends DataFlowAdapter<D> {
 
 	private final TerminalComponent<?, D> component;
 
@@ -43,8 +44,8 @@ public class TerminalDownStreamDataFlow<D> extends DownStreamDataFlowAdapter<D> 
 	 *            The component
 	 * @return
 	 */
-	public static <D> DownStreamDataFlow<D> create(TerminalComponent<?, D> component) {
-		return DataFlows.<D> closable(new TerminalDownStreamDataFlow<D>(component));
+	public static <D> DataFlow<D> create(TerminalComponent<?, D> component) {
+		return DataFlows.<D> closable(new TerminalDataFlow<D>(component));
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class TerminalDownStreamDataFlow<D> extends DownStreamDataFlowAdapter<D> 
 	 * 
 	 * @param component
 	 */
-	private TerminalDownStreamDataFlow(TerminalComponent<?, D> component) {
+	private TerminalDataFlow(TerminalComponent<?, D> component) {
 		super();
 		this.component = component;
 	}
@@ -60,7 +61,7 @@ public class TerminalDownStreamDataFlow<D> extends DownStreamDataFlowAdapter<D> 
 	@Override
 	public void handleData(D data) throws DataFlowException {
 		try {
-			this.component.getDownStreamDataHandler().handleData(data);
+			this.component.getDownStreamDataFlow().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowException(e);
 		}

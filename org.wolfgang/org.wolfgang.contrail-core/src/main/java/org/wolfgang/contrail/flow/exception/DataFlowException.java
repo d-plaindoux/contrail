@@ -16,27 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.flow;
-
+package org.wolfgang.contrail.flow.exception;
 
 /**
- * <code>UpStreamDataFlowFactory</code> is capable to build data sender.
+ * <code>HandleDataException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface UpStreamDataFlowFactory<U, D> {
+public class DataFlowException extends Exception {
+
+	private static final long serialVersionUID = -2525135136709063308L;
 
 	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
-	 * 
-	 * @param component
-	 *            The component used to build the data sender
-	 * @return a data sender (Never <code>null</code>)
-	 * @throws CannotCreateDataFlowException
-	 *             if the data sender cannot be correctly created
+	 * Constructor
 	 */
-	UpStreamDataFlow<U> create(DownStreamDataFlow<D> component) throws CannotCreateDataFlowException;
+	public DataFlowException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataFlowException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataFlowException(Throwable arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public DataFlowException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
 
 }

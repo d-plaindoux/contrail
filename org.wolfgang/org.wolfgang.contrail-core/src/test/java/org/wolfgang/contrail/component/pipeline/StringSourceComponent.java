@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
 
 /**
  * <code>StringSourceComponent</code> is a simple upstream source component.
@@ -38,7 +38,7 @@ public class StringSourceComponent {
 	 * Constructor
 	 */
 	public static InitialComponent<String, String> create(final AtomicReference<String> reference) {
-		return Components.initial(DataFlows.<String> closable(new DownStreamDataFlowAdapter<String>() {
+		return Components.initial(DataFlows.<String> closable(new DataFlowAdapter<String>() {
 			public void handleData(String data) throws DataFlowException {
 				reference.set(data);
 			}

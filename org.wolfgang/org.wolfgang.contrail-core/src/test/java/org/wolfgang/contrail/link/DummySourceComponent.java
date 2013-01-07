@@ -20,11 +20,10 @@ package org.wolfgang.contrail.link;
 
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.DownStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.DownStreamDataFlowFactory;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
+import org.wolfgang.contrail.flow.DataFlowFactory;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
  * <code>DummySourceComponent</code> is a simple upstream source component.
@@ -40,10 +39,10 @@ public class DummySourceComponent {
 	 * @throws CannotCreateDataFlowException
 	 */
 	public static InitialComponent<Void, Void> create() throws CannotCreateDataFlowException {
-		return Components.initial(new DownStreamDataFlowFactory<Void, Void>() {
+		return Components.initial(new DataFlowFactory<Void, Void>() {
 			@Override
-			public DownStreamDataFlow<Void> create(UpStreamDataFlow<Void> sender) {
-				return new DownStreamDataFlowAdapter<Void>();
+			public DataFlow<Void> create(DataFlow<Void> sender) {
+				return new DataFlowAdapter<Void>();
 			}
 		});
 	}

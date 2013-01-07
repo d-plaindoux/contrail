@@ -16,22 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.bound;
+package org.wolfgang.contrail.component.bound.flow;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.bound.InitialComponent;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
 
 /**
- * <code>InitialUpStreamDataFlow</code>
+ * <code>InitialDataFlow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class InitialUpStreamDataFlow<U> extends UpStreamDataFlowAdapter<U> {
+public class InitialDataFlow<U> extends DataFlowAdapter<U> {
 
 	private final InitialComponent<U, ?> component;
 
@@ -43,8 +44,8 @@ public class InitialUpStreamDataFlow<U> extends UpStreamDataFlowAdapter<U> {
 	 *            The component
 	 * @return
 	 */
-	public static <U> UpStreamDataFlow<U> create(InitialComponent<U, ?> component) {
-		return DataFlows.<U> closable(new InitialUpStreamDataFlow<U>(component));
+	public static <U> DataFlow<U> create(InitialComponent<U, ?> component) {
+		return DataFlows.<U> closable(new InitialDataFlow<U>(component));
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class InitialUpStreamDataFlow<U> extends UpStreamDataFlowAdapter<U> {
 	 * 
 	 * @param component
 	 */
-	private InitialUpStreamDataFlow(InitialComponent<U, ?> component) {
+	private InitialDataFlow(InitialComponent<U, ?> component) {
 		super();
 		this.component = component;
 	}

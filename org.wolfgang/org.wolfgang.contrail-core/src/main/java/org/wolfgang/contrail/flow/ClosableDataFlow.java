@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract class ClosableDataFlow<D> implements DataFlow<D> {
+public class ClosableDataFlow<D> implements DataFlow<D> {
 
 	/**
 	 * The atomic reference denoting the close status

@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
+import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.DisposableLink;
 
@@ -39,7 +39,7 @@ public interface SourceComponent<U, D> extends Component {
 	 * 
 	 * @return a down stream data channel (never <code>null</code>)
 	 */
-	DownStreamDataFlow<D> getDownStreamDataFlow();
+	DataFlow<D> getDownStreamDataFlow();
 
 	/**
 	 * Method called whether a connection must be performed

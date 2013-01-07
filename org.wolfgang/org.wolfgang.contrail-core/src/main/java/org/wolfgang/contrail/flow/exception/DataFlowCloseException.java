@@ -16,22 +16,51 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.flow;
+package org.wolfgang.contrail.flow.exception;
 
 /**
- * <code>ClosableUpStreamDataHandler</code>
+ * <code>DataHandlerCloseException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ClosableUpStreamDataFlow<D> extends ClosableDataFlow<D> implements UpStreamDataFlow<D> {
+public class DataFlowCloseException extends DataFlowException {
+
+	private static final long serialVersionUID = -114097230498401093L;
+
+	/**
+	 * Constructor
+	 */
+	public DataFlowCloseException() {
+		super();
+	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param exceptionToSend
+	 * @param arg0
+	 * @param arg1
 	 */
-	ClosableUpStreamDataFlow(UpStreamDataFlow<D> dataHandler) {
-		super(dataHandler);
+	public DataFlowCloseException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataFlowCloseException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public DataFlowCloseException(Throwable arg0) {
+		super(arg0);
+	}
+
 }

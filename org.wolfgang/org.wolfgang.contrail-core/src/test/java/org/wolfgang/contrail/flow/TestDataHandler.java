@@ -38,7 +38,7 @@ public class TestDataHandler {
 	public void testClosable01() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -54,7 +54,7 @@ public class TestDataHandler {
 	public void testClosable02() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DownStreamDataFlow<String> handler = DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -76,7 +76,7 @@ public class TestDataHandler {
 	public void testClosable04() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -92,7 +92,7 @@ public class TestDataHandler {
 	public void testClosable05() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final UpStreamDataFlow<String> handler = DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -108,85 +108,5 @@ public class TestDataHandler {
 		} catch (DataFlowCloseException e) {
 			// OK
 		}
-	}
-
-	@Test
-	public void testReverse01() throws DataFlowException, InterruptedException, ExecutionException {
-		final Promise<String> future = Promise.create();
-
-		final UpStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.success(data);
-			}
-		}));
-
-		final String message = "Hello,  World!";
-		handler.handleData(message);
-		assertEquals(message, future.getFuture().get());
-
-	}
-
-	@Test
-	public void testReverse02() throws DataFlowException, InterruptedException, ExecutionException {
-		final Promise<String> future = Promise.create();
-
-		final UpStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new DownStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.success(data);
-			}
-		}));
-
-		handler.handleClose();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-
-	}
-
-	@Test
-	public void testReverse04() throws DataFlowException, InterruptedException, ExecutionException {
-		final Promise<String> future = Promise.create();
-
-		final DownStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.success(data);
-			}
-		}));
-
-		final String message = "Hello,  World!";
-		handler.handleData(message);
-		assertEquals(message, future.getFuture().get());
-
-	}
-
-	@Test
-	public void testReverse05() throws DataFlowException, InterruptedException, ExecutionException {
-		final Promise<String> future = Promise.create();
-
-		final DownStreamDataFlow<String> handler = DataFlows.reverse(DataFlows.closable(new UpStreamDataFlowAdapter<String>() {
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				future.success(data);
-			}
-		}));
-
-		handler.handleClose();
-
-		try {
-			final String message = "Hello,  World!";
-			handler.handleData(message);
-			fail();
-		} catch (DataFlowCloseException e) {
-			// OK
-		}
-
 	}
 }

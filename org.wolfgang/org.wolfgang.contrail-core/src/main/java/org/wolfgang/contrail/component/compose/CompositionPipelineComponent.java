@@ -26,9 +26,8 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.PipelineComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.DisposableLink;
@@ -66,12 +65,12 @@ public class CompositionPipelineComponent<U1, D1, U2, D2> extends AbstractCompon
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
+	public DataFlow<D2> getDownStreamDataFlow() {
 		return this.terminalComponent.getDownStreamDataFlow();
 	}
 
 	@Override
-	public UpStreamDataFlow<U1> getUpStreamDataFlow() {
+	public DataFlow<U1> getUpStreamDataFlow() {
 		return this.initialComponent.getUpStreamDataFlow();
 	}
 

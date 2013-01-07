@@ -18,15 +18,27 @@
 
 package org.wolfgang.contrail.flow;
 
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+
+
 /**
- * The <code>DownStreamDataHandler</code> provides basic mechanisms required
- * when messages shall be managed using the down stream channel.
+ * <code>DataFlowFactory</code> is capable to build data sender.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DownStreamDataFlow<D> extends DataFlow<D> {
+public interface DataFlowFactory<U, D> {
 
-	// No specific behaviors
+	/**
+	 * Method called whether a data receiver shall be built for a given
+	 * component
+	 * 
+	 * @param component
+	 *            The component used to build the data sender
+	 * @return a data sender (Never <code>null</code>)
+	 * @throws CannotCreateDataFlowException
+	 *             if the data sender cannot be correctly created
+	 */
+	DataFlow<D> create(DataFlow<U> component) throws CannotCreateDataFlowException;
 
 }

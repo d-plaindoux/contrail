@@ -19,13 +19,12 @@
 package org.wolfgang.contrail.component.relay;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
  * <code>ByteArrayDestinationComponent</code>
@@ -41,10 +40,10 @@ public class ByteArrayDestinationComponent extends TerminalComponent<byte[], byt
 	 * @throws CannotCreateDataFlowException
 	 */
 	public ByteArrayDestinationComponent() throws CannotCreateDataFlowException {
-		super(new UpStreamDataFlowFactory<byte[], byte[]>() {
+		super(new DataFlowFactory<byte[], byte[]>() {
 			@Override
-			public UpStreamDataFlow<byte[]> create(final DownStreamDataFlow<byte[]> sender) {
-				return DataFlows.<byte[]> closable(new UpStreamDataFlowAdapter<byte[]>() {
+			public DataFlow<byte[]> create(final DataFlow<byte[]> sender) {
+				return DataFlows.<byte[]> closable(new DataFlowAdapter<byte[]>() {
 					@Override
 					public void handleData(byte[] data) throws DataFlowException {
 						sender.handleData(data);

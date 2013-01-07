@@ -16,13 +16,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer;
+package org.wolfgang.contrail.component.pipeline.transducer.flow;
 
 import java.util.List;
 
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
+import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
+import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
+import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -33,7 +36,7 @@ import org.wolfgang.contrail.link.ComponentLinkFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-class TransducerDownStreamDataHandler<U, D> implements DownStreamDataFlow<U> {
+public class TransducerDataFlow<U, D> implements DataFlow<U> {
 
 	/**
 	 * The component which is in charge of this data handler
@@ -55,7 +58,7 @@ class TransducerDownStreamDataHandler<U, D> implements DownStreamDataFlow<U> {
 	 * @param streamXducer
 	 *            The data transformation process
 	 */
-	public TransducerDownStreamDataHandler(TransducerComponent<?, D, ?, U> component, DataTransducer<U, D> downstreamXducer) {
+	public TransducerDataFlow(TransducerComponent<?, D, ?, U> component, DataTransducer<U, D> downstreamXducer) {
 		this.component = component;
 		this.streamXducer = downstreamXducer;
 	}

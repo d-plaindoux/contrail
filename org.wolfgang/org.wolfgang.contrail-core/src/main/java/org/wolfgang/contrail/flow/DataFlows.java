@@ -38,31 +38,7 @@ public final class DataFlows {
 	 * @param dataFlow
 	 * @return
 	 */
-	public static <U> UpStreamDataFlow<U> closable(UpStreamDataFlow<U> dataHandler) {
-		return new ClosableUpStreamDataFlow<U>(dataHandler);
-	}
-
-	/**
-	 * @param dataFlow
-	 * @return
-	 */
-	public static <U> DownStreamDataFlow<U> closable(DownStreamDataFlow<U> dataHandler) {
-		return new ClosableDownStreamDataFlow<U>(dataHandler);
-	}
-
-	/**
-	 * @param dataFlow
-	 * @return
-	 */
-	public static <U> UpStreamDataFlow<U> reverse(DownStreamDataFlow<U> dataFlow) {
-		return new UpStreamFromDownStreamDataFlow<U>(dataFlow);
-	}
-
-	/**
-	 * @param dataFlow
-	 * @return
-	 */
-	public static <U> DownStreamDataFlow<U> reverse(UpStreamDataFlow<U> dataFlow) {
-		return new DownStreamFromUpStreamDataFlow<U>(dataFlow);
+	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
+		return new ClosableDataFlow<U>(dataHandler);
 	}
 }

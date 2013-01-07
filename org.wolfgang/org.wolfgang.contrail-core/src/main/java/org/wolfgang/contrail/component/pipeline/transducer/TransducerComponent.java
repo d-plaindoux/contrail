@@ -22,9 +22,10 @@ import static org.wolfgang.common.message.MessagesProvider.message;
 
 import org.wolfgang.common.message.Message;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerDownStreamDataFlow;
+import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerUpStreamDataFlow;
+import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
 
 /**
  * <code>TransducerComponent</code> is an implementation which requires data
@@ -39,12 +40,12 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	/**
 	 * Static message definition for unknown transformation
 	 */
-	static final Message XDUCER_UNKNOWN;
+	public static final Message XDUCER_UNKNOWN;
 
 	/**
 	 * Static message definition for transformation error
 	 */
-	static final Message XDUCER_ERROR;
+	public static final Message XDUCER_ERROR;
 
 	static {
 		final String category = "org.wolfgang.contrail.message";
@@ -56,12 +57,12 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	/**
 	 * Internal upstream handler performing a data transformation for S to D
 	 */
-	private final UpStreamDataFlow<U1> upStreamDataHandler;
+	private final DataFlow<U1> upStreamDataHandler;
 
 	/**
 	 * Internal upstream handler performing a data transformation for D to S
 	 */
-	private final DownStreamDataFlow<D2> downStreamDataHandler;
+	private final DataFlow<D2> downStreamDataHandler;
 
 	/**
 	 * Constructor
@@ -74,17 +75,17 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
 
-		this.upStreamDataHandler = DataFlows.<U1> closable(new TransducerUpStreamDataHandler<U1, U2>(this, upstreamXducer));
-		this.downStreamDataHandler = DataFlows.<D2> closable(new TransducerDownStreamDataHandler<D2, D1>(this, downstreamXducer));
+		this.upStreamDataHandler = DataFlows.<U1> closable(new TransducerUpStreamDataFlow<U1, U2>(this, upstreamXducer));
+		this.downStreamDataHandler = DataFlows.<D2> closable(new TransducerDownStreamDataFlow<D2, D1>(this, downstreamXducer));
 	}
 
 	@Override
-	public UpStreamDataFlow<U1> getUpStreamDataFlow() {
+	public DataFlow<U1> getUpStreamDataFlow() {
 		return upStreamDataHandler;
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
+	public DataFlow<D2> getDownStreamDataFlow() {
 		return downStreamDataHandler;
 	}
 }

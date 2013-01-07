@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,6 +20,7 @@
 package org.wolfgang.contrail.component.pipeline.transducer;
 
 import java.util.List;
+
 
 /**
  * A <code>DataTransducer</code> is able to transform any data from a given type

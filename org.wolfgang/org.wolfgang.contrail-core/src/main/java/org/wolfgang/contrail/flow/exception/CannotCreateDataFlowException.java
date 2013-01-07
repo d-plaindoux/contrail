@@ -16,14 +16,54 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.contrail.flow.exception;
+
 /**
- * Basic specification for data handlers. Two major handler types are provided.
- * First one { @link {@link org.wolfgang.contrail.flow.UpStreamDataFlow}
- * is dedicated to incoming data management and another one 
- * {@link org.wolfgang.contrail.flow.DownStreamDataFlow} is dedicated to
- * outgoing data. 
- *
+ * <code>CannotCreateDataFlowException</code>
+ * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-package org.wolfgang.contrail.flow;
+public class CannotCreateDataFlowException extends Exception {
+
+	/**
+	 * The serialVersionUID attribute
+	 */
+	private static final long serialVersionUID = -9200648015853026201L;
+
+	/**
+	 * Constructor
+	 */
+	public CannotCreateDataFlowException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public CannotCreateDataFlowException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataFlowException(String arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param arg0
+	 */
+	public CannotCreateDataFlowException(Throwable arg0) {
+		super(arg0);
+	}
+
+}

@@ -24,8 +24,8 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
+import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 import org.wolfgang.contrail.link.DisposableLink;
@@ -72,7 +72,7 @@ public class CompositionSourceComponent<U1, D1, U2, D2> extends AbstractComponen
 	}
 
 	@Override
-	public DownStreamDataFlow<D2> getDownStreamDataFlow() {
+	public DataFlow<D2> getDownStreamDataFlow() {
 		return this.terminalComponent.getDownStreamDataFlow();
 	}
 

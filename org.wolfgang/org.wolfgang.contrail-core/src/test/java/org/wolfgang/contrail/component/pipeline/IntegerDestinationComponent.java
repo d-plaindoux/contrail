@@ -19,13 +19,12 @@
 package org.wolfgang.contrail.component.pipeline;
 
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.DataFlows;
-import org.wolfgang.contrail.flow.DownStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlow;
-import org.wolfgang.contrail.flow.UpStreamDataFlowAdapter;
-import org.wolfgang.contrail.flow.UpStreamDataFlowFactory;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
  * <code>IntegerDestinationComponent</code>
@@ -41,10 +40,10 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 	 * @throws CannotCreateDataFlowException
 	 */
 	public IntegerDestinationComponent() throws CannotCreateDataFlowException {
-		super(new UpStreamDataFlowFactory<Integer, Integer>() {
+		super(new DataFlowFactory<Integer, Integer>() {
 			@Override
-			public UpStreamDataFlow<Integer> create(final DownStreamDataFlow<Integer> terminal) {
-				return DataFlows.<Integer> closable(new UpStreamDataFlowAdapter<Integer>() {
+			public DataFlow<Integer> create(final DataFlow<Integer> terminal) {
+				return DataFlows.<Integer> closable(new DataFlowAdapter<Integer>() {
 					@Override
 					public void handleData(Integer data) throws DataFlowException {
 						terminal.handleData(data * data);

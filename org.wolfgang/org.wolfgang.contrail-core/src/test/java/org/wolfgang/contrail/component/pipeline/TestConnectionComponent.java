@@ -30,9 +30,9 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
-import org.wolfgang.contrail.flow.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.DataFlowCloseException;
 import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DisposableLink;
 
@@ -92,7 +92,7 @@ public class TestConnectionComponent {
 		final DisposableLink terminalConnection = ComponentManager.connect(connection, terminal);
 
 		initial.closeUpStream();
-		terminal.getDownStreamDataHandler().handleData(9);
+		terminal.getDownStreamDataFlow().handleData(9);
 		assertEquals("9", stringReference.get());
 
 		initialConnection.dispose();
@@ -310,7 +310,7 @@ public class TestConnectionComponent {
 		final DisposableLink terminalConnection = ComponentManager.connect(connection, terminal);
 
 		try {
-			terminal.getDownStreamDataHandler().handleData(123);
+			terminal.getDownStreamDataFlow().handleData(123);
 			fail();
 		} catch (DataFlowException e) {
 			// OK
