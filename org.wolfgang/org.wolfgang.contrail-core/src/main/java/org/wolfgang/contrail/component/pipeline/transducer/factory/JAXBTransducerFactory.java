@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.component.pipeline.transducer.jaxb;
+package org.wolfgang.contrail.component.pipeline.transducer.factory;
 
 import org.wolfgang.contrail.codec.jaxb.Decoder;
 import org.wolfgang.contrail.codec.jaxb.Encoder;

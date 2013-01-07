@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
-import org.wolfgang.contrail.component.pipeline.transducer.serializer.SerializationTransducerFactory;
+import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
 
 /**
  * <code>TestSerializer</code>

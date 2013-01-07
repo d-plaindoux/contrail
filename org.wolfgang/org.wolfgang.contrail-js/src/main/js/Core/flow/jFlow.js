@@ -36,8 +36,8 @@ define("Core/flow/jFlow",
 
         jFlow.core = dataFlow;
         jFlow.closeable = closeableDataFlow;
-        jFlow.buffered = bufferedDataFlow;
         jFlow.filtered = filteredDataFlow;
+        jFlow.buffered = bufferedDataFlow;
 
         return jFlow;
 
