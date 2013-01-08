@@ -96,6 +96,8 @@ public class MultiDestinationComponent<U, D> extends DestinationComponentWithSin
 
 	@Override
 	public void closeUpStream() throws DataFlowCloseException {
-		// TODO
+		for (DestinationComponentLink<U, D> link : getDestinationComponentLinks()) {
+			link.getDestinationComponent().closeUpStream();
+		}
 	}
 }

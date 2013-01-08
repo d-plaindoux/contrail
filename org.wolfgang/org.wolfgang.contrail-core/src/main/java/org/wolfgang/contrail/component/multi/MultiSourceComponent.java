@@ -96,6 +96,8 @@ public class MultiSourceComponent<U, D> extends SourceComponentWithSingleDestina
 
 	@Override
 	public void closeDownStream() throws DataFlowCloseException {
-		
+		for (SourceComponentLink<U, D> component : getSourceComponentLinks()) {
+			component.getSourceComponent().closeDownStream();
+		}
 	}
 }
