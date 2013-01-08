@@ -84,7 +84,7 @@ public abstract class DestinationComponentWithSingleSource<U, D> extends Abstrac
 			return new DisposableLink() {
 				@Override
 				public void dispose() throws ComponentDisconnectionRejectedException {
-					disconnectDestination(componentId);
+					disconnectSource(componentId);
 				}
 			};
 		} else {
@@ -92,7 +92,7 @@ public abstract class DestinationComponentWithSingleSource<U, D> extends Abstrac
 		}
 	}
 
-	private void disconnectDestination(ComponentId componentId) throws ComponentNotConnectedException {
+	private void disconnectSource(ComponentId componentId) throws ComponentNotConnectedException {
 		if (!acceptSource(componentId) && this.sourceComponentLink.getSourceComponent().getComponentId().equals(componentId)) {
 			this.sourceComponentLink = ComponentLinkFactory.unboundSourceComponentLink();
 		} else {

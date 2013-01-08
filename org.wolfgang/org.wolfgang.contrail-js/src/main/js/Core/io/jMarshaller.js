@@ -202,7 +202,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             function (value) {
                 return [value >>> 8 & 0xFF, value & 0xFF];
             });
-        
+
         /**
          * Convert a char to a byte array
          *
