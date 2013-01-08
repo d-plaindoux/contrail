@@ -19,7 +19,6 @@
 package org.wolfgang.common.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -34,23 +33,81 @@ import org.junit.Test;
 public class TestMarshall {
 
 	@Test
-	public void GivenAnIntegerUnmarshallMarshallMustBeIdentity() throws IOException {
-		assertEquals(12, Marshall.bytesToInt(Marshall.intToBytes(12)));
+	public void GivenAnNumberUnmarshallMarshallMustBeIdentity() throws IOException {
+		final byte[] marshalled = Marshall.numberToBytes(12);
+		assertEquals(4, marshalled.length);
+		assertEquals(12, Marshall.bytesToNumber(marshalled));
+	}
+
+	@Test(expected = IOException.class)
+	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAnNumber() throws IOException {
+		Marshall.bytesToNumber(new byte[] { 1, 2, 3 });
 	}
 
 	@Test
-	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAnInteger() {
-		try {
-			assertEquals(12, Marshall.bytesToInt(new byte[] { 1, 2, 3 }));
-			fail();
-		} catch (IOException e) {
-			// OK
-		}
+	public void GivenAShortNumberUnmarshallMarshallMustBeIdentity() throws IOException {
+		final byte[] marshalled = Marshall.shortNumberToBytes(12);
+		assertEquals(2, marshalled.length);
+		assertEquals(12, Marshall.bytesToShortNumber(marshalled));
+	}
+
+	@Test(expected = IOException.class)
+	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAnShortNumber() throws IOException {
+		Marshall.bytesToShortNumber(new byte[] { 1 });
 	}
 
 	@Test
-	public void GivenAStringUnmarshallMarshallCannotBeAnInteger() throws IOException, ClassNotFoundException {
-		assertEquals("Hello, World!", Marshall.bytesToObject(Marshall.objectToBytes("Hello, World!")));
+	public void GivenACharUnmarshallMarshallMustBeIdentity() throws IOException {
+		final byte[] marshalled = Marshall.charToBytes('a');
+		assertEquals(2, marshalled.length);
+		assertEquals('a', Marshall.bytesToChar(marshalled));
 	}
 
+	@Test(expected = IOException.class)
+	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAChar() throws IOException {
+		Marshall.bytesToShortNumber(new byte[] { 1 });
+	}
+
+	@Test
+	public void GivenAStringUnmarshallMarshallMustBeIdentity() throws IOException {
+		final String string = "Hello, World!";
+		final byte[] marshalled = Marshall.stringToBytes(string);
+		assertEquals(string.length() * Marshall.SIZE_Character, marshalled.length);
+		assertEquals(string, Marshall.bytesToString(marshalled, string.length()));
+	}
+
+	@Test(expected = IOException.class)
+	public void GivenAnArrayOfIntegerUnmarshallMarshallCannotBeAString() throws IOException {
+		Marshall.bytesToString(new byte[] { 1, 2, 3, 4 }, 5);
+	}
+
+	@Test
+	public void GivenAnNumberUnmarshallWithOffsetMarshallAsAShortNumber() throws IOException {
+		final byte[] marshalled = Marshall.numberToBytes(12);
+		assertEquals(4, marshalled.length);
+		assertEquals(12, Marshall.bytesToShortNumberWithOffset(marshalled, 2));
+	}
+
+	@Test
+	public void GivenAnNumberUnmarshallWithOffsetMarshallAsAChar() throws IOException {
+		final byte[] marshalled = Marshall.numberToBytes(32);
+		assertEquals(4, marshalled.length);
+		assertEquals(' ', Marshall.bytesToCharWithOffset(marshalled, 2));
+	}
+
+	@Test
+	public void GivenAStringUnmarshallWithOffsetMarshallAsNumber() throws IOException {
+		final String string = "Hello,\0 World!";
+		final byte[] marshalled = Marshall.stringToBytes(string);
+		assertEquals(string.length() * Marshall.SIZE_Character, marshalled.length);
+		assertEquals(' ' /* 32 */, Marshall.bytesToNumberWithOffset(marshalled, 12));
+	}
+
+	@Test
+	public void GivenAStringUnmarshallWithOffsetMarshallAsString() throws IOException {
+		final String string = "Hello, World!";
+		final byte[] marshalled = Marshall.stringToBytes(string);
+		assertEquals(string.length() * Marshall.SIZE_Character, marshalled.length);
+		assertEquals("World", Marshall.bytesToStringWithOffset(marshalled, 14, 5));
+	}
 }

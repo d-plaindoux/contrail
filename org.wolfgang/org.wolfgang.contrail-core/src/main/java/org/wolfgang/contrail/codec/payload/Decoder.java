@@ -75,8 +75,8 @@ public class Decoder implements DataTransducer<byte[], Bytes> {
 		if (buffer.length < INT_LEN) {
 			return Option.none();
 		} else {
-			// Read the coded object payload first
-			final int payLoad = Marshall.bytesToInt(buffer);
+			// Read the coded object pay-load first
+			final int payLoad = Marshall.bytesToNumber(buffer);
 			if (buffer.length - INT_LEN < payLoad) {
 				return Option.none();
 			} else {

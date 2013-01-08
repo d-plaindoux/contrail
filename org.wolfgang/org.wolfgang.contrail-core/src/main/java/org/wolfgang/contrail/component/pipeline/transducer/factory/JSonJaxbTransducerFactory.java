@@ -18,8 +18,8 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.factory;
 
-import org.wolfgang.contrail.codec.jaxb.Decoder;
-import org.wolfgang.contrail.codec.jaxb.Encoder;
+import org.wolfgang.contrail.codec.jaxb.json.Decoder;
+import org.wolfgang.contrail.codec.jaxb.json.Encoder;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -33,7 +33,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Object> {
+public final class JSonJaxbTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**
 	 * Desired classes for JAXB encoding/decoding processes
@@ -46,7 +46,7 @@ public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Obj
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("static-access")
-	public JAXBTransducerFactory(String... types) throws ClassNotFoundException {
+	public JSonJaxbTransducerFactory(String... types) throws ClassNotFoundException {
 		this.types = new Class[types.length];
 		for (int i = 0; i < types.length; i++) {
 			this.types[i] = this.getClass().forName(types[i]);
@@ -56,7 +56,7 @@ public final class JAXBTransducerFactory implements TransducerFactory<Bytes, Obj
 	/**
 	 * Constructor
 	 */
-	public JAXBTransducerFactory(Class<?>... types) {
+	public JSonJaxbTransducerFactory(Class<?>... types) {
 		this.types = types;
 	}
 

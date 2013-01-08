@@ -124,7 +124,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          * @param offset The initial position
          * @return {*}
          */
-        jMarshaller.bytesToCharWithOffSet = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
+        jMarshaller.bytesToCharWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
                 if (bytes.length < offset + jMarshaller.sizeOf.Character) {
                     throw jObj.exception("L.array.out.of.bound");
@@ -142,7 +142,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          */
         jMarshaller.bytesToChar = jObj.method([jObj.types.Array], jObj.types.Number,
             function (bytes) {
-                return jMarshaller.bytesToCharWithOffSet(bytes, 0);
+                return jMarshaller.bytesToCharWithOffset(bytes, 0);
             });
 
         /**
@@ -155,8 +155,12 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             function (bytes, offset, length) {
                 var str = "", i;
 
+                if (bytes.length < offset + length * jMarshaller.sizeOf.Character) {
+                    throw jObj.exception("L.array.out.of.bound");
+                }
+
                 for (i = 0; i < length * jMarshaller.sizeOf.Character; i += 2) {
-                    str += String.fromCharCode(jMarshaller.bytesToCharWithOffSet(bytes, i + offset));
+                    str += String.fromCharCode(jMarshaller.bytesToCharWithOffset(bytes, i + offset));
                 }
 
                 return str;
@@ -198,6 +202,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             function (value) {
                 return [value >>> 8 & 0xFF, value & 0xFF];
             });
+        
         /**
          * Convert a char to a byte array
          *

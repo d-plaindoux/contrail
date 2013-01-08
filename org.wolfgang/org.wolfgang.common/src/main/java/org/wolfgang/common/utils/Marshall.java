@@ -18,8 +18,6 @@
 
 package org.wolfgang.common.utils;
 
-import static org.wolfgang.common.message.MessagesProvider.message;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,13 +33,20 @@ import java.io.ObjectOutputStream;
  */
 public final class Marshall {
 
-	private static final int INT_LENGTH = 4;
+	public static final int TYPE_Array = 0x1;
+	public static final int TYPE_Object = 0x2;
+	public static final int TYPE_Character = 0x3;
+	public static final int TYPE_Number = 0x4;
+	public static final int TYPE_ShortNumber = 0x5;
+	public static final int TYPE_String = 0x6;
+	public static final int TYPE_BooleanTrue = 0x7;
+	public static final int TYPE_BooleanFalse = 0x8;
+	public static final int TYPE_Undefined = 0x9;
 
-	private static final int BYTES_3 = 24;
-	private static final int BYTES_2 = 16;
-	private static final int BYTES_1 = 8;
-
-	private static final int BYTE_MASK = 0xFF;
+	public static final int SIZE_Character = 2;
+	public static final int SIZE_Number = 4;
+	public static final int SIZE_ShortNumber = 2;
+	public static final int SIZE_Boolean = 1;
 
 	/**
 	 * Constructor
@@ -49,6 +54,9 @@ public final class Marshall {
 	private Marshall() {
 		super();
 	}
+
+	// Deprecated code ... To be removed soon / Only used for java native
+	// serialization
 
 	/**
 	 * Method called whether an object must be translated to a byte array
@@ -58,6 +66,7 @@ public final class Marshall {
 	 * @return a byte array
 	 * @throws IOException
 	 *             Thrown if the externalization fails
+	 * @deprecated
 	 */
 	public static byte[] objectToBytes(final Object object) throws IOException {
 		final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
@@ -81,6 +90,7 @@ public final class Marshall {
 	 *             Thrown if the internalization fails
 	 * @throws ClassNotFoundException
 	 *             if the object is not consistent with existing classes
+	 * @deprecated
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T bytesToObject(final byte[] bytes) throws IOException, ClassNotFoundException {
@@ -94,6 +104,146 @@ public final class Marshall {
 		}
 	}
 
+	// -------------------------------------------------------------------------------------------------------------
+	// Decoding ...
+	// -------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static int bytesToNumberWithOffset(byte[] bytes, int offset) throws IOException {
+		if (bytes.length < offset + SIZE_Number) {
+			throw new IOException();
+		}
+
+		return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | bytes[offset + 3];
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static int bytesToNumber(byte[] bytes) throws IOException {
+		return bytesToNumberWithOffset(bytes, 0);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static int bytesToShortNumberWithOffset(byte[] bytes, int offset) throws IOException {
+		if (bytes.length < offset + SIZE_ShortNumber) {
+			throw new IOException();
+		}
+
+		return bytes[offset] << 8 | bytes[offset + 1];
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static int bytesToShortNumber(byte[] bytes) throws IOException {
+		return bytesToShortNumberWithOffset(bytes, 0);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static char bytesToCharWithOffset(byte[] bytes, int offset) throws IOException {
+		if (bytes.length < offset + SIZE_Character) {
+			throw new IOException();
+		}
+
+		return (char) (bytes[offset] << 8 | bytes[offset + 1]);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static char bytesToChar(byte[] bytes) throws IOException {
+		return (char) bytesToCharWithOffset(bytes, 0);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static String bytesToStringWithOffset(byte[] bytes, int offset, int length) throws IOException {
+		if (bytes.length < offset + length * SIZE_Character) {
+			throw new IOException();
+		}
+
+		char[] chars = new char[length];
+
+		for (int i = 0; i < length; i += 1) {
+			chars[i] = bytesToCharWithOffset(bytes, i * SIZE_Character + offset);
+		}
+
+		return String.valueOf(chars);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static String bytesToString(byte[] bytes, int length) throws IOException {
+		return bytesToStringWithOffset(bytes, 0, length);
+	}
+
+	// Encoding
+
 	/**
 	 * Method called to encode an integer
 	 * 
@@ -102,27 +252,51 @@ public final class Marshall {
 	 * @return the encoding result
 	 * @throws IOException
 	 */
-	public static byte[] intToBytes(int i) {
-		return new byte[] { (byte) (i >>> BYTES_3), (byte) (i >>> BYTES_2), (byte) (i >>> BYTES_1), (byte) i };
+	public static byte[] numberToBytes(int i) {
+		return new byte[] { (byte) (i >>> 24), (byte) (i >>> 16), (byte) (i >>> 8), (byte) i };
 	}
 
 	/**
-	 * Method called to decode an integer
+	 * Method called to encode an integer
 	 * 
-	 * @param inBuffer
-	 *            The encoded int
+	 * @param i
+	 *            The int to encode
+	 * @return the encoding result
 	 * @throws IOException
-	 * @returnt an integer
 	 */
-	public static int bytesToInt(byte[] inBuffer) throws IOException {
-		if (inBuffer.length < INT_LENGTH) {
-			throw new IOException(message("org.wolfgang.common.message", "cannot.decode.int").format());
-		} else {
-			int value = 0;
-			for (int i = 0; i < INT_LENGTH; i++) {
-				value = (value << BYTES_1) + (inBuffer[i] & BYTE_MASK);
-			}
-			return value;
+	public static byte[] shortNumberToBytes(int i) {
+		return new byte[] { (byte) (i >>> 8), (byte) i };
+	}
+
+	/**
+	 * Method called to encode an integer
+	 * 
+	 * @param i
+	 *            The char to encode
+	 * @return the encoding result
+	 * @throws IOException
+	 */
+	public static byte[] charToBytes(char c) {
+		return new byte[] { (byte) (c >>> 8), (byte) c };
+	}
+
+	/**
+	 * Method called to encode an integer
+	 * 
+	 * @param i
+	 *            The char to encode
+	 * @return the encoding result
+	 * @throws IOException
+	 */
+	public static byte[] stringToBytes(String s) {
+		byte[] bytes = new byte[s.length() * SIZE_Character];
+
+		for (int i = 0; i < s.length(); i += 1) {
+			final byte[] charToBytes = charToBytes(s.charAt(i));
+			bytes[i * SIZE_Character] = charToBytes[0];
+			bytes[i * SIZE_Character + 1] = charToBytes[1];
 		}
+
+		return bytes;
 	}
 }
