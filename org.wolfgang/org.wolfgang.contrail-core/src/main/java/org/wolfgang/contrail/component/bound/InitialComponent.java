@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.component.bound;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.flow.InitialDataFlow;
 import org.wolfgang.contrail.component.core.SourceComponentWithSingleDestination;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -58,7 +58,7 @@ public class InitialComponent<U, D> extends SourceComponentWithSingleDestination
 	 * @param receiver
 	 *            The initial data receiver
 	 */
-	public InitialComponent(final DataFlowFactory<U, D> receiver) throws CannotCreateDataFlowException {
+	public InitialComponent(final ComponentDataFlowFactory<U, D> receiver) throws CannotCreateDataFlowException {
 		super();
 		this.downStreamDataHandler = receiver.create(InitialDataFlow.<U> create(this));
 	}

@@ -30,9 +30,9 @@ import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DisposableLink;
 

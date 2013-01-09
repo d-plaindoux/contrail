@@ -18,49 +18,40 @@
 
 package org.wolfgang.contrail.flow;
 
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+
 /**
- * <code>DataHandlerCloseException</code>
+ * The <code>FilteredDataFlow.java</code> is a specific data flows handling
+ * accepted data (based on filter)
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class DataFlowCloseException extends DataFlowException {
+public class FilteredDataFlow<D> implements DataFlow<D> {
 
-	private static final long serialVersionUID = -114097230498401093L;
+	public interface Acceptor<D> {
+		boolean accept(D data);
+	}
 
-	/**
-	 * Constructor
-	 */
-	public DataFlowCloseException() {
+	private final Acceptor<D> filter;
+	private final DataFlow<D> delegated;
+
+	FilteredDataFlow(Acceptor<D> filter, DataFlow<D> delegated) {
 		super();
+		this.filter = filter;
+		this.delegated = delegated;
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public DataFlowCloseException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	@Override
+	public void handleData(D data) throws DataFlowException {
+		if (this.filter.accept(data)) {
+			this.delegated.handleData(data);
+		}
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public DataFlowCloseException(String arg0) {
-		super(arg0);
+	@Override
+	public void handleClose() throws DataFlowCloseException {
+		this.delegated.handleClose();
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param arg0
-	 */
-	public DataFlowCloseException(Throwable arg0) {
-		super(arg0);
-	}
-
 }

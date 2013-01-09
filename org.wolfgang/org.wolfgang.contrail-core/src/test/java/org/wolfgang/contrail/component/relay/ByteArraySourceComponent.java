@@ -21,15 +21,15 @@ package org.wolfgang.contrail.component.relay;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlowFactory;
-import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>ByteArraySourceComponent</code> is a simple upstream source component.
@@ -45,10 +45,10 @@ public class ByteArraySourceComponent {
 	 * @throws CannotCreateDataFlowException
 	 */
 	public static InitialComponent<byte[], byte[]> create(final OutputStream outputStream) throws CannotCreateDataFlowException {
-		return Components.initial(new DataFlowFactory<byte[], byte[]>() {
+		return Components.initial(new ComponentDataFlowFactory<byte[], byte[]>() {
 			@Override
 			public DataFlow<byte[]> create(DataFlow<byte[]> initial) {
-				return DataFlows.<byte[]> closable(new DataFlowAdapter<byte[]>() {
+				return DataFlowFactory.<byte[]> closable(new DataFlowAdapter<byte[]>() {
 					public void handleData(byte[] data) throws DataFlowException {
 						try {
 							outputStream.write(data);

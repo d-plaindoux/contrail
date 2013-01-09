@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.component.bound;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.flow.TerminalDataFlow;
 import org.wolfgang.contrail.component.core.DestinationComponentWithSingleSource;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentLinkFactory;
 
 /**
@@ -59,7 +59,7 @@ public class TerminalComponent<U, D> extends DestinationComponentWithSingleSourc
 	 *            The terminal data receiver
 	 * @throws CannotCreateDataFlowException
 	 */
-	public TerminalComponent(final DataFlowFactory<D, U> receiver) throws CannotCreateDataFlowException {
+	public TerminalComponent(final ComponentDataFlowFactory<D, U> receiver) throws CannotCreateDataFlowException {
 		super();
 
 		this.upstreamDataHandler = receiver.create(TerminalDataFlow.<D> create(this));

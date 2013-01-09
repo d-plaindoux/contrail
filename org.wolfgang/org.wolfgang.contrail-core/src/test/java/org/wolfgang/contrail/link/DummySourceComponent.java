@@ -18,11 +18,11 @@
 
 package org.wolfgang.contrail.link;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
@@ -39,7 +39,7 @@ public class DummySourceComponent {
 	 * @throws CannotCreateDataFlowException
 	 */
 	public static InitialComponent<Void, Void> create() throws CannotCreateDataFlowException {
-		return Components.initial(new DataFlowFactory<Void, Void>() {
+		return Components.initial(new ComponentDataFlowFactory<Void, Void>() {
 			@Override
 			public DataFlow<Void> create(DataFlow<Void> sender) {
 				return new DataFlowAdapter<Void>();

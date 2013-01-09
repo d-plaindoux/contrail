@@ -27,7 +27,6 @@ import org.wolfgang.contrail.component.compose.CompositionDestinationComponent;
 import org.wolfgang.contrail.component.compose.CompositionPipelineComponent;
 import org.wolfgang.contrail.component.compose.CompositionSourceComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 
 /**
@@ -49,7 +48,7 @@ public final class Components {
 		return new InitialComponent<U, D>(flow);
 	}
 
-	public static <U, D> InitialComponent<U, D> initial(DataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
+	public static <U, D> InitialComponent<U, D> initial(ComponentDataFlowFactory<U, D> factory) throws CannotCreateDataFlowException {
 		return new InitialComponent<U, D>(factory);
 	}
 
@@ -57,7 +56,7 @@ public final class Components {
 		return new TerminalComponent<U, D>(flow);
 	}
 
-	public static <U, D> TerminalComponent<U, D> terminal(DataFlowFactory<D, U> factory) throws CannotCreateDataFlowException {
+	public static <U, D> TerminalComponent<U, D> terminal(ComponentDataFlowFactory<D, U> factory) throws CannotCreateDataFlowException {
 		return new TerminalComponent<U, D>(factory);
 	}
 

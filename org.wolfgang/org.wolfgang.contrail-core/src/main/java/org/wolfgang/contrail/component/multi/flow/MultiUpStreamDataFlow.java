@@ -20,8 +20,8 @@ package org.wolfgang.contrail.component.multi.flow;
 
 import org.wolfgang.contrail.component.multi.MultiDestinationComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.link.DestinationComponentLink;
 
 /**

@@ -18,27 +18,40 @@
 
 package org.wolfgang.contrail.flow;
 
-import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
-
-
 /**
- * <code>DataFlowFactory</code> is capable to build data sender.
+ * <code>StreamDataHandlerFactory</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface DataFlowFactory<U, D> {
+public final class DataFlowFactory {
 
 	/**
-	 * Method called whether a data receiver shall be built for a given
-	 * component
-	 * 
-	 * @param component
-	 *            The component used to build the data sender
-	 * @return a data sender (Never <code>null</code>)
-	 * @throws CannotCreateDataFlowException
-	 *             if the data sender cannot be correctly created
+	 * Constructor
 	 */
-	DataFlow<D> create(DataFlow<U> component) throws CannotCreateDataFlowException;
+	private DataFlowFactory() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
+	/**
+	 * Creates a closable data flow
+	 * 
+	 * @param dataHandler
+	 * @return
+	 */
+	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
+		return new ClosableDataFlow<U>(dataHandler);
+	}
+
+	/**
+	 * Creates a filtered data flow
+	 * 
+	 * @param filter
+	 * @param dataHandler
+	 * @return
+	 */
+	public static <U> DataFlow<U> filtered(FilteredDataFlow.Acceptor<U> filter, DataFlow<U> dataHandler) {
+		return new FilteredDataFlow<U>(filter, dataHandler);
+	}
 }

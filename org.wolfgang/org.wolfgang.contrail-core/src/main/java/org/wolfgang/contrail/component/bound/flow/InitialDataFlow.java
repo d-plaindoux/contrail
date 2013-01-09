@@ -22,9 +22,9 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DataFlowFactory;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>InitialDataFlow</code>
@@ -45,7 +45,7 @@ public class InitialDataFlow<U> extends DataFlowAdapter<U> {
 	 * @return
 	 */
 	public static <U> DataFlow<U> create(InitialComponent<U, ?> component) {
-		return DataFlows.<U> closable(new InitialDataFlow<U>(component));
+		return DataFlowFactory.<U> closable(new InitialDataFlow<U>(component));
 	}
 
 	/**

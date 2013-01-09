@@ -22,9 +22,9 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DataFlowFactory;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>TerminalDataFlow</code>
@@ -45,7 +45,7 @@ public class TerminalDataFlow<D> extends DataFlowAdapter<D> {
 	 * @return
 	 */
 	public static <D> DataFlow<D> create(TerminalComponent<?, D> component) {
-		return DataFlows.<D> closable(new TerminalDataFlow<D>(component));
+		return DataFlowFactory.<D> closable(new TerminalDataFlow<D>(component));
 	}
 
 	/**

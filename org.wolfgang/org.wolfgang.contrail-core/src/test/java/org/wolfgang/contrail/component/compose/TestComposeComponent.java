@@ -35,7 +35,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.factory.CoercionTrans
 import org.wolfgang.contrail.component.pipeline.transducer.factory.PayLoadTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 
 /**

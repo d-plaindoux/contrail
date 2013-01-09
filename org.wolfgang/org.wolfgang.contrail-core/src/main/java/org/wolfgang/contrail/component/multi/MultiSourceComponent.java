@@ -31,7 +31,7 @@ import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.core.SourceComponentWithSingleDestination;
 import org.wolfgang.contrail.component.multi.flow.MultiDownStreamDataFlow;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;
 

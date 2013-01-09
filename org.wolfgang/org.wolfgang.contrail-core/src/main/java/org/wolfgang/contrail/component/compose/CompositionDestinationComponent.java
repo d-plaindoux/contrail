@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.ComponentId;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.link.DisposableLink;
 import org.wolfgang.contrail.link.SourceComponentLink;

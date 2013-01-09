@@ -24,7 +24,7 @@ import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.core.AbstractComponent;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.link.ComponentManager;
 
 /**

@@ -25,7 +25,7 @@ import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerDownStreamDataFlow;
 import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerUpStreamDataFlow;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlows;
+import org.wolfgang.contrail.flow.DataFlowFactory;
 
 /**
  * <code>TransducerComponent</code> is an implementation which requires data
@@ -75,8 +75,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	public TransducerComponent(DataTransducer<U1, U2> upstreamXducer, DataTransducer<D2, D1> downstreamXducer) {
 		super();
 
-		this.upStreamDataHandler = DataFlows.<U1> closable(new TransducerUpStreamDataFlow<U1, U2>(this, upstreamXducer));
-		this.downStreamDataHandler = DataFlows.<D2> closable(new TransducerDownStreamDataFlow<D2, D1>(this, downstreamXducer));
+		this.upStreamDataHandler = DataFlowFactory.<U1> closable(new TransducerUpStreamDataFlow<U1, U2>(this, upstreamXducer));
+		this.downStreamDataHandler = DataFlowFactory.<D2> closable(new TransducerDownStreamDataFlow<D2, D1>(this, downstreamXducer));
 	}
 
 	@Override

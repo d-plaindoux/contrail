@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.link;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowCloseException;
-import org.wolfgang.contrail.flow.DataFlowException;
-import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>DummyDestinationComponent</code>
@@ -40,7 +40,7 @@ public class DummyDestinationComponent extends TerminalComponent<Void, Void> {
 	 * @throws CannotCreateDataFlowException
 	 */
 	public DummyDestinationComponent() throws CannotCreateDataFlowException {
-		super(new DataFlowFactory<Void, Void>() {
+		super(new ComponentDataFlowFactory<Void, Void>() {
 			@Override
 			public DataFlow<Void> create(final DataFlow<Void> sender) {
 				return new DataFlowAdapter<Void>() {

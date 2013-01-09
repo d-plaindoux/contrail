@@ -20,6 +20,9 @@ package org.wolfgang.contrail.flow;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+
 /**
  * The <code>ClosableDataFlow</code> is a specific data flows managing the
  * stream status (open or close) and delegating operations when it's open.
@@ -29,26 +32,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ClosableDataFlow<D> implements DataFlow<D> {
 
-	/**
-	 * The atomic reference denoting the close status
-	 */
 	private final AtomicBoolean closed;
-
-	/**
-	 * The deletateg data flow
-	 */
 	private final DataFlow<D> dataFlow;
 
 	{
 		this.closed = new AtomicBoolean(false);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param dataFlow
-	 */
-	protected ClosableDataFlow(DataFlow<D> dataFlow) {
+	ClosableDataFlow(DataFlow<D> dataFlow) {
 		super();
 		this.dataFlow = dataFlow;
 	}

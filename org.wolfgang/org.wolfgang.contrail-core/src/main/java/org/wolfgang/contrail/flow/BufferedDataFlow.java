@@ -18,27 +18,41 @@
 
 package org.wolfgang.contrail.flow;
 
+import java.util.LinkedList;
+
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+
 /**
- * <code>StreamDataHandlerFactory</code>
+ * The <code>BufferedDataFlow</code> is a specific data flows storing
+ * information in a given buffer.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class DataFlows {
+public class BufferedDataFlow<D> implements DataFlow<D> {
 
-	/**
-	 * Constructor
-	 */
-	private DataFlows() {
-		super();
-		// TODO Auto-generated constructor stub
+	private final LinkedList<D> datas;
+
+	{
+		this.datas = new LinkedList<D>();
 	}
 
-	/**
-	 * @param dataFlow
-	 * @return
-	 */
-	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
-		return new ClosableDataFlow<U>(dataHandler);
+	@Override
+	public void handleData(D data) throws DataFlowException {
+		this.datas.addLast(data);
+	}
+
+	@Override
+	public void handleClose() throws DataFlowCloseException {
+		// Nothing to do | must be combined with a closeable
+	}
+
+	public boolean hasNextData() {
+		return !this.datas.isEmpty();
+	}
+
+	public D getNextData() {
+		return this.datas.getFirst();
 	}
 }

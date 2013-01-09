@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.flow;
 
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+
 /**
  * The <code>DataHandler</code> provides basic mechanisms required when messages
  * shall be managed. This data type is not provided as-is but was mainly used as

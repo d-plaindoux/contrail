@@ -25,6 +25,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>TestDataHandler</code>
@@ -38,7 +40,7 @@ public class TestDataHandler {
 	public void testClosable01() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -54,7 +56,7 @@ public class TestDataHandler {
 	public void testClosable02() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -76,7 +78,7 @@ public class TestDataHandler {
 	public void testClosable04() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);
@@ -92,7 +94,7 @@ public class TestDataHandler {
 	public void testClosable05() throws InterruptedException, ExecutionException, DataFlowException {
 		final Promise<String> future = Promise.create();
 
-		final DataFlow<String> handler = DataFlows.closable(new DataFlowAdapter<String>() {
+		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
 			public void handleData(String data) throws DataFlowException {
 				future.success(data);

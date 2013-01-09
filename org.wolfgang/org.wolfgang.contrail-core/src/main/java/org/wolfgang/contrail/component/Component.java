@@ -18,7 +18,7 @@
 
 package org.wolfgang.contrail.component;
 
-import org.wolfgang.contrail.flow.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 
 /**
  * <code>Component</code> is the main specification for component definition. It

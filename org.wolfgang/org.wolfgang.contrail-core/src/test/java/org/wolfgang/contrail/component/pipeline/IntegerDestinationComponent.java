@@ -18,13 +18,13 @@
 
 package org.wolfgang.contrail.component.pipeline;
 
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
-import org.wolfgang.contrail.flow.DataFlowException;
 import org.wolfgang.contrail.flow.DataFlowFactory;
-import org.wolfgang.contrail.flow.DataFlows;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
 
 /**
  * <code>IntegerDestinationComponent</code>
@@ -40,10 +40,10 @@ public class IntegerDestinationComponent extends TerminalComponent<Integer, Inte
 	 * @throws CannotCreateDataFlowException
 	 */
 	public IntegerDestinationComponent() throws CannotCreateDataFlowException {
-		super(new DataFlowFactory<Integer, Integer>() {
+		super(new ComponentDataFlowFactory<Integer, Integer>() {
 			@Override
 			public DataFlow<Integer> create(final DataFlow<Integer> terminal) {
-				return DataFlows.<Integer> closable(new DataFlowAdapter<Integer>() {
+				return DataFlowFactory.<Integer> closable(new DataFlowAdapter<Integer>() {
 					@Override
 					public void handleData(Integer data) throws DataFlowException {
 						terminal.handleData(data * data);

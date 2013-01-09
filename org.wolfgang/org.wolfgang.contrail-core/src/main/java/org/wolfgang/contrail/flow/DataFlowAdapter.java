@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.flow;
 
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+
 /**
  * <code>DownStreamDataHandlerAdapter</code>
  * 
