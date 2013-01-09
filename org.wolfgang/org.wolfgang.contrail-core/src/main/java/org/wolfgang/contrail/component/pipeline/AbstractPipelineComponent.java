@@ -145,6 +145,8 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 		if (!ComponentLinkFactory.isUndefined(this.destinationComponentLink)) {
 			try {
 				this.getUpStreamDataFlow().handleClose();
+			} catch (ComponentNotConnectedException e) {
+				// TODO
 			} finally {
 				this.destinationComponentLink.getDestinationComponent().closeUpStream();
 			}
@@ -156,6 +158,8 @@ public abstract class AbstractPipelineComponent<U1, D1, U2, D2> extends Abstract
 		if (!ComponentLinkFactory.isUndefined(this.sourceComponentLink)) {
 			try {
 				this.getDownStreamDataFlow().handleClose();
+			} catch (ComponentNotConnectedException e) {
+				// TODO
 			} finally {
 				this.sourceComponentLink.getSourceComponent().closeDownStream();
 			}

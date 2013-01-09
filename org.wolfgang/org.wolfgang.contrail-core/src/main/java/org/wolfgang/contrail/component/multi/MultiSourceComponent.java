@@ -56,23 +56,13 @@ public class MultiSourceComponent<U, D> extends SourceComponentWithSingleDestina
 		return this.downStreamDataFlow;
 	}
 
-	@Override
-	public DataFlow<U> getUpStreamDataFlow() {
-		try {
-			return super.getUpStreamDataFlow();
-		} catch (ComponentNotConnectedException e) {
-			// TODO -- How this exception can be handled correctly
-			return null;
-		}
-	}
-
 	public Collection<SourceComponentLink<U, D>> getSourceComponentLinks() {
 		return sources.values();
 	}
 
 	@Override
 	public boolean acceptSource(ComponentId componentId) {
-		return this.sources.containsKey(componentId);
+		return !this.sources.containsKey(componentId);
 	}
 
 	@Override

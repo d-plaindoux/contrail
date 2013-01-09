@@ -20,6 +20,7 @@ package org.wolfgang.contrail.component.pipeline.transducer.flow;
 
 import java.util.List;
 
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
@@ -74,6 +75,9 @@ public class TransducerDownStreamDataFlow<U, D> implements DataFlow<U> {
 				for (D value : transform) {
 					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(value);
 				}
+			} catch (ComponentNotConnectedException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataFlowException(message, e);
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataFlowException(message, e);
@@ -92,6 +96,9 @@ public class TransducerDownStreamDataFlow<U, D> implements DataFlow<U> {
 				for (D value : transform) {
 					this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(value);
 				}
+			} catch (ComponentNotConnectedException e) {
+				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
+				throw new DataFlowCloseException(message, e);
 			} catch (DataTransducerException e) {
 				final String message = TransducerComponent.XDUCER_ERROR.format(e.getMessage());
 				throw new DataFlowCloseException(message, e);

@@ -45,7 +45,7 @@ public class BufferedDataFlow<D> implements DataFlow<D> {
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		// Nothing to do | must be combined with a closeable
+		// Nothing to do | must be combined with a closable
 	}
 
 	public boolean hasNextData() {

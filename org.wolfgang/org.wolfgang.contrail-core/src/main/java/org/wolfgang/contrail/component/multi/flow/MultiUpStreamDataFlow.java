@@ -18,6 +18,7 @@
 
 package org.wolfgang.contrail.component.multi.flow;
 
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.multi.MultiDestinationComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
@@ -46,6 +47,8 @@ public class MultiUpStreamDataFlow<U> implements DataFlow<U> {
 				link.getDestinationComponent().getUpStreamDataFlow().handleData(data);
 			} catch (DataFlowException e) {
 				// TODO
+			} catch (ComponentNotConnectedException e) {
+				// TODO
 			}
 		}
 	}
@@ -56,6 +59,8 @@ public class MultiUpStreamDataFlow<U> implements DataFlow<U> {
 			try {
 				link.getDestinationComponent().getUpStreamDataFlow().handleClose();
 			} catch (DataFlowCloseException e) {
+				// TODO
+			} catch (ComponentNotConnectedException e) {
 				// TODO
 			}
 		}

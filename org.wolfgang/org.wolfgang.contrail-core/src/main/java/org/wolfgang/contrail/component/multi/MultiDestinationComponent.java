@@ -56,23 +56,13 @@ public class MultiDestinationComponent<U, D> extends DestinationComponentWithSin
 		return this.upStreamDataFlow;
 	}
 
-	@Override
-	public DataFlow<D> getDownStreamDataFlow() {
-		try {
-			return super.getDownStreamDataFlow();
-		} catch (ComponentNotConnectedException e) {
-			// TODO -- How this exception can be handled correctly
-			return null;
-		}
-	}
-
 	public Collection<DestinationComponentLink<U, D>> getDestinationComponentLinks() {
 		return destinations.values();
 	}
 
 	@Override
 	public boolean acceptDestination(ComponentId componentId) {
-		return this.destinations.containsKey(componentId);
+		return !this.destinations.containsKey(componentId);
 	}
 
 	@Override
