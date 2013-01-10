@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "qunit", "test/jCC" ],
-    function (jObj, QUnit, jCC) {
+require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
+    function (jObj, jTransducer, QUnit, jCC) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -173,7 +173,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     b = new B();
                 }).
                 When(function () {
-                    tb = jObj.toType(b);
+                    tb = jTransducer.toType(b);
                 }).
                 Then(function () {
                     QUnit.equal(jObj.ofType(tb.a, jObj.types.String), true, "Checking Type(<string>)");

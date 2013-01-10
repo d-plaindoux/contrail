@@ -108,24 +108,24 @@ define([ "./jType" ],
         jModel.method = function (profil, returns, method) {
             var result;
 
-            if (method === undefined) {
-                result = undefined;
-            } else if (!jModel.specificationIsEnable) {
+            if (!jModel.specificationIsEnable) {
                 result = method;
             } else {
                 result = function () {
                     if (arguments.length !== profil.length) {
-                        throw jModel.exception("L.profil.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length});
+                        throw jModel.exception("L.profile.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length});
                     } else {
-                        var index, result;
+                        var index;
 
                         for (index = 0; index < profil.length; index += 1) {
                             jType.checkType(arguments[index], profil[index]);
                         }
 
-                        result = method.apply(this, arguments);
+                        if (method === undefined) {
+                            throw jModel.exception("L.abstract.method", { method:method, arity:arguments.length});
+                        }
 
-                        return jType.checkType(result, returns);
+                        return jType.checkType(method.apply(this, arguments), returns);
                     }
                 };
             }

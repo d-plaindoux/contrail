@@ -283,9 +283,9 @@ define([ "require" ],
         jType.checkType = function (object, type) {
             if (!jType.ofType(object, type)) {
                 throw new RuntimeTypeError(object + " must be an instance of " + jType.getTypeName(type));
-            } else {
-                return object;
             }
+
+            return object;
         };
 
         return jType;

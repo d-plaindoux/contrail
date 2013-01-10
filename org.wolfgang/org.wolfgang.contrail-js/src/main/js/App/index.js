@@ -21,21 +21,21 @@
 $(function () {
     "use strict";
 
-    require([ "Contrail/jContrail", "Core/object/jObj", "Core/dom/jDom" ],
-        function (Factory, jObj, jDom) {
+    require([ "Contrail/jContrail", "Core/object/jObj", "Core/utils/jTransducer", "Core/dom/jDom" ],
+        function (Factory, jObj, jTransducer, jDom) {
             try {
                 var key, classes, id, name, changeToType, changeToObject;
 
                 changeToType = function (id, object) {
                     return function () {
-                        $(id + " > pre").replaceWith(jDom("pre", { display_type:"type" }, jObj.toString(jObj.toType(object))));
+                        $(id + " > pre").replaceWith(jDom("pre", { display_type:"type" }, jTransducer.toString(jObj.toType(object))));
                         $(id + " > pre").addClass("boxedArea");
                     };
                 };
 
                 changeToObject = function (id, object) {
                     return function () {
-                        $(id + " > pre").replaceWith(jDom("pre", { display_object:"object" }, jObj.toString(object)));
+                        $(id + " > pre").replaceWith(jDom("pre", { display_object:"object" }, jTransducer.toString(object)));
                         $(id + " > pre").addClass("boxedArea");
                     };
                 };

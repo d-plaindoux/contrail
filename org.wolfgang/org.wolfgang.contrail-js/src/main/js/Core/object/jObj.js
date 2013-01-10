@@ -22,7 +22,7 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define( "Core/object/jObj", [ "./jModel", "./jType", "./jTransducer" ],
+define("Core/object/jObj", [ "./jModel", "./jType" ],
     function (jModel, jType, jTransducer) {
         "use strict";
 
@@ -106,6 +106,6 @@ define( "Core/object/jObj", [ "./jModel", "./jType", "./jTransducer" ],
             return result;
         };
 
-        return jObj.bless(jObj, jModel, jType, jTransducer);
+        return jObj.bless(jObj, jModel, jType);
 
     });

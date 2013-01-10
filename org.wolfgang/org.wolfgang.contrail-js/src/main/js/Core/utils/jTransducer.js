@@ -22,8 +22,8 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "./jType" ],
-    function (jType) {
+define("Core/utils/jTransducer", [ "../object/jObj" ],
+    function (jObj) {
         "use strict";
 
         var jTransducer = {};
@@ -39,7 +39,7 @@ define([ "./jType" ],
             var result, key, content;
 
             if (typeof object === "object") {
-                content = driver.enterObject(jType.getClass(object));
+                content = driver.enterObject(jObj.getClass(object));
 
                 for (key in object) {
                     if (object.hasOwnProperty(key)) {
