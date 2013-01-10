@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+	  <groupId>org.wolfgang</groupId>
+	  <artifactId>org.wolfgang</artifactId>
+	  <version>1.0-SNAPSHOT</version>
+	</parent>
+
 	<groupId>org.wolfgang</groupId>
-	<artifactId>org.wolfgang</artifactId>
+	<artifactId>org.wolfgang.contrail-netty</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>org.wolfgang Maven Multi Project</name>
+	<name>Contrail Java Netty Adapter</name>
 	<url>http://maven.apache.org</url>
 
 	<developers>
@@ -21,6 +29,37 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wolfgang</groupId>
+			<artifactId>org.wolfgang.common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wolfgang</groupId>
+			<artifactId>org.wolfgang.contrail-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.4.5.Final</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -55,12 +94,4 @@
 
 		</plugins>
 	</build>
-
-	<modules>
-	  <module>org.wolfgang.common</module>
-	  <module>org.wolfgang.contrail-core</module>
-	  <module>org.wolfgang.contrail-netty</module>
-	  <module>org.wolfgang.contrail-js</module>
-	</modules>
-
 </project>
