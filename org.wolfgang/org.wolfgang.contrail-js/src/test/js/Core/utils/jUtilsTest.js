@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "Utils/jUUID", "qunit", "test/jCC" ],
+require([ "Core/utils/jUUID", "qunit", "test/jCC" ],
     function (jUUID, QUnit, jCC) {
         "use strict";
 

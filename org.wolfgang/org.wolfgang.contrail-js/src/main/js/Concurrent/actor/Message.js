@@ -22,28 +22,36 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Core/utils/jUUID", "Core/object/jObj" ],
-    function (jUUID, jObj) {
+define(["../../Core/object/jObj"],
+    function (jObj) {
         "use strict";
 
-        function Component() {
+        var Message = function (actorId, name, parameters) {
             jObj.bless(this);
-            this.identifier = jUUID.generate();
-        }
+            this.actorId = actorId;
+            this.name = name;
+            this.parameters = parameters;
+        };
 
-        Component.init = jObj.constructor([],
-            function () {
-                return new Component();
+        Message.init = jObj.constructor([jObj.types.String, jObj.types.String, jObj.types.Array],
+            function (actorId, name, parameters) {
+                return new Message(actorId, name, parameters);
             });
 
-        Component.prototype.getComponentId = jObj.method([], jObj.types.String,
+        Message.prototype.getActorId = jObj.method([], jObj.types.String,
             function () {
-                return this.identifier;
+                return this.actorId;
             });
 
-        Component.prototype.closeDownStream = jObj.procedure([]);
+        Message.prototype.getName = jObj.method([], jObj.types.String,
+            function () {
+                return this.name;
+            });
 
-        Component.prototype.closeUpStream = jObj.procedure([]);
+        Message.prototype.getParameters = jObj.method([], jObj.types.Array,
+            function () {
+                return this.parameters;
+            });
 
-        return Component.init;
+        return Message.init;
     });
