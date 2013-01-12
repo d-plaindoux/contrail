@@ -29,6 +29,7 @@ define([ "../../Core/object/jObj", "./Actor" ],
         var ActorManager = function () {
             jObj.bless(this);
 
+            this.universe = {};
             this.actors = [];
             this.jobs = [];
 
@@ -83,12 +84,24 @@ define([ "../../Core/object/jObj", "./Actor" ],
             });
 
         /*
-         * Actor factory
+         * Actor management
          */
 
-        ActorManager.prototype.actor = jObj.method([], jObj.types.Named("Actor"),
-            function () {
-                return actor(this);
+        ActorManager.prototype.newActor = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
+            function (model) {
+                var freshActor = actor(this, model);
+                this.universe[freshActor.getActorId] = freshActor; // O(log(n))
+                return freshActor;
+            });
+
+        ActorManager.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
+            function (id) {
+                return this.universe[id] || jObj.raise(jObj.exception("L.actor.not.found"));
+            });
+
+        ActorManager.prototype.finalizeActor = jObj.procedure([jObj.types.String],
+            function (id) {
+                delete this.universe[id];
             });
 
         return ActorManager.init;

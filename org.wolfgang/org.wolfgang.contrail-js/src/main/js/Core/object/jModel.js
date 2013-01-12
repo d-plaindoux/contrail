@@ -46,6 +46,15 @@ define([ "./jType" ],
         };
 
         /**
+         * Facility used to raise an error
+         *
+         * @param error
+         */
+        jModel.raise = function (error) {
+            throw error;
+        };
+
+        /**
          * Method called whether a given exception must be thrown
          * @param e
          */

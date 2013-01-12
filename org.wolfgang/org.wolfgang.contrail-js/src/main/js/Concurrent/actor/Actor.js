@@ -26,17 +26,17 @@ define([ "Core/utils/jUUID", "Core/object/jObj" ],
     function (jUUID, jObj) {
         "use strict";
 
-        var Actor = function (manager) {
-            jObj.bless(this);
+        var Actor = function (manager, model) {
+            jObj.bless(this, model);
 
             this.actorId = jUUID.generate();
             this.manager = manager;
             this.jobs = [];
         };
 
-        Actor.init = jObj.constructor([ jObj.types.Named("ActorManager") ],
-            function (manager) {
-                return new Actor(manager);
+        Actor.init = jObj.constructor([ jObj.types.Named("ActorManager"), jObj.types.Object ],
+            function (manager, model) {
+                return new Actor(manager, model);
             });
 
         Actor.prototype.send = jObj.procedure([ jObj.types.String, jObj.types.Array, jObj.types.Nullable(jObj.types.Named("Promise"))],
