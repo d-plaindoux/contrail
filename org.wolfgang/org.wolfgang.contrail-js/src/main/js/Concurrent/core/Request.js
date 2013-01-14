@@ -26,26 +26,26 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function Message(actorId, data) {
+        function Request(name, parameters) {
             jObj.bless(this);
-            this.actorId = actorId;
-            this.data = data;
+            this.name = name;
+            this.parameters = parameters;
         }
 
-        Message.init = jObj.constructor([jObj.types.String, jObj.types.Or(jObj.types.Named("Request"), jObj.types.Named("Response"))],
-            function (actorId, data) {
-                return new Message(actorId, data);
+        Request.init = jObj.constructor([jObj.types.String, jObj.types.Array],
+            function (actorId, name, parameters) {
+                return new Request(actorId, name, parameters);
             });
 
-        Message.prototype.getActorId = jObj.method([], jObj.types.String,
+        Request.prototype.getName = jObj.method([], jObj.types.String,
             function () {
-                return this.actorId;
+                return this.name;
             });
 
-        Message.prototype.getData = jObj.method([], jObj.types.Or(jObj.types.Named("Request"), jObj.types.Named("Response")),
+        Request.prototype.getParameters = jObj.method([], jObj.types.Array,
             function () {
-                return this.data;
+                return this.parameters;
             });
 
-        return Message.init;
+        return Request.init;
     });

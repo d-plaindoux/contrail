@@ -16,42 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.concurrent;
+/*global define*/
 
-import java.util.concurrent.Future;
+define("Concurrent/actor/jActor", [ "./ActorManager" ],
+    function (manager) {
+        "use strict";
 
+        var jActor = {};
 
- * <code>Promise</code>
- /**
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public class Promise<V> {
-	
-	private final PromisedFuture<V> future;
-	
-	{
-		this.future = new PromisedFuture<V>();
-	}
-	
-	public static <V> Promise<V> create() {
-		return new Promise<V>();
-	}
+        jActor.manager = manager;
 
-	private Promise() {
-		super();
-	}
-
-	public Future<V> getFuture() {
-		return this.future;
-	}
-	
-	public void success(V value) {
-		future.setValue(value);
-	}
-
-	public void error(Throwable error) {
-		future.setError(error);
-	}
-}
+        return jActor;
+    });

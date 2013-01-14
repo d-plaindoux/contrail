@@ -22,50 +22,69 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Core/utils/jUUID", "Core/object/jObj" ],
-    function (jUUID, jObj) {
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        var Actor = function (manager, model) {
+        function Actor(manager, identifier, model) {
             jObj.bless(this, model);
 
-            this.actorId = jUUID.generate();
+            this.actorId = identifier;
             this.manager = manager;
             this.jobs = [];
-        };
+        }
 
-        Actor.init = jObj.constructor([ jObj.types.Named("ActorManager"), jObj.types.Object ],
-            function (manager, model) {
-                return new Actor(manager, model);
+        Actor.init = jObj.constructor([ jObj.types.Named("ActorManager"), jObj.types.String, jObj.types.Object ],
+            function (manager, identifier, model) {
+                return new Actor(manager, identifier, model);
             });
 
-        Actor.prototype.send = jObj.procedure([ jObj.types.String, jObj.types.Array, jObj.types.Nullable(jObj.types.Named("Promise"))],
-            function (name, parameters, promise) {
-                var job = function () {
-                    var returnValue;
+        Actor.prototype.getActorId = jObj.method([], jObj.types.String,
+            function () {
+                return this.actorId;
+            });
 
-                    try {
-                        returnValue = this[name](parameters);
-                        if (promise !== undefined) {
-                            promise.success(returnValue);
-                        }
-                    } catch (e) {
-                        if (promise !== undefined) {
-                            promise.failure(e);
-                        }
-                    }
+        Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (request, response) {
+                var job = function () {
+                    this.invoke(request, response);
                 };
 
                 this.jobs.push(job);
             });
 
-        Actor.prototype.start = function () {
-            this.manager.register(this);
-        };
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (request, response) {
+                try {
+                    var returnValue = this[request.getName()](request.getParameters());
+                    if (response !== undefined) {
+                        response.success(returnValue);
+                    }
+                } catch (error) {
+                    if (response !== undefined) {
+                        response.failure(error);
+                    }
+                }
+            });
 
-        Actor.prototype.stop = function () {
-            this.manager.unregister(this);
-        };
+        /*
+         * Management corner ...
+         */
+
+        Actor.prototype.start = jObj.procedure([],
+            function () {
+                this.manager.register(this);
+            });
+
+        Actor.prototype.stop = jObj.procedure([],
+            function () {
+                this.manager.unregister(this);
+            });
+
+        Actor.prototype.dispose = jObj.procedure([],
+            function () {
+                this.manager.disposeActor(this.getActorId());
+            });
 
         return Actor.init;
     });

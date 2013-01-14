@@ -16,59 +16,74 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module, setInterval*/
+/*global define:true, require, module, setInterval, clearInterval*/
 
 if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "../../Core/object/jObj", "./Actor" ],
+define([ "Core/object/jObj", "./Actor" ],
     function (jObj, actor) {
         "use strict";
 
-        var ActorManager = function () {
+        function ActorManager() {
             jObj.bless(this);
 
             this.universe = {};
             this.actors = [];
             this.jobs = [];
 
-            setInterval(this.jobRunner, 100);
-            setInterval(this.actorRunner, 100);
-        };
+            this.interval = 100;
+            this.jobRunnerInterval = undefined;
+            this.actorRunnerInterval = undefined;
+        }
 
         ActorManager.init = jObj.constructor([], function () {
             return new ActorManager();
         });
+
+        ActorManager.prototype.start = jObj.procedure([],
+            function () {
+                if (this.jobRunnerInterval === undefined) {
+                    this.jobRunnerInterval = setInterval(this.jobRunner, this.interval);
+                }
+                if (this.actorRunnerInterval === undefined) {
+                    this.actorRunnerInterval = setInterval(this.actorRunner, this.interval);
+                }
+            });
+
+        ActorManager.prototype.stop = jObj.procedure([],
+            function () {
+                if (this.jobRunnerInterval !== undefined) {
+                    clearInterval(this.jobRunnerInterval);
+                    this.jobRunnerInterval = undefined;
+                }
+                if (this.actorRunnerInterval !== undefined) {
+                    clearInterval(this.actorRunnerInterval);
+                    this.actorRunnerInterval = undefined;
+                }
+            });
 
         /*
          * Privates method
          */
 
         ActorManager.prototype.jobRunner = function () {
-            if (this.jobs.length < 1) {
-                return;
+            if (this.jobs.length !== 0) {
+                this.jobs.shift()();
             }
-
-            return this.jobs.shift()();
         };
 
         ActorManager.prototype.actorRunner = function () {
-            var actor;
-
-            if (this.actors.length === 0) {
-                return;
-            }
-
-            actor = this.actors.shift();
-
-            while (actor.jobs.length) {
-                this.jobs.push(actor.jobs.shift());
-            }
+            this.actors.forEach(function (actor) {
+                if (actor.jobs.length !== 0) {
+                    this.jobs.push(actor.jobs.shift());
+                }
+            });
         };
 
         /*
-         * Actor manager (un)registration features
+         * Actor (un)registration features
          */
 
         ActorManager.prototype.register = jObj.procedure([jObj.types.Named("Actor")],
@@ -84,22 +99,22 @@ define([ "../../Core/object/jObj", "./Actor" ],
             });
 
         /*
-         * Actor management
+         * Actor creation and deletion
          */
 
-        ActorManager.prototype.newActor = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
-            function (model) {
-                var freshActor = actor(this, model);
-                this.universe[freshActor.getActorId] = freshActor; // O(log(n))
+        ActorManager.prototype.actor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
+            function (identifier, model) {
+                var freshActor = actor(this, identifier, model);
+                this.universe[identifier] = freshActor;
                 return freshActor;
             });
 
         ActorManager.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
             function (id) {
-                return this.universe[id] || jObj.raise(jObj.exception("L.actor.not.found"));
+                return this.universe[id] || jObj.raise(jObj.exception("L.actor.not.found")); // O(log(n))
             });
 
-        ActorManager.prototype.finalizeActor = jObj.procedure([jObj.types.String],
+        ActorManager.prototype.disposeActor = jObj.procedure([jObj.types.String],
             function (id) {
                 delete this.universe[id];
             });

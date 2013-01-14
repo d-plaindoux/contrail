@@ -16,36 +16,37 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module*/
+/*global define:true, require, module, setInterval*/
 
 if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
 define([ "Core/object/jObj" ],
-    function (jObj) {
+    function (jUUID, jObj) {
         "use strict";
 
-        function Message(actorId, data) {
+        function Response() {
             jObj.bless(this);
-            this.actorId = actorId;
-            this.data = data;
+            this.value = undefined;
+            this.error = undefined;
         }
 
-        Message.init = jObj.constructor([jObj.types.String, jObj.types.Or(jObj.types.Named("Request"), jObj.types.Named("Response"))],
-            function (actorId, data) {
-                return new Message(actorId, data);
-            });
-
-        Message.prototype.getActorId = jObj.method([], jObj.types.String,
+        Response.init = jObj.constructor([],
             function () {
-                return this.actorId;
+                return new Response();
             });
 
-        Message.prototype.getData = jObj.method([], jObj.types.Or(jObj.types.Named("Request"), jObj.types.Named("Response")),
-            function () {
-                return this.data;
+        Response.prototype.success = jObj.procedure([ jObj.types.Any ],
+            function (value) {
+                this.value = value;
             });
 
-        return Message.init;
+        Response.prototype.failure = jObj.procedure([ jObj.types.Any ],
+            function (error) {
+                this.error = error
+                ;
+            });
+
+        return Response.init;
     });
