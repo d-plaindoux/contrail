@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require */
+/*global require, setTimeout */
 
 require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
     function (jObj, QUnit, jCC, jActor, jEvent) {
@@ -165,5 +165,36 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                     QUnit.equal(e, "A.m()", "Job has been executed and an exception has been raised");
                 });
         });
+
+        jCC.asyncScenario("Check actor indirect successful invocation not simulated", function () {
+            var manager, actor, response;
+
+            jCC.
+                Given(function () {
+                    manager = jActor.manager();
+                }).
+                And(function () {
+                    manager.start();
+                }).
+                And(function () {
+                    actor = manager.actor("test.a", new A());
+                }).
+                And(function () {
+                    actor.activate();
+                }).
+                And(function () {
+                    response = jEvent.response();
+                }).
+                When(function () {
+                    actor.send(jEvent.request("n", []), response);
+                }).
+                ThenAfter(1000,function () {
+                    QUnit.equal(response.value(), "A.n()", "Checking response type");
+                }).
+                And(function () {
+                    manager.stop();
+                });
+        });
+
     });
 

@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define, setTimeout*/
 
 define("test/jCC", [ "qunit" ],
     function (QUnit) {
@@ -26,6 +26,10 @@ define("test/jCC", [ "qunit" ],
 
         jCC.scenario = function (name, scenario) {
             QUnit.test(name, scenario);
+        };
+
+        jCC.asyncScenario = function (name, scenario) {
+            QUnit.asyncTest(name, scenario);
         };
 
         jCC.Nothing = function () {
@@ -46,6 +50,21 @@ define("test/jCC", [ "qunit" ],
         jCC.AndThen = function (previous) {
             previous();
             return jCC.ThenSomething();
+        };
+
+        jCC.ThenAfter = function (previous) {
+            return function (timeout, aThen) {
+                previous();
+                // QUnit.stop();
+                setTimeout(function () {
+                    try {
+                        aThen();
+                    } finally {
+                        QUnit.start();
+                    }
+                }, timeout);
+                return jCC.ThenSomething();
+            };
         };
 
         jCC.Then = function (previous) {
@@ -84,6 +103,7 @@ define("test/jCC", [ "qunit" ],
             return {
                 And:jCC.When(previous),
                 Then:jCC.Then(previous),
+                ThenAfter:jCC.ThenAfter(previous),
                 ThenError:jCC.ThenError(previous)
             };
         };

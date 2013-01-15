@@ -44,11 +44,17 @@ define([ "Core/object/jObj", "./Actor" ],
 
         ActorManager.prototype.start = jObj.procedure([],
             function () {
+                var self = this;
+
                 if (this.jobRunnerInterval === undefined) {
-                    this.jobRunnerInterval = setInterval(this.jobRunner, this.interval);
+                    this.jobRunnerInterval = setInterval(function () {
+                        self.jobRunner();
+                    }, this.interval);
                 }
                 if (this.actorRunnerInterval === undefined) {
-                    this.actorRunnerInterval = setInterval(this.actorRunner, this.interval);
+                    this.actorRunnerInterval = setInterval(function () {
+                        self.actorRunner();
+                    }, this.interval);
                 }
             });
 
