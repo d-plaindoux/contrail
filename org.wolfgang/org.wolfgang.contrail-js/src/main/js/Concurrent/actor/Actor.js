@@ -46,11 +46,10 @@ define([ "Core/object/jObj" ],
 
         Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
-                var job = function () {
-                    this.invoke(request, response);
-                };
-
-                this.jobs.push(job);
+                var self = this;
+                this.jobs.push(function () {
+                    self.invoke(request, response);
+                });
             });
 
         Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
@@ -71,12 +70,12 @@ define([ "Core/object/jObj" ],
          * Management corner ...
          */
 
-        Actor.prototype.start = jObj.procedure([],
+        Actor.prototype.activate = jObj.procedure([],
             function () {
                 this.manager.register(this);
             });
 
-        Actor.prototype.stop = jObj.procedure([],
+        Actor.prototype.suspend = jObj.procedure([],
             function () {
                 this.manager.unregister(this);
             });

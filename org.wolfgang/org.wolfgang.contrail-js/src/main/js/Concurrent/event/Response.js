@@ -23,13 +23,20 @@ if (typeof define !== "function") {
 }
 
 define([ "Core/object/jObj" ],
-    function (jUUID, jObj) {
+    function (jObj) {
         "use strict";
+
+        var status = {
+            UNSET:0x0,
+            SUCCESS:0x1,
+            FAILURE:0x2
+        };
 
         function Response() {
             jObj.bless(this);
-            this.value = undefined;
-            this.error = undefined;
+
+            this.status = status.UNSET;
+            this.result = undefined;
         }
 
         Response.init = jObj.constructor([],
@@ -39,13 +46,26 @@ define([ "Core/object/jObj" ],
 
         Response.prototype.success = jObj.procedure([ jObj.types.Any ],
             function (value) {
-                this.value = value;
+                this.status = status.SUCCESS;
+                this.result = value;
             });
 
         Response.prototype.failure = jObj.procedure([ jObj.types.Any ],
             function (error) {
-                this.error = error
-                ;
+                this.status = status.FAILURE;
+                this.result = error;
+            });
+
+        Response.prototype.value = jObj.method([], jObj.types.Any,
+            function () {
+                switch (this.status) {
+                    case status.UNSET:
+                        throw jObj.exception("L.response.not.yet.setup");
+                    case status.FAILURE:
+                        throw this.result;
+                    case status.SUCCESS:
+                        return this.result; // Value can be null ! So How can be this handled by the current system
+                }
             });
 
         return Response.init;

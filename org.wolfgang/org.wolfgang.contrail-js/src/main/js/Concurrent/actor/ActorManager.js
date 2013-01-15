@@ -75,9 +75,10 @@ define([ "Core/object/jObj", "./Actor" ],
         };
 
         ActorManager.prototype.actorRunner = function () {
+            var self = this;
             this.actors.forEach(function (actor) {
                 if (actor.jobs.length !== 0) {
-                    this.jobs.push(actor.jobs.shift());
+                    self.jobs.push(actor.jobs.shift());
                 }
             });
         };
