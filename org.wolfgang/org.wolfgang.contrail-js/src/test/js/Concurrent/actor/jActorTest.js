@@ -166,7 +166,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                 });
         });
 
-        jCC.asyncScenario("Check actor indirect successful invocation not simulated", function () {
+        jCC.scenario("Check actor indirect successful message sent", function () {
             var manager, actor, response;
 
             jCC.
@@ -188,10 +188,8 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                 When(function () {
                     actor.send(jEvent.request("n", []), response);
                 }).
-                ThenAfter(1000,function () {
+                ThenAfter(500, function () {
                     QUnit.equal(response.value(), "A.n()", "Checking response type");
-                }).
-                And(function () {
                     manager.stop();
                 });
         });

@@ -28,10 +28,6 @@ define("test/jCC", [ "qunit" ],
             QUnit.test(name, scenario);
         };
 
-        jCC.asyncScenario = function (name, scenario) {
-            QUnit.asyncTest(name, scenario);
-        };
-
         jCC.Nothing = function () {
             // Nothing to do
         };
@@ -55,7 +51,7 @@ define("test/jCC", [ "qunit" ],
         jCC.ThenAfter = function (previous) {
             return function (timeout, aThen) {
                 previous();
-                // QUnit.stop();
+                QUnit.stop();
                 setTimeout(function () {
                     try {
                         aThen();

@@ -48,8 +48,9 @@ define([ "Core/object/jObj", "./Actor" ],
 
                 if (this.jobRunnerInterval === undefined) {
                     this.jobRunnerInterval = setInterval(function () {
-                        self.jobRunner();
-                    }, this.interval);
+                            self.jobRunner();
+                        }, this.interval
+                    );
                 }
                 if (this.actorRunnerInterval === undefined) {
                     this.actorRunnerInterval = setInterval(function () {

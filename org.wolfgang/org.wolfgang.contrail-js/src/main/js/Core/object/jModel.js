@@ -28,7 +28,7 @@ define([ "./jType" ],
 
         var jModel = {};
 
-        jModel.specificationIsEnable = true;
+        jModel.specificationIsEnable = false;
 
         jModel.enableSpecification = function (value) {
             jModel.specificationIsEnable = value;
