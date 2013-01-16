@@ -201,7 +201,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 });
         });
 
-        jCC.scenario("Method polymorphism without override", function () {
+        jCC.scenario("Method polymorphism with override", function () {
             var b, r;
 
             jCC.
