@@ -69,7 +69,7 @@ require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent
                     actor = manager.actor("test.a", new A());
                 }).
                 And(function () {
-                    response = jEvent.response();
+                    response = jEvent.storedResponse();
                 }).
                 When(function () {
                     actor.invoke(jEvent.request("n", []), response);
@@ -92,11 +92,8 @@ require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent
                 And(function () {
                     actor.activate();
                 }).
-                And(function () {
-                    response = jEvent.response();
-                }).
                 When(function () {
-                    actor.send(jEvent.request("n", []), response);
+                    response = actor.send(jEvent.request("n", []));
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -134,11 +131,8 @@ require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent
                 And(function () {
                     actor.activate();
                 }).
-                And(function () {
-                    response = jEvent.response();
-                }).
                 When(function () {
-                    actor.send(jEvent.request("m", []), response);
+                    response = actor.send(jEvent.request("m", []));
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -182,11 +176,8 @@ require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent
                 And(function () {
                     actor.activate();
                 }).
-                And(function () {
-                    response = jEvent.response();
-                }).
                 When(function () {
-                    actor.send(jEvent.request("n", []), response);
+                    response = actor.send(jEvent.request("n", []));
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -194,5 +185,34 @@ require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent
                 });
         });
 
+        jCC.scenario("Check actor indirect failed message sent", function () {
+            var manager, actor, response;
+
+            jCC.
+                Given(function () {
+                    manager = jActor.manager();
+                }).
+                And(function () {
+                    manager.start();
+                }).
+                And(function () {
+                    actor = manager.actor("test.a", new A());
+                }).
+                And(function () {
+                    actor.activate();
+                }).
+                When(function () {
+                    response = actor.send(jEvent.request("m", []));
+                }).
+                ThenAfter(500, function () {
+                    try {
+                        response.value();
+                        jCC.equal(true, false, "expecting an exception");
+                    } catch (e) {
+                        jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
+                    }
+                    manager.stop();
+                });
+        });
     });
 

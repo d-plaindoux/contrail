@@ -22,8 +22,8 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
+    function (jObj, jEvent) {
         "use strict";
 
         function Actor(manager, identifier, model) {
@@ -44,25 +44,30 @@ define([ "Core/object/jObj" ],
                 return this.actorId;
             });
 
-        Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Actor.prototype.send = jObj.method([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))] , jObj.types.Named("Response"),
             function (request, response) {
-                var self = this;
+                var self = this, realResponse;
+
+                if (response === undefined) {
+                    realResponse = jEvent.storedResponse();
+                } else {
+                    realResponse = response;
+                }
+
                 this.jobs.push(function () {
-                    self.invoke(request, response);
+                    self.invoke(request, realResponse);
                 });
+
+                return realResponse;
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Named("Response")] ,
             function (request, response) {
                 try {
                     var returnValue = this[request.getName()](request.getParameters());
-                    if (response !== undefined) {
-                        response.success(returnValue);
-                    }
+                    response.success(returnValue);
                 } catch (error) {
-                    if (response !== undefined) {
-                        response.failure(error);
-                    }
+                    response.failure(error);
                 }
             });
 

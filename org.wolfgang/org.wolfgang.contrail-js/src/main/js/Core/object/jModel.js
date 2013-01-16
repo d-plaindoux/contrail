@@ -121,13 +121,17 @@ define([ "./jType" ],
                 result = method;
             } else {
                 result = function () {
-                    if (arguments.length !== profil.length) {
+                    if (arguments.length > profil.length) {
                         throw jModel.exception("L.profile.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length});
                     } else {
                         var index;
 
-                        for (index = 0; index < profil.length; index += 1) {
+                        for (index = 0; index < arguments.length; index += 1) {
                             jType.checkType(arguments[index], profil[index]);
+                        }
+
+                        for (index = arguments.length; index < profil.length; index += 1) {
+                            jType.checkType(undefined, profil[index]);
                         }
 
                         if (method === undefined) {
