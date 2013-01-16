@@ -148,7 +148,7 @@ define([ "require" ],
                 return typeRule("Or", function (object) {
                     var result;
 
-                    if (jType.ofType(object, type2)) {
+                    if (jType.ofType(object, type1)) {
                         result = true;
                     } else {
                         result = jType.ofType(object, type2);
@@ -163,7 +163,7 @@ define([ "require" ],
                 return typeRule("And", function (object) {
                     var result;
 
-                    if (jType.ofType(object, type2)) {
+                    if (jType.ofType(object, type1)) {
                         result = jType.ofType(object, type2);
                     } else {
                         result = false;
