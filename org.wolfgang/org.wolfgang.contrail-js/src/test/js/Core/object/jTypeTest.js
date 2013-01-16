@@ -108,5 +108,41 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     A.prototype.m = undefined;
                 });
         });
+
+        jCC.scenario("Check Subtype a:String <? Nullable(String)", function () {
+            var a;
+
+            jCC.
+                Given(function () {
+                    a = "...";
+                }).
+                When(function () {
+                    jObj.checkType(a, jObj.types.Nullable(jObj.types.String));
+                }).
+                Then(function () {
+                    QUnit.equal(true, true, "a is an instance of Nullable(String)");
+                }).
+                And(function () {
+                    A.prototype.m = undefined;
+                });
+        });
+
+        jCC.scenario("Check Subtype a:Undefined <? Nullable(String)", function () {
+            var a;
+
+            jCC.
+                Given(function () {
+                    a = undefined;
+                }).
+                When(function () {
+                    jObj.checkType(a, jObj.types.Nullable(jObj.types.String));
+                }).
+                Then(function () {
+                    QUnit.equal(true, true, "a is an instance of Nullable(String)");
+                }).
+                And(function () {
+                    A.prototype.m = undefined;
+                });
+        });
     });
 
