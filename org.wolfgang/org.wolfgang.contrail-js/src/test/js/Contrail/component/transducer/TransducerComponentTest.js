@@ -41,7 +41,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 And(function () {
                     c2 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
@@ -54,7 +54,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 Given(function () {
                     c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of TransducerComponent");
                 });
@@ -67,7 +67,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 Given(function () {
                     c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
@@ -80,7 +80,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 Given(function () {
                     c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
                 });
@@ -93,7 +93,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 Given(function () {
                     c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
                 });
@@ -106,7 +106,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 Given(function () {
                     c1 = Component.transducer(JSon.encoder(), JSon.decoder());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });

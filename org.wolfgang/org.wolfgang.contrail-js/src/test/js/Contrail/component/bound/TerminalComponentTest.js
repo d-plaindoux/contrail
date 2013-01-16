@@ -32,7 +32,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 And(function () {
                     component2 = Factory.component.terminal(Factory.flow.core());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
                 });

@@ -32,7 +32,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 And(function () {
                     c2 = Factory.component.multi.sources();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
@@ -45,7 +45,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 Given(function () {
                     c1 = Factory.component.multi.sources();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
@@ -58,7 +58,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 Given(function () {
                     c1 = Factory.component.multi.sources();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("MultiSourceComponent")), true, "Checking c1 instance of MultiSourceComponent");
                 });

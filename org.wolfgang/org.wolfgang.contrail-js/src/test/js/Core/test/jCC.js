@@ -18,14 +18,14 @@
 
 /*global define, setTimeout*/
 
-define("test/jCC", [ "qunit" ],
-    function (QUnit) {
+define("test/jCC", [ "Core/object/jObj", "qunit" ],
+    function (jObj, QUnit) {
         "use strict";
 
-        var jCC = {};
+        var jCC = jObj.bless({}, QUnit);
 
         jCC.scenario = function (name, scenario) {
-            QUnit.test(name, scenario);
+            jCC.test(name, scenario);
         };
 
         jCC.Nothing = function () {
@@ -84,23 +84,38 @@ define("test/jCC", [ "qunit" ],
             };
         };
 
+        jCC.ThenErrorAfter = function (previous) {
+            return function (timeout, aThen) {
+                try {
+                    previous();
+                } catch (e) {
+                    QUnit.stop();
+                    setTimeout(function () {
+                        try {
+                            aThen(e);
+                        } finally {
+                            QUnit.start();
+                        }
+                    }, timeout);
+                    aThen(e);
+                    return jCC.ThenSomething();
+                }
+
+                throw { message:"expecting an exception"};
+            };
+        };
+
         /*
          * When block definition
          */
-
-        jCC.WhenNothing = function (previous) {
-            return {
-                Then:jCC.Then(previous),
-                ThenError:jCC.ThenError(previous)
-            };
-        };
 
         jCC.WhenSomething = function (previous) {
             return {
                 And:jCC.When(previous),
                 Then:jCC.Then(previous),
+                ThenError:jCC.ThenError(previous),
                 ThenAfter:jCC.ThenAfter(previous),
-                ThenError:jCC.ThenError(previous)
+                ThenErrorAfter:jCC.ThenErrorAfter(previous)
             };
         };
 
@@ -117,16 +132,10 @@ define("test/jCC", [ "qunit" ],
          * Given block definition
          */
 
-        jCC.GivenNothing = {
-            When:jCC.When(jCC.Nothing),
-            WhenNothing:jCC.WhenNothing(jCC.Nothing)
-        };
-
         jCC.GivenSomething = function () {
             return {
                 And:jCC.Given,
-                When:jCC.When(jCC.Nothing),
-                WhenNothing:jCC.WhenNothing(jCC.Nothing)
+                When:jCC.When(jCC.Nothing)
             };
         };
 

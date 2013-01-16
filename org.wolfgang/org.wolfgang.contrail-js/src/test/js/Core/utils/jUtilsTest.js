@@ -35,7 +35,7 @@ require([ "Core/utils/jUUID", "qunit", "test/jCC" ],
                 And(function () {
                     uuid2 = jUUID.generate();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
                 });

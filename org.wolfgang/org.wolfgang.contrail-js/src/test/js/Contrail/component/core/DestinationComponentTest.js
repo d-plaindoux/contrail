@@ -35,7 +35,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 And(function () {
                     c2 = Factory.component.core.destination();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
@@ -54,7 +54,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 And(function () {
                     c2 = Factory.component.core.sourceWithSingleDestination();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
                 });
@@ -76,7 +76,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 And(function () {
                     lm = Factory.link;
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
                 }).
@@ -99,7 +99,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 Given(function () {
                     c1 = Factory.component.core.destinationWithSingleSource();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
                 });
@@ -112,7 +112,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 Given(function () {
                     c1 = Factory.component.core.destination();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });

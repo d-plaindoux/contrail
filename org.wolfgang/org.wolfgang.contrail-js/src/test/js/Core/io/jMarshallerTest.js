@@ -32,7 +32,7 @@ require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
                 And(function () {
                     b = jMarshaller.numberToBytes(i);
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(b.length, 4, "Size of bytes from int is 4");
                 });
@@ -48,7 +48,7 @@ require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
                 And(function () {
                     b = jMarshaller.numberToBytes(i);
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(b[0], 0x89, "Content of bytes at index 0");
                 }).

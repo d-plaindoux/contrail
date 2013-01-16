@@ -57,7 +57,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     a = new A();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(a, "A"), true, "Checking a:A instance of A");
                 });
@@ -70,7 +70,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = new B();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, "B"), true, "Checking b:B instance of B");
                 });
@@ -83,7 +83,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = new B();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, "A"), true, "Checking b:B extends A instance of A");
                 });
@@ -96,7 +96,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = "b";
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.String), true, "Checking Type(<string>)");
                 });
@@ -109,7 +109,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = 123;
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.Number), true, "Checking Type(<number>)");
                 });
@@ -122,7 +122,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = true;
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
                 });
@@ -132,8 +132,8 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
             var b; // = undefined;
 
             jCC.
-                GivenNothing.
-                WhenNothing.
+                Given(jCC.Nothing).
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
                 });
@@ -146,7 +146,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = {};
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.Object), true, "Checking Type(<object>)");
                 });
@@ -159,7 +159,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(function () {
                     b = [];
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(jObj.ofType(b, jObj.types.Array), true, "Checking Type(<array>)");
                 });

@@ -29,7 +29,7 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                 Given(function () {
                     buffer = byteBuffer();
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(buffer.isClosed(), false, "New buffer is not closed");
                 }).
@@ -90,7 +90,7 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                 And(function () {
                     bytes = jUUID.array(10);
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
                     QUnit.equal(buffer.read(bytes), 0, "Buffer must provide nothing");
                 });

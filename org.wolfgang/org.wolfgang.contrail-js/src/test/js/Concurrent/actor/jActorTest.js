@@ -18,8 +18,8 @@
 
 /*global require, setTimeout */
 
-require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
-    function (jObj, QUnit, jCC, jActor, jEvent) {
+require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
+    function (jObj, jCC, jActor, jEvent) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -49,12 +49,12 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                 And(function () {
                     actor = manager.actor("test.a", new A());
                 }).
-                WhenNothing.
+                When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(actor, jObj.types.Named("A")), true, "Checking a:A instance of A");
+                    jCC.equal(jObj.ofType(actor, jObj.types.Named("A")), true, "Checking a:A instance of A");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(actor, jObj.types.Named("Actor")), true, "Checking a:A instance of Actor");
+                    jCC.equal(jObj.ofType(actor, jObj.types.Named("Actor")), true, "Checking a:A instance of Actor");
                 });
         });
 
@@ -75,7 +75,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                     actor.invoke(jEvent.request("n", []), response);
                 }).
                 Then(function () {
-                    QUnit.equal(response.value(), "A.n()", "Checking response type");
+                    jCC.equal(response.value(), "A.n()", "Checking response type");
                 });
         });
 
@@ -99,25 +99,25 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                     actor.send(jEvent.request("n", []), response);
                 }).
                 Then(function () {
-                    QUnit.equal(actor.jobs.length, 1, "A new job has been created");
+                    jCC.equal(actor.jobs.length, 1, "A new job has been created");
                 }).
                 When(function () {
                     manager.actorRunner();
                 }).
                 Then(function () {
-                    QUnit.equal(manager.jobs.length, 1, "Job has been push in executable state");
+                    jCC.equal(manager.jobs.length, 1, "Job has been push in executable state");
                 }).
                 And(function () {
-                    QUnit.equal(actor.jobs.length, 0, "no new job");
+                    jCC.equal(actor.jobs.length, 0, "no new job");
                 }).
                 When(function () {
                     manager.jobRunner();
                 }).
                 Then(function () {
-                    QUnit.equal(manager.jobs.length, 0, "Job has been executed");
+                    jCC.equal(manager.jobs.length, 0, "Job has been executed");
                 }).
                 And(function () {
-                    QUnit.equal(response.value(), "A.n()", "Checking response type");
+                    jCC.equal(response.value(), "A.n()", "Checking response type");
                 });
         });
 
@@ -141,28 +141,28 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                     actor.send(jEvent.request("m", []), response);
                 }).
                 Then(function () {
-                    QUnit.equal(actor.jobs.length, 1, "A new job has been created");
+                    jCC.equal(actor.jobs.length, 1, "A new job has been created");
                 }).
                 When(function () {
                     manager.actorRunner();
                 }).
                 Then(function () {
-                    QUnit.equal(manager.jobs.length, 1, "Job has been push in executable state");
+                    jCC.equal(manager.jobs.length, 1, "Job has been push in executable state");
                 }).
                 And(function () {
-                    QUnit.equal(actor.jobs.length, 0, "no new job");
+                    jCC.equal(actor.jobs.length, 0, "no new job");
                 }).
                 When(function () {
                     manager.jobRunner();
                 }).
                 Then(function () {
-                    QUnit.equal(manager.jobs.length, 0, "Job has been executed");
+                    jCC.equal(manager.jobs.length, 0, "Job has been executed");
                 }).
                 When(function () {
                     response.value();
                 }).
                 ThenError(function (e) {
-                    QUnit.equal(e, "A.m()", "Job has been executed and an exception has been raised");
+                    jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
                 });
         });
 
@@ -189,7 +189,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC", "Concurrent/actor/jActor", "C
                     actor.send(jEvent.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
-                    QUnit.equal(response.value(), "A.n()", "Checking response type");
+                    jCC.equal(response.value(), "A.n()", "Checking response type");
                     manager.stop();
                 });
         });
