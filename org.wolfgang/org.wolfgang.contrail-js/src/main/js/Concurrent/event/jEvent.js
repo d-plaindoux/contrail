@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Concurrent/event/jEvent", [ "./Request", "./StoredResponse" ],
-    function (request, response) {
+define("Concurrent/event/jEvent", [ "./Request", "./Response", "./StoredResponse" ],
+    function (request, response, storedResponse) {
         "use strict";
 
         var jEvent = {};
@@ -27,7 +27,7 @@ define("Concurrent/event/jEvent", [ "./Request", "./StoredResponse" ],
         jEvent.request = request;
 
         jEvent.response = response;
-        jEvent.storedResponse = response;
+        jEvent.storedResponse = storedResponse;
 
         return jEvent;
     });
