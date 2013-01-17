@@ -38,12 +38,12 @@ public class TestWebServer {
 
 	@Test
 	public void testWebServer01() throws IOException {
-		final WebServer server = WebServer.create(2777);
+		final WebServer server = WebServer.create(2777, null);
 		server.call();
 
 		final URL url = new URL("http://localhost:2777/helloworld");
-
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		
 		try {
 			final InputStream inputStream = url.openStream();
 			try {

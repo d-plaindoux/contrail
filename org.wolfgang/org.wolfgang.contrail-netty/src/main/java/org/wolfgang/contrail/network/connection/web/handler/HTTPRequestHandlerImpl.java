@@ -51,14 +51,12 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFa
 import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.contrail.ComponentFactory;
+import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
-import org.wolfgang.contrail.link.ComponentManager;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
-import org.wolfgang.contrail.network.connection.web.resource.Resource;
 
 /**
  * <code>HTTPRequestHandler</code>
@@ -76,7 +74,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * The upstream handler
 	 */
-	private final ComponentFactory factory;
+	private final ComponentSourceManager componentSourceManager;
 
 	/**
 	 * The web server page
@@ -105,8 +103,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(ComponentFactory factory, WebServerPage serverPage) {
-		this.factory = factory;
+	public HTTPRequestHandlerImpl(ComponentSourceManager componentSourceManager, WebServerPage serverPage) {
+		this.componentSourceManager = componentSourceManager;
 		this.serverPage = serverPage;
 	}
 
@@ -124,10 +122,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 			this.sendHttpResponse(context, req, FORBIDDEN_HTTP_RESPONSE);
 		}
 
-		// Map containing informations
-		final Map<String, String> map = new HashMap<String, String>();
-		map.put("self.id", String.valueOf(req.getHeader("From")));
-
 		// Prepare the URI ?
 		final String resourceURI;
 		if (req.getUri().startsWith(WEBSOCKET)) {
@@ -142,14 +136,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 			final HttpResponse res = DEFAULT_HTTP_RESPONSE;
 
 			try {
-				final Resource resource = serverPage.getResource(resourceURI);
-
-				if (resource.getFreeVariables().contains("web.socket.location")) {
-					final String location = this.getWebSocketLocation(req);
-					map.put("web.socket.location", location);
-				}
-
-				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource.getContent(map));
+				final byte[] resource = serverPage.getContent(resourceURI);
+				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource);
 				res.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
 				setContentLength(res, content.readableBytes());
 
@@ -233,7 +221,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
 					final InitialComponent<String, String> initialComponent = Components.initial(emitter);
-					ComponentManager.connect(initialComponent, factory.create());
+					componentSourceManager.attach(initialComponent);
 					try {
 						receivers.put(identifier, initialComponent.getUpStreamDataFlow());
 					} catch (Exception e) {

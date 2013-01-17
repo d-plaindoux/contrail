@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.wolfgang.contrail.network.connection.web.resource.Resource;
-import org.wolfgang.contrail.network.connection.web.resource.StringResourceImpl;
-
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
  * resourceName TODO improve this code ASAP
@@ -58,7 +55,7 @@ public final class WebServerPage {
 	 * @throws IOException
 	 *             if a problem occurs when the page retrieval fails
 	 */
-	public Resource getResource(String resourceName) throws IOException {
+	public byte[] getContent(String resourceName) throws IOException {
 		// Retrieve the resource
 
 		final URL resource = WebServerPage.class.getResource(HTDOCS + resourceName);
@@ -85,7 +82,7 @@ public final class WebServerPage {
 		}
 
 		// Unfold HTML document
-		
-		return new StringResourceImpl(new String(outputStream.toByteArray()));
+
+		return outputStream.toByteArray();
 	}
 }

@@ -33,11 +33,13 @@ define("External/jSocketLib", [ "require", "Core/object/jObj" ],
                 var WebSocket, client;
 
                 WebSocket = window.WebSocket || window.MozWebSocket || jObj.throwError(jObj.exception("L.web.socket.not.defined"));
+
                 client = new WebSocket(endpoint);
 
                 client.onopen = function () {
                     // Nothing for the moment
                 };
+
                 client.onerror = function () {
                     // Nothing for the moment
                 };

@@ -46,7 +46,7 @@ define([ "require", "Core/object/jObj" ],
                 this.data = [];
             });
 
-        BufferedDataFlow.prototype.getAccumulation = jObj.method([], jObj.types.Array,
+        BufferedDataFlow.prototype.getCumulated = jObj.method([], jObj.types.Array,
             function () {
                 return this.data; // Can be modified -- TODO
             });

@@ -20,21 +20,20 @@ package org.wolfgang.common.concurrent;
 
 import java.util.concurrent.Future;
 
-
+/**
  * <code>Promise</code>
- /**
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
 public class Promise<V> {
-	
+
 	private final PromisedFuture<V> future;
-	
+
 	{
 		this.future = new PromisedFuture<V>();
 	}
-	
+
 	public static <V> Promise<V> create() {
 		return new Promise<V>();
 	}
@@ -46,7 +45,7 @@ public class Promise<V> {
 	public Future<V> getFuture() {
 		return this.future;
 	}
-	
+
 	public void success(V value) {
 		future.setValue(value);
 	}

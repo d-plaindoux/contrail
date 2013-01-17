@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.junit.Test;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
@@ -35,19 +34,12 @@ import org.wolfgang.contrail.network.connection.web.WebServerPage;
  */
 public class TestWebPage {
 
-	@SuppressWarnings("serial")
 	@Test
 	public void testWebPage01() throws IOException {
 		final WebServerPage serverPage = new WebServerPage();
 
-		final byte[] resource01 = serverPage.getResource("index.html").getContent(new HashMap<String, String>() {
-			{
-				this.put("title", "Hello");
-				this.put("product", "Contrail");
-			}
-		});
-
-		final byte[] resource02 = serverPage.getResource("index.html.orig").getContent(new HashMap<String, String>());
+		final byte[] resource01 = serverPage.getContent("index.html");
+		final byte[] resource02 = serverPage.getContent("index.html.orig");
 
 		assertEquals(new String(resource01), new String(resource02));
 	}
@@ -57,7 +49,7 @@ public class TestWebPage {
 		final WebServerPage serverPage = new WebServerPage();
 
 		try {
-			serverPage.getResource("undefined");
+			serverPage.getContent("undefined");
 			fail();
 		} catch (IOException e) {
 			// OK

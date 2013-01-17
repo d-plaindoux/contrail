@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.contrail;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.Component;
+import org.wolfgang.contrail.component.SourceComponent;
 
 /**
  * <code>ComponentFactory</code>
@@ -27,8 +27,8 @@ import org.wolfgang.contrail.component.Component;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentFactory {
+public interface ComponentSourceManager {
 
-	Component create(Object... arguments) throws CannotCreateComponentException;
+	void attach(SourceComponent<String, String> source) throws CannotCreateComponentException;
 
 }
