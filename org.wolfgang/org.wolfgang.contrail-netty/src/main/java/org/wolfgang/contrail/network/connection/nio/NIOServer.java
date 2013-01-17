@@ -31,7 +31,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 /**
- * <code>NIOServer</code> is able to manage client connection using nio
+ * <code>NIOServer</code> is able to manage client connection using NIO
  * libraries
  * 
  * @author Didier Plaindoux
@@ -39,32 +39,11 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
  */
 public class NIOServer implements Callable<Void>, Closeable {
 
-	/**
-	 * The host to be used
-	 */
 	private final String host;
-
-	/**
-	 * Port number for web based communication
-	 */
 	private final int port;
-
-	/**
-	 * 
-	 */
 	private final ChannelPipelineFactory pipeline;
+	private final AtomicReference<Channel> channelReference;
 
-	/**
-	 * 
-	 */
-	private AtomicReference<Channel> channelReference;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param port
-	 *            The port number
-	 */
 	public NIOServer(String host, int port, ChannelPipelineFactory pipeline) {
 		this.host = host;
 		this.port = port;
@@ -72,9 +51,6 @@ public class NIOServer implements Callable<Void>, Closeable {
 		this.channelReference = new AtomicReference<Channel>();
 	}
 
-	/**
-	 * Main method called whether a web server is required
-	 */
 	public Void call() {
 		// Configure the server.
 		final NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());

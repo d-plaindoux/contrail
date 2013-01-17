@@ -18,7 +18,7 @@
 
 /*global require */
 
-require(["Core/object/jObj", "Contrail/codec/jCodec", "test/jCC", "Core/io/jMarshaller"],
+require(["Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io/jMarshaller"],
     function (jObj, Factory, jCC, jMarshaller) {
         "use strict";
 

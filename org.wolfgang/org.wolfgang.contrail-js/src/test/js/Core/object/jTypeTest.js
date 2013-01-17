@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "test/jCC" ],
+require([ "Core/object/jObj", "Core/test/jCC" ],
     function (jObj, jCC) {
         "use strict";
 

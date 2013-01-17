@@ -18,7 +18,7 @@
 
 /*global define, setTimeout*/
 
-define("test/jCC", [ "Core/object/jObj", "qunit" ],
+define("Core/test/jCC", [ "Core/object/jObj", "qunit" ],
     function (jObj, QUnit) {
         "use strict";
 

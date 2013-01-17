@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "Core/utils/jTransducer", "test/jCC" ],
+require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
     function (jObj, jTransducer, jCC) {
         "use strict";
 

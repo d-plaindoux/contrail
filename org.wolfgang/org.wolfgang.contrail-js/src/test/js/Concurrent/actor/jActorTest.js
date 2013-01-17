@@ -18,7 +18,7 @@
 
 /*global require, setTimeout */
 
-require([ "Core/object/jObj", "test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
+require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
     function (jObj, jCC, jActor, jEvent) {
         "use strict";
 
