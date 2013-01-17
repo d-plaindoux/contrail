@@ -22,15 +22,15 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define(["External/SocketFactory", "require", "Core/object/jObj"],
-    function (WebSocket, require, jObj) {
+define(["External/jSocketLib", "require", "Core/object/jObj"],
+    function (SocketLib, require, jObj) {
         "use strict";
 
         function Socket(endpoint, dataFlow) {
 
             jObj.bless(this);
 
-            this.client = WebSocket.client(endpoint, {
+            this.client = SocketLib.client(endpoint, {
                 onopen:jObj.procedure([],
                     function () {
                         // Nothing

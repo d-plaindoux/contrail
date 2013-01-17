@@ -22,15 +22,15 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "External/SocketFactory", "require", "Core/object/jObj", "Contrail/jContrail"],
-    function (WebSocket, require, jObj, Contrail) {
+define([ "External/jSocketLib", "require", "Core/object/jObj", "Contrail/jContrail"],
+    function (SocketLib, require, jObj, Contrail) {
         "use strict";
 
         function ServerSocket(port, handler) {
             jObj.bless(this);
 
             this.handler = handler;
-            this.server = WebSocket.server(port, {accept:this.accept});
+            this.server = SocketLib.server(port, {accept:this.accept});
         }
 
         ServerSocket.init = jObj.constructor([ jObj.types.Number, jObj.types.Named("DataFlowHandler") ],
@@ -38,7 +38,8 @@ define([ "External/SocketFactory", "require", "Core/object/jObj", "Contrail/jCon
                 return new ServerSocket(port, handler);
             });
 
-        ServerSocket.prototype.accept = jObj.method([ jObj.types.ObjectOf({send:jObj.types.Function}) ], jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}),
+        ServerSocket.prototype.accept = jObj.method([ jObj.types.ObjectOf({send:jObj.types.Function}) ],
+            jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}),
             function (client) {
                 var dataFlowIn, dataFlowOut;
 
