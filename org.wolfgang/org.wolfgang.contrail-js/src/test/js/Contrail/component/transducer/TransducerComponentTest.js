@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
-    function (QUnit, Factory, jObj, jCC) {
+require([ "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
+    function (Factory, jObj, jCC) {
         "use strict";
 
         var JSon = Factory.codec.json,
@@ -43,7 +43,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                    jCC.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -56,7 +56,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of TransducerComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("TransducerComponent")), true, "Checking c1 instance of TransducerComponent");
                 });
         });
 
@@ -69,7 +69,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("PipelineComponent")), true, "Checking c1 instance of PipelineComponent");
                 });
         });
 
@@ -82,7 +82,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("SourceComponent")), true, "Checking c1 instance of SourceComponent");
                 });
         });
 
@@ -95,7 +95,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
                 });
         });
 
@@ -108,7 +108,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
 
@@ -136,7 +136,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                         composition.getUpStreamDataFlow().handleData({ a:index });
                     }).
                     Then(function () {
-                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                        jCC.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
                     });
             };
 
@@ -172,7 +172,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                         composition.getUpStreamDataFlow().handleData({ a:index });
                     }).
                     Then(function () {
-                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                        jCC.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
                     });
             };
 
@@ -210,7 +210,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                         composition.getUpStreamDataFlow().handleData({ a:index });
                     }).
                     Then(function () {
-                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                        jCC.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
                     });
             };
 
@@ -249,7 +249,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                         composition.getUpStreamDataFlow().handleData({ a:index });
                     }).
                     Then(function () {
-                        QUnit.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
+                        jCC.equal(terminalFlow.content.a, index, "De-Serialise JSON object");
                     });
             };
 

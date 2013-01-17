@@ -18,8 +18,8 @@
 
 /*global require */
 
-require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core/io/jMarshaller"],
-    function (jObj, Factory, QUnit, jCC, jMarshaller) {
+require(["Core/object/jObj", "Contrail/codec/jCodec", "test/jCC", "Core/io/jMarshaller"],
+    function (jObj, Factory, jCC, jMarshaller) {
         "use strict";
 
         jCC.scenario("String decoding", function () {
@@ -36,13 +36,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], message, "Checking encoded value");
+                    jCC.equal(result[0], message, "Checking encoded value");
                 });
         });
 
@@ -60,13 +60,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Number), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Number), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], -256, "Checking encoded value");
+                    jCC.equal(result[0], -256, "Checking encoded value");
                 });
         });
 
@@ -84,13 +84,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Undefined), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Undefined), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], undefined, "Checking encoded value");
+                    jCC.equal(result[0], undefined, "Checking encoded value");
                 });
         });
 
@@ -108,13 +108,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], true, "Checking encoded value");
+                    jCC.equal(result[0], true, "Checking encoded value");
                 });
         });
 
@@ -132,13 +132,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Boolean), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], false, "Checking encoded value");
+                    jCC.equal(result[0], false, "Checking encoded value");
                 });
         });
 
@@ -157,13 +157,13 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 0, "Checking encoding length");
+                    jCC.equal(result[0].length, 0, "Checking encoding length");
                 });
         });
 
@@ -181,16 +181,16 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 1, "Checking encoding length");
+                    jCC.equal(result[0].length, 1, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], true, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], true, "Checking encoded value[0]");
                 });
         });
 
@@ -210,16 +210,16 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 1, "Checking encoding length");
+                    jCC.equal(result[0].length, 1, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], message, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], message, "Checking encoded value[0]");
                 });
         });
 
@@ -237,19 +237,19 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 2, "Checking encoding length");
+                    jCC.equal(result[0].length, 2, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], true, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], true, "Checking encoded value[0]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][1], false, "Checking encoded value[1]");
+                    jCC.equal(result[0][1], false, "Checking encoded value[1]");
                 });
         });
 
@@ -267,19 +267,19 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 2, "Checking encoding length");
+                    jCC.equal(result[0].length, 2, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], 128, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], 128, "Checking encoded value[0]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][1], false, "Checking encoded value[1]");
+                    jCC.equal(result[0][1], false, "Checking encoded value[1]");
                 });
         });
 
@@ -299,16 +299,16 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 1, "Checking encoding length");
+                    jCC.equal(result[0].length, 1, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], message, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], message, "Checking encoded value[0]");
                 });
         });
 
@@ -329,22 +329,22 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 3, "Checking encoding length");
+                    jCC.equal(result[0].length, 3, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0], message, "Checking encoded value[0]");
+                    jCC.equal(result[0][0], message, "Checking encoded value[0]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][1], 2013, "Checking encoded value[0]");
+                    jCC.equal(result[0][1], 2013, "Checking encoded value[0]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][2], true, "Checking encoded value[1]");
+                    jCC.equal(result[0][2], true, "Checking encoded value[1]");
                 });
         });
 
@@ -366,25 +366,25 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].length, 2, "Checking encoding length");
+                    jCC.equal(result[0].length, 2, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0].length, 2, "Checking encoding length");
+                    jCC.equal(result[0][0].length, 2, "Checking encoding length");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0][0], message, "Checking encoded value[0][0]");
+                    jCC.equal(result[0][0][0], message, "Checking encoded value[0][0]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][0][1], 2013, "Checking encoded value[0][1]");
+                    jCC.equal(result[0][0][1], 2013, "Checking encoded value[0][1]");
                 }).
                 And(function () {
-                    QUnit.equal(result[0][1], true, "Checking encoded value[1]");
+                    jCC.equal(result[0][1], true, "Checking encoded value[1]");
                 });
         });
 
@@ -402,10 +402,10 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
                 });
         });
 
@@ -427,22 +427,22 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC", "Core
                     result = decoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].hasOwnProperty(foo), true, "Checking foo property existence");
+                    jCC.equal(result[0].hasOwnProperty(foo), true, "Checking foo property existence");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].foo, 2013, "Checking foo property value");
+                    jCC.equal(result[0].foo, 2013, "Checking foo property value");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].hasOwnProperty(bar), true, "Checking bar property existence");
+                    jCC.equal(result[0].hasOwnProperty(bar), true, "Checking bar property existence");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].bar, true, "Checking bar property value");
+                    jCC.equal(result[0].bar, true, "Checking bar property value");
                 });
         });
     });

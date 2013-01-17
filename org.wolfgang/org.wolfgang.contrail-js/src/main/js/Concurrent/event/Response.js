@@ -33,7 +33,7 @@ define([ "Core/object/jObj" ],
             this.failure = failure;
         }
 
-        Response.init = jObj.constructor([jObj.types.Function,jObj.types.Function],
+        Response.init = jObj.constructor([jObj.types.Function, jObj.types.Function],
             function (success, failure) {
                 return new Response(success, failure);
             });

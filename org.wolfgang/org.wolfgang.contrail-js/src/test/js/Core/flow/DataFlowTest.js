@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
-    function (QUnit, jObj, Factory, jCC) {
+require([ "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
+    function (jObj, Factory, jCC) {
         "use strict";
 
         jCC.scenario("Checking data flow", function () {
@@ -28,25 +28,26 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
             jCC.
                 Given(function () {
                     dataFlow = Factory.flow.core();
-                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
-                        this.content = jObj.value(this.content, "") + data;
-                    });
+                    dataFlow.handleData = jObj.procedure([jObj.types.Any],
+                        function (data) {
+                            this.content = jObj.value(this.content, "") + data;
+                        });
                 }).
                 When(function () {
                     dataFlow.handleData("Hello,");
                 }).
                 Then(function () {
-                    QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
+                    jCC.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
                 }).
                 When(function () {
                     dataFlow.handleData(" World!");
                 }).
                 Then(function () {
-                    QUnit.equal(dataFlow.content, "Hello, World!", "Checking content after handling 'Hello,' and ' World!'");
+                    jCC.equal(dataFlow.content, "Hello, World!", "Checking content after handling 'Hello,' and ' World!'");
                 });
         });
 
-        QUnit.test("Checking closed data flow", function () {
+        jCC.test("Checking closed data flow", function () {
             var dataFlow, closeableDataFlow;
 
             jCC.
@@ -63,7 +64,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
                     closeableDataFlow.handleData("Hello,");
                 }).
                 Then(function () {
-                    QUnit.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
+                    jCC.equal(dataFlow.content, "Hello,", "Checking content after handling 'Hello,'");
                 }).
                 When(function () {
                     closeableDataFlow.handleClose();
@@ -72,11 +73,11 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
                     closeableDataFlow.handleData(" World!");
                 }).
                 ThenError(function () {
-                    QUnit.ok(true, "An Exception has been raised");
+                    jCC.ok(true, "An Exception has been raised");
                 });
         });
 
-        QUnit.test("Checking filtered data flow", function () {
+        jCC.test("Checking filtered data flow", function () {
             var dataFlow, filteredDataFlow;
 
             jCC.
@@ -98,7 +99,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail", "test/jCC" ],
                     filteredDataFlow.handleData(" World!");
                 }).
                 Then(function () {
-                    QUnit.equal(dataFlow.content, " World!", "Checking content after handling 'removed[Hello,] World!'");
+                    jCC.equal(dataFlow.content, " World!", "Checking content after handling 'removed[Hello,] World!'");
                 });
         });
     });

@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/utils/jUUID", "qunit", "test/jCC" ],
-    function (jUUID, QUnit, jCC) {
+require([ "Core/utils/jUUID", "test/jCC" ],
+    function (jUUID, jCC) {
         "use strict";
 
         /**
@@ -37,7 +37,7 @@ require([ "Core/utils/jUUID", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
+                    jCC.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
                 });
         });
     });

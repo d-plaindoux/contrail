@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
-    function (Factory, QUnit, jObj, jCC) {
+require([ "Contrail/jContrail", "Core/object/jObj", "test/jCC"],
+    function (Factory, jObj, jCC) {
         "use strict";
 
         jCC.scenario("Check Component generation", function () {
@@ -34,7 +34,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                    jCC.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -47,7 +47,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
     });

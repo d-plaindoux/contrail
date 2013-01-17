@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/io/ByteBuffer" ],
-    function (QUnit, jCC, jUUID, jMarshaller, byteBuffer) {
+require([ "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/io/ByteBuffer" ],
+    function (jCC, jUUID, jMarshaller, byteBuffer) {
         "use strict";
 
         jCC.scenario("Checking Byte buffer creation", function () {
@@ -31,10 +31,10 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(buffer.isClosed(), false, "New buffer is not closed");
+                    jCC.equal(buffer.isClosed(), false, "New buffer is not closed");
                 }).
                 And(function () {
-                    QUnit.equal(buffer.size(), 0, "New buffer is empty");
+                    jCC.equal(buffer.size(), 0, "New buffer is empty");
                 });
         });
 
@@ -52,7 +52,7 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                     buffer.write(jMarshaller.stringToBytes(message));
                 }).
                 Then(function () {
-                    QUnit.equal(buffer.size(), message.length * 2, "Buffer must contain the written array");
+                    jCC.equal(buffer.size(), message.length * 2, "Buffer must contain the written array");
                 });
         });
 
@@ -73,10 +73,10 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                     buffer.write(jMarshaller.stringToBytes(message));
                 }).
                 Then(function () {
-                    QUnit.equal(buffer.read(bytes), message.length * 2, "Buffer must provide the written array with the same length");
+                    jCC.equal(buffer.read(bytes), message.length * 2, "Buffer must provide the written array with the same length");
                 }).
                 And(function () {
-                    QUnit.equal(jMarshaller.bytesToString(bytes), message, "Buffer must provide the same written array");
+                    jCC.equal(jMarshaller.bytesToString(bytes), message, "Buffer must provide the same written array");
                 });
         });
 
@@ -92,7 +92,7 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(buffer.read(bytes), 0, "Buffer must provide nothing");
+                    jCC.equal(buffer.read(bytes), 0, "Buffer must provide nothing");
                 });
         });
 
@@ -111,7 +111,7 @@ require([ "qunit", "test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/
                     buffer.close();
                 }).
                 Then(function () {
-                    QUnit.equal(buffer.read(bytes), -1, "Buffer must provide nothing");
+                    jCC.equal(buffer.read(bytes), -1, "Buffer must provide nothing");
                 });
         });
     });

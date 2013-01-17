@@ -34,7 +34,6 @@ $(function () {
                     });
 
 
-
                 client = socket("ws://localhost:1337", dataFlow);
 
             } catch (e) {

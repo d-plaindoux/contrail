@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
-    function (QUnit, jObj, Factory, jCC) {
+require([ "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
+    function (jObj, Factory, jCC) {
         "use strict";
 
         jCC.scenario("Create composition with 0 components", function () {
@@ -33,7 +33,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ ]);
                 }).
                 ThenError(function (exception) {
-                    QUnit.equal(true, true, "Expected Exception " + exception + " catch");
+                    jCC.equal(true, true, "Expected Exception " + exception + " catch");
                 });
         });
 
@@ -51,7 +51,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ component ]);
                 }).
                 Then(function () {
-                    QUnit.equal(compose, component, " Composition One component is the component itself");
+                    jCC.equal(compose, component, " Composition One component is the component itself");
                 });
         });
 
@@ -72,13 +72,13 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
                 });
         });
 
@@ -99,13 +99,13 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
                 });
         });
 
@@ -126,13 +126,13 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | not a source component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | not a source component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
                 });
         });
 
@@ -153,13 +153,13 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     compose = Factory.component.compose([ component1, component2 ]);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | is a source component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | is a source component");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
+                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
                 });
         });
     });

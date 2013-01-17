@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
-    function (jMarshaller, QUnit, jCC) {
+require([ "Core/io/jMarshaller", "test/jCC" ],
+    function (jMarshaller, jCC) {
         "use strict";
 
         jCC.scenario("Checking intToBytes length", function () {
@@ -34,7 +34,7 @@ require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(b.length, 4, "Size of bytes from int is 4");
+                    jCC.equal(b.length, 4, "Size of bytes from int is 4");
                 });
         });
 
@@ -50,16 +50,16 @@ require([ "Core/io/jMarshaller", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(b[0], 0x89, "Content of bytes at index 0");
+                    jCC.equal(b[0], 0x89, "Content of bytes at index 0");
                 }).
                 And(function () {
-                    QUnit.equal(b[1], 0xAB, "Content of bytes at index 1");
+                    jCC.equal(b[1], 0xAB, "Content of bytes at index 1");
                 }).
                 And(function () {
-                    QUnit.equal(b[2], 0xCD, "Content of bytes at index 2");
+                    jCC.equal(b[2], 0xCD, "Content of bytes at index 2");
                 }).
                 And(function () {
-                    QUnit.equal(b[3], 0xEF, "Content of bytes at index 3");
+                    jCC.equal(b[3], 0xEF, "Content of bytes at index 3");
                 });
         });
     });

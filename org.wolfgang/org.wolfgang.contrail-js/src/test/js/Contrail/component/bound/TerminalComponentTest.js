@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
-    function (QUnit, Factory, jObj, jCC) {
+require([ "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
+    function (Factory, jObj, jCC) {
         "use strict";
 
         jCC.scenario("Check Component generation", function () {
@@ -34,7 +34,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
+                    jCC.notEqual(component1.getComponentId(), component2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -55,7 +55,7 @@ require([ "qunit", "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
                     component.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(dataFlow.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                    jCC.equal(dataFlow.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
                 });
         });
     });

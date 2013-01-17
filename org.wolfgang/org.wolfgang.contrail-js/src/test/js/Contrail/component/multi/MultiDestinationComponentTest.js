@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
-    function (Factory, QUnit, jObj, jCC) {
+require([ "Contrail/jContrail", "Core/object/jObj", "test/jCC"],
+    function (Factory, jObj, jCC) {
         "use strict";
 
         jCC.scenario("Check Component generation", function () {
@@ -34,7 +34,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                    jCC.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -47,7 +47,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
 
@@ -60,7 +60,7 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("MultiDestinationComponent")), true, "Checking c1 instance of MultiDestinationComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("MultiDestinationComponent")), true, "Checking c1 instance of MultiDestinationComponent");
                 });
         });
 
@@ -81,10 +81,10 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
@@ -111,16 +111,16 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t1.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t1.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    QUnit.equal(t2.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t2.getUpStreamDataFlow().getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(t2.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t2.getUpStreamDataFlow().getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
@@ -157,13 +157,13 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(d1.getAccumulation()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(d1.getAccumulation()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    QUnit.equal(d2.getAccumulation().length, 0, "Checking accumulated number of data");
+                    jCC.equal(d2.getAccumulation().length, 0, "Checking accumulated number of data");
                 });
         });
 
@@ -203,16 +203,16 @@ require([ "Contrail/jContrail", "qunit", "Core/object/jObj", "test/jCC"],
                     c1.getUpStreamDataFlow().handleData({to:"T2", what:"World!"});
                 }).
                 Then(function () {
-                    QUnit.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d1.getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(d1.getAccumulation()[0], "Hello", "Checking accumulated data");
+                    jCC.equal(d1.getAccumulation()[0], "Hello", "Checking accumulated data");
                 }).
                 And(function () {
-                    QUnit.equal(d2.getAccumulation().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d2.getAccumulation().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    QUnit.equal(d2.getAccumulation()[0], "World!", "Checking accumulated data");
+                    jCC.equal(d2.getAccumulation()[0], "World!", "Checking accumulated data");
                 });
         });
     });

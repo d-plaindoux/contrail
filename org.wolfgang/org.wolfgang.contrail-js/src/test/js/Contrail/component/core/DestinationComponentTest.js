@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
-    function (Factory, jObj, QUnit, jCC) {
+require([ "Contrail/jContrail", "Core/object/jObj", "test/jCC" ],
+    function (Factory, jObj, jCC) {
         "use strict";
 
         /**
@@ -37,7 +37,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
+                    jCC.notEqual(c1.getComponentId(), c2.getComponentId(), "Two fresh components must be different");
                 });
         });
 
@@ -56,7 +56,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
+                    jCC.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
                 });
         });
 
@@ -78,13 +78,13 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
+                    jCC.equal(c1.acceptSource(c2.getComponentId()), true, "Source must be unbound");
                 }).
                 When(function () {
                     lm.connect(c2, c1);
                 }).
                 Then(function () {
-                    QUnit.equal(c1.acceptSource(c2.getComponentId()), false, "Source must be setup");
+                    jCC.equal(c1.acceptSource(c2.getComponentId()), false, "Source must be setup");
                 });
 
         });
@@ -101,7 +101,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("DestinationComponent")), true, "Checking c1 instance of DestinationComponent");
                 });
         });
 
@@ -114,7 +114,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
+                    jCC.equal(jObj.ofType(c1, jObj.types.Named("Component")), true, "Checking c1 instance of Component");
                 });
         });
     });

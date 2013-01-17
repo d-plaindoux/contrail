@@ -44,7 +44,7 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
                 return this.actorId;
             });
 
-        Actor.prototype.send = jObj.method([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))] , jObj.types.Named("Response"),
+        Actor.prototype.send = jObj.method([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))], jObj.types.Named("Response"),
             function (request, response) {
                 var self = this, realResponse;
 
@@ -61,7 +61,7 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
                 return realResponse;
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Named("Response")] ,
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Named("Response")],
             function (request, response) {
                 try {
                     var returnValue = this[request.getName()](request.getParameters());

@@ -19,8 +19,8 @@
 /*global require */
 
 
-require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit" , "test/jCC" ],
-    function (jObj, Factory, QUnit, jCC) {
+require([ "Core/object/jObj", "Contrail/codec/jCodec", "test/jCC" ],
+    function (jObj, Factory, jCC) {
         "use strict";
 
         jCC.scenario("Object decoding", function () {
@@ -37,13 +37,13 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit" , "test/jCC" ],
                     result = decoder.transform(string);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
+                    jCC.equal(result.length, 1, "Checking result length");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Object), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0].a, true, "Checking decoding value");
+                    jCC.equal(result[0].a, true, "Checking decoding value");
                 });
         });
     });

@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC" ],
-    function (jObj, Factory, QUnit, jCC) {
+require([ "Core/object/jObj", "Contrail/codec/jCodec", "test/jCC" ],
+    function (jObj, Factory, jCC) {
         "use strict";
 
         jCC.scenario("Object encoding", function () {
@@ -36,11 +36,11 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "qunit", "test/jCC" ],
                     result = encoder.transform(object);
                 }).
                 Then(function () {
-                    QUnit.equal(result.length, 1, "Checking result length");
-                    QUnit.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
+                    jCC.equal(result.length, 1, "Checking result length");
+                    jCC.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
                 }).
                 And(function () {
-                    QUnit.equal(result[0], '{"a":true}', "Checking encoding length");
+                    jCC.equal(result[0], '{"a":true}', "Checking encoding length");
                 });
         });
     });

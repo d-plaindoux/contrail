@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
-    function (QUnit, jObj, Factory, jCC) {
+require([ "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
+    function (jObj, Factory, jCC) {
         "use strict";
 
         jCC.scenario("Linking an initial with a terminal component and up message", function () {
@@ -51,7 +51,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     initialComponent.getDestination().getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                    jCC.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
                 });
         });
 
@@ -88,7 +88,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     initialComponent.getDestination().getUpStreamDataFlow().handleData(" World!");
                 }).
                 Then(function () {
-                    QUnit.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                    jCC.equal(initialStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
                 });
         });
 
@@ -121,7 +121,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     terminalComponent.getSource().getDownStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    QUnit.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                    jCC.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
                 });
         });
 
@@ -158,7 +158,7 @@ require([ "qunit", "Core/object/jObj", "Contrail/jContrail" , "test/jCC"],
                     terminalComponent.getSource().getDownStreamDataFlow().handleData(" World!");
                 }).
                 Then(function () {
-                    QUnit.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
+                    jCC.equal(terminalStream.content, "Hello, World!", "Checking data stream content which must be 'Hello, World!'");
                 });
         });
     });

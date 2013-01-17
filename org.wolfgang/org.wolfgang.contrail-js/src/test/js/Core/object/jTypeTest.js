@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "qunit", "test/jCC" ],
-    function (jObj, QUnit, jCC) {
+require([ "Core/object/jObj", "test/jCC" ],
+    function (jObj, jCC) {
         "use strict";
 
         function A() {
@@ -37,7 +37,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, "A");
                 }).
                 Then(function () {
-                    QUnit.equal(true, true, " a is an instance of A");
+                    jCC.equal(true, true, " a is an instance of A");
                 });
         });
 
@@ -52,7 +52,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, "B");
                 }).
                 ThenError(function (e) {
-                    QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+                    jCC.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
                 });
         });
 
@@ -67,7 +67,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, jObj.types.ObjectOf({}));
                 }).
                 Then(function () {
-                    QUnit.equal(true, true, "a is not an instance of {m:Function}");
+                    jCC.equal(true, true, "a is not an instance of {m:Function}");
                 });
         });
 
@@ -82,7 +82,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
                 }).
                 ThenError(function (e) {
-                    QUnit.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
+                    jCC.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
                 });
         });
 
@@ -102,7 +102,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
                 }).
                 Then(function () {
-                    QUnit.equal(true, true, "a is an instance of {m:Function}");
+                    jCC.equal(true, true, "a is an instance of {m:Function}");
                 }).
                 And(function () {
                     A.prototype.m = undefined;
@@ -120,7 +120,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, jObj.types.Nullable(jObj.types.String));
                 }).
                 Then(function () {
-                    QUnit.equal(true, true, "a is an instance of Nullable(String)");
+                    jCC.equal(true, true, "a is an instance of Nullable(String)");
                 }).
                 And(function () {
                     A.prototype.m = undefined;
@@ -138,7 +138,7 @@ require([ "Core/object/jObj", "qunit", "test/jCC" ],
                     jObj.checkType(a, jObj.types.Nullable(jObj.types.String));
                 }).
                 Then(function () {
-                    QUnit.equal(true, true, "a is an instance of Nullable(String)");
+                    jCC.equal(true, true, "a is an instance of Nullable(String)");
                 }).
                 And(function () {
                     A.prototype.m = undefined;

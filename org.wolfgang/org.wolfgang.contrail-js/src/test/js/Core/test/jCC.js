@@ -51,12 +51,12 @@ define("test/jCC", [ "Core/object/jObj", "qunit" ],
         jCC.ThenAfter = function (previous) {
             return function (timeout, aThen) {
                 previous();
-                QUnit.stop();
+                jCC.stop();
                 setTimeout(function () {
                     try {
                         aThen();
                     } finally {
-                        QUnit.start();
+                        jCC.start();
                     }
                 }, timeout);
                 return jCC.ThenSomething();
@@ -89,12 +89,12 @@ define("test/jCC", [ "Core/object/jObj", "qunit" ],
                 try {
                     previous();
                 } catch (e) {
-                    QUnit.stop();
+                    jCC.stop();
                     setTimeout(function () {
                         try {
                             aThen(e);
                         } finally {
-                            QUnit.start();
+                            jCC.start();
                         }
                     }, timeout);
                     aThen(e);

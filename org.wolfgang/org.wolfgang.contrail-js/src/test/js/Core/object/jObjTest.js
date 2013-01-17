@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
-    function (jObj, jTransducer, QUnit, jCC) {
+require([ "Core/object/jObj", "Core/utils/jTransducer", "test/jCC" ],
+    function (jObj, jTransducer, jCC) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -59,7 +59,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(a, "A"), true, "Checking a:A instance of A");
+                    jCC.equal(jObj.ofType(a, "A"), true, "Checking a:A instance of A");
                 });
         });
 
@@ -72,7 +72,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, "B"), true, "Checking b:B instance of B");
+                    jCC.equal(jObj.ofType(b, "B"), true, "Checking b:B instance of B");
                 });
         });
 
@@ -85,7 +85,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, "A"), true, "Checking b:B extends A instance of A");
+                    jCC.equal(jObj.ofType(b, "A"), true, "Checking b:B extends A instance of A");
                 });
         });
 
@@ -98,7 +98,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.String), true, "Checking Type(<string>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.String), true, "Checking Type(<string>)");
                 });
         });
 
@@ -111,7 +111,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.Number), true, "Checking Type(<number>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.Number), true, "Checking Type(<number>)");
                 });
         });
 
@@ -124,7 +124,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.Boolean), true, "Checking Type(<boolean>)");
                 });
         });
 
@@ -135,7 +135,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 Given(jCC.Nothing).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.Undefined), true, "Checking Type(<undefined>)");
                 });
         });
 
@@ -148,7 +148,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.Object), true, "Checking Type(<object>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.Object), true, "Checking Type(<object>)");
                 });
         });
 
@@ -161,7 +161,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(b, jObj.types.Array), true, "Checking Type(<array>)");
+                    jCC.equal(jObj.ofType(b, jObj.types.Array), true, "Checking Type(<array>)");
                 });
         });
 
@@ -176,13 +176,13 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                     tb = jTransducer.toType(b);
                 }).
                 Then(function () {
-                    QUnit.equal(jObj.ofType(tb.a, jObj.types.String), true, "Checking Type(<string>)");
+                    jCC.equal(jObj.ofType(tb.a, jObj.types.String), true, "Checking Type(<string>)");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
+                    jCC.equal(jObj.ofType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
                 }).
                 And(function () {
-                    QUnit.equal(jObj.ofType(tb.b.hello, jObj.types.String), true, "Checking getType(<string>)");
+                    jCC.equal(jObj.ofType(tb.b.hello, jObj.types.String), true, "Checking getType(<string>)");
                 });
         });
 
@@ -197,7 +197,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                     r = b.n();
                 }).
                 Then(function () {
-                    QUnit.equal(r, "A.n()", "Method polymorphism without override is A.n()");
+                    jCC.equal(r, "A.n()", "Method polymorphism without override is A.n()");
                 });
         });
 
@@ -212,7 +212,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "qunit", "test/jCC" ],
                     r = b.m();
                 }).
                 Then(function () {
-                    QUnit.equal(r, "B.m()", "Method polymorphism without override is B.m()");
+                    jCC.equal(r, "B.m()", "Method polymorphism without override is B.m()");
                 });
         });
     });
