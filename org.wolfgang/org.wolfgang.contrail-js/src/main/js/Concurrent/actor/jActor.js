@@ -18,14 +18,13 @@
 
 /*global define*/
 
-define("Concurrent/actor/jActor", [ "./ActorManager", "./Message" ],
-    function (manager, message) {
+define("Concurrent/actor/jActor", [ "./ActorManager"],
+    function (manager) {
         "use strict";
 
         var jActor = {};
 
         jActor.manager = manager;
-        jActor.message = message;
 
         return jActor;
     });
