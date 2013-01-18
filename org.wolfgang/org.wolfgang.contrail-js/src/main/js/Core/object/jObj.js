@@ -71,16 +71,15 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
             });
 
             // Inheritance definition
-            instance.inherits = {};
-
+            instance.superclass = {};
             parameters.forEach(function (inherited) {
                 var key;
-                for (key in inherited.inherits) {
-                    if (inherited.inherits.hasOwnProperty(key)) {
-                        instance.inherits[key] = true;
+                for (key in inherited.superclass) {
+                    if (inherited.superclass.hasOwnProperty(key)) {
+                        instance.superclass[key] = inherited.superclass[key];
                     }
                 }
-                instance.inherits[jType.getClass(inherited)] = true;
+                instance.superclass[jType.getClass(inherited)] = inherited;
             });
 
             return instance;

@@ -47,13 +47,13 @@ define([ "require" ],
             return typeRule(type, function (object) {
                 var result;
 
-                if (typeof object === type) {
+                if (type === typeof object) {
                     result = true;
                 } else if (type === Primitives.Any) {
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
-                } else if (object && object.inherits && object.inherits.hasOwnProperty(type)) {
+                } else if (object && object.superclass && object.superclass.hasOwnProperty(type)) {
                     result = true;
                 } else {
                     result = false;
