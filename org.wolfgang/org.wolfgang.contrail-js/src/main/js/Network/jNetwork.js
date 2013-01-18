@@ -16,24 +16,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define:true, require, module*/
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+if (typeof define !== "function") {
+    var define = require("amdefine")(module);
+}
+
+define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./route/RouteLoader" ],
+    function (component, table, loader) {
         "use strict";
 
-        var RouteLoader = {};
+        var jRoute = {};
 
-        RouteLoader.populate = jObj.procedure([jObj.types.Named("RouteTable"), jObj.types.Object],
-            function (table, data) {
-                var name;
+        jRoute.component = component;
+        jRoute.table = table;
+        jRoute.loader = loader;
 
-                for (name in data) {
-                    if (data.hasOwnProperty(name)) {
-                        table.addRoute(name, data[name]);
-                    }
-                }
-            });
-
-        return RouteLoader;
+        return jRoute;
     });

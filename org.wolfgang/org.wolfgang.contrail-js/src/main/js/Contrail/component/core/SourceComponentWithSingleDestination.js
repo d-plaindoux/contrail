@@ -67,7 +67,7 @@ define([ "require", "Core/object/jObj" ],
                 this.destinationLink = null;
             });
 
-        SourceComponentWithSingleDestination.prototype.getUpStreamDataFlow = jObj.method([], "DataFlow",
+        SourceComponentWithSingleDestination.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.getDestination().getUpStreamDataFlow();
             });

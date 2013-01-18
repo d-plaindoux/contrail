@@ -16,17 +16,22 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define:true, require, module*/
 
-define([ "Core/object/jObj", "Contrail/jContrail" ],
-    function (jObj, jContrail) {
+if (typeof define !== "function") {
+    var define = require("amdefine")(module);
+}
+
+define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentDataFlow" ],
+    function (jObj, jContrail, routerFlow) {
+
         "use strict";
 
         function RouterComponent(route, identifier) {
             jObj.bless(this, jContrail.component.multi.sources());
 
-            this.route = route;
-            this.identifier = identifier;
+            this.routerId = identifier;
+            this.upStreamDataFlow = routerFlow(this, route);
         }
 
         RouterComponent.init = jObj.constructor([jObj.types.Named("RouteTable", jObj.types.String)],
@@ -34,7 +39,15 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
                 return new RouterComponent(route, identifier);
             });
 
+        RouterComponent.prototype.hasRouterId = jObj.method([ jObj.types.String ], jObj.types.Boolean,
+            function (routerId) {
+                return this.routerId === routerId;
+            });
 
+        RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                return this.upStreamDataFlow;
+            });
 
         return RouterComponent.init;
     });

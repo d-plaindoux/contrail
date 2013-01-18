@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C)2012 D. Plaindoux.
  *
@@ -17,16 +16,28 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define:true, require, module*/
 
-define( "Wan/route/jRoute", [ "./RouteTable", "./RouteLoader" ],
-    function (table, loader) {
+if (typeof define !== "function") {
+    var define = require("amdefine")(module);
+}
+
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        var jRoute = {};
+        var RouteLoader = {};
 
-        jRoute.table = table;
-        jRoute.loader = loader;
+        RouteLoader.populate = jObj.procedure([jObj.types.Named("RouteTable"), jObj.types.Object],
+            function (table, data) {
+                var name;
 
-        return jRoute;
+                for (name in data) {
+                    if (data.hasOwnProperty(name)) {
+                        table.addRoute(name, data[name]);
+                    }
+                }
+            });
+
+        return RouteLoader;
     });

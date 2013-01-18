@@ -18,8 +18,8 @@
 
 /*global require */
 
-require([ "Core/test/jCC", "Wan/route/jRoute", "External/JSon" ],
-    function (jCC, jRoute, JSON) {
+require([ "Core/test/jCC", "Network/jNetwork", "External/JSon" ],
+    function (jCC, jNetwork, JSON) {
         "use strict";
 
         jCC.scenario("Checking route table add/retrieve capabilities", function () {
@@ -27,7 +27,7 @@ require([ "Core/test/jCC", "Wan/route/jRoute", "External/JSon" ],
 
             jCC.
                 Given(function () {
-                    table = jRoute.table();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.addRoute("a", "ws://localhost/a");
@@ -42,7 +42,7 @@ require([ "Core/test/jCC", "Wan/route/jRoute", "External/JSon" ],
 
             jCC.
                 Given(function () {
-                    table = jRoute.table();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.getRoute("a");
@@ -57,7 +57,7 @@ require([ "Core/test/jCC", "Wan/route/jRoute", "External/JSon" ],
 
             jCC.
                 Given(function () {
-                    table = jRoute.table();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.addRoute("a", "ws://localhost/a");
@@ -75,13 +75,13 @@ require([ "Core/test/jCC", "Wan/route/jRoute", "External/JSon" ],
 
             jCC.
                 Given(function () {
-                    table = jRoute.table();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     configuration = '{"a":"ws://localhost/a", "b":"ws://localhost/b"}';
                 }).
                 When(function () {
-                    jRoute.loader.populate(table, JSON.parse(configuration));
+                    jNetwork.loader.populate(table, JSON.parse(configuration));
                 }).
                 Then(function () {
                     jCC.equal(table.getRoute("a"), "ws://localhost/a");
