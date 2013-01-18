@@ -22,29 +22,18 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function RouteTable() {
-            jObj.bless(this);
-            this.routes = {};
-        }
+        var RouteLoader = {};
 
-        RouteTable.init = jObj.constructor([],
-            function () {
-                return new RouteTable();
-            });
+        RouteLoader.populate = jObj.procedure([jObj.types.Named("RouteTable"), jObj.types.Object],
+            function (table, data) {
+                var name;
 
-        RouteTable.prototype.addRoute = jObj.procedure([ jObj.types.String, jObj.types.String ],
-            function (name, endpoint) {
-                if (this.routes.hasOwnProperty(name)) {
-                    jObj.throwError(jObj.exception("L.route.entry.already.defined"));
-                } else {
-                    this.routes[name] = endpoint;
+                for (name in data) {
+                    if (data.hasOwnProperty(name)) {
+                        table.addRoute(name, data[name]);
+                    }
                 }
             });
 
-        RouteTable.prototype.getRoute = jObj.method([ jObj.types.String ], jObj.types.String,
-            function (name) {
-                return this.routes[name] || jObj.throwError(jObj.exception("L.route.entry.not.defined"));
-            });
-
-        return RouteTable.init;
+        return RouteLoader;
     });
