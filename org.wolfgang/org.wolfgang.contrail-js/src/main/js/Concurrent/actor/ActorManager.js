@@ -94,12 +94,12 @@ define([ "Core/object/jObj", "./Actor" ],
          * Actor (un)registration features
          */
 
-        ActorManager.prototype.register = jObj.procedure([jObj.types.Named("Actor")],
+        ActorManager.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors.push(actor);
             });
 
-        ActorManager.prototype.unregister = jObj.procedure([jObj.types.Named("Actor")],
+        ActorManager.prototype.unregisterActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors = this.actors.filter(function (a) {
                     return a.actorId !== actor.actorId;
@@ -110,7 +110,7 @@ define([ "Core/object/jObj", "./Actor" ],
          * Actor creation and deletion
          */
 
-        ActorManager.prototype.actor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
+        ActorManager.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
             function (identifier, model) {
                 var freshActor = actor(this, identifier, model);
                 this.universe[identifier] = freshActor;
@@ -119,7 +119,7 @@ define([ "Core/object/jObj", "./Actor" ],
 
         ActorManager.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
             function (id) {
-                return this.universe[id] || jObj.raise(jObj.exception("L.actor.not.found")); // O(log(n))
+                return this.universe[id] || jObj.raise(jObj.exception("L.createActor.not.found")); // O(log(n))
             });
 
         ActorManager.prototype.disposeActor = jObj.procedure([jObj.types.String],

@@ -64,8 +64,9 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
         Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Named("Response")],
             function (request, response) {
                 try {
-                    var returnValue = this[request.getName()](request.getParameters());
-                    response.success(returnValue);
+                    var method = this[request.getName()];
+                    jObj.checkType(method, jObj.types.Function);
+                    response.success(method(request.getParameters()));
                 } catch (error) {
                     response.failure(error);
                 }
@@ -77,12 +78,12 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
 
         Actor.prototype.activate = jObj.procedure([],
             function () {
-                this.manager.register(this);
+                this.manager.registerActor(this);
             });
 
         Actor.prototype.suspend = jObj.procedure([],
             function () {
-                this.manager.unregister(this);
+                this.manager.unregisterActor(this);
             });
 
         Actor.prototype.dispose = jObj.procedure([],

@@ -47,7 +47,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.manager();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -66,7 +66,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.manager();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
                     response = jEvent.storedResponse();
@@ -87,7 +87,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.manager();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
                     actor.activate();
@@ -126,7 +126,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.manager();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
                     actor.activate();
@@ -171,7 +171,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
                     actor.activate();
@@ -196,7 +196,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a", new A());
+                    actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
                     actor.activate();
