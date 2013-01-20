@@ -53,7 +53,7 @@ define([ "require" ],
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
-                } else if (object && object.extension && object.extension.hasOwnProperty(type)) {
+                } else if (object && object.extension) {
                     if (object.extension.hasOwnProperty(type)) {
                         result = true;
                     } else {
