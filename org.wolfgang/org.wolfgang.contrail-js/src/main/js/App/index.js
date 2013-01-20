@@ -44,7 +44,7 @@ $(function () {
                     Component:Factory.component.core.component(),
                     SourceComponent:Factory.component.core.source(),
                     DestinationComponent:Factory.component.core.destination(),
-                    PipelineComponent:Factory.component.core.pipeline()
+                    PipelineComponent:Factory.component.pipeline()
                 };
 
                 for (key in classes) {

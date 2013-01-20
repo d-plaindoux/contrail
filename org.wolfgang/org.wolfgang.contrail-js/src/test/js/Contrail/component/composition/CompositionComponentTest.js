@@ -87,7 +87,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.core.pipeline();
+                    component1 = Factory.component.pipeline();
                 }).
                 And(function () {
                     component2 = Factory.component.core.destinationWithSingleSource();
@@ -117,7 +117,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component1 = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    component2 = Factory.component.core.pipeline();
+                    component2 = Factory.component.pipeline();
                 }).
                 And(function () {
                     linkManager = Factory.link.manager;
@@ -141,10 +141,10 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
 
             jCC.
                 Given(function () {
-                    component1 = Factory.component.core.pipeline();
+                    component1 = Factory.component.pipeline();
                 }).
                 And(function () {
-                    component2 = Factory.component.core.pipeline();
+                    component2 = Factory.component.pipeline();
                 }).
                 And(function () {
                     linkManager = Factory.link.manager;

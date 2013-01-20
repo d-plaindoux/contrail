@@ -79,7 +79,7 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
                     a = new A();
                 }).
                 When(function () {
-                    jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
+                    jObj.checkType(a, jObj.types.ObjectOf({id:jObj.types.Function}));
                 }).
                 ThenError(function (e) {
                     jCC.equal(jObj.ofType(e, jObj.types.Named("RuntimeTypeError")), true, "Checking throws error to be a TypeError");
@@ -91,7 +91,7 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    A.prototype.m = function () {
+                    A.prototype.id = function () {
                         // Empty constructor
                     };
                 }).
@@ -99,13 +99,13 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
                     a = new A();
                 }).
                 When(function () {
-                    jObj.checkType(a, jObj.types.ObjectOf({m:jObj.types.Function}));
+                    jObj.checkType(a, jObj.types.ObjectOf({id:jObj.types.Function}));
                 }).
                 Then(function () {
                     jCC.equal(true, true, "a is an instance of {m:Function}");
                 }).
                 And(function () {
-                    A.prototype.m = undefined;
+                    A.prototype.id = undefined;
                 });
         });
 
@@ -123,7 +123,7 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
                     jCC.equal(true, true, "a is an instance of Nullable(String)");
                 }).
                 And(function () {
-                    A.prototype.m = undefined;
+                    A.prototype.id = undefined;
                 });
         });
 
@@ -141,7 +141,7 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
                     jCC.equal(true, true, "a is an instance of Nullable(String)");
                 }).
                 And(function () {
-                    A.prototype.m = undefined;
+                    A.prototype.id = undefined;
                 });
         });
     });

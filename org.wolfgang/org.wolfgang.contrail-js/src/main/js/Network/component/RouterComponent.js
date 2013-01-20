@@ -22,19 +22,20 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentDataFlow" ],
-    function (jObj, jContrail, routerFlow) {
+define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStreamDataFlow", "./flow/RouterComponentDownStreamDataFlow" ],
+    function (jObj, jContrail, routerUpStreamFlow, routerDownStreamFlow) {
 
         "use strict";
 
         function RouterComponent(route, identifier) {
-            jObj.bless(this, jContrail.component.multi.sources());
+            jObj.bless(this, jContrail.component.pipeline());
 
             this.routerId = identifier;
-            this.upStreamDataFlow = routerFlow(this, route);
+            this.upStreamDataFlow = routerUpStreamFlow(this, route);
+            this.downStreamDataFlow = routerDownStreamFlow(this, route);
         }
 
-        RouterComponent.init = jObj.constructor([jObj.types.Named("RouteTable", jObj.types.String)],
+        RouterComponent.init = jObj.constructor([ jObj.types.Named("RouteTable"), jObj.types.String ],
             function (route, identifier) {
                 return new RouterComponent(route, identifier);
             });
@@ -47,6 +48,11 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentDataFl
         RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
+            });
+
+        RouterComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                return this.downStreamDataFlow;
             });
 
         return RouterComponent.init;

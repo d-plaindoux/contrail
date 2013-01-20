@@ -81,10 +81,10 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    jCC.equal(t1.getUpStreamDataFlow().getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t1.getUpStreamDataFlow().getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(t1.getUpStreamDataFlow().getCumulated()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t1.getUpStreamDataFlow().getBuffered()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
@@ -111,16 +111,16 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    jCC.equal(t1.getUpStreamDataFlow().getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t1.getUpStreamDataFlow().getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(t1.getUpStreamDataFlow().getCumulated()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t1.getUpStreamDataFlow().getBuffered()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    jCC.equal(t2.getUpStreamDataFlow().getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(t2.getUpStreamDataFlow().getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(t2.getUpStreamDataFlow().getCumulated()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(t2.getUpStreamDataFlow().getBuffered()[0], "Hello, World!", "Checking accumulated data");
                 });
         });
 
@@ -157,13 +157,13 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC"],
                     c1.getUpStreamDataFlow().handleData("Hello, World!");
                 }).
                 Then(function () {
-                    jCC.equal(d1.getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d1.getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(d1.getCumulated()[0], "Hello, World!", "Checking accumulated data");
+                    jCC.equal(d1.getBuffered()[0], "Hello, World!", "Checking accumulated data");
                 }).
                 And(function () {
-                    jCC.equal(d2.getCumulated().length, 0, "Checking accumulated number of data");
+                    jCC.equal(d2.getBuffered().length, 0, "Checking accumulated number of data");
                 });
         });
 
@@ -203,16 +203,16 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC"],
                     c1.getUpStreamDataFlow().handleData({to:"T2", what:"World!"});
                 }).
                 Then(function () {
-                    jCC.equal(d1.getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d1.getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(d1.getCumulated()[0], "Hello", "Checking accumulated data");
+                    jCC.equal(d1.getBuffered()[0], "Hello", "Checking accumulated data");
                 }).
                 And(function () {
-                    jCC.equal(d2.getCumulated().length, 1, "Checking accumulated number of data");
+                    jCC.equal(d2.getBuffered().length, 1, "Checking accumulated number of data");
                 }).
                 And(function () {
-                    jCC.equal(d2.getCumulated()[0], "World!", "Checking accumulated data");
+                    jCC.equal(d2.getBuffered()[0], "World!", "Checking accumulated data");
                 });
         });
     });

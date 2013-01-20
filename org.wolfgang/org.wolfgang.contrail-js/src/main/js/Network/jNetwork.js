@@ -22,15 +22,16 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./route/RouteLoader" ],
-    function (component, table, loader) {
+define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./route/RouteLoader", "./packet/Packet" ],
+    function (component, table, loader, packet) {
         "use strict";
 
-        var jRoute = {};
+        var jNetwork = {};
 
-        jRoute.component = component;
-        jRoute.table = table;
-        jRoute.loader = loader;
+        jNetwork.component = component;
+        jNetwork.table = table;
+        jNetwork.loader = loader;
+        jNetwork.packet = packet;
 
-        return jRoute;
+        return jNetwork;
     });

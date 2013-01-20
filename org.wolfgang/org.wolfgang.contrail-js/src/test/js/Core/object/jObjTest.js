@@ -24,28 +24,29 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
 
         // ---------------------------------------------------------
 
-        function A() {
+        function A(m) {
             jObj.bless(this);
+            this.id = m;
             this.a = "a";
         }
 
         A.prototype.n = function () {
-            return "A.n()";
+            return "A.n() for " + this.id;
         };
 
         A.prototype.m = function () {
-            return "A.m()";
+            return "A.m() for " + this.id;
         };
 
         // ---------------------------------------------------------
 
         function B() {
-            jObj.bless(this, new A());
+            jObj.bless(this, new A("b"));
             this.b = { hello:"World!"};
         }
 
         B.prototype.m = function () {
-            return "B.m()";
+            return "B.m() for " + this.id;
         };
 
         // ---------------------------------------------------------
@@ -197,7 +198,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     r = b.n();
                 }).
                 Then(function () {
-                    jCC.equal(r, "A.n()", "Method polymorphism without override is A.n()");
+                    jCC.equal(r, "A.n() for b", "Method polymorphism without override is A.n()");
                 });
         });
 
@@ -212,11 +213,11 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     r = b.m();
                 }).
                 Then(function () {
-                    jCC.equal(r, "B.m()", "Method polymorphism with override is B.m()");
+                    jCC.equal(r, "B.m() for b", "Method polymorphism with override is B.m()");
                 });
         });
 
-        jCC.scenario("Method polymorphism with override and calling superclass A", function () {
+        jCC.scenario("Method polymorphism with override and calling extension A", function () {
             var b, r;
 
             jCC.
@@ -224,10 +225,25 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     b = new B();
                 }).
                 When(function () {
-                    r = b.superclass.A.m();
+                    r = b.extension.A.m();
                 }).
                 Then(function () {
-                    jCC.equal(r, "A.m()", "Super method polymorphism with override is A.m()");
+                    jCC.equal(r, "A.m() for b", "Super method polymorphism with override is A.m()");
+                });
+        });
+
+        jCC.scenario("Method polymorphism with override and calling superclass which is A", function () {
+            var b, r;
+
+            jCC.
+                Given(function () {
+                    b = new B();
+                }).
+                When(function () {
+                    r = b.superclass.m();
+                }).
+                Then(function () {
+                    jCC.equal(r, "A.m() for b", "Super method polymorphism with override is A.m()");
                 });
         });
     });

@@ -27,7 +27,7 @@ define([ "require", "Core/object/jObj", "./flow/TransducerUpStreamDataFlow", "./
         "use strict";
 
         function TransducerComponent(encoder, decoder) {
-            jObj.bless(this, require("Contrail/component/jComponent").core.pipeline());
+            jObj.bless(this, require("Contrail/component/jComponent").pipeline());
 
             this.upStreamDataFlow = transducerUpStreamDataFlow(this, decoder);
             this.downStreamDataFlow = transducerDownStreamDataFlow(this, encoder);

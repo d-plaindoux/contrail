@@ -27,10 +27,10 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 And(function () {
-                    c2 = Factory.component.core.pipeline();
+                    c2 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -43,7 +43,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -56,7 +56,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -69,7 +69,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -82,7 +82,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -95,7 +95,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    c1 = Factory.component.core.pipeline();
+                    c1 = Factory.component.pipeline();
                 }).
                 When(jCC.Nothing).
                 Then(function () {

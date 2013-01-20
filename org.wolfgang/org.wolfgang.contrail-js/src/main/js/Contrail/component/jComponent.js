@@ -37,7 +37,7 @@ define("Contrail/component/jComponent",
         var Factory = {};
 
         Factory.core = Core;
-        Factory.core.pipeline = Pipeline.component;
+        Factory.pipeline = Pipeline.component;
 
         Factory.compose = Composition.compose;
         Factory.initial = Bound.initial;

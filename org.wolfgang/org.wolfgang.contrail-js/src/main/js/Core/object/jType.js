@@ -45,7 +45,7 @@ define([ "require" ],
          */
         function ofPrimitiveType(type) {
             return typeRule(type, function (object) {
-                var result;
+                var result, parent;
 
                 if (type === typeof object) {
                     result = true;
@@ -53,8 +53,18 @@ define([ "require" ],
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
-                } else if (object && object.superclass && object.superclass.hasOwnProperty(type)) {
-                    result = true;
+                } else if (object && object.extension && object.extension.hasOwnProperty(type)) {
+                    if (object.extension.hasOwnProperty(type)) {
+                        result = true;
+                    } else {
+                        for (parent in object.extension) {
+                            if (object.extension.hasOwnProperty(parent) && !result) {
+                                if (ofPrimitiveType(type).check(object.extension[parent])) {
+                                    result = true;
+                                }
+                            }
+                        }
+                    }
                 } else {
                     result = false;
                 }

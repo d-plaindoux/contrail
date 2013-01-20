@@ -22,33 +22,28 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        function RouterComponentDataFlow(router, table) {
+        function RouterComponentDownStreamDataFlow(router, table) {
             jObj.bless(this, jContrail.flow.core());
 
             this.router = router;
             this.table = table;
         }
 
-        RouterComponentDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent"), jObj.types.Named("RouteTable") ],
+        RouterComponentDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent"), jObj.types.Named("RouteTable") ],
             function (router, table) {
-                return new RouterComponentDataFlow(router, table);
+                return new RouterComponentDownStreamDataFlow(router, table);
             });
 
-        RouterComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
+        RouterComponentDownStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
-                if (this.router.hasRouterId(packet.getRouterId())) {
-                    // INFO - TODO - Do we perform packet structural decomposition just keeping the data ?
-                    this.router.superclass.MultiSourceComponent.getUpStreamDataFlow().handleData(packet.getData());
-                } else {
-                    // INFO - TODO - What about element which does not exists when sending Packet to a new end-point ?
-                    this.router.getDownStreamDataFlow().handleData(packet.sendTo(this.table[packet.getRouterId()]));
-                }
+                var newPacket = packet.sendTo(this.table.getRoute(packet.getRouterId()));
+                this.router.superclass.getDownStreamDataFlow().handleData(newPacket);
             });
 
-        RouterComponentDataFlow.prototype.handleClose = jObj.procedure([],
+        RouterComponentDownStreamDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.router.superclass.MultiSourceComponent.getUpStreamDataFlow().handleClose();
+                this.router.superclass.getUpStreamDataFlow().handleClose();
             });
 
-        return RouterComponentDataFlow.init;
+        return RouterComponentDownStreamDataFlow.init;
     });

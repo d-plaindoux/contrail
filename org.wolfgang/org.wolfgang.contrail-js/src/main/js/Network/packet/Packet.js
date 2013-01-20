@@ -51,7 +51,7 @@ define([ "Core/object/jObj" ],
 
         Packet.prototype.getEndPoint = jObj.method([], jObj.types.String,
             function () {
-                return this.endPoint;
+                return this.endPoint || jObj.throwError(jObj.exception("L.packet.endpoint.not.defined"));
             });
 
         Packet.prototype.sendTo = jObj.method([ jObj.types.String ], jObj.types.Named("Packet"),
