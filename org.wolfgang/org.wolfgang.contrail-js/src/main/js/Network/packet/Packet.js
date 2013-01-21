@@ -29,7 +29,7 @@ define([ "Core/object/jObj" ],
         function Packet(routerId, data, endpoint) {
             jObj.bless(this);
 
-            this.routerId = routerId;
+            this.identifier = routerId;
             this.data = data;
             this.endPoint = endpoint;
         }
@@ -41,7 +41,7 @@ define([ "Core/object/jObj" ],
 
         Packet.prototype.getRouterId = jObj.method([], jObj.types.String,
             function () {
-                return this.routerId;
+                return this.identifier;
             });
 
         Packet.prototype.getData = jObj.method([], jObj.types.Any,
@@ -56,7 +56,7 @@ define([ "Core/object/jObj" ],
 
         Packet.prototype.sendTo = jObj.method([ jObj.types.String ], jObj.types.Named("Packet"),
             function (endPoint) {
-                return Packet.init(this.routerId, this.data, endPoint);
+                return Packet.init(this.identifier, this.data, endPoint);
             });
 
         return Packet.init;

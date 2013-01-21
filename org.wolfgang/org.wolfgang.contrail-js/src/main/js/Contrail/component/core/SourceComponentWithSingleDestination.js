@@ -52,7 +52,7 @@ define([ "require", "Core/object/jObj" ],
             function () {
                 var result;
 
-                if (this.sourceLink !== null) {
+                if (this.destinationLink !== null) {
                     result = this.destinationLink.getDestination();
                 } else {
                     throw jObj.exception("L.destination.not.connected");
