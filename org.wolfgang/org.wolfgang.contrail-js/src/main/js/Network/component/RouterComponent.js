@@ -39,9 +39,9 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
                 return new RouterComponent(route, identifier);
             });
 
-        RouterComponent.prototype.hasSameIdentifierAs = jObj.method([ jObj.types.String ], jObj.types.Boolean,
-            function (routerId) {
-                return this.destinationId === routerId;
+        RouterComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
+            function () {
+                return this.destinationId;
             });
 
         RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),

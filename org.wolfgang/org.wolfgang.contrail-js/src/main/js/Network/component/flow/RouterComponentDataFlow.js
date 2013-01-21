@@ -36,7 +36,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
 
         RouterComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
-                if (this.router.hasSameIdentifierAs(packet.getDestinationId())) {
+                if (this.router.getIdentifier() === packet.getDestinationId()) {
                     this.router.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {
                     var newPacket = packet.sendTo(this.table.getRoute(packet.getDestinationId()));
