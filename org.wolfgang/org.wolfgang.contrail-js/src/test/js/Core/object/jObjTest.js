@@ -51,6 +51,27 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
 
         // ---------------------------------------------------------
 
+        function C() {
+            jObj.bless(this, new A("c"), new B("c"));
+            this.c = 2013;
+        }
+
+        C.prototype.m = function () {
+            return "C.m() for " + this.id;
+        };
+
+        // ---------------------------------------------------------
+
+        function D() {
+            jObj.bless(this, new C("d"));
+        }
+
+        D.prototype.m = function () {
+            return "D.m() for " + this.id;
+        };
+
+        // ---------------------------------------------------------
+
         jCC.scenario("Check Subtype a:A <? A", function () {
             var a;
 
@@ -244,6 +265,71 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                 }).
                 Then(function () {
                     jCC.equal(r, "A.m() for b", "Super method polymorphism with override is A.m()");
+                });
+        });
+
+        jCC.scenario("Method polymorphism with override and calling superclass which is A and extending B", function () {
+            var c, r;
+
+            jCC.
+                Given(function () {
+                    c = new C();
+                }).
+                When(function () {
+                    r = c.superclass.m();
+                }).
+                Then(function () {
+                    jCC.equal(r, "A.m() for c", "Super method polymorphism with override is A.m()");
+                });
+        });
+
+        jCC.scenario("Checking type of C inheriting A and extending B", function () {
+            var c, r;
+
+            jCC.
+                Given(function () {
+                    c = new C();
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(jObj.ofType(c, jObj.types.Named("A")), true, "c is a A");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(c, jObj.types.Named("B")), true, "c is also B");
+                });
+        });
+
+        jCC.scenario("Checking type of D inheriting C", function () {
+            var d, r;
+
+            jCC.
+                Given(function () {
+                    d = new D();
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(jObj.ofType(d, jObj.types.Named("C")), true, "d is a C");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d, jObj.types.Named("A")), true, "d is also A");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d, jObj.types.Named("B")), true, "d is also B");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d.superclass, jObj.types.Named("C")), true, "d.superclass is C");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d.extension.C, jObj.types.Named("C")), true, "d.extension.C is C");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d.superclass.superclass, jObj.types.Named("A")), true, "d.superclass.superclass is A");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d.superclass.extension.A, jObj.types.Named("A")), true, "d.superclass.extension.A is also A");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(d.superclass.extension.B, jObj.types.Named("B")), true, "d.superclass.extension.B is also B");
                 });
         });
     });

@@ -71,12 +71,14 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
             });
 
             // Inheritance definition
+            instance.extension = {};
+
             if (parameters.length > 0) {
-                instance.extension = {};
-                instance.superclass = parameters[0];
                 parameters.forEach(function (inherited) {
                     instance.extension[jType.getClass(inherited)] = inherited;
                 });
+
+                instance.superclass = parameters[0];
             }
 
             return instance;

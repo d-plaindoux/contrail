@@ -54,8 +54,9 @@ define(
             function (components) {
                 var linkManager, index, current;
 
-                current = components[0];
                 linkManager = require("Contrail/jContrail").link;
+
+                current = components[0];
 
                 for (index = 1; index < components.length; index += 1) {
                     linkManager.connect(current, components[index]);
@@ -81,7 +82,7 @@ define(
                     first = components[0];
                     last = components[components.length - 1];
 
-                    if (jObj.ofTypes(first, [ sourceType, destinationType]) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
+                    if (jObj.ofTypes(first, [ sourceType, destinationType ]) && jObj.ofTypes(last, [ sourceType, destinationType ])) {
 
                         result = pipelineComposition(linkComponents(components));
 

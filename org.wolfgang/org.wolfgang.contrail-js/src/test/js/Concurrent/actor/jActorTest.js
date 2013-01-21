@@ -33,8 +33,8 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
             return "A.n()";
         };
 
-        A.prototype.id = function () {
-            throw "A.id()";
+        A.prototype.m = function () {
+            throw "A.m()";
         };
 
         // ---------------------------------------------------------

@@ -73,12 +73,6 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                 }).
                 Then(function () {
                     jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
-                }).
-                And(function () {
-                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
-                }).
-                And(function () {
-                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
                 });
         });
 
@@ -100,9 +94,6 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                 }).
                 Then(function () {
                     jCC.equal(jObj.ofType(compose, jObj.types.Named("Component")), true, " Composition with source | destination is a component");
-                }).
-                And(function () {
-                    jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), false, " Composition with source | not a source component");
                 }).
                 And(function () {
                     jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), true, " Composition with source | is a destination component");
@@ -130,9 +121,6 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                 }).
                 And(function () {
                     jCC.equal(jObj.ofType(compose, jObj.types.Named("SourceComponent")), true, " Composition with source | not a source component");
-                }).
-                And(function () {
-                    jCC.equal(jObj.ofType(compose, jObj.types.Named("DestinationComponent")), false, " Composition with source | not a destination component");
                 });
         });
 
