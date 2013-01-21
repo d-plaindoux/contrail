@@ -29,7 +29,7 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
         function RouterComponent(route, identifier) {
             jObj.bless(this, jContrail.component.pipeline());
 
-            this.identifier = identifier;
+            this.destinationId = identifier;
             this.upStreamDataFlow = routerUpStreamFlow(this, route);
             this.downStreamDataFlow = routerDownStreamFlow(this, route);
         }
@@ -41,7 +41,7 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
 
         RouterComponent.prototype.hasSameIdentifierAs = jObj.method([ jObj.types.String ], jObj.types.Boolean,
             function (routerId) {
-                return this.identifier === routerId;
+                return this.destinationId === routerId;
             });
 
         RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),

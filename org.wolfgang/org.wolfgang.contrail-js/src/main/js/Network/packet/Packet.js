@@ -26,22 +26,28 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function Packet(routerId, data, endpoint) {
+        function Packet(sourceId, destinationId, data, endpoint) {
             jObj.bless(this);
 
-            this.identifier = routerId;
+            this.sourceId = sourceId;
+            this.destinationId = destinationId;
             this.data = data;
             this.endPoint = endpoint;
         }
 
-        Packet.init = jObj.constructor([ jObj.types.String, jObj.types.Any , jObj.types.Nullable(jObj.types.String) ],
-            function (routerId, data, endPoint) {
-                return new Packet(routerId, data, endPoint);
+        Packet.init = jObj.constructor([ jObj.types.String, jObj.types.String, jObj.types.Any , jObj.types.Nullable(jObj.types.String) ],
+            function (sourceId, destinationId, data, endPoint) {
+                return new Packet(sourceId, destinationId, data, endPoint);
             });
 
-        Packet.prototype.getRouterId = jObj.method([], jObj.types.String,
+        Packet.prototype.getSourceId = jObj.method([], jObj.types.String,
             function () {
-                return this.identifier;
+                return this.sourceId;
+            });
+
+        Packet.prototype.getDestinationId = jObj.method([], jObj.types.String,
+            function () {
+                return this.destinationId;
             });
 
         Packet.prototype.getData = jObj.method([], jObj.types.Any,
@@ -56,7 +62,7 @@ define([ "Core/object/jObj" ],
 
         Packet.prototype.sendTo = jObj.method([ jObj.types.String ], jObj.types.Named("Packet"),
             function (endPoint) {
-                return Packet.init(this.identifier, this.data, endPoint);
+                return Packet.init(this.sourceId, this.destinationId, this.data, endPoint);
             });
 
         return Packet.init;
