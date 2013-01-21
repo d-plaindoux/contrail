@@ -22,12 +22,12 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "require", "Core/object/jObj" ],
-    function (require, jObj) {
+define([ "require", "Core/object/jObj", "../core/DestinationComponent" ],
+    function (require, jObj, destination) {
         "use strict";
 
         var DestinationCompositionComponent = function (components) {
-            jObj.bless(this, require("Contrail/component/jComponent").core.destination());
+            jObj.bless(this, destination());
             this.component = components[0];
         };
 

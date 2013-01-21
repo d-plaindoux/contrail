@@ -22,12 +22,12 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define([ "require", "Core/object/jObj" ],
-    function (require, jObj) {
+define([ "require", "Core/object/jObj" , "./DataFlow" ],
+    function (require, jObj, core) {
         "use strict";
 
         function FilteredDataFlow(dataFlow, predicate) {
-            jObj.bless(this, require("Core/flow/jFlow").core());
+            jObj.bless(this, core());
             this.dataFlow = dataFlow;
             this.filter = predicate;
         }

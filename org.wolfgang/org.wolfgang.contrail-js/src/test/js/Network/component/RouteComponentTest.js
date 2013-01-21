@@ -54,10 +54,10 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     jCC.equal(buffered.getBuffered().length, 1, "A data must be buffered");
                 }).
                 And(function () {
-                    jCC.equal(jObj.types.checkType(buffered.getBuffered()[0], jObj.types.Named("Packet")), true, "A packet must be buffered");
+                    jCC.equal(jObj.ofType(buffered.getBuffered()[0], jObj.types.Named("Packet")), true, "A Packet must be buffered");
                 }).
                 And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!'", "Data is 'Hello, World!'");
+                    jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");

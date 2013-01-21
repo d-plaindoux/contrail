@@ -122,7 +122,9 @@ define([ "./jType" ],
             var result;
 
             if (!jModel.specificationIsEnable) {
-                result = method;
+                result = method || function () {
+                    throw jModel.exception("L.abstract.method", { method:method, arity:arguments.length});
+                };
             } else {
                 result = function () {
                     if (arguments.length > profil.length) {

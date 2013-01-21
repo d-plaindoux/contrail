@@ -24,7 +24,6 @@ if (typeof define !== "function") {
 
 define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStreamDataFlow", "./flow/RouterComponentDownStreamDataFlow" ],
     function (jObj, jContrail, routerUpStreamFlow, routerDownStreamFlow) {
-
         "use strict";
 
         function RouterComponent(route, identifier) {

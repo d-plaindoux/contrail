@@ -22,12 +22,12 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define(["require", "Core/object/jObj" ],
-    function (require, jObj) {
+define(["require", "Core/object/jObj", "../core/SourceComponent" ],
+    function (require, jObj, source) {
         "use strict";
 
         var SourceCompositionComponent = function (components) {
-            jObj.bless(this, require("Contrail/component/jComponent").core.source());
+            jObj.bless(this, source());
             this.components = components;
         };
 

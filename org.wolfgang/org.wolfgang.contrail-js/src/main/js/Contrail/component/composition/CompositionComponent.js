@@ -22,14 +22,14 @@ if (typeof define !== "function") {
     var define = require("amdefine")(module);
 }
 
-define(["require", "Core/object/jObj" ],
-    function (require, jObj) {
+define(["require", "Core/object/jObj", "../core/Component" ],
+    function (require, jObj, component) {
         "use strict";
 
-        function CompositionComponent(components) {
-            jObj.bless(this, require("Contrail/component/jComponent").core.component());
+        var CompositionComponent = function (components) {
+            jObj.bless(this, component());
             this.components = components;
-        }
+        };
 
         /**
          * Constructor

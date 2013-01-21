@@ -37,7 +37,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
         RouterComponentUpStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
                 if (this.router.hasRouterId(packet.getRouterId())) {
-                    this.router.superclass.getUpStreamDataFlow().handleData(packet);
+                    this.router.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {
                     this.router.getDownStreamDataFlow().handleData(packet);
                 }
@@ -45,7 +45,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
 
         RouterComponentUpStreamDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.router.superclass.getUpStreamDataFlow().handleClose();
+                this.router.getDestination().getUpStreamDataFlow().handleClose();
             });
 
         return RouterComponentUpStreamDataFlow.init;

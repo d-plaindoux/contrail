@@ -75,7 +75,19 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
 
             if (parameters.length > 0) {
                 parameters.forEach(function (inherited) {
-                    instance.extension[jType.getClass(inherited)] = inherited;
+                    var key, type;
+
+                    type = jType.getClass(inherited);
+
+                    if (type === "Object") {
+                        for (key in inherited.extension) {
+                            if (inherited.extension.hasOwnProperty(key)) {
+                                instance.extension[key] = inherited.extension[key];
+                            }
+                        }
+                    } else {
+                        instance.extension[type] = inherited;
+                    }
                 });
 
                 instance.superclass = parameters[0];
