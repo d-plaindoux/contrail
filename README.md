@@ -22,3 +22,12 @@ like:
 * multiplexer providing a single source to multiple destination connection,
 * demultiplexer providing a multiple source to a single destination connection and 
 * router providing a multiple source to multiple destination connection.
+
+Supported Languages
+-------------------
+
+The library is available in:
+
+* Java and 
+* JavaScript
+
