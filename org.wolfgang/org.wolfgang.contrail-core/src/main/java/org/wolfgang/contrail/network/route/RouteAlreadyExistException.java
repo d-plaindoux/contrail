@@ -16,42 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.flow;
+package org.wolfgang.contrail.network.route;
 
 /**
- * <code>StreamDataHandlerFactory</code>
+ * <code>RouteAlreadyExistException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class DataFlowFactory {
+public class RouteAlreadyExistException extends Exception {
 
-	/**
-	 * Constructor
-	 */
-	private DataFlowFactory() {
-		super();
-		// TODO Auto-generated constructor stub
+	private static final long serialVersionUID = -8658342493319178686L;
+
+	public RouteAlreadyExistException(String arg0) {
+		super(arg0);
 	}
 
-	/**
-	 * Creates a closable data flow
-	 * 
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
-		return new ClosableDataFlow<U>(dataHandler);
-	}
-
-	/**
-	 * Creates a filtered data flow
-	 * 
-	 * @param filter
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> filtered(FilteredDataFlow.Filter<U> filter, DataFlow<U> dataHandler) {
-		return new FilteredDataFlow<U>(filter, dataHandler);
-	}
 }

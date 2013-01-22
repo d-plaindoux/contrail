@@ -26,7 +26,7 @@ import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.BufferedDataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
-import org.wolfgang.contrail.flow.FilteredDataFlow.Acceptor;
+import org.wolfgang.contrail.flow.FilteredDataFlow.Filter;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 
@@ -67,17 +67,18 @@ public class TestMultiDestinationComponent {
 
 		final MultiDestinationComponent<String, String> multiComponent = new MultiDestinationComponent<String, String>();
 
-		final Acceptor<String> filter01 = new Acceptor<String>() {
+		final Filter<String> filter01 = new Filter<String>() {
 			@Override
 			public boolean accept(String data) {
 				return true;
 			}
 		};
+		
 		final BufferedDataFlow<String> flow01 = new BufferedDataFlow<String>();
 		final TerminalComponent<String, String> terminal01 = Components.terminal(DataFlowFactory.filtered(filter01, flow01));
 		ComponentManager.connect(multiComponent, terminal01);
 
-		final Acceptor<String> filter02 = new Acceptor<String>() {
+		final Filter<String> filter02 = new Filter<String>() {
 			@Override
 			public boolean accept(String data) {
 				return false;

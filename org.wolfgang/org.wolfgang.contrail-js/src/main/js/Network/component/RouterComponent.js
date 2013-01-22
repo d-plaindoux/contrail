@@ -30,8 +30,9 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
             jObj.bless(this, jContrail.component.pipeline());
 
             this.destinationId = identifier;
-            this.upStreamDataFlow = routerUpStreamFlow(this, route);
-            this.downStreamDataFlow = routerDownStreamFlow(this, route);
+            this.route = route;
+            this.upStreamDataFlow = routerUpStreamFlow(this);
+            this.downStreamDataFlow = routerDownStreamFlow(this);
         }
 
         RouterComponent.init = jObj.constructor([ jObj.types.Named("RouteTable"), jObj.types.String ],
@@ -42,6 +43,11 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
         RouterComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
             function () {
                 return this.destinationId;
+            });
+
+        RouterComponent.prototype.getTable = jObj.method([ ], jObj.types.Named("RouteTable"),
+            function () {
+                return this.route;
             });
 
         RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),

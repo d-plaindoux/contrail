@@ -22,16 +22,15 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        var RouterComponentDataFlow = function (router, table) {
+        var RouterComponentDataFlow = function (router) {
             jObj.bless(this, jContrail.flow.core());
 
             this.router = router;
-            this.table = table;
         };
 
-        RouterComponentDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent"), jObj.types.Named("RouteTable") ],
-            function (router, table) {
-                return new RouterComponentDataFlow(router, table);
+        RouterComponentDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent") ],
+            function (router) {
+                return new RouterComponentDataFlow(router);
             });
 
         RouterComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
@@ -39,7 +38,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
                 if (this.router.getIdentifier() === packet.getDestinationId()) {
                     this.router.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {
-                    var newPacket = packet.sendTo(this.table.getRoute(packet.getDestinationId()));
+                    var newPacket = packet.sendTo(this.router.getTable().getRoute(packet.getDestinationId()));
                     this.router.getSource().getDownStreamDataFlow().handleData(newPacket);
                 }
             });

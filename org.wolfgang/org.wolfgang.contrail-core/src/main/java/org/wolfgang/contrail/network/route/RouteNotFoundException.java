@@ -16,42 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.flow;
+package org.wolfgang.contrail.network.route;
 
 /**
- * <code>StreamDataHandlerFactory</code>
+ * <code>RouteNotFoundException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class DataFlowFactory {
+public class RouteNotFoundException extends Exception {
 
-	/**
-	 * Constructor
-	 */
-	private DataFlowFactory() {
-		super();
+	private static final long serialVersionUID = 8611689745407416792L;
+
+	public RouteNotFoundException(String message) {
+		super(message);
 		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Creates a closable data flow
-	 * 
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
-		return new ClosableDataFlow<U>(dataHandler);
-	}
-
-	/**
-	 * Creates a filtered data flow
-	 * 
-	 * @param filter
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> filtered(FilteredDataFlow.Filter<U> filter, DataFlow<U> dataHandler) {
-		return new FilteredDataFlow<U>(filter, dataHandler);
 	}
 }

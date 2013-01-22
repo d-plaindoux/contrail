@@ -16,42 +16,34 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.flow;
+package org.wolfgang.contrail.network.component.flow;
+
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.contrail.network.component.RouteComponent;
 
 /**
- * <code>StreamDataHandlerFactory</code>
+ * <code>RouterUpStreamDataFlow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class DataFlowFactory {
+public class RouterDownStreamDataFlow extends RouterDataFlow {
 
 	/**
-	 * Constructor
+	 * @param router
 	 */
-	private DataFlowFactory() {
-		super();
-		// TODO Auto-generated constructor stub
+	public RouterDownStreamDataFlow(RouteComponent router) {
+		super(router);
 	}
 
-	/**
-	 * Creates a closable data flow
-	 * 
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> closable(DataFlow<U> dataHandler) {
-		return new ClosableDataFlow<U>(dataHandler);
+	@Override
+	public void handleClose() throws DataFlowCloseException {
+		try {
+			this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleClose();
+		} catch (ComponentNotConnectedException e) {
+			throw new DataFlowCloseException(e);
+		}
 	}
 
-	/**
-	 * Creates a filtered data flow
-	 * 
-	 * @param filter
-	 * @param dataHandler
-	 * @return
-	 */
-	public static <U> DataFlow<U> filtered(FilteredDataFlow.Filter<U> filter, DataFlow<U> dataHandler) {
-		return new FilteredDataFlow<U>(filter, dataHandler);
-	}
 }

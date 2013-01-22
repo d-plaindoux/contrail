@@ -30,14 +30,14 @@ import org.wolfgang.contrail.flow.exception.DataFlowException;
  */
 public class FilteredDataFlow<D> implements DataFlow<D> {
 
-	public interface Acceptor<D> {
+	public interface Filter<D> {
 		boolean accept(D data);
 	}
 
-	private final Acceptor<D> filter;
+	private final Filter<D> filter;
 	private final DataFlow<D> delegated;
 
-	FilteredDataFlow(Acceptor<D> filter, DataFlow<D> delegated) {
+	FilteredDataFlow(Filter<D> filter, DataFlow<D> delegated) {
 		super();
 		this.filter = filter;
 		this.delegated = delegated;

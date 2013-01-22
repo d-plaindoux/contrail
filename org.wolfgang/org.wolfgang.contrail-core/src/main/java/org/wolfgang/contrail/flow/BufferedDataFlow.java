@@ -45,7 +45,7 @@ public class BufferedDataFlow<D> implements DataFlow<D> {
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		// Nothing to do | must be combined with a closable
+		this.datas.clear();
 	}
 
 	public boolean hasNextData() {
@@ -53,6 +53,6 @@ public class BufferedDataFlow<D> implements DataFlow<D> {
 	}
 
 	public D getNextData() {
-		return this.datas.getFirst();
+		return this.datas.removeFirst();
 	}
 }

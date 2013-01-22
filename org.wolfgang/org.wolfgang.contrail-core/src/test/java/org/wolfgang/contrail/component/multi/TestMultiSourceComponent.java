@@ -26,7 +26,7 @@ import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.BufferedDataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
-import org.wolfgang.contrail.flow.FilteredDataFlow.Acceptor;
+import org.wolfgang.contrail.flow.FilteredDataFlow.Filter;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.link.ComponentManager;
 
@@ -67,7 +67,7 @@ public class TestMultiSourceComponent {
 
 		final MultiSourceComponent<String, String> multiComponent = new MultiSourceComponent<String, String>();
 
-		final Acceptor<String> filter01 = new Acceptor<String>() {
+		final Filter<String> filter01 = new Filter<String>() {
 			@Override
 			public boolean accept(String data) {
 				return true;
@@ -77,7 +77,7 @@ public class TestMultiSourceComponent {
 		final InitialComponent<String, String> initial01 = Components.initial(DataFlowFactory.filtered(filter01, flow01));
 		ComponentManager.connect(initial01, multiComponent);
 
-		final Acceptor<String> filter02 = new Acceptor<String>() {
+		final Filter<String> filter02 = new Filter<String>() {
 			@Override
 			public boolean accept(String data) {
 				return false;

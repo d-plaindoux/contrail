@@ -78,19 +78,4 @@ public final class Components {
 			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
-
-	/** TODO
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Component reverse(Component component) throws ComponentConnectionRejectedException {
-		if (Coercion.canCoerce(component, PipelineComponent.class)) {
-			return new ReversedPipelIneComponent(Coercion.coerce(component, PipelineComponent.class));
-		} else if (Coercion.canCoerce(component, SourceComponent.class)) {
-			return new ReversedSourceComponent(Coercion.coerce(component, SourceComponent.class));
-		} else if (Coercion.canCoerce(component, DestinationComponent.class)) {
-			return new ReversedDestinationComponent(Coercion.coerce(component, DestinationComponent.class));
-		} else {
-			return null;
-		}
-	}
-	*/
 }

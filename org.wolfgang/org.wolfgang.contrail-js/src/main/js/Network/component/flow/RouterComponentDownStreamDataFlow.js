@@ -22,13 +22,13 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./RouterComponentDataFlow" ]
     function (jObj, jContrail, routerFlow) {
         // "use strict";
 
-        var RouterComponentDownStreamDataFlow = function (router, table) {
-            jObj.bless(this, routerFlow(router, table));
+        var RouterComponentDownStreamDataFlow = function (router) {
+            jObj.bless(this, routerFlow(router));
         };
 
-        RouterComponentDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent"), jObj.types.Named("RouteTable") ],
-            function (router, table) {
-                return new RouterComponentDownStreamDataFlow(router, table);
+        RouterComponentDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent") ],
+            function (router) {
+                return new RouterComponentDownStreamDataFlow(router);
             });
 
         RouterComponentDownStreamDataFlow.prototype.handleClose = jObj.procedure([],
