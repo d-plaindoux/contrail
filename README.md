@@ -8,9 +8,9 @@ but also framework dedicated to components cooperation.
 In this approach  we call network a set  of connected components which
 cooperate in  order to solve a  given problem.  Such problem  can be a
 simple one  like data  transformation, interceptors, ciphered  data or
-complex like service based layer..
+complex like service based layer.
 
-For his  purpose each  component provides an  upstream/downstream data
+For this  purpose each component provides  an upstream/downstream data
 management. From  this simple  design component patterns  are provided
 like:
 

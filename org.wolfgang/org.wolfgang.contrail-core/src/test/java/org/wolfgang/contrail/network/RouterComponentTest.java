@@ -28,6 +28,7 @@ import org.wolfgang.contrail.flow.BufferedDataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.component.RouteComponent;
 import org.wolfgang.contrail.network.packet.Packet;
+import org.wolfgang.contrail.network.route.RouteAlreadyExistException;
 import org.wolfgang.contrail.network.route.RouteNotFoundException;
 import org.wolfgang.contrail.network.route.RouteTable;
 
@@ -44,9 +45,7 @@ public class RouterComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("b", "ws://localhost/b");
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -64,9 +63,7 @@ public class RouterComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("b", "ws://localhost/b");
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -84,9 +81,7 @@ public class RouterComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
 
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("b", "ws://localhost/b");
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -103,10 +98,7 @@ public class RouterComponentTest {
 	public void shouldRetreivePacketAlreadyInDestination() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
-
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("b", "ws://localhost/b");
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -123,29 +115,35 @@ public class RouterComponentTest {
 	public void shouldFailWhenDestinationisUndefined() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-
-		final RouteTable routeTable = new RouteTable();
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(initial, routeComponent);
 
-		initial.getUpStreamDataFlow().handleData(new Packet("b", "b", "Hello, World!"));
+		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
 	}
 
 	@Test(expected = RouteNotFoundException.class)
 	public void shouldFailWhenDestinationisUndefinedWithRealCause() throws Throwable {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-
-		final RouteTable routeTable = new RouteTable();
-		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		final RouteComponent routeComponent = givenARouteComponent();
 
 		Components.compose(initial, routeComponent);
 
 		try {
-			initial.getUpStreamDataFlow().handleData(new Packet("b", "b", "Hello, World!"));
+			initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
 		} catch (DataFlowException e) {
 			throw e.getCause();
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	private RouteComponent givenARouteComponent() throws RouteAlreadyExistException {
+		final RouteTable routeTable = new RouteTable();
+		routeTable.addRoute("b", "ws://localhost/b");
+		final RouteComponent routeComponent = new RouteComponent(routeTable, "a");
+		return routeComponent;
+	}
+
 }
