@@ -18,10 +18,10 @@ like:
 
 * initial producer providing a data injection mechanism,
 * terminal  consumer providing a data reception mechanism,
-* connector providing a component to component communication,
-* multiplexer providing a single source to multiple destination connection,
-* demultiplexer providing a multiple source to a single destination connection and 
-* router providing a multiple source to multiple destination connection.
+* pipeline providing a component to component communication,
+* single source to multiple destination connection,
+* a multiple source to a single destination connection and 
+* router providing a baisc mechanism for routed packets.
 
 Supported Languages
 -------------------
