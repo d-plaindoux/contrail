@@ -1,10 +1,9 @@
-== WolfGang ==
+# WolfGang
 
 The WolfGang project goals are  multiple covering low level java tools
 but also framework dedicated to components cooperation.
 
-Contrail Network
----
+## Contrail Network
 
 In this approach  we call network a set  of connected components which
 cooperate in  order to solve a  given problem.  Such problem  can be a
@@ -22,7 +21,7 @@ like:
 * a multiple source to a single destination connection and 
 * router providing a baisc mechanism for routed packets.
 
-==== Supported Languages ====
+### Supported Languages
 
 The library is available in:
 
