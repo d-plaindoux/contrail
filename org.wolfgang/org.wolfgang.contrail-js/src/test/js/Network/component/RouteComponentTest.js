@@ -149,7 +149,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 });
         });
 
-        jCC.scenario("Checking route component with packet sent a component", function () {
+        jCC.scenario("Checking route component with packet sent to a component", function () {
             var table, router, initial, buffered, packet;
 
             jCC.
@@ -188,6 +188,113 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
+                });
+        });
+
+        jCC.scenario("Checking route component with packet sent to an intermediate component", function () {
+            var table, router, initial, buffered, packet;
+
+            jCC.
+                Given(function () {
+                    table = jNetwork.table.create();
+                }).
+                And(function () {
+                    table.addRoute("b", "ws://localhost/b");
+                }).
+                And(function () {
+                    router = jNetwork.component(table, "a");
+                }).
+                And(function () {
+                    buffered = jFlow.buffered();
+                }).
+                And(function () {
+                    initial = jContrail.component.initial(buffered);
+                }).
+                And(function () {
+                    jContrail.component.compose([ initial, router ]);
+                }).
+                And(function () {
+                    packet = jNetwork.packet("b", "b", "Hello, World!");
+                }).
+                When(function () {
+                    router.getUpStreamDataFlow().handleData(packet);
+                }).
+                Then(function () {
+                    jCC.equal(buffered.getBuffered().length, 1, "A data must be buffered");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(buffered.getBuffered()[0], jObj.types.Named("Packet")), true, "A Packet must be buffered");
+                }).
+                And(function () {
+                    jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
+                }).
+                And(function () {
+                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
+                });
+        });
+
+
+        jCC.scenario("Checking route with indirect call and two collaborative component ecosystems", function () {
+            var table, routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter;
+
+            jCC.
+                Given(function () {
+                    table = jNetwork.table.create();
+                }).
+                And(function () {
+                    table.addRoute("a", "ws://localhost/a");
+                }).
+                And(function () {
+                    table.addRoute("b", "ws://localhost/b");
+                }).
+                And(function () {
+                    routerA = jNetwork.component(table, "a");
+                }).
+                And(function () {
+                    routerB = jNetwork.component(table, "b");
+                }).
+                And(function () {
+                    dataFlowRouter = jContrail.flow.core();
+                    dataFlowRouter.handleData = function (data) {
+                        if (data.getEndPoint() === table.getRoute("a")) {
+                            initialA.getUpStreamDataFlow().handleData(data);
+                        } else if (data.getEndPoint() === table.getRoute("b")) {
+                            initialB.getUpStreamDataFlow().handleData(data);
+                        }
+                    };
+                }).
+                And(function () {
+                    initialA = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    initialB = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    terminalB = jContrail.component.terminal(jFlow.buffered());
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialA, routerA ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialB, routerB, terminalB ]);
+                }).
+                And(function () {
+                    packet = jNetwork.packet("a", "b", "Hello, World!");
+                }).
+                When(function () {
+                    routerA.getDownStreamDataFlow().handleData(packet);
+                }).
+                Then(function () {
+                    jCC.equal(terminalB.getUpStreamDataFlow().getBuffered().length, 1, "A data must be buffered");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(terminalB.getUpStreamDataFlow().getBuffered()[0], jObj.types.Named("Packet")), true, "A Packet must be buffered");
+                }).
+                And(function () {
+                    jCC.equal(terminalB.getUpStreamDataFlow().getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
+                }).
+                And(function () {
+                    jCC.equal(terminalB.getUpStreamDataFlow().getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
                 });
         });
     });
