@@ -26,6 +26,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.junit.Test;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.network.connection.web.WebServer;
 
 /**
@@ -37,13 +40,13 @@ import org.wolfgang.contrail.network.connection.web.WebServer;
 public class TestWebServer {
 
 	@Test
-	public void testWebServer01() throws IOException {
+	public void shouldHavePageContentUsingHTTPWhenRequired() throws IOException {
 		final WebServer server = WebServer.create(2777, null);
-		server.call();
-
 		final URL url = new URL("http://localhost:2777/helloworld");
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		
+
+		server.call();
+
 		try {
 			final InputStream inputStream = url.openStream();
 			try {

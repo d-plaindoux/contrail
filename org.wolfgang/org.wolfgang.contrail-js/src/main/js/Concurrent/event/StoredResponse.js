@@ -16,11 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module, setInterval*/
-
-if (typeof define !== "function") {
-    var define = require("amdefine")(module);
-}
+/*global define, setInterval*/
 
 define([ "Core/object/jObj", "./Response" ],
     function (jObj, response) {
@@ -60,11 +56,11 @@ define([ "Core/object/jObj", "./Response" ],
             function () {
                 switch (this.status) {
                     case status.UNSET:
-                        throw jObj.exception("L.storedResponse.not.yet.setup");
+                        throw jObj.exception("L.stored.response.not.yet.setup");
                     case status.FAILURE:
                         throw this.result;
                     case status.SUCCESS:
-                        return this.result; // Value can be null ! So How can be this handled by the current system
+                        return this.result;
                 }
             });
 

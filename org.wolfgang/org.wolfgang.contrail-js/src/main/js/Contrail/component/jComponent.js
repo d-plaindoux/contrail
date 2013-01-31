@@ -16,11 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module*/
-
-if (typeof define !== "function") {
-    var define = require("amdefine")(module);
-}
+/*global define*/
 
 define("Contrail/component/jComponent",
     [

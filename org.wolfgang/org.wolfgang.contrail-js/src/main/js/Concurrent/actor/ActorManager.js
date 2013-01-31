@@ -16,11 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module, setInterval, clearInterval*/
-
-if (typeof define !== "function") {
-    var define = require("amdefine")(module);
-}
+/*global define, setInterval, clearInterval*/
 
 define([ "Core/object/jObj", "./Actor" ],
     function (jObj, actor) {
@@ -34,6 +30,7 @@ define([ "Core/object/jObj", "./Actor" ],
             this.jobs = [];
 
             this.interval = 100;
+
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
         }

@@ -16,11 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define:true, require, module*/
-
-if (typeof define !== "function") {
-    var define = require("amdefine")(module);
-}
+/*global define*/
 
 define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./route/RouteLoader", "./packet/Packet" ],
     function (component, table, loader, packet) {
@@ -29,8 +25,11 @@ define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable"
         var jNetwork = {};
 
         jNetwork.component = component;
-        jNetwork.table = table;
-        jNetwork.loader = loader;
+
+        jNetwork.table = {};
+        jNetwork.table.create = table;
+        jNetwork.table.populate = loader.populate;
+
         jNetwork.packet = packet;
 
         return jNetwork;

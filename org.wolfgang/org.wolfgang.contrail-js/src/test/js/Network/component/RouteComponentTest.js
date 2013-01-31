@@ -27,7 +27,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
+                    table = jNetwork.table.create();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -70,7 +70,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
+                    table = jNetwork.table.create();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -112,7 +112,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
+                    table = jNetwork.table.create();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -154,7 +154,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
+                    table = jNetwork.table.create();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
