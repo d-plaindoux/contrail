@@ -40,7 +40,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC" ],
                     jCC.equal(jObj.ofType(result[0], jObj.types.String), true, "Checking result type");
                 }).
                 And(function () {
-                    jCC.equal(result[0], '{"a":true}', "Checking encoding length");
+                    jCC.equal(result[0], '{"a":true}', "Checking encoding value");
                 });
         });
     });

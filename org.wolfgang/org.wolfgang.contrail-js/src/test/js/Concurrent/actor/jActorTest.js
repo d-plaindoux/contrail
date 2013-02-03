@@ -18,8 +18,8 @@
 
 /*global require, setTimeout */
 
-require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent" ],
-    function (jObj, jCC, jActor, jEvent) {
+require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent", "./StoredResponse" ],
+    function (jObj, jCC, jActor, jEvent, storedResponse) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -44,7 +44,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     actor = manager.createActor("test.a", new A());
@@ -63,13 +63,13 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
-                    response = jEvent.storedResponse();
+                    response = storedResponse();
                 }).
                 When(function () {
                     actor.invoke(jEvent.request("n", []), response);
@@ -84,16 +84,19 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
+                    response = storedResponse();
+                }).
+                And(function () {
                     actor.activate();
                 }).
                 When(function () {
-                    response = actor.send(jEvent.request("n", []));
+                    actor.send(jEvent.request("n", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -123,7 +126,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     actor = manager.createActor("test.a", new A());
@@ -131,8 +134,11 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 And(function () {
                     actor.activate();
                 }).
+                And(function () {
+                    response = storedResponse();
+                }).
                 When(function () {
-                    response = actor.send(jEvent.request("m", []));
+                    actor.send(jEvent.request("m", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -165,7 +171,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     manager.start();
@@ -174,10 +180,13 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
+                    response = storedResponse();
+                }).
+                And(function () {
                     actor.activate();
                 }).
                 When(function () {
-                    response = actor.send(jEvent.request("n", []));
+                    actor.send(jEvent.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -190,7 +199,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
 
             jCC.
                 Given(function () {
-                    manager = jActor.manager();
+                    manager = jActor.coordinator();
                 }).
                 And(function () {
                     manager.start();
@@ -201,8 +210,11 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 And(function () {
                     actor.activate();
                 }).
+                And(function () {
+                    response = storedResponse();
+                }).
                 When(function () {
-                    response = actor.send(jEvent.request("m", []));
+                    actor.send(jEvent.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {

@@ -22,7 +22,7 @@ define([ "Core/object/jObj", "./Actor" ],
     function (jObj, actor) {
         "use strict";
 
-        function ActorManager() {
+        function Coordinator() {
             jObj.bless(this);
 
             this.universe = {};
@@ -35,11 +35,11 @@ define([ "Core/object/jObj", "./Actor" ],
             this.actorRunnerInterval = undefined;
         }
 
-        ActorManager.init = jObj.constructor([], function () {
-            return new ActorManager();
+        Coordinator.init = jObj.constructor([], function () {
+            return new Coordinator();
         });
 
-        ActorManager.prototype.start = jObj.procedure([],
+        Coordinator.prototype.start = jObj.procedure([],
             function () {
                 var self = this;
 
@@ -56,7 +56,7 @@ define([ "Core/object/jObj", "./Actor" ],
                 }
             });
 
-        ActorManager.prototype.stop = jObj.procedure([],
+        Coordinator.prototype.stop = jObj.procedure([],
             function () {
                 if (this.jobRunnerInterval !== undefined) {
                     clearInterval(this.jobRunnerInterval);
@@ -72,13 +72,13 @@ define([ "Core/object/jObj", "./Actor" ],
          * Privates method
          */
 
-        ActorManager.prototype.jobRunner = function () {
+        Coordinator.prototype.jobRunner = function () {
             if (this.jobs.length !== 0) {
                 this.jobs.shift()();
             }
         };
 
-        ActorManager.prototype.actorRunner = function () {
+        Coordinator.prototype.actorRunner = function () {
             var self = this;
             this.actors.forEach(function (actor) {
                 if (actor.jobs.length !== 0) {
@@ -91,12 +91,12 @@ define([ "Core/object/jObj", "./Actor" ],
          * Actor (un)registration features
          */
 
-        ActorManager.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
+        Coordinator.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors.push(actor);
             });
 
-        ActorManager.prototype.unregisterActor = jObj.procedure([jObj.types.Named("Actor")],
+        Coordinator.prototype.unregisterActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors = this.actors.filter(function (a) {
                     return a.actorId !== actor.actorId;
@@ -107,22 +107,22 @@ define([ "Core/object/jObj", "./Actor" ],
          * Actor creation and deletion
          */
 
-        ActorManager.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
+        Coordinator.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
             function (identifier, model) {
                 var freshActor = actor(this, identifier, model);
                 this.universe[identifier] = freshActor;
                 return freshActor;
             });
 
-        ActorManager.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
+        Coordinator.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
             function (id) {
                 return this.universe[id] || jObj.raise(jObj.exception("L.createActor.not.found")); // O(log(n))
             });
 
-        ActorManager.prototype.disposeActor = jObj.procedure([jObj.types.String],
+        Coordinator.prototype.disposeActor = jObj.procedure([jObj.types.String],
             function (id) {
                 delete this.universe[id];
             });
 
-        return ActorManager.init;
+        return Coordinator.init;
     });

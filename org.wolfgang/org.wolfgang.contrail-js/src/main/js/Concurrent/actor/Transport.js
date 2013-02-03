@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,14 +18,18 @@
 
 /*global define*/
 
-define("Concurrent/event/jEvent", [ "./Request", "./Response" ],
-    function (request, response) {
+define(["Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        var jEvent = {};
+        function Transport() {
+            jObj.bless(this);
+        }
 
-        jEvent.request = request;
-        jEvent.response = response;
+        Transport.init = jObj.constructor([],
+            function () {
+                return new Transport();
+            });
 
-        return jEvent;
+        return Transport.init;
     });

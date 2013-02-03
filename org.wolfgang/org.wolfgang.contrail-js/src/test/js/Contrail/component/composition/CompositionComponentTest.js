@@ -27,7 +27,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
 
             jCC.
                 Given(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ ]);
@@ -45,7 +45,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component = Factory.component.core.sourceWithSingleDestination();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ component ]);
@@ -66,7 +66,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component2 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ component1, component2 ]);
@@ -87,7 +87,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component2 = Factory.component.core.destinationWithSingleSource();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ component1, component2 ]);
@@ -111,7 +111,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component2 = Factory.component.pipeline();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ component1, component2 ]);
@@ -135,7 +135,7 @@ require([ "Core/object/jObj", "Contrail/jContrail" , "Core/test/jCC"],
                     component2 = Factory.component.pipeline();
                 }).
                 And(function () {
-                    linkManager = Factory.link.manager;
+                    linkManager = Factory.link.coordinator;
                 }).
                 When(function () {
                     compose = Factory.component.compose([ component1, component2 ]);

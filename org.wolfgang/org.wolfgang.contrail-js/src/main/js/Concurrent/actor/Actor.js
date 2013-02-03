@@ -26,11 +26,11 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
             jObj.bless(this, model);
 
             this.actorId = identifier;
-            this.manager = manager;
+            this.coordinator = manager;
             this.jobs = [];
         }
 
-        Actor.init = jObj.constructor([ jObj.types.Named("ActorManager"), jObj.types.String, jObj.types.Object ],
+        Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],
             function (manager, identifier, model) {
                 return new Actor(manager, identifier, model);
             });
@@ -40,31 +40,26 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
                 return this.actorId;
             });
 
-        Actor.prototype.send = jObj.method([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))], jObj.types.Named("Response"),
+        Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
-                var self = this, realResponse;
-
-                if (response === undefined) {
-                    realResponse = jEvent.storedResponse();
-                } else {
-                    realResponse = response;
-                }
-
+                var self = this;
                 this.jobs.push(function () {
-                    self.invoke(request, realResponse);
+                    self.invoke(request, response);
                 });
-
-                return realResponse;
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Named("Response")],
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 try {
                     var method = this[request.getName()];
                     jObj.checkType(method, jObj.types.Function);
-                    response.success(method(request.getParameters()));
+                    if (response !== undefined) {
+                        response.success(method(request.getParameters()));
+                    }
                 } catch (error) {
-                    response.failure(error);
+                    if (response !== undefined) {
+                        response.failure(error);
+                    }
                 }
             });
 
@@ -74,17 +69,17 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
 
         Actor.prototype.activate = jObj.procedure([],
             function () {
-                this.manager.registerActor(this);
+                this.coordinator.registerActor(this);
             });
 
         Actor.prototype.suspend = jObj.procedure([],
             function () {
-                this.manager.unregisterActor(this);
+                this.coordinator.unregisterActor(this);
             });
 
         Actor.prototype.dispose = jObj.procedure([],
             function () {
-                this.manager.disposeActor(this.getActorId());
+                this.coordinator.disposeActor(this.getActorId());
             });
 
         return Actor.init;

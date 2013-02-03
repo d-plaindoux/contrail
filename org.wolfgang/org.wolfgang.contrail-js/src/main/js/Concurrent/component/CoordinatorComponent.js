@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,14 +18,21 @@
 
 /*global define*/
 
-define("Concurrent/event/jEvent", [ "./Request", "./Response" ],
-    function (request, response) {
+define(["Core/object/jObj", "Contrail/jContrail", "Concurrent/actor/jActor" ],
+    function (jObj, jContrail, jActor) {
         "use strict";
 
-        var jEvent = {};
+        function CoordinatorComponent() {
+            jObj.bless(this, jContrail.core.destinationWithSingleSource());
 
-        jEvent.request = request;
-        jEvent.response = response;
+            this.coordinator = jActor.coordinator();
+            this.upStreamDataFlow = undefined;
+        }
 
-        return jEvent;
+        CoordinatorComponent.init = jObj.constructor([],
+            function () {
+                return new CoordinatorComponent();
+            });
+
+        return CoordinatorComponent.init;
     });
