@@ -114,14 +114,30 @@ define([ "Core/object/jObj", "./Actor" ],
                 return freshActor;
             });
 
-        Coordinator.prototype.findActorById = jObj.method([ jObj.types.String ], jObj.types.Named("Actor"),
-            function (id) {
-                return this.universe[id] || jObj.raise(jObj.exception("L.createActor.not.found")); // O(log(n))
-            });
-
         Coordinator.prototype.disposeActor = jObj.procedure([jObj.types.String],
             function (id) {
                 delete this.universe[id];
+            });
+
+        /*
+         * Send and broadcast mechanisms
+         */
+
+        Coordinator.prototype.send = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (identifier, request, response) {
+                if (this.universe.hasOwnProperty(identifier)) {
+                    this.universe[identifier].send(request, response);
+                }
+            });
+
+        Coordinator.prototype.broadcast = jObj.procedure([jObj.types.Named("Request")],
+            function (request) {
+                var identifier;
+                for (identifier in this.universe) {
+                    if (this.universe.hasOwnProperty(identifier)) {
+                        this.universe[identifier].send(request);
+                    }
+                }
             });
 
         return Coordinator.init;

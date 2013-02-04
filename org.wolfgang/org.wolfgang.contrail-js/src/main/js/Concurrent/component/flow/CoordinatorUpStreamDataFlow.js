@@ -22,11 +22,11 @@ define(["Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function CoordinatorUpStreamDataFlow(coordinator, coordinatorComponent) {
+        function CoordinatorUpStreamDataFlow(coordinator, component) {
             jObj.bless(this);
 
             this.coordinator = coordinator;
-            this.coordinatorComponent = coordinatorComponent;
+            this.component = component;
         }
 
         CoordinatorUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.Named("CoordinatorComponent")],

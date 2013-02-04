@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Concurrent/actor/jActor", [ "./Coordinator"],
+define("Concurrent/actor/jActor", [ "./Coordinator" ],
     function (coordinator) {
         "use strict";
 
