@@ -18,8 +18,8 @@
 
 /*global define, setInterval, clearInterval*/
 
-define([ "Core/object/jObj", "./Actor" ],
-    function (jObj, actor) {
+define([ "Core/object/jObj", "./LocalActor" ],
+    function (jObj, localActor) {
         "use strict";
 
         function Coordinator() {
@@ -109,9 +109,9 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
             function (identifier, model) {
-                var freshActor = actor(this, identifier, model);
-                this.universe[identifier] = freshActor;
-                return freshActor;
+                var actor = localActor(this, identifier, model);
+                this.universe[identifier] = actor;
+                return actor;
             });
 
         Coordinator.prototype.disposeActor = jObj.procedure([jObj.types.String],

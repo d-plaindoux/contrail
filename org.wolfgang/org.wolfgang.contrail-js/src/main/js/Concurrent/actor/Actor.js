@@ -18,21 +18,21 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
-    function (jObj, jEvent) {
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        function Actor(manager, identifier, model) {
-            jObj.bless(this, model);
+        function Actor(coordinator, identifier) {
+            jObj.bless(this);
 
             this.actorId = identifier;
-            this.coordinator = manager;
+            this.coordinator = coordinator;
             this.jobs = [];
         }
 
-        Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],
-            function (manager, identifier, model) {
-                return new Actor(manager, identifier, model);
+        Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
+            function (coordinator, identifier) {
+                return new Actor(coordinator, identifier);
             });
 
         Actor.prototype.getActorId = jObj.method([], jObj.types.String,
@@ -48,20 +48,7 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
                 });
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
-            function (request, response) {
-                try {
-                    var method = this[request.getName()];
-                    jObj.checkType(method, jObj.types.Function);
-                    if (response !== undefined) {
-                        response.success(method(request.getParameters()));
-                    }
-                } catch (error) {
-                    if (response !== undefined) {
-                        response.failure(error);
-                    }
-                }
-            });
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))]);
 
         /*
          * Management corner ...
