@@ -18,12 +18,12 @@
 
 /*global define*/
 
-define(["Core/object/jObj" ],
-    function (jObj) {
+define(["Core/object/jObj", "Core/flow/jFlow" ],
+    function (jObj, jFlow) {
         "use strict";
 
         function CoordinatorUpStreamDataFlow(coordinator, component) {
-            jObj.bless(this);
+            jObj.bless(this, jFlow.core());
 
             this.coordinator = coordinator;
             this.component = component;
@@ -36,7 +36,7 @@ define(["Core/object/jObj" ],
 
         CoordinatorUpStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
             function (packet) {
-                // Result might be created here ... - TODO
+                // Response management - TODO
                 var data = packet.getData();
                 this.coordinator.send(data.identifier, data.request);
             });

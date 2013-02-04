@@ -18,20 +18,26 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Contrail/jContrail", "Concurrent/actor/jActor" ],
-    function (jObj, jContrail, jActor) {
+define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/jContrail", "./flow/CoordinatorUpStreamDataFlow" ],
+    function (jObj, jFlow, jContrail, coordinatorFlow) {
         "use strict";
 
-        function CoordinatorComponent() {
+        function CoordinatorComponent(coordinator) {
             jObj.bless(this, jContrail.core.destinationWithSingleSource());
 
-            this.coordinator = jActor.coordinator();
-            this.upStreamDataFlow = undefined;
+            this.coordinator = coordinator;
+            this.upStreamDataFlow = jFlow.filtered(this.isPacketActorRequest, coordinatorFlow(coordinator, this));
         }
 
-        CoordinatorComponent.init = jObj.constructor([],
-            function () {
-                return new CoordinatorComponent();
+        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],
+            function (coordinator) {
+                return new CoordinatorComponent(coordinator);
+            });
+
+        CoordinatorComponent.prototype.isPacketActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
+            function (packet) {
+                return jObj.ofType(packet, jObj.types.Named("Packet"))
+                    && jObj.ofType(packet.getData(), jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request")}));
             });
 
         return CoordinatorComponent.init;

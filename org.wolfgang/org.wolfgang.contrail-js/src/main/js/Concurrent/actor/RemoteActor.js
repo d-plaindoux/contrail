@@ -18,24 +18,27 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "./Actor" ],
-    function (jObj, actor) {
+define([ "Core/object/jObj", "Network/jNetwork", "./Actor" ],
+    function (jObj, jNetwork, actor) {
         "use strict";
 
-        function RemoteActor(coordinator, identifier, requestHandler) {
+        function RemoteActor(coordinator, identifier, destinationId, coordinatorComponent) {
             jObj.bless(this, actor(coordinator, identifier));
 
-            this.requestHandler = requestHandler;
+            this.destinationId = destinationId;
+            this.coordinatorComponent = coordinatorComponent;
         }
 
-        RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],
-            function (manager, identifier, model) {
-                return new RemoteActor(manager, identifier, model);
+        RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.String, jObj.types.Named("CoordinatorComponent") ],
+            function (coordinator, identifier, destinationId, coordinatorComponent) {
+                return new RemoteActor(coordinator, identifier, destinationId, coordinatorComponent);
             });
 
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
-                jObj.throwError(jObj.exception("L.not.yet.implemented"));
+                // Response management - TODO
+                var packet = jNetwork.packet(this.destinationId, { identifier:this.getActorId(), request:request });
+                this.coordinatorComponent.getDownStreamDataFlow().handleData(packet);
             });
 
         return RemoteActor.init;
