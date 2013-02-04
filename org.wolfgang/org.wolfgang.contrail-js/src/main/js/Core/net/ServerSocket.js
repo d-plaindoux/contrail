@@ -25,7 +25,7 @@ define([ "External/jSocketLib", "require", "Core/object/jObj", "Contrail/jContra
         function ServerSocket(port, handler) {
             jObj.bless(this);
 
-            this.handler = handler;
+            this.actorHandler = handler;
             this.server = SocketLib.server(port, {accept:this.accept});
         }
 
@@ -45,7 +45,7 @@ define([ "External/jSocketLib", "require", "Core/object/jObj", "Contrail/jContra
                         client.send(data);
                     });
 
-                dataFlowIn = this.handler.handle(dataFlowOut);
+                dataFlowIn = this.actorHandler.handle(dataFlowOut);
 
                 return {
                     onmessage:dataFlowIn.handleData,

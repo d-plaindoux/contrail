@@ -18,8 +18,8 @@
 
 /*global define, setInterval, clearInterval*/
 
-define([ "Core/object/jObj", "./LocalActor" ],
-    function (jObj, localActor) {
+define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
+    function (jObj, localActor, remoteActor) {
         "use strict";
 
         function Coordinator() {
@@ -113,7 +113,14 @@ define([ "Core/object/jObj", "./LocalActor" ],
 
         Coordinator.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
             function (identifier, model) {
-                var actor = localActor(this, identifier, model);
+                var actor;
+
+                if (jObj.ofType(model, jObj.types.Named("ActorHandler"))) {
+                    actor = remoteActor(this, identifier, model);
+                } else {
+                    actor = localActor(this, identifier, model);
+                }
+
                 this.universe[identifier] = actor;
                 return actor;
             });
