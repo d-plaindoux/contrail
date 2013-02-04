@@ -35,8 +35,10 @@ define(["Core/object/jObj" ],
             });
 
         CoordinatorUpStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
-            function (data) {
-                // TODO -- this.actorManager.findActorById(data.getData().getActorId()).send(data.get)
+            function (packet) {
+                // Result might be created here ... - TODO
+                var data = packet.getData();
+                this.coordinator.send(data.identifier, data.request);
             });
 
         return CoordinatorUpStreamDataFlow.init;

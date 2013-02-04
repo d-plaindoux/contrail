@@ -23,7 +23,9 @@ define([ "Core/object/jObj", "./Actor" ],
         "use strict";
 
         function LocalActor(coordinator, identifier, model) {
-            jObj.bless(this, actor(coordinator, identifier), model);
+            jObj.bless(this, actor(coordinator, identifier));
+
+            this.model = model;
         }
 
         LocalActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],
@@ -34,7 +36,7 @@ define([ "Core/object/jObj", "./Actor" ],
         LocalActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 try {
-                    var method = this[request.getName()];
+                    var method = this.model[request.getName()];
                     jObj.checkType(method, jObj.types.Function);
                     if (response !== undefined) {
                         response.success(method(request.getParameters()));

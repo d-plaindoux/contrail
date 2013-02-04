@@ -39,6 +39,10 @@ define([ "Core/object/jObj", "./LocalActor" ],
             return new Coordinator();
         });
 
+        /*
+         * Coordinator management
+         */
+
         Coordinator.prototype.start = jObj.procedure([],
             function () {
                 var self = this;

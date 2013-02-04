@@ -22,8 +22,10 @@ define([ "Core/object/jObj", "./Actor" ],
     function (jObj, actor) {
         "use strict";
 
-        function RemoteActor(coordinator, identifier, model) {
-            jObj.bless(this, actor(coordinator, identifier), model);
+        function RemoteActor(coordinator, identifier, requestHandler) {
+            jObj.bless(this, actor(coordinator, identifier));
+
+            this.requestHandler = requestHandler;
         }
 
         RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],

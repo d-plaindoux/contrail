@@ -39,7 +39,7 @@ public class Packet {
 		this.endPoint = endPoint;
 	}
 
-	public Packet(String sourceId, String destinationId, Object data) {
+	public Packet(String destinationId, Object data) {
 		this(null, destinationId, data, null);
 	}
 

@@ -51,9 +51,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    jCC.equal(jObj.ofType(actor, jObj.types.Named("A")), true, "Checking a:A instance of A");
-                }).
-                And(function () {
                     jCC.equal(jObj.ofType(actor, jObj.types.Named("Actor")), true, "Checking a:A instance of Actor");
                 });
         });
