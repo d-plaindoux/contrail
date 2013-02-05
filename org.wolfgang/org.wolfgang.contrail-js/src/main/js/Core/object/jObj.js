@@ -19,7 +19,7 @@
 /*global define*/
 
 define("Core/object/jObj", [ "./jModel", "./jType" ],
-    function (jModel, jType, jTransducer) {
+    function (jModel, jType) {
         "use strict";
 
         var jObj = {};

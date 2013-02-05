@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("External/JSon", [],
+define("External/jSonLib", [],
     function () {
         "use strict";
 

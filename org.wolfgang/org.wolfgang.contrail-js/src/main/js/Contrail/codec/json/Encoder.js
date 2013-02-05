@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "require", "Core/object/jObj", "External/JSon" ],
+define([ "require", "Core/object/jObj", "External/jSonLib" ],
     function (require, jObj, JSon) {
         "use strict";
 

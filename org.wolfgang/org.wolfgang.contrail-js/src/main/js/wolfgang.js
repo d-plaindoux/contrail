@@ -16,19 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require */
+/*global require,define:true,module */
 
-require([
-    "../js/External/JSocketLib",
-    "External/JSonLib",
-    "Core/flow/jFlow",
-    "Core/io/jMarshaller",
-    "Core/net/jSocket",
-    "Core/object/jObj",
-    "Core/utils/jTransducer",
-    "Core/utils/jUUID",
-    "Concurrent/jConcurrent",
-    "Contrail/jContrail",
-    "Network/jNetwork"
-]);
+if (typeof define !== 'function') {
+    define = require('amdefine')(module);
+}
 
+require("External/jSocketLib");
+require("External/jSonLib");
+require("Core/flow/jFlow");
+require("Core/io/jMarshaller");
+require("Core/net/jSocket");
+require("Core/object/jObj");
+require("Core/utils/jTransducer");
+require("Core/utils/jUUID");
+require("Concurrent/jConcurrent");
+require("Contrail/jContrail");
+require("Network/jNetwork");

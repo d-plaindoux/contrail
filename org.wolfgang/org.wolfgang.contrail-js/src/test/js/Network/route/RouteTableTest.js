@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "Core/test/jCC", "Network/jNetwork", "External/JSon" ],
+require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
     function (jCC, jNetwork, JSON) {
         "use strict";
 

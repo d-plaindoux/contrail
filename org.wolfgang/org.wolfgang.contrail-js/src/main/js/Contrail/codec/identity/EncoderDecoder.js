@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define([ "require", "Core/object/jObj", "External/JSon" ],
-    function (require, jObj, JSon) {
+define([ "require", "Core/object/jObj" ],
+    function (require, jObj) {
         "use strict";
 
         function IdentityDecoder() {

@@ -22,9 +22,9 @@ define("External/jSocketLib", [ "require", "Core/object/jObj" ],
     function (require, jObj) {
         "use strict";
 
-        var Factory = {};
+        var SocketLib = {};
 
-        Factory.client = jObj.method([ jObj.types.String, jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}) ], jObj.types.Object,
+        SocketLib.client = jObj.method([ jObj.types.String, jObj.types.ObjectOf({onclose:jObj.types.Function, onmessage:jObj.types.Function}) ], jObj.types.Object,
             function (endpoint, callbacks) {
                 var WebSocket, client;
 
@@ -55,7 +55,7 @@ define("External/jSocketLib", [ "require", "Core/object/jObj" ],
             });
 
         /* NODE JS server side - "npm install websocket" - required first */
-        Factory.server = jObj.method([ jObj.types.Number, jObj.types.ObjectOf({accept:jObj.types.Function}) ], jObj.types.Object,
+        SocketLib.server = jObj.method([ jObj.types.Number, jObj.types.ObjectOf({accept:jObj.types.Function}) ], jObj.types.Object,
             function (port, accept) {
                 var httpServer, WebSocketServer, client;
 
@@ -81,7 +81,7 @@ define("External/jSocketLib", [ "require", "Core/object/jObj" ],
                 return httpServer;
             });
 
-        return Factory;
+        return SocketLib;
 
     });
 
