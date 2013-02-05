@@ -43,5 +43,11 @@ define([ "Core/object/jObj" ],
                 return this.parameters;
             });
 
+        Request.prototype.toActor = jObj.method([ jObj.types.String], jObj.types.Object,
+            function (id) {
+                return { identifier:id, request:this };
+            }
+        );
+
         return Request.init;
     });

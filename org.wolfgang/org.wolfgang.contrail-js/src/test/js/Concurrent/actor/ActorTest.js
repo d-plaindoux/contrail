@@ -18,7 +18,7 @@
 
 /*global require, setTimeout */
 
-require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent", "./StoredResponse" ],
+require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent", "../common/StoredResponse" ],
     function (jObj, jCC, jActor, jEvent, storedResponse) {
         "use strict";
 
@@ -160,6 +160,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 }).
                 ThenError(function (e) {
                     jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
+                    manager.stop();
                 });
         });
 

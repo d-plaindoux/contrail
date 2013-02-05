@@ -36,10 +36,13 @@ define([ "Core/object/jObj", "./Actor" ],
         LocalActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 try {
-                    var method = this.model[request.getName()];
+                    var result, method = this.model[request.getName()];
                     jObj.checkType(method, jObj.types.Function);
+
+                    result = method.call(this.model, request.getParameters());
+
                     if (response !== undefined) {
-                        response.success(method(request.getParameters()));
+                        response.success(result);
                     }
                 } catch (error) {
                     if (response !== undefined) {

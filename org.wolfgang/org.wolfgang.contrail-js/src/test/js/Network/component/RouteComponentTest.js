@@ -233,7 +233,6 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 });
         });
 
-
         jCC.scenario("Checking route with indirect call and two collaborative component ecosystems", function () {
             var table, routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter;
 
