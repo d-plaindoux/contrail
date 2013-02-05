@@ -70,6 +70,10 @@ require([
                 And(function () {
                     packet = jNetwork.packet("b", "a", jConcurrent.event.request("n", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
                 }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(object.a, "a");
+                }).
                 When(function () {
                     router.getUpStreamDataFlow().handleData(packet);
                 }).
@@ -132,6 +136,10 @@ require([
                 }).
                 And(function () {
                     packet = jNetwork.packet("a", "b", jConcurrent.event.request("n", [ "Hello, World!" ]).toActor("A"));
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(object.a, "a");
                 }).
                 When(function () {
                     routerA.getDownStreamDataFlow().handleData(packet);
