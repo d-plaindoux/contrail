@@ -36,7 +36,7 @@ define([ "Core/object/jObj", "Network/jNetwork", "./Actor" ],
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 // Response management - TODO
-                this.actorHandler.handle({ identifier:this.getActorId(), request:request });
+                this.actorHandler.handle(request.toActor(this.getActorId()));
             });
 
         return RemoteActor.init;
