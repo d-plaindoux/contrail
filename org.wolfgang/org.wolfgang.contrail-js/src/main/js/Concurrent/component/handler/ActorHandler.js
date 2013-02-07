@@ -34,10 +34,13 @@ define(["Core/object/jObj", "Network/jNetwork" ],
                 return new ActorHandler(destinationId, coordinatorComponent);
             });
 
-        ActorHandler.prototype.actorHandler = jObj.method([jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request")})],
+        ActorHandler.prototype.actorHandler = jObj.method([jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.Named("Response"))})],
             function (data) {
-                var packet = jNetwork.packet(this.destinationId, data);
-                this.coordinatorComponent.getDownStreamDataFlow().handleData(packet);
+                if (data.response !== null) {
+                    data.response = this.coordinatorComponent.createResponseHook(data.response);
+                }
+
+                this.coordinatorComponent.getDownStreamDataFlow().handleData(jNetwork.packet(this.destinationId, data));
             });
 
         return ActorHandler.init;

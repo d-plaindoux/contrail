@@ -19,8 +19,7 @@
 /*global require, setTimeout */
 
 require([
-    "Core/object/jObj", "Core/test/jCC", "Concurrent/jConcurrent",
-    "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail"
+    "Core/object/jObj", "Core/test/jCC", "Concurrent/jConcurrent", "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail"
 ],
     function (jObj, jCC, jConcurrent, storedResponse, jNetwork, jFlow, jContrail) {
         "use strict";

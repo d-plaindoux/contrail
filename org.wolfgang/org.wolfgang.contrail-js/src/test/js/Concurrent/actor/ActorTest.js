@@ -200,7 +200,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send(jEvent.request("n", []).toActor("test.a"), response);
+                    manager.send("test.a", jEvent.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -254,7 +254,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send(jEvent.request("m", []).toActor("test.a"), response);
+                    manager.send("test.a", jEvent.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -281,7 +281,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send(jEvent.request("m", []).toActor("test.a"), response);
+                    manager.send("test.a", jEvent.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {

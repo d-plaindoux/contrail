@@ -18,15 +18,16 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "./flow/CoordinatorUpStreamDataFlow" ],
-    function (jObj, jFlow, jComponent, coordinatorFlow) {
+define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow" ],
+    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow) {
         "use strict";
 
         function CoordinatorComponent(coordinator) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
-            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), this.packetActorRequestFilter);
+            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), this.actorRequestFilter);
             this.coordinator = coordinator;
+            this.responses = {};
         }
 
         CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],
@@ -34,12 +35,39 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
                 return new CoordinatorComponent(coordinator);
             });
 
-        CoordinatorComponent.prototype.packetActorRequestFilter = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
+        CoordinatorComponent.prototype.createResponseHook = jObj.method([jObj.types.Named("Response")], jObj.types.String,
+            function (response) {
+                var identifier = jUUID.generate();
+                this.responses[identifier] = response;
+                return identifier;
+            });
+
+        CoordinatorComponent.prototype.retrieveResponseHook = jObj.method([jObj.types.String], jObj.types.Named("Response"),
+            function (identifier) {
+                var response = this.responses[identifier];
+                delete this.responses[identifier];
+                return response;
+            });
+
+        CoordinatorComponent.prototype.isAnActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
+            function (data) {
+                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.String)}));
+            });
+
+        CoordinatorComponent.prototype.isAnActorResponse = jObj.method([jObj.types.Any], jObj.types.Boolean,
+            function (data) {
+                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, type:jObj.types.Number, value:jObj.types.Any}));
+            });
+
+        CoordinatorComponent.prototype.actorRequestFilter = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
             function (packet) {
                 var result;
 
-                if (jObj.ofType(packet, jObj.types.Named("Packet"))
-                    && jObj.ofType(packet.getData(), jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request")}))) {
+                if (!jObj.ofType(packet, jObj.types.Named("Packet"))) {
+                    result = null;
+                } else if (this.isAnActorRequest(packet.getData())) {
+                    result = packet;
+                } else if (this.isAnActorResponse(packet.getData())) {
                     result = packet;
                 } else {
                     result = null;
@@ -47,7 +75,6 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
 
                 return result;
             });
-
 
         CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
