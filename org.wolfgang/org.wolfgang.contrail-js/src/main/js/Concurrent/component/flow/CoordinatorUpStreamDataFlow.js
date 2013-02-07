@@ -38,7 +38,7 @@ define(["Core/object/jObj", "Core/flow/jFlow" ],
             function (packet) {
                 // Response management - TODO
                 var data = packet.getData();
-                this.coordinator.send(data.identifier, data.request);
+                this.coordinator.send(data);
             });
 
         return CoordinatorUpStreamDataFlow.init;

@@ -22,12 +22,18 @@
  */
 
 ({
-    appDir:"../",
-    baseUrl:"js",
-    dir:"../../../target/nodejs",
+    appDir:"../js",
+    baseUrl:".",
+    dir:"../../../target/node_modules",
     modules:[
         {
-            name:"wolfgang"
+            name:"Contrail/jContrail",
+            include:["Network/jNetwork", "Concurrent/jConcurrent"],
+            exclude:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+        },
+        {
+            name:"Core/jCore",
+            include:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
         }
     ]
 })

@@ -16,20 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require,define:true,module */
+/*global define*/
 
-if (typeof define !== 'function') {
-    define = require('amdefine')(module);
-}
+define([],
+    function () {
+        "use strict";
 
-require("External/jSocketLib");
-require("External/jSonLib");
-require("Core/flow/jFlow");
-require("Core/io/jMarshaller");
-require("Core/net/jSocket");
-require("Core/object/jObj");
-require("Core/utils/jTransducer");
-require("Core/utils/jUUID");
-require("Concurrent/jConcurrent");
-require("Contrail/jContrail");
-require("Network/jNetwork");
+        var jCore = {};
+
+        jCore.version = { major:0, minor:1};
+
+        return jCore;
+    });

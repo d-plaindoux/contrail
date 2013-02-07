@@ -122,6 +122,8 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
                 }
 
                 this.universe[identifier] = actor;
+                this.registerActor(actor);
+
                 return actor;
             });
 
@@ -134,10 +136,14 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
          * Send and broadcast mechanisms
          */
 
-        Coordinator.prototype.send = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
-            function (identifier, request, response) {
-                if (this.universe.hasOwnProperty(identifier)) {
-                    this.universe[identifier].send(request, response);
+        Coordinator.prototype.send = jObj.procedure([jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request")}), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (actorRequest, response) {
+                if (this.universe.hasOwnProperty(actorRequest.identifier)) {
+                    this.universe[actorRequest.identifier].send(actorRequest.request, response);
+                } else {
+                    if (response !== undefined) {
+                        response.failure(jObj.exception("L.actor.not.found"));
+                    }
                 }
             });
 

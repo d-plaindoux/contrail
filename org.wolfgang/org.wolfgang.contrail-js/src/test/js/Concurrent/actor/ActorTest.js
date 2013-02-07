@@ -89,9 +89,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 And(function () {
                     response = storedResponse();
                 }).
-                And(function () {
-                    actor.activate();
-                }).
                 When(function () {
                     actor.send(jEvent.request("n", []), response);
                 }).
@@ -127,9 +124,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 }).
                 And(function () {
                     actor = manager.createActor("test.a", new A());
-                }).
-                And(function () {
-                    actor.activate();
                 }).
                 And(function () {
                     response = storedResponse();
@@ -180,9 +174,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 And(function () {
                     response = storedResponse();
                 }).
-                And(function () {
-                    actor.activate();
-                }).
                 When(function () {
                     actor.send(jEvent.request("n", []), response);
                 }).
@@ -192,6 +183,30 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                 });
         });
 
+        jCC.scenario("Check actor indirect using manager successful message sent", function () {
+            var manager, response;
+
+            jCC.
+                Given(function () {
+                    manager = jActor.coordinator();
+                }).
+                And(function () {
+                    manager.start();
+                }).
+                And(function () {
+                    manager.createActor("test.a", new A());
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    manager.send(jEvent.request("n", []).toActor("test.a"), response);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response.value(), "A.n()", "Checking response type");
+                    manager.stop();
+                });
+        });
         jCC.scenario("Check actor indirect failed message sent", function () {
             var manager, actor, response;
 
@@ -206,9 +221,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     actor = manager.createActor("test.a", new A());
                 }).
                 And(function () {
-                    actor.activate();
-                }).
-                And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
@@ -220,6 +232,63 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                         jCC.equal(true, false, "expecting an exception");
                     } catch (e) {
                         jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
+                    }
+                    manager.stop();
+                });
+        });
+
+        jCC.scenario("Check actor indirect using manager failed message sent", function () {
+            var manager, response;
+
+            jCC.
+                Given(function () {
+                    manager = jActor.coordinator();
+                }).
+                And(function () {
+                    manager.start();
+                }).
+                And(function () {
+                    manager.createActor("test.a", new A());
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    manager.send(jEvent.request("m", []).toActor("test.a"), response);
+                }).
+                ThenAfter(500, function () {
+                    try {
+                        response.value();
+                        jCC.equal(true, false, "expecting an exception");
+                    } catch (e) {
+                        jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
+                    }
+                    manager.stop();
+                });
+        });
+
+        jCC.scenario("Check undefined actor indirect failed message sent", function () {
+            var manager, response;
+
+            jCC.
+                Given(function () {
+                    manager = jActor.coordinator();
+                }).
+                And(function () {
+                    manager.start();
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    manager.send(jEvent.request("m", []).toActor("test.a"), response);
+                }).
+                ThenAfter(500, function () {
+                    try {
+                        response.value();
+                        jCC.equal(true, false, "expecting an exception");
+                    } catch (e) {
+                        jCC.equal(e.message, "L.actor.not.found", "Actor does not exist");
                     }
                     manager.stop();
                 });

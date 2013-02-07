@@ -43,7 +43,7 @@ require([
         // ---------------------------------------------------------
 
         jCC.scenario("Check locally routed actor message passing", function () {
-            var router, terminal, coordinator, actor, object, packet;
+            var router, terminal, coordinator, object, packet;
 
             jCC.
                 Given(function () {
@@ -58,8 +58,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    actor = coordinator.createActor("A", object);
-                    actor.activate();
+                    coordinator.createActor("A", object);
                 }).
                 And(function () {
                     terminal = jConcurrent.component(coordinator);
@@ -84,7 +83,7 @@ require([
         });
 
         jCC.scenario("Checking remotely routed actor message passing", function () {
-            var table, routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter, coordinator, actor, object;
+            var table, routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter, coordinator, object;
 
             jCC.
                 Given(function () {
@@ -122,8 +121,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    actor = coordinator.createActor("A", object);
-                    actor.activate();
+                    coordinator.createActor("A", object);
                 }).
                 And(function () {
                     terminalB = jConcurrent.component(coordinator);
