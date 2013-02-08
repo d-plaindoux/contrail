@@ -18,31 +18,37 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Concurrent/event/jEvent"],
-    function (jObj, jEvent) {
+define(["Core/object/jObj", "Concurrent/event/jEvent", "Network/jNetwork"],
+    function (jObj, jEvent, jNetwork) {
         "use strict";
 
-        function ResponseHandler(component, identifier) {
+        function ResponseHandler(component, identifier, destinationId) {
             jObj.bless(this, jEvent.response(this.success, this.failure));
             this.component = component;
             this.identifier = identifier;
+            this.destinationId = destinationId;
         }
 
-        ResponseHandler.init = jObj.constructor([jObj.types.Named("CoordinatorComponent"), jObj.types.String],
-            function (component, identifier) {
+        var sendPacket =
+            function (self, data) {
+                var packet = jNetwork.packet(null, self.destinationId, data, null);
+                self.component.getDownStreamDataFlow().handleData(packet);
+            };
+
+        ResponseHandler.init = jObj.constructor([jObj.types.Named("CoordinatorComponent"), jObj.types.String, jObj.types.String],
+            function (component, identifier, destination) {
                 return new ResponseHandler(component, identifier);
             });
 
-        ResponseHandler.prototype.success =
         ResponseHandler.prototype.success = jObj.procedure([jObj.types.Any],
             function (value) {
-                this.component.getDownStreamDataFlow().handleData({ identifier:this.identifier, type:0x01, value:value});
-            };
+                sendPacket(this, { identifier:this.identifier, type:0x01, value:value});
+            });
 
-        ResponseHandler.prototype.failure =
+        ResponseHandler.prototype.failure = jObj.procedure([jObj.types.Any],
             function (error) {
-                this.component.getDownStreamDataFlow().handleData({ identifier:this.identifier, type:0x02, value:error});
-            };
+                sendPacket(this, { identifier:this.identifier, type:0x02, value:error});
+            });
 
         return ResponseHandler.init;
     });
