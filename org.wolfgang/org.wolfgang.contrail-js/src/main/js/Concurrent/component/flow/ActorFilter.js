@@ -34,7 +34,7 @@ define(["Core/object/jObj" ],
                 return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, type:jObj.types.Number, value:jObj.types.Any}));
             });
 
-        ActorPacketFilter.actorRequestFilter = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
+        ActorPacketFilter.isAnActorInteraction = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
             function (packet) {
                 var result;
 

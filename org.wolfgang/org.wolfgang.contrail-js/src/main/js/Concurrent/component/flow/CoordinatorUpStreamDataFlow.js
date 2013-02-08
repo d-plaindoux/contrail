@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorPacketFilter" ],
-    function (jObj, jFlow, responseHandler, actorPacketFilter) {
+define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorFilter" ],
+    function (jObj, jFlow, responseHandler, actorFilter) {
         "use strict";
 
         function CoordinatorUpStreamDataFlow(coordinator, component) {
@@ -38,12 +38,12 @@ define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorPack
             function (packet) {
                 var data = packet.getData(), response, self = this;
 
-                if (actorPacketFilter.isAnActorRequest(data)) {
-                    if (data.response !== null) {
+                if (actorFilter.isAnActorRequest(data)) {
+                    if (data.response !== undefined) {
                         response = responseHandler(this.component, data.response);
                     }
                     this.coordinator.send(data.identifier, data.request, response);
-                } else if (actorPacketFilter.isAnActorResponse(data)) {
+                } else if (actorFilter.isAnActorResponse(data)) {
                     response = this.coordinator.retrieveResponseHook(data.identifier);
                     if (data.type === 0x01) {
                         response.success(data.response);
