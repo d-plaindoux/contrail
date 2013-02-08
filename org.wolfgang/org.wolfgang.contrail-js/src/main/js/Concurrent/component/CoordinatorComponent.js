@@ -18,14 +18,14 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow" ],
-    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow) {
+define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorPacketFilter" ],
+    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow, actorPacketFilter) {
         "use strict";
 
         function CoordinatorComponent(coordinator) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
-            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), this.actorRequestFilter);
+            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorPacketFilter.actorRequestFilter);
             this.coordinator = coordinator;
             this.responses = {};
         }
@@ -47,33 +47,6 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
                 var response = this.responses[identifier];
                 delete this.responses[identifier];
                 return response;
-            });
-
-        CoordinatorComponent.prototype.isAnActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
-            function (data) {
-                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.String)}));
-            });
-
-        CoordinatorComponent.prototype.isAnActorResponse = jObj.method([jObj.types.Any], jObj.types.Boolean,
-            function (data) {
-                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, type:jObj.types.Number, value:jObj.types.Any}));
-            });
-
-        CoordinatorComponent.prototype.actorRequestFilter = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
-            function (packet) {
-                var result;
-
-                if (!jObj.ofType(packet, jObj.types.Named("Packet"))) {
-                    result = null;
-                } else if (this.isAnActorRequest(packet.getData())) {
-                    result = packet;
-                } else if (this.isAnActorResponse(packet.getData())) {
-                    result = packet;
-                } else {
-                    result = null;
-                }
-
-                return result;
             });
 
         CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),

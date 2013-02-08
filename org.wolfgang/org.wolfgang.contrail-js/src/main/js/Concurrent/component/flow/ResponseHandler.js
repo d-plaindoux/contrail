@@ -34,6 +34,7 @@ define(["Core/object/jObj", "Concurrent/event/jEvent"],
             });
 
         ResponseHandler.prototype.success =
+        ResponseHandler.prototype.success = jObj.procedure([jObj.types.Any],
             function (value) {
                 this.component.getDownStreamDataFlow().handleData({ identifier:this.identifier, type:0x01, value:value});
             };
