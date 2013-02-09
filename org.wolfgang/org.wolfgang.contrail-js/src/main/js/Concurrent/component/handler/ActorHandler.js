@@ -36,7 +36,7 @@ define(["Core/object/jObj", "Network/jNetwork" ],
 
         ActorHandler.prototype.actorHandler = jObj.method([jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.Named("Response"))})],
             function (data) {
-                if (data.response !== null) {
+                if (data.response) {
                     data.response = this.coordinatorComponent.createResponseHook(data.response);
                 }
 

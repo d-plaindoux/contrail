@@ -31,11 +31,15 @@ require([
             this.a = "a";
         }
 
-        A.prototype.n = function (na) {
+        A.prototype.setA = function (na) {
             this.a = na;
         };
 
-        A.prototype.m = function () {
+        A.prototype.getA = function () {
+            return this.a;
+        };
+
+        A.prototype.error = function () {
             throw "A.m()";
         };
 
@@ -66,7 +70,7 @@ require([
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", jConcurrent.event.request("n", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
+                    packet = jNetwork.packet("b", "a", jConcurrent.event.request("setA", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -132,7 +136,7 @@ require([
                     jContrail.component.compose([ initialB, routerB, terminalB ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("a", "b", jConcurrent.event.request("n", [ "Hello, World!" ]).toActor("A"));
+                    packet = jNetwork.packet("a", "b", jConcurrent.event.request("setA", [ "Hello, World!" ]).toActor("A"));
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -144,6 +148,64 @@ require([
                 ThenAfter(500, function () {
                     jCC.equal(object.a, "Hello, World!");
                     coordinator.stop();
+                });
+        });
+
+        jCC.scenario("Checking remotely routed actor message passing", function () {
+            var table, coordinatorA, initialA, componentA, coordinatorB, initialB, dataFlowRouter, response;
+
+            jCC.
+                Given(function () {
+                    table = jNetwork.table.create();
+                    table.addRoute("a", "ws://localhost/a");
+                    table.addRoute("b", "ws://localhost/b");
+                }).
+                And(function () {
+                    dataFlowRouter = jContrail.flow.core();
+                    dataFlowRouter.handleData = function (data) {
+                        if (data.getEndPoint() === table.getRoute("a")) {
+                            initialA.getUpStreamDataFlow().handleData(data);
+                        } else if (data.getEndPoint() === table.getRoute("b")) {
+                            initialB.getUpStreamDataFlow().handleData(data);
+                        }
+                    };
+                }).
+                And(function () {
+                    initialA = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    initialB = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    coordinatorA = jConcurrent.actor.coordinator();
+                    coordinatorA.start();
+                }).
+                And(function () {
+                    coordinatorB = jConcurrent.actor.coordinator();
+                    coordinatorB.start();
+                }).
+                And(function () {
+                    coordinatorB.createActor("A", new A());
+                }).
+                And(function () {
+                    componentA = jConcurrent.component(coordinatorA);
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), componentA ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
+                }).
+                And(function () {
+                    coordinatorA.createActor("A", jConcurrent.actor.handler("b", componentA));
+                }).
+                When(function () {
+                    coordinatorA.send("A", jConcurrent.event.request("setA", [ "Hello, World!" ]), response);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response.value(), "Hello, World!");
+                    coordinatorA.stop();
+                    coordinatorB.stop();
                 });
         });
     });

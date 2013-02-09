@@ -26,15 +26,31 @@ define(["Core/object/jObj" ],
 
         ActorPacketFilter.isAnActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
             function (data) {
-                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.String)}));
+                var result;
+
+                if (jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.String)}))) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+
+                return result;
             });
 
         ActorPacketFilter.isAnActorResponse = jObj.method([jObj.types.Any], jObj.types.Boolean,
             function (data) {
-                return jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, type:jObj.types.Number, value:jObj.types.Any}));
+                var result;
+
+                if (jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, type:jObj.types.Number, value:jObj.types.Any}))) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+
+                return result;
             });
 
-        ActorPacketFilter.isAnActorInteraction = jObj.method([jObj.types.Any], jObj.types.Named("Packet"),
+        ActorPacketFilter.isAnActorInteraction = jObj.method([jObj.types.Any], jObj.types.Nullable(jObj.types.Named("Packet")),
             function (packet) {
                 var result;
 

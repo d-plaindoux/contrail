@@ -92,6 +92,9 @@ define([ "require" ],
             String:ofPrimitiveType(Primitives.String),
             Boolean:ofPrimitiveType(Primitives.Boolean),
             Undefined:ofPrimitiveType(Primitives.Undefined),
+            Null:typeRule("null", function (object) {
+                return object === null;
+            }),
 
             Named:ofPrimitiveType,
 
@@ -188,11 +191,7 @@ define([ "require" ],
 
             // Nullable
             Nullable:function (type) {
-                return jType.types.Or(jType.types.Undefined, type);
-            },
-
-            VarArgs:function (type) {
-                return jType.types.Or(jType.types.Undefined, type);
+                return jType.types.Or(jType.types.Or(jType.types.Null, jType.types.Undefined), type);
             }
         };
 
