@@ -47,7 +47,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -63,7 +63,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -84,7 +84,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -123,7 +123,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -169,7 +169,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -194,7 +194,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    manager.createActor("test.a", new A());
+                    manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -218,7 +218,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    actor = manager.createActor("test.a", new A());
+                    actor = manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -248,7 +248,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     manager.start();
                 }).
                 And(function () {
-                    manager.createActor("test.a", new A());
+                    manager.localActor("test.a", new A());
                 }).
                 And(function () {
                     response = storedResponse();

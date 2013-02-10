@@ -36,19 +36,19 @@ define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorFilt
 
         CoordinatorUpStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
             function (packet) {
-                var data = packet.getData(), response, self = this;
+                var data = packet.getData(), response;
 
                 if (actorFilter.isAnActorRequest(data)) {
-                    if (data.response !== undefined) {
-                        response = responseHandler(this.component, data.response);
+                    if (data.response) {
+                        response = responseHandler(this.component, packet.getSourceId(), data.response);
                     }
                     this.coordinator.send(data.identifier, data.request, response);
                 } else if (actorFilter.isAnActorResponse(data)) {
-                    response = this.coordinator.retrieveResponseHook(data.identifier);
+                    response = this.component.retrieveResponseById(data.identifier);
                     if (data.type === 0x01) {
-                        response.success(data.response);
+                        response.success(data.value);
                     } else {
-                        response.failure(data.response);
+                        response.failure(data.value);
                     }
                 }
 

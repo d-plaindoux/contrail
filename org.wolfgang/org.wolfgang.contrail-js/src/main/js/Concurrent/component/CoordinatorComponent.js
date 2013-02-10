@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorFilter" ],
-    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow, actorFilter) {
+define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorFilter", "./handler/RemoteActorHandler" ],
+    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow, actorFilter, actorHandler) {
         "use strict";
 
         function CoordinatorComponent(coordinator) {
@@ -28,6 +28,8 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
             this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorFilter.isAnActorInteraction);
             this.coordinator = coordinator;
             this.responses = {};
+
+            this.coordinator.setRemoteActorHandler(actorHandler(this));
         }
 
         CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],
@@ -35,14 +37,14 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
                 return new CoordinatorComponent(coordinator);
             });
 
-        CoordinatorComponent.prototype.createResponseHook = jObj.method([jObj.types.Named("Response")], jObj.types.String,
+        CoordinatorComponent.prototype.createResponseId = jObj.method([jObj.types.Named("Response")], jObj.types.String,
             function (response) {
                 var identifier = jUUID.generate();
                 this.responses[identifier] = response;
                 return identifier;
             });
 
-        CoordinatorComponent.prototype.retrieveResponseHook = jObj.method([jObj.types.String], jObj.types.Named("Response"),
+        CoordinatorComponent.prototype.retrieveResponseById = jObj.method([jObj.types.String], jObj.types.Named("Response"),
             function (identifier) {
                 var response = this.responses[identifier];
                 delete this.responses[identifier];
@@ -52,6 +54,11 @@ define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", 
         CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
+            });
+
+        CoordinatorComponent.prototype.createRemoteActor = jObj.procedure([jObj.types.String, jObj.types.String],
+            function (id, name) {
+                this.coordinator.localActor(name, actorHandler(id, this));
             });
 
         return CoordinatorComponent.init;

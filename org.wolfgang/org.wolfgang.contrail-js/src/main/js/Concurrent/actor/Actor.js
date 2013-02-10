@@ -25,7 +25,7 @@ define([ "Core/object/jObj" ],
         function Actor(coordinator, identifier) {
             jObj.bless(this);
 
-            this.actorId = identifier;
+            this.identifier = identifier;
             this.coordinator = coordinator;
             this.jobs = [];
         }
@@ -33,11 +33,6 @@ define([ "Core/object/jObj" ],
         Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
             function (coordinator, identifier) {
                 return new Actor(coordinator, identifier);
-            });
-
-        Actor.prototype.getActorId = jObj.method([], jObj.types.String,
-            function () {
-                return this.actorId;
             });
 
         Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
@@ -66,7 +61,7 @@ define([ "Core/object/jObj" ],
 
         Actor.prototype.dispose = jObj.procedure([],
             function () {
-                this.coordinator.disposeActor(this.getActorId());
+                this.coordinator.disposeActor(this.identifier);
             });
 
         return Actor.init;

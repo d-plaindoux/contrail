@@ -35,6 +35,10 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
 
         RouterComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
+                if (!packet.getSourceId()) {
+                    packet.setSourceId(this.router.getIdentifier());
+                }
+
                 if (this.router.getIdentifier() === packet.getDestinationId()) {
                     this.router.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {

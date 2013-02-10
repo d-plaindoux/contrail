@@ -22,20 +22,20 @@ define([ "Core/object/jObj", "Network/jNetwork", "./Actor" ],
     function (jObj, jNetwork, actor) {
         "use strict";
 
-        function RemoteActor(coordinator, identifier, actorHandler) {
+        function RemoteActor(coordinator, location, identifier) {
             jObj.bless(this, actor(coordinator, identifier));
 
-            this.actorHandler = actorHandler;
+            this.location = location;
         }
 
-        RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Named("ActorHandler") ],
-            function (coordinator, identifier, actorHandler) {
-                return new RemoteActor(coordinator, identifier, actorHandler);
+        RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.String ],
+            function (coordinator, location, identifier) {
+                return new RemoteActor(coordinator, location, identifier);
             });
 
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
-                this.actorHandler.handle(request.toActor(this.getActorId(), response));
+                this.coordinator.getRemoteActorHandler().handle(this.location, this.identifier, request, response);
             });
 
         return RemoteActor.init;

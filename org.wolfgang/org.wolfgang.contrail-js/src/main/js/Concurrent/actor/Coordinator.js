@@ -33,11 +33,27 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
 
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
+
+            this.remoteActorHandler = undefined;
         }
 
         Coordinator.init = jObj.constructor([], function () {
             return new Coordinator();
         });
+
+        /*
+         * Remote actor handler
+         */
+
+        Coordinator.prototype.setRemoteActorHandler = jObj.procedure([jObj.types.Named("RemoteActorHandler")],
+            function (remoteActorHandler) {
+                this.remoteActorHandler = remoteActorHandler;
+            });
+
+        Coordinator.prototype.getRemoteActorHandler = jObj.method([], jObj.types.Named("RemoteActorHandler"),
+            function () {
+                return this.remoteActorHandler;
+            });
 
         /*
          * Coordinator management
@@ -103,7 +119,7 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
         Coordinator.prototype.unregisterActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors = this.actors.filter(function (a) {
-                    return a.actorId !== actor.actorId;
+                    return a.identifier !== actor.identifier;
                 });
             });
 
@@ -111,15 +127,23 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
          * Actor creation and deletion
          */
 
-        Coordinator.prototype.createActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
+        Coordinator.prototype.localActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
             function (identifier, model) {
-                var actor;
+                var actor = localActor(this, identifier, model);
 
-                if (jObj.ofType(model, jObj.types.Named("ActorHandler"))) {
-                    actor = remoteActor(this, identifier, model);
-                } else {
-                    actor = localActor(this, identifier, model);
-                }
+                this.universe[identifier] = actor;
+                this.registerActor(actor);
+
+                return actor;
+            });
+
+        /*
+         * Actor creation and deletion
+         */
+
+        Coordinator.prototype.remoteActor = jObj.method([jObj.types.String, jObj.types.String], jObj.types.Named("Actor"),
+            function (location, identifier) {
+                var actor = remoteActor(this, location, identifier);
 
                 this.universe[identifier] = actor;
                 this.registerActor(actor);

@@ -20,28 +20,31 @@
 
 define(["Core/object/jObj", "Network/jNetwork" ],
     function (jObj, jNetwork) {
-        "use strict";
+        // "use strict";
 
-        function ActorHandler(destinationId, coordinatorComponent) {
+        function RemoteActorHandler(coordinatorComponent) {
             jObj.bless(this);
 
-            this.destinationId = destinationId;
             this.coordinatorComponent = coordinatorComponent;
         }
 
-        ActorHandler.init = jObj.constructor([jObj.types.String, jObj.types.Named("CoordinatorComponent")],
-            function (destinationId, coordinatorComponent) {
-                return new ActorHandler(destinationId, coordinatorComponent);
+        RemoteActorHandler.init = jObj.constructor([jObj.types.Named("CoordinatorComponent")],
+            function (coordinatorComponent) {
+                return new RemoteActorHandler(coordinatorComponent);
             });
 
-        ActorHandler.prototype.actorHandler = jObj.method([jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.Named("Response"))})],
-            function (data) {
-                if (data.response) {
-                    data.response = this.coordinatorComponent.createResponseHook(data.response);
+        RemoteActorHandler.prototype.handle = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Named("Request"), jObj.types.Named("Response")],
+            function (location, identifier, request, response) {
+                var responseId;
+
+                if (response) {
+                    responseId = this.coordinatorComponent.createResponseId(response);
+                } else {
+                    responseId = null;
                 }
 
-                this.coordinatorComponent.getDownStreamDataFlow().handleData(jNetwork.packet(this.destinationId, data));
+                this.coordinatorComponent.getDownStreamDataFlow().handleData(jNetwork.packet(null, location, request.toActor(identifier, responseId)));
             });
 
-        return ActorHandler.init;
+        return RemoteActorHandler.init;
     });

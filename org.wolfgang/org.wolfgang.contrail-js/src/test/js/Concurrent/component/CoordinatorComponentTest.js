@@ -61,7 +61,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    coordinator.createActor("A", object);
+                    coordinator.localActor("A", object);
                 }).
                 And(function () {
                     terminal = jConcurrent.component(coordinator);
@@ -124,7 +124,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    coordinator.createActor("A", object);
+                    coordinator.localActor("A", object);
                 }).
                 And(function () {
                     terminalB = jConcurrent.component(coordinator);
@@ -151,8 +151,8 @@ require([
                 });
         });
 
-        jCC.scenario("Checking remotely routed actor message passing", function () {
-            var table, coordinatorA, initialA, componentA, coordinatorB, initialB, dataFlowRouter, response;
+        jCC.scenario("Checking remotely routed actor message passing using remote actor", function () {
+            var table, coordinatorA, initialA, coordinatorB, initialB, dataFlowRouter, response;
 
             jCC.
                 Given(function () {
@@ -181,29 +181,29 @@ require([
                     coordinatorA.start();
                 }).
                 And(function () {
+                    coordinatorA.remoteActor("b", "A");
+                }).
+                And(function () {
                     coordinatorB = jConcurrent.actor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
-                    coordinatorB.createActor("A", new A());
+                    coordinatorB.localActor("A", new A());
                 }).
                 And(function () {
-                    componentA = jConcurrent.component(coordinatorA);
-                }).
-                And(function () {
-                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), componentA ]);
+                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
                 }).
                 And(function () {
                     jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
                 }).
                 And(function () {
-                    coordinatorA.createActor("A", jConcurrent.actor.handler("b", componentA));
+                    response = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jConcurrent.event.request("setA", [ "Hello, World!" ]), response);
+                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response);
                 }).
                 ThenAfter(500, function () {
-                    jCC.equal(response.value(), "Hello, World!");
+                    jCC.equal(response.value(), "a");
                     coordinatorA.stop();
                     coordinatorB.stop();
                 });

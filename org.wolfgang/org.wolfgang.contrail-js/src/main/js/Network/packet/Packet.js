@@ -31,12 +31,17 @@ define([ "Core/object/jObj" ],
             this.endPoint = endpoint;
         }
 
-        Packet.init = jObj.constructor([ jObj.types.String, jObj.types.String, jObj.types.Any , jObj.types.Nullable(jObj.types.String) ],
+        Packet.init = jObj.constructor([ jObj.types.Nullable(jObj.types.String), jObj.types.String, jObj.types.Any , jObj.types.Nullable(jObj.types.String) ],
             function (sourceId, destinationId, data, endPoint) {
                 return new Packet(sourceId, destinationId, data, endPoint);
             });
 
-        Packet.prototype.getSourceId = jObj.method([], jObj.types.String,
+        Packet.prototype.setSourceId = jObj.procedure([jObj.types.String],
+            function (sourceId) {
+                this.sourceId = sourceId;
+            });
+
+        Packet.prototype.getSourceId = jObj.method([], jObj.types.Nullable(jObj.types.String),
             function () {
                 return this.sourceId;
             });
