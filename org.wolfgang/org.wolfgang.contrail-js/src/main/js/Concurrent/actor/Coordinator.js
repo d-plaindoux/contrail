@@ -18,8 +18,8 @@
 
 /*global define, setInterval, clearInterval*/
 
-define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
-    function (jObj, localActor, remoteActor) {
+define([ "Core/object/jObj", "./Actor" ],
+    function (jObj, actor) {
         "use strict";
 
         function Coordinator() {
@@ -111,12 +111,12 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
          * Actor (un)registration features
          */
 
-        Coordinator.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
+        Coordinator.prototype.activateActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors.push(actor);
             });
 
-        Coordinator.prototype.unregisterActor = jObj.procedure([jObj.types.Named("Actor")],
+        Coordinator.prototype.deactivateActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
                 this.actors = this.actors.filter(function (a) {
                     return a.identifier !== actor.identifier;
@@ -127,28 +127,15 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
          * Actor creation and deletion
          */
 
-        Coordinator.prototype.localActor = jObj.method([jObj.types.String, jObj.types.Object], jObj.types.Named("Actor"),
-            function (identifier, model) {
-                var actor = localActor(this, identifier, model);
-
-                this.universe[identifier] = actor;
-                this.registerActor(actor);
-
-                return actor;
+        Coordinator.prototype.actor = jObj.method([jObj.types.String], jObj.types.Named("Actor"),
+            function (identifier) {
+                return actor(this, identifier);
             });
 
-        /*
-         * Actor creation and deletion
-         */
-
-        Coordinator.prototype.remoteActor = jObj.method([jObj.types.String, jObj.types.String], jObj.types.Named("Actor"),
-            function (location, identifier) {
-                var actor = remoteActor(this, location, identifier);
-
-                this.universe[identifier] = actor;
-                this.registerActor(actor);
-
-                return actor;
+        Coordinator.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
+            function (anActor) {
+                this.universe[anActor.getIdentifier()] = anActor;
+                this.activateActor(anActor);
             });
 
         Coordinator.prototype.disposeActor = jObj.procedure([jObj.types.String],

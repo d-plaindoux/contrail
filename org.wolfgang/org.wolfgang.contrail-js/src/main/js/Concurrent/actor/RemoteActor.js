@@ -18,24 +18,34 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "Network/jNetwork", "./Actor" ],
-    function (jObj, jNetwork, actor) {
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        function RemoteActor(coordinator, location, identifier) {
-            jObj.bless(this, actor(coordinator, identifier));
+        function RemoteActor(actor, location) {
+            jObj.bless(this, actor);
 
             this.location = location;
         }
 
-        RemoteActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.String ],
-            function (coordinator, location, identifier) {
-                return new RemoteActor(coordinator, location, identifier);
+        RemoteActor.init = jObj.constructor([ jObj.types.Named("Actor"), jObj.types.String ],
+            function (actor, location) {
+                return new RemoteActor(actor, location);
             });
 
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 this.coordinator.getRemoteActorHandler().handle(this.location, this.identifier, request, response);
+            });
+
+        RemoteActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
+            function (model) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
+            });
+
+        RemoteActor.prototype.bindToRemote = jObj.procedure([jObj.types.String],
+            function (location) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
             });
 
         return RemoteActor.init;

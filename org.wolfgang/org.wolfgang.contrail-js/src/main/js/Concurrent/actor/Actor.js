@@ -18,8 +18,8 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
+    function (jObj, localActor, remoteActor) {
         "use strict";
 
         function Actor(coordinator, identifier) {
@@ -33,6 +33,11 @@ define([ "Core/object/jObj" ],
         Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
             function (coordinator, identifier) {
                 return new Actor(coordinator, identifier);
+            });
+
+        Actor.prototype.getIdentifier = jObj.method([], jObj.types.String,
+            function () {
+                return this.identifier;
             });
 
         Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
@@ -51,17 +56,31 @@ define([ "Core/object/jObj" ],
 
         Actor.prototype.activate = jObj.procedure([],
             function () {
-                this.coordinator.registerActor(this);
+                this.coordinator.activateActor(this);
             });
 
         Actor.prototype.suspend = jObj.procedure([],
             function () {
-                this.coordinator.unregisterActor(this);
+                this.coordinator.deactivateActor(this);
             });
 
         Actor.prototype.dispose = jObj.procedure([],
             function () {
                 this.coordinator.disposeActor(this.identifier);
+            });
+
+        Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
+            function (model) {
+                var anActor = localActor(this, model);
+                this.coordinator.registerActor(anActor);
+                return anActor;
+            });
+
+        Actor.prototype.bindToRemote = jObj.method([jObj.types.String], jObj.types.Named("Actor"),
+            function (location) {
+                var anActor = remoteActor(this, location);
+                this.coordinator.registerActor(anActor);
+                return anActor;
             });
 
         return Actor.init;

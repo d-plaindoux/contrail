@@ -61,7 +61,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    coordinator.localActor("A", object);
+                    coordinator.actor("A").bindToObject(object);
                 }).
                 And(function () {
                     terminal = jConcurrent.component(coordinator);
@@ -124,7 +124,7 @@ require([
                     object = new A();
                 }).
                 And(function () {
-                    coordinator.localActor("A", object);
+                    coordinator.actor("A").bindToObject(object);
                 }).
                 And(function () {
                     terminalB = jConcurrent.component(coordinator);
@@ -181,14 +181,14 @@ require([
                     coordinatorA.start();
                 }).
                 And(function () {
-                    coordinatorA.remoteActor("b", "A");
+                    coordinatorA.actor("A").bindToRemote("b");
                 }).
                 And(function () {
                     coordinatorB = jConcurrent.actor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
-                    coordinatorB.localActor("A", new A());
+                    coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);

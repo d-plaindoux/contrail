@@ -18,19 +18,19 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "./Actor" ],
+define([ "Core/object/jObj" ],
     function (jObj, actor) {
         "use strict";
 
-        function LocalActor(coordinator, identifier, model) {
-            jObj.bless(this, actor(coordinator, identifier));
+        function LocalActor(actor, model) {
+            jObj.bless(this, actor);
 
             this.model = model;
         }
 
-        LocalActor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Object ],
-            function (manager, identifier, model) {
-                return new LocalActor(manager, identifier, model);
+        LocalActor.init = jObj.constructor([ jObj.types.Named("Actor"), jObj.types.Object ],
+            function (actor, model) {
+                return new LocalActor(actor, model);
             });
 
         LocalActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
@@ -49,6 +49,16 @@ define([ "Core/object/jObj", "./Actor" ],
                         response.failure(error);
                     }
                 }
+            });
+
+        LocalActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
+            function (model) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.object"));
+            });
+
+        LocalActor.prototype.bindToRemote = jObj.procedure([jObj.types.String],
+            function (location) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.object"));
             });
 
         return LocalActor.init;
