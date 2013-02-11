@@ -91,8 +91,7 @@ require([
             jCC.
                 Given(function () {
                     table = jNetwork.table();
-                    table.addRoute("a", "ws://localhost/a");
-                    table.addRoute("b", "ws://localhost/b");
+                    table.populate({"a":"ws://localhost/a", "b":"ws://localhost/b"});
                 }).
                 And(function () {
                     routerA = jNetwork.component(table, "a");
@@ -153,8 +152,7 @@ require([
             jCC.
                 Given(function () {
                     table = jNetwork.table();
-                    table.addRoute("a", "ws://localhost/a");
-                    table.addRoute("b", "ws://localhost/b");
+                    table.populate({"a":"ws://localhost/a", "b":"ws://localhost/b"});
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();
@@ -203,8 +201,7 @@ require([
             jCC.
                 Given(function () {
                     table = jNetwork.table();
-                    table.addRoute("a", "ws://localhost/a");
-                    table.addRoute("b", "ws://localhost/b");
+                    table.populate({"a":"ws://localhost/a", "b":"ws://localhost/b"});
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();
