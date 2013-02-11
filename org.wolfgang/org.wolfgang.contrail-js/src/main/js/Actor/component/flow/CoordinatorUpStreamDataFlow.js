@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorFilter" ],
+define(["Core/object/jObj", "Core/flow/jFlow", "../handler/ResponseHandler", "./ActorFilter" ],
     function (jObj, jFlow, responseHandler, actorFilter) {
         "use strict";
 

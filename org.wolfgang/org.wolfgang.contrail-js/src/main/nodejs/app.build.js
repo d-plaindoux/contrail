@@ -28,7 +28,7 @@
     modules:[
         {
             name:"Contrail/jContrail",
-            include:["Network/jNetwork", "Concurrent/jConcurrent"],
+            include:["Network/jNetwork", "Actor/jActor"],
             exclude:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
         },
         {

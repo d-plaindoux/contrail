@@ -18,8 +18,8 @@
 
 /*global require, setTimeout */
 
-require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concurrent/event/jEvent", "../common/StoredResponse" ],
-    function (jObj, jCC, jActor, jEvent, storedResponse) {
+require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse" ],
+    function (jObj, jCC, jActor, storedResponse) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -69,7 +69,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.invoke(jEvent.request("n", []), response);
+                    actor.invoke(jActor.event.request("n", []), response);
                 }).
                 Then(function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -90,7 +90,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jEvent.request("n", []), response);
+                    actor.send(jActor.event.request("n", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -129,7 +129,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jEvent.request("m", []), response);
+                    actor.send(jActor.event.request("m", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.jobs.length, 1, "A new job has been created");
@@ -175,7 +175,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jEvent.request("n", []), response);
+                    actor.send(jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -200,7 +200,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jEvent.request("n", []), response);
+                    manager.send("test.a", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -224,7 +224,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jEvent.request("m", []), response);
+                    actor.send(jActor.event.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -254,7 +254,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jEvent.request("m", []), response);
+                    manager.send("test.a", jActor.event.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -281,7 +281,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Concurrent/actor/jActor", "Concu
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jEvent.request("n", []), response);
+                    manager.send("test.a", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {

@@ -27,7 +27,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.addRoute("a", "ws://localhost/a");
@@ -42,7 +42,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.getRoute("a");
@@ -57,7 +57,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.addRoute("a", "ws://localhost/a");
@@ -75,13 +75,13 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     configuration = '{"a":"ws://localhost/a", "b":"ws://localhost/b"}';
                 }).
                 When(function () {
-                    jNetwork.table.populate(table, JSON.parse(configuration));
+                    table.populate(JSON.parse(configuration));
                 }).
                 Then(function () {
                     jCC.equal(table.getRoute("a"), "ws://localhost/a");

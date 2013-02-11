@@ -18,19 +18,16 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "./event/jEvent", "./actor/jActor", "./component/CoordinatorComponent", "./component/handler/RemoteActorHandler" ],
-    function (jObj, jEvent, jActor, coordinatorComponent, actorHandler) {
+define([ "Core/object/jObj", "./event/Event", "./core/Coordinator", "./component/CoordinatorComponent", "./component/handler/RemoteActorHandler" ],
+    function (jObj, event, coordinator, component) {
         "use strict";
 
-        var Concurrent = {};
+        var Actor = {};
 
-        Concurrent.actor = {};
+        Actor.component = component;
+        Actor.coordinator = coordinator;
+        Actor.event = event;
 
-        Concurrent.actor.coordinator = jActor.coordinator;
-        Concurrent.actor.handler = actorHandler;
-        Concurrent.event = jEvent;
-        Concurrent.component = coordinatorComponent;
-
-        return Concurrent;
+        return Actor;
     })
 ;

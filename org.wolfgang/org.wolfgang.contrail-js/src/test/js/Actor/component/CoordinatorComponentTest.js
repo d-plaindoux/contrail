@@ -19,9 +19,9 @@
 /*global require, setTimeout */
 
 require([
-    "Core/object/jObj", "Core/test/jCC", "Concurrent/jConcurrent", "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail"
+    "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail"
 ],
-    function (jObj, jCC, jConcurrent, storedResponse, jNetwork, jFlow, jContrail) {
+    function (jObj, jCC, jActor, storedResponse, jNetwork, jFlow, jContrail) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -50,11 +50,11 @@ require([
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component(jNetwork.table.create(), "a");
+                    router = jNetwork.component(jNetwork.table(), "a");
                     router.getTable().addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    coordinator = jConcurrent.actor.coordinator();
+                    coordinator = jActor.coordinator();
                     coordinator.start();
                 }).
                 And(function () {
@@ -64,13 +64,13 @@ require([
                     coordinator.actor("A").bindToObject(object);
                 }).
                 And(function () {
-                    terminal = jConcurrent.component(coordinator);
+                    terminal = jActor.component(coordinator);
                 }).
                 And(function () {
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", jConcurrent.event.request("setA", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
+                    packet = jNetwork.packet("b", "a", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -90,7 +90,7 @@ require([
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                     table.addRoute("a", "ws://localhost/a");
                     table.addRoute("b", "ws://localhost/b");
                 }).
@@ -115,7 +115,7 @@ require([
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
-                    coordinator = jConcurrent.actor.coordinator();
+                    coordinator = jActor.coordinator();
                     coordinator.start();
                 }).
                 And(function () {
@@ -125,14 +125,14 @@ require([
                     coordinator.actor("A").bindToObject(object);
                 }).
                 And(function () {
-                    terminalB = jConcurrent.component(coordinator);
+                    terminalB = jActor.component(coordinator);
                 }).
                 And(function () {
                     jContrail.component.compose([ initialA, routerA ]);
                     jContrail.component.compose([ initialB, routerB, terminalB ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("a", "b", jConcurrent.event.request("setA", [ "Hello, World!" ]).toActor("A"));
+                    packet = jNetwork.packet("a", "b", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -152,7 +152,7 @@ require([
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                     table.addRoute("a", "ws://localhost/a");
                     table.addRoute("b", "ws://localhost/b");
                 }).
@@ -171,9 +171,9 @@ require([
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
-                    coordinatorA = jConcurrent.actor.coordinator();
+                    coordinatorA = jActor.coordinator();
                     coordinatorA.start();
-                    coordinatorB = jConcurrent.actor.coordinator();
+                    coordinatorB = jActor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
@@ -181,14 +181,14 @@ require([
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
-                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
+                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jActor.component(coordinatorA) ]);
+                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response);
+                    coordinatorA.send("A", jActor.event.request("getA", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "a");
@@ -202,7 +202,7 @@ require([
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                     table.addRoute("a", "ws://localhost/a");
                     table.addRoute("b", "ws://localhost/b");
                 }).
@@ -221,9 +221,9 @@ require([
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
-                    coordinatorA = jConcurrent.actor.coordinator();
+                    coordinatorA = jActor.coordinator();
                     coordinatorA.start();
-                    coordinatorB = jConcurrent.actor.coordinator();
+                    coordinatorB = jActor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
@@ -231,17 +231,17 @@ require([
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
-                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
+                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jActor.component(coordinatorA) ]);
+                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
                     response1 = storedResponse();
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response1);
-                    coordinatorA.send("A", jConcurrent.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response2);
+                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
+                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response1.value(), "a");

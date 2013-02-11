@@ -18,12 +18,12 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Concurrent/event/jEvent", "Network/jNetwork"],
-    function (jObj, jEvent, jNetwork) {
+define(["Core/object/jObj", "../../event/Event", "Network/jNetwork"],
+    function (jObj, event, jNetwork) {
         "use strict";
 
         function ResponseHandler(component, location, identifier) {
-            jObj.bless(this, jEvent.response(this.success, this.failure));
+            jObj.bless(this, event.response(this.success, this.failure));
             this.component = component;
             this.location = location;
             this.identifier = identifier;

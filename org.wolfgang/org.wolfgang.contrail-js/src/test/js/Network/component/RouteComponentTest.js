@@ -27,7 +27,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -70,7 +70,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -112,7 +112,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -154,7 +154,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -196,7 +196,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("b", "ws://localhost/b");
@@ -238,7 +238,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table.create();
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     table.addRoute("a", "ws://localhost/a");

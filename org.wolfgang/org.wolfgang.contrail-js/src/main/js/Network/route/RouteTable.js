@@ -46,5 +46,16 @@ define([ "Core/object/jObj" ],
                 return this.routes[name] || jObj.throwError(jObj.exception("L.route.entry.not.defined"));
             });
 
+        RouteTable.prototype.populate = jObj.procedure([jObj.types.Object],
+            function (data) {
+                var name;
+
+                for (name in data) {
+                    if (data.hasOwnProperty(name)) {
+                        this.addRoute(name, data[name]);
+                    }
+                }
+            });
+
         return RouteTable.init;
     });

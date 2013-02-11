@@ -18,8 +18,8 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
-    function (jObj, jEvent) {
+define([ "Core/object/jObj", "Actor/jActor" ],
+    function (jObj, jActor) {
         "use strict";
 
         var status = {
@@ -29,7 +29,7 @@ define([ "Core/object/jObj", "Concurrent/event/jEvent" ],
         };
 
         function StoredResponse() {
-            jObj.bless(this, jEvent.response(this.success, this.failure));
+            jObj.bless(this, jActor.event.response(this.success, this.failure));
 
             this.status = status.UNSET;
             this.result = undefined;

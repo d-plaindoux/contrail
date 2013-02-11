@@ -18,13 +18,14 @@
 
 /*global define*/
 
-define("Concurrent/actor/jActor", [ "./Coordinator" ],
-    function (coordinator) {
+define([ "./Request", "./Response" ],
+    function (request, response) {
         "use strict";
 
-        var jActor = {};
+        var Event = {};
 
-        jActor.coordinator = coordinator;
+        Event.request = request;
+        Event.response = response;
 
-        return jActor;
+        return Event;
     });
