@@ -28,8 +28,15 @@
     modules:[
         {
             name:"Contrail/jContrail",
-            include:["Network/jNetwork", "Actor/jActor"],
-            exclude:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+            exclude:["Network/jNetwork", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+        },
+        {
+            name:"Network/jNetwork",
+            exclude:["Contrail/jContrail", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+        },
+        {
+            name:"Actor/jActor",
+            exclude:["Contrail/jContrail", "Network/jNetwork", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
         },
         {
             name:"Core/jCore",
