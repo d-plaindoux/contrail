@@ -18,25 +18,25 @@
 
 /*global define*/
 
-define("Hello/World", [ "Core/object/jObj" ],
+define("Atomic.String", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function HelloWorld(hello) {
+        function AtomicString(value) {
             jObj.bless(this);
 
-            this.hello = hello;
+            this.value = value;
         }
 
-        HelloWorld.init = jObj.constructor([jObj.types.String],
-            function (hello) {
-                return new HelloWorld(hello);
+        AtomicString.init = jObj.constructor([jObj.types.String],
+            function (value) {
+                return new AtomicString(value);
             });
 
-        HelloWorld.prototype.sayHello = jObj.method([], jObj.types.String,
+        AtomicString.prototype.getValue = jObj.method([], jObj.types.String,
             function () {
-                return this.hello;
+                return this.value;
             });
 
-        return HelloWorld.init;
+        return AtomicString.init;
     });

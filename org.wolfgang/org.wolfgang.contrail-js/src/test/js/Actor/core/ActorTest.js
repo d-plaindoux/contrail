@@ -293,13 +293,13 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("HW").bindToSource("./HelloWorld.js").instantiate("Hello/World", [ "Hello, World!" ]);
+                    coordinator.actor("AS").bindToSource("./AtomicString.js").instantiate("Atomic.String", [ "Hello, World!" ]);
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("HW", jActor.event.request("sayHello", []), response);
+                    coordinator.send("AS", jActor.event.request("getValue", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "Hello, World!", "Actor must respond 'Hello, World!'");

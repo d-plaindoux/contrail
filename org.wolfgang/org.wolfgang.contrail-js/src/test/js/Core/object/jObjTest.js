@@ -42,7 +42,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
 
         function B() {
             jObj.bless(this, new A("b"));
-            this.b = { hello:"World!"};
+            this.b = { value:"World!"};
         }
 
         B.prototype.m = function () {
@@ -204,7 +204,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     jCC.equal(jObj.ofType(tb.b, jObj.types.Object), true, "Checking getType(<object>)");
                 }).
                 And(function () {
-                    jCC.equal(jObj.ofType(tb.b.hello, jObj.types.String), true, "Checking getType(<string>)");
+                    jCC.equal(jObj.ofType(tb.b.value, jObj.types.String), true, "Checking getType(<string>)");
                 });
         });
 
