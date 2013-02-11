@@ -208,5 +208,73 @@ require([
                     coordinatorB.stop();
                 });
         });
+
+        jCC.scenario("Checking sequential remotely routed actor message passing using remote actor", function () {
+            var table, coordinatorA, initialA, coordinatorB, initialB, dataFlowRouter, response1, response2;
+
+            jCC.
+                Given(function () {
+                    table = jNetwork.table.create();
+                    table.addRoute("a", "ws://localhost/a");
+                    table.addRoute("b", "ws://localhost/b");
+                }).
+                And(function () {
+                    dataFlowRouter = jContrail.flow.core();
+                    dataFlowRouter.handleData = function (data) {
+                        if (data.getEndPoint() === table.getRoute("a")) {
+                            initialA.getUpStreamDataFlow().handleData(data);
+                        } else if (data.getEndPoint() === table.getRoute("b")) {
+                            initialB.getUpStreamDataFlow().handleData(data);
+                        }
+                    };
+                }).
+                And(function () {
+                    initialA = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    initialB = jContrail.component.initial(dataFlowRouter);
+                }).
+                And(function () {
+                    coordinatorA = jConcurrent.actor.coordinator();
+                    coordinatorA.start();
+                }).
+                And(function () {
+                    coordinatorA.actor("A").bindToRemote("b");
+                }).
+                And(function () {
+                    coordinatorB = jConcurrent.actor.coordinator();
+                    coordinatorB.start();
+                }).
+                And(function () {
+                    coordinatorB.actor("A").bindToObject(new A());
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
+                }).
+                And(function () {
+                    response1 = storedResponse();
+                }).
+                And(function () {
+                    response2 = storedResponse();
+                }).
+                When(function () {
+                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response1);
+                }).
+                And(function () {
+                    coordinatorA.send("A", jConcurrent.event.request("setA", [ "Hello, World!" ]));
+                }).
+                And(function () {
+                    coordinatorA.send("A", jConcurrent.event.request("getA", []), response2);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response1.value(), "a");
+                    jCC.equal(response2.value(), "Hello, World!");
+                    coordinatorA.stop();
+                    coordinatorB.stop();
+                });
+        });
     });
 

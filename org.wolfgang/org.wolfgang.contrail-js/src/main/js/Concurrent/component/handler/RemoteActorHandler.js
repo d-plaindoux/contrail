@@ -20,7 +20,7 @@
 
 define(["Core/object/jObj", "Network/jNetwork" ],
     function (jObj, jNetwork) {
-        // "use strict";
+        "use strict";
 
         function RemoteActorHandler(coordinatorComponent) {
             jObj.bless(this);
@@ -33,17 +33,19 @@ define(["Core/object/jObj", "Network/jNetwork" ],
                 return new RemoteActorHandler(coordinatorComponent);
             });
 
-        RemoteActorHandler.prototype.handle = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Named("Request"), jObj.types.Named("Response")],
+        RemoteActorHandler.prototype.handle = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (location, identifier, request, response) {
-                var responseId;
+                var packet, responseId;
 
                 if (response) {
                     responseId = this.coordinatorComponent.createResponseId(response);
                 } else {
-                    responseId = null;
+                    responseId = undefined;
                 }
 
-                this.coordinatorComponent.getDownStreamDataFlow().handleData(jNetwork.packet(null, location, request.toActor(identifier, responseId)));
+                packet = jNetwork.packet(null, location, request.toActor(identifier, responseId));
+
+                this.coordinatorComponent.getDownStreamDataFlow().handleData(packet);
             });
 
         return RemoteActorHandler.init;

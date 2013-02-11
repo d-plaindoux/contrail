@@ -41,6 +41,8 @@ define(["Core/object/jObj", "Core/flow/jFlow", "./ResponseHandler", "./ActorFilt
                 if (actorFilter.isAnActorRequest(data)) {
                     if (data.response) {
                         response = responseHandler(this.component, packet.getSourceId(), data.response);
+                    } else {
+                        response = undefined;
                     }
                     this.coordinator.send(data.identifier, data.request, response);
                 } else if (actorFilter.isAnActorResponse(data)) {

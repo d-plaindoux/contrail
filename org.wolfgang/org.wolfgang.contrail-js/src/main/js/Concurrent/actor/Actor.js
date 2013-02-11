@@ -48,7 +48,10 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
                 });
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))]);
+        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (request) {
+                jObj.throwError(jObj.exception("L.actor.not yet.bind"));
+            });
 
         /*
          * Management corner ...

@@ -41,11 +41,11 @@ define([ "Core/object/jObj" ],
 
                     result = method.call(this.model, request.getParameters());
 
-                    if (response !== undefined) {
+                    if (response) {
                         response.success(result);
                     }
                 } catch (error) {
-                    if (response !== undefined) {
+                    if (response) {
                         response.failure(error);
                     }
                 }
