@@ -72,21 +72,26 @@ define([ "Core/object/jObj", "Core/dom/jLoader", "./LocalActor", "./RemoteActor"
                 this.coordinator.disposeActor(this.identifier);
             });
 
-        Actor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
-            function (source, module, parameters) {
+        Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({instantiate:jObj.types.Function}),
+            function (source) {
                 var self = this;
-                jLoader.load(source, function () {
-                    var anActor, callee;
 
-                    callee = require(module);
+                return { instantiate:jObj.procedure([jObj.types.String, jObj.types.Array],
+                    function (module, parameters) {
+                        jLoader.load(source, function () {
+                            var anActor, callee;
 
-                    if (callee) {
-                        anActor = localActor(self, callee.call(parameters));
-                        self.coordinator.registerActor(anActor);
-                    } else {
-                        jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
-                    }
-                });
+                            callee = require(module);
+
+                            if (callee) {
+                                anActor = localActor(self, callee.apply({}, parameters));
+                                self.coordinator.registerActor(anActor);
+                            } else {
+                                jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
+                            }
+                        });
+                    })
+                };
             });
 
         Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),

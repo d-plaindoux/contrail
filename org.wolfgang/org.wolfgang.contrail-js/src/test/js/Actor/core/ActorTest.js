@@ -293,7 +293,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("HW").bindToSource("./HelloWorld.js", "Hello/World", []);
+                    coordinator.actor("HW").bindToSource("./HelloWorld.js").instantiate("Hello/World", [ "Hello, World!" ]);
                 }).
                 And(function () {
                     response = storedResponse();

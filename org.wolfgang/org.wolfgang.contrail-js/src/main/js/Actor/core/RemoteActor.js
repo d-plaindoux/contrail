@@ -18,12 +18,12 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+define([ "Core/object/jObj", "./BindActor" ],
+    function (jObj, bindActor) {
         "use strict";
 
         function RemoteActor(actor, location) {
-            jObj.bless(this, actor);
+            jObj.bless(this, actor, bindActor());
 
             this.location = location;
         }
@@ -36,21 +36,6 @@ define([ "Core/object/jObj" ],
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 this.coordinator.getRemoteActorHandler().handle(this.location, this.identifier, request, response);
-            });
-
-        RemoteActor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
-            function (source, module, parameters) {
-                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
-            });
-
-        RemoteActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
-            function (model) {
-                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
-            });
-
-        RemoteActor.prototype.bindToRemote = jObj.procedure([jObj.types.String],
-            function (location) {
-                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
             });
 
         return RemoteActor.init;

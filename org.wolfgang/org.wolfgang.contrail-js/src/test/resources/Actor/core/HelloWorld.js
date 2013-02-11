@@ -22,18 +22,21 @@ define("Hello/World", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function HelloWorld() {
+        function HelloWorld(hello) {
             jObj.bless(this);
+
+            this.hello = hello;
         }
 
-        HelloWorld.init = jObj.constructor([],
-            function () {
-                return new HelloWorld();
+        HelloWorld.init = jObj.constructor([jObj.types.String],
+            function (hello) {
+                return new HelloWorld(hello);
             });
 
-        HelloWorld.prototype.sayHello = function () {
-            return "Hello, World!";
-        };
+        HelloWorld.prototype.sayHello = jObj.method([], jObj.types.String,
+            function () {
+                return this.hello;
+            });
 
         return HelloWorld.init;
     });
