@@ -40,14 +40,14 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         // ---------------------------------------------------------
 
         jCC.scenario("Check actor creation", function () {
-            var manager, actor;
+            var coordinator, actor;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -56,14 +56,14 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Check actor direct invocation", function () {
-            var manager, actor, response;
+            var coordinator, actor, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -77,14 +77,14 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Check actor indirect successful invocation simulated", function () {
-            var manager, actor, response;
+            var coordinator, actor, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -93,22 +93,22 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     actor.send(jActor.event.request("n", []), response);
                 }).
                 Then(function () {
-                    jCC.equal(actor.jobs.length, 1, "A new job has been created");
+                    jCC.equal(actor.pendingJobs.length, 1, "A new job has been created");
                 }).
                 When(function () {
-                    manager.actorRunner();
+                    coordinator.actorRunner();
                 }).
                 Then(function () {
-                    jCC.equal(manager.jobs.length, 1, "Job has been push in executable state");
+                    jCC.equal(coordinator.pendingJobs.length, 1, "Job has been push in executable state");
                 }).
                 And(function () {
-                    jCC.equal(actor.jobs.length, 0, "no new job");
+                    jCC.equal(actor.pendingJobs.length, 0, "no new job");
                 }).
                 When(function () {
-                    manager.jobRunner();
+                    coordinator.jobRunner();
                 }).
                 Then(function () {
-                    jCC.equal(manager.jobs.length, 0, "Job has been executed");
+                    jCC.equal(coordinator.pendingJobs.length, 0, "Job has been executed");
                 }).
                 And(function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -116,14 +116,14 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Check actor indirect failed invocation simulated", function () {
-            var manager, actor, response;
+            var coordinator, actor, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
                 }).
                 And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -132,44 +132,42 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     actor.send(jActor.event.request("m", []), response);
                 }).
                 Then(function () {
-                    jCC.equal(actor.jobs.length, 1, "A new job has been created");
+                    jCC.equal(actor.pendingJobs.length, 1, "A new job has been created");
                 }).
                 When(function () {
-                    manager.actorRunner();
+                    coordinator.actorRunner();
                 }).
                 Then(function () {
-                    jCC.equal(manager.jobs.length, 1, "Job has been push in executable state");
+                    jCC.equal(coordinator.pendingJobs.length, 1, "Job has been push in executable state");
                 }).
                 And(function () {
-                    jCC.equal(actor.jobs.length, 0, "no new job");
+                    jCC.equal(actor.pendingJobs.length, 0, "no new job");
                 }).
                 When(function () {
-                    manager.jobRunner();
+                    coordinator.jobRunner();
                 }).
                 Then(function () {
-                    jCC.equal(manager.jobs.length, 0, "Job has been executed");
+                    jCC.equal(coordinator.pendingJobs.length, 0, "Job has been executed");
                 }).
                 When(function () {
                     response.value();
                 }).
                 ThenError(function (e) {
                     jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
-                    manager.stop();
+                    coordinator.stop();
                 });
         });
 
         jCC.scenario("Check actor indirect successful message sent", function () {
-            var manager, actor, response;
+            var coordinator, actor, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
                 }).
                 And(function () {
-                    manager.start();
-                }).
-                And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -179,46 +177,42 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
-                    manager.stop();
+                    coordinator.stop();
                 });
         });
 
         jCC.scenario("Check actor indirect using manager successful message sent", function () {
-            var manager, response;
+            var coordinator, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
                 }).
                 And(function () {
-                    manager.start();
-                }).
-                And(function () {
-                    manager.actor("test.a").bindToObject(new A());
+                    coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jActor.event.request("n", []), response);
+                    coordinator.send("A", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
-                    manager.stop();
+                    coordinator.stop();
                 });
         });
         jCC.scenario("Check actor indirect failed message sent", function () {
-            var manager, actor, response;
+            var coordinator, actor, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
                 }).
                 And(function () {
-                    manager.start();
-                }).
-                And(function () {
-                    actor = manager.actor("test.a").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
@@ -233,7 +227,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     } catch (e) {
                         jCC.equal(e, "A.m()", "Job has been executed and an exception has been raised");
                     }
-                    manager.stop();
+                    coordinator.stop();
                 });
         });
 
@@ -243,18 +237,16 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
             jCC.
                 Given(function () {
                     manager = jActor.coordinator();
-                }).
-                And(function () {
                     manager.start();
                 }).
                 And(function () {
-                    manager.actor("test.a").bindToObject(new A());
+                    manager.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jActor.event.request("m", []), response);
+                    manager.send("A", jActor.event.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -268,20 +260,18 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Check undefined actor indirect failed message sent", function () {
-            var manager, response;
+            var coordinator, response;
 
             jCC.
                 Given(function () {
-                    manager = jActor.coordinator();
-                }).
-                And(function () {
-                    manager.start();
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("test.a", jActor.event.request("n", []), response);
+                    coordinator.send("A", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -290,8 +280,32 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     } catch (e) {
                         jCC.equal(e.message, "L.actor.not.found", "Actor does not exist");
                     }
-                    manager.stop();
+                    coordinator.stop();
                 });
         });
+
+        jCC.scenario("Check sourced actor indirect using manager failed message sent", function () {
+            var coordinator, response;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
+                }).
+                And(function () {
+                    coordinator.actor("HW").bindToSource("./HelloWorld.js", "Hello/World", []);
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    coordinator.send("HW", jActor.event.request("sayHello", []), response);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response.value(), "Hello, World!", "Actor must respond 'Hello, World!'");
+                    coordinator.stop();
+                });
+        });
+
     });
 

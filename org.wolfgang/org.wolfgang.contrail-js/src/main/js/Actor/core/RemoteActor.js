@@ -38,6 +38,11 @@ define([ "Core/object/jObj" ],
                 this.coordinator.getRemoteActorHandler().handle(this.location, this.identifier, request, response);
             });
 
+        RemoteActor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
+            function (source, module, parameters) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));
+            });
+
         RemoteActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
             function (model) {
                 jObj.throwError(jObj.exception("L.actor.already.bind.to.remote"));

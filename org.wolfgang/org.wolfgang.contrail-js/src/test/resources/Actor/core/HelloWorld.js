@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,25 +16,24 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require */
+/*global define*/
 
-
-require([ "Core/object/jObj", "Core/dom/jLoader", "Core/test/jCC" ],
-    function (jObj, jLoader, jCC) {
+define("Hello/World", [ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        jCC.scenario("Checking jLoader with script name only", function () {
-            var response;
+        function HelloWorld() {
+            jObj.bless(this);
+        }
 
-            jCC.
-                Given(jCC.Nothing).
-                When(function () {
-                    jLoader.load("./SimpleTest.js", function () {
-                        response = require("test.loader");
-                    });
-                }).
-                ThenAfter(500, function () {
-                    jCC.equal(response, "Hello, World!");
-                });
-        });
+        HelloWorld.init = jObj.constructor([],
+            function () {
+                return new HelloWorld();
+            });
+
+        HelloWorld.prototype.sayHello = function () {
+            return "Hello, World!";
+        };
+
+        return HelloWorld.init;
     });

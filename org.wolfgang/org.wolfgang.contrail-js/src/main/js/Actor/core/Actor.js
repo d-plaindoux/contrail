@@ -16,10 +16,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define, setInterval*/
+/*global define, require, setInterval*/
 
-define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
-    function (jObj, localActor, remoteActor) {
+define([ "Core/object/jObj", "Core/dom/jLoader", "./LocalActor", "./RemoteActor" ],
+    function (jObj, jLoader, localActor, remoteActor) {
         "use strict";
 
         function Actor(coordinator, identifier) {
@@ -27,7 +27,7 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
 
             this.identifier = identifier;
             this.coordinator = coordinator;
-            this.jobs = [];
+            this.pendingJobs = [];
         }
 
         Actor.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
@@ -43,14 +43,14 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
         Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 var self = this;
-                this.jobs.push(function () {
-                    self.invoke(request, response);
+                this.pendingJobs.push(function () {
+                    self.coordinator.invoke(self.getIdentifier(), request, response);
                 });
             });
 
         Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
-            function (request) {
-                jObj.throwError(jObj.exception("L.actor.not yet.bind"));
+            function (request, response) {
+                jObj.throwError(jObj.exception("L.actor.not.yet.bind"));
             });
 
         /*
@@ -70,6 +70,23 @@ define([ "Core/object/jObj", "./LocalActor", "./RemoteActor" ],
         Actor.prototype.dispose = jObj.procedure([],
             function () {
                 this.coordinator.disposeActor(this.identifier);
+            });
+
+        Actor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
+            function (source, module, parameters) {
+                var self = this;
+                jLoader.load(source, function () {
+                    var anActor, callee;
+
+                    callee = require(module);
+
+                    if (callee) {
+                        anActor = localActor(self, callee.call(parameters));
+                        self.coordinator.registerActor(anActor);
+                    } else {
+                        jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
+                    }
+                });
             });
 
         Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),

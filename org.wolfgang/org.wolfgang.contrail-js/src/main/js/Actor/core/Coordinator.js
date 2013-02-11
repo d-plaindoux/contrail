@@ -26,10 +26,10 @@ define([ "Core/object/jObj", "./Actor" ],
             jObj.bless(this);
 
             this.universe = {};
-            this.actors = [];
-            this.jobs = [];
+            this.activeActors = [];
+            this.pendingJobs = [];
 
-            this.interval = 100;
+            this.interval = 100 /*ms*/;
 
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
@@ -65,9 +65,8 @@ define([ "Core/object/jObj", "./Actor" ],
 
                 if (this.jobRunnerInterval === undefined) {
                     this.jobRunnerInterval = setInterval(function () {
-                            self.jobRunner();
-                        }, this.interval
-                    );
+                        self.jobRunner();
+                    }, this.interval);
                 }
                 if (this.actorRunnerInterval === undefined) {
                     this.actorRunnerInterval = setInterval(function () {
@@ -93,16 +92,16 @@ define([ "Core/object/jObj", "./Actor" ],
          */
 
         Coordinator.prototype.jobRunner = function () {
-            if (this.jobs.length !== 0) {
-                this.jobs.shift()();
+            if (this.pendingJobs.length !== 0) {
+                this.pendingJobs.shift()();
             }
         };
 
         Coordinator.prototype.actorRunner = function () {
             var self = this;
-            this.actors.forEach(function (actor) {
-                if (actor.jobs.length !== 0) {
-                    self.jobs.push(actor.jobs.shift());
+            this.activeActors.forEach(function (actor) {
+                if (actor.pendingJobs.length !== 0) {
+                    self.pendingJobs.push(actor.pendingJobs.shift());
                 }
             });
         };
@@ -113,12 +112,12 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.activateActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
-                this.actors.push(actor);
+                this.activeActors.push(actor);
             });
 
         Coordinator.prototype.deactivateActor = jObj.procedure([jObj.types.Named("Actor")],
             function (actor) {
-                this.actors = this.actors.filter(function (a) {
+                this.activeActors = this.activeActors.filter(function (a) {
                     return a.identifier !== actor.identifier;
                 });
             });
@@ -129,7 +128,9 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.actor = jObj.method([jObj.types.String], jObj.types.Named("Actor"),
             function (identifier) {
-                return actor(this, identifier);
+                var anActor = actor(this, identifier);
+                this.universe[anActor.getIdentifier()] = anActor;
+                return anActor;
             });
 
         Coordinator.prototype.registerActor = jObj.procedure([jObj.types.Named("Actor")],
@@ -151,6 +152,17 @@ define([ "Core/object/jObj", "./Actor" ],
             function (identifier, request, response) {
                 if (this.universe.hasOwnProperty(identifier)) {
                     this.universe[identifier].send(request, response);
+                } else {
+                    if (response !== undefined) {
+                        response.failure(jObj.exception("L.actor.not.found"));
+                    }
+                }
+            });
+
+        Coordinator.prototype.invoke = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+            function (identifier, request, response) {
+                if (this.universe.hasOwnProperty(identifier)) {
+                    this.universe[identifier].invoke(request, response);
                 } else {
                     if (response !== undefined) {
                         response.failure(jObj.exception("L.actor.not.found"));

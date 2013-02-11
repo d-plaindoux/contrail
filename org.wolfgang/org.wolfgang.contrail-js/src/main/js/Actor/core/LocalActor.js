@@ -51,6 +51,11 @@ define([ "Core/object/jObj" ],
                 }
             });
 
+        LocalActor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
+            function (source, module, parameters) {
+                jObj.throwError(jObj.exception("L.actor.already.bind.to.object"));
+            });
+
         LocalActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
             function (model) {
                 jObj.throwError(jObj.exception("L.actor.already.bind.to.object"));
