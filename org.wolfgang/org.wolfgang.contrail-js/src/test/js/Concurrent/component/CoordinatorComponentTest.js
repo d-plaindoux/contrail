@@ -112,8 +112,6 @@ require([
                 }).
                 And(function () {
                     initialA = jContrail.component.initial(dataFlowRouter);
-                }).
-                And(function () {
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
@@ -131,8 +129,6 @@ require([
                 }).
                 And(function () {
                     jContrail.component.compose([ initialA, routerA ]);
-                }).
-                And(function () {
                     jContrail.component.compose([ initialB, routerB, terminalB ]);
                 }).
                 And(function () {
@@ -172,28 +168,20 @@ require([
                 }).
                 And(function () {
                     initialA = jContrail.component.initial(dataFlowRouter);
-                }).
-                And(function () {
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
                     coordinatorA = jConcurrent.actor.coordinator();
                     coordinatorA.start();
-                }).
-                And(function () {
-                    coordinatorA.actor("A").bindToRemote("b");
-                }).
-                And(function () {
                     coordinatorB = jConcurrent.actor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
+                    coordinatorA.actor("A").bindToRemote("b");
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
-                }).
-                And(function () {
                     jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
                 }).
                 And(function () {
@@ -230,43 +218,29 @@ require([
                 }).
                 And(function () {
                     initialA = jContrail.component.initial(dataFlowRouter);
-                }).
-                And(function () {
                     initialB = jContrail.component.initial(dataFlowRouter);
                 }).
                 And(function () {
                     coordinatorA = jConcurrent.actor.coordinator();
                     coordinatorA.start();
-                }).
-                And(function () {
-                    coordinatorA.actor("A").bindToRemote("b");
-                }).
-                And(function () {
                     coordinatorB = jConcurrent.actor.coordinator();
                     coordinatorB.start();
                 }).
                 And(function () {
+                    coordinatorA.actor("A").bindToRemote("b");
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
                     jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jConcurrent.component(coordinatorA) ]);
-                }).
-                And(function () {
                     jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jConcurrent.component(coordinatorB) ]);
                 }).
                 And(function () {
                     response1 = storedResponse();
-                }).
-                And(function () {
                     response2 = storedResponse();
                 }).
                 When(function () {
                     coordinatorA.send("A", jConcurrent.event.request("getA", []), response1);
-                }).
-                And(function () {
                     coordinatorA.send("A", jConcurrent.event.request("setA", [ "Hello, World!" ]));
-                }).
-                And(function () {
                     coordinatorA.send("A", jConcurrent.event.request("getA", []), response2);
                 }).
                 ThenAfter(500, function () {
