@@ -68,7 +68,7 @@
                 <configuration>
                     <disallowBitwiseOperators>false</disallowBitwiseOperators>
                     <excludes>
-                        <exclude>lib/*.js</exclude>
+                        <exclude>Actor/core/ActorTest.js</exclude>
                     </excludes>
                 </configuration>
                 <executions>

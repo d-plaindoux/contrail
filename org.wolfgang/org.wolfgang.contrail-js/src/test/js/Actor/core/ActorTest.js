@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require, setTimeout */
+/*global require, setTimeout*/
 
 require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse" ],
     function (jObj, jCC, jActor, storedResponse) {
@@ -284,7 +284,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 });
         });
 
-        jCC.scenario("Check sourced actor indirect using manager failed message sent", function () {
+        jCC.scenario("Check sourced module actor indirect using manager failed message sent", function () {
             var coordinator, response;
 
             jCC.
@@ -293,16 +293,42 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("AS").bindToSource("./AtomicString.js").instantiate("Atomic.String", [ "Hello, World!" ]);
+                    coordinator.actor("AtomicString").bindToSource("./AtomicString.js").withModule("Atomic.String", [ "Hello, World!" ]);
                 }).
                 And(function () {
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("AS", jActor.event.request("getValue", []), response);
+                    coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "Hello, World!", "Actor must respond 'Hello, World!'");
+                    coordinator.stop();
+                });
+        });
+
+
+        jCC.scenario("Check sourced simple actor indirect using manager failed message sent", function () {
+            var coordinator, response;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
+                }).
+                And(function () {
+                    coordinator.actor("SimpleString").bindToSource("./SimpleString.js").withCallback(function () {
+                        return SimpleObject;
+                    });
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    coordinator.send("SimpleString", jActor.event.request("getName", []), response);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response.value(), "A simple name", "Actor must respond 'A simple name'");
                     coordinator.stop();
                 });
         });

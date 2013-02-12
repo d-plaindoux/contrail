@@ -72,25 +72,37 @@ define([ "Core/object/jObj", "Core/ui/jLoader", "./LocalActor", "./RemoteActor" 
                 this.coordinator.disposeActor(this.identifier);
             });
 
-        Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({instantiate:jObj.types.Function}),
+        Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({withModule:jObj.types.Function, withCallback:jObj.types.Function}),
             function (source) {
                 var self = this;
 
-                return { instantiate:jObj.procedure([jObj.types.String, jObj.types.Array],
-                    function (module, parameters) {
-                        jLoader.load(source, function () {
-                            var anActor, callee;
+                return {
+                    withModule:jObj.procedure([jObj.types.String, jObj.types.Array],
+                        function (module, parameters) {
+                            jLoader.load(source, function () {
+                                    var anActor, callback;
 
-                            callee = require(module);
+                                    callback = require(module);
 
-                            if (callee) {
-                                anActor = localActor(self, callee.apply({}, parameters));
-                                self.coordinator.registerActor(anActor);
-                            } else {
-                                jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
-                            }
-                        });
-                    })
+                                    if (callback) {
+                                        anActor = localActor(self, callback.apply({}, parameters));
+                                        self.coordinator.registerActor(anActor);
+                                    } else {
+                                        jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
+                                    }
+                                }
+                            );
+                        }),
+                    withCallback:jObj.procedure([jObj.types.Function],
+                        function (callback) {
+                            jLoader.load(source, function () {
+                                    var anActor;
+
+                                    anActor = localActor(self, callback());
+                                    self.coordinator.registerActor(anActor);
+                                }
+                            );
+                        })
                 };
             });
 
