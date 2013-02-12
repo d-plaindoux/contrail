@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,16 +18,15 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./packet/Packet", "./codec/CoDecPacketLibrary" ],
-    function (component, table, packet, codec) {
+define([ "./Encoder", "./Decoder" ],
+    function (encoder, decoder) {
         "use strict";
 
-        var jNetwork = {};
+        var Factory = {};
 
-        jNetwork.component = component;
-        jNetwork.table = table;
-        jNetwork.packet = packet;
-        jNetwork.codec = codec;
+        Factory.encoder = encoder;
+        Factory.decoder = decoder;
 
-        return jNetwork;
+        return Factory;
+
     });

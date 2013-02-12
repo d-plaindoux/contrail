@@ -157,9 +157,9 @@ require([
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();
                     dataFlowRouter.handleData = function (data) {
-                        if (data.getEndPoint() === table.getRoute("a")) {
+                        if (data.endPoint === table.getRoute("a")) {
                             initialA.getUpStreamDataFlow().handleData(data);
-                        } else if (data.getEndPoint() === table.getRoute("b")) {
+                        } else if (data.endPoint === table.getRoute("b")) {
                             initialB.getUpStreamDataFlow().handleData(data);
                         }
                     };
@@ -179,8 +179,18 @@ require([
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jContrail.component.compose([ initialA, jNetwork.component(table, "a"), jActor.component(coordinatorA) ]);
-                    jContrail.component.compose([ initialB, jNetwork.component(table, "b"), jActor.component(coordinatorB) ]);
+                    jContrail.component.compose([
+                        initialA,
+                        jContrail.component.transducer(jNetwork.codec.encoder(), jNetwork.codec.decoder()),
+                        jNetwork.component(table, "a"),
+                        jActor.component(coordinatorA) ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([
+                        initialB,
+                        jContrail.component.transducer(jNetwork.codec.encoder(), jNetwork.codec.decoder()),
+                        jNetwork.component(table, "b"),
+                        jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
                     response = storedResponse();
