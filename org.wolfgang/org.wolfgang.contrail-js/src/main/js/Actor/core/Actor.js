@@ -18,7 +18,7 @@
 
 /*global define, require, setInterval*/
 
-define([ "Core/object/jObj", "Core/dom/jLoader", "./LocalActor", "./RemoteActor" ],
+define([ "Core/object/jObj", "Core/ui/jLoader", "./LocalActor", "./RemoteActor" ],
     function (jObj, jLoader, localActor, remoteActor) {
         "use strict";
 

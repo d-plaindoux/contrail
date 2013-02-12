@@ -21,7 +21,7 @@
 $(function () {
     "use strict";
 
-    require([ "Contrail/jContrail", "Core/object/jObj", "Core/utils/jTransducer", "Core/dom/jDom" ],
+    require([ "Contrail/jContrail", "Core/object/jObj", "Core/utils/jTransducer", "Core/ui/jDom" ],
         function (Factory, jObj, jTransducer, jDom) {
             try {
                 var key, classes, id, name, changeToType, changeToObject;

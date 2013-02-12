@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Core/dom/jDom", [ "Core/object/jObj" ],
+define("Core/ui/jDom", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 

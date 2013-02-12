@@ -18,7 +18,7 @@
 
 /*global define, document*/
 
-define("Core/dom/jLoader", [ "Core/object/jObj" ],
+define("Core/ui/jLoader", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
