@@ -34,54 +34,69 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         SerializeDecoder.prototype.decode = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Any,
             function (array, offset) {
-                var type, result, i, decoded, length, name_length, size, key;
+                var result, i, decoded, length, name_length, size, key;
 
-                type = array[offset];
+                switch (array[offset]) {
+                    case jMarshaller.types.String:
+                        length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                        size = 1 + jMarshaller.sizeOf.ShortNumber;
+                        result = jMarshaller.bytesToStringWithOffset(array, offset + size, length);
+                        size += length * jMarshaller.sizeOf.Character;
+                        break;
 
-                if (type === jMarshaller.types.String) {
-                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
-                    size = 1 + jMarshaller.sizeOf.ShortNumber;
-                    result = jMarshaller.bytesToStringWithOffset(array, offset + size, length);
-                    size += length * jMarshaller.sizeOf.Character;
-                } else if (type === jMarshaller.types.Number) {
-                    result = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
-                    size = 1 + jMarshaller.sizeOf.Number;
-                } else if (type === jMarshaller.types.Undefined) {
-                    result = undefined;
-                    size = 1;
-                } else if (type === jMarshaller.types.Null) {
-                    result = null;
-                    size = 1;
-                } else if (type === jMarshaller.types.BooleanTrue) {
-                    result = true;
-                    size = 1;
-                } else if (type === jMarshaller.types.BooleanFalse) {
-                    result = false;
-                    size = 1;
-                } else if (type === jMarshaller.types.Array) {
-                    result = [];
-                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
-                    size = 1 + jMarshaller.sizeOf.ShortNumber;
-                    for (i = 0; i < length; i += 1) {
-                        decoded = this.decode(array, offset + size);
-                        result.push(decoded.value);
-                        size += decoded.offset;
-                    }
-                } else if (type === jMarshaller.types.Object) {
-                    result = {};
-                    length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
-                    size = 1 + jMarshaller.sizeOf.ShortNumber;
-                    for (i = 0; i < length; i += 1) {
-                        name_length = jMarshaller.bytesToShortNumberWithOffset(array, offset + size);
-                        size += jMarshaller.sizeOf.ShortNumber;
-                        key = jMarshaller.bytesToStringWithOffset(array, offset + size, name_length);
-                        size += name_length * jMarshaller.sizeOf.Character;
-                        decoded = this.decode(array, offset + size);
-                        result[key] = decoded.value;
-                        size += decoded.offset;
-                    }
-                } else {
-                    throw jObj.exception("L.data.not.deserializable");
+                    case jMarshaller.types.Number:
+                        result = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
+                        size = 1 + jMarshaller.sizeOf.Number;
+                        break;
+
+                    case jMarshaller.types.Undefined:
+                        result = undefined;
+                        size = 1;
+                        break;
+
+                    case jMarshaller.types.Null:
+                        result = null;
+                        size = 1;
+                        break;
+
+                    case jMarshaller.types.BooleanTrue:
+                        result = true;
+                        size = 1;
+                        break;
+
+                    case jMarshaller.types.BooleanFalse:
+                        result = false;
+                        size = 1;
+                        break;
+
+                    case jMarshaller.types.Array:
+                        result = [];
+                        length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                        size = 1 + jMarshaller.sizeOf.ShortNumber;
+                        for (i = 0; i < length; i += 1) {
+                            decoded = this.decode(array, offset + size);
+                            result.push(decoded.value);
+                            size += decoded.offset;
+                        }
+                        break;
+
+                    case jMarshaller.types.Object:
+                        result = {};
+                        length = jMarshaller.bytesToShortNumberWithOffset(array, offset + 1);
+                        size = 1 + jMarshaller.sizeOf.ShortNumber;
+                        for (i = 0; i < length; i += 1) {
+                            name_length = jMarshaller.bytesToShortNumberWithOffset(array, offset + size);
+                            size += jMarshaller.sizeOf.ShortNumber;
+                            key = jMarshaller.bytesToStringWithOffset(array, offset + size, name_length);
+                            size += name_length * jMarshaller.sizeOf.Character;
+                            decoded = this.decode(array, offset + size);
+                            result[key] = decoded.value;
+                            size += decoded.offset;
+                        }
+                        break;
+
+                    default:
+                        throw jObj.exception("L.data.not.deserializable");
                 }
 
                 return { value:result, offset:size };

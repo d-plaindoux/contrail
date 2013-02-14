@@ -22,11 +22,13 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
+import org.wolfgang.contrail.data.ObjectRecord;
 
 /**
  * <code>Encoder</code> is capable to transform objects to payload based byte
@@ -38,37 +40,30 @@ import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerExcepti
 public class Encoder implements DataTransducer<Object, Bytes> {
 
 	/**
-	 * An array of accepted types
-	 */
-	@SuppressWarnings("unused")
-	private final Class<?>[] acceptedTypes;
-
-	/**
 	 * Constructor
 	 */
-	public Encoder(Class<?>... acceptedTypes) {
+	public Encoder() {
 		super();
-		this.acceptedTypes = acceptedTypes;
 	}
 
 	private byte[] concat(byte b1, byte[] b2) {
 		final byte[] result = new byte[1 + b2.length];
 		result[0] = b1;
-		System.arraycopy(result, 1, b2, 0, b2.length);
+		System.arraycopy(b2, 0, result, 1, b2.length);
 		return result;
 	}
 
 	private byte[] concat(byte[] b1, byte b2) {
-		final byte[] result = new byte[1 + b1.length];
-		System.arraycopy(result, 0, b2, 0, b1.length);
+		final byte[] result = new byte[b1.length + 1];
+		System.arraycopy(b1, 0, result, 0, b1.length);
 		result[b1.length] = b2;
 		return result;
 	}
 
 	private byte[] concat(byte[] b1, byte[] b2) {
 		final byte[] result = new byte[b1.length + b2.length];
-		System.arraycopy(result, 0, b1, 0, b1.length);
-		System.arraycopy(result, b1.length, b2, 0, b2.length);
+		System.arraycopy(b1, 0, result, 0, b1.length);
+		System.arraycopy(b2, 0, result, b1.length, b2.length);
 		return result;
 	}
 
@@ -81,7 +76,8 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 			result = Marshall.numberToBytes((Integer) source);
 		} else if (source instanceof String) {
 			type = Marshall.TYPE_String;
-			result = Marshall.stringToBytes((String) source);
+			result = Marshall.shortNumberToBytes(((String) source).length());
+			result = concat(result, Marshall.stringToBytes((String) source));
 		} else if (source == null) {
 			type = Marshall.TYPE_Null;
 			result = new byte[0];
@@ -99,17 +95,16 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 			for (int i = 0; i < length; i++) {
 				result = concat(result, encode(Array.get(source, i)));
 			}
-		} else if (source instanceof Object) {
-			final Field[] fields = source.getClass().getFields();
-			final int length = fields.length;
+		} else if (source instanceof ObjectRecord) {
+			final ObjectRecord record = (ObjectRecord) source;
+			final Set<String> fields = record.getNames();
+			final int length = fields.size();
 			type = Marshall.TYPE_Object;
 			result = Marshall.shortNumberToBytes(length);
-			for (Field field : fields) {
-				if (field.isAccessible()) {
-					result = concat(result, (byte) field.getName().length());
-					result = concat(result, Marshall.stringToBytes(field.getName()));
-					result = concat(result, encode(field.get(source)));
-				}
+			for (String field : fields) {
+				result = concat(result, (byte) field.length());
+				result = concat(result, Marshall.stringToBytes(field));
+				result = concat(result, encode(record.get(field)));
 			}
 		} else {
 			throw new DataTransducerException();

@@ -62,6 +62,7 @@ public class TestComposeComponent {
 				sourceFuture.success(data);
 			}
 		});
+		
 		final Component composedComponent = Components.compose(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = Components.terminal(new DataFlowAdapter<String>() {

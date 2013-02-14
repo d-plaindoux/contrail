@@ -37,46 +37,19 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 public final class SerializationTransducerFactory implements TransducerFactory<Bytes, Object> {
 
 	/**
-	 * Accepted types
-	 */
-	private final Class<?>[] types;
-
-	/**
 	 * Constructor
 	 */
 	public SerializationTransducerFactory() {
-		this.types = new Class[0];
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @throws ClassNotFoundException
-	 */
-	@SuppressWarnings("static-access")
-	public SerializationTransducerFactory(String... types) throws ClassNotFoundException {
-		this.types = new Class[types.length];
-		for (int i = 0; i < types.length; i++) {
-			this.types[i] = this.getClass().forName(types[i]);
-		}
-	}
-
-	/**
-	 * Constructor
-	 */
-	public SerializationTransducerFactory(Class<?>... acceptedTypes) {
-		this.types = acceptedTypes;
-		// Prevent useless object creation
 	}
 
 	@Override
 	public DataTransducer<Bytes, Object> getDecoder() {
-		return new Decoder(types);
+		return new Decoder();
 	}
 
 	@Override
 	public DataTransducer<Object, Bytes> getEncoder() {
-		return new Encoder(types);
+		return new Encoder();
 	}
 
 	@Override

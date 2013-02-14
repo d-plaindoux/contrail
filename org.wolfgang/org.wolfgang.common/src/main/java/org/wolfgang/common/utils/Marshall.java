@@ -60,55 +60,6 @@ public final class Marshall {
 		super();
 	}
 
-	// Deprecated code ... To be removed soon / Only used for java native
-	// serialization
-
-	/**
-	 * Method called whether an object must be translated to a byte array
-	 * 
-	 * @param object
-	 *            The object to externalize
-	 * @return a byte array
-	 * @throws IOException
-	 *             Thrown if the externalization fails
-	 * @deprecated
-	 */
-	public static byte[] objectToBytes(final Object object) throws IOException {
-		final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-		final ObjectOutputStream outputStream = new ObjectOutputStream(arrayOutputStream);
-		try {
-			outputStream.writeObject(object);
-		} finally {
-			arrayOutputStream.close();
-			outputStream.close();
-		}
-		return arrayOutputStream.toByteArray();
-	}
-
-	/**
-	 * Method called whether an array must be translated to an object
-	 * 
-	 * @param bytes
-	 *            The object to internalize
-	 * @return an object
-	 * @throws IOException
-	 *             Thrown if the internalization fails
-	 * @throws ClassNotFoundException
-	 *             if the object is not consistent with existing classes
-	 * @deprecated
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T bytesToObject(final byte[] bytes) throws IOException, ClassNotFoundException {
-		final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(bytes);
-		final ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);
-		try {
-			return (T) inputStream.readObject();
-		} finally {
-			arrayInputStream.close();
-			inputStream.close();
-		}
-	}
-
 	// -------------------------------------------------------------------------------------------------------------
 	// Decoding ...
 	// -------------------------------------------------------------------------------------------------------------

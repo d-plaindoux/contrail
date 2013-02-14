@@ -23,9 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.wolfgang.common.utils.Marshall;
+import org.wolfgang.common.utils.Pair;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
+import org.wolfgang.contrail.data.ObjectRecord;
 
 /**
  * <code>Decoder</code> is able to transform a payload based array to an object
@@ -36,26 +38,89 @@ import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerExcepti
 public class Decoder implements DataTransducer<Bytes, Object> {
 
 	/**
-	 * Accepted types for the decoding
-	 */
-	@SuppressWarnings("unused")
-	private final Class<?>[] acceptedTypes;
-
-	/**
 	 * Constructor
 	 */
-	public Decoder(Class<?>... acceptedTypes) {
+	public Decoder() {
 		super();
-		this.acceptedTypes = acceptedTypes;
+	}
+
+	private Pair<Integer, Object> decode(byte[] array, int offset) throws IOException, DataTransducerException {
+		int length;
+		int size;
+
+		final Object result;
+
+		switch (array[offset]) {
+		case Marshall.TYPE_String:
+			length = Marshall.bytesToShortNumberWithOffset(array, offset + 1);
+			size = 1 + Marshall.SIZE_ShortNumber;
+			result = Marshall.bytesToStringWithOffset(array, offset + size, length);
+			size += length * Marshall.SIZE_Character;
+			break;
+
+		case Marshall.TYPE_Number:
+			result = Marshall.bytesToNumberWithOffset(array, offset + 1);
+			size = 1 + Marshall.SIZE_Number;
+			break;
+
+		case Marshall.TYPE_Undefined:
+			result = null;
+			size = 1;
+			break;
+
+		case Marshall.TYPE_Null:
+			result = null;
+			size = 1;
+			break;
+
+		case Marshall.TYPE_BooleanTrue:
+			result = true;
+			size = 1;
+			break;
+
+		case Marshall.TYPE_BooleanFalse:
+			result = false;
+			size = 1;
+			break;
+
+		case Marshall.TYPE_Array:
+			length = Marshall.bytesToShortNumberWithOffset(array, offset + 1);
+			size = 1 + Marshall.SIZE_ShortNumber;
+			result = new Object[length];
+			for (int i = 0; i < length; i += 1) {
+				final Pair<Integer, Object> decoded = this.decode(array, offset + size);
+				((Object[]) result)[i] = decoded.getSecond();
+				size += decoded.getFirst();
+			}
+			break;
+
+		case Marshall.TYPE_Object:
+			result = new ObjectRecord();
+			length = Marshall.bytesToShortNumberWithOffset(array, offset + 1);
+			size = 1 + Marshall.SIZE_ShortNumber;
+			for (int i = 0; i < length; i += 1) {
+				final int name_length = Marshall.bytesToShortNumberWithOffset(array, offset + size);
+				size += Marshall.SIZE_ShortNumber;
+				final String key = Marshall.bytesToStringWithOffset(array, offset + size, name_length);
+				size += name_length * Marshall.SIZE_Character;
+				final Pair<Integer, Object> decoded = this.decode(array, offset + size);
+				((ObjectRecord) result).set(key, decoded.getSecond());
+				size += decoded.getFirst();
+			}
+			break;
+
+		default:
+			throw new DataTransducerException("L.data.not.deserializable");
+		}
+
+		return new Pair<Integer, Object>(size, result);
 	}
 
 	@Override
 	public List<Object> transform(Bytes source) throws DataTransducerException {
 		try {
-			return Arrays.asList(Marshall.bytesToObject(source.getContent()));
+			return Arrays.asList(decode(source.getContent(), 0).getSecond());
 		} catch (IOException e) {
-			throw new DataTransducerException(e);
-		} catch (ClassNotFoundException e) {
 			throw new DataTransducerException(e);
 		}
 	}
