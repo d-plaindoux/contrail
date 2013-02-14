@@ -32,21 +32,26 @@ import java.io.ObjectOutputStream;
  * @version 1.0
  */
 public final class Marshall {
+	
+	// Types
 
-	public static final int TYPE_Array = 0x1;
-	public static final int TYPE_Object = 0x2;
-	public static final int TYPE_Character = 0x3;
-	public static final int TYPE_Number = 0x4;
-	public static final int TYPE_ShortNumber = 0x5;
-	public static final int TYPE_String = 0x6;
-	public static final int TYPE_BooleanTrue = 0x7;
-	public static final int TYPE_BooleanFalse = 0x8;
-	public static final int TYPE_Undefined = 0x9;
+	public static final byte TYPE_Array = 0x1;
+	public static final byte TYPE_Object = 0x2;
+	public static final byte TYPE_Character = 0x3;
+	public static final byte TYPE_Number = 0x4;
+	public static final byte TYPE_ShortNumber = 0x5;
+	public static final byte TYPE_String = 0x6;
+	public static final byte TYPE_BooleanTrue = 0x7;
+	public static final byte TYPE_BooleanFalse = 0x8;
+	public static final byte TYPE_Undefined = 0x9;
+	public static final byte TYPE_Null = 0x10;
+	
+	// Sizes
 
-	public static final int SIZE_Character = 2;
-	public static final int SIZE_Number = 4;
-	public static final int SIZE_ShortNumber = 2;
-	public static final int SIZE_Boolean = 1;
+	public static final byte SIZE_Character = 2;
+	public static final byte SIZE_Number = 4;
+	public static final byte SIZE_ShortNumber = 2;
+	public static final byte SIZE_Boolean = 1;
 
 	/**
 	 * Constructor

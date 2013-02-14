@@ -42,6 +42,9 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     type = jMarshaller.types.String;
                     result = jMarshaller.shortNumberToBytes(value.length);
                     result = result.concat(jMarshaller.stringToBytes(value));
+                } else if (jObj.ofType(value, jObj.types.Null)) {
+                    type = jMarshaller.types.Null;
+                    result = [];
                 } else if (jObj.ofType(value, jObj.types.Undefined)) {
                     type = jMarshaller.types.Undefined;
                     result = [];
@@ -73,7 +76,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         result = result.concat(this.encode(value[keys[i]]));
                     }
                 } else {
-                    throw jObj.exception("L.not.yet.implemented");
+                    throw jObj.exception("L.data.not.serializable");
                 }
 
                 return [type].concat(result);

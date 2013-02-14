@@ -20,7 +20,7 @@
 
 define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
     function (require, jObj, jMarshaller) {
-        // "use strict";
+        "use strict";
 
         function SerializeDecoder() {
             jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
@@ -48,6 +48,9 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                     size = 1 + jMarshaller.sizeOf.Number;
                 } else if (type === jMarshaller.types.Undefined) {
                     result = undefined;
+                    size = 1;
+                } else if (type === jMarshaller.types.Null) {
+                    result = null;
                     size = 1;
                 } else if (type === jMarshaller.types.BooleanTrue) {
                     result = true;
@@ -78,7 +81,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         size += decoded.offset;
                     }
                 } else {
-                    throw jObj.exception("L.cannot.decode");
+                    throw jObj.exception("L.data.not.deserializable");
                 }
 
                 return { value:result, offset:size };

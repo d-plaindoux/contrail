@@ -210,6 +210,71 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 });
         });
 
+
+        jCC.scenario("Checking remotely routed actor message passing using remote actor and native serialization (without json", function () {
+            var table, coordinatorA, initialA, coordinatorB, initialB, response1, response2, drivers;
+
+            jCC.
+                Given(function () {
+                    table = jNetwork.table();
+                    table.populate({"a":"ws://localhost/a", "b":"ws://localhost/b"});
+                }).
+                And(function () {
+                    initialA = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialB.getUpStreamDataFlow().handleData(data);
+                    }));
+                    initialB = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialA.getUpStreamDataFlow().handleData(data);
+                    }));
+                }).
+                And(function () {
+                    coordinatorA = jActor.coordinator();
+                    coordinatorA.start();
+                    coordinatorB = jActor.coordinator();
+                    coordinatorB.start();
+                }).
+                And(function () {
+                    coordinatorA.actor("A").bindToRemote("b");
+                    coordinatorB.actor("A").bindToObject(new A());
+                }).
+                And(function () {
+                    drivers = {Packet:jNetwork.packet, Request:jActor.event.request};
+                }).
+                And(function () {
+                    jContrail.component.compose([
+                        initialA,
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jNetwork.component(table, "a"),
+                        jActor.component(coordinatorA) ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([
+                        initialB,
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jNetwork.component(table, "b"),
+                        jActor.component(coordinatorB) ]);
+                }).
+                And(function () {
+                    response1 = storedResponse();
+                    response2 = storedResponse();
+                }).
+                When(function () {
+                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
+                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response1.value(), "a");
+                    jCC.equal(response2.value(), "Hello, World!");
+                    coordinatorA.stop();
+                    coordinatorB.stop();
+                });
+        });
+
         jCC.scenario("Checking sequential remotely routed actor message passing using remote actor", function () {
             var table, coordinatorA, initialA, coordinatorB, initialB, dataFlowRouter, response1, response2;
 

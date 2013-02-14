@@ -49,7 +49,7 @@ public class RouterComponentTest {
 
 		Components.compose(initial, routeComponent);
 
-		initial.getUpStreamDataFlow().handleData(new Packet("b", "b", "Hello, World!"));
+		initial.getUpStreamDataFlow().handleData(new Packet("b", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -67,7 +67,7 @@ public class RouterComponentTest {
 
 		Components.compose(initial, routeComponent);
 
-		routeComponent.getDownStreamDataFlow().handleData(new Packet("b", "b", "Hello, World!"));
+		routeComponent.getDownStreamDataFlow().handleData(new Packet("b", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -85,7 +85,7 @@ public class RouterComponentTest {
 
 		Components.compose(routeComponent, terminal);
 
-		routeComponent.getUpStreamDataFlow().handleData(new Packet("b", "a", "Hello, World!").sendTo("ws://localhost/a"));
+		routeComponent.getUpStreamDataFlow().handleData(new Packet("a", "Hello, World!").sendTo("ws://localhost/a"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -102,7 +102,7 @@ public class RouterComponentTest {
 
 		Components.compose(routeComponent, terminal);
 
-		terminal.getDownStreamDataFlow().handleData(new Packet("b", "a", "Hello, World!"));
+		terminal.getDownStreamDataFlow().handleData(new Packet("a", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -119,7 +119,7 @@ public class RouterComponentTest {
 
 		Components.compose(initial, routeComponent);
 
-		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
+		initial.getUpStreamDataFlow().handleData(new Packet("c", "Hello, World!"));
 	}
 
 	@Test(expected = RouteNotFoundException.class)
@@ -131,7 +131,7 @@ public class RouterComponentTest {
 		Components.compose(initial, routeComponent);
 
 		try {
-			initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
+			initial.getUpStreamDataFlow().handleData(new Packet("c", "Hello, World!"));
 		} catch (DataFlowException e) {
 			throw e.getCause();
 		}

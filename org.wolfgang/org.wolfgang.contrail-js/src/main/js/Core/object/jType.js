@@ -128,12 +128,18 @@ define([],
             ObjectOf:function (objectType) {
                 return typeRule(Primitives.Object,
                     function (object) {
-                        var entry, result = true;
+                        var entry, result;
 
-                        for (entry in objectType) {
-                            if (objectType.hasOwnProperty(entry)) {
-                                result = result && jType.ofType(object[entry], objectType[entry]);
+                        if (jType.ofType(object, jType.types.Object)) {
+                            result = true;
+
+                            for (entry in objectType) {
+                                if (objectType.hasOwnProperty(entry)) {
+                                    result = result && jType.ofType(object[entry], objectType[entry]);
+                                }
                             }
+                        } else {
+                            result = false;
                         }
 
                         return result;

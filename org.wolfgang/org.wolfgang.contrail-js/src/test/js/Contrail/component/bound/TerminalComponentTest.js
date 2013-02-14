@@ -43,8 +43,7 @@ require([ "Contrail/jContrail", "Core/object/jObj", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    dataFlow = Factory.flow.core();
-                    dataFlow.handleData = jObj.procedure([jObj.types.Any], function (data) {
+                    dataFlow = Factory.flow.core(function (data) {
                         this.content = jObj.value(this.content, "") + data;
                     });
                 }).

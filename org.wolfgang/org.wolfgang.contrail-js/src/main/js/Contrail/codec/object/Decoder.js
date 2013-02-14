@@ -43,7 +43,7 @@ define([ "require", "Core/object/jObj" ],
         ObjectDecoder.prototype.toObject = jObj.method([jObj.types.Any], jObj.types.Any,
             function (data) {
                 var result, key, self = this;
-                if (data.hasOwnProperty("jN") && data.hasOwnProperty("jV")) {
+                if (jObj.ofType(data, jObj.types.ObjectOf({jN:jObj.types.String, jV:jObj.types.Object}))) {
                     result = this.drivers[data.jN].toObject(data.jV, function (value) {
                         return self.toObject(value);
                     });
