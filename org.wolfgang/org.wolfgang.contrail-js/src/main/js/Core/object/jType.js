@@ -18,15 +18,17 @@
 
 /*global define*/
 
-define([ "require" ],
-    function (require) {
+define([],
+    function () {
         "use strict";
 
         var jType = {}, Primitives;
 
         function RuntimeTypeError(message) {
-            require("Core/object/jObj").bless(this);
             this.message = message;
+            this.toString = function () {
+                return "RuntimeTypeError: " + this.message;
+            };
         }
 
         function typeRule(type, fun) {
@@ -49,13 +51,13 @@ define([ "require" ],
                     result = true;
                 } else if (jType.getClass(object) === type) {
                     result = true;
-                } else if (object && object.extension) {
-                    if (object.extension.hasOwnProperty(type)) {
+                } else if (object && object.extensions) {
+                    if (object.extensions.hasOwnProperty(type)) {
                         result = true;
                     } else {
-                        for (parent in object.extension) {
-                            if (object.extension.hasOwnProperty(parent) && !result) {
-                                if (ofPrimitiveType(type).check(object.extension[parent])) {
+                        for (parent in object.extensions) {
+                            if (object.extensions.hasOwnProperty(parent) && !result) {
+                                if (ofPrimitiveType(type).check(object.extensions[parent])) {
                                     result = true;
                                 }
                             }
@@ -117,9 +119,9 @@ define([ "require" ],
                         return result;
                     });
             },
-            // Object type only
+            // Object type only - An array is not an object in this type system
             Object:typeRule(Primitives.Object, function (object) {
-                return typeof object === "object";
+                return typeof object === "object" && !jType.ofType(object, jType.types.Array);
             }),
 
             // Complex object type (Structural sub-typing)
@@ -196,7 +198,17 @@ define([ "require" ],
         };
 
         /**
-         * Method called whether the class name nust be retrieved
+         * Method checking the object nature ...
+         *
+         * @param object
+         * @return {Boolean}
+         */
+        jType.isAClassInstance = function (object) {
+            return object.hasOwnProperty("extensions");
+        };
+
+        /**
+         * Method called whether the class name must be retrieved
          *
          * @param object The object
          * @return the type if it's an object; undefined otherwise

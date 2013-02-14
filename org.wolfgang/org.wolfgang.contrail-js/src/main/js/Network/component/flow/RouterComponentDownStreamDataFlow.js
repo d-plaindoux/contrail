@@ -20,7 +20,7 @@
 
 define([ "Core/object/jObj", "Contrail/jContrail", "./RouterComponentDataFlow" ],
     function (jObj, jContrail, routerFlow) {
-        // "use strict";
+        "use strict";
 
         var RouterComponentDownStreamDataFlow = function (router) {
             jObj.bless(this, routerFlow(router));

@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./packet/Packet", "./codec/CoDecPacketLibrary" ],
-    function (component, table, packet, codec) {
+define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./packet/Packet" ],
+    function (component, table, packet) {
         "use strict";
 
         var jNetwork = {};
@@ -27,7 +27,6 @@ define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable"
         jNetwork.component = component;
         jNetwork.table = table;
         jNetwork.packet = packet;
-        jNetwork.codec = codec;
 
         return jNetwork;
     });

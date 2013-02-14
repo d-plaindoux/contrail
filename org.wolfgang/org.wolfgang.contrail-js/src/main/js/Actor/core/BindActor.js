@@ -23,9 +23,9 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function BindActor() {
+        var BindActor = function () {
             jObj.bless(this);
-        }
+        };
 
         BindActor.init = jObj.constructor([ ],
             function () {

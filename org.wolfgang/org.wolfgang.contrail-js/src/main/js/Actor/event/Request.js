@@ -29,8 +29,8 @@ define([ "Core/object/jObj" ],
         }
 
         Request.init = jObj.constructor([jObj.types.String, jObj.types.Array],
-            function (actorId, name, parameters) {
-                return new Request(actorId, name, parameters);
+            function (name, parameters) {
+                return new Request(name, parameters);
             });
 
         Request.prototype.getName = jObj.method([], jObj.types.String,
@@ -49,5 +49,5 @@ define([ "Core/object/jObj" ],
             }
         );
 
-        return Request.init;
+        return jObj.jSonifiable(Request.init, ["name", "parameters"]);
     });

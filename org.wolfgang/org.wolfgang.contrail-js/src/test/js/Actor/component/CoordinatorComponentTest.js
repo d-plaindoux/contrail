@@ -147,7 +147,7 @@ require([
         });
 
         jCC.scenario("Checking remotely routed actor message passing using remote actor", function () {
-            var table, coordinatorA, initialA, coordinatorB, initialB, dataFlowRouter, response;
+            var table, coordinatorA, initialA, coordinatorB, initialB, response, drivers;
 
             jCC.
                 Given(function () {
@@ -155,18 +155,12 @@ require([
                     table.populate({"a":"ws://localhost/a", "b":"ws://localhost/b"});
                 }).
                 And(function () {
-                    dataFlowRouter = jContrail.flow.core();
-                    dataFlowRouter.handleData = function (data) {
-                        if (data.endPoint === table.getRoute("a")) {
-                            initialA.getUpStreamDataFlow().handleData(data);
-                        } else if (data.endPoint === table.getRoute("b")) {
-                            initialB.getUpStreamDataFlow().handleData(data);
-                        }
-                    };
-                }).
-                And(function () {
-                    initialA = jContrail.component.initial(dataFlowRouter);
-                    initialB = jContrail.component.initial(dataFlowRouter);
+                    initialA = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialB.getUpStreamDataFlow().handleData(data);
+                    }));
+                    initialB = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialA.getUpStreamDataFlow().handleData(data);
+                    }));
                 }).
                 And(function () {
                     coordinatorA = jActor.coordinator();
@@ -179,16 +173,25 @@ require([
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
+                    drivers = {Packet:jNetwork.packet, Request:jActor.event.request};
+                }).
+                And(function () {
                     jContrail.component.compose([
                         initialA,
-                        jContrail.component.transducer(jNetwork.codec.encoder(), jNetwork.codec.decoder()),
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
                         jNetwork.component(table, "a"),
                         jActor.component(coordinatorA) ]);
                 }).
                 And(function () {
                     jContrail.component.compose([
                         initialB,
-                        jContrail.component.transducer(jNetwork.codec.encoder(), jNetwork.codec.decoder()),
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
                         jNetwork.component(table, "b"),
                         jActor.component(coordinatorB) ]);
                 }).

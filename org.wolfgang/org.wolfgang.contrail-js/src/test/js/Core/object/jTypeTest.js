@@ -144,5 +144,19 @@ require([ "Core/object/jObj", "Core/test/jCC" ],
                     A.prototype.id = undefined;
                 });
         });
+
+
+        jCC.scenario("Check Subtype []:Array !<? Object", function () {
+            var a;
+
+            jCC.
+                Given(function () {
+                    a = [];
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(jObj.ofType(a, jObj.types.Object), false, "a not an object");
+                });
+        });
     });
 

@@ -38,7 +38,13 @@ define([ "./jType" ],
          * @return an exception
          */
         jModel.exception = function (message, cause) {
-            return { message:message, cause:cause };
+            return {
+                message:message,
+                cause:cause,
+                toString:function () {
+                    return "RuntimeException: " + message;
+                }
+            };
         };
 
         /**
@@ -105,6 +111,9 @@ define([ "./jType" ],
             return jModel.method(profil, undefined, method);
         };
 
+        jModel.abstractDefinition = function () {
+            throw jModel.exception("L.abstract.method", { arity:arguments.length});
+        };
 
         /**
          * Method called whether a method must be defined
@@ -137,10 +146,10 @@ define([ "./jType" ],
                         }
 
                         if (method === undefined) {
-                            throw jModel.exception("L.abstract.method", { method:method, arity:arguments.length});
+                            jModel.abstractDefinition.apply(this, arguments);
+                        } else {
+                            return jType.checkType(method.apply(this, arguments), returns);
                         }
-
-                        return jType.checkType(method.apply(this, arguments), returns);
                     }
                 };
             }

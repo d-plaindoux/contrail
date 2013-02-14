@@ -24,9 +24,10 @@ define("Contrail/codec/jCodec",
         "./identity/CoDecIdentityLibrary",
         "./payload/CoDecPayloadLibrary",
         "./json/CoDecJSonLibrary",
-        "./serialize/CoDecSerializeLibrary"
+        "./serialize/CoDecSerializeLibrary",
+        "./object/CoDecObjectLibrary"
     ],
-    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory) {
+    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory, ObjectFactory) {
         "use strict";
 
         var Factory = {};
@@ -36,6 +37,7 @@ define("Contrail/codec/jCodec",
         Factory.payload = PayloadFactory;
         Factory.json = JSonFactory;
         Factory.serialize = SerializeFactory;
+        Factory.object = ObjectFactory;
 
         return Factory;
 

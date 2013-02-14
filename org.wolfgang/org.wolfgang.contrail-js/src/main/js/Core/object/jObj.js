@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/object/jObj", [ "./jModel", "./jType" ],
-    function (jModel, jType) {
+define("Core/object/jObj", [ "./jModel", "./jType", "./jSonifier"],
+    function (jModel, jType, jExchangeable) {
         "use strict";
 
         var jObj = {};
@@ -67,7 +67,7 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
             });
 
             // Inheritance definition
-            instance.extension = {};
+            instance.extensions = {};
 
             if (parameters.length > 0) {
                 parameters.forEach(function (inherited) {
@@ -76,18 +76,22 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
                     type = jType.getClass(inherited);
 
                     if (type === "Object") {
-                        for (key in inherited.extension) {
-                            if (inherited.extension.hasOwnProperty(key)) {
-                                instance.extension[key] = inherited.extension[key];
+                        for (key in inherited.extensions) {
+                            if (inherited.extensions.hasOwnProperty(key)) {
+                                instance.extensions[key] = inherited.extensions[key];
                             }
                         }
                     } else {
-                        instance.extension[type] = inherited;
+                        instance.extensions[type] = inherited;
                     }
                 });
 
                 instance.superclass = parameters[0];
             }
+
+            instance.toString = function () {
+                return jObj.getClass(this);
+            };
 
             return instance;
         };
@@ -112,6 +116,6 @@ define("Core/object/jObj", [ "./jModel", "./jType" ],
             return result;
         };
 
-        return jObj.bless(jObj, jModel, jType);
+        return jObj.bless(jObj, jModel, jType, jExchangeable);
 
     });

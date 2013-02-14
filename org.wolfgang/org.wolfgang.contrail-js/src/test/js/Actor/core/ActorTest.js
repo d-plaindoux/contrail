@@ -293,7 +293,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("AtomicString").bindToSource("./AtomicString.js").withModule("Atomic.String", [ "Hello, World!" ]);
+                    coordinator.actor("AtomicString").bindToSource("./AtomicString.js").withModule("Atomic.String", ["Hello!"]);
                 }).
                 And(function () {
                     response = storedResponse();
@@ -302,7 +302,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
                 }).
                 ThenAfter(500, function () {
-                    jCC.equal(response.value(), "Hello, World!", "Actor must respond 'Hello, World!'");
+                    jCC.equal(response.value(), "Hello!", "Actor must respond 'Hello!'");
                     coordinator.stop();
                 });
         });

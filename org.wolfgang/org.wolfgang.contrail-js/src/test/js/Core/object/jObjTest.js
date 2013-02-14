@@ -246,7 +246,7 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     b = new B();
                 }).
                 When(function () {
-                    r = b.extension.A.m();
+                    r = b.extensions.A.m();
                 }).
                 Then(function () {
                     jCC.equal(r, "A.m() for b", "Super method polymorphism with override is A.m()");
@@ -320,16 +320,16 @@ require([ "Core/object/jObj", "Core/utils/jTransducer", "Core/test/jCC" ],
                     jCC.equal(jObj.ofType(d.superclass, jObj.types.Named("C")), true, "d.superclass is C");
                 }).
                 And(function () {
-                    jCC.equal(jObj.ofType(d.extension.C, jObj.types.Named("C")), true, "d.extension.C is C");
+                    jCC.equal(jObj.ofType(d.extensions.C, jObj.types.Named("C")), true, "d.extensions.C is C");
                 }).
                 And(function () {
                     jCC.equal(jObj.ofType(d.superclass.superclass, jObj.types.Named("A")), true, "d.superclass.superclass is A");
                 }).
                 And(function () {
-                    jCC.equal(jObj.ofType(d.superclass.extension.A, jObj.types.Named("A")), true, "d.superclass.extension.A is also A");
+                    jCC.equal(jObj.ofType(d.superclass.extensions.A, jObj.types.Named("A")), true, "d.superclass.extensions.A is also A");
                 }).
                 And(function () {
-                    jCC.equal(jObj.ofType(d.superclass.extension.B, jObj.types.Named("B")), true, "d.superclass.extension.B is also B");
+                    jCC.equal(jObj.ofType(d.superclass.extensions.B, jObj.types.Named("B")), true, "d.superclass.extensions.B is also B");
                 });
         });
     });

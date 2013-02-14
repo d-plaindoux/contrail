@@ -36,24 +36,22 @@ define([ "require", "Core/object/jObj" ],
 
         TransducerDataFlow.prototype.handleData = jObj.procedure([jObj.types.Any],
             function (data) {
-                var index,
-                    dataFlow = this.getDataFlow(),
+                var dataFlow = this.getDataFlow(),
                     dataList = this.transducer.transform(data);
 
-                for (index = 0; index < dataList.length; index += 1) {
-                    dataFlow.handleData(dataList[index]);
-                }
+                dataList.forEach(function (data) {
+                    dataFlow.handleData(data);
+                });
             });
 
         TransducerDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                var index,
-                    dataFlow = this.getDataFlow(),
+                var dataFlow = this.getDataFlow(),
                     dataList = this.transducer.finish();
 
-                for (index = 0; index < dataList.length; index += 1) {
-                    dataFlow.handleData(dataList[index]);
-                }
+                dataList.forEach(function (data) {
+                    dataFlow.handleData(data);
+                });
             });
 
         return TransducerDataFlow.init;
