@@ -204,7 +204,7 @@ define([],
          * @return {Boolean}
          */
         jType.isAClassInstance = function (object) {
-            return object.hasOwnProperty("extensions");
+            return object && object.hasOwnProperty("extensions");
         };
 
         /**

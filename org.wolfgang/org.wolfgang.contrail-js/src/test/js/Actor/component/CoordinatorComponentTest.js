@@ -18,9 +18,7 @@
 
 /*global require, setTimeout */
 
-require([
-    "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail"
-],
+require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse", "Network/jNetwork", "Core/flow/jFlow", "Contrail/jContrail" ],
     function (jObj, jCC, jActor, storedResponse, jNetwork, jFlow, jContrail) {
         "use strict";
 
@@ -147,7 +145,7 @@ require([
         });
 
         jCC.scenario("Checking remotely routed actor message passing using remote actor", function () {
-            var table, coordinatorA, initialA, coordinatorB, initialB, response, drivers;
+            var table, coordinatorA, initialA, coordinatorB, initialB, response1, response2, drivers;
 
             jCC.
                 Given(function () {
@@ -196,13 +194,17 @@ require([
                         jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
-                    response = storedResponse();
+                    response1 = storedResponse();
+                    response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jActor.event.request("getA", []), response);
+                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
+                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(500, function () {
-                    jCC.equal(response.value(), "a");
+                    jCC.equal(response1.value(), "a");
+                    jCC.equal(response2.value(), "Hello, World!");
                     coordinatorA.stop();
                     coordinatorB.stop();
                 });
