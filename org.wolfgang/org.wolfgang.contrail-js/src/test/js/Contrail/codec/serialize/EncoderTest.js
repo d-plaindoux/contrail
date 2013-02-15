@@ -124,6 +124,36 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io
                 });
         });
 
+        jCC.scenario("Null encoding", function () {
+            var value, encoder, result;
+
+            jCC.
+                Given(function () {
+                    value = null;
+                }).
+                And(function () {
+                    encoder = Factory.serialize.encoder();
+                }).
+                When(function () {
+                    result = encoder.transform(value);
+                }).
+                Then(function () {
+                    jCC.equal(jObj.ofType(result, jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    jCC.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking first result type");
+                }).
+                And(function () {
+                    jCC.equal(result[0].length, 1, "Checking first result length");
+                }).
+                And(function () {
+                    jCC.equal(result[0][0], Marshaller.types.Null, "Checking encoded type");
+                });
+        });
+
         jCC.scenario("Boolean true encoding", function () {
             var value, encoder, result;
 

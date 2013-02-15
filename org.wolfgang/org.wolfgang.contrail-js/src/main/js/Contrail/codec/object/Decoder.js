@@ -44,9 +44,13 @@ define([ "require", "Core/object/jObj" ],
             function (data) {
                 var result, key, self = this;
                 if (jObj.ofType(data, jObj.types.ObjectOf({jN:jObj.types.String, jV:jObj.types.Object}))) {
-                    result = this.drivers[data.jN].toObject(data.jV, function (value) {
-                        return self.toObject(value);
-                    });
+                    if (this.drivers[data.jN]) {
+                        result = this.drivers[data.jN].toObject(data.jV, function (value) {
+                            return self.toObject(value);
+                        });
+                    } else {
+                        jObj.throwError(jObj.exception("L.deserialization.driver.not.found"));
+                    }
                 } else if (jObj.ofType(data, jObj.types.Object)) {
                     result = {};
                     for (key in data) {

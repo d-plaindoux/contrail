@@ -19,11 +19,11 @@
 package org.wolfgang.contrail.codec.serialize;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
@@ -53,13 +53,6 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 		return result;
 	}
 
-	private byte[] concat(byte[] b1, byte b2) {
-		final byte[] result = new byte[b1.length + 1];
-		System.arraycopy(b1, 0, result, 0, b1.length);
-		result[b1.length] = b2;
-		return result;
-	}
-
 	private byte[] concat(byte[] b1, byte[] b2) {
 		final byte[] result = new byte[b1.length + b2.length];
 		System.arraycopy(b1, 0, result, 0, b1.length);
@@ -71,43 +64,42 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 		final byte type;
 		byte[] result;
 
-		if (source instanceof Integer) {
+		if (Coercion.canCoerce(source, Integer.class)) {
+			final Integer intValue = Coercion.coerce(source, Integer.class);
 			type = Marshall.TYPE_Number;
-			result = Marshall.numberToBytes((Integer) source);
-		} else if (source instanceof String) {
+			result = Marshall.numberToBytes(intValue);
+		} else if (Coercion.canCoerce(source, String.class)) {
 			type = Marshall.TYPE_String;
-			result = Marshall.shortNumberToBytes(((String) source).length());
-			result = concat(result, Marshall.stringToBytes((String) source));
+			final String stringValue = Coercion.coerce(source, String.class);
+			result = Marshall.shortNumberToBytes(stringValue.length());
+			result = concat(result, Marshall.stringToBytes(stringValue));
 		} else if (source == null) {
 			type = Marshall.TYPE_Null;
 			result = new byte[0];
-		} else if (source instanceof Boolean) {
-			if ((Boolean) source) {
-				type = Marshall.TYPE_BooleanTrue;
-			} else {
-				type = Marshall.TYPE_BooleanFalse;
-			}
+		} else if (Coercion.canCoerce(source, Boolean.class)) {
+			final boolean boolValue = Coercion.coerce(source, Boolean.class);
+			type = boolValue ? Marshall.TYPE_BooleanTrue : Marshall.TYPE_BooleanFalse;
 			result = new byte[0];
-		} else if (source instanceof Array) {
+		} else if (source.getClass().isArray()) {
 			final int length = Array.getLength(source);
 			type = Marshall.TYPE_Array;
 			result = Marshall.shortNumberToBytes(length);
 			for (int i = 0; i < length; i++) {
 				result = concat(result, encode(Array.get(source, i)));
 			}
-		} else if (source instanceof ObjectRecord) {
-			final ObjectRecord record = (ObjectRecord) source;
+		} else if (Coercion.canCoerce(source, ObjectRecord.class)) {
+			final ObjectRecord record = Coercion.coerce(source, ObjectRecord.class);
 			final Set<String> fields = record.getNames();
 			final int length = fields.size();
 			type = Marshall.TYPE_Object;
 			result = Marshall.shortNumberToBytes(length);
 			for (String field : fields) {
-				result = concat(result, (byte) field.length());
+				result = concat(result, Marshall.shortNumberToBytes(field.length()));
 				result = concat(result, Marshall.stringToBytes(field));
 				result = concat(result, encode(record.get(field)));
 			}
 		} else {
-			throw new DataTransducerException();
+			throw new DataTransducerException("Serialization encoding not supported for " + source.getClass());
 		}
 
 		return concat(type, result);

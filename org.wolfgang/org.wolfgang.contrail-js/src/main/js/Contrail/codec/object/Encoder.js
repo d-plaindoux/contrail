@@ -45,10 +45,14 @@ define([ "require", "Core/object/jObj" ],
                 var result, name, value, key, self = this;
                 if (jObj.isAClassInstance(data)) {
                     name = jObj.getClass(data);
-                    value = this.drivers[name].toStructure(data, function (object) {
-                        return self.toStructure(object);
-                    });
-                    result = { jN:name, jV:value };
+                    if (this.drivers[name]) {
+                        value = this.drivers[name].toStructure(data, function (object) {
+                            return self.toStructure(object);
+                        });
+                        result = { jN:name, jV:value };
+                    } else {
+                        jObj.throwError(jObj.exception("L.serialization.driver.not.found"));
+                    }
                 } else if (jObj.ofType(data, jObj.types.Object)) {
                     result = {};
                     for (key in data) {

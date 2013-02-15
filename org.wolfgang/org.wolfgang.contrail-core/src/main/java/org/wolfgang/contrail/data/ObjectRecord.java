@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.wolfgang.common.utils.Coercion;
+
 /**
  * <code>ObjectRecord</code>
  * 
@@ -48,7 +50,42 @@ public class ObjectRecord {
 		return this.attributes.get(name);
 	}
 
-	public void set(String name, Object object) {
+	public <T> T get(String name, Class<T> type) {
+		final Object object = this.attributes.get(name);
+		if (Coercion.canCoerce(object, type)) {
+			return Coercion.coerce(object, type);
+		} else {
+			return null;
+		}
+	}
+
+	public ObjectRecord set(String name, Object object) {
 		this.attributes.put(name, object);
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ObjectRecord other = (ObjectRecord) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!attributes.equals(other.attributes))
+			return false;
+		return true;
 	}
 }

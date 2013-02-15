@@ -89,8 +89,8 @@ public class Decoder implements DataTransducer<Bytes, Object> {
 			result = new Object[length];
 			for (int i = 0; i < length; i += 1) {
 				final Pair<Integer, Object> decoded = this.decode(array, offset + size);
-				((Object[]) result)[i] = decoded.getSecond();
 				size += decoded.getFirst();
+				((Object[]) result)[i] = decoded.getSecond();
 			}
 			break;
 
@@ -104,8 +104,8 @@ public class Decoder implements DataTransducer<Bytes, Object> {
 				final String key = Marshall.bytesToStringWithOffset(array, offset + size, name_length);
 				size += name_length * Marshall.SIZE_Character;
 				final Pair<Integer, Object> decoded = this.decode(array, offset + size);
-				((ObjectRecord) result).set(key, decoded.getSecond());
 				size += decoded.getFirst();
+				((ObjectRecord) result).set(key, decoded.getSecond());
 			}
 			break;
 
