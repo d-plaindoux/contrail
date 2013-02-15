@@ -27,21 +27,33 @@ import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerExcepti
 
 public class JSonifier {
 
-	private String[] names;
-	private Class<?>[] types;
+	public static JSonifierWithoutTypes withNames(String... names) {
+		return new JSonifierWithoutTypes(names);
+	}
 
-	public JSonifier() {
+	static class JSonifierWithoutTypes {
+		private final String[] names;
+
+		private JSonifierWithoutTypes(String[] names) {
+			super();
+			this.names = names;
+		}
+
+		public JSonifier withTypes(Class<?>... types) {
+			return new JSonifier(names, types);
+		}
+	}
+
+	private final String[] names;
+	private final Class<?>[] types;
+
+	private JSonifier(String[] names, Class<?>[] types) {
 		super();
-	}
 
-	public JSonifier withNames(String... names) {
+		assert names.length == types.length;
+
 		this.names = names;
-		return this;
-	}
-
-	public JSonifier withTypes(Class<?>... types) {
 		this.types = types;
-		return this;
 	}
 
 	public ObjectRecord toStructure(Object object, Encoder encoder) throws DataTransducerException {

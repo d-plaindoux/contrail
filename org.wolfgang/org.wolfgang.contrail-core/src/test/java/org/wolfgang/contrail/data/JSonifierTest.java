@@ -51,7 +51,7 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveJSonifiedObjectWhenJSonifySimpleObject() throws DataTransducerException {
-		final JSonifier jSonifier = new JSonifier().withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
 		final Simple simpleClass = new Simple("A", 42, new ObjectRecord());
 		final ObjectRecord structure = jSonifier.toStructure(simpleClass, new Encoder(new HashMap<String, JSonifier>()));
 
@@ -66,7 +66,7 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveSimpleObjectWhenJSonifyJSonifiedObject() throws DataTransducerException {
-		final JSonifier jSonifier = new JSonifier().withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
 		final ObjectRecord structure = new ObjectRecord().set("jN", Simple.class.getName()).set("jV", new ObjectRecord().set("name", "B").set("age", 24).set("data", new ObjectRecord()));
 		final Object object = jSonifier.toObject(structure, new Decoder(new HashMap<String, JSonifier>()));
 
