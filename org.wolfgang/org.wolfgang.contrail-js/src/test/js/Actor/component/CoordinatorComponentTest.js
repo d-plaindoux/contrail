@@ -211,7 +211,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
 
-        jCC.scenario("Checking remotely routed actor message passing using remote actor and native serialization (without json", function () {
+        jCC.scenario("Checking remotely routed actor message passing using remote actor and native serialization without json", function () {
             var table, coordinatorA, initialA, coordinatorB, initialB, response1, response2, drivers;
 
             jCC.

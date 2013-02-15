@@ -20,6 +20,7 @@ package org.wolfgang.contrail.data;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.wolfgang.contrail.codec.object.Decoder;
 import org.wolfgang.contrail.codec.object.Encoder;
@@ -34,7 +35,7 @@ public class JSonifier {
 		return new JSonifierWithoutTypes(names);
 	}
 
-	static class JSonifierWithoutTypes {
+	public static class JSonifierWithoutTypes {
 		final private String[] names;
 
 		private JSonifierWithoutTypes(String[] names) {
@@ -60,13 +61,25 @@ public class JSonifier {
 		this.types = types;
 	}
 
+	private String getBeanName(String name) {
+		final StringBuilder builder = new StringBuilder("get");
+		builder.append(Character.toUpperCase(name.charAt(0))).append(name.substring(1));
+		return builder.toString();
+	}
+
 	public ObjectRecord toStructure(Object object, Encoder encoder) throws DataTransducerException {
 		try {
 			final ObjectRecord parameters = new ObjectRecord();
 
 			for (String name : names) {
-				final Field field = object.getClass().getField(name);
-				parameters.set(name, encoder.encode(field.get(object)));
+				try {
+					final String methodName = getBeanName(name);
+					final Method method = object.getClass().getMethod(methodName);
+					parameters.set(name, encoder.encode(method.invoke(object)));
+				} catch (Exception e) {
+					final Field field = object.getClass().getField(name);
+					parameters.set(name, encoder.encode(field.get(object)));
+				}
 			}
 
 			return new ObjectRecord().set(JSonName, object.getClass().getName()).set(JSonValue, parameters);

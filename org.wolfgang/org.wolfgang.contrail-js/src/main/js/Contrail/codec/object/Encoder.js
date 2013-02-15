@@ -43,6 +43,7 @@ define([ "require", "Core/object/jObj" ],
         ObjectEncoder.prototype.toStructure = jObj.method([jObj.types.Any], jObj.types.Any,
             function (data) {
                 var result, name, value, key, self = this;
+
                 if (jObj.isAClassInstance(data)) {
                     name = jObj.getClass(data);
                     if (this.drivers[name]) {

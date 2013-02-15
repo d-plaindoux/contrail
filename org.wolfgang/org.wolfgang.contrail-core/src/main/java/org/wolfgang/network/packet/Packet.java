@@ -16,7 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.packet;
+package org.wolfgang.network.packet;
+
+import org.wolfgang.contrail.data.JSonifier;
 
 /**
  * <code>Packet</code>
@@ -30,6 +32,10 @@ public class Packet {
 	private final String destinationId;
 	private final Object data;
 	private String endPoint;
+
+	public static JSonifier jSonifable() {
+		return JSonifier.withNames("sourceId", "destinationId", "data", "endPoint").withTypes(String.class, String.class, Object.class, String.class);
+	}
 
 	private Packet(String sourceId, String destinationId, Object data, String endPoint) {
 		super();

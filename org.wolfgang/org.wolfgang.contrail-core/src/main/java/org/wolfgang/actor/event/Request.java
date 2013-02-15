@@ -16,41 +16,41 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.concurrent;
+package org.wolfgang.actor.event;
 
-import java.util.concurrent.Future;
+import org.wolfgang.contrail.data.JSonifier;
+import org.wolfgang.contrail.data.ObjectRecord;
 
 /**
- * <code>Promise</code>
+ * <code>Request</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Promise<V> {
+public class Request {
 
-	private final PromisedFuture<V> future;
+	private final String name;
+	private final Object[] parameters;
 
-	{
-		this.future = new PromisedFuture<V>();
+	public static JSonifier jSonifable() {
+		return JSonifier.withNames("name", "parameters").withTypes(String.class, Object[].class);
 	}
 
-	public static <V> Promise<V> create() {
-		return new Promise<V>();
-	}
-
-	protected Promise() {
+	private Request(String name, Object[] parameters) {
 		super();
+		this.name = name;
+		this.parameters = parameters;
 	}
 
-	public Future<V> getFuture() {
-		return this.future;
+	public String getName() {
+		return name;
 	}
 
-	public void success(V value) {
-		future.setValue(value);
+	public Object[] getParameters() {
+		return parameters;
 	}
 
-	public void error(Throwable error) {
-		future.setError(error);
+	public ObjectRecord toActor(String location, String responseId) {
+		return new ObjectRecord().set("identifier", location).set("request", this).set("response", responseId);
 	}
 }

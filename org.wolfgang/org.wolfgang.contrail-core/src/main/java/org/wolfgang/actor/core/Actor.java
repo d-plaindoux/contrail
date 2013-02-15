@@ -16,34 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component.flow;
+package org.wolfgang.actor.core;
 
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
-import org.wolfgang.contrail.network.component.RouteComponent;
+import org.wolfgang.actor.event.Request;
+import org.wolfgang.actor.event.Response;
 
 /**
- * <code>RouterUpStreamDataFlow</code>
+ * <code>Actor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RouterDownStreamDataFlow extends RouterDataFlow {
+public interface Actor {
 
-	/**
-	 * @param router
-	 */
-	public RouterDownStreamDataFlow(RouteComponent router) {
-		super(router);
-	}
+	String getActorId();
 
-	@Override
-	public void handleClose() throws DataFlowCloseException {
-		try {
-			this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleClose();
-		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
-		}
-	}
+	void send(Request request, Response response);
+
+	void invoke(Request request, Response response);
 
 }

@@ -16,41 +16,34 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.concurrent;
+package org.wolfgang.network.component.flow;
 
-import java.util.concurrent.Future;
+import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
+import org.wolfgang.network.component.RouteComponent;
 
 /**
- * <code>Promise</code>
+ * <code>RouterUpStreamDataFlow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Promise<V> {
+public class RouterDownStreamDataFlow extends RouterDataFlow {
 
-	private final PromisedFuture<V> future;
-
-	{
-		this.future = new PromisedFuture<V>();
+	/**
+	 * @param router
+	 */
+	public RouterDownStreamDataFlow(RouteComponent router) {
+		super(router);
 	}
 
-	public static <V> Promise<V> create() {
-		return new Promise<V>();
+	@Override
+	public void handleClose() throws DataFlowCloseException {
+		try {
+			this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleClose();
+		} catch (ComponentNotConnectedException e) {
+			throw new DataFlowCloseException(e);
+		}
 	}
 
-	protected Promise() {
-		super();
-	}
-
-	public Future<V> getFuture() {
-		return this.future;
-	}
-
-	public void success(V value) {
-		future.setValue(value);
-	}
-
-	public void error(Throwable error) {
-		future.setError(error);
-	}
 }

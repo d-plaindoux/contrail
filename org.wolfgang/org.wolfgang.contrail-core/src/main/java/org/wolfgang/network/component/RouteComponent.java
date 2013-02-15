@@ -16,15 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.component;
+package org.wolfgang.network.component;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.network.component.flow.RouterDownStreamDataFlow;
-import org.wolfgang.contrail.network.component.flow.RouterUpStreamDataFlow;
-import org.wolfgang.contrail.network.packet.Packet;
 import org.wolfgang.contrail.network.route.RouteTable;
+import org.wolfgang.network.component.flow.RouterDownStreamDataFlow;
+import org.wolfgang.network.component.flow.RouterUpStreamDataFlow;
+import org.wolfgang.network.packet.Packet;
 
 /**
  * <code>RouteComponent</code>

@@ -16,41 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.common.concurrent;
+package org.wolfgang.actor.event;
 
-import java.util.concurrent.Future;
+import org.wolfgang.common.concurrent.Promise;
 
 /**
- * <code>Promise</code>
+ * <code>Response</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Promise<V> {
+public class Response extends Promise<Object> {
 
-	private final PromisedFuture<V> future;
-
-	{
-		this.future = new PromisedFuture<V>();
-	}
-
-	public static <V> Promise<V> create() {
-		return new Promise<V>();
-	}
-
-	protected Promise() {
+	public Response() {
 		super();
 	}
 
-	public Future<V> getFuture() {
-		return this.future;
-	}
-
-	public void success(V value) {
-		future.setValue(value);
-	}
-
-	public void error(Throwable error) {
-		future.setError(error);
-	}
 }

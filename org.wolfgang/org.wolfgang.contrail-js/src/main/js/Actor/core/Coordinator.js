@@ -33,8 +33,6 @@ define([ "Core/object/jObj", "./Actor" ],
 
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
-
-            this.remoteActorHandler = undefined;
         }
 
         Coordinator.init = jObj.constructor([], function () {
@@ -115,10 +113,10 @@ define([ "Core/object/jObj", "./Actor" ],
                 this.activeActors.push(actor);
             });
 
-        Coordinator.prototype.deactivateActor = jObj.procedure([jObj.types.Named("Actor")],
-            function (actor) {
-                this.activeActors = this.activeActors.filter(function (a) {
-                    return a.identifier !== actor.identifier;
+        Coordinator.prototype.deactivateActor = jObj.procedure([jObj.types.String],
+            function (identifier) {
+                this.activeActors = this.activeActors.filter(function (actor) {
+                    return actor.identifier !== identifier;
                 });
             });
 
@@ -141,6 +139,7 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.disposeActor = jObj.procedure([jObj.types.String],
             function (id) {
+                this.deactivateActor(id);
                 delete this.universe[id];
             });
 

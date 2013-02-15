@@ -32,9 +32,6 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC" ],
             this.object = object;
         }
 
-        jObj.jSonifiable(B, []);
-        jObj.jSonifiable(A, [ "name", "object" ]);
-
         jCC.scenario("Object encoding", function () {
             var object, encoder, result;
 
@@ -43,6 +40,9 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC" ],
                     object = new A("name of A", new B());
                 }).
                 And(function () {
+                    jObj.jSonifier(B).withKeys();
+                    jObj.jSonifier(A).withKeys("name", "object");
+
                     encoder = Factory.object.encoder({ A:A, B:B});
                 }).
                 When(function () {

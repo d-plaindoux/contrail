@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network;
+package org.wolfgang.network;
 
 import junit.framework.TestCase;
 
@@ -26,11 +26,11 @@ import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
 import org.wolfgang.contrail.flow.BufferedDataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
-import org.wolfgang.contrail.network.component.RouteComponent;
-import org.wolfgang.contrail.network.packet.Packet;
 import org.wolfgang.contrail.network.route.RouteAlreadyExistException;
 import org.wolfgang.contrail.network.route.RouteNotFoundException;
 import org.wolfgang.contrail.network.route.RouteTable;
+import org.wolfgang.network.component.RouteComponent;
+import org.wolfgang.network.packet.Packet;
 
 /**
  * <code>RouterComponentTest</code>

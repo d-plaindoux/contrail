@@ -49,5 +49,5 @@ define([ "Core/object/jObj" ],
             }
         );
 
-        return jObj.jSonifiable(Request.init, ["name", "parameters"]);
+        return jObj.jSonifier(Request.init).withKeys("name", "parameters");
     });

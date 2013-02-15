@@ -22,37 +22,41 @@ define([ ],
     function () {
         "use strict";
 
-        var jSonifier = {};
+        var jSonifiable = {};
 
-        jSonifier.jSonifiable = function (init, keys) {
-            init.toObject = function (structure, toObject) {
-                var parameters = [];
+        jSonifiable.jSonifier = function (callBack) {
+            return { withKeys:function () {
+                var keys = Array.prototype.slice.call(arguments);
 
-                keys.forEach(function (key) {
-                    if (structure[key] !== undefined) {
-                        parameters.push(toObject(structure[key]));
-                    } else {
-                        parameters.push(undefined);
-                    }
-                });
+                callBack.toObject = function (structure, toObject) {
+                    var parameters = [];
 
-                return init.apply(this, parameters);
-            };
+                    keys.forEach(function (key) {
+                        if (structure[key] !== undefined) {
+                            parameters.push(toObject(structure[key]));
+                        } else {
+                            parameters.push(undefined);
+                        }
+                    });
 
-            init.toStructure = function (object, toStructure) {
-                var structure = {};
+                    return callBack.apply(this, parameters);
+                };
 
-                keys.forEach(function (key) {
-                    if (object[key] !== undefined) {
-                        structure[key] = toStructure(object[key]);
-                    }
-                });
+                callBack.toStructure = function (object, toStructure) {
+                    var structure = {};
 
-                return structure;
-            };
+                    keys.forEach(function (key) {
+                        if (object[key] !== undefined) {
+                            structure[key] = toStructure(object[key]);
+                        }
+                    });
 
-            return init;
+                    return structure;
+                };
+
+                return callBack;
+            }};
         };
 
-        return jSonifier;
+        return jSonifiable;
     });
