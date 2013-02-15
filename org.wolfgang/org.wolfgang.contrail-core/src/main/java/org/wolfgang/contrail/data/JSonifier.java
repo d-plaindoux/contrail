@@ -27,15 +27,19 @@ import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerExcepti
 
 public class JSonifier {
 
+	public static String JSonName = "jN";
+	public static String JSonValue = "jV";
+
 	public static JSonifierWithoutTypes withNames(String... names) {
 		return new JSonifierWithoutTypes(names);
 	}
 
 	static class JSonifierWithoutTypes {
-		private final String[] names;
+		final private String[] names;
 
 		private JSonifierWithoutTypes(String[] names) {
 			super();
+
 			this.names = names;
 		}
 
@@ -44,8 +48,8 @@ public class JSonifier {
 		}
 	}
 
-	private final String[] names;
-	private final Class<?>[] types;
+	final private String[] names;
+	final private Class<?>[] types;
 
 	private JSonifier(String[] names, Class<?>[] types) {
 		super();
@@ -65,7 +69,7 @@ public class JSonifier {
 				parameters.set(name, encoder.encode(field.get(object)));
 			}
 
-			return new ObjectRecord().set("jN", object.getClass().getName()).set("jV", parameters);
+			return new ObjectRecord().set(JSonName, object.getClass().getName()).set(JSonValue, parameters);
 		} catch (DataTransducerException e) {
 			throw e;
 		} catch (Exception e) {
@@ -75,8 +79,8 @@ public class JSonifier {
 
 	public Object toObject(ObjectRecord object, Decoder decoder) throws DataTransducerException {
 		try {
-			final Class<?> model = Class.forName(object.get("jN", String.class));
-			final ObjectRecord objectRecord = object.get("jV", ObjectRecord.class);
+			final Class<?> model = Class.forName(object.get(JSonName, String.class));
+			final ObjectRecord objectRecord = object.get(JSonValue, ObjectRecord.class);
 			final Constructor<?> constructor = model.getConstructor(types);
 			final Object[] parameters = new Object[types.length];
 			for (int i = 0; i < types.length; i++) {

@@ -33,7 +33,7 @@ import org.wolfgang.common.utils.Coercion;
 public class ObjectRecord {
 
 	private Map<String, Object> attributes;
-
+   
 	{
 		this.attributes = new HashMap<String, Object>();
 	}
@@ -43,7 +43,7 @@ public class ObjectRecord {
 	}
 
 	public Set<String> getNames() {
-		return attributes.keySet();
+		return this.attributes.keySet();
 	}
 
 	public Object get(String name) {
@@ -51,7 +51,7 @@ public class ObjectRecord {
 	}
 
 	public <T> T get(String name, Class<T> type) {
-		final Object object = this.attributes.get(name);
+		final Object object = this.get(name);
 		if (Coercion.canCoerce(object, type)) {
 			return Coercion.coerce(object, type);
 		} else {
@@ -68,7 +68,7 @@ public class ObjectRecord {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ((this.attributes == null) ? 0 : this.attributes.hashCode());
 		return result;
 	}
 
@@ -81,10 +81,10 @@ public class ObjectRecord {
 		if (getClass() != obj.getClass())
 			return false;
 		ObjectRecord other = (ObjectRecord) obj;
-		if (attributes == null) {
+		if (this.attributes == null) {
 			if (other.attributes != null)
 				return false;
-		} else if (!attributes.equals(other.attributes))
+		} else if (!this.attributes.equals(other.attributes))
 			return false;
 		return true;
 	}

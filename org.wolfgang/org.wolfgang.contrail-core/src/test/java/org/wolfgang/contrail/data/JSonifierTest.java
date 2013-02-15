@@ -51,13 +51,14 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveJSonifiedObjectWhenJSonifySimpleObject() throws DataTransducerException {
-		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		final JSonifier jSonifier = givenJSonifier();
+		
 		final Simple simpleClass = new Simple("A", 42, new ObjectRecord());
 		final ObjectRecord structure = jSonifier.toStructure(simpleClass, new Encoder(new HashMap<String, JSonifier>()));
 
-		TestCase.assertEquals(Simple.class.getName(), structure.get("jN", String.class));
+		TestCase.assertEquals(Simple.class.getName(), structure.get(JSonifier.JSonName, String.class));
 
-		final ObjectRecord parameters = structure.get("jV", ObjectRecord.class);
+		final ObjectRecord parameters = structure.get(JSonifier.JSonValue, ObjectRecord.class);
 
 		TestCase.assertEquals("A", parameters.get("name"));
 		TestCase.assertEquals(42, parameters.get("age"));
@@ -66,8 +67,9 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveSimpleObjectWhenJSonifyJSonifiedObject() throws DataTransducerException {
-		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
-		final ObjectRecord structure = new ObjectRecord().set("jN", Simple.class.getName()).set("jV", new ObjectRecord().set("name", "B").set("age", 24).set("data", new ObjectRecord()));
+		final JSonifier jSonifier = givenJSonifier();
+		final ObjectRecord objectValue = new ObjectRecord().set("name", "B").set("age", 24).set("data", new ObjectRecord());
+		final ObjectRecord structure = new ObjectRecord().set(JSonifier.JSonName, Simple.class.getName()).set(JSonifier.JSonValue, objectValue);
 		final Object object = jSonifier.toObject(structure, new Decoder(new HashMap<String, JSonifier>()));
 
 		TestCase.assertEquals(Simple.class.getName(), object.getClass().getName());
@@ -77,5 +79,13 @@ public class JSonifierTest {
 		TestCase.assertEquals("B", simple.name);
 		TestCase.assertEquals(24, simple.age);
 		TestCase.assertEquals(new ObjectRecord(), simple.data);
+	}
+
+	/**
+	 * @return
+	 */
+	private JSonifier givenJSonifier() {
+		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		return jSonifier;
 	}
 }
