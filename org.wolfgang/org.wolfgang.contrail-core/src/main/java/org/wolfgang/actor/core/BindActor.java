@@ -18,7 +18,6 @@
 
 package org.wolfgang.actor.core;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.wolfgang.actor.event.Request;
@@ -31,26 +30,16 @@ import org.wolfgang.common.utils.Pair;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class AbstractActor implements Actor {
+public class BindActor implements Actor {
 
 	private final Coordinator coordinator;
 	private final String name;
 	private final List<Pair<Request, Response>> actorActions;
 
-	public AbstractActor(String name, Coordinator coordinator) {
-		this.name = name;
-		this.coordinator = coordinator;
-		this.actorActions = new LinkedList<Pair<Request, Response>>();
-	}
-
-	protected AbstractActor(AbstractActor actor) {
-		this.name = actor.name;
-		this.coordinator = actor.coordinator;
-		this.actorActions = actor.actorActions;
-	}
-
-	public List<Pair<Request, Response>> getActorActions() {
-		return actorActions;
+	protected BindActor(AbstractActor actor) {
+		this.name = actor.getActorId();
+		this.coordinator = actor.getCoordinator();
+		this.actorActions = actor.getActorActions();
 	}
 
 	public Coordinator getCoordinator() {
@@ -62,15 +51,11 @@ public class AbstractActor implements Actor {
 	}
 
 	public Actor bindToObject(Object model) {
-		final LocalActor actor = new LocalActor(model, this);
-		this.coordinator.registerActor(actor);
-		return actor;
+		return null; // TODO
 	}
 
 	public Actor bindToRemote(String location) {
-		final RemoteActor actor = new RemoteActor(location, this);
-		this.coordinator.registerActor(actor);
-		return actor;
+		return null; // TODO
 	}
 
 	@Override

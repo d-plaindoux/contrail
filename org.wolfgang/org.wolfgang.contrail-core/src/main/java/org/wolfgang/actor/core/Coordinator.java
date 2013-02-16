@@ -87,16 +87,16 @@ public class Coordinator {
 	public void send(String actorId, Request request, Response response) {
 		if (this.universe.containsKey(actorId)) {
 			this.universe.get(actorId).send(request, response);
-		} else {
-			// TODO -- Error
+		} else if (response != null) {
+			response.failure(new Exception("TODO"));
 		}
 	}
 
 	public void invoke(String actorId, Request request, Response response) {
 		if (this.universe.containsKey(actorId)) {
 			this.universe.get(actorId).invoke(request, response);
-		} else {
-			// TODO -- Error
+		} else if (response != null) {
+			response.failure(new Exception("TODO"));
 		}
 	}
 

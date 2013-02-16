@@ -53,7 +53,7 @@ public class TestFuture {
 	public void ShouldRaiseAnErrorWhenSettingAnError() {
 		final Promise<String> promise = Promise.create();
 		final Throwable value = new Throwable();
-		promise.error(value);
+		promise.failure(value);
 		try {
 			promise.getFuture().get();
 			fail();
@@ -108,7 +108,7 @@ public class TestFuture {
 				try {
 					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
-					promise.error(e);
+					promise.failure(e);
 				}
 				promise.success(value);
 			}
@@ -145,9 +145,9 @@ public class TestFuture {
 				try {
 					Thread.sleep(TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS));
 				} catch (InterruptedException e) {
-					promise.error(e);
+					promise.failure(e);
 				}
-				promise.error(value);
+				promise.failure(value);
 			}
 		}.start();
 	}

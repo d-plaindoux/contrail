@@ -19,16 +19,61 @@
 
 package org.wolfgang.actor.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.wolfgang.actor.event.Request;
+import org.wolfgang.actor.event.Response;
+
 /**
  * <code>LocalActor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class LocalActor extends AbstractActor implements Actor {
+public class LocalActor extends BindActor implements Actor {
+
+	final private Object model;
 
 	public LocalActor(Object model, AbstractActor actor) {
 		super(actor);
+		this.model = model;
 	}
 
+	@Override
+	public void invoke(Request request, Response response) {
+		final Method method = getMethodByName(request.getName());
+
+		if (method != null) {
+			try {
+				response.success(method.invoke(model, request.getParameters()));
+			} catch (IllegalArgumentException e) {
+				failure(response, e);
+			} catch (IllegalAccessException e) {
+				failure(response, e);
+			} catch (InvocationTargetException e) {
+				failure(response, e.getCause());
+			}
+		} else {
+			failure(response, new Exception("TODO"));
+		}
+	}
+
+	private Method getMethodByName(String name) {
+		final Method[] methods = model.getClass().getMethods();
+
+		for (Method method : methods) {
+			if (method.getName().equals(name)) {
+				return method;
+			}
+		}
+
+		return null;
+	}
+
+	private void failure(Response response, Throwable e) {
+		if (response != null) {
+			response.failure(e);
+		}
+	}
 }

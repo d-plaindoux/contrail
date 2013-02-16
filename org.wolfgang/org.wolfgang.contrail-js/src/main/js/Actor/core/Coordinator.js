@@ -152,7 +152,7 @@ define([ "Core/object/jObj", "./Actor" ],
                 if (this.universe.hasOwnProperty(identifier)) {
                     this.universe[identifier].send(request, response);
                 } else {
-                    if (response !== undefined) {
+                    if (response) {
                         response.failure(jObj.exception("L.actor.not.found"));
                     }
                 }
@@ -163,7 +163,7 @@ define([ "Core/object/jObj", "./Actor" ],
                 if (this.universe.hasOwnProperty(identifier)) {
                     this.universe[identifier].invoke(request, response);
                 } else {
-                    if (response !== undefined) {
+                    if (response) {
                         response.failure(jObj.exception("L.actor.not.found"));
                     }
                 }

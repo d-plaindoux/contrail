@@ -25,7 +25,7 @@ package org.wolfgang.actor.core;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RemoteActor extends AbstractActor implements Actor {
+public class RemoteActor extends BindActor implements Actor {
 
 	public RemoteActor(String name, AbstractActor actor) {
 		super(actor);

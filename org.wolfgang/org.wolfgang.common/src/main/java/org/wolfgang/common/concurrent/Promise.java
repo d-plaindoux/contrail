@@ -50,7 +50,7 @@ public class Promise<V> {
 		future.setValue(value);
 	}
 
-	public void error(Throwable error) {
+	public void failure(Throwable error) {
 		future.setError(error);
 	}
 }
