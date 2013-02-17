@@ -36,7 +36,7 @@ public class Request {
 		return JSonifier.withNames("name", "parameters").withTypes(String.class, Object[].class);
 	}
 
-	private Request(String name, Object[] parameters) {
+	public Request(String name, Object... parameters) {
 		super();
 		this.name = name;
 		this.parameters = parameters;

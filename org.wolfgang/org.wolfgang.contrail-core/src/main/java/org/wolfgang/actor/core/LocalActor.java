@@ -21,6 +21,8 @@ package org.wolfgang.actor.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
@@ -34,6 +36,11 @@ import org.wolfgang.actor.event.Response;
 public class LocalActor extends BindActor implements Actor {
 
 	final private Object model;
+	final private Map<String, Method> methodsCache;
+
+	{
+		this.methodsCache = new HashMap<String, Method>();
+	}
 
 	public LocalActor(Object model, AbstractActor actor) {
 		super(actor);
@@ -59,16 +66,22 @@ public class LocalActor extends BindActor implements Actor {
 		}
 	}
 
-	private Method getMethodByName(String name) {
-		final Method[] methods = model.getClass().getMethods();
+	private void findMethodByName(String name) {
+		if (!this.methodsCache.containsKey(name)) {
+			final Method[] methods = model.getClass().getMethods();
 
-		for (Method method : methods) {
-			if (method.getName().equals(name)) {
-				return method;
+			for (Method method : methods) {
+				if (method.getName().equals(name)) {
+					this.methodsCache.put(name, method);
+					return;
+				}
 			}
 		}
+	}
 
-		return null;
+	private Method getMethodByName(String name) {
+		this.findMethodByName(name);
+		return this.methodsCache.get(name);
 	}
 
 	private void failure(Response response, Throwable e) {

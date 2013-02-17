@@ -36,12 +36,8 @@ public class Coordinator {
 	private final Map<String, Actor> universe;
 	private/* mutable */RemoteActorHandler remoteActorHandler;
 
-	{
-		this.universe = new HashMap<String, Actor>();
-	}
-
 	public Coordinator() {
-		// Nothing to be done
+		this.universe = new HashMap<String, Actor>();
 	}
 
 	public void setRemoteActorHandler(RemoteActorHandler remoteActorHandler) {
