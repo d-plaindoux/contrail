@@ -18,7 +18,9 @@
 
 package org.wolfgang.actor.core;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
 
@@ -50,6 +52,10 @@ public class CoordinatorTest {
 		public int getValue() {
 			return value;
 		}
+
+		public void getError() throws Exception {
+			throw new Exception();
+		}
 	}
 
 	@Test
@@ -67,6 +73,21 @@ public class CoordinatorTest {
 		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
 	}
 
+	@Test(expected=ExecutionException.class)
+	public void shouldHaveExceptionWithLocalActorInvoked() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final PromiseResponse response = new PromiseResponse();
+		final Request request = new Request("getError");
+
+		coordinator.invoke("A", request, response);
+
+		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+	}
+	
 	@Test
 	public void shouldHaveResponseWithSentMessageToLocalActor() throws Exception {
 		final Coordinator coordinator = new Coordinator();
@@ -81,5 +102,36 @@ public class CoordinatorTest {
 		coordinator.send("A", request, response);
 
 		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+	}
+
+	@Test(expected=ExecutionException.class)
+	public void shouldHaveExceptionWithSentMessageToLocalActor() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+		coordinator.start();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final PromiseResponse response = new PromiseResponse();
+		final Request request = new Request("getError");
+
+		coordinator.send("A", request, response);
+
+		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+	}
+
+	@Test(expected=TimeoutException.class)
+	public void shouldHaveTimeOutWithSentMessageToInactiveLocalActor() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final PromiseResponse response = new PromiseResponse();
+		final Request request = new Request("getValue");
+
+		coordinator.send("A", request, response);
+
+		TestCase.assertNotSame(42, response.getFuture().get(2, TimeUnit.SECONDS));
 	}
 }
