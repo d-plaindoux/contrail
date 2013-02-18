@@ -19,7 +19,20 @@
 
 package org.wolfgang.actor.component;
 
+import java.util.concurrent.TimeUnit;
+
+import junit.framework.TestCase;
+
 import org.junit.Test;
+import org.wolfgang.actor.core.Coordinator;
+import org.wolfgang.actor.event.Request;
+import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.component.Components;
+import org.wolfgang.contrail.data.ObjectRecord;
+import org.wolfgang.contrail.network.route.RouteTable;
+import org.wolfgang.network.component.RouteComponent;
+import org.wolfgang.network.packet.Packet;
 
 /**
  * <code>CoordinatorComponentTest</code>
@@ -29,9 +42,48 @@ import org.junit.Test;
  */
 public class CoordinatorComponentTest {
 
-	@Test
-	public void shouldHaveResponseWithLocalActorInvokedAsRemotee() {
-		// TODO
+	public class PromiseResponse extends Promise<Object> implements Response {
+		// Nothing to be done
 	}
 
+	public static class A {
+		private int value;
+
+		public A(int value) {
+			super();
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public void setValue(int value) {
+			this.value = value;
+		}
+	}
+
+	@Test
+	public void shouldHaveResponseWithLocalActorInvokedAsRemote() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+		coordinator.start();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final CoordinatorComponent coordinatorComponent = new CoordinatorComponent(coordinator);
+		final RouteComponent routeComponent = new RouteComponent(new RouteTable(), "a");
+		
+		Components.compose(routeComponent, coordinatorComponent);
+
+		final PromiseResponse response = new PromiseResponse();
+		final String responseId = coordinatorComponent.createResponseId(response);
+
+		final ObjectRecord data = new ObjectRecord().set("identifier", "A").set("request", new Request("getValue")).set("response", responseId);
+		final Packet packet = new Packet("a", "a", data, "ws://localhost:8090/a");
+
+		routeComponent.getUpStreamDataFlow().handleData(packet);
+
+		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+	}
 }

@@ -42,7 +42,7 @@ public final class ActorInteractionFilter {
 	public static boolean isAnActorResponse(Object object) {
 		if (Coercion.canCoerce(object, ObjectRecord.class)) {
 			final ObjectRecord record = Coercion.coerce(object, ObjectRecord.class);
-			return record.has("identifier", String.class) && record.has("type", Integer.TYPE) && record.hasOrNull("value", Object.class);
+			return record.has("identifier", String.class) && record.has("type", Integer.class) && record.hasOrNull("value", Object.class);
 		} else {
 			return false;
 		}

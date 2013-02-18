@@ -62,7 +62,7 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 		} else if (ActorInteractionFilter.isAnActorResponse(data.getData())) {
 			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
 			final Response response = this.component.retrieveResponseById(record.get("identifier", String.class));
-			if (record.get("type", Integer.TYPE) == 0x01) {
+			if (record.get("type", Integer.class) == 0x01) {
 				response.success(record.get("value", Object.class));
 			} else {
 				response.failure(record.get("value", Throwable.class));

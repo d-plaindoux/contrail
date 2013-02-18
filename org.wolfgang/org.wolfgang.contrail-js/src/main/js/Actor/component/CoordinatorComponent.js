@@ -31,7 +31,7 @@ define([
             this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
             this.responses = {};
 
-            this.coordinator.setRemoteActorHandler(removeActorHandler(this));
+            coordinator.setRemoteActorHandler(removeActorHandler(this));
         }
 
         CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],

@@ -37,7 +37,7 @@ public class Packet {
 		return JSonifier.withNames("sourceId", "destinationId", "data", "endPoint").withTypes(String.class, String.class, Object.class, String.class);
 	}
 
-	private Packet(String sourceId, String destinationId, Object data, String endPoint) {
+	public Packet(String sourceId, String destinationId, Object data, String endPoint) {
 		super();
 		this.sourceId = sourceId;
 		this.destinationId = destinationId;
