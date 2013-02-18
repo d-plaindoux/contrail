@@ -59,7 +59,7 @@ public class BindActor implements Actor {
 	}
 
 	@Override
-	public void send(Request request, Response response) {
+	public synchronized void send(Request request, Response response) {
 		this.actorActions.add(new Pair<Request, Response>(request, response));
 	}
 
@@ -68,4 +68,11 @@ public class BindActor implements Actor {
 		response.failure(new Exception("Not yet binded")); // TODO
 	}
 
+	public synchronized Pair<Request, Response> getNextAction() {
+		if (this.actorActions.size() == 0) {
+			return null;
+		} else {
+			return this.actorActions.remove(0);
+		}
+	}
 }

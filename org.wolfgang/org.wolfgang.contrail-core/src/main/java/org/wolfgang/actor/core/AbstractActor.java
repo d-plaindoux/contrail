@@ -83,4 +83,8 @@ public class AbstractActor implements Actor {
 		response.failure(new Exception("Not yet binded")); // TODO
 	}
 
+	@Override
+	public Pair<Request, Response> getNextAction() {
+		return null;
+	}
 }

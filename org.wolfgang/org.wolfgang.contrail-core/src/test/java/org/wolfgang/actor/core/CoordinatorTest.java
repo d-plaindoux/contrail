@@ -18,23 +18,12 @@
 
 package org.wolfgang.actor.core;
 
-import org.wolfgang.actor.event.Request;
-import org.wolfgang.actor.event.Response;
-import org.wolfgang.common.utils.Pair;
-
 /**
- * <code>Actor</code>
- * 
+ * <code>CoordinatorTest</code>
+ *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Actor {
+public class CoordinatorTest {
 
-	String getActorId();
-
-	void send(Request request, Response response);
-
-	void invoke(Request request, Response response);
-
-	Pair<Request, Response> getNextAction();
 }

@@ -19,21 +19,19 @@
 /*global define*/
 
 define([
-    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUUID",
-    "Contrail/component/jComponent",
-    "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter",
-    "./handler/RemoteActorHandler"
+    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUUID", "Contrail/component/jComponent",
+    "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
 ],
-    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorFilter, actorHandler) {
+    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorInteractionFilter, removeActorHandler) {
         "use strict";
 
         function CoordinatorComponent(coordinator) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
-            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorFilter.isAnActorInteraction);
+            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
             this.responses = {};
 
-            this.coordinator.setRemoteActorHandler(actorHandler(this));
+            this.coordinator.setRemoteActorHandler(removeActorHandler(this));
         }
 
         CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],
@@ -62,7 +60,7 @@ define([
 
         CoordinatorComponent.prototype.createRemoteActor = jObj.procedure([jObj.types.String, jObj.types.String],
             function (id, name) {
-                this.coordinator.localActor(name, actorHandler(id, this));
+                this.coordinator.localActor(name, removeActorHandler(id, this));
             });
 
         return CoordinatorComponent.init;

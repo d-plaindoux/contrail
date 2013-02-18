@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -16,25 +17,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.actor.core;
+package org.wolfgang.actor.component;
 
-import org.wolfgang.actor.event.Request;
-import org.wolfgang.actor.event.Response;
-import org.wolfgang.common.utils.Pair;
+import org.junit.Test;
 
 /**
- * <code>Actor</code>
+ * <code>CoordinatorComponentTest</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Actor {
+public class CoordinatorComponentTest {
 
-	String getActorId();
+	@Test
+	public void shouldHaveResponseWithLocalActorInvokedAsRemotee() {
+		// TODO
+	}
 
-	void send(Request request, Response response);
-
-	void invoke(Request request, Response response);
-
-	Pair<Request, Response> getNextAction();
 }

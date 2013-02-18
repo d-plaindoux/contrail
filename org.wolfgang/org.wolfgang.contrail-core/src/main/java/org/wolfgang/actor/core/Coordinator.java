@@ -18,12 +18,18 @@
 
 package org.wolfgang.actor.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.utils.Pair;
 
 /**
  * <code>Coordinator</code>
@@ -31,13 +37,31 @@ import org.wolfgang.actor.event.Response;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Coordinator {
+public class Coordinator implements Runnable {
 
 	private final Map<String, Actor> universe;
-	private/* mutable */RemoteActorHandler remoteActorHandler;
+
+	private final List<String> pendingActivedActors;
+	private final List<String> pendingDeactivedActors;
+
+	private final List<String> activeActors;
+
+	private RemoteActorHandler remoteActorHandler;
+
+	private ExecutorService coordinatorExecutor;
+	private boolean isInExecutionStage;
+
+	private ExecutorService actorActionsExecutor;
+
+	{
+		this.universe = new HashMap<String, Actor>();
+		this.activeActors = new ArrayList<String>();
+		this.pendingActivedActors = new ArrayList<String>();
+		this.pendingDeactivedActors = new ArrayList<String>();
+		this.isInExecutionStage = false;
+	}
 
 	public Coordinator() {
-		this.universe = new HashMap<String, Actor>();
 	}
 
 	public void setRemoteActorHandler(RemoteActorHandler remoteActorHandler) {
@@ -49,19 +73,79 @@ public class Coordinator {
 	}
 
 	public void start() {
-		// TODO
+		if (this.coordinatorExecutor == null) {
+			actorActionsExecutor = Executors.newScheduledThreadPool(40); // TODO
+			coordinatorExecutor = Executors.newSingleThreadExecutor();
+		}
+	}
+
+	private void activateCoordinatorIfNecessary() {
+		synchronized (this) {
+			if (!this.isInExecutionStage && coordinatorExecutor != null) {
+				this.isInExecutionStage = true;
+				this.coordinatorExecutor.submit(this);
+			}
+		}
+	}
+
+	public void run() {
+		boolean actionPerfomed = false;
+
+		synchronized (this) {
+			this.activeActors.addAll(this.pendingActivedActors);
+			this.pendingActivedActors.clear();
+			this.activeActors.removeAll(this.pendingDeactivedActors);
+			this.pendingDeactivedActors.clear();
+		}
+
+		for (final String actorId : activeActors) {
+			final Pair<Request, Response> nextAction = this.universe.get(actorId).getNextAction();
+			if (nextAction != null) {
+				actionPerfomed = true;
+				this.actorActionsExecutor.submit(new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						invoke(actorId, nextAction.getFirst(), nextAction.getSecond());
+						return null;
+					}
+				});
+			}
+		}
+
+		synchronized (this) {
+			this.isInExecutionStage = false;
+			if (actionPerfomed) {
+				this.activateCoordinatorIfNecessary();
+			}
+		}
 	}
 
 	public void stop() {
-		// TODO
+		this.coordinatorExecutor.shutdown();
+		this.actorActionsExecutor.shutdown();
 	}
 
-	public void activateActor(Actor actor) {
-
+	public synchronized void activateActor(Actor actor) {
+		final String identifier = actor.getActorId();
+		if (this.pendingDeactivedActors.contains(identifier)) {
+			this.pendingDeactivedActors.remove(identifier);
+		} else if (this.pendingActivedActors.contains(identifier)) {
+			// Nothing
+		} else if (!this.activeActors.contains(identifier)) {
+			this.pendingActivedActors.add(identifier);
+			this.activateCoordinatorIfNecessary();
+		}
 	}
 
-	public void deactivateActor(String identifier) {
-
+	public synchronized void deactivateActor(String identifier) {
+		if (this.pendingActivedActors.contains(identifier)) {
+			this.pendingActivedActors.remove(identifier);
+		} else if (this.pendingDeactivedActors.contains(identifier)) {
+			// Nothing
+		} else if (this.activeActors.contains(identifier)) {
+			this.pendingDeactivedActors.add(identifier);
+			this.activateCoordinatorIfNecessary();
+		}
 	}
 
 	public AbstractActor actor(String name) {
@@ -83,6 +167,7 @@ public class Coordinator {
 	public void send(String actorId, Request request, Response response) {
 		if (this.universe.containsKey(actorId)) {
 			this.universe.get(actorId).send(request, response);
+			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
 			response.failure(new Exception("TODO"));
 		}
