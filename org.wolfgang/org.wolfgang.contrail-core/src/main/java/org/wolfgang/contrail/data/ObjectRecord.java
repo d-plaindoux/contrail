@@ -33,7 +33,7 @@ import org.wolfgang.common.utils.Coercion;
 public class ObjectRecord {
 
 	private Map<String, Object> attributes;
-   
+
 	{
 		this.attributes = new HashMap<String, Object>();
 	}
@@ -48,6 +48,16 @@ public class ObjectRecord {
 
 	public Object get(String name) {
 		return this.attributes.get(name);
+	}
+
+	public boolean has(String name, Class<?> type) {
+		final Object object = this.get(name);
+		return Coercion.canCoerce(object, type);
+	}
+
+	public boolean hasOrNull(String name, Class<?> type) {
+		final Object object = this.get(name);
+		return object == null || Coercion.canCoerce(object, type);
 	}
 
 	public <T> T get(String name, Class<T> type) {

@@ -19,6 +19,9 @@
 
 package org.wolfgang.actor.core;
 
+import org.wolfgang.actor.event.Request;
+import org.wolfgang.actor.event.Response;
+
 /**
  * <code>RemoteActor</code>
  * 
@@ -27,8 +30,15 @@ package org.wolfgang.actor.core;
  */
 public class RemoteActor extends BindActor implements Actor {
 
-	public RemoteActor(String name, AbstractActor actor) {
+	private final String location;
+
+	public RemoteActor(String location, AbstractActor actor) {
 		super(actor);
+		this.location = location;
 	}
 
+	@Override
+	public void invoke(Request request, Response response) {
+		this.getCoordinator().getRemoteActorHandler().handle(location, request, response);
+	}
 }

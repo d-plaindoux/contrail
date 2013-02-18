@@ -21,7 +21,7 @@ package org.wolfgang.actor.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.wolfgang.actor.core.component.handler.RemoteActorHandler;
+import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 

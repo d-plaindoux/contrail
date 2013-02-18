@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "../handler/ResponseHandler", "./ActorFilter" ],
-    function (jObj, jFlow, responseHandler, actorFilter) {
+define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler", "./ActorInteractionFilter" ],
+    function (jObj, jFlow, remoteResponseHandler, actorInteractionFilter) {
         "use strict";
 
         function CoordinatorUpStreamDataFlow(coordinator, component) {
@@ -36,16 +36,16 @@ define(["Core/object/jObj", "Core/flow/jFlow", "../handler/ResponseHandler", "./
 
         CoordinatorUpStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
             function (packet) {
-                var data = packet.getData(), response;
+                var response, data = packet.getData();
 
-                if (actorFilter.isAnActorRequest(data)) {
+                if (actorInteractionFilter.isAnActorRequest(data)) {
                     if (data.response) {
-                        response = responseHandler(this.component, packet.getSourceId(), data.response);
+                        response = remoteResponseHandler(this.component, packet.getSourceId(), data.response);
                     } else {
                         response = undefined;
                     }
                     this.coordinator.send(data.identifier, data.request, response);
-                } else if (actorFilter.isAnActorResponse(data)) {
+                } else if (actorInteractionFilter.isAnActorResponse(data)) {
                     response = this.component.retrieveResponseById(data.identifier);
                     if (data.type === 0x01) {
                         response.success(data.value);

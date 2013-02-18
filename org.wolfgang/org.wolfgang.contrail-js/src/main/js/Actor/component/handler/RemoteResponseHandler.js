@@ -22,7 +22,7 @@ define(["Core/object/jObj", "../../event/Event", "Network/jNetwork"],
     function (jObj, event, jNetwork) {
         "use strict";
 
-        function ResponseHandler(component, location, identifier) {
+        function RemoteResponseHandler(component, location, identifier) {
             jObj.bless(this, event.response(this.success, this.failure));
             this.component = component;
             this.location = location;
@@ -34,20 +34,20 @@ define(["Core/object/jObj", "../../event/Event", "Network/jNetwork"],
             self.component.getDownStreamDataFlow().handleData(packet);
         }
 
-        ResponseHandler.init = jObj.constructor([jObj.types.Named("CoordinatorComponent"), jObj.types.String, jObj.types.String],
+        RemoteResponseHandler.init = jObj.constructor([jObj.types.Named("CoordinatorComponent"), jObj.types.String, jObj.types.String],
             function (component, location, identifier) {
-                return new ResponseHandler(component, location, identifier);
+                return new RemoteResponseHandler(component, location, identifier);
             });
 
-        ResponseHandler.prototype.success = jObj.procedure([jObj.types.Any],
+        RemoteResponseHandler.prototype.success = jObj.procedure([jObj.types.Any],
             function (value) {
                 sendPacket(this, { identifier:this.identifier, type:0x01, value:value });
             });
 
-        ResponseHandler.prototype.failure = jObj.procedure([jObj.types.Any],
+        RemoteResponseHandler.prototype.failure = jObj.procedure([jObj.types.Any],
             function (error) {
                 sendPacket(this, { identifier:this.identifier, type:0x02, value:error });
             });
 
-        return ResponseHandler.init;
+        return RemoteResponseHandler.init;
     });

@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.concurrent.Promise;
 
 /**
  * <code>LocalActorTest</code>
@@ -34,6 +35,10 @@ import org.wolfgang.actor.event.Response;
  * @version 1.0
  */
 public class LocalActorTest {
+
+	public class PromiseResponse extends Promise<Object> implements Response {
+		// Nothing to be done
+	}
 
 	public static class CA {
 		private int value;
@@ -56,8 +61,8 @@ public class LocalActorTest {
 	public void shouldRetrieveAValueWhenInvokingActorMethod() throws Exception {
 		final Coordinator coordinator = new Coordinator();
 		final Actor actor = coordinator.actor("A").bindToObject(new CA(42));
-		
-		final Response response = new Response();
+
+		final PromiseResponse response = new PromiseResponse();
 		actor.invoke(new Request("getValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -67,11 +72,11 @@ public class LocalActorTest {
 		final Coordinator coordinator = new Coordinator();
 		final Actor actor = coordinator.actor("A").bindToObject(new CA(0));
 
-		final Response responseSet = new Response();
+		final PromiseResponse responseSet = new PromiseResponse();
 		actor.invoke(new Request("setValue", 42), responseSet);
 		TestCase.assertEquals(null, responseSet.getFuture().get(1, TimeUnit.SECONDS));
 
-		final Response responseGet = new Response();
+		final PromiseResponse responseGet = new PromiseResponse();
 		actor.invoke(new Request("getValue"), responseGet);
 		TestCase.assertEquals(42, responseGet.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -80,8 +85,8 @@ public class LocalActorTest {
 	public void shouldRetrieveAnErrorWhenInvokingIncorrectActorMethod() throws Exception {
 		final Coordinator coordinator = new Coordinator();
 		final Actor actor = coordinator.actor("A").bindToObject(new CA(42));
-		
-		final Response response = new Response();
+
+		final PromiseResponse response = new PromiseResponse();
 		actor.invoke(new Request("getWrongValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}

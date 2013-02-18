@@ -22,9 +22,9 @@ define(["Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        var ActorPacketFilter = {};
+        var ActorInteractionFilter = {};
 
-        ActorPacketFilter.isAnActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
+        ActorInteractionFilter.isAnActorRequest = jObj.method([jObj.types.Any], jObj.types.Boolean,
             function (data) {
                 var result;
 
@@ -37,7 +37,7 @@ define(["Core/object/jObj" ],
                 return result;
             });
 
-        ActorPacketFilter.isAnActorResponse = jObj.method([jObj.types.Any], jObj.types.Boolean,
+        ActorInteractionFilter.isAnActorResponse = jObj.method([jObj.types.Any], jObj.types.Boolean,
             function (data) {
                 var result;
 
@@ -50,15 +50,15 @@ define(["Core/object/jObj" ],
                 return result;
             });
 
-        ActorPacketFilter.isAnActorInteraction = jObj.method([jObj.types.Any], jObj.types.Nullable(jObj.types.Named("Packet")),
+        ActorInteractionFilter.isAnActorInteraction = jObj.method([jObj.types.Any], jObj.types.Nullable(jObj.types.Named("Packet")),
             function (packet) {
                 var result;
 
                 if (!jObj.ofType(packet, jObj.types.Named("Packet"))) {
                     result = null;
-                } else if (ActorPacketFilter.isAnActorRequest(packet.getData())) {
+                } else if (ActorInteractionFilter.isAnActorRequest(packet.getData())) {
                     result = packet;
-                } else if (ActorPacketFilter.isAnActorResponse(packet.getData())) {
+                } else if (ActorInteractionFilter.isAnActorResponse(packet.getData())) {
                     result = packet;
                 } else {
                     result = null;
@@ -67,6 +67,5 @@ define(["Core/object/jObj" ],
                 return result;
             });
 
-
-        return ActorPacketFilter;
+        return ActorInteractionFilter;
     });

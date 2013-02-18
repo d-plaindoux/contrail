@@ -18,15 +18,19 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "Core/flow/jFlow", "Contrail/component/jComponent", "Core/utils/jUUID", "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorFilter", "./handler/RemoteActorHandler" ],
-    function (jObj, jFlow, jComponent, jUUID, coordinatorFlow, actorFilter, actorHandler) {
+define([
+    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUUID",
+    "Contrail/component/jComponent",
+    "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter",
+    "./handler/RemoteActorHandler"
+],
+    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorFilter, actorHandler) {
         "use strict";
 
         function CoordinatorComponent(coordinator) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
             this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorFilter.isAnActorInteraction);
-            this.coordinator = coordinator;
             this.responses = {};
 
             this.coordinator.setRemoteActorHandler(actorHandler(this));

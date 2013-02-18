@@ -18,18 +18,16 @@
 
 package org.wolfgang.actor.event;
 
-import org.wolfgang.common.concurrent.Promise;
-
 /**
  * <code>Response</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Response extends Promise<Object> {
+public interface Response {
 
-	public Response() {
-		super();
-	}
+	void success(Object value);
+
+	void failure(Throwable error);
 
 }
