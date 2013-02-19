@@ -70,10 +70,10 @@ public class CoordinatorTest {
 
 		coordinator.invoke("A", request, response);
 
-		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
-	@Test(expected=ExecutionException.class)
+	@Test(expected = ExecutionException.class)
 	public void shouldHaveExceptionWithLocalActorInvoked() throws Exception {
 		final Coordinator coordinator = new Coordinator();
 
@@ -85,9 +85,9 @@ public class CoordinatorTest {
 
 		coordinator.invoke("A", request, response);
 
-		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
-	
+
 	@Test
 	public void shouldHaveResponseWithSentMessageToLocalActor() throws Exception {
 		final Coordinator coordinator = new Coordinator();
@@ -101,10 +101,10 @@ public class CoordinatorTest {
 
 		coordinator.send("A", request, response);
 
-		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
-	@Test(expected=ExecutionException.class)
+	@Test(expected = ExecutionException.class)
 	public void shouldHaveExceptionWithSentMessageToLocalActor() throws Exception {
 		final Coordinator coordinator = new Coordinator();
 		coordinator.start();
@@ -117,10 +117,10 @@ public class CoordinatorTest {
 
 		coordinator.send("A", request, response);
 
-		TestCase.assertEquals(42, response.getFuture().get(2, TimeUnit.SECONDS));
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
-	@Test(expected=TimeoutException.class)
+	@Test(expected = TimeoutException.class)
 	public void shouldHaveTimeOutWithSentMessageToInactiveLocalActor() throws Exception {
 		final Coordinator coordinator = new Coordinator();
 
@@ -132,6 +132,54 @@ public class CoordinatorTest {
 
 		coordinator.send("A", request, response);
 
-		TestCase.assertNotSame(42, response.getFuture().get(2, TimeUnit.SECONDS));
+		TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
+	}
+
+	@Test
+	public void shouldHaveTimeOutAndAResultWithSentMessageToInactiveLocalActor() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final PromiseResponse response = new PromiseResponse();
+		final Request request = new Request("getValue");
+
+		coordinator.send("A", request, response);
+
+		try {
+			TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
+		} catch (TimeoutException e) {
+			// continue
+		}
+
+		coordinator.start();
+
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
+	}
+
+
+	@Test
+	public void shouldHaveAResultWithSentMessageToLateBoundLocalActor() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+		coordinator.start();
+
+		final A model = new A(42);
+		final AbstractActor actor = coordinator.actor("A");
+
+		final PromiseResponse response = new PromiseResponse();
+		final Request request = new Request("getValue");
+
+		coordinator.send("A", request, response);
+
+		try {
+			TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
+		} catch (TimeoutException e) {
+			// continue
+		}
+		
+		actor.bindToObject(model);
+
+		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 }

@@ -76,6 +76,7 @@ public class Coordinator implements Runnable {
 		if (this.coordinatorExecutor == null) {
 			actorActionsExecutor = Executors.newScheduledThreadPool(40); // TODO
 			coordinatorExecutor = Executors.newSingleThreadExecutor();
+			this.activateCoordinatorIfNecessary();
 		}
 	}
 
