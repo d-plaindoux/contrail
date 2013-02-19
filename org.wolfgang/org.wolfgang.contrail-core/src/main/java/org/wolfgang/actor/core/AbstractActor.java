@@ -26,7 +26,7 @@ import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.utils.Pair;
 
 /**
- * <code>ActorBuilder</code>
+ * <code>AbstractActor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
