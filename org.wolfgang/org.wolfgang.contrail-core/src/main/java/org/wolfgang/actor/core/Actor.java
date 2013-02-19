@@ -36,5 +36,5 @@ public interface Actor {
 
 	void invoke(Request request, Response response);
 
-	Pair<Request, Response> getNextAction();
+	boolean performPendingAction();
 }

@@ -68,11 +68,13 @@ public class BindActor implements Actor {
 		response.failure(new Exception("Not yet binded")); // TODO
 	}
 
-	public synchronized Pair<Request, Response> getNextAction() {
+	public synchronized boolean performPendingAction() {
 		if (this.actorActions.size() == 0) {
-			return null;
+			return false;
 		} else {
-			return this.actorActions.remove(0);
+			final Pair<Request, Response> pendingAction = this.actorActions.remove(0);
+			this.coordinator.performPendingActorAction(name, pendingAction.getFirst(), pendingAction.getSecond());
+			return true;
 		}
 	}
 }

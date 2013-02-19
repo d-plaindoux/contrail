@@ -89,6 +89,16 @@ public class Coordinator implements Runnable {
 		}
 	}
 
+	void performPendingActorAction(final String actorId, final Request request, final Response response) {
+		this.actorActionsExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				invoke(actorId, request, response);
+				return null;
+			}
+		});
+	}
+
 	public void run() {
 		boolean actionPerfomed = false;
 
@@ -100,17 +110,7 @@ public class Coordinator implements Runnable {
 		}
 
 		for (final String actorId : activeActors) {
-			final Pair<Request, Response> nextAction = this.universe.get(actorId).getNextAction();
-			if (nextAction != null) {
-				actionPerfomed = true;
-				this.actorActionsExecutor.submit(new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						invoke(actorId, nextAction.getFirst(), nextAction.getSecond());
-						return null;
-					}
-				});
-			}
+			actionPerfomed = this.universe.get(actorId).performPendingAction() || actionPerfomed;
 		}
 
 		synchronized (this) {

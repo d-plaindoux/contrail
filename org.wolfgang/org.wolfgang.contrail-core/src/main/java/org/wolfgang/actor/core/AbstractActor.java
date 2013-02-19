@@ -84,7 +84,7 @@ public class AbstractActor implements Actor {
 	}
 
 	@Override
-	public Pair<Request, Response> getNextAction() {
-		return null;
+	public boolean performPendingAction() {
+		return false;
 	}
 }
