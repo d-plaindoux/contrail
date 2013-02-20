@@ -29,7 +29,6 @@ import java.util.concurrent.Executors;
 import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
-import org.wolfgang.common.utils.Pair;
 
 /**
  * <code>Coordinator</code>

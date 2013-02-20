@@ -41,13 +41,13 @@ public class NIOServer implements Callable<Void>, Closeable {
 
 	private final String host;
 	private final int port;
-	private final ChannelPipelineFactory pipeline;
+	private final ChannelPipelineFactory pipelineFactort;
 	private final AtomicReference<Channel> channelReference;
 
 	public NIOServer(String host, int port, ChannelPipelineFactory pipeline) {
 		this.host = host;
 		this.port = port;
-		this.pipeline = pipeline;
+		this.pipelineFactort = pipeline;
 		this.channelReference = new AtomicReference<Channel>();
 	}
 
@@ -57,7 +57,7 @@ public class NIOServer implements Callable<Void>, Closeable {
 		final ServerBootstrap serverBootstrap = new ServerBootstrap(channelFactory);
 
 		// Set up the event pipeline factory.
-		serverBootstrap.setPipelineFactory(pipeline);
+		serverBootstrap.setPipelineFactory(pipelineFactort);
 
 		// Bind and start to accept incoming connections.
 

@@ -26,9 +26,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.junit.Test;
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.network.connection.web.WebServer;
 
 /**

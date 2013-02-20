@@ -28,7 +28,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
 
 /**
- * <code>WebSocketServerPipelineFactory</code> is able to create the right
+ * <code>WebServerPipelineFactory</code> is able to create the right
  * channel pipeline for both web and eb socket management.
  * 
  * @author Didier Plaindoux

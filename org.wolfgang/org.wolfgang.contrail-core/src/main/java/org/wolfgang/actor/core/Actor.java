@@ -20,7 +20,6 @@ package org.wolfgang.actor.core;
 
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
-import org.wolfgang.common.utils.Pair;
 
 /**
  * <code>Actor</code>

@@ -18,11 +18,7 @@
 
 package org.wolfgang.common.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * The <code>Marshall</code> module is in charge of object to/from bytes
@@ -32,7 +28,7 @@ import java.io.ObjectOutputStream;
  * @version 1.0
  */
 public final class Marshall {
-	
+
 	// Types
 
 	public static final byte TYPE_Array = 0x1;
@@ -45,7 +41,7 @@ public final class Marshall {
 	public static final byte TYPE_BooleanFalse = 0x8;
 	public static final byte TYPE_Undefined = 0x9;
 	public static final byte TYPE_Null = 0x10;
-	
+
 	// Sizes
 
 	public static final byte SIZE_Character = 2;
