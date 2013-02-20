@@ -51,19 +51,20 @@ public class NIOClient implements Callable<Void>, Closeable {
 	}
 
 	public Void call() {
-		// Configure the server.
+		// Configure the client.
 		final NioClientSocketChannelFactory channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ClientBootstrap clientBootstrap = new ClientBootstrap(channelFactory);
 
 		// Set up the event pipeline factory.
 		clientBootstrap.setPipelineFactory(pipelineFactory);
 
-		// Bind and start to accept incoming connections.
-
+		// Establish the connection.
 		channelReference.set(clientBootstrap.connect(new InetSocketAddress(host, port)));
 
+		// TODO clientBootstrap must release external resources ...
 		return null;
 	}
+	
 
 	@Override
 	public void close() throws IOException {

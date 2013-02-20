@@ -60,12 +60,13 @@ public class NIOServer implements Callable<Void>, Closeable {
 		serverBootstrap.setPipelineFactory(pipelineFactort);
 
 		// Bind and start to accept incoming connections.
-
 		channelReference.set(serverBootstrap.bind(new InetSocketAddress(host, port)));
 
+		// TODO serverBootstrap must release external resources ...
 		return null;
 	}
 
+	
 	@Override
 	public void close() throws IOException {
 		// Find the best way to close this server

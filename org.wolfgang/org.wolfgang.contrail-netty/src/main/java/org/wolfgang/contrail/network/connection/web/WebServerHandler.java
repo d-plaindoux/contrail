@@ -25,6 +25,8 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandler;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerImpl;
+import org.wolfgang.contrail.network.connection.web.handler.WSRequestHandler;
+import org.wolfgang.contrail.network.connection.web.handler.WSRequestHandlerImpl;
 
 /**
  * Handles handshakes and messages
@@ -35,12 +37,14 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 	 * Request handler
 	 */
 	private final HTTPRequestHandler httpRequestHandler;
+	private final WSRequestHandler wsRequestHandler;
 
 	/**
 	 * Constructor
 	 */
 	public WebServerHandler(ComponentSourceManager componentSourceManager) {
-		this.httpRequestHandler = new HTTPRequestHandlerImpl(componentSourceManager, new WebServerPage());
+		this.wsRequestHandler = new WSRequestHandlerImpl(componentSourceManager);
+		this.httpRequestHandler = new HTTPRequestHandlerImpl(wsRequestHandler, new WebServerPage());
 	}
 
 	@Override
@@ -52,7 +56,7 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 				this.httpRequestHandler.handleHttpRequest(context, httpRequest);
 			} else if (msg instanceof WebSocketFrame) {
 				final WebSocketFrame webSocketFrame = (WebSocketFrame) msg;
-				this.httpRequestHandler.handleWebSocketFrame(context, webSocketFrame);
+				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

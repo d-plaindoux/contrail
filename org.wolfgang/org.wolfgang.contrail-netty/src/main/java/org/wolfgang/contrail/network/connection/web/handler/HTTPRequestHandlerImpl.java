@@ -28,34 +28,19 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.OK;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import org.jboss.netty.handler.codec.http.websocketx.PingWebSocketFrame;
-import org.jboss.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
-import org.wolfgang.contrail.component.Components;
-import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
-import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.DataFlowFactory;
-import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
-import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.connection.web.WebServerPage;
 
 /**
@@ -71,29 +56,10 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	private static final DefaultHttpResponse NOT_FOUND_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, NOT_FOUND);
 	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
 
-	/**
-	 * The upstream handler
-	 */
-	private final ComponentSourceManager componentSourceManager;
-
-	/**
-	 * The web server page
-	 */
+	private final WSRequestHandler wsRequestHandler;
 	private final WebServerPage serverPage;
 
-	/**
-	 * The hand shaker used for web socket
-	 */
 	private WebSocketServerHandshaker handshaker;
-
-	/**
-	 * The upstream data flow
-	 */
-	private Map<Integer, DataFlow<String>> receivers;
-
-	{
-		this.receivers = new HashMap<Integer, DataFlow<String>>();
-	}
 
 	/**
 	 * Constructor
@@ -103,8 +69,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(ComponentSourceManager componentSourceManager, WebServerPage serverPage) {
-		this.componentSourceManager = componentSourceManager;
+	public HTTPRequestHandlerImpl(WSRequestHandler wsRequestHandler, WebServerPage serverPage) {
+		this.wsRequestHandler = wsRequestHandler;
 		this.serverPage = serverPage;
 	}
 
@@ -150,26 +116,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 		}
 	}
 
-	@Override
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataFlowException, DataFlowCloseException {
-		final int identifier = context.getChannel().getId();
-
-		if (!this.receivers.containsKey(identifier)) {
-			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
-		} else if (frame instanceof CloseWebSocketFrame) {
-			this.handshaker.close(context.getChannel(), (CloseWebSocketFrame) frame);
-			this.handshaker = null;
-			this.receivers.remove(identifier).handleClose();
-		} else if (frame instanceof PingWebSocketFrame) {
-			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
-		} else if (frame instanceof TextWebSocketFrame) {
-			final String request = ((TextWebSocketFrame) frame).getText();
-			this.receivers.get(identifier).handleData(request);
-		} else {
-			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
-		}
-	}
-
 	//
 	// Basic and internal construction mechanisms
 	//
@@ -180,57 +126,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 */
 	private String getWebSocketLocation(HttpRequest req) {
 		return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + WEBSOCKET;
-	}
-
-	/**
-	 * @param context
-	 * @return
-	 */
-	private DataFlow<String> createReceiver(final ChannelHandlerContext context) {
-		assert handshaker != null;
-
-		return DataFlowFactory.<String> closable(new DataFlow<String>() {
-			@Override
-			public String toString() {
-				return "Web Socket " + context.getName();
-			}
-
-			@Override
-			public void handleClose() throws DataFlowCloseException {
-				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
-			}
-
-			@Override
-			public void handleData(String data) throws DataFlowException {
-				sendWebSocketFrame(context, new TextWebSocketFrame(data));
-			}
-		});
-	}
-
-	/**
-	 * @param context
-	 * @return
-	 */
-	private ChannelFutureListener createListener(ChannelHandlerContext context) {
-		final int identifier = context.getChannel().getId();
-		final DataFlow<String> emitter = createReceiver(context);
-
-		return new ChannelFutureListener() {
-			public void operationComplete(ChannelFuture future) throws Exception {
-				if (!future.isSuccess()) {
-					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
-				} else {
-					final InitialComponent<String, String> initialComponent = Components.initial(emitter);
-					componentSourceManager.attach(initialComponent);
-					try {
-						receivers.put(identifier, initialComponent.getUpStreamDataFlow());
-					} catch (Exception e) {
-						Channels.fireExceptionCaught(future.getChannel(), e);
-						throw e;
-					}
-				}
-			}
-		};
 	}
 
 	//
@@ -249,16 +144,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 		if (this.handshaker == null) {
 			wsFactory.sendUnsupportedWebSocketVersionResponse(context.getChannel());
 		} else {
-			this.handshaker.handshake(context.getChannel(), req).addListener(this.createListener(context));
+			this.handshaker.handshake(context.getChannel(), req).addListener(wsRequestHandler.createHandShakeListener(context));
 		}
-	}
-
-	//
-	// Message post facilities
-	//
-	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {
-		// Send the response and close the connection if necessary.
-		ctx.getChannel().write(res);
 	}
 
 	private void sendHttpResponse(ChannelHandlerContext ctx, HttpRequest req, HttpResponse res) {
