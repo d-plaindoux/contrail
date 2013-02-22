@@ -14,48 +14,44 @@
  * under the License.
  */
 
-package org.wolfgang.contrail.network.connection.web;
+package org.wolfgang.contrail.network.connection.web.client;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
-import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandler;
-import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerImpl;
-import org.wolfgang.contrail.network.connection.web.handler.WSRequestHandler;
-import org.wolfgang.contrail.network.connection.web.handler.WSRequestHandlerImpl;
+import org.jboss.netty.util.CharsetUtil;
+import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 
 /**
  * Handles handshakes and messages
  */
-class WebServerHandler extends SimpleChannelUpstreamHandler {
+class WebClientHandler extends SimpleChannelUpstreamHandler {
 
-	/**
-	 * Request handler
-	 */
-	private final HTTPRequestHandler httpRequestHandler;
-	private final WSRequestHandler wsRequestHandler;
+	private final WebSocketClientHandshaker handshaker;
+	private final WebClientSocketHandler wsRequestHandler;
 
-	/**
-	 * Constructor
-	 */
-	public WebServerHandler(ComponentSourceManager componentSourceManager) {
-		this.wsRequestHandler = new WSRequestHandlerImpl(componentSourceManager);
-		this.httpRequestHandler = new HTTPRequestHandlerImpl(wsRequestHandler, new WebServerPage());
+	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler) {
+		this.handshaker = handshaker;
+		this.wsRequestHandler = wsRequestHandler;
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext context, MessageEvent event) throws Exception {
 		try {
-			Object msg = event.getMessage();
-			if (msg instanceof HttpRequest) {
-				final HttpRequest httpRequest = (HttpRequest) msg;
-				this.httpRequestHandler.handleHttpRequest(context, httpRequest);
-			} else if (msg instanceof WebSocketFrame) {
-				final WebSocketFrame webSocketFrame = (WebSocketFrame) msg;
+			final Object message = event.getMessage();
+
+			if (!handshaker.isHandshakeComplete()) {
+				handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
+				wsRequestHandler.notifyHandShake(context);
+			} else if (message instanceof HttpResponse) {
+				final HttpResponse response = (HttpResponse) event.getMessage();
+				throw new Exception("Unexpected HttpResponse (status=" + response.getStatus() + ", content=" + response.getContent().toString(CharsetUtil.UTF_8) + ')');
+			} else if (message instanceof WebSocketFrame) {
+				final WebSocketFrame webSocketFrame = (WebSocketFrame) message;
 				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 			}
 		} catch (Throwable t) {

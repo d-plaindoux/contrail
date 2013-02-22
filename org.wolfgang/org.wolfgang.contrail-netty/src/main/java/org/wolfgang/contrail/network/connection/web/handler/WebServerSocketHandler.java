@@ -18,25 +18,32 @@
 
 package org.wolfgang.contrail.network.connection.web.handler;
 
+import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
+import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 
 /**
- * <code>HTTPRequestHander</code> defines handler for HTTP requests
+ * <code>WSRequestHander</code> defines handler for web socket requests
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface HTTPRequestHandler {
+public interface WebServerSocketHandler {
 
 	/**
-	 * Main method called whether an HTTP request is received
 	 * 
 	 * @param contex
-	 * @param req
-	 * @return
+	 * @param frame
 	 * @throws Exception
 	 */
-	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest req) throws Exception;
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
+
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
+	ChannelFutureListener createHandShakeListener(WebSocketServerHandshaker handshaker, ChannelHandlerContext context);
 
 }

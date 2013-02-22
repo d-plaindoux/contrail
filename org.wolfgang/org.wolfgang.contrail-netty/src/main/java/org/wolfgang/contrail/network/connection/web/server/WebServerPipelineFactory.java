@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web;
+package org.wolfgang.contrail.network.connection.web.server;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
@@ -51,7 +51,7 @@ class WebServerPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("http_decoder", new HttpRequestDecoder());
 		pipeline.addLast("http_aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("http_encoder", new HttpResponseEncoder());
-		pipeline.addLast("websocket_handler", new WebServerHandler(this.factory));
+		pipeline.addLast("webserver_handler", new WebServerHandler(this.factory));
 		return pipeline;
 	}
 }

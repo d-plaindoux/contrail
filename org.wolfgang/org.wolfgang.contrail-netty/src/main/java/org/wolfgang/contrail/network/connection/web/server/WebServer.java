@@ -16,8 +16,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web;
+package org.wolfgang.contrail.network.connection.web.server;
 
+import java.net.URI;
+
+import org.jboss.netty.channel.Channel;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -30,33 +33,34 @@ import org.wolfgang.contrail.network.connection.nio.NIOServer;
  */
 public final class WebServer extends NIOServer {
 
+	private ComponentSourceManager factory;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param port
 	 */
-	public WebServer(String host, int port, ComponentSourceManager factory) {
-		super(host, port, new WebServerPipelineFactory(factory));
-	}
+	private WebServer(URI uri, ComponentSourceManager factory) {
+		super(uri.getHost(), uri.getPort());
 
-	public static WebServer create(int port, ComponentSourceManager componentSourceManager) {
-		return new WebServer("0.0.0.0", port, componentSourceManager);
-	}
-
-	/**
-	 * Main
-	 * 
-	 * @param args
-	 * @throws CannotProvideComponentException
-	 */
-	public static void main(String[] args) {
-		int port;
-		if (args.length > 0) {
-			port = Integer.parseInt(args[0]);
-		} else {
-			port = 9090;
+		if (!"http".equals(uri.getScheme())) {
+			throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme());
 		}
 
-		create(port, null).call();
+		this.factory = factory;
+	}
+
+	public WebServer bind() throws Exception {
+		this.call();
+		return this;
+	}
+
+	@Override
+	public Channel call() throws Exception {
+		return this.bind(new WebServerPipelineFactory(factory));
+	}
+
+	public static WebServer create(URI uri, ComponentSourceManager componentSourceManager) {
+		return new WebServer(uri, componentSourceManager);
 	}
 }

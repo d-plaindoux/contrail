@@ -37,36 +37,32 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NIOServer implements Callable<Void>, Closeable {
+public abstract class NIOServer implements Callable<Channel>, Closeable {
 
 	private final String host;
 	private final int port;
-	private final ChannelPipelineFactory pipelineFactort;
 	private final AtomicReference<Channel> channelReference;
 
-	public NIOServer(String host, int port, ChannelPipelineFactory pipeline) {
+	public NIOServer(String host, int port) {
 		this.host = host;
 		this.port = port;
-		this.pipelineFactort = pipeline;
 		this.channelReference = new AtomicReference<Channel>();
 	}
 
-	public Void call() {
+	public Channel bind(ChannelPipelineFactory factory) {
 		// Configure the server.
 		final NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ServerBootstrap serverBootstrap = new ServerBootstrap(channelFactory);
 
-		// Set up the event pipeline factory.
-		serverBootstrap.setPipelineFactory(pipelineFactort);
+		serverBootstrap.setPipelineFactory(factory);
 
-		// Bind and start to accept incoming connections.
-		channelReference.set(serverBootstrap.bind(new InetSocketAddress(host, port)));
+		final Channel bind = serverBootstrap.bind(new InetSocketAddress(host, port));
 
-		// TODO serverBootstrap must release external resources ...
-		return null;
+		channelReference.set(bind);
+
+		return bind;
 	}
 
-	
 	@Override
 	public void close() throws IOException {
 		// Find the best way to close this server

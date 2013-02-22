@@ -18,27 +18,15 @@
 
 package org.wolfgang.contrail.network.connection.web.handler;
 
-import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
-import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
-import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
-import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.Components;
@@ -55,17 +43,12 @@ import org.wolfgang.contrail.flow.exception.DataFlowException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class WSRequestHandlerImpl implements WSRequestHandler {
+public class WebClientSocketHandlerImpl implements WebClientSocketHandler {
 
 	/**
 	 * The upstream handler
 	 */
 	private final ComponentSourceManager componentSourceManager;
-
-	/**
-	 * The hand shaker used for web socket
-	 */
-	private WebSocketServerHandshaker handshaker;
 
 	/**
 	 * The upstream data flow
@@ -84,7 +67,7 @@ public class WSRequestHandlerImpl implements WSRequestHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public WSRequestHandlerImpl(ComponentSourceManager componentSourceManager) {
+	public WebClientSocketHandlerImpl(ComponentSourceManager componentSourceManager) {
 		this.componentSourceManager = componentSourceManager;
 	}
 
@@ -95,8 +78,6 @@ public class WSRequestHandlerImpl implements WSRequestHandler {
 		if (!this.receivers.containsKey(identifier)) {
 			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
 		} else if (frame instanceof CloseWebSocketFrame) {
-			this.handshaker.close(context.getChannel(), (CloseWebSocketFrame) frame);
-			this.handshaker = null;
 			this.receivers.remove(identifier).handleClose();
 		} else if (frame instanceof PingWebSocketFrame) {
 			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
@@ -108,13 +89,22 @@ public class WSRequestHandlerImpl implements WSRequestHandler {
 		}
 	}
 
-	/**
-	 * @param context
-	 * @return
-	 */
-	private DataFlow<String> createReceiver(final ChannelHandlerContext context) {
-		assert handshaker != null;
+	@Override
+	public void notifyHandShake(ChannelHandlerContext context) {
+		final int identifier = context.getChannel().getId();
+		final DataFlow<String> emitter = createReceiver(context);
+		try {
+			this.registerIncomingConnection(identifier, emitter);
+		} catch (ComponentNotConnectedException e) {
+			// TODO
+			e.printStackTrace();
+		} catch (CannotCreateComponentException e) {
+			// TODO
+			e.printStackTrace();
+		}
+	}
 
+	private DataFlow<String> createReceiver(final ChannelHandlerContext context) {
 		return DataFlowFactory.<String> closable(new DataFlow<String>() {
 			@Override
 			public String toString() {
@@ -123,7 +113,8 @@ public class WSRequestHandlerImpl implements WSRequestHandler {
 
 			@Override
 			public void handleClose() throws DataFlowCloseException {
-				handshaker.close(context.getChannel(), new CloseWebSocketFrame());
+				// TODO -- handshaker.close(context.getChannel(), new
+				// CloseWebSocketFrame());
 			}
 
 			@Override
@@ -131,26 +122,6 @@ public class WSRequestHandlerImpl implements WSRequestHandler {
 				sendWebSocketFrame(context, new TextWebSocketFrame(data));
 			}
 		});
-	}
-
-	public ChannelFutureListener createHandShakeListener(ChannelHandlerContext context) {
-		final int identifier = context.getChannel().getId();
-		final DataFlow<String> emitter = createReceiver(context);
-
-		return new ChannelFutureListener() {
-			public void operationComplete(ChannelFuture future) throws Exception {
-				if (!future.isSuccess()) {
-					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
-				} else {
-					try {
-						registerIncomingConnection(identifier, emitter);
-					} catch (Exception e) {
-						Channels.fireExceptionCaught(future.getChannel(), e);
-						throw e;
-					}
-				}
-			}
-		};
 	}
 
 	private void registerIncomingConnection(int identifier, DataFlow<String> emitter) throws CannotCreateComponentException, ComponentNotConnectedException {

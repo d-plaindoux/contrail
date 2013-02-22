@@ -41,7 +41,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
-import org.wolfgang.contrail.network.connection.web.WebServerPage;
+import org.wolfgang.contrail.network.connection.web.server.WebServerPage;
 
 /**
  * <code>HTTPRequestHandler</code>
@@ -51,15 +51,14 @@ import org.wolfgang.contrail.network.connection.web.WebServerPage;
  */
 public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 
-	private static final String WEBSOCKET = "/web.socket";
+	private static final String WEBSOCKET = "/websocket";
+
 	private static final DefaultHttpResponse DEFAULT_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, OK);
 	private static final DefaultHttpResponse NOT_FOUND_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, NOT_FOUND);
 	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
 
-	private final WSRequestHandler wsRequestHandler;
+	private final WebServerSocketHandler wsRequestHandler;
 	private final WebServerPage serverPage;
-
-	private WebSocketServerHandshaker handshaker;
 
 	/**
 	 * Constructor
@@ -69,7 +68,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(WSRequestHandler wsRequestHandler, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(WebServerSocketHandler wsRequestHandler, WebServerPage serverPage) {
 		this.wsRequestHandler = wsRequestHandler;
 		this.serverPage = serverPage;
 	}
@@ -140,11 +139,11 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	private void initiateWebSocket(ChannelHandlerContext context, HttpRequest req) throws Exception {
 		final String location = this.getWebSocketLocation(req);
 		final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(location, null, false);
-		this.handshaker = wsFactory.newHandshaker(req);
-		if (this.handshaker == null) {
+		final WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
+		if (handshaker == null) {
 			wsFactory.sendUnsupportedWebSocketVersionResponse(context.getChannel());
 		} else {
-			this.handshaker.handshake(context.getChannel(), req).addListener(wsRequestHandler.createHandShakeListener(context));
+			handshaker.handshake(context.getChannel(), req).addListener(wsRequestHandler.createHandShakeListener(handshaker, context));
 		}
 	}
 

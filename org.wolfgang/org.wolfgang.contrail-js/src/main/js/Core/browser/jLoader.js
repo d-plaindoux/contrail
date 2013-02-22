@@ -26,7 +26,7 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
 
         jLoader.load = jObj.procedure([ jObj.types.String, jObj.types.Function ],
             function (source, helper) {
-                var script, response;
+                var script;
 
                 script = document.createElement("script");
                 script.type = "text/javascript";

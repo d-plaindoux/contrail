@@ -18,13 +18,8 @@
 
 package org.wolfgang.contrail.network.connection.web.handler;
 
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.wolfgang.contrail.component.CannotCreateComponentException;
-import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.flow.DataFlow;
 
 /**
  * <code>WSRequestHander</code> defines handler for web socket requests
@@ -32,7 +27,7 @@ import org.wolfgang.contrail.flow.DataFlow;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface WSRequestHandler {
+public interface WebClientSocketHandler {
 
 	/**
 	 * 
@@ -40,13 +35,13 @@ public interface WSRequestHandler {
 	 * @param frame
 	 * @throws Exception
 	 */
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
+	void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
 
 	/**
 	 * 
 	 * @param context
 	 * @return
 	 */
-	ChannelFutureListener createHandShakeListener(ChannelHandlerContext context);
+	void notifyHandShake(ChannelHandlerContext context);
 
 }

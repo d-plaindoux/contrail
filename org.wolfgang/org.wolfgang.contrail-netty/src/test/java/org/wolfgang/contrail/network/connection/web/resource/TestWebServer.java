@@ -19,14 +19,29 @@
 package org.wolfgang.contrail.network.connection.web.resource;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import org.wolfgang.contrail.network.connection.web.WebServer;
+import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.component.CannotCreateComponentException;
+import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDataFlowFactory;
+import org.wolfgang.contrail.component.Components;
+import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.bound.TerminalComponent;
+import org.wolfgang.contrail.contrail.ComponentSourceManager;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.DataFlowAdapter;
+import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+import org.wolfgang.contrail.network.connection.web.client.WebClient;
+import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
+import org.wolfgang.contrail.network.connection.web.server.WebServer;
 
 /**
  * <code>TestWebPage</code>
@@ -37,15 +52,23 @@ import org.wolfgang.contrail.network.connection.web.WebServer;
 public class TestWebServer {
 
 	@Test
-	public void shouldHavePageContentUsingHTTPWhenRequired() throws IOException {
-		final WebServer server = WebServer.create(2777, null);
-		final URL url = new URL("http://localhost:2777/helloworld");
+	public void shouldHavePageContentUsingHTTPWhenRequired() throws Exception {
+		final String address = "http://localhost:2777";
+
+		final URI uriServer = new URI(address);
+		final WebServer server = WebServer.create(uriServer, new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				throw new CannotCreateComponentException("Not allowed");
+			}
+		});
+		server.bind();
+
+		final URI uriClient = new URI(address + "/helloworld");
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		server.call();
-
 		try {
-			final InputStream inputStream = url.openStream();
+			final InputStream inputStream = uriClient.toURL().openStream();
 			try {
 				final byte[] bytes = new byte[1024];
 				int len;
@@ -62,6 +85,153 @@ public class TestWebServer {
 
 		assertEquals("Hello, World!", outputStream.toString());
 
+		server.close();
+	}
+
+	@Test
+	public void shouldHaveServerResponseWhenClientSendUsingWS() throws Exception {
+
+		final ComponentDataFlowFactory<String, String> receiverFactory = new ComponentDataFlowFactory<String, String>() {
+			@Override
+			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
+				return new DataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						if (data.equals("helloworld")) {
+							componentDataFlow.handleData("Hello, World!");
+						}
+					}
+				};
+			}
+		};
+
+		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(receiverFactory);
+
+		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, serverTerminal);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+
+		final WebServer server = WebServer.create(new URI("http://localhost:2777"), serverSourceManager).bind();
+
+		final Promise<Boolean> ready = Promise.create();
+		final Promise<String> response = Promise.create();
+
+		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new ComponentDataFlowFactory<String, String>() {
+			@Override
+			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
+				return new DataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						response.success(data);
+					}
+				};
+			}
+		});
+
+		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, clientTerminal);
+					ready.success(true);
+				} catch (ComponentConnectionRejectedException e) {
+					ready.failure(e);
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+
+		final WebClient client = WebClient.create(clientSourceManager);
+		final Instance connect = client.instance(new URI("ws://localhost:2777/websocket")).connect();
+
+		assertTrue(ready.getFuture().get(10, TimeUnit.SECONDS));
+
+		clientTerminal.getDownStreamDataFlow().handleData("helloworld");
+
+		assertEquals("Hello, World!", response.getFuture().get(10, TimeUnit.SECONDS));
+
+		connect.close();
+		server.close();
+	}
+
+	@Test
+	public void shouldHaveClientResponseWhenServerSendUsingWS() throws Exception {
+
+		final Promise<String> response = Promise.create();
+
+		final ComponentDataFlowFactory<String, String> receiverFactory = new ComponentDataFlowFactory<String, String>() {
+			@Override
+			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
+				return new DataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						response.success(data);
+					}
+				};
+			}
+		};
+
+		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(receiverFactory);
+
+		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, serverTerminal);
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+
+		final WebServer server = WebServer.create(new URI("http://localhost:2778"), serverSourceManager).bind();
+
+		final Promise<Boolean> ready = Promise.create();
+
+		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new ComponentDataFlowFactory<String, String>() {
+			@Override
+			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
+				return new DataFlowAdapter<String>() {
+					@Override
+					public void handleData(String data) throws DataFlowException {
+						if (data.equals("helloworld")) {
+							componentDataFlow.handleData("Hello, World!");
+						}
+					}
+				};
+			}
+		});
+
+		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, clientTerminal);
+					ready.success(true);
+				} catch (ComponentConnectionRejectedException e) {
+					ready.failure(e);
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+
+		final WebClient client = WebClient.create(clientSourceManager);
+		final Instance connect = client.instance(new URI("ws://localhost:277/websocket")).connect();
+
+		assertTrue(ready.getFuture().get(10, TimeUnit.SECONDS));
+
+		serverTerminal.getDownStreamDataFlow().handleData("helloworld");
+
+		assertEquals("Hello, World!", response.getFuture().get(10, TimeUnit.SECONDS));
+
+		connect.close();
 		server.close();
 	}
 }

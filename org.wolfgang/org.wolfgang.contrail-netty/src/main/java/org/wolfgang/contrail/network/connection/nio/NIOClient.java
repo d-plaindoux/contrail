@@ -18,12 +18,8 @@
 
 package org.wolfgang.contrail.network.connection.nio;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFuture;
@@ -36,43 +32,22 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class NIOClient implements Callable<Void>, Closeable {
+public abstract class NIOClient {
 
-	private final String host;
-	private final int port;
-	private final ChannelPipelineFactory pipelineFactory;
-	private final AtomicReference<ChannelFuture> channelReference;
+	private final NioClientSocketChannelFactory channelFactory;
 
-	public NIOClient(String host, int port, ChannelPipelineFactory pipeline) {
-		this.host = host;
-		this.port = port;
-		this.pipelineFactory = pipeline;
-		this.channelReference = new AtomicReference<ChannelFuture>();
+	public NIOClient() {
+		this.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 	}
 
-	public Void call() {
+	protected ChannelFuture connect(String host, int port, ChannelPipelineFactory pipelineFactory) throws Exception {
 		// Configure the client.
-		final NioClientSocketChannelFactory channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ClientBootstrap clientBootstrap = new ClientBootstrap(channelFactory);
 
 		// Set up the event pipeline factory.
 		clientBootstrap.setPipelineFactory(pipelineFactory);
 
 		// Establish the connection.
-		channelReference.set(clientBootstrap.connect(new InetSocketAddress(host, port)));
-
-		// TODO clientBootstrap must release external resources ...
-		return null;
+		return clientBootstrap.connect(new InetSocketAddress(host, port));
 	}
-	
-
-	@Override
-	public void close() throws IOException {
-		// Find the best way to close this server
-		final ChannelFuture channel = channelReference.getAndSet(null);
-		if (channel != null) {
-			channel.getChannel().close();
-		}
-	}
-
 }
