@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web.resource;
+package org.wolfgang.contrail.network.connection.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.network.connection.web.server.WebServerPage;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestWebPage {
+public class WebPageTest {
 
 	@Test
 	public void testWebPage01() throws IOException {

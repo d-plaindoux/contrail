@@ -36,6 +36,7 @@ import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
+import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 
 /**
  * <code>HTTPRequestHandler</code>
@@ -90,17 +91,13 @@ public class WebClientSocketHandlerImpl implements WebClientSocketHandler {
 	}
 
 	@Override
-	public void notifyHandShake(ChannelHandlerContext context) {
+	public void notifyHandShake(ChannelHandlerContext context) throws WebClientConnectionException {
 		final int identifier = context.getChannel().getId();
 		final DataFlow<String> emitter = createReceiver(context);
 		try {
 			this.registerIncomingConnection(identifier, emitter);
-		} catch (ComponentNotConnectedException e) {
-			// TODO
-			e.printStackTrace();
-		} catch (CannotCreateComponentException e) {
-			// TODO
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new WebClientConnectionException(e);
 		}
 	}
 

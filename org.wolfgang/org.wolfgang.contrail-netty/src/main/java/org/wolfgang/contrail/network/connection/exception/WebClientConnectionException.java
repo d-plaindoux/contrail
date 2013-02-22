@@ -16,34 +16,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web.handler;
-
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
+package org.wolfgang.contrail.network.connection.exception;
 
 /**
- * <code>WSRequestHander</code> defines handler for web socket requests
+ * <code>WebClientConnectionException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface WebClientSocketHandler {
+public class WebClientConnectionException extends Exception {
 
-	/**
-	 * 
-	 * @param contex
-	 * @param frame
-	 * @throws Exception
-	 */
-	void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
+	private static final long serialVersionUID = 2003308933577380198L;
 
-	/**
-	 * 
-	 * @param context
-	 * @return
-	 * @throws WebClientConnectionException 
-	 */
-	void notifyHandShake(ChannelHandlerContext context) throws WebClientConnectionException;
+	public WebClientConnectionException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
 
 }

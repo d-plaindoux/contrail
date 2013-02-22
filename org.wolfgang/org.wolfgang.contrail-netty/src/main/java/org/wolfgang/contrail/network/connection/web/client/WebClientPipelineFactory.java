@@ -25,6 +25,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 
 /**
@@ -38,10 +39,12 @@ class WebClientPipelineFactory implements ChannelPipelineFactory {
 
 	private final WebSocketClientHandshaker handshaker;
 	private final WebClientSocketHandler wsRequestHandler;
+	private final Promise<Boolean> connectionEstablished;
 
-	public WebClientPipelineFactory(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler) {
+	public WebClientPipelineFactory(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Boolean> connectionEstablished) {
 		this.handshaker = handshaker;
 		this.wsRequestHandler = wsRequestHandler;
+		this.connectionEstablished = connectionEstablished;
 	}
 
 	@Override
@@ -49,7 +52,7 @@ class WebClientPipelineFactory implements ChannelPipelineFactory {
 		final ChannelPipeline pipeline = pipeline();
 		pipeline.addLast("http_encoder", new HttpRequestEncoder());
 		pipeline.addLast("http_decoder", new HttpResponseDecoder());
-		pipeline.addLast("ws-handler", new WebClientHandler(handshaker, wsRequestHandler));
+		pipeline.addLast("ws-handler", new WebClientHandler(handshaker, wsRequestHandler, connectionEstablished));
 		return pipeline;
 	}
 }

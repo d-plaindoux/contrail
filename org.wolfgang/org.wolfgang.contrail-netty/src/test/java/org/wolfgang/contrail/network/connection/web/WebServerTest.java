@@ -16,14 +16,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web.resource;
+package org.wolfgang.contrail.network.connection.web;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -49,22 +50,20 @@ import org.wolfgang.contrail.network.connection.web.server.WebServer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestWebServer {
+public class WebServerTest {
 
 	@Test
 	public void shouldHavePageContentUsingHTTPWhenRequired() throws Exception {
-		final String address = "http://localhost:2777";
 
-		final URI uriServer = new URI(address);
-		final WebServer server = WebServer.create(uriServer, new ComponentSourceManager() {
+		final WebServer server = WebServer.create(new ComponentSourceManager() {
 			@Override
 			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				throw new CannotCreateComponentException("Not allowed");
 			}
 		});
-		server.bind();
+		server.bind(2777);
 
-		final URI uriClient = new URI(address + "/helloworld");
+		final URI uriClient = new URI("http://localhost:2777/helloworld");
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 		try {
@@ -118,20 +117,14 @@ public class TestWebServer {
 			}
 		};
 
-		final WebServer server = WebServer.create(new URI("http://localhost:2777"), serverSourceManager).bind();
+		final WebServer server = WebServer.create(serverSourceManager).bind(2777);
 
-		final Promise<Boolean> ready = Promise.create();
-		final Promise<String> response = Promise.create();
+		final Promise<String> serverResponse = Promise.create();
 
-		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new ComponentDataFlowFactory<String, String>() {
+		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new DataFlowAdapter<String>() {
 			@Override
-			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
-				return new DataFlowAdapter<String>() {
-					@Override
-					public void handleData(String data) throws DataFlowException {
-						response.success(data);
-					}
-				};
+			public void handleData(String data) throws DataFlowException {
+				serverResponse.success(data);
 			}
 		});
 
@@ -140,22 +133,18 @@ public class TestWebServer {
 			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
-					ready.success(true);
 				} catch (ComponentConnectionRejectedException e) {
-					ready.failure(e);
 					throw new CannotCreateComponentException(e);
 				}
 			}
 		};
 
 		final WebClient client = WebClient.create(clientSourceManager);
-		final Instance connect = client.instance(new URI("ws://localhost:2777/websocket")).connect();
-
-		assertTrue(ready.getFuture().get(10, TimeUnit.SECONDS));
+		final Instance connect = client.instance(new URI("ws://localhost:2777/websocket")).connect().awaitEstablishment();
 
 		clientTerminal.getDownStreamDataFlow().handleData("helloworld");
 
-		assertEquals("Hello, World!", response.getFuture().get(10, TimeUnit.SECONDS));
+		assertEquals("Hello, World!", serverResponse.getFuture().get(10, TimeUnit.SECONDS));
 
 		connect.close();
 		server.close();
@@ -164,21 +153,14 @@ public class TestWebServer {
 	@Test
 	public void shouldHaveClientResponseWhenServerSendUsingWS() throws Exception {
 
-		final Promise<String> response = Promise.create();
+		final Promise<String> clientResponse = Promise.create();
 
-		final ComponentDataFlowFactory<String, String> receiverFactory = new ComponentDataFlowFactory<String, String>() {
+		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(new DataFlowAdapter<String>() {
 			@Override
-			public DataFlow<String> create(final DataFlow<String> componentDataFlow) throws CannotCreateDataFlowException {
-				return new DataFlowAdapter<String>() {
-					@Override
-					public void handleData(String data) throws DataFlowException {
-						response.success(data);
-					}
-				};
+			public void handleData(String data) throws DataFlowException {
+				clientResponse.success(data);
 			}
-		};
-
-		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(receiverFactory);
+		});
 
 		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
 			@Override
@@ -191,9 +173,7 @@ public class TestWebServer {
 			}
 		};
 
-		final WebServer server = WebServer.create(new URI("http://localhost:2778"), serverSourceManager).bind();
-
-		final Promise<Boolean> ready = Promise.create();
+		final WebServer server = WebServer.create(serverSourceManager).bind(2778);
 
 		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new ComponentDataFlowFactory<String, String>() {
 			@Override
@@ -214,22 +194,18 @@ public class TestWebServer {
 			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
-					ready.success(true);
 				} catch (ComponentConnectionRejectedException e) {
-					ready.failure(e);
 					throw new CannotCreateComponentException(e);
 				}
 			}
 		};
 
 		final WebClient client = WebClient.create(clientSourceManager);
-		final Instance connect = client.instance(new URI("ws://localhost:277/websocket")).connect();
-
-		assertTrue(ready.getFuture().get(10, TimeUnit.SECONDS));
+		final Instance connect = client.instance(new URI("ws://localhost:2778/websocket")).connect().awaitEstablishment();
 
 		serverTerminal.getDownStreamDataFlow().handleData("helloworld");
 
-		assertEquals("Hello, World!", response.getFuture().get(10, TimeUnit.SECONDS));
+		assertEquals("Hello, World!", clientResponse.getFuture().get(10, TimeUnit.SECONDS));
 
 		connect.close();
 		server.close();

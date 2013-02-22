@@ -21,11 +21,12 @@ package org.wolfgang.contrail.network.connection.web.client;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jboss.netty.channel.ChannelFuture;
@@ -33,7 +34,9 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
+import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
+import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 import org.wolfgang.contrail.network.connection.nio.NIOClient;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandlerImpl;
@@ -67,11 +70,26 @@ public final class WebClient extends NIOClient {
 
 		private final URI uri;
 		private final AtomicReference<ChannelFuture> reference;
+		private final Promise<Boolean> connectionEstablished;
 
 		Instance(URI uri) {
 			super();
 			this.uri = uri;
 			this.reference = new AtomicReference<ChannelFuture>();
+			this.connectionEstablished = Promise.create();
+		}
+
+		public Instance awaitEstablishment() throws WebClientConnectionException {
+			try {
+				this.connectionEstablished.getFuture().get(3, TimeUnit.SECONDS);
+				return this;
+			} catch (InterruptedException e) {
+				throw new WebClientConnectionException(e);
+			} catch (ExecutionException e) {
+				throw new WebClientConnectionException(e.getCause());
+			} catch (TimeoutException e) {
+				throw new WebClientConnectionException(e);
+			}
 		}
 
 		public Instance connect() throws Exception {
@@ -83,7 +101,7 @@ public final class WebClient extends NIOClient {
 		public ChannelFuture call() throws Exception {
 			final Map<String, String> customHeaders = new HashMap<String, String>();
 			final WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(uri, WebSocketVersion.V13, null, false, customHeaders);
-			final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, wsRequestHandler);
+			final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, wsRequestHandler, connectionEstablished);
 			final ChannelFuture channelFuture = WebClient.this.connect(uri.getHost(), uri.getPort(), channelPipelineFactory);
 
 			handshaker.handshake(channelFuture.getChannel());

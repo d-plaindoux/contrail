@@ -21,7 +21,6 @@ package org.wolfgang.contrail.network.connection.nio;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -37,30 +36,24 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public abstract class NIOServer implements Callable<Channel>, Closeable {
+public abstract class NIOServer implements Closeable {
 
-	private final String host;
-	private final int port;
 	private final AtomicReference<Channel> channelReference;
 
-	public NIOServer(String host, int port) {
-		this.host = host;
-		this.port = port;
+	public NIOServer() {
 		this.channelReference = new AtomicReference<Channel>();
 	}
 
-	public Channel bind(ChannelPipelineFactory factory) {
+	public void bind(int port, ChannelPipelineFactory factory) {
 		// Configure the server.
 		final NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ServerBootstrap serverBootstrap = new ServerBootstrap(channelFactory);
 
 		serverBootstrap.setPipelineFactory(factory);
 
-		final Channel bind = serverBootstrap.bind(new InetSocketAddress(host, port));
+		final Channel bind = serverBootstrap.bind(new InetSocketAddress("0.0.0.0", port));
 
 		channelReference.set(bind);
-
-		return bind;
 	}
 
 	@Override

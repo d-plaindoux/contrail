@@ -16,34 +16,22 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web.handler;
+package org.wolfgang.contrail.network.actor;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
+import org.junit.Test;
 
 /**
- * <code>WSRequestHander</code> defines handler for web socket requests
+ * <code>NetworkActorTest</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface WebClientSocketHandler {
+public class NetworkActorTest {
 
-	/**
-	 * 
-	 * @param contex
-	 * @param frame
-	 * @throws Exception
-	 */
-	void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
-
-	/**
-	 * 
-	 * @param context
-	 * @return
-	 * @throws WebClientConnectionException 
-	 */
-	void notifyHandShake(ChannelHandlerContext context) throws WebClientConnectionException;
+	@Test
+	public void shouldReceiveResponseWithRemoteActors() {
+		
+		
+	}
 
 }

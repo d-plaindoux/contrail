@@ -18,9 +18,8 @@
 
 package org.wolfgang.contrail.network.connection.web.server;
 
-import java.net.URI;
+import java.util.concurrent.Callable;
 
-import org.jboss.netty.channel.Channel;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
@@ -31,36 +30,35 @@ import org.wolfgang.contrail.network.connection.nio.NIOServer;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class WebServer extends NIOServer {
+public final class WebServer extends NIOServer implements Callable<Void> {
 
-	private ComponentSourceManager factory;
+	private final ComponentSourceManager factory;
+	private int port;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param port
 	 */
-	private WebServer(URI uri, ComponentSourceManager factory) {
-		super(uri.getHost(), uri.getPort());
-
-		if (!"http".equals(uri.getScheme())) {
-			throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme());
-		}
+	private WebServer(ComponentSourceManager factory) {
+		super();
 
 		this.factory = factory;
 	}
 
-	public WebServer bind() throws Exception {
+	public WebServer bind(int port) throws Exception {
+		this.port = port;
 		this.call();
 		return this;
 	}
 
 	@Override
-	public Channel call() throws Exception {
-		return this.bind(new WebServerPipelineFactory(factory));
+	public Void call() throws Exception {
+		this.bind(this.port, new WebServerPipelineFactory(factory));
+		return null;
 	}
 
-	public static WebServer create(URI uri, ComponentSourceManager componentSourceManager) {
-		return new WebServer(uri, componentSourceManager);
+	public static WebServer create(ComponentSourceManager componentSourceManager) {
+		return new WebServer(componentSourceManager);
 	}
 }

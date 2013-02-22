@@ -41,13 +41,8 @@ public abstract class NIOClient {
 	}
 
 	protected ChannelFuture connect(String host, int port, ChannelPipelineFactory pipelineFactory) throws Exception {
-		// Configure the client.
 		final ClientBootstrap clientBootstrap = new ClientBootstrap(channelFactory);
-
-		// Set up the event pipeline factory.
 		clientBootstrap.setPipelineFactory(pipelineFactory);
-
-		// Establish the connection.
 		return clientBootstrap.connect(new InetSocketAddress(host, port));
 	}
 }

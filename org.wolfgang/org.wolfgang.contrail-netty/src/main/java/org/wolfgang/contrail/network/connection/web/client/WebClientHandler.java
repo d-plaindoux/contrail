@@ -1,17 +1,19 @@
 /*
- * Copyright 2011 The Netty Project
+ * Copyright (C)2012 D. Plaindoux.
  *
- * The Netty Project licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2, or (at your option) any
+ * later version.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 package org.wolfgang.contrail.network.connection.web.client;
@@ -24,6 +26,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.util.CharsetUtil;
+import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 
 /**
@@ -31,12 +34,14 @@ import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandl
  */
 class WebClientHandler extends SimpleChannelUpstreamHandler {
 
+	private final Promise<Boolean> connectionEstablished;
 	private final WebSocketClientHandshaker handshaker;
 	private final WebClientSocketHandler wsRequestHandler;
 
-	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler) {
+	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Boolean> connectionEstablished) {
 		this.handshaker = handshaker;
 		this.wsRequestHandler = wsRequestHandler;
+		this.connectionEstablished = connectionEstablished;
 	}
 
 	@Override
@@ -45,8 +50,13 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 			final Object message = event.getMessage();
 
 			if (!handshaker.isHandshakeComplete()) {
-				handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
-				wsRequestHandler.notifyHandShake(context);
+				try {
+					handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
+					wsRequestHandler.notifyHandShake(context);
+					connectionEstablished.success(true);
+				} catch (Exception e) {
+					connectionEstablished.failure(e);
+				}
 			} else if (message instanceof HttpResponse) {
 				final HttpResponse response = (HttpResponse) event.getMessage();
 				throw new Exception("Unexpected HttpResponse (status=" + response.getStatus() + ", content=" + response.getContent().toString(CharsetUtil.UTF_8) + ')');
@@ -55,7 +65,7 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 			}
 		} catch (Throwable t) {
-			t.printStackTrace();
+			t.printStackTrace(); // TODO
 		}
 	}
 
