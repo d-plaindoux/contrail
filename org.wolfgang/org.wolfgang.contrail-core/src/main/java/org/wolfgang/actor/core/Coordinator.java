@@ -71,12 +71,14 @@ public class Coordinator implements Runnable {
 		return this.remoteActorHandler;
 	}
 
-	public void start() {
+	public Coordinator start() {
 		if (this.coordinatorExecutor == null) {
 			actorActionsExecutor = Executors.newScheduledThreadPool(40); // TODO
 			coordinatorExecutor = Executors.newSingleThreadExecutor();
 			this.activateCoordinatorIfNecessary();
 		}
+
+		return this;
 	}
 
 	private void activateCoordinatorIfNecessary() {

@@ -53,7 +53,7 @@ public class Encoder implements DataTransducer<Object, Object> {
 		if (source == null) {
 			return null;
 			
-		} else if (drivers.containsKey(source.getClass())) {
+		} else if (drivers.containsKey(source.getClass().getName())) {
 			return drivers.get(source.getClass()).toStructure(source, this);
 		} else if (source.getClass().isArray()) {
 			final Object[] result = new Object[Array.getLength(source)];

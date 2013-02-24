@@ -1,5 +1,4 @@
 /*
-
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,47 +18,41 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.factory;
 
-import org.wolfgang.contrail.codec.coercion.Decoder;
-import org.wolfgang.contrail.codec.coercion.Encoder;
+import org.wolfgang.contrail.codec.payload.Bytes;
+import org.wolfgang.contrail.codec.stringify.Decoder;
+import org.wolfgang.contrail.codec.stringify.Encoder;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
 
 /**
- * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
- * bytes to java object and vice-versa based on pay load. This class provides
- * dedicate encoder and decoder for such serialization based codec
+ * <code>StringifyTransducerFactory</code> is in charge of transforming upstream
+ * string to byte arrays and vice-versa based on pay load.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class CoercionTransducerFactory<T> implements TransducerFactory<Object, T> {
-
-	/**
-	 * Accepted types
-	 */
-	private final Class<T> coercionType;
+public final class StringifyTransducerFactory implements TransducerFactory<String, Bytes> {
 
 	/**
 	 * Constructor
 	 */
-	public CoercionTransducerFactory(Class<T> coercionType) {
-		this.coercionType = coercionType;
+	public StringifyTransducerFactory() {
 		// Prevent useless object creation
 	}
 
 	@Override
-	public DataTransducer<Object, T> getDecoder() {
-		return new Decoder<T>(this.coercionType);
+	public DataTransducer<String, Bytes> getDecoder() {
+		return new Decoder();
 	}
 
 	@Override
-	public DataTransducer<T, Object> getEncoder() {
-		return new Encoder<T>(this.coercionType);
+	public DataTransducer<Bytes, String> getEncoder() {
+		return new Encoder();
 	}
 
 	@Override
-	public TransducerComponent<Object, Object, T, T> createComponent() {
-		return new TransducerComponent<Object, Object, T, T>(getDecoder(), getEncoder());
+	public TransducerComponent<String, String, Bytes, Bytes> createComponent() {
+		return new TransducerComponent<String, String, Bytes, Bytes>(getDecoder(), getEncoder());
 	}
 }

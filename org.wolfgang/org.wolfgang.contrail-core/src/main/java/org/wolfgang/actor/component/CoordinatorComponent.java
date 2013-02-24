@@ -62,6 +62,8 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
 	}
 
+	
+	
 	@Override
 	public DataFlow<Packet> getUpStreamDataFlow() throws ComponentNotConnectedException {
 		return this.upStreamDataFlow;

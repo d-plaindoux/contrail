@@ -19,47 +19,43 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.factory;
 
-import org.wolfgang.contrail.codec.coercion.Decoder;
-import org.wolfgang.contrail.codec.coercion.Encoder;
+import java.util.Map;
+
+import org.wolfgang.contrail.codec.object.Decoder;
+import org.wolfgang.contrail.codec.object.Encoder;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
+import org.wolfgang.contrail.data.JSonifier;
 
 /**
- * <code>PayLoadBasedSerializer</code> is in charge of transforming upstream
- * bytes to java object and vice-versa based on pay load. This class provides
- * dedicate encoder and decoder for such serialization based codec
+ * <code>ObjectTransducerFactory</code> is in charge of transforming upstream
+ * object to java object and vice-versa. This class provides dedicate encoder
+ * and decoder for basic object encoding/decoding.
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class CoercionTransducerFactory<T> implements TransducerFactory<Object, T> {
+public final class ObjectTransducerFactory implements TransducerFactory<Object, Object> {
 
-	/**
-	 * Accepted types
-	 */
-	private final Class<T> coercionType;
+	private final Map<String, JSonifier> drivers;
 
-	/**
-	 * Constructor
-	 */
-	public CoercionTransducerFactory(Class<T> coercionType) {
-		this.coercionType = coercionType;
-		// Prevent useless object creation
+	public ObjectTransducerFactory(Map<String, JSonifier> drivers) {
+		this.drivers = drivers;
 	}
 
 	@Override
-	public DataTransducer<Object, T> getDecoder() {
-		return new Decoder<T>(this.coercionType);
+	public DataTransducer<Object, Object> getDecoder() {
+		return new Decoder(drivers);
 	}
 
 	@Override
-	public DataTransducer<T, Object> getEncoder() {
-		return new Encoder<T>(this.coercionType);
+	public DataTransducer<Object, Object> getEncoder() {
+		return new Encoder(drivers);
 	}
 
 	@Override
-	public TransducerComponent<Object, Object, T, T> createComponent() {
-		return new TransducerComponent<Object, Object, T, T>(getDecoder(), getEncoder());
+	public TransducerComponent<Object, Object, Object, Object> createComponent() {
+		return new TransducerComponent<Object, Object, Object, Object>(getDecoder(), getEncoder());
 	}
 }
