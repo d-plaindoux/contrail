@@ -80,14 +80,13 @@ public class NetworkActorTest {
 	public void shouldReceiveResponseWithRemoteActors() throws Exception {
 
 		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("1", "ws://localhost:8090/websocket");
+		routeTable.addRoute("1", "ws://localhost:8090/websocket/1");
 		routeTable.addRoute("2", "ws://localhost:8090/websocket/2");
 
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
 		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
-			private static final long serialVersionUID = 1L;
 			{
 				this.put(Packet.class.getName(), Packet.jSonifable());
 				this.put(Request.class.getName(), Request.jSonifable());
@@ -99,16 +98,18 @@ public class NetworkActorTest {
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
 		final RouteComponent routeComponent1 = new RouteComponent(routeTable, "1");
-		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
-				coordinatorComponent1);
+		final Component compose1 = Components.compose(
+				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
+				objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
 		
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
 		final RouteComponent routeComponent2 = new RouteComponent(routeTable, "2");
-		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
-				coordinatorComponent2);
+		final Component compose2 = Components.compose(
+				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
+				objectFactory.createComponent(), routeComponent2, coordinatorComponent2);
 
 		// Prepare server connection manager
 
@@ -153,7 +154,6 @@ public class NetworkActorTest {
 
 		connect.close();
 		server.close();
-
 	}
 
 }
