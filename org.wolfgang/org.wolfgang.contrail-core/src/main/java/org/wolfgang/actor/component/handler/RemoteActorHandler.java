@@ -35,12 +35,12 @@ public class RemoteActorHandler {
 
 	private final CoordinatorComponent component;
 
-	private RemoteActorHandler(CoordinatorComponent component) {
+	public RemoteActorHandler(CoordinatorComponent component) {
 		super();
 		this.component = component;
 	}
 
-	public void handle(String location, Request request, Response response) {
+	public void handle(String location, String actorId, Request request, Response response) {
 		final String responseId;
 
 		if (response != null) {
@@ -49,14 +49,18 @@ public class RemoteActorHandler {
 			responseId = null;
 		}
 
-		final Packet packet = new Packet(location, request.toActor(location, responseId));
+		final Packet packet = new Packet(location, request.toActor(actorId, responseId));
 
 		try {
-			this.component.getDownStreamDataFlow().handleData(packet);
+			component.getDownStreamDataFlow().handleData(packet);
 		} catch (ComponentNotConnectedException e) {
-			// TODO
+			if (responseId != null) {
+				component.retrieveResponseById(responseId).failure(e);
+			}
 		} catch (DataFlowException e) {
-			// TODO
+			if (responseId != null) {
+				component.retrieveResponseById(responseId).failure(e);
+			}
 		}
 	}
 

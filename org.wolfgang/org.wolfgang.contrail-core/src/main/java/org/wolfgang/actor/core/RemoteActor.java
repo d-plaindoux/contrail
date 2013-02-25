@@ -39,6 +39,6 @@ public class RemoteActor extends BindActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		this.getCoordinator().getRemoteActorHandler().handle(location, request, response);
+		this.getCoordinator().getRemoteActorHandler().handle(location, this.getActorId(), request, response);
 	}
 }

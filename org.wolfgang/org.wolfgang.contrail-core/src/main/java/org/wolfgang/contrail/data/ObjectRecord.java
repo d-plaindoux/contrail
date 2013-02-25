@@ -68,8 +68,8 @@ public class ObjectRecord {
 			return null;
 		}
 	}
-
-	public ObjectRecord set(String name, Object object) {
+	
+	public ObjectRecord set(String name, Object object) {		
 		this.attributes.put(name, object);
 		return this;
 	}

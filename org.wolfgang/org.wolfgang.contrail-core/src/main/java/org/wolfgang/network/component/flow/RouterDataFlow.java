@@ -45,6 +45,9 @@ abstract class RouterDataFlow implements DataFlow<Packet> {
 				this.router.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
 			} else {
 				final Packet newData = data.sendTo(this.router.getRouteTable().getRoute(data.getDestinationId()));
+				if (newData.getSourceId() == null) {
+					newData.setSourceId(this.router.getIdentifier());
+				}
 				this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(newData);
 			}
 		} catch (ComponentNotConnectedException e) {

@@ -19,6 +19,7 @@
 package org.wolfgang.actor.component.flow;
 
 import org.wolfgang.actor.component.CoordinatorComponent;
+import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.component.handler.RemoteResponseHandler;
 import org.wolfgang.actor.core.Coordinator;
 import org.wolfgang.actor.event.Request;
@@ -46,6 +47,8 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 		super();
 		this.coordinator = coordinator;
 		this.component = component;
+		
+		this.coordinator.setRemoteActorHandler(new RemoteActorHandler(this.component));
 	}
 
 	@Override

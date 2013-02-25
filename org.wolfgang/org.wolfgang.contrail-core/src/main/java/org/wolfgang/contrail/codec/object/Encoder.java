@@ -52,9 +52,8 @@ public class Encoder implements DataTransducer<Object, Object> {
 	public Object encode(Object source) throws DataTransducerException {
 		if (source == null) {
 			return null;
-			
 		} else if (drivers.containsKey(source.getClass().getName())) {
-			return drivers.get(source.getClass()).toStructure(source, this);
+			return drivers.get(source.getClass().getName()).toStructure(source, this);
 		} else if (source.getClass().isArray()) {
 			final Object[] result = new Object[Array.getLength(source)];
 			for (int i = 0; i < Array.getLength(source); i++) {
@@ -68,7 +67,12 @@ public class Encoder implements DataTransducer<Object, Object> {
 		} else if (Coercion.canCoerce(source, String.class)) {
 			return source;
 		} else if (Coercion.canCoerce(source, ObjectRecord.class)) {
-			return source;
+			final ObjectRecord sourceRecord = (ObjectRecord) source;
+			final ObjectRecord result = new ObjectRecord();
+			for (String name : sourceRecord.getNames()) {
+				result.set(name, encode(sourceRecord.get(name)));
+			}
+			return result;
 		} else {
 			throw new DataTransducerException("Object encoding for " + source.getClass() + " is not supported");
 		}

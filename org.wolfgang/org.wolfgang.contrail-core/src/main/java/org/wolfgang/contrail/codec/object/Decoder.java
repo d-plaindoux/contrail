@@ -52,17 +52,20 @@ public class Decoder implements DataTransducer<Object, Object> {
 		if (source == null) {
 			return source;
 		} else if (Coercion.canCoerce(source, ObjectRecord.class)) {
-			final ObjectRecord objectRecord = Coercion.coerce(source, ObjectRecord.class);
-			final String name = objectRecord.get("jN", String.class);
-			final ObjectRecord parameters = objectRecord.get("jV", ObjectRecord.class);
-			if (name != null && parameters != null) {
-				if (drivers.containsKey(name)) {
-					return drivers.get(name).toObject(objectRecord, this);
+			final ObjectRecord sourceRecord = Coercion.coerce(source, ObjectRecord.class);
+			if (sourceRecord.has("jN", String.class) && sourceRecord.has("jV", ObjectRecord.class)) {
+				final String driverName = sourceRecord.get("jN", String.class);
+				if (drivers.containsKey(driverName)) {
+					return drivers.get(driverName).toObject(sourceRecord, this);
 				} else {
-					throw new DataTransducerException("Object encoding for " + name + " is not available");
+					throw new DataTransducerException("Object encoding for " + driverName + " is not available");
 				}
 			} else {
-				return source;
+				final ObjectRecord result = new ObjectRecord();
+				for (String name : sourceRecord.getNames()) {
+					result.set(name, decode(sourceRecord.get(name)));
+				}
+				return result;
 			}
 		} else if (source.getClass().isArray()) {
 			final Object[] result = new Object[Array.getLength(source)];

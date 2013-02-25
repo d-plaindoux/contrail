@@ -32,12 +32,12 @@ import org.wolfgang.contrail.component.pipeline.transducer.TransducerFactory;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class StringifyTransducerFactory implements TransducerFactory<String, Bytes> {
+public final class BytesStringifierTransducerFactory implements TransducerFactory<String, Bytes> {
 
 	/**
 	 * Constructor
 	 */
-	public StringifyTransducerFactory() {
+	public BytesStringifierTransducerFactory() {
 		// Prevent useless object creation
 	}
 
