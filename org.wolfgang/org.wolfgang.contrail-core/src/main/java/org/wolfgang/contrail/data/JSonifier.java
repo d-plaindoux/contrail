@@ -31,34 +31,64 @@ public class JSonifier {
 	public static String JSonName = "jN";
 	public static String JSonValue = "jV";
 
-	public static JSonifierWithoutTypes withNames(String... names) {
-		return new JSonifierWithoutTypes(names);
+	public static JSonifierWithoutNames nameAndType(String identifier, String typeName) {
+		return new JSonifierWithoutNames(identifier, typeName);
+	}
+
+	public static class JSonifierWithoutNames {
+		private final String identifier;
+		private final String typeName;
+
+		private JSonifierWithoutNames(String identifier, String typeName) {
+			super();
+
+			this.identifier = identifier;
+			this.typeName = typeName;
+		}
+
+		public JSonifierWithoutTypes withKeys(String... names) {
+			return new JSonifierWithoutTypes(identifier, typeName, names);
+		}
 	}
 
 	public static class JSonifierWithoutTypes {
-		final private String[] names;
+		private final String identifier;
+		private final String typeName;
+		private final String[] names;
 
-		private JSonifierWithoutTypes(String[] names) {
+		private JSonifierWithoutTypes(String identifier, String typeName, String[] names) {
 			super();
-
+			this.identifier = identifier;
+			this.typeName = typeName;
 			this.names = names;
 		}
 
 		public JSonifier withTypes(Class<?>... types) {
-			return new JSonifier(names, types);
+			return new JSonifier(identifier, typeName, names, types);
 		}
 	}
 
-	final private String[] names;
-	final private Class<?>[] types;
+	private final String identifier;
+	private final String[] names;
+	private final Class<?>[] types;
+	private final String typeName;
 
-	private JSonifier(String[] names, Class<?>[] types) {
+	private JSonifier(String identifier, String typeName, String[] names, Class<?>[] types) {
 		super();
-
+		this.typeName = typeName;
 		assert names.length == types.length;
 
+		this.identifier = identifier;
 		this.names = names;
 		this.types = types;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public String getTypeName() {
+		return typeName;
 	}
 
 	private String getBeanName(String name) {
@@ -82,7 +112,7 @@ public class JSonifier {
 				}
 			}
 
-			return new ObjectRecord().set(JSonName, object.getClass().getName()).set(JSonValue, parameters);
+			return new ObjectRecord().set(JSonName, identifier).set(JSonValue, parameters);
 		} catch (DataTransducerException e) {
 			throw e;
 		} catch (Exception e) {

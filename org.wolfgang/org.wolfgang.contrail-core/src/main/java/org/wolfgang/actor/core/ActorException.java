@@ -31,7 +31,7 @@ public class ActorException extends Exception {
 	private static final long serialVersionUID = 6299142557828319229L;
 
 	public static JSonifier jSonifable() {
-		return JSonifier.withNames("message").withTypes(String.class);
+		return JSonifier.nameAndType("ActorException", ActorException.class.getName()).withKeys("message").withTypes(String.class);
 	}
 
 	public ActorException(String message) {

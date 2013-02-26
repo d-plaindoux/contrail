@@ -19,7 +19,7 @@
 /*global define*/
 
 define("Core/object/jObj", [ "./jModel", "./jType", "./jSonifier"],
-    function (jModel, jType, jExchangeable) {
+    function (jModel, jType, jSonifier) {
         "use strict";
 
         var jObj = {};
@@ -116,6 +116,6 @@ define("Core/object/jObj", [ "./jModel", "./jType", "./jSonifier"],
             return result;
         };
 
-        return jObj.bless(jObj, jModel, jType, jExchangeable);
+        return jObj.bless(jObj, jModel, jType, jSonifier);
 
     });

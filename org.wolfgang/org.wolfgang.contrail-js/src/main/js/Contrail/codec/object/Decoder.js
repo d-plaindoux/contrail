@@ -24,18 +24,20 @@ define([ "require", "Core/object/jObj" ],
 
         function ObjectDecoder(drivers) {
             jObj.bless(this, require("Contrail/codec/jCodec").core.decoder());
-
             this.drivers = drivers;
         }
 
-        ObjectDecoder.init = jObj.constructor([jObj.types.Object],
-            function (drivers) {
-                var key;
-                for (key in drivers) {
-                    if (drivers.hasOwnProperty(key) && !drivers[key].hasOwnProperty("toObject")) {
+        ObjectDecoder.init = jObj.constructor([jObj.types.Array],
+            function (jSonifiers) {
+                var drivers = {};
+
+                jSonifiers.forEach(function(jSonifier) {
+                    if (jSonifier.hasOwnProperty("jSonifable")) {
+                        drivers[jSonifier.jSonifable.name] = jSonifier.jSonifable;
+                    } else {
                         jObj.throwError(jObj.exception("L.encoding.to.object.undefined"));
                     }
-                }
+                });
 
                 return new ObjectDecoder(drivers);
             });

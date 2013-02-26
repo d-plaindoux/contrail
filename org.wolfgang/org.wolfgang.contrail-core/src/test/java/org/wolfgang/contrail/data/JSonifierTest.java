@@ -19,7 +19,7 @@
 
 package org.wolfgang.contrail.data;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -55,12 +55,12 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveJSonifiedObjectWhenJSonifySimpleObject() throws DataTransducerException {
-		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		final JSonifier jSonifier = JSonifier.nameAndType("Simple", Simple.class.getName()).withKeys("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
 
 		final Simple simpleClass = new Simple("A", 42, new ObjectRecord());
-		final ObjectRecord structure = jSonifier.toStructure(simpleClass, new Encoder(new HashMap<String, JSonifier>()));
+		final ObjectRecord structure = jSonifier.toStructure(simpleClass, new Encoder(Arrays.<JSonifier> asList()));
 
-		TestCase.assertEquals(Simple.class.getName(), structure.get(JSonifier.JSonName, String.class));
+		TestCase.assertEquals("Simple", structure.get(JSonifier.JSonName, String.class));
 
 		final ObjectRecord parameters = structure.get(JSonifier.JSonValue, ObjectRecord.class);
 
@@ -71,11 +71,11 @@ public class JSonifierTest {
 
 	@Test
 	public void shouldHaveSimpleObjectWhenJSonifyJSonifiedObject() throws DataTransducerException {
-		final JSonifier jSonifier = JSonifier.withNames("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
+		final JSonifier jSonifier = JSonifier.nameAndType("Simple", Simple.class.getName()).withKeys("name", "age", "data").withTypes(String.class, Integer.TYPE, ObjectRecord.class);
 
 		final ObjectRecord structure = new ObjectRecord().set(JSonifier.JSonName, Simple.class.getName()).set(JSonifier.JSonValue,
 				new ObjectRecord().set("name", "B").set("age", 24).set("data", new ObjectRecord()));
-		final Object object = jSonifier.toObject(structure, new Decoder(new HashMap<String, JSonifier>()));
+		final Object object = jSonifier.toObject(structure, new Decoder(Arrays.<JSonifier> asList()));
 
 		TestCase.assertEquals(Simple.class.getName(), object.getClass().getName());
 

@@ -40,10 +40,10 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC" ],
                     object = new A("name of A", new B());
                 }).
                 And(function () {
-                    jObj.jSonifier(B).withKeys();
-                    jObj.jSonifier(A).withKeys("name", "object");
+                    jObj.jSonifable(B).nameAndType("B","B").withKeys();
+                    jObj.jSonifable(A).nameAndType("A","A").withKeys("name", "object");
 
-                    encoder = Factory.object.encoder({ A:A, B:B});
+                    encoder = Factory.object.encoder([A, B]);
                 }).
                 When(function () {
                     result = encoder.transform(object);

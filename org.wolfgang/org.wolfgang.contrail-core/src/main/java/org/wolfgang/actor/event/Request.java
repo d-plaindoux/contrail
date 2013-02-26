@@ -33,7 +33,7 @@ public class Request {
 	private final Object[] parameters;
 
 	public static JSonifier jSonifable() {
-		return JSonifier.withNames("name", "parameters").withTypes(String.class, Object[].class);
+		return JSonifier.nameAndType("Request", Request.class.getName()).withKeys("name", "parameters").withTypes(String.class, Object[].class);
 	}
 
 	public Request(String name, Object... parameters) {

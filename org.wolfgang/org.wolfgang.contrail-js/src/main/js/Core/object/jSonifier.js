@@ -22,41 +22,45 @@ define([ ],
     function () {
         "use strict";
 
-        var jSonifiable = {};
+        var jSonifier = {};
 
-        jSonifiable.jSonifier = function (callBack) {
-            return { withKeys:function () {
-                var keys = Array.prototype.slice.call(arguments);
+        jSonifier.jSonifable = function (callBack) {
+            return { nameAndType:function (name, type) {
+                return { withKeys:function () {
+                    var keys = Array.prototype.slice.call(arguments);
+                    callBack.jSonifable = {
+                        name:name,
+                        type:type,
+                        toObject:function (structure, toObject) {
+                            var parameters = [];
 
-                callBack.toObject = function (structure, toObject) {
-                    var parameters = [];
+                            keys.forEach(function (key) {
+                                if (structure[key]) {
+                                    parameters.push(toObject(structure[key]));
+                                } else {
+                                    parameters.push(structure[key]);
+                                }
+                            });
 
-                    keys.forEach(function (key) {
-                        if (structure[key]) {
-                            parameters.push(toObject(structure[key]));
-                        } else {
-                            parameters.push(structure[key]);
+                            return callBack.apply(this, parameters);
+                        },
+                        toStructure:function (object, toStructure) {
+                            var structure = {};
+
+                            keys.forEach(function (key) {
+                                if (object[key]) {
+                                    structure[key] = toStructure(object[key]);
+                                }
+                            });
+
+                            return structure;
                         }
-                    });
+                    };
 
-                    return callBack.apply(this, parameters);
-                };
-
-                callBack.toStructure = function (object, toStructure) {
-                    var structure = {};
-
-                    keys.forEach(function (key) {
-                        if (object[key]) {
-                            structure[key] = toStructure(object[key]);
-                        }
-                    });
-
-                    return structure;
-                };
-
-                return callBack;
+                    return callBack;
+                }};
             }};
         };
 
-        return jSonifiable;
+        return jSonifier;
     });

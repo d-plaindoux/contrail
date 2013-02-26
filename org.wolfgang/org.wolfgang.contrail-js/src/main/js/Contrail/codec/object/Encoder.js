@@ -28,16 +28,19 @@ define([ "require", "Core/object/jObj" ],
             this.drivers = drivers;
         }
 
-        ObjectEncoder.init = jObj.constructor([jObj.types.Object],
-            function (drivers) {
-                var key;
-                for (key in drivers) {
-                    if (drivers.hasOwnProperty(key) && !drivers[key].hasOwnProperty("toStructure")) {
-                        jObj.throwError(jObj.exception("L.encoding.to.structure.undefined"));
-                    }
-                }
+        ObjectEncoder.init = jObj.constructor([jObj.types.Array],
+                function (jSonifiers) {
+                    var drivers = {};
 
-                return new ObjectEncoder(drivers);
+                    jSonifiers.forEach(function(jSonifier) {
+                        if (jSonifier.hasOwnProperty("jSonifable")) {
+                            drivers[jSonifier.jSonifable.type] = jSonifier.jSonifable;
+                        } else {
+                            jObj.throwError(jObj.exception("L.encoding.to.object.undefined"));
+                        }
+                    });
+
+                    return new ObjectEncoder(drivers);
             });
 
         ObjectEncoder.prototype.toStructure = jObj.method([jObj.types.Any], jObj.types.Any,

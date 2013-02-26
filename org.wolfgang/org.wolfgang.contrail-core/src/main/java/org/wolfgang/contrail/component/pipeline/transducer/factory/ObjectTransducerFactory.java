@@ -19,7 +19,7 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer.factory;
 
-import java.util.Map;
+import java.util.List;
 
 import org.wolfgang.contrail.codec.object.Decoder;
 import org.wolfgang.contrail.codec.object.Encoder;
@@ -38,9 +38,9 @@ import org.wolfgang.contrail.data.JSonifier;
  */
 public final class ObjectTransducerFactory implements TransducerFactory<Object, Object> {
 
-	private final Map<String, JSonifier> drivers;
+	private final List<JSonifier> drivers;
 
-	public ObjectTransducerFactory(Map<String, JSonifier> drivers) {
+	public ObjectTransducerFactory(List<JSonifier> drivers) {
 		this.drivers = drivers;
 	}
 

@@ -20,6 +20,7 @@ package org.wolfgang.contrail.codec.object;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,10 +43,14 @@ public class Decoder implements DataTransducer<Object, Object> {
 	/**
 	 * Constructor
 	 */
-	public Decoder(Map<String, JSonifier> drivers) {
+	public Decoder(List<JSonifier> jSonifiers) {
 		super();
 
-		this.drivers = drivers;
+		this.drivers = new HashMap<String, JSonifier>();
+		
+		for(JSonifier jSonifier : jSonifiers) {
+			this.drivers.put(jSonifier.getIdentifier(), jSonifier);
+		}
 	}
 
 	public Object decode(Object source) throws DataTransducerException {

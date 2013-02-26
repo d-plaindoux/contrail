@@ -19,7 +19,7 @@
 package org.wolfgang.contrail.network.actor;
 
 import java.net.URI;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -82,12 +82,12 @@ public class NetworkActorTest {
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
-		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
-			private static final long serialVersionUID = 1L;
+		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new ArrayList<JSonifier>() {
+			private static final long serialVersionUID = 2065999814340836186L;
 			{
-				this.put(Packet.class.getName(), Packet.jSonifable());
-				this.put(Request.class.getName(), Request.jSonifable());
-				this.put(ActorException.class.getName(), ActorException.jSonifable());
+				this.add(Packet.jSonifable());
+				this.add(Request.jSonifable());
+				this.add(ActorException.jSonifable());
 			}
 		});
 
@@ -158,12 +158,12 @@ public class NetworkActorTest {
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
-		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
-			private static final long serialVersionUID = 1L;
+		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new ArrayList<JSonifier>() {
+			private static final long serialVersionUID = 2065999814340836186L;
 			{
-				this.put(Packet.class.getName(), Packet.jSonifable());
-				this.put(Request.class.getName(), Request.jSonifable());
-				this.put(ActorException.class.getName(), ActorException.jSonifable());
+				this.add(Packet.jSonifable());
+				this.add(Request.jSonifable());
+				this.add(ActorException.jSonifable());
 			}
 		});
 

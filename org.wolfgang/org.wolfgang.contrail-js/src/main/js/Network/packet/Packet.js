@@ -66,5 +66,5 @@ define([ "Core/object/jObj" ],
                 return Packet.init(this.sourceId, this.destinationId, this.data, endPoint);
             });
 
-        return jObj.jSonifier(Packet.init).withKeys("sourceId", "destinationId", "data", "endPoint");
+        return jObj.jSonifable(Packet.init).nameAndType("Packet", "Packet").withKeys("sourceId", "destinationId", "data", "endPoint");
     });

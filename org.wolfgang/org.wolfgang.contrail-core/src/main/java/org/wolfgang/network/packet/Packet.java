@@ -34,7 +34,7 @@ public class Packet {
 	private String endPoint;
 
 	public static JSonifier jSonifable() {
-		return JSonifier.withNames("sourceId", "destinationId", "data", "endPoint").withTypes(String.class, String.class, Object.class, String.class);
+		return JSonifier.nameAndType("Packet", Packet.class.getName()).withKeys("sourceId", "destinationId", "data", "endPoint").withTypes(String.class, String.class, Object.class, String.class);
 	}
 
 	public Packet(String sourceId, String destinationId, Object data, String endPoint) {

@@ -140,7 +140,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Checking remotely routed actor message passing using remote actor", function () {
-            var coordinatorA, initialA, coordinatorB, initialB, response1, response2, drivers;
+            var coordinatorA, initialA, coordinatorB, initialB, response1, response2, jSonifiers;
 
             jCC.
                 Given(function () {
@@ -162,7 +162,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    drivers = {Packet:jNetwork.packet, Request:jActor.event.request};
+                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
                 }).
                 And(function () {
                     jContrail.component.compose([
@@ -170,7 +170,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
-                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
                         jNetwork.component.selector("a"),
                         jActor.component(coordinatorA) ]);
                 }).
@@ -180,7 +180,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
-                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
                         jNetwork.component.selector("b"),
                         jActor.component(coordinatorB) ]);
                 }).
@@ -203,7 +203,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
 
 
         jCC.scenario("Checking remotely routed actor message passing using remote actor and native serialization without json", function () {
-            var coordinatorA, initialA, coordinatorB, initialB, response1, response2, drivers;
+            var coordinatorA, initialA, coordinatorB, initialB, response1, response2, jSonifiers;
 
             jCC.
                 Given(function () {
@@ -225,14 +225,14 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    drivers = {Packet:jNetwork.packet, Request:jActor.event.request};
+                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
                 }).
                 And(function () {
                     jContrail.component.compose([
                         initialA,
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
-                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
                         jNetwork.component.selector("a"),
                         jActor.component(coordinatorA) ]);
                 }).
@@ -241,7 +241,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         initialB,
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
-                        jContrail.component.transducer(jContrail.codec.object.encoder(drivers), jContrail.codec.object.decoder(drivers)),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
                         jNetwork.component.selector("b"),
                         jActor.component(coordinatorB) ]);
                 }).
