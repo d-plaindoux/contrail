@@ -16,20 +16,29 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.actor.event;
+package org.wolfgang.actor.core;
 
-import org.wolfgang.actor.core.ActorException;
+import org.wolfgang.contrail.data.JSonifier;
 
 /**
- * <code>Response</code>
+ * <code>ActorException</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Response {
+public class ActorException extends Exception {
 
-	void success(Object value);
+	private static final long serialVersionUID = 6299142557828319229L;
 
-	void failure(ActorException error);
+	public static JSonifier jSonifable() {
+		return JSonifier.withNames("message").withTypes(String.class);
+	}
 
+	public ActorException(String message) {
+		super(message);
+	}
+
+	public ActorException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

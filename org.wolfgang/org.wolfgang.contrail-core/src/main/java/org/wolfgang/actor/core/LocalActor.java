@@ -55,14 +55,14 @@ public class LocalActor extends BindActor implements Actor {
 			try {
 				response.success(method.invoke(model, request.getParameters()));
 			} catch (IllegalArgumentException e) {
-				failure(response, e);
+				failure(response, new ActorException(e.getMessage(), e));
 			} catch (IllegalAccessException e) {
-				failure(response, e);
+				failure(response, new ActorException(e.getMessage(), e));
 			} catch (InvocationTargetException e) {
-				failure(response, e.getCause());
+				failure(response, new ActorException(e.getCause().getMessage(), e.getCause()));
 			}
 		} else {
-			failure(response, new Exception("TODO"));
+			failure(response, new ActorException("Actor method does not exist"));
 		}
 	}
 
@@ -84,7 +84,7 @@ public class LocalActor extends BindActor implements Actor {
 		return this.methodsCache.get(name);
 	}
 
-	private void failure(Response response, Throwable e) {
+	private void failure(Response response, ActorException e) {
 		if (response != null) {
 			response.failure(e);
 		}

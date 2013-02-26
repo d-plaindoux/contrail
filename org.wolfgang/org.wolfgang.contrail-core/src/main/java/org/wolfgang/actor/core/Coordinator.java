@@ -171,7 +171,7 @@ public class Coordinator implements Runnable {
 			this.universe.get(actorId).send(request, response);
 			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
-			response.failure(new Exception("TODO"));
+			response.failure(new ActorException("Actor does not exists"));
 		}
 	}
 
@@ -179,7 +179,7 @@ public class Coordinator implements Runnable {
 		if (this.universe.containsKey(actorId)) {
 			this.universe.get(actorId).invoke(request, response);
 		} else if (response != null) {
-			response.failure(new Exception("TODO"));
+			response.failure(new ActorException("Actor does not exists"));
 		}
 	}
 

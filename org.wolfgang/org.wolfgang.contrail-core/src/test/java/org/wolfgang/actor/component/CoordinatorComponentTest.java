@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.core.Coordinator;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
@@ -41,7 +42,7 @@ import org.wolfgang.network.packet.Packet;
  */
 public class CoordinatorComponentTest {
 
-	public class PromiseResponse extends Promise<Object> implements Response {
+	public class PromiseResponse extends Promise<Object, ActorException> implements Response {
 		// Nothing to be done
 	}
 
@@ -72,7 +73,7 @@ public class CoordinatorComponentTest {
 
 		final CoordinatorComponent coordinatorComponent = new CoordinatorComponent(coordinator);
 		final TargetSelectorComponent routeComponent = new TargetSelectorComponent("a");
-		
+
 		Components.compose(routeComponent, coordinatorComponent);
 
 		final PromiseResponse response = new PromiseResponse();

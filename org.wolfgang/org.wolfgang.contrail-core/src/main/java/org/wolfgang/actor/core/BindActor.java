@@ -65,7 +65,7 @@ public class BindActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		response.failure(new Exception("Not yet binded")); // TODO
+		response.failure(new ActorException("Not yet binded")); // TODO
 	}
 
 	public synchronized boolean performPendingAction() {

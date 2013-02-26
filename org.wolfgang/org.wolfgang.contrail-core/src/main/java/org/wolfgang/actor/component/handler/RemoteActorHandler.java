@@ -19,6 +19,7 @@
 package org.wolfgang.actor.component.handler;
 
 import org.wolfgang.actor.component.CoordinatorComponent;
+import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
@@ -55,11 +56,11 @@ public class RemoteActorHandler {
 			component.getDownStreamDataFlow().handleData(packet);
 		} catch (ComponentNotConnectedException e) {
 			if (responseId != null) {
-				component.retrieveResponseById(responseId).failure(e);
+				component.retrieveResponseById(responseId).failure(new ActorException(e.getMessage(),e));
 			}
 		} catch (DataFlowException e) {
 			if (responseId != null) {
-				component.retrieveResponseById(responseId).failure(e);
+				component.retrieveResponseById(responseId).failure(new ActorException(e.getMessage(),e));
 			}
 		}
 	}

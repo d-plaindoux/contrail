@@ -70,7 +70,7 @@ public final class WebClient extends NIOClient {
 
 		private final URI uri;
 		private final AtomicReference<ChannelFuture> reference;
-		private final Promise<Boolean> connectionEstablished;
+		private final Promise<Boolean,Exception> connectionEstablished;
 
 		Instance(URI uri) {
 			super();

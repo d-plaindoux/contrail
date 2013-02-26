@@ -117,7 +117,7 @@ public class WebServerTest {
 
 		final WebServer server = WebServer.create(serverSourceManager).bind(2777);
 
-		final Promise<String> serverResponse = Promise.create();
+		final Promise<String, Exception> serverResponse = Promise.create();
 
 		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new DataFlowAdapter<String>() {
 			@Override
@@ -151,7 +151,7 @@ public class WebServerTest {
 	@Test
 	public void shouldHaveClientResponseWhenServerSendUsingWS() throws Exception {
 
-		final Promise<String> clientResponse = Promise.create();
+		final Promise<String, Exception> clientResponse = Promise.create();
 
 		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(new DataFlowAdapter<String>() {
 			@Override

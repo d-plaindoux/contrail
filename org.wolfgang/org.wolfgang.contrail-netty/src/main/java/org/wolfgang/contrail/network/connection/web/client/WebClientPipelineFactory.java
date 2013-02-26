@@ -39,9 +39,9 @@ class WebClientPipelineFactory implements ChannelPipelineFactory {
 
 	private final WebSocketClientHandshaker handshaker;
 	private final WebClientSocketHandler wsRequestHandler;
-	private final Promise<Boolean> connectionEstablished;
+	private final Promise<Boolean, Exception> connectionEstablished;
 
-	public WebClientPipelineFactory(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Boolean> connectionEstablished) {
+	public WebClientPipelineFactory(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Boolean, Exception> connectionEstablished) {
 		this.handshaker = handshaker;
 		this.wsRequestHandler = wsRequestHandler;
 		this.connectionEstablished = connectionEstablished;

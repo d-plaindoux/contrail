@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.actor.component.CoordinatorComponent;
+import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.core.Coordinator;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
@@ -54,7 +55,7 @@ import org.wolfgang.network.packet.Packet;
  */
 public class NetworkActorTest {
 
-	public class PromiseResponse extends Promise<Object> implements Response {
+	public class PromiseResponse extends Promise<Object, ActorException> implements Response {
 		// Nothing to be done
 	}
 
@@ -82,9 +83,11 @@ public class NetworkActorTest {
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
 		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
+			private static final long serialVersionUID = 1L;
 			{
 				this.put(Packet.class.getName(), Packet.jSonifable());
 				this.put(Request.class.getName(), Request.jSonifable());
+				this.put(ActorException.class.getName(), ActorException.jSonifable());
 			}
 		});
 
@@ -156,9 +159,11 @@ public class NetworkActorTest {
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
 		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
+			private static final long serialVersionUID = 1L;
 			{
 				this.put(Packet.class.getName(), Packet.jSonifable());
 				this.put(Request.class.getName(), Request.jSonifable());
+				this.put(ActorException.class.getName(), ActorException.jSonifable());
 			}
 		});
 

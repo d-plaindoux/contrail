@@ -19,6 +19,7 @@
 package org.wolfgang.actor.component.handler;
 
 import org.wolfgang.actor.component.CoordinatorComponent;
+import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.data.ObjectRecord;
@@ -39,7 +40,6 @@ public class RemoteResponseHandler implements Response {
 
 	public RemoteResponseHandler(CoordinatorComponent component, String location, String identifier) {
 		this.component = component;
-		// TODO Auto-generated constructor stub
 		this.location = location;
 		this.identifier = identifier;
 	}
@@ -50,7 +50,7 @@ public class RemoteResponseHandler implements Response {
 	}
 
 	@Override
-	public void failure(Throwable error) {
+	public void failure(ActorException error) {
 		this.sendPacket(0x02, error);
 	}
 

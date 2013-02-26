@@ -37,7 +37,7 @@ public class TestFuture {
 
 	@Test
 	public void ShouldProvideAValueWhenSettingAFuture() {
-		final Promise<String> promise = Promise.create();
+		final Promise<String, Exception> promise = Promise.create();
 		final String value = "Hello, World!";
 		promise.success(value);
 		try {
@@ -51,7 +51,7 @@ public class TestFuture {
 
 	@Test
 	public void ShouldRaiseAnErrorWhenSettingAnError() {
-		final Promise<String> promise = Promise.create();
+		final Promise<String, Throwable> promise = Promise.create();
 		final Throwable value = new Throwable();
 		promise.failure(value);
 		try {
@@ -66,7 +66,7 @@ public class TestFuture {
 
 	@Test
 	public void ShouldRaiseATimeOutWhenNoValueSet() {
-		final Promise<String> promise = Promise.create();
+		final Promise<String, Exception> promise = Promise.create();
 		try {
 			promise.getFuture().get(1, TimeUnit.SECONDS);
 			fail();
@@ -81,7 +81,7 @@ public class TestFuture {
 
 	@Test
 	public void ShouldProvideAValueWhenSettingAFutureAfter1SecondDelay() {
-		final Promise<String> promise = Promise.create();
+		final Promise<String, Exception> promise = Promise.create();
 		final String value = "Hello, World!";
 
 		setAValueWithOneSecondDelay(promise, value);
@@ -101,7 +101,7 @@ public class TestFuture {
 	 * @param promise
 	 * @param value
 	 */
-	private void setAValueWithOneSecondDelay(final Promise<String> promise, final String value) {
+	private void setAValueWithOneSecondDelay(final Promise<String, Exception> promise, final String value) {
 		new Thread() {
 			@Override
 			public void run() {
@@ -117,7 +117,7 @@ public class TestFuture {
 
 	@Test
 	public void GivenAFutureSetWithDelayToErrorThrowThError() {
-		final Promise<String> promise = Promise.create();
+		final Promise<String, Throwable> promise = Promise.create();
 		final Throwable value = new Throwable();
 
 		setAnErrorWithOneSecondDelay(promise, value);
@@ -138,7 +138,7 @@ public class TestFuture {
 	 * @param promise
 	 * @param value
 	 */
-	private void setAnErrorWithOneSecondDelay(final Promise<String> promise, final Throwable value) {
+	private void setAnErrorWithOneSecondDelay(final Promise<String, Throwable> promise, final Throwable value) {
 		new Thread() {
 			@Override
 			public void run() {

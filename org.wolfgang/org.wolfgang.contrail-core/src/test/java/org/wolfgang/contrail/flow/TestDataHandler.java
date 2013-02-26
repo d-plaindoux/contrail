@@ -38,7 +38,7 @@ public class TestDataHandler {
 
 	@Test
 	public void testClosable01() throws InterruptedException, ExecutionException, DataFlowException {
-		final Promise<String> future = Promise.create();
+		final Promise<String, Exception> future = Promise.create();
 
 		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
@@ -54,7 +54,7 @@ public class TestDataHandler {
 
 	@Test
 	public void testClosable02() throws InterruptedException, ExecutionException, DataFlowException {
-		final Promise<String> future = Promise.create();
+		final Promise<String, Exception> future = Promise.create();
 
 		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
@@ -76,7 +76,7 @@ public class TestDataHandler {
 
 	@Test
 	public void testClosable04() throws InterruptedException, ExecutionException, DataFlowException {
-		final Promise<String> future = Promise.create();
+		final Promise<String, Exception> future = Promise.create();
 
 		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override
@@ -92,7 +92,7 @@ public class TestDataHandler {
 
 	@Test
 	public void testClosable05() throws InterruptedException, ExecutionException, DataFlowException {
-		final Promise<String> future = Promise.create();
+		final Promise<String, Exception> future = Promise.create();
 
 		final DataFlow<String> handler = DataFlowFactory.closable(new DataFlowAdapter<String>() {
 			@Override

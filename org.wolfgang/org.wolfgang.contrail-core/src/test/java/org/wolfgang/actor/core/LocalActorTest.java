@@ -36,7 +36,7 @@ import org.wolfgang.common.concurrent.Promise;
  */
 public class LocalActorTest {
 
-	public class PromiseResponse extends Promise<Object> implements Response {
+	public class PromiseResponse extends Promise<Object,ActorException> implements Response {
 		// Nothing to be done
 	}
 

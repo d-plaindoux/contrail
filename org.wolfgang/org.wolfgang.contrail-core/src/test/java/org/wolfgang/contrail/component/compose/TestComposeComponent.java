@@ -49,8 +49,8 @@ public class TestComposeComponent {
 	@Test
 	public void testCompose01() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
-		final Promise<byte[]> sourceFuture = Promise.create();
-		final Promise<String> terminalFuture = Promise.create();
+		final Promise<byte[], Exception> sourceFuture = Promise.create();
+		final Promise<String, Exception> terminalFuture = Promise.create();
 
 		final Component[] pipelines = { new PayLoadTransducerFactory().createComponent(), new SerializationTransducerFactory().createComponent(),
 				new CoercionTransducerFactory<String>(String.class).createComponent() };
@@ -62,7 +62,7 @@ public class TestComposeComponent {
 				sourceFuture.success(data);
 			}
 		});
-		
+
 		final Component composedComponent = Components.compose(pipelines);
 
 		final TerminalComponent<String, String> terminalComponent = Components.terminal(new DataFlowAdapter<String>() {
@@ -84,8 +84,8 @@ public class TestComposeComponent {
 	@Test
 	public void testCompose02() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
-		final Promise<byte[]> sourceFuture = Promise.create();
-		final Promise<String> terminalFuture = Promise.create();
+		final Promise<byte[], Exception> sourceFuture = Promise.create();
+		final Promise<String, Exception> terminalFuture = Promise.create();
 
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DataFlowAdapter<byte[]>() {
 			@Override
@@ -116,8 +116,8 @@ public class TestComposeComponent {
 	@Test
 	public void testCompose03() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
-		final Promise<byte[]> sourceFuture = Promise.create();
-		final Promise<String> terminalFuture = Promise.create();
+		final Promise<byte[], Exception> sourceFuture = Promise.create();
+		final Promise<String, Exception> terminalFuture = Promise.create();
 
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DataFlowAdapter<byte[]>() {
 			@Override
@@ -150,8 +150,8 @@ public class TestComposeComponent {
 	@Test
 	public void testCompose04() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
-		final Promise<byte[]> sourceFuture = Promise.create();
-		final Promise<String> terminalFuture = Promise.create();
+		final Promise<byte[], Exception> sourceFuture = Promise.create();
+		final Promise<String, Exception> terminalFuture = Promise.create();
 
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DataFlowAdapter<byte[]>() {
 			@Override
@@ -184,8 +184,8 @@ public class TestComposeComponent {
 	@Test
 	public void testCompose05() throws ComponentConnectionRejectedException, DataFlowException, InterruptedException, ExecutionException, ComponentNotConnectedException {
 		final String source = new String("Hello, World!");
-		final Promise<byte[]> sourceFuture = Promise.create();
-		final Promise<String> terminalFuture = Promise.create();
+		final Promise<byte[], Exception> sourceFuture = Promise.create();
+		final Promise<String, Exception> terminalFuture = Promise.create();
 
 		final InitialComponent<byte[], byte[]> initialComponent = Components.initial(new DataFlowAdapter<byte[]>() {
 			@Override

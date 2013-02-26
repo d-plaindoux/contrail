@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class Promise<V> {
+public class Promise<V, E extends Throwable> {
 
 	private final PromisedFuture<V> future;
 
@@ -34,8 +34,8 @@ public class Promise<V> {
 		this.future = new PromisedFuture<V>();
 	}
 
-	public static <V> Promise<V> create() {
-		return new Promise<V>();
+	public static <V, E extends Throwable> Promise<V, E> create() {
+		return new Promise<V, E>();
 	}
 
 	protected Promise() {
@@ -50,7 +50,7 @@ public class Promise<V> {
 		future.setValue(value);
 	}
 
-	public void failure(Throwable error) {
+	public void failure(E error) {
 		future.setError(error);
 	}
 }
