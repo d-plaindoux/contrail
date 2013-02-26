@@ -22,7 +22,7 @@ import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.route.RouteNotFoundException;
-import org.wolfgang.network.component.RouteComponent;
+import org.wolfgang.network.component.TargetSelectorComponent;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -31,11 +31,11 @@ import org.wolfgang.network.packet.Packet;
  * @author Didier Plaindoux
  * @version 1.0
  */
-abstract class RouterDataFlow implements DataFlow<Packet> {
+abstract class TargetSelectorDataFlow implements DataFlow<Packet> {
 
-	protected final RouteComponent router;
+	protected final TargetSelectorComponent router;
 
-	public RouterDataFlow(RouteComponent router) {
+	public TargetSelectorDataFlow(TargetSelectorComponent router) {
 		this.router = router;
 	}
 

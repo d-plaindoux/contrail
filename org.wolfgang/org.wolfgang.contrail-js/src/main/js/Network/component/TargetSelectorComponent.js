@@ -18,11 +18,11 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStreamDataFlow", "./flow/RouterComponentDownStreamDataFlow" ],
+define([ "Core/object/jObj", "Contrail/jContrail", "./flow/TargetSelectorComponentUpStreamDataFlow", "./flow/TargetSelectorComponentDownStreamDataFlow" ],
     function (jObj, jContrail, routerUpStreamFlow, routerDownStreamFlow) {
         "use strict";
 
-        function RouterComponent(route, identifier) {
+        function TargetSelectorComponent(route, identifier) {
             jObj.bless(this, jContrail.component.pipeline());
 
             this.destinationId = identifier;
@@ -31,30 +31,30 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/RouterComponentUpStre
             this.downStreamDataFlow = routerDownStreamFlow(this);
         }
 
-        RouterComponent.init = jObj.constructor([ jObj.types.Named("RouteTable"), jObj.types.String ],
+        TargetSelectorComponent.init = jObj.constructor([ jObj.types.Named("RouteTable"), jObj.types.String ],
             function (route, identifier) {
-                return new RouterComponent(route, identifier);
+                return new TargetSelectorComponent(route, identifier);
             });
 
-        RouterComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
+        TargetSelectorComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
             function () {
                 return this.destinationId;
             });
 
-        RouterComponent.prototype.getTable = jObj.method([ ], jObj.types.Named("RouteTable"),
+        TargetSelectorComponent.prototype.getTable = jObj.method([ ], jObj.types.Named("RouteTable"),
             function () {
                 return this.route;
             });
 
-        RouterComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        TargetSelectorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
             });
 
-        RouterComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        TargetSelectorComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.downStreamDataFlow;
             });
 
-        return RouterComponent.init;
+        return TargetSelectorComponent.init;
     });

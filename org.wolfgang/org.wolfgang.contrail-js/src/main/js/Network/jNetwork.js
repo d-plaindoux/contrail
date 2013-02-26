@@ -18,13 +18,14 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/RouterComponent", "./route/RouteTable", "./packet/Packet" ],
-    function (component, table, packet) {
+define("Network/jNetwork", [ "./component/TargetSelectorComponent", "./route/RouteTable", "./packet/Packet" ],
+    function (selector, table, packet) {
         "use strict";
 
         var jNetwork = {};
+        jNetwork.component = {};
 
-        jNetwork.component = component;
+        jNetwork.component.selector = selector;
         jNetwork.table = table;
         jNetwork.packet = packet;
 

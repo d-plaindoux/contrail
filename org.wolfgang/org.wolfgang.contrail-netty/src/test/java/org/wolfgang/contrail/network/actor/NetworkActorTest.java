@@ -44,7 +44,7 @@ import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
 import org.wolfgang.contrail.network.route.RouteTable;
-import org.wolfgang.network.component.RouteComponent;
+import org.wolfgang.network.component.TargetSelectorComponent;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -77,7 +77,7 @@ public class NetworkActorTest {
 	}
 
 	@Test
-	public void shouldReceiveResponseWithRemoteActors() throws Exception {
+	public void shouldReceiveResponseWithRemoteActorAndCorrectMessage() throws Exception {
 
 		final RouteTable routeTable = new RouteTable();
 		routeTable.addRoute("1", "ws://localhost:8090/websocket/1");
@@ -97,7 +97,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final RouteComponent routeComponent1 = new RouteComponent(routeTable, "1");
+		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent(routeTable, "1");
 		final Component compose1 = Components.compose(
 				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
 				objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
@@ -106,7 +106,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final RouteComponent routeComponent2 = new RouteComponent(routeTable, "2");
+		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent(routeTable, "2");
 		final Component compose2 = Components.compose(
 				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
 				objectFactory.createComponent(), routeComponent2, coordinatorComponent2);
@@ -150,7 +150,88 @@ public class NetworkActorTest {
 		final PromiseResponse response = new PromiseResponse();
 		coordinator2.send("A", new Request("getValue"), response);
 
-		TestCase.assertEquals(42, response.getFuture().get(200, TimeUnit.SECONDS));
+		TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
+
+		connect.close();
+		server.close();
+	}
+
+
+	@Test
+	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Exception {
+
+		final RouteTable routeTable = new RouteTable();
+		routeTable.addRoute("1", "ws://localhost:8091/websocket/1");
+		routeTable.addRoute("2", "ws://localhost:8091/websocket/2");
+
+		// Factories
+		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
+		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
+		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new HashMap<String, JSonifier>() {
+			{
+				this.put(Packet.class.getName(), Packet.jSonifable());
+				this.put(Request.class.getName(), Request.jSonifable());
+			}
+		});
+
+		// Prepare domain "1"
+
+		final Coordinator coordinator1 = new Coordinator().start();
+		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
+		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent(routeTable, "1");
+		final Component compose1 = Components.compose(
+				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
+				objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
+		
+		// Prepare domain "2"
+
+		final Coordinator coordinator2 = new Coordinator().start();
+		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
+		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent(routeTable, "2");
+		final Component compose2 = Components.compose(
+				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
+				objectFactory.createComponent(), routeComponent2, coordinatorComponent2);
+
+		// Prepare server connection manager
+
+		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, compose1); // Filter ?
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+		final WebServer server = WebServer.create(serverSourceManager).bind(8091);
+
+		// Prepare client connection manager
+
+		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+			@Override
+			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+				try {
+					Components.compose(source, compose2); // Filter ?
+				} catch (ComponentConnectionRejectedException e) {
+					throw new CannotCreateComponentException(e);
+				}
+			}
+		};
+
+		final WebClient client = WebClient.create(clientSourceManager);
+		final Instance connect = client.instance(new URI("ws://localhost:8091/websocket")).connect().awaitEstablishment();
+
+		// Actor performance
+
+		final A model = new A(42);
+		coordinator1.actor("A").bindToObject(model);
+		coordinator2.actor("A").bindToRemote("1");
+
+		final PromiseResponse response = new PromiseResponse();
+		coordinator2.send("A", new Request("getWrongValue"), response);
+
+		TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
 
 		connect.close();
 		server.close();

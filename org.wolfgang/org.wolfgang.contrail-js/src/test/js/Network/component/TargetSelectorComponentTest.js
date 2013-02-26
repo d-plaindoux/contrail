@@ -33,7 +33,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    router = jNetwork.component(table, "a");
+                    router = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -76,7 +76,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    router = jNetwork.component(table, "a");
+                    router = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -118,7 +118,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    router = jNetwork.component(table, "a");
+                    router = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -160,7 +160,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    router = jNetwork.component(table, "a");
+                    router = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -202,7 +202,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    router = jNetwork.component(table, "a");
+                    router = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -247,10 +247,10 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     table.addRoute("b", "ws://localhost/b");
                 }).
                 And(function () {
-                    routerA = jNetwork.component(table, "a");
+                    routerA = jNetwork.component.selector(table, "a");
                 }).
                 And(function () {
-                    routerB = jNetwork.component(table, "b");
+                    routerB = jNetwork.component.selector(table, "b");
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();

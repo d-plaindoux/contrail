@@ -22,18 +22,18 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        var RouterComponentDataFlow = function (router) {
+        var TargetSelectorComponentDataFlow = function (router) {
             jObj.bless(this, jContrail.flow.core());
 
             this.router = router;
         };
 
-        RouterComponentDataFlow.init = jObj.constructor([ jObj.types.Named("RouterComponent") ],
+        TargetSelectorComponentDataFlow.init = jObj.constructor([ jObj.types.Named("TargetSelectorComponent") ],
             function (router) {
-                return new RouterComponentDataFlow(router);
+                return new TargetSelectorComponentDataFlow(router);
             });
 
-        RouterComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
+        TargetSelectorComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
                 if (!packet.getSourceId()) {
                     packet.setSourceId(this.router.getIdentifier());
@@ -47,5 +47,5 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
                 }
             });
 
-        return RouterComponentDataFlow.init;
+        return TargetSelectorComponentDataFlow.init;
     });

@@ -63,8 +63,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * Constructor
 	 * 
-	 * @param factory2
-	 *            The factory
+	 * @param wsRequestHandler
+	 *            The web server socket handler
 	 * @param serverPage
 	 *            The server page
 	 */
@@ -76,26 +76,26 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	/**
 	 * Main method called whether an HTTP request is received
 	 * 
-	 * @param req
-	 * @return
+	 * @param request
+	 *            The request
 	 * @throws Exception
 	 */
 	@Override
-	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest req) throws Exception {
+	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest request) throws Exception {
 		// Allow only GET methods ?
-		if (req.getMethod() != GET) {
-			this.sendHttpResponse(context, req, FORBIDDEN_HTTP_RESPONSE);
+		if (request.getMethod() != GET) {
+			this.sendHttpResponse(context, request, FORBIDDEN_HTTP_RESPONSE);
 		}
 
 		// Prepare the URI ?
 		final String resourceURI;
-		if (req.getUri().startsWith(WEBSOCKET)) {
-			this.initiateWebSocket(context, req);
+		if (request.getUri().startsWith(WEBSOCKET)) {
+			this.initiateWebSocket(context, request);
 		} else {
-			if (req.getUri().equals("/")) {
+			if (request.getUri().equals("/")) {
 				resourceURI = "/index.html";
 			} else {
-				resourceURI = req.getUri();
+				resourceURI = request.getUri();
 			}
 
 			final HttpResponse res = DEFAULT_HTTP_RESPONSE;
@@ -107,10 +107,10 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				setContentLength(res, content.readableBytes());
 
 				res.setContent(content);
-				this.sendHttpResponse(context, req, res);
+				this.sendHttpResponse(context, request, res);
 
 			} catch (IOException e) {
-				this.sendHttpResponse(context, req, NOT_FOUND_HTTP_RESPONSE);
+				this.sendHttpResponse(context, request, NOT_FOUND_HTTP_RESPONSE);
 			}
 		}
 	}
@@ -119,10 +119,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	// Basic and internal construction mechanisms
 	//
 
-	/**
-	 * @param req
-	 * @return
-	 */
 	private String getWebSocketLocation(HttpRequest req) {
 		return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + WEBSOCKET;
 	}
@@ -131,11 +127,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	// Framework initialization
 	//
 
-	/**
-	 * @param context
-	 * @param req
-	 * @throws Exception
-	 */
 	private void initiateWebSocket(ChannelHandlerContext context, HttpRequest req) throws Exception {
 		final String location = this.getWebSocketLocation(req);
 		final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(location, null, false);
