@@ -42,8 +42,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
                 if (this.router.getIdentifier() === packet.getDestinationId()) {
                     this.router.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {
-                    var newPacket = packet.sendTo(this.router.getTable().getRoute(packet.getDestinationId()));
-                    this.router.getSource().getDownStreamDataFlow().handleData(newPacket);
+                    this.router.getSource().getDownStreamDataFlow().handleData(packet);
                 }
             });
 

@@ -18,17 +18,12 @@
 
 package org.wolfgang.contrail.codec.stringify;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import org.wolfgang.common.utils.Coercion;
-import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
-import org.wolfgang.contrail.data.ObjectRecord;
 
 /**
  * <code>Encoder</code> is capable to transform objects to payload based byte

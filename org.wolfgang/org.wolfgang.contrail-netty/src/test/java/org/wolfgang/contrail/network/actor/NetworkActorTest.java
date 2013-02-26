@@ -35,15 +35,14 @@ import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.pipeline.transducer.factory.BytesStringifierTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
-import org.wolfgang.contrail.component.pipeline.transducer.factory.BytesStringifierTransducerFactory;
 import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
-import org.wolfgang.contrail.network.route.RouteTable;
 import org.wolfgang.network.component.TargetSelectorComponent;
 import org.wolfgang.network.packet.Packet;
 
@@ -79,10 +78,6 @@ public class NetworkActorTest {
 	@Test
 	public void shouldReceiveResponseWithRemoteActorAndCorrectMessage() throws Exception {
 
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("1", "ws://localhost:8090/websocket/1");
-		routeTable.addRoute("2", "ws://localhost:8090/websocket/2");
-
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
@@ -97,19 +92,17 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent(routeTable, "1");
-		final Component compose1 = Components.compose(
-				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
-				objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
-		
+		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent("1");
+		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
+				coordinatorComponent1);
+
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent(routeTable, "2");
-		final Component compose2 = Components.compose(
-				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
-				objectFactory.createComponent(), routeComponent2, coordinatorComponent2);
+		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent("2");
+		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
+				coordinatorComponent2);
 
 		// Prepare server connection manager
 
@@ -156,13 +149,8 @@ public class NetworkActorTest {
 		server.close();
 	}
 
-
 	@Test
 	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Exception {
-
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("1", "ws://localhost:8091/websocket/1");
-		routeTable.addRoute("2", "ws://localhost:8091/websocket/2");
 
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
@@ -178,19 +166,17 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent(routeTable, "1");
-		final Component compose1 = Components.compose(
-				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
-				objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
-		
+		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent("1");
+		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
+				coordinatorComponent1);
+
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent(routeTable, "2");
-		final Component compose2 = Components.compose(
-				stringifyFactory.createComponent(), serializationFactory.createComponent(), 
-				objectFactory.createComponent(), routeComponent2, coordinatorComponent2);
+		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent("2");
+		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
+				coordinatorComponent2);
 
 		// Prepare server connection manager
 

@@ -21,7 +21,6 @@ package org.wolfgang.network.component.flow;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
-import org.wolfgang.contrail.network.route.RouteNotFoundException;
 import org.wolfgang.network.component.TargetSelectorComponent;
 import org.wolfgang.network.packet.Packet;
 
@@ -41,18 +40,16 @@ abstract class TargetSelectorDataFlow implements DataFlow<Packet> {
 
 	public void handleData(Packet data) throws DataFlowException {
 		try {
+			if (data.getSourceId() == null) {
+				data.setSourceId(this.router.getIdentifier());
+			}
+			
 			if (this.router.getIdentifier().equals(data.getDestinationId())) {
 				this.router.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
 			} else {
-				final Packet newData = data.sendTo(this.router.getRouteTable().getRoute(data.getDestinationId()));
-				if (newData.getSourceId() == null) {
-					newData.setSourceId(this.router.getIdentifier());
-				}
-				this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(newData);
+				this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
 			}
 		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowException(e);
-		} catch (RouteNotFoundException e) {
 			throw new DataFlowException(e);
 		}
 	}

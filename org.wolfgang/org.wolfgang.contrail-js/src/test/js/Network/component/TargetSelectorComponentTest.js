@@ -23,17 +23,11 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
         "use strict";
 
         jCC.scenario("Checking route component with packet in destination", function () {
-            var table, router, terminal, buffered, packet;
+            var router, terminal, buffered, packet;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    router = jNetwork.component.selector(table, "a");
+                    router = jNetwork.component.selector("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -58,25 +52,16 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/a", "End point is 'ws://localhost/a'");
                 });
         });
 
 
         jCC.scenario("Checking route component already routed in destination", function () {
-            var table, router, terminal, buffered, packet;
+            var router, terminal, buffered, packet;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    router = jNetwork.component.selector(table, "a");
+                    router = jNetwork.component.selector("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -101,24 +86,15 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/a", "End point is 'ws://localhost/a'");
                 });
         });
 
         jCC.scenario("Checking route component with packet in transit", function () {
-            var table, router, initial, buffered, packet;
+            var router, initial, buffered, packet;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    router = jNetwork.component.selector(table, "a");
+                    router = jNetwork.component.selector("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -143,24 +119,15 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
                 });
         });
 
         jCC.scenario("Checking route component with packet sent to a component", function () {
-            var table, router, initial, buffered, packet;
+            var router, initial, buffered, packet;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    router = jNetwork.component.selector(table, "a");
+                    router = jNetwork.component.selector("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -185,24 +152,15 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
                 });
         });
 
         jCC.scenario("Checking route component with packet sent to an intermediate component", function () {
-            var table, router, initial, buffered, packet;
+            var router, initial, buffered, packet;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    router = jNetwork.component.selector(table, "a");
+                    router = jNetwork.component.selector("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -227,37 +185,25 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(buffered.getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(buffered.getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
                 });
         });
 
         jCC.scenario("Checking route with indirect call and two collaborative component ecosystems", function () {
-            var table, routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter;
+            var routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter;
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table();
+                    routerA = jNetwork.component.selector("a");
                 }).
                 And(function () {
-                    table.addRoute("a", "ws://localhost/a");
-                }).
-                And(function () {
-                    table.addRoute("b", "ws://localhost/b");
-                }).
-                And(function () {
-                    routerA = jNetwork.component.selector(table, "a");
-                }).
-                And(function () {
-                    routerB = jNetwork.component.selector(table, "b");
+                    routerB = jNetwork.component.selector("b");
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();
                     dataFlowRouter.handleData = function (data) {
-                        if (data.getEndPoint() === table.getRoute("a")) {
+                        if (data.getDestinationId() === "a") {
                             initialA.getUpStreamDataFlow().handleData(data);
-                        } else if (data.getEndPoint() === table.getRoute("b")) {
+                        } else if (data.getDestinationId() === "b") {
                             initialB.getUpStreamDataFlow().handleData(data);
                         }
                     };
@@ -291,9 +237,6 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                 }).
                 And(function () {
                     jCC.equal(terminalB.getUpStreamDataFlow().getBuffered()[0].getData(), "Hello, World!", "Data is 'Hello, World!'");
-                }).
-                And(function () {
-                    jCC.equal(terminalB.getUpStreamDataFlow().getBuffered()[0].getEndPoint(), "ws://localhost/b", "End point is 'ws://localhost/b'");
                 });
         });
     });

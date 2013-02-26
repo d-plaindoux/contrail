@@ -22,28 +22,22 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/TargetSelectorCompone
     function (jObj, jContrail, routerUpStreamFlow, routerDownStreamFlow) {
         "use strict";
 
-        function TargetSelectorComponent(route, identifier) {
+        function TargetSelectorComponent(identifier) {
             jObj.bless(this, jContrail.component.pipeline());
 
             this.destinationId = identifier;
-            this.route = route;
             this.upStreamDataFlow = routerUpStreamFlow(this);
             this.downStreamDataFlow = routerDownStreamFlow(this);
         }
 
-        TargetSelectorComponent.init = jObj.constructor([ jObj.types.Named("RouteTable"), jObj.types.String ],
-            function (route, identifier) {
-                return new TargetSelectorComponent(route, identifier);
+        TargetSelectorComponent.init = jObj.constructor([ jObj.types.String ],
+            function (identifier) {
+                return new TargetSelectorComponent(identifier);
             });
 
         TargetSelectorComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
             function () {
                 return this.destinationId;
-            });
-
-        TargetSelectorComponent.prototype.getTable = jObj.method([ ], jObj.types.Named("RouteTable"),
-            function () {
-                return this.route;
             });
 
         TargetSelectorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),

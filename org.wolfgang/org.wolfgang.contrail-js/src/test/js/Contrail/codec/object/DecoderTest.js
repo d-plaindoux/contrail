@@ -42,8 +42,12 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC" ],
                     value = { jN:"A", jV:{ name:"name of A", object:{jN:"B", jV:{}}}};
                 }).
                 And(function () {
-                    B.init = jObj.jSonifier(function() { return new B(); }).withKeys();
-                    A.init = jObj.jSonifier(function(name, object) { return new A(name,object); }).withKeys("name", "object");
+                    B.init = jObj.jSonifier(function () {
+                        return new B();
+                    }).withKeys();
+                    A.init = jObj.jSonifier(function (name, object) {
+                        return new A(name, object);
+                    }).withKeys("name", "object");
 
                     decoder = Factory.object.decoder({ A:A.init, B:B.init});
                 }).

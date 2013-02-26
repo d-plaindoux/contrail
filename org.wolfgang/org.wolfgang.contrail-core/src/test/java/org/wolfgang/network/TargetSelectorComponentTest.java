@@ -28,7 +28,6 @@ import org.wolfgang.contrail.flow.BufferedDataFlow;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.route.RouteAlreadyExistException;
 import org.wolfgang.contrail.network.route.RouteNotFoundException;
-import org.wolfgang.contrail.network.route.RouteTable;
 import org.wolfgang.network.component.TargetSelectorComponent;
 import org.wolfgang.network.packet.Packet;
 
@@ -45,7 +44,7 @@ public class TargetSelectorComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
+		final TargetSelectorComponent routeComponent = givenATargetSelectorComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -54,8 +53,8 @@ public class TargetSelectorComponentTest {
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
 		final Packet nextData = bufferedDataFlow.getNextData();
+		TestCase.assertEquals("a", nextData.getSourceId());
 		TestCase.assertEquals("Hello, World!", nextData.getData());
-		TestCase.assertEquals("ws://localhost/b", nextData.getEndPoint());
 	}
 
 	@Test
@@ -63,7 +62,7 @@ public class TargetSelectorComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
+		final TargetSelectorComponent routeComponent = givenATargetSelectorComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -72,8 +71,8 @@ public class TargetSelectorComponentTest {
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
 		final Packet nextData = bufferedDataFlow.getNextData();
+		TestCase.assertEquals("a", nextData.getSourceId());
 		TestCase.assertEquals("Hello, World!", nextData.getData());
-		TestCase.assertEquals("ws://localhost/b", nextData.getEndPoint());
 	}
 
 	@Test
@@ -81,7 +80,7 @@ public class TargetSelectorComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
 
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
+		final TargetSelectorComponent routeComponent = givenATargetSelectorComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -90,15 +89,15 @@ public class TargetSelectorComponentTest {
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
 		final Packet nextData = bufferedDataFlow.getNextData();
+		TestCase.assertEquals("a", nextData.getSourceId());
 		TestCase.assertEquals("Hello, World!", nextData.getData());
-		TestCase.assertEquals("ws://localhost/a", nextData.getEndPoint());
 	}
 
 	@Test
 	public void shouldRetreivePacketAlreadyInDestination() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
+		final TargetSelectorComponent routeComponent = givenATargetSelectorComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -107,42 +106,31 @@ public class TargetSelectorComponentTest {
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
 		final Packet nextData = bufferedDataFlow.getNextData();
+		TestCase.assertEquals("a", nextData.getSourceId());
 		TestCase.assertEquals("Hello, World!", nextData.getData());
 		TestCase.assertNull(nextData.getEndPoint());
 	}
 
-	@Test(expected = DataFlowException.class)
+	@Test
 	public void shouldFailWhenDestinationisUndefined() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
+		final TargetSelectorComponent routeComponent = givenATargetSelectorComponent();
 
 		Components.compose(initial, routeComponent);
 
-		initial.getUpStreamDataFlow().handleData(new Packet("c", "Hello, World!"));
-	}
+		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!", null));
 
-	@Test(expected = RouteNotFoundException.class)
-	public void shouldFailWhenDestinationisUndefinedWithRealCause() throws Throwable {
-		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
-		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-		final TargetSelectorComponent routeComponent = givenARouteComponent();
-
-		Components.compose(initial, routeComponent);
-
-		try {
-			initial.getUpStreamDataFlow().handleData(new Packet("c", "Hello, World!"));
-		} catch (DataFlowException e) {
-			throw e.getCause();
-		}
+		final Packet nextData = bufferedDataFlow.getNextData();
+		TestCase.assertEquals("b", nextData.getSourceId());
+		TestCase.assertEquals("c", nextData.getDestinationId());
+		TestCase.assertEquals("Hello, World!", nextData.getData());
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	private TargetSelectorComponent givenARouteComponent() throws RouteAlreadyExistException {
-		final RouteTable routeTable = new RouteTable();
-		routeTable.addRoute("b", "ws://localhost/b");
-		final TargetSelectorComponent routeComponent = new TargetSelectorComponent(routeTable, "a");
+	private TargetSelectorComponent givenATargetSelectorComponent() throws RouteAlreadyExistException {
+		final TargetSelectorComponent routeComponent = new TargetSelectorComponent("a");
 		return routeComponent;
 	}
 

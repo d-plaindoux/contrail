@@ -32,10 +32,10 @@ define([ ],
                     var parameters = [];
 
                     keys.forEach(function (key) {
-                        if (structure[key] !== undefined) {
+                        if (structure[key]) {
                             parameters.push(toObject(structure[key]));
                         } else {
-                            parameters.push(undefined);
+                            parameters.push(structure[key]);
                         }
                     });
 
@@ -46,7 +46,7 @@ define([ ],
                     var structure = {};
 
                     keys.forEach(function (key) {
-                        if (object[key] !== undefined) {
+                        if (object[key]) {
                             structure[key] = toStructure(object[key]);
                         }
                     });

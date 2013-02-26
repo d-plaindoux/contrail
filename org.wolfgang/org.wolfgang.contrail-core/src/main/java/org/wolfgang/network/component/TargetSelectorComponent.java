@@ -21,7 +21,6 @@ package org.wolfgang.network.component;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.network.route.RouteTable;
 import org.wolfgang.network.component.flow.TargetSelectorDownStreamDataFlow;
 import org.wolfgang.network.component.flow.TargetSelectorUpStreamDataFlow;
 import org.wolfgang.network.packet.Packet;
@@ -34,13 +33,11 @@ import org.wolfgang.network.packet.Packet;
  */
 public class TargetSelectorComponent extends AbstractPipelineComponent<Packet, Packet, Packet, Packet> {
 
-	private final RouteTable routeTable;
 	private final String identifier;
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
 
-	public TargetSelectorComponent(RouteTable routeTable, String identifier) {
-		this.routeTable = routeTable;
+	public TargetSelectorComponent(String identifier) {
 		this.identifier = identifier;
 
 		this.upStreamDataFlow = new TargetSelectorUpStreamDataFlow(this);
@@ -49,10 +46,6 @@ public class TargetSelectorComponent extends AbstractPipelineComponent<Packet, P
 
 	public String getIdentifier() {
 		return identifier;
-	}
-
-	public RouteTable getRouteTable() {
-		return routeTable;
 	}
 
 	@Override
