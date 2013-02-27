@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/TargetSelectorComponent", "./route/RouteTable", "./packet/Packet" ],
+define("Network/jNetwork", [ "./component/DomainComponent", "./route/RouteTable", "./packet/Packet" ],
     function (selector, table, packet) {
         "use strict";
 

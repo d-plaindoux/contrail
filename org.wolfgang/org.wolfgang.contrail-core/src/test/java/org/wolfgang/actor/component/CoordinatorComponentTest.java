@@ -31,7 +31,7 @@ import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.data.ObjectRecord;
-import org.wolfgang.network.component.TargetSelectorComponent;
+import org.wolfgang.network.component.DomainComponent;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -72,7 +72,7 @@ public class CoordinatorComponentTest {
 		coordinator.actor("A").bindToObject(model);
 
 		final CoordinatorComponent coordinatorComponent = new CoordinatorComponent(coordinator);
-		final TargetSelectorComponent routeComponent = new TargetSelectorComponent("a");
+		final DomainComponent routeComponent = new DomainComponent("a");
 
 		Components.compose(routeComponent, coordinatorComponent);
 

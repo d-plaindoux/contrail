@@ -21,8 +21,8 @@ package org.wolfgang.network.component;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.network.component.flow.TargetSelectorDownStreamDataFlow;
-import org.wolfgang.network.component.flow.TargetSelectorUpStreamDataFlow;
+import org.wolfgang.network.component.flow.DomainDownStreamDataFlow;
+import org.wolfgang.network.component.flow.DomainUpStreamDataFlow;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -31,17 +31,17 @@ import org.wolfgang.network.packet.Packet;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TargetSelectorComponent extends AbstractPipelineComponent<Packet, Packet, Packet, Packet> {
+public class DomainComponent extends AbstractPipelineComponent<Packet, Packet, Packet, Packet> {
 
 	private final String identifier;
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
 
-	public TargetSelectorComponent(String identifier) {
+	public DomainComponent(String identifier) {
 		this.identifier = identifier;
 
-		this.upStreamDataFlow = new TargetSelectorUpStreamDataFlow(this);
-		this.downStreamDataFlow = new TargetSelectorDownStreamDataFlow(this);
+		this.upStreamDataFlow = new DomainUpStreamDataFlow(this);
+		this.downStreamDataFlow = new DomainDownStreamDataFlow(this);
 	}
 
 	public String getIdentifier() {

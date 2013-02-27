@@ -18,11 +18,11 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./flow/TargetSelectorComponentUpStreamDataFlow", "./flow/TargetSelectorComponentDownStreamDataFlow" ],
+define([ "Core/object/jObj", "Contrail/jContrail", "./flow/DomainComponentUpStreamDataFlow", "./flow/DomainComponentDownStreamDataFlow" ],
     function (jObj, jContrail, routerUpStreamFlow, routerDownStreamFlow) {
         "use strict";
 
-        function TargetSelectorComponent(identifier) {
+        function DomainComponent(identifier) {
             jObj.bless(this, jContrail.component.pipeline());
 
             this.destinationId = identifier;
@@ -30,25 +30,25 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/TargetSelectorCompone
             this.downStreamDataFlow = routerDownStreamFlow(this);
         }
 
-        TargetSelectorComponent.init = jObj.constructor([ jObj.types.String ],
+        DomainComponent.init = jObj.constructor([ jObj.types.String ],
             function (identifier) {
-                return new TargetSelectorComponent(identifier);
+                return new DomainComponent(identifier);
             });
 
-        TargetSelectorComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
+        DomainComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
             function () {
                 return this.destinationId;
             });
 
-        TargetSelectorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        DomainComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
             });
 
-        TargetSelectorComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        DomainComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.downStreamDataFlow;
             });
 
-        return TargetSelectorComponent.init;
+        return DomainComponent.init;
     });

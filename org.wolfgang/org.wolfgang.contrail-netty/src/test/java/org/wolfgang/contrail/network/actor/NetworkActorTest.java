@@ -45,7 +45,7 @@ import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
-import org.wolfgang.network.component.TargetSelectorComponent;
+import org.wolfgang.network.component.DomainComponent;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -96,7 +96,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent("1");
+		final DomainComponent routeComponent1 = new DomainComponent("1");
 		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
 				coordinatorComponent1);
 
@@ -104,7 +104,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent("2");
+		final DomainComponent routeComponent2 = new DomainComponent("2");
 		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
 				coordinatorComponent2);
 
@@ -172,7 +172,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final TargetSelectorComponent routeComponent1 = new TargetSelectorComponent("1");
+		final DomainComponent routeComponent1 = new DomainComponent("1");
 		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
 				coordinatorComponent1);
 
@@ -180,7 +180,7 @@ public class NetworkActorTest {
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final TargetSelectorComponent routeComponent2 = new TargetSelectorComponent("2");
+		final DomainComponent routeComponent2 = new DomainComponent("2");
 		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
 				coordinatorComponent2);
 

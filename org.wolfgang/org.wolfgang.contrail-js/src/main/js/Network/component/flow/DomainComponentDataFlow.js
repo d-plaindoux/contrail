@@ -22,29 +22,29 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        var TargetSelectorComponentDataFlow = function (router) {
+        var DomainComponentDataFlow = function (component) {
             jObj.bless(this, jContrail.flow.core());
 
-            this.router = router;
+            this.component = component;
         };
 
-        TargetSelectorComponentDataFlow.init = jObj.constructor([ jObj.types.Named("TargetSelectorComponent") ],
+        DomainComponentDataFlow.init = jObj.constructor([ jObj.types.Named("DomainComponent") ],
             function (router) {
-                return new TargetSelectorComponentDataFlow(router);
+                return new DomainComponentDataFlow(router);
             });
 
-        TargetSelectorComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
+        DomainComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
                 if (!packet.getSourceId()) {
-                    packet.setSourceId(this.router.getIdentifier());
+                    packet.setSourceId(this.component.getIdentifier());
                 }
 
-                if (this.router.getIdentifier() === packet.getDestinationId()) {
-                    this.router.getDestination().getUpStreamDataFlow().handleData(packet);
+                if (this.component.getIdentifier() === packet.getDestinationId()) {
+                    this.component.getDestination().getUpStreamDataFlow().handleData(packet);
                 } else {
-                    this.router.getSource().getDownStreamDataFlow().handleData(packet);
+                    this.component.getSource().getDownStreamDataFlow().handleData(packet);
                 }
             });
 
-        return TargetSelectorComponentDataFlow.init;
+        return DomainComponentDataFlow.init;
     });

@@ -20,7 +20,7 @@ package org.wolfgang.network.component.flow;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
-import org.wolfgang.network.component.TargetSelectorComponent;
+import org.wolfgang.network.component.DomainComponent;
 
 /**
  * <code>RouterUpStreamDataFlow</code>
@@ -28,19 +28,19 @@ import org.wolfgang.network.component.TargetSelectorComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TargetSelectorUpStreamDataFlow extends TargetSelectorDataFlow {
+public class DomainDownStreamDataFlow extends DomainDataFlow {
 
 	/**
-	 * @param router
+	 * @param component
 	 */
-	public TargetSelectorUpStreamDataFlow(TargetSelectorComponent router) {
-		super(router);
+	public DomainDownStreamDataFlow(DomainComponent component) {
+		super(component);
 	}
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
 		try {
-			this.router.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleClose();
+			this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleClose();
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowCloseException(e);
 		}

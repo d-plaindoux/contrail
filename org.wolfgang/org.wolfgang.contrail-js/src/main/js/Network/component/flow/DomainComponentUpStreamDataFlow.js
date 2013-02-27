@@ -18,23 +18,23 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./TargetSelectorComponentDataFlow" ],
+define([ "Core/object/jObj", "Contrail/jContrail", "./DomainComponentDataFlow" ],
     function (jObj, jContrail, routerFlow) {
         "use strict";
 
-        var TargetSelectorComponentUpStreamDataFlow = function (router) {
+        var DomainComponentUpStreamDataFlow = function (router) {
             jObj.bless(this, routerFlow(router));
         };
 
-        TargetSelectorComponentUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("TargetSelectorComponent") ],
+        DomainComponentUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("DomainComponent") ],
             function (router) {
-                return new TargetSelectorComponentUpStreamDataFlow(router);
+                return new DomainComponentUpStreamDataFlow(router);
             });
 
-        TargetSelectorComponentUpStreamDataFlow.prototype.handleClose = jObj.procedure([],
+        DomainComponentUpStreamDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.router.getDestination().getUpStreamDataFlow().handleClose();
+                this.component.getDestination().getUpStreamDataFlow().handleClose();
             });
 
-        return TargetSelectorComponentUpStreamDataFlow.init;
+        return DomainComponentUpStreamDataFlow.init;
     });

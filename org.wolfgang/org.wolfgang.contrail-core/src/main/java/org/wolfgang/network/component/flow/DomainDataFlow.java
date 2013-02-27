@@ -19,31 +19,38 @@
 package org.wolfgang.network.component.flow;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
-import org.wolfgang.network.component.TargetSelectorComponent;
+import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.exception.DataFlowException;
+import org.wolfgang.network.component.DomainComponent;
+import org.wolfgang.network.packet.Packet;
 
 /**
- * <code>RouterUpStreamDataFlow</code>
+ * <code>RouterDataFlow</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TargetSelectorDownStreamDataFlow extends TargetSelectorDataFlow {
+abstract class DomainDataFlow implements DataFlow<Packet> {
 
-	/**
-	 * @param router
-	 */
-	public TargetSelectorDownStreamDataFlow(TargetSelectorComponent router) {
-		super(router);
+	protected final DomainComponent component;
+
+	public DomainDataFlow(DomainComponent component) {
+		this.component = component;
 	}
 
-	@Override
-	public void handleClose() throws DataFlowCloseException {
+	public void handleData(Packet data) throws DataFlowException {
 		try {
-			this.router.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleClose();
+			if (data.getSourceId() == null) {
+				data.setSourceId(this.component.getIdentifier());
+			}
+			
+			if (this.component.getIdentifier().equals(data.getDestinationId())) {
+				this.component.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
+			} else {
+				this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
+			}
 		} catch (ComponentNotConnectedException e) {
-			throw new DataFlowCloseException(e);
+			throw new DataFlowException(e);
 		}
 	}
-
 }
