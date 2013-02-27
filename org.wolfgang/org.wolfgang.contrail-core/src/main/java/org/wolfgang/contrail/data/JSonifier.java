@@ -75,10 +75,10 @@ public class JSonifier {
 
 	private JSonifier(String identifier, String typeName, String[] names, Class<?>[] types) {
 		super();
-		this.typeName = typeName;
 		assert names.length == types.length;
 
 		this.identifier = identifier;
+		this.typeName = typeName;
 		this.names = names;
 		this.types = types;
 	}
@@ -122,7 +122,7 @@ public class JSonifier {
 
 	public Object toObject(ObjectRecord object, Decoder decoder) throws DataTransducerException {
 		try {
-			final Class<?> model = Class.forName(object.get(JSonName, String.class));
+			final Class<?> model = Class.forName(typeName);
 			final ObjectRecord objectRecord = object.get(JSonValue, ObjectRecord.class);
 			final Constructor<?> constructor = model.getConstructor(types);
 			final Object[] parameters = new Object[types.length];
