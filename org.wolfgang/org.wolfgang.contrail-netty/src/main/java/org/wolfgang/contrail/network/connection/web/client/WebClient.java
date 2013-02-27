@@ -70,7 +70,7 @@ public final class WebClient extends NIOClient {
 
 		private final URI uri;
 		private final AtomicReference<ChannelFuture> reference;
-		private final Promise<Boolean,Exception> connectionEstablished;
+		private final Promise<Boolean, Exception> connectionEstablished;
 
 		Instance(URI uri) {
 			super();
@@ -81,7 +81,7 @@ public final class WebClient extends NIOClient {
 
 		public Instance awaitEstablishment() throws WebClientConnectionException {
 			try {
-				this.connectionEstablished.getFuture().get(3, TimeUnit.SECONDS);
+				this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
 				return this;
 			} catch (InterruptedException e) {
 				throw new WebClientConnectionException(e);
@@ -102,11 +102,14 @@ public final class WebClient extends NIOClient {
 			final Map<String, String> customHeaders = new HashMap<String, String>();
 			final WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(uri, WebSocketVersion.V13, null, false, customHeaders);
 			final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, wsRequestHandler, connectionEstablished);
+
 			final ChannelFuture channelFuture = WebClient.this.connect(uri.getHost(), uri.getPort(), channelPipelineFactory);
+			channelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
 
-			handshaker.handshake(channelFuture.getChannel());
+			final ChannelFuture handshakedChannelFuture = handshaker.handshake(channelFuture.getChannel());
+			handshakedChannelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
 
-			this.reference.set(channelFuture);
+			this.reference.set(handshakedChannelFuture);
 
 			return this.reference.get();
 		}

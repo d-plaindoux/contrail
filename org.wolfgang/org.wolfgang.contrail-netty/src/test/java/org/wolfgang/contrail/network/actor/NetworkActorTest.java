@@ -20,6 +20,7 @@ package org.wolfgang.contrail.network.actor;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -152,8 +153,8 @@ public class NetworkActorTest {
 		server.close();
 	}
 
-	@Test
-	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Exception {
+	@Test(expected = ActorException.class)
+	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Throwable {
 
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
@@ -222,10 +223,14 @@ public class NetworkActorTest {
 		final PromiseResponse response = new PromiseResponse();
 		coordinator2.send("A", new Request("getWrongValue"), response);
 
-		TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
-
-		connect.close();
-		server.close();
+		try {
+			TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
+		} catch (ExecutionException e) {
+			throw e.getCause();
+		} finally {
+			connect.close();
+			server.close();
+		}
 	}
 
 }
