@@ -39,7 +39,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", "Hello, World!", "ws://localhost/a");
+                    packet = jNetwork.packet("b", "a", "Hello, World!");
                 }).
                 When(function () {
                     terminal.getDownStreamDataFlow().handleData(packet);
@@ -73,7 +73,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", "Hello, World!", "ws://localhost/a");
+                    packet = jNetwork.packet("b", "a", "Hello, World!");
                 }).
                 When(function () {
                     router.getUpStreamDataFlow().handleData(packet);
@@ -106,7 +106,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
                     jContrail.component.compose([ initial, router ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "b", "Hello, World!", "ws://localhost/a");
+                    packet = jNetwork.packet("b", "b", "Hello, World!");
                 }).
                 When(function () {
                     initial.getUpStreamDataFlow().handleData(packet);

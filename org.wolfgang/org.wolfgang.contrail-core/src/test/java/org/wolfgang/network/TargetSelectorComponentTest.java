@@ -82,7 +82,7 @@ public class TargetSelectorComponentTest {
 
 		Components.compose(routeComponent, terminal);
 
-		routeComponent.getUpStreamDataFlow().handleData(new Packet("a", "Hello, World!").sendTo("ws://localhost/a"));
+		routeComponent.getUpStreamDataFlow().handleData(new Packet("a", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -117,7 +117,7 @@ public class TargetSelectorComponentTest {
 
 		Components.compose(initial, routeComponent);
 
-		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!", null));
+		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
 
 		final Packet nextData = bufferedDataFlow.getNextData();
 		TestCase.assertEquals("b", nextData.getSourceId());

@@ -80,7 +80,7 @@ public class CoordinatorComponentTest {
 		final String responseId = coordinatorComponent.createResponseId(response);
 
 		final ObjectRecord data = new ObjectRecord().set("identifier", "A").set("request", new Request("getValue")).set("response", responseId);
-		final Packet packet = new Packet("a", "a", data, "ws://localhost:8090/a");
+		final Packet packet = new Packet("a", "a", data);
 
 		routeComponent.getUpStreamDataFlow().handleData(packet);
 

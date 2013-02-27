@@ -67,7 +67,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"), "ws://localhost/a");
+                    packet = jNetwork.packet("b", "a", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
                 }).
                 When(jCC.Nothing).
                 Then(function () {

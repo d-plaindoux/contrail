@@ -18,37 +18,37 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./flow/domain/DomainComponentUpStreamDataFlow", "./flow/domain/DomainComponentDownStreamDataFlow" ],
-    function (jObj, jContrail, domainUpStreamFlow, domainDownStreamFlow) {
+define([ "Core/object/jObj", "Contrail/jContrail" ],
+    function (jObj, jContrail) {
         "use strict";
 
-        function DomainComponent(identifier) {
+        function InterfaceComponent(identifier) {
             jObj.bless(this, jContrail.component.pipeline());
 
             this.destinationId = identifier;
-            this.upStreamDataFlow = domainUpStreamFlow(this);
-            this.downStreamDataFlow = domainDownStreamFlow(this);
+            this.upStreamDataFlow = null;
+            this.downStreamDataFlow = null;
         }
 
-        DomainComponent.init = jObj.constructor([ jObj.types.String ],
+        InterfaceComponent.init = jObj.constructor([ jObj.types.String ],
             function (identifier) {
-                return new DomainComponent(identifier);
+                return new InterfaceComponent(identifier);
             });
 
-        DomainComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
+        InterfaceComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
             function () {
                 return this.destinationId;
             });
 
-        DomainComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        InterfaceComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
             });
 
-        DomainComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+        InterfaceComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.downStreamDataFlow;
             });
 
-        return DomainComponent.init;
+        return InterfaceComponent.init;
     });

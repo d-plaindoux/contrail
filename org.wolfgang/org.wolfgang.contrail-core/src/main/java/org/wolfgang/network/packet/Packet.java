@@ -34,19 +34,18 @@ public class Packet {
 	private String endPoint;
 
 	public static JSonifier jSonifable() {
-		return JSonifier.nameAndType("Packet", Packet.class.getName()).withKeys("sourceId", "destinationId", "data", "endPoint").withTypes(String.class, String.class, Object.class, String.class);
+		return JSonifier.nameAndType("Packet", Packet.class.getName()).withKeys("sourceId", "destinationId", "data").withTypes(String.class, String.class, Object.class);
 	}
 
-	public Packet(String sourceId, String destinationId, Object data, String endPoint) {
+	public Packet(String sourceId, String destinationId, Object data) {
 		super();
 		this.sourceId = sourceId;
 		this.destinationId = destinationId;
 		this.data = data;
-		this.endPoint = endPoint;
 	}
 
 	public Packet(String destinationId, Object data) {
-		this(null, destinationId, data, null);
+		this(null, destinationId, data);
 	}
 
 	public String getSourceId() {
@@ -59,10 +58,6 @@ public class Packet {
 
 	public String getEndPoint() {
 		return endPoint;
-	}
-
-	public Packet sendTo(String endPoint) {
-		return new Packet(this.sourceId, this.destinationId, this.data, endPoint);
 	}
 
 	public String getDestinationId() {

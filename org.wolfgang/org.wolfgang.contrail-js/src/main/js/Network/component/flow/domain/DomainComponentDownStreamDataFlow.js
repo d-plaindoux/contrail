@@ -18,23 +18,23 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./DomainComponentDataFlow" ],
+define([ "../../../../Core/object/jObj", "Contrail/jContrail", "./DomainComponentDataFlow" ],
     function (jObj, jContrail, routerFlow) {
         "use strict";
 
-        var DomainComponentUpStreamDataFlow = function (router) {
+        var DomainDownStreamDataFlow = function (router) {
             jObj.bless(this, routerFlow(router));
         };
 
-        DomainComponentUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("DomainComponent") ],
+        DomainDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("DomainComponent") ],
             function (router) {
-                return new DomainComponentUpStreamDataFlow(router);
+                return new DomainDownStreamDataFlow(router);
             });
 
-        DomainComponentUpStreamDataFlow.prototype.handleClose = jObj.procedure([],
+        DomainDownStreamDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.component.getDestination().getUpStreamDataFlow().handleClose();
+                this.component.getSource().getDownStreamDataFlow().handleClose();
             });
 
-        return DomainComponentUpStreamDataFlow.init;
+        return DomainDownStreamDataFlow.init;
     });

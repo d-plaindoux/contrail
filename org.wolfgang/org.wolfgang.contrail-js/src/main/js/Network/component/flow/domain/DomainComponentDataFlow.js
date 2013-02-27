@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail" ],
+define([ "../../../../Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 

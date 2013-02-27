@@ -30,7 +30,7 @@ define(["Core/object/jObj", "../../event/Event", "Network/jNetwork"],
         }
 
         function sendPacket(self, data) {
-            var packet = jNetwork.packet(null, self.location, data, null);
+            var packet = jNetwork.packet(null, self.location, data);
             self.component.getDownStreamDataFlow().handleData(packet);
         }
 

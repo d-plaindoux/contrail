@@ -22,18 +22,17 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function Packet(sourceId, destinationId, data, endpoint) {
+        function Packet(sourceId, destinationId, data) {
             jObj.bless(this);
 
             this.sourceId = sourceId;
             this.destinationId = destinationId;
             this.data = data;
-            this.endPoint = endpoint;
         }
 
-        Packet.init = jObj.constructor([ jObj.types.Nullable(jObj.types.String), jObj.types.String, jObj.types.Any , jObj.types.Nullable(jObj.types.String) ],
-            function (sourceId, destinationId, data, endPoint) {
-                return new Packet(sourceId, destinationId, data, endPoint);
+        Packet.init = jObj.constructor([ jObj.types.Nullable(jObj.types.String), jObj.types.String, jObj.types.Any ],
+            function (sourceId, destinationId, data) {
+                return new Packet(sourceId, destinationId, data);
             });
 
         Packet.prototype.setSourceId = jObj.procedure([jObj.types.String],
@@ -56,15 +55,5 @@ define([ "Core/object/jObj" ],
                 return this.data;
             });
 
-        Packet.prototype.getEndPoint = jObj.method([], jObj.types.String,
-            function () {
-                return this.endPoint || jObj.throwError(jObj.exception("L.packet.endpoint.not.defined"));
-            });
-
-        Packet.prototype.sendTo = jObj.method([ jObj.types.String ], jObj.types.Named("Packet"),
-            function (endPoint) {
-                return Packet.init(this.sourceId, this.destinationId, this.data, endPoint);
-            });
-
-        return jObj.jSonifable(Packet.init).nameAndType("Packet", "Packet").withKeys("sourceId", "destinationId", "data", "endPoint");
+        return jObj.jSonifable(Packet.init).nameAndType("Packet", "Packet").withKeys("sourceId", "destinationId", "data");
     });
