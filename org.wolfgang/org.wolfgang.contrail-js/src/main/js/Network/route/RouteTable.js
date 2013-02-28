@@ -18,18 +18,19 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "./ClientBuilder" ],
-    function (jObj, clientBuilder) {
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        function RouteTable() {
+        function RouteTable(builder) {
             jObj.bless(this);
+            this.builder = builder;
             this.routes = {};
         }
 
-        RouteTable.init = jObj.constructor([],
-            function () {
-                return new RouteTable();
+        RouteTable.init = jObj.constructor([ jObj.types.Function ],
+            function (builder) {
+                return new RouteTable(builder);
             });
 
         RouteTable.prototype.addRoute = jObj.procedure([ jObj.types.String, jObj.types.String ],
@@ -37,7 +38,7 @@ define([ "Core/object/jObj", "./ClientBuilder" ],
                 if (this.routes.hasOwnProperty(name)) {
                     jObj.throwError(jObj.exception("L.route.entry.already.defined"));
                 } else {
-                    this.routes[name] = clientBuilder(endpoint);
+                    this.routes[name] = this.builder(endpoint);
                 }
             });
 

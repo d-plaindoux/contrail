@@ -18,22 +18,27 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/DomainComponent", "./component/RouterComponent", "./component/ClientComponent", "./route/RouteTable", "./packet/Packet", "./clientBuilder/Builders" ],
-    function (domainComponent, routerComponent, clientComponent, table, packet, builders) {
+define([ "Core/object/jObj" ],
+    function (jObj) {
         "use strict";
 
-        var jNetwork = {};
-        jNetwork.component = {};
+        function ClientBuilder(endPoint) {
+            jObj.bless(this);
 
-        jNetwork.component.domain = domainComponent;
-        jNetwork.component.client = clientComponent;
-        jNetwork.component.router = routerComponent;
+            this.endPoint = endPoint;
+        }
 
-        jNetwork.table = table;
-        jNetwork.packet = packet;
+        ClientBuilder.init = jObj.constructor([ jObj.types.String ],
+            function (endPoint) {
+                return new ClientBuilder(endPoint);
+            });
 
-        jNetwork.builder = {};
-        jNetwork.builder = builders;
+        ClientBuilder.prototype.getEndPoint = jObj.method([], jObj.types.String,
+            function () {
+                return this.endPoint;
+            });
 
-        return jNetwork;
+        ClientBuilder.prototype.activate = jObj.method([ jObj.types.String ], jObj.types.Named("Component"));
+
+        return ClientBuilder.init;
     });

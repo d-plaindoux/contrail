@@ -18,22 +18,13 @@
 
 /*global define*/
 
-define("Network/jNetwork", [ "./component/DomainComponent", "./component/RouterComponent", "./component/ClientComponent", "./route/RouteTable", "./packet/Packet", "./clientBuilder/Builders" ],
-    function (domainComponent, routerComponent, clientComponent, table, packet, builders) {
+define([ "./StandardClientBuilder" ],
+    function (standardBuilder) {
         "use strict";
 
-        var jNetwork = {};
-        jNetwork.component = {};
+        var jBuilders = {};
 
-        jNetwork.component.domain = domainComponent;
-        jNetwork.component.client = clientComponent;
-        jNetwork.component.router = routerComponent;
+        jBuilders.standard = standardBuilder;
 
-        jNetwork.table = table;
-        jNetwork.packet = packet;
-
-        jNetwork.builder = {};
-        jNetwork.builder = builders;
-
-        return jNetwork;
+        return jBuilders;
     });

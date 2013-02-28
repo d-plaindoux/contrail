@@ -18,27 +18,20 @@
 
 /*global define*/
 
-define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "../component/ClientComponent"],
-    function (require, jObj, jSocket, jContrail, interfaceComponent) {
+define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "./ClientBuilder", "../component/ClientComponent"],
+    function (require, jObj, jSocket, jContrail, clientBuilder, clientComponent) {
         "use strict";
 
-        function ClientBuilder(endPoint) {
-            jObj.bless(this);
-
-            this.endPoint = endPoint;
+        function StandardClientBuilder(endPoint) {
+            jObj.bless(this, clientBuilder(endPoint));
         }
 
-        ClientBuilder.init = jObj.constructor([ jObj.types.String ],
+        StandardClientBuilder.init = jObj.constructor([ jObj.types.String ],
             function (endPoint) {
-                return new ClientBuilder(endPoint);
+                return new StandardClientBuilder(endPoint);
             });
 
-        ClientBuilder.prototype.getEndPoint = jObj.method([], jObj.types.String,
-            function () {
-                return this.endPoint;
-            });
-
-        ClientBuilder.prototype.activate = jObj.method([ jObj.types.String ], jObj.types.Named("Component"),
+        StandardClientBuilder.prototype.activate = jObj.method([ jObj.types.String ], jObj.types.Named("Component"),
             function (destinationId) {
                 var socket, component, jSonifiers;
 
@@ -51,7 +44,7 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                     jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),
                     jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                     jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                    interfaceComponent(this.endPoint).addDestinationId(destinationId)
+                    clientComponent(this.endPoint).addDestinationId(destinationId)
                 ]);
 
                 socket = jSocket.client(this.endPoint, component.getUpStreamDataFlow());
@@ -59,5 +52,5 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                 return component;
             });
 
-        return ClientBuilder.init;
+        return StandardClientBuilder.init;
     });
