@@ -50,9 +50,9 @@ define("Core/object/jObj", [ "./jModel", "./jType", "./jSonifier"],
             var instance, parameters = arguments;
 
             if (parameters.length === 0) {
-                throw { message:"L.bless.requires.at.least.one.object"};
+                jModel.throwError({ message:"L.bless.requires.at.least.one.object"});
             } else if (!jType.ofType(parameters[0], jType.types.Object)) {
-                throw { message:"L.bless.applied.to.object.only"};
+                jModel.throwError({ message:"L.bless.applied.to.object.only"});
             }
 
             instance = parameters[0];

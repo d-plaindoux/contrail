@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail", "./flow/router/RouterComponentDownStreamDataFlow" ],
-    function (jObj, jContrail, routerDownStream) {
+define([ "Core/object/jObj", "Contrail/jContrail", "./ClientComponent", "./flow/router/RouterComponentDownStreamDataFlow" ],
+    function (jObj, jContrail, clientComponent, routerDownStream) {
         "use strict";
 
         function RouterComponent(table) {
@@ -46,9 +46,29 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/router/RouterComponen
                 return this.table;
             });
 
-        RouterComponent.prototype.getActiveRoutes = jObj.method([], jObj.types.ArrayOf("InterfaceComponent"),
-            function () {
-                return this.activeRoutes;
+        RouterComponent.prototype.addActiveRoute = jObj.method([ jObj.types.Named("SourceComponent"), jObj.types.Nullable(jObj.types.String) ], jObj.types.Named("ClientComponent"),
+            function (source, endPoint) {
+                var client = clientComponent(endPoint);
+                jContrail.component.compose([ source, client, this ]);
+                this.activeRoutes.push(client);
+                return client;
+            });
+
+        RouterComponent.prototype.getActiveRoute = jObj.method([ jObj.types.String, jObj.types.Nullable(jObj.types.String) ], jObj.types.Nullable(jObj.types.Named("ClientComponent")),
+            function (destinationId, endPoint) {
+                var activeRoute = null;
+
+                this.activeRoutes.forEach(function (route) {
+                    if (activeRoute === null) {
+                        if (route.acceptDestinationId(destinationId)) {
+                            activeRoute = route;
+                        } else if (endPoint && route.getEndPoint() === endPoint) {
+                            activeRoute = route;
+                        }
+                    }
+                });
+
+                return activeRoute;
             });
 
         return RouterComponent.init;

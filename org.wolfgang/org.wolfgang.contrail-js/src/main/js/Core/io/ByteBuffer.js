@@ -34,7 +34,7 @@ define("Core/io/ByteBuffer", [ "Core/object/jObj" ],
 
         ByteBuffer.prototype.write = jObj.procedure([jObj.types.Array], function (bytes) {
             if (this.closed) {
-                throw jObj.exception("L.byte.buffer.closed");
+                jObj.throwError(jObj.exception("L.byte.buffer.closed"));
             } else {
                 this.buffer = this.buffer.concat(bytes);
             }

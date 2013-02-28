@@ -51,7 +51,7 @@ define([ "require", "Core/object/jObj" ],
                 if (this.destinationLink !== null) {
                     result = this.destinationLink.getDestination();
                 } else {
-                    throw jObj.exception("L.destination.not.connected");
+                    jObj.throwError(jObj.exception("L.destination.not.connected"));
                 }
 
                 return result;

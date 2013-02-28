@@ -69,7 +69,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
         PayloadDecoder.prototype.finish = jObj.method([], jObj.types.Array,
             function () {
                 if (this.buffer.length > 0) {
-                    throw jObj.exception("L.array.must.be.empty");
+                    jObj.throwError(jObj.exception("L.array.must.be.empty"));
                 } else {
                     return [];
                 }

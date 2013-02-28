@@ -18,12 +18,13 @@
 
 /*global define*/
 
-define([ "./StandardClientBuilder" ],
-    function (standardBuilder) {
+define([ "./ClientBuilder", "./StandardClientBuilder" ],
+    function (clientBuilder, standardBuilder) {
         "use strict";
 
         var jBuilders = {};
 
+        jBuilders.core = clientBuilder;
         jBuilders.standard = standardBuilder;
 
         return jBuilders;

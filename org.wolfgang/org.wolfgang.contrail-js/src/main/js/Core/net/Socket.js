@@ -60,9 +60,9 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
             function () {
                 if (!this.client.isOpen()) {
                     if (this.client.isClosed()) {
-                        throw jObj.exception("L.web.socket.closed");
+                        jObj.throwError(jObj.exception("L.web.socket.closed"));
                     } else {
-                        throw jObj.exception("L.web.socket.not.established");
+                        jObj.throwError(jObj.exception("L.web.socket.not.established"));
                     }
                 }
             });

@@ -24,6 +24,7 @@ define([ "Core/object/jObj" ],
 
         function RouteTable(builder) {
             jObj.bless(this);
+
             this.builder = builder;
             this.routes = {};
         }
@@ -35,7 +36,7 @@ define([ "Core/object/jObj" ],
 
         RouteTable.prototype.addRoute = jObj.procedure([ jObj.types.String, jObj.types.String ],
             function (name, endpoint) {
-                if (this.routes.hasOwnProperty(name)) {
+                if (this.hasRoute(name)) {
                     jObj.throwError(jObj.exception("L.route.entry.already.defined"));
                 } else {
                     this.routes[name] = this.builder(endpoint);
@@ -44,7 +45,7 @@ define([ "Core/object/jObj" ],
 
         RouteTable.prototype.hasRoute = jObj.method([ jObj.types.String ], jObj.types.Boolean,
             function (name) {
-                return this.routes[name] ? true : false;
+                return this.routes.hasOwnProperty(name);
             });
 
         RouteTable.prototype.getRoute = jObj.method([ jObj.types.String ], jObj.types.Named("ClientBuilder"),

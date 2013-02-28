@@ -36,26 +36,18 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
 
         RouterDownStreamComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
-                var endPoint, activeRoute;
+                var builder = null, endPoint = null, activeRoute = null;
 
                 if (this.component.getRouteTable().hasRoute(packet.getDestinationId())) {
-                    endPoint = this.component.getRouteTable().getRoute(packet.getDestinationId());
+                    builder = this.component.getRouteTable().getRoute(packet.getDestinationId());
+                    endPoint = builder.getEndPoint();
                 }
 
-                this.component.getActiveRoutes().forEach(function (route) {
-                    if (!activeRoute) {
-                        if (route.acceptDestinationId(packet.getDestinationId())) {
-                            activeRoute = route;
-                        } else if (endPoint && route.getEndPoint() === endPoint) {
-                            activeRoute = route;
-                        }
-                    }
-                });
+                activeRoute = this.component.getActiveRoute(packet.getDestinationId(), endPoint);
 
                 if (!activeRoute) {
-                    if (endPoint) {
-                        activeRoute = endPoint.activate(packet.getDestinationId());
-                        jContrail.component.compose(activeRoute, this.component);
+                    if (builder) {
+                        activeRoute = this.component.addActiveRoute(builder.activate(), endPoint);
                     } else {
                         jObj.throwError(jObj.exception("L.no.route.to.destination"));
                     }

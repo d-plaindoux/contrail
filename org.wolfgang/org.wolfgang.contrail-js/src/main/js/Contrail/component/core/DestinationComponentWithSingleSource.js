@@ -51,7 +51,7 @@ define([ "require", "Core/object/jObj" ],
                 if (this.sourceLink !== null) {
                     result = this.sourceLink.getSource();
                 } else {
-                    throw jObj.exception("L.source.not.connected");
+                    jObj.throwError(jObj.exception("L.source.not.connected"));
                 }
 
                 return result;

@@ -36,7 +36,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
         ClientComponentDownStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
                 this.component.addDestinationId(packet.getDestinationId());
-                this.component.getSource.getDownStreamDataFlow().handleData(packet);
+                this.component.getSource().getDownStreamDataFlow().handleData(packet);
             });
 
         ClientComponentDownStreamDataFlow.prototype.handleClose = jObj.procedure([],

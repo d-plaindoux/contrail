@@ -38,7 +38,7 @@ define([ "Core/object/jObj" ],
                 return this.endPoint;
             });
 
-        ClientBuilder.prototype.activate = jObj.method([ jObj.types.String ], jObj.types.Named("Component"));
+        ClientBuilder.prototype.activate = jObj.method([ ], jObj.types.Named("SourceComponent"));
 
         return ClientBuilder.init;
     });

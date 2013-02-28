@@ -96,7 +96,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         break;
 
                     default:
-                        throw jObj.exception("L.data.not.deserializable");
+                        jObj.throwError(jObj.exception("L.data.not.deserializable"));
                 }
 
                 return { value:result, offset:size };

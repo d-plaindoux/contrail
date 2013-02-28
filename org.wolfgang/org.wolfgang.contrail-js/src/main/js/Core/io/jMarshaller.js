@@ -67,7 +67,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
         jMarshaller.bytesToNumberWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
                 if (bytes.length < offset + jMarshaller.sizeOf.Number) {
-                    throw jObj.exception("L.array.out.of.bound");
+                    jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
                 return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | bytes[offset + 3];
@@ -96,7 +96,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
         jMarshaller.bytesToShortNumberWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
                 if (bytes.length < offset + jMarshaller.sizeOf.ShortNumber) {
-                    throw jObj.exception("L.array.out.of.bound");
+                    jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
                 return bytes[offset] << 8 | bytes[offset + 1];
@@ -124,7 +124,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
         jMarshaller.bytesToCharWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
                 if (bytes.length < offset + jMarshaller.sizeOf.Character) {
-                    throw jObj.exception("L.array.out.of.bound");
+                    jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
                 return bytes[offset] << 8 | bytes[offset + 1];
@@ -153,7 +153,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 var str = "", i;
 
                 if (bytes.length < offset + length * jMarshaller.sizeOf.Character) {
-                    throw jObj.exception("L.array.out.of.bound");
+                    jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
                 for (i = 0; i < length * jMarshaller.sizeOf.Character; i += 2) {

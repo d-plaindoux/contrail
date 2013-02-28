@@ -68,7 +68,7 @@ define(
 
                 if (components.length === 0) {
 
-                    throw jObj.exception("L.no.components.available");
+                    jObj.throwError(jObj.exception("L.no.components.available"));
 
                 } else if (components.length === 1) {
 
@@ -95,7 +95,7 @@ define(
                         result = componentComposition(linkComponents(components));
 
                     } else {
-                        throw jObj.exception("L.not.compatible.components");
+                        jObj.throwError(jObj.exception("L.not.compatible.components"));
                     }
                 }
 

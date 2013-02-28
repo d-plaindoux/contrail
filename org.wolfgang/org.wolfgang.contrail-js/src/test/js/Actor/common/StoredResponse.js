@@ -56,9 +56,11 @@ define([ "Core/object/jObj", "Actor/jActor" ],
             function () {
                 switch (this.status) {
                     case status.UNSET:
-                        throw jObj.exception("L.stored.response.not.yet.setup");
+                        jObj.throwError(jObj.exception("L.stored.response.not.yet.setup"));
+                        break;
                     case status.FAILURE:
-                        throw this.result;
+                        jObj.throwError(this.result);
+                        break;
                     case status.SUCCESS:
                         return this.result;
                 }

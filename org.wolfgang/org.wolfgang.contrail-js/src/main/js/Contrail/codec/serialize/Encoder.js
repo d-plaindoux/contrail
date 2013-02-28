@@ -76,7 +76,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         result = result.concat(this.encode(value[keys[i]]));
                     }
                 } else {
-                    throw jObj.exception("L.data.not.serializable");
+                    jObj.throwError(jObj.exception("L.data.not.serializable"));
                 }
 
                 return [type].concat(result);

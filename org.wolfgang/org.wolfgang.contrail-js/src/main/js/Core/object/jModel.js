@@ -79,7 +79,7 @@ define([ "./jType" ],
             } else {
                 result = function () {
                     if (arguments.length > profil.length) {
-                        throw jModel.exception("L.profil.arguments.length.error", { method:constructor, expect:profil.length, actual:arguments.length});
+                        jModel.throwError(jModel.exception("L.profil.arguments.length.error", { method:constructor, expect:profil.length, actual:arguments.length}));
                     } else {
                         var index;
 
@@ -112,7 +112,7 @@ define([ "./jType" ],
         };
 
         jModel.abstractDefinition = function () {
-            throw jModel.exception("L.abstract.method", { arity:arguments.length});
+            jModel.throwError(jModel.exception("L.abstract.method", { arity:arguments.length}));
         };
 
         /**
@@ -128,12 +128,12 @@ define([ "./jType" ],
 
             if (!jModel.specificationIsEnable) {
                 result = method || function () {
-                    throw jModel.exception("L.abstract.method", { method:method, arity:arguments.length});
+                    jModel.throwError(jModel.exception("L.abstract.method", { method:method, arity:arguments.length}));
                 };
             } else {
                 result = function () {
                     if (arguments.length > profil.length) {
-                        throw jModel.exception("L.profile.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length});
+                        jModel.throwError(jModel.exception("L.profile.arguments.length.error", { method:method, expect:profil.length, actual:arguments.length}));
                     } else {
                         var index;
 

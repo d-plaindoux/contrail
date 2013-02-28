@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "./ClientBuilder", "../component/ClientComponent"],
-    function (require, jObj, jSocket, jContrail, clientBuilder, clientComponent) {
+define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "./ClientBuilder" ],
+    function (require, jObj, jSocket, jContrail, clientBuilder) {
         "use strict";
 
         function StandardClientBuilder(endPoint) {
@@ -31,8 +31,8 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                 return new StandardClientBuilder(endPoint);
             });
 
-        StandardClientBuilder.prototype.activate = jObj.method([ jObj.types.String ], jObj.types.Named("Component"),
-            function (destinationId) {
+        StandardClientBuilder.prototype.activate = jObj.method([ ], jObj.types.Named("SourceComponent"),
+            function () {
                 var socket, component, jSonifiers;
 
                 jSonifiers = [ require("Network/jNetwork").packet, require("Network/jActor").event.request ];
@@ -43,8 +43,7 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                     })),
                     jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),
                     jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
-                    jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                    clientComponent(this.endPoint).addDestinationId(destinationId)
+                    jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers))
                 ]);
 
                 socket = jSocket.client(this.endPoint, component.getUpStreamDataFlow());

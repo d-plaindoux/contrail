@@ -32,7 +32,7 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
             this.identifiers = [];
         }
 
-        ClientComponent.init = jObj.constructor([ jObj.types.String ],
+        ClientComponent.init = jObj.constructor([ jObj.types.Nullable(jObj.types.String) ],
             function (identifier) {
                 return new ClientComponent(identifier);
             });
@@ -43,7 +43,7 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
                 return this;
             });
 
-        ClientComponent.prototype.getEndPoint = jObj.method([], jObj.types.String,
+        ClientComponent.prototype.getEndPoint = jObj.method([], jObj.types.Nullable(jObj.types.String),
             function () {
                 return this.endPoint;
             });
