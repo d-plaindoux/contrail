@@ -54,6 +54,23 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./ClientComponent", "./flow/
                 return client;
             });
 
+        RouterComponent.prototype.hasActiveRoute = jObj.method([ jObj.types.String, jObj.types.Nullable(jObj.types.String) ], jObj.types.Boolean,
+            function (destinationId, endPoint) {
+                var activeRoute = false;
+
+                this.activeRoutes.forEach(function (route) {
+                    if (!activeRoute) {
+                        if (route.acceptDestinationId(destinationId)) {
+                            activeRoute = true;
+                        } else if (endPoint && route.getEndPoint() === endPoint) {
+                            activeRoute = true;
+                        }
+                    }
+                });
+
+                return activeRoute;
+            });
+
         RouterComponent.prototype.getActiveRoute = jObj.method([ jObj.types.String, jObj.types.Nullable(jObj.types.String) ], jObj.types.Nullable(jObj.types.Named("ClientComponent")),
             function (destinationId, endPoint) {
                 var activeRoute = null;
