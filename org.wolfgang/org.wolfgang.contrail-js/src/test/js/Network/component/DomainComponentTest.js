@@ -27,7 +27,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -61,7 +61,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -94,7 +94,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -127,7 +127,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -160,7 +160,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     buffered = jFlow.buffered();
@@ -193,10 +193,10 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    routerA = jNetwork.component.selector("a");
+                    routerA = jNetwork.component.domain("a");
                 }).
                 And(function () {
-                    routerB = jNetwork.component.selector("b");
+                    routerB = jNetwork.component.domain("b");
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();

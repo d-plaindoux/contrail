@@ -33,7 +33,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table.addRoute("a", "ws://localhost/a");
                 }).
                 Then(function () {
-                    jCC.equal(table.getRoute("a"), "ws://localhost/a");
+                    jCC.equal(table.getRoute("a").getEndPoint(), "ws://localhost/a");
                 });
         });
 
@@ -84,10 +84,10 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table.populate(JSON.parse(configuration));
                 }).
                 Then(function () {
-                    jCC.equal(table.getRoute("a"), "ws://localhost/a");
+                    jCC.equal(table.getRoute("a").getEndPoint(), "ws://localhost/a");
                 }).
                 And(function () {
-                    jCC.equal(table.getRoute("b"), "ws://localhost/b");
+                    jCC.equal(table.getRoute("b").getEndPoint(), "ws://localhost/b");
                 });
         });
     });

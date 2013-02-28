@@ -18,29 +18,28 @@
 
 /*global define*/
 
-define("Contrail/codec/jCodec",
-    [
-        "./basic/CoDecBasicLibrary",
-        "./identity/CoDecIdentityLibrary",
-        "./payload/CoDecPayloadLibrary",
-        "./json/CoDecJSonLibrary",
-        "./serialize/CoDecSerializeLibrary",
-        "./stringify/CoDecStringifyLibrary",
-        "./object/CoDecObjectLibrary"
-    ],
-    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory, StringifyFactory, ObjectFactory) {
+define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
+    function (require, jObj, jMarshaller) {
         "use strict";
 
-        var Factory = {};
+        function StringifyEncoder() {
+            jObj.bless(this, require("Contrail/codec/jCodec").core.encoder());
+        }
 
-        Factory.core = BasicFactory;
-        Factory.identity = IdentityFactory;
-        Factory.payload = PayloadFactory;
-        Factory.json = JSonFactory;
-        Factory.serialize = SerializeFactory;
-        Factory.stringify = StringifyFactory;
-        Factory.object = ObjectFactory;
+        StringifyEncoder.init = jObj.constructor([],
+            function () {
+                return new StringifyEncoder();
+            });
 
-        return Factory;
+        StringifyEncoder.prototype.transform = jObj.method([jObj.types.Array ], jObj.types.ArrayOf(jObj.types.String),
+            function (value) {
+                return [ jMarshaller.bytesToString(value) ];
+            });
 
+        StringifyEncoder.prototype.finish = jObj.method([], jObj.types.Array,
+            function () {
+                return [];
+            });
+
+        return StringifyEncoder.init;
     });

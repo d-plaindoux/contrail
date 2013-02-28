@@ -19,7 +19,7 @@
 /*global define*/
 
 
-define([ "../../../../Core/object/jObj", "Contrail/jContrail" ],
+define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
@@ -36,10 +36,32 @@ define([ "../../../../Core/object/jObj", "Contrail/jContrail" ],
 
         RouterDownStreamComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
-                var activeRoute = this.component.activeRoutes[packet.getDestinationId()];
-                if (activeRoute) {
-                    activeRoute.getDownStreamDataFlow().handleData(packet);
+                var endPoint, activeRoute;
+
+                if (this.component.getRouteTable().hasRoute(packet.getDestinationId())) {
+                    endPoint = this.component.getRouteTable().getRoute(packet.getDestinationId());
                 }
+
+                this.component.getActiveRoutes().forEach(function (route) {
+                    if (!activeRoute) {
+                        if (route.acceptDestinationId(packet.getDestinationId())) {
+                            activeRoute = route;
+                        } else if (endPoint && route.getEndPoint() === endPoint) {
+                            activeRoute = route;
+                        }
+                    }
+                });
+
+                if (!activeRoute) {
+                    if (endPoint) {
+                        activeRoute = endPoint.activate(packet.getDestinationId());
+                        jContrail.component.compose(activeRoute, this.component);
+                    } else {
+                        jObj.throwError(jObj.exception("L.no.route.to.destination"));
+                    }
+                }
+
+                activeRoute.getDownStreamDataFlow().handleData(packet);
             });
 
         RouterDownStreamComponentDataFlow.prototype.handleClose = jObj.procedure([],

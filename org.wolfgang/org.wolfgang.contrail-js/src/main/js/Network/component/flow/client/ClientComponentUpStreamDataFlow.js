@@ -22,33 +22,27 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        function InterfaceComponent(identifier) {
-            jObj.bless(this, jContrail.component.pipeline());
+        var ClientComponentUpStreamDataFlow = function (component) {
+            jObj.bless(this, jContrail.flow.core());
 
-            this.destinationId = identifier;
-            this.upStreamDataFlow = null;
-            this.downStreamDataFlow = null;
-        }
+            this.component = component;
+        };
 
-        InterfaceComponent.init = jObj.constructor([ jObj.types.String ],
-            function (identifier) {
-                return new InterfaceComponent(identifier);
+        ClientComponentUpStreamDataFlow.init = jObj.constructor([ jObj.types.Named("ClientComponent") ],
+            function (component) {
+                return new ClientComponentUpStreamDataFlow(component);
             });
 
-        InterfaceComponent.prototype.getIdentifier = jObj.method([ ], jObj.types.String,
+        ClientComponentUpStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
+            function (packet) {
+                this.component.addDestinationId(packet.getSourceId());
+                this.component.getDestination().getUpStreamDataFlow().handleData(packet);
+            });
+
+        ClientComponentUpStreamDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                return this.destinationId;
+                this.component.getDestination().getUpStreamDataFlow().handleClose();
             });
 
-        InterfaceComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
-            function () {
-                return this.upStreamDataFlow;
-            });
-
-        InterfaceComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
-            function () {
-                return this.downStreamDataFlow;
-            });
-
-        return InterfaceComponent.init;
+        return ClientComponentUpStreamDataFlow.init;
     });

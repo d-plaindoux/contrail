@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "../../../../Core/object/jObj", "Contrail/jContrail", "./DomainComponentDataFlow" ],
+define([ "Core/object/jObj", "Contrail/jContrail", "./DomainComponentDataFlow" ],
     function (jObj, jContrail, routerFlow) {
         "use strict";
 

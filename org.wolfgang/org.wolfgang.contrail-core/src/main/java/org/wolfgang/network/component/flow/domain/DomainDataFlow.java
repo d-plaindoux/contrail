@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.network.component.flow;
+package org.wolfgang.network.component.flow.domain;
 
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.flow.DataFlow;

@@ -21,8 +21,8 @@ package org.wolfgang.network.component;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.network.component.flow.DomainDownStreamDataFlow;
-import org.wolfgang.network.component.flow.DomainUpStreamDataFlow;
+import org.wolfgang.network.component.flow.domain.DomainDownStreamDataFlow;
+import org.wolfgang.network.component.flow.domain.DomainUpStreamDataFlow;
 import org.wolfgang.network.packet.Packet;
 
 /**

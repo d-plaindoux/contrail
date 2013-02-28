@@ -22,29 +22,27 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
     function (jObj, jContrail) {
         "use strict";
 
-        var DomainComponentDataFlow = function (component) {
+        var ClientComponentDownStreamDataFlow = function (component) {
             jObj.bless(this, jContrail.flow.core());
 
             this.component = component;
         };
 
-        DomainComponentDataFlow.init = jObj.constructor([ jObj.types.Named("DomainComponent") ],
-            function (router) {
-                return new DomainComponentDataFlow(router);
+        ClientComponentDownStreamDataFlow.init = jObj.constructor([ jObj.types.Named("ClientComponent") ],
+            function (component) {
+                return new ClientComponentDownStreamDataFlow(component);
             });
 
-        DomainComponentDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
+        ClientComponentDownStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
-                if (!packet.getSourceId()) {
-                    packet.setSourceId(this.component.getIdentifier());
-                }
-
-                if (this.component.getIdentifier() === packet.getDestinationId()) {
-                    this.component.getDestination().getUpStreamDataFlow().handleData(packet);
-                } else {
-                    this.component.getSource().getDownStreamDataFlow().handleData(packet);
-                }
+                this.component.addDestinationId(packet.getDestinationId());
+                this.component.getSource.getDownStreamDataFlow().handleData(packet);
             });
 
-        return DomainComponentDataFlow.init;
+        ClientComponentDownStreamDataFlow.prototype.handleClose = jObj.procedure([],
+            function () {
+                this.component.getSource().getDownStreamDataFlow().handleClose();
+            });
+
+        return ClientComponentDownStreamDataFlow.init;
     });

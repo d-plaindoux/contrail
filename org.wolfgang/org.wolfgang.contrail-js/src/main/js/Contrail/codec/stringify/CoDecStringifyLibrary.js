@@ -18,28 +18,14 @@
 
 /*global define*/
 
-define("Contrail/codec/jCodec",
-    [
-        "./basic/CoDecBasicLibrary",
-        "./identity/CoDecIdentityLibrary",
-        "./payload/CoDecPayloadLibrary",
-        "./json/CoDecJSonLibrary",
-        "./serialize/CoDecSerializeLibrary",
-        "./stringify/CoDecStringifyLibrary",
-        "./object/CoDecObjectLibrary"
-    ],
-    function (BasicFactory, IdentityFactory, PayloadFactory, JSonFactory, SerializeFactory, StringifyFactory, ObjectFactory) {
+define([ "./Encoder", "./Decoder" ],
+    function (encoder, decoder) {
         "use strict";
 
         var Factory = {};
 
-        Factory.core = BasicFactory;
-        Factory.identity = IdentityFactory;
-        Factory.payload = PayloadFactory;
-        Factory.json = JSonFactory;
-        Factory.serialize = SerializeFactory;
-        Factory.stringify = StringifyFactory;
-        Factory.object = ObjectFactory;
+        Factory.encoder = encoder;
+        Factory.decoder = decoder;
 
         return Factory;
 

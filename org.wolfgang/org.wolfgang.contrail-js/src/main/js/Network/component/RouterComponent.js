@@ -18,17 +18,17 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "Contrail/jContrail" ],
-    function (jObj, jContrail) {
+define([ "Core/object/jObj", "Contrail/jContrail", "./flow/router/RouterComponentDownStreamDataFlow" ],
+    function (jObj, jContrail, routerDownStream) {
         "use strict";
 
         function RouterComponent(table) {
             jObj.bless(this, jContrail.component.multi.sources());
 
             this.table = table;
-            this.downStreamDataFlow = null;
+            this.downStreamDataFlow = routerDownStream(this);
 
-            this.activeRoutes = {};
+            this.activeRoutes = [];
         }
 
         RouterComponent.init = jObj.constructor([ jObj.types.Named("RouteTable") ],
@@ -39,6 +39,16 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
         RouterComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.downStreamDataFlow;
+            });
+
+        RouterComponent.prototype.getRouteTable = jObj.method([], jObj.types.Named("RouteTable"),
+            function () {
+                return this.table;
+            });
+
+        RouterComponent.prototype.getActiveRoutes = jObj.method([], jObj.types.ArrayOf("InterfaceComponent"),
+            function () {
+                return this.activeRoutes;
             });
 
         return RouterComponent.init;

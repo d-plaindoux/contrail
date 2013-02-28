@@ -48,7 +48,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
 
             jCC.
                 Given(function () {
-                    router = jNetwork.component.selector("a");
+                    router = jNetwork.component.domain("a");
                 }).
                 And(function () {
                     coordinator = jActor.coordinator();
@@ -87,10 +87,10 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
 
             jCC.
                 Given(function () {
-                    routerA = jNetwork.component.selector("a");
+                    routerA = jNetwork.component.domain("a");
                 }).
                 And(function () {
-                    routerB = jNetwork.component.selector("b");
+                    routerB = jNetwork.component.domain("b");
                 }).
                 And(function () {
                     dataFlowRouter = jContrail.flow.core();
@@ -171,7 +171,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
                         jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                        jNetwork.component.selector("a"),
+                        jNetwork.component.domain("a"),
                         jActor.component(coordinatorA) ]);
                 }).
                 And(function () {
@@ -181,7 +181,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
                         jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                        jNetwork.component.selector("b"),
+                        jNetwork.component.domain("b"),
                         jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
@@ -233,7 +233,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                        jNetwork.component.selector("a"),
+                        jNetwork.component.domain("a"),
                         jActor.component(coordinatorA) ]);
                 }).
                 And(function () {
@@ -242,7 +242,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                         jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
                         jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                         jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
-                        jNetwork.component.selector("b"),
+                        jNetwork.component.domain("b"),
                         jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
@@ -291,8 +291,8 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jContrail.component.compose([ initialA, jNetwork.component.selector("a"), jActor.component(coordinatorA) ]);
-                    jContrail.component.compose([ initialB, jNetwork.component.selector("b"), jActor.component(coordinatorB) ]);
+                    jContrail.component.compose([ initialA, jNetwork.component.domain("a"), jActor.component(coordinatorA) ]);
+                    jContrail.component.compose([ initialB, jNetwork.component.domain("b"), jActor.component(coordinatorB) ]);
                 }).
                 And(function () {
                     response1 = storedResponse();
