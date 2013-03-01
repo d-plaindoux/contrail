@@ -33,9 +33,9 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.bound.InitialComponent;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
 import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
@@ -52,7 +52,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	/**
 	 * The upstream handler
 	 */
-	private final ComponentSourceManager componentSourceManager;
+	private final SourceComponentNotifier componentSourceManager;
 
 	/**
 	 * The upstream data flow
@@ -73,7 +73,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public WebServerSocketHandlerImpl(ComponentSourceManager componentSourceManager) {
+	public WebServerSocketHandlerImpl(SourceComponentNotifier componentSourceManager) {
 		this.componentSourceManager = componentSourceManager;
 	}
 
@@ -145,7 +145,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
 	private void registerIncomingConnection(int identifier, DataFlow<String> emitter) throws CannotCreateComponentException, ComponentNotConnectedException {
 		final InitialComponent<String, String> initialComponent = Components.initial(emitter);
-		componentSourceManager.attach(initialComponent);
+		componentSourceManager.attach(identifier, initialComponent);
 		receivers.put(identifier, initialComponent.getUpStreamDataFlow());
 	}
 

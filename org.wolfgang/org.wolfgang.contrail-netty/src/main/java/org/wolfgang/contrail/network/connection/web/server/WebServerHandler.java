@@ -24,7 +24,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandler;
 import org.wolfgang.contrail.network.connection.web.handler.HTTPRequestHandlerImpl;
 import org.wolfgang.contrail.network.connection.web.handler.WebServerSocketHandler;
@@ -44,7 +44,7 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 	/**
 	 * Constructor
 	 */
-	public WebServerHandler(ComponentSourceManager componentSourceManager) {
+	public WebServerHandler(SourceComponentNotifier componentSourceManager) {
 		this.wsRequestHandler = new WebServerSocketHandlerImpl(componentSourceManager);
 		this.httpRequestHandler = new HTTPRequestHandlerImpl(wsRequestHandler, new WebServerPage());
 	}

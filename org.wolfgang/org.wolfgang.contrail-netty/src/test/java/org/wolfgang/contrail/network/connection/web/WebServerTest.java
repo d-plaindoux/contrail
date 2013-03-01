@@ -30,10 +30,10 @@ import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDataFlowFactory;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.bound.TerminalComponent;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
@@ -53,9 +53,9 @@ public class WebServerTest {
 	@Test
 	public void shouldHavePageContentUsingHTTPWhenRequired() throws Exception {
 
-		final WebServer server = WebServer.create(new ComponentSourceManager() {
+		final WebServer server = WebServer.create(new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				throw new CannotCreateComponentException("Not allowed");
 			}
 		});
@@ -104,9 +104,9 @@ public class WebServerTest {
 
 		final TerminalComponent<String, String> serverTerminal = new TerminalComponent<String, String>(receiverFactory);
 
-		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -126,9 +126,9 @@ public class WebServerTest {
 			}
 		});
 
-		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -160,9 +160,9 @@ public class WebServerTest {
 			}
 		});
 
-		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -187,9 +187,9 @@ public class WebServerTest {
 			}
 		});
 
-		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {

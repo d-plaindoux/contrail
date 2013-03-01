@@ -20,7 +20,7 @@ package org.wolfgang.contrail.network.connection.web.server;
 
 import java.util.concurrent.Callable;
 
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
 
 /**
@@ -32,7 +32,7 @@ import org.wolfgang.contrail.network.connection.nio.NIOServer;
  */
 public final class WebServer extends NIOServer implements Callable<Void> {
 
-	private final ComponentSourceManager factory;
+	private final SourceComponentNotifier factory;
 	private int port;
 
 	/**
@@ -40,7 +40,7 @@ public final class WebServer extends NIOServer implements Callable<Void> {
 	 * 
 	 * @param port
 	 */
-	private WebServer(ComponentSourceManager factory) {
+	private WebServer(SourceComponentNotifier factory) {
 		super();
 
 		this.factory = factory;
@@ -58,7 +58,7 @@ public final class WebServer extends NIOServer implements Callable<Void> {
 		return null;
 	}
 
-	public static WebServer create(ComponentSourceManager componentSourceManager) {
+	public static WebServer create(SourceComponentNotifier componentSourceManager) {
 		return new WebServer(componentSourceManager);
 	}
 }

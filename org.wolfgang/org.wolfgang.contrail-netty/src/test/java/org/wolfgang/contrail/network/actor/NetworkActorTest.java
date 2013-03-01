@@ -35,12 +35,12 @@ import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.BytesStringifierTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
 import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
@@ -110,9 +110,9 @@ public class NetworkActorTest {
 
 		// Prepare server connection manager
 
-		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -124,9 +124,9 @@ public class NetworkActorTest {
 
 		// Prepare client connection manager
 
-		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -186,9 +186,9 @@ public class NetworkActorTest {
 
 		// Prepare server connection manager
 
-		final ComponentSourceManager serverSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -200,9 +200,9 @@ public class NetworkActorTest {
 
 		// Prepare client connection manager
 
-		final ComponentSourceManager clientSourceManager = new ComponentSourceManager() {
+		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {

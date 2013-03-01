@@ -35,7 +35,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
 import org.wolfgang.common.concurrent.Promise;
-import org.wolfgang.contrail.contrail.ComponentSourceManager;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 import org.wolfgang.contrail.network.connection.nio.NIOClient;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
@@ -52,7 +52,7 @@ public final class WebClient extends NIOClient {
 
 	private final WebClientSocketHandler wsRequestHandler;
 
-	private WebClient(ComponentSourceManager factory) {
+	private WebClient(SourceComponentNotifier factory) {
 		super();
 
 		this.wsRequestHandler = new WebClientSocketHandlerImpl(factory);
@@ -70,7 +70,7 @@ public final class WebClient extends NIOClient {
 
 		private final URI uri;
 		private final AtomicReference<ChannelFuture> reference;
-		private final Promise<Boolean, Exception> connectionEstablished;
+		private final Promise<Integer, Exception> connectionEstablished;
 
 		Instance(URI uri) {
 			super();
@@ -95,6 +95,18 @@ public final class WebClient extends NIOClient {
 		public Instance connect() throws Exception {
 			this.call();
 			return this;
+		}
+
+		public int getId() throws WebClientConnectionException {
+			try {
+				return this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				throw new WebClientConnectionException(e);
+			} catch (ExecutionException e) {
+				throw new WebClientConnectionException(e.getCause());
+			} catch (TimeoutException e) {
+				throw new WebClientConnectionException(e);
+			}
 		}
 
 		@Override
@@ -122,7 +134,7 @@ public final class WebClient extends NIOClient {
 		}
 	}
 
-	public static WebClient create(ComponentSourceManager componentSourceManager) {
+	public static WebClient create(SourceComponentNotifier componentSourceManager) {
 		return new WebClient(componentSourceManager);
 	}
 }

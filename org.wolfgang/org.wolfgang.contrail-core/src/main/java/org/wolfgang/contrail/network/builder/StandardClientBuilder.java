@@ -45,7 +45,7 @@ public abstract class StandardClientBuilder extends ClientBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	public PipelineComponent<String, String, Packet, Packet> getIntermediateComponent() throws ComponentConnectionRejectedException {
+	protected PipelineComponent<String, String, Packet, Packet> getIntermediateComponent() throws ComponentConnectionRejectedException {
 
 		final PipelineComponent<String, String, Bytes, Bytes> stringify = new StringifyTransducerFactory().createComponent();
 		final PipelineComponent<Bytes, Bytes, Object, Object> serialize = new SerializationTransducerFactory().createComponent();

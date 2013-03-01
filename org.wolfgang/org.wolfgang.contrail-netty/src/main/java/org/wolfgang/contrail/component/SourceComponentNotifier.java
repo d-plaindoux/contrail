@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.contrail;
+package org.wolfgang.contrail.component;
 
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.SourceComponent;
@@ -27,8 +27,8 @@ import org.wolfgang.contrail.component.SourceComponent;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface ComponentSourceManager {
+public interface SourceComponentNotifier {
 
-	void attach(SourceComponent<String, String> source) throws CannotCreateComponentException;
+	void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException;
 
 }

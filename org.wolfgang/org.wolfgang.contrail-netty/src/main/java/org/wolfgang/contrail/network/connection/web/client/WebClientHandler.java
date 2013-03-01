@@ -34,11 +34,11 @@ import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandl
  */
 class WebClientHandler extends SimpleChannelUpstreamHandler {
 
-	private final Promise<Boolean, Exception> connectionEstablished;
+	private final Promise<Integer, Exception> connectionEstablished;
 	private final WebSocketClientHandshaker handshaker;
 	private final WebClientSocketHandler wsRequestHandler;
 
-	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Boolean, Exception> connectionEstablished) {
+	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Integer, Exception> connectionEstablished) {
 		this.handshaker = handshaker;
 		this.wsRequestHandler = wsRequestHandler;
 		this.connectionEstablished = connectionEstablished;
@@ -53,7 +53,7 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 				try {
 					handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
 					wsRequestHandler.notifyHandShake(context);
-					connectionEstablished.success(true);
+					connectionEstablished.success(context.getChannel().getId());
 				} catch (Exception e) {
 					connectionEstablished.failure(e);
 				}
