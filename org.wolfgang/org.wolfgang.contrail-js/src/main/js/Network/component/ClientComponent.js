@@ -37,10 +37,11 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
                 return new ClientComponent(identifier);
             });
 
-        ClientComponent.prototype.addDestinationId = jObj.method([ jObj.types.String ], jObj.types.Named("ClientComponent"),
+        ClientComponent.prototype.addDestinationId = jObj.procedure([ jObj.types.String ],
             function (identifier) {
-                this.identifiers.push(identifier);
-                return this;
+                if (!this.acceptDestinationId(identifier)) {
+                    this.identifiers.push(identifier);
+                }
             });
 
         ClientComponent.prototype.getEndPoint = jObj.method([], jObj.types.Nullable(jObj.types.String),
@@ -50,13 +51,9 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
 
         ClientComponent.prototype.acceptDestinationId = jObj.method([ jObj.types.String ], jObj.types.Boolean,
             function (identifier) {
-                var accept = false;
-
-                this.identifiers.forEach(function(id) {
-                    accept = accept || identifier === id;
+                return this.identifiers.some(function(id) {
+                    return identifier === id;
                 });
-
-                return accept;
             });
 
         ClientComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
