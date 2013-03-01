@@ -40,7 +40,7 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
             jCC.
                 Given(function () {
                     table = jNetwork.table(MyBuilder.init);
-                    table.addRoute("b","Route.To.B");
+                    table.addEntry("b","Route.To.B");
                 }).
                 And(function () {
                     routerComponent = jNetwork.component.router(table);
@@ -81,8 +81,8 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
             jCC.
                 Given(function () {
                     table = jNetwork.table(MyBuilder.init);
-                    table.addRoute("b","Route.To.B");
-                    table.addRoute("c","Route.To.B");
+                    table.addEntry("b","Route.To.B");
+                    table.addEntry("c","Route.To.B");
                 }).
                 And(function () {
                     routerComponent = jNetwork.component.router(table);

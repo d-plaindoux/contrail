@@ -33,9 +33,11 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
 
         StandardClientBuilder.prototype.activate = jObj.method([ ], jObj.types.Named("SourceComponent"),
             function () {
-                var socket, component, jSonifiers;
+                var socket, initial, component, jSonifiers;
 
                 jSonifiers = [ require("Network/jNetwork").packet, require("Network/jActor").event.request ];
+
+                socket = jSocket.client(this.endPoint);
 
                 component = jContrail.component.compose([
                     jContrail.component.initial(jContrail.flow.core(function (data) {
@@ -46,7 +48,7 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                     jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers))
                 ]);
 
-                socket = jSocket.client(this.endPoint, component.getUpStreamDataFlow());
+                socket.connect(component.getUpStreamDataFlow());
 
                 return component;
             });

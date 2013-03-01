@@ -22,33 +22,11 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
     function (SocketLib, require, jObj) {
         "use strict";
 
-        function Socket(endpoint, dataFlow) {
-
+        function Socket(endpoint) {
             jObj.bless(this);
 
-            this.client = SocketLib.client(endpoint, {
-                onopen:jObj.procedure([],
-                    function () {
-                        // Nothing
-                    }),
-
-                onerror:jObj.procedure([ jObj.types.Object ],
-                    function (error) {
-                        dataFlow.handleClose();
-                    }),
-
-                onclose:jObj.procedure([],
-                    function () {
-                        dataFlow.handleClose();
-                    }),
-
-                onmessage:jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
-                    function (message) {
-                        if (message.data) {
-                            dataFlow.handleData(message.data);
-                        }
-                    })
-            });
+            this.endPoint = endpoint;
+            this.client = null;
         }
 
         Socket.init = jObj.constructor([ jObj.types.String, jObj.types.Named("DataFlow") ],
@@ -56,9 +34,40 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
                 return new Socket(endPoint, dataFlow);
             });
 
+        Socket.prototype.connect = jObj.procedure([ jObj.types.Named("DataFlow") ],
+            function (dataFlow) {
+                if (this.client) {
+                    jObj.throwError(jObj.exception("L.web.socket.already.opened"));
+                } else {
+                    this.client = SocketLib.client(this.endpoint, {
+                        onopen:jObj.procedure([],
+                            function () {
+                                // Nothing
+                            }),
+
+                        onerror:jObj.procedure([ jObj.types.Object ],
+                            function (error) {
+                                dataFlow.handleClose();
+                            }),
+
+                        onclose:jObj.procedure([],
+                            function () {
+                                dataFlow.handleClose();
+                            }),
+
+                        onmessage:jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
+                            function (message) {
+                                if (message.data) {
+                                    dataFlow.handleData(message.data);
+                                }
+                            })
+                    });
+                }
+            });
+
         Socket.prototype.ensureOpen = jObj.procedure([ ],
             function () {
-                if (!this.client.isOpen()) {
+                if (this.client && !this.client.isOpen()) {
                     if (this.client.isClosed()) {
                         jObj.throwError(jObj.exception("L.web.socket.closed"));
                     } else {
@@ -80,7 +89,10 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
 
         Socket.prototype.close = jObj.procedure([],
             function () {
-                this.client.close();
+                if (this.client) {
+                    this.client.close();
+                    this.client = null;
+                }
             });
 
         return Socket.init;

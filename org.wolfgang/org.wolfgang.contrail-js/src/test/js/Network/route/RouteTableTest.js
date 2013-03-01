@@ -30,10 +30,10 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table = jNetwork.table(jNetwork.builder.standard);
                 }).
                 When(function () {
-                    table.addRoute("a", "ws://localhost/a");
+                    table.addEntry("a", "ws://localhost/a");
                 }).
                 Then(function () {
-                    jCC.equal(table.getRoute("a").getEndPoint(), "ws://localhost/a");
+                    jCC.equal(table.getEntry("a").getEndPoint(), "ws://localhost/a");
                 });
         });
 
@@ -45,7 +45,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table = jNetwork.table(jNetwork.builder.standard);
                 }).
                 When(function () {
-                    table.getRoute("a");
+                    table.getEntry("a");
                 }).
                 ThenError(function (e) {
                     jCC.ok("Exception catch");
@@ -60,10 +60,10 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table = jNetwork.table(jNetwork.builder.standard);
                 }).
                 When(function () {
-                    table.addRoute("a", "ws://localhost/a");
+                    table.addEntry("a", "ws://localhost/a");
                 }).
                 And(function () {
-                    table.addRoute("a", "ws://localhost/a");
+                    table.addEntry("a", "ws://localhost/a");
                 }).
                 ThenError(function (e) {
                     jCC.ok("Exception catch");
@@ -84,10 +84,10 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
                     table.populate(JSON.parse(configuration));
                 }).
                 Then(function () {
-                    jCC.equal(table.getRoute("a").getEndPoint(), "ws://localhost/a");
+                    jCC.equal(table.getEntry("a").getEndPoint(), "ws://localhost/a");
                 }).
                 And(function () {
-                    jCC.equal(table.getRoute("b").getEndPoint(), "ws://localhost/b");
+                    jCC.equal(table.getEntry("b").getEndPoint(), "ws://localhost/b");
                 });
         });
     });

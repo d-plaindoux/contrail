@@ -34,21 +34,21 @@ define([ "Core/object/jObj" ],
                 return new RouteTable(builder);
             });
 
-        RouteTable.prototype.addRoute = jObj.procedure([ jObj.types.String, jObj.types.String ],
+        RouteTable.prototype.addEntry = jObj.procedure([ jObj.types.String, jObj.types.String ],
             function (name, endpoint) {
-                if (this.hasRoute(name)) {
+                if (this.hasEntry(name)) {
                     jObj.throwError(jObj.exception("L.route.entry.already.defined"));
                 } else {
                     this.routes[name] = this.builder(endpoint);
                 }
             });
 
-        RouteTable.prototype.hasRoute = jObj.method([ jObj.types.String ], jObj.types.Boolean,
+        RouteTable.prototype.hasEntry = jObj.method([ jObj.types.String ], jObj.types.Boolean,
             function (name) {
                 return this.routes.hasOwnProperty(name);
             });
 
-        RouteTable.prototype.getRoute = jObj.method([ jObj.types.String ], jObj.types.Named("ClientBuilder"),
+        RouteTable.prototype.getEntry = jObj.method([ jObj.types.String ], jObj.types.Named("ClientBuilder"),
             function (name) {
                 return this.routes[name] || jObj.throwError(jObj.exception("L.route.entry.not.defined"));
             });
@@ -59,7 +59,7 @@ define([ "Core/object/jObj" ],
 
                 for (name in data) {
                     if (data.hasOwnProperty(name)) {
-                        this.addRoute(name, data[name]);
+                        this.addEntry(name, data[name]);
                     }
                 }
             });

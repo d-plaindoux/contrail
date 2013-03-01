@@ -38,8 +38,8 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
             function (packet) {
                 var builder = null, endPoint = null, activeRoute = null;
 
-                if (this.component.getRouteTable().hasRoute(packet.getDestinationId())) {
-                    builder = this.component.getRouteTable().getRoute(packet.getDestinationId());
+                if (this.component.getRouteTable().hasEntry(packet.getDestinationId())) {
+                    builder = this.component.getRouteTable().getEntry(packet.getDestinationId());
                     endPoint = builder.getEndPoint();
                 }
 
@@ -58,7 +58,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
 
         RouterDownStreamComponentDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.component.getSource().getDownStreamDataFlow().handleClose();
+                // TODO
             });
 
         return RouterDownStreamComponentDataFlow.init;
