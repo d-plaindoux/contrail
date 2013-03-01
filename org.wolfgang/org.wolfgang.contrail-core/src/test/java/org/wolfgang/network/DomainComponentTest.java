@@ -35,14 +35,14 @@ import org.wolfgang.network.packet.Packet;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TargetSelectorComponentTest {
+public class DomainComponentTest {
 
 	@Test
 	public void shouldRetreivePacketInTransit() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenATargetSelectorComponent();
+		final DomainComponent routeComponent = givenADomainComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -60,7 +60,7 @@ public class TargetSelectorComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenATargetSelectorComponent();
+		final DomainComponent routeComponent = givenADomainComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -78,7 +78,7 @@ public class TargetSelectorComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenATargetSelectorComponent();
+		final DomainComponent routeComponent = givenADomainComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -95,7 +95,7 @@ public class TargetSelectorComponentTest {
 	public void shouldRetreivePacketAlreadyInDestination() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
-		final DomainComponent routeComponent = givenATargetSelectorComponent();
+		final DomainComponent routeComponent = givenADomainComponent();
 
 		Components.compose(routeComponent, terminal);
 
@@ -113,7 +113,7 @@ public class TargetSelectorComponentTest {
 	public void shouldFailWhenDestinationisUndefined() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-		final DomainComponent routeComponent = givenATargetSelectorComponent();
+		final DomainComponent routeComponent = givenADomainComponent();
 
 		Components.compose(initial, routeComponent);
 
@@ -127,7 +127,7 @@ public class TargetSelectorComponentTest {
 
 	// ---------------------------------------------------------------------------------------
 
-	private DomainComponent givenATargetSelectorComponent() throws RouteAlreadyExistException {
+	private DomainComponent givenADomainComponent() throws RouteAlreadyExistException {
 		final DomainComponent routeComponent = new DomainComponent("a");
 		return routeComponent;
 	}
