@@ -36,13 +36,13 @@ import org.wolfgang.network.packet.Packet;
  */
 public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, Packet, Packet> {
 
-	private final String identifier;
+	private final String endPoint;
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
 	private final List<String> destinations;
 
-	public ClientComponent(String identifier) {
-		this.identifier = identifier;
+	public ClientComponent(String endPoint) {
+		this.endPoint = endPoint;
 
 		this.upStreamDataFlow = new ClientUpStreamDataFlow(this);
 		this.downStreamDataFlow = new ClientDownStreamDataFlow(this);
@@ -50,8 +50,8 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 		this.destinations = new ArrayList<String>();
 	}
 
-	public String getIdentifier() {
-		return identifier;
+	public String getEndPoint() {
+		return endPoint;
 	}
 
 	public void addDestinationId(String identifier) {
@@ -73,4 +73,5 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 	public DataFlow<Packet> getDownStreamDataFlow() throws ComponentNotConnectedException {
 		return this.downStreamDataFlow;
 	}
+
 }

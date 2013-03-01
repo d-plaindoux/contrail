@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.wolfgang.common.message.MessagesProvider;
+import org.wolfgang.contrail.network.builder.ClientBuilder;
 
 /**
  * <code>RouteTable</code>
@@ -31,22 +32,26 @@ import org.wolfgang.common.message.MessagesProvider;
  */
 public class RouteTable {
 
-	private final Map<String, String> routes;
+	private final Map<String, ClientBuilder> routes;
 
 	{
-		this.routes = new HashMap<String, String>();
+		this.routes = new HashMap<String, ClientBuilder>();
 	}
 
-	public void addRoute(String name, String endpoint) throws RouteAlreadyExistException {
-		if (this.routes.containsKey(name)) {
+	public void addEntry(String name, ClientBuilder endpoint) throws RouteAlreadyExistException {
+		if (this.hasEntry(name)) {
 			throw new RouteAlreadyExistException(MessagesProvider.message("org/wolfgang/contrail/message", "route.already.exist").format(name, endpoint));
 		} else {
 			this.routes.put(name, endpoint);
 		}
 	}
 
-	public String getRoute(String name) throws RouteNotFoundException {
-		if (this.routes.containsKey(name)) {
+	public boolean hasEntry(String name) {
+		return this.routes.containsKey(name);
+	}
+
+	public ClientBuilder getEntry(String name) throws RouteNotFoundException {
+		if (this.hasEntry(name)) {
 			return this.routes.get(name);
 		} else {
 			throw new RouteNotFoundException(MessagesProvider.message("org/wolfgang/contrail/message", "route.not.found").format(name));
