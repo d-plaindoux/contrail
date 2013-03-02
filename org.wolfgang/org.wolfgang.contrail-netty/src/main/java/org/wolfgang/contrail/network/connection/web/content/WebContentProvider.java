@@ -16,33 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package org.wolfgang.contrail.network.connection.web.server;
+package org.wolfgang.contrail.network.connection.web.content;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 /**
- * <code>ServerPage</code> provides html pages on demand based on simple
- * resourceName TODO improve this code ASAP
+ * <code>ServerPage</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class WebServerPage {
-
-	/**
-	 * The HTDOCS attribute
-	 */
-	private static final String HTDOCS = "/htdocs/";
-
-	/**
-	 * Constructor
-	 */
-	public WebServerPage() {
-		// TODO
-	}
+public interface WebContentProvider {
 
 	/**
 	 * Method called whether a page must be retrieved (experimental)
@@ -55,34 +39,6 @@ public final class WebServerPage {
 	 * @throws IOException
 	 *             if a problem occurs when the page retrieval fails
 	 */
-	public byte[] getContent(String resourceName) throws IOException {
-		// Retrieve the resource
+	byte[] getContent(String resourceName) throws IOException;
 
-		final URL resource = WebServerPage.class.getResource(HTDOCS + resourceName);
-
-		if (resource == null) {
-			throw new IOException();
-		}
-
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		try {
-			final InputStream inputStream = resource.openStream();
-			try {
-				final byte[] bytes = new byte[1024];
-				int len;
-				while ((len = inputStream.read(bytes)) != -1) {
-					outputStream.write(bytes, 0, len);
-					outputStream.flush();
-				}
-			} finally {
-				inputStream.close();
-			}
-		} finally {
-			outputStream.close();
-		}
-
-		// Unfold HTML document
-
-		return outputStream.toByteArray();
-	}
 }

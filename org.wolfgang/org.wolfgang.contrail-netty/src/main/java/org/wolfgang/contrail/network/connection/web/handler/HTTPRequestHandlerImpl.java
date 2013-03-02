@@ -41,7 +41,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
-import org.wolfgang.contrail.network.connection.web.server.WebServerPage;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 
 /**
  * <code>HTTPRequestHandler</code>
@@ -58,7 +58,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
 
 	private final WebServerSocketHandler wsRequestHandler;
-	private final WebServerPage serverPage;
+	private final WebContentProvider serverPage;
 
 	/**
 	 * Constructor
@@ -68,7 +68,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 * @param serverPage
 	 *            The server page
 	 */
-	public HTTPRequestHandlerImpl(WebServerSocketHandler wsRequestHandler, WebServerPage serverPage) {
+	public HTTPRequestHandlerImpl(WebServerSocketHandler wsRequestHandler, WebContentProvider serverPage) {
 		this.wsRequestHandler = wsRequestHandler;
 		this.serverPage = serverPage;
 	}

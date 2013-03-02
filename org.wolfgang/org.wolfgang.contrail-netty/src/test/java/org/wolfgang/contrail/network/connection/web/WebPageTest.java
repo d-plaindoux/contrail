@@ -24,7 +24,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.wolfgang.contrail.network.connection.web.server.WebServerPage;
+import org.wolfgang.contrail.network.connection.web.content.ResourceWebServerPage;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 
 /**
  * <code>TestWebPage</code>
@@ -36,7 +37,7 @@ public class WebPageTest {
 
 	@Test
 	public void testWebPage01() throws IOException {
-		final WebServerPage serverPage = new WebServerPage();
+		final WebContentProvider serverPage = new ResourceWebServerPage();
 
 		final byte[] resource01 = serverPage.getContent("index.html");
 		final byte[] resource02 = serverPage.getContent("index.html.orig");
@@ -46,7 +47,7 @@ public class WebPageTest {
 
 	@Test
 	public void testWebPage02() {
-		final WebServerPage serverPage = new WebServerPage();
+		final WebContentProvider serverPage = new ResourceWebServerPage();
 
 		try {
 			serverPage.getContent("undefined");
