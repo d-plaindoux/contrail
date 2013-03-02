@@ -53,7 +53,7 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 		this.waitingSources = new HashMap<Integer, Promise<SourceComponent<String, String>, Exception>>();
 		this.webClient = WebClient.create(new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				synchronized (waitingSources) {
 					final Promise<SourceComponent<String, String>, Exception> promise = waitingSources.remove(identifier);
 					if (promise != null) {

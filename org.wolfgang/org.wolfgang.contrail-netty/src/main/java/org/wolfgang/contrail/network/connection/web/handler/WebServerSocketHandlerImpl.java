@@ -145,7 +145,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
 	private void registerIncomingConnection(int identifier, DataFlow<String> emitter) throws CannotCreateComponentException, ComponentNotConnectedException {
 		final InitialComponent<String, String> initialComponent = Components.initial(emitter);
-		componentSourceManager.attach(identifier, initialComponent);
+		componentSourceManager.accept(identifier, initialComponent);
 		receivers.put(identifier, initialComponent.getUpStreamDataFlow());
 	}
 

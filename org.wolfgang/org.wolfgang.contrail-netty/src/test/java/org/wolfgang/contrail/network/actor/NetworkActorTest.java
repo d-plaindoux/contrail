@@ -112,7 +112,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -126,7 +126,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -188,7 +188,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -202,7 +202,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {

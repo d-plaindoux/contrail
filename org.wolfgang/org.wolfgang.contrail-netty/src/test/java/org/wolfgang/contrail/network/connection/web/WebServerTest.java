@@ -55,7 +55,7 @@ public class WebServerTest {
 
 		final WebServer server = WebServer.create(new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				throw new CannotCreateComponentException("Not allowed");
 			}
 		});
@@ -106,7 +106,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -128,7 +128,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -162,7 +162,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -189,7 +189,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void attach(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {
