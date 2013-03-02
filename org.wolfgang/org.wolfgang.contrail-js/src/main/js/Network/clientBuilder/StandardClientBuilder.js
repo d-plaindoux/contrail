@@ -31,48 +31,17 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                 return new StandardClientBuilder(endPoint);
             });
 
-        StandardClientBuilder.prototype.getXXX = jObj.method([ ], jObj.types.Named("SourceComponent"),
+        StandardClientBuilder.prototype.getIntermediateComponent = jObj.method([ ], jObj.types.Named("SourceComponent"),
             function () {
                 var socket, component, jSonifiers;
 
                 jSonifiers = [ require("Network/jNetwork").packet, require("Network/jActor").event.request ];
 
-                socket = jSocket.client(this.endPoint);
-
-                component = jContrail.component.compose([
-                    jContrail.component.initial(jContrail.flow.core(function (data) {
-                        socket.send(data);
-                    })),
+                return jContrail.component.compose([
                     jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),
                     jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
                     jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers))
                 ]);
-
-                socket.connect(component.getUpStreamDataFlow());
-
-                return component;
-            });
-
-        StandardClientBuilder.prototype.activate = jObj.method([ ], jObj.types.Named("SourceComponent"),
-            function () {
-                var socket, component, jSonifiers;
-
-                jSonifiers = [ require("Network/jNetwork").packet, require("Network/jActor").event.request ];
-
-                socket = jSocket.client(this.endPoint);
-
-                component = jContrail.component.compose([
-                    jContrail.component.initial(jContrail.flow.core(function (data) {
-                        socket.send(data);
-                    })),
-                    jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),
-                    jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
-                    jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers))
-                ]);
-
-                socket.connect(component.getUpStreamDataFlow());
-
-                return component;
             });
 
         return StandardClientBuilder.init;

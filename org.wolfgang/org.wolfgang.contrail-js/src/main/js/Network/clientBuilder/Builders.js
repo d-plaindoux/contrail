@@ -18,14 +18,15 @@
 
 /*global define*/
 
-define([ "./ClientBuilder", "./StandardClientBuilder" ],
-    function (clientBuilder, standardBuilder) {
+define([ "./ClientBuilder", "./StandardClientBuilder", "./WebSocketClientBuilder" ],
+    function (clientBuilder, standardBuilder, webSocketBuilder) {
         "use strict";
 
         var jBuilders = {};
 
         jBuilders.core = clientBuilder;
         jBuilders.standard = standardBuilder;
+        jBuilders.webSocker = webSocketBuilder;
 
         return jBuilders;
     });
