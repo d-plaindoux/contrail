@@ -31,7 +31,7 @@ import java.net.URL;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ResourceWebServerPage implements WebContentProvider {
+public final class ResourceWebContentProvider implements WebContentProvider {
 
 	/**
 	 * The HTDOCS attribute
@@ -41,7 +41,7 @@ public final class ResourceWebServerPage implements WebContentProvider {
 	/**
 	 * Constructor
 	 */
-	public ResourceWebServerPage() {
+	public ResourceWebContentProvider() {
 		// TODO
 	}
 
@@ -52,7 +52,7 @@ public final class ResourceWebServerPage implements WebContentProvider {
 	public byte[] getContent(String resourceName) throws IOException {
 		// Retrieve the resource
 
-		final URL resource = ResourceWebServerPage.class.getResource(HTDOCS + resourceName);
+		final URL resource = ResourceWebContentProvider.class.getResource(HTDOCS + resourceName);
 
 		if (resource == null) {
 			throw new IOException();

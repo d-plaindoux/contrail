@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 
 import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.nio.NIOServer;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 
 /**
  * <code>WebServer</code> is A HTTP server which serves HTTP requests and Web
@@ -33,6 +34,8 @@ import org.wolfgang.contrail.network.connection.nio.NIOServer;
 public final class WebServer extends NIOServer implements Callable<Void> {
 
 	private final SourceComponentNotifier factory;
+	private final WebContentProvider contentProvider;
+
 	private int port;
 
 	/**
@@ -40,10 +43,11 @@ public final class WebServer extends NIOServer implements Callable<Void> {
 	 * 
 	 * @param port
 	 */
-	private WebServer(SourceComponentNotifier factory) {
+	private WebServer(SourceComponentNotifier factory, WebContentProvider contentProvider) {
 		super();
 
 		this.factory = factory;
+		this.contentProvider = contentProvider;
 	}
 
 	public WebServer bind(int port) throws Exception {
@@ -54,11 +58,11 @@ public final class WebServer extends NIOServer implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
-		this.bind(this.port, new WebServerPipelineFactory(factory));
+		this.bind(this.port, new WebServerPipelineFactory(factory, contentProvider));
 		return null;
 	}
 
-	public static WebServer create(SourceComponentNotifier componentSourceManager) {
-		return new WebServer(componentSourceManager);
+	public static WebServer create(SourceComponentNotifier componentSourceManager, WebContentProvider contentProvider) {
+		return new WebServer(componentSourceManager, contentProvider);
 	}
 }

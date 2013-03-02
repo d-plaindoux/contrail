@@ -40,6 +40,8 @@ import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
+import org.wolfgang.contrail.network.connection.web.content.ResourceWebContentProvider;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
 
 /**
@@ -53,12 +55,13 @@ public class WebServerTest {
 	@Test
 	public void shouldHavePageContentUsingHTTPWhenRequired() throws Exception {
 
+		final WebContentProvider contentProvider = new ResourceWebContentProvider();
 		final WebServer server = WebServer.create(new SourceComponentNotifier() {
 			@Override
 			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				throw new CannotCreateComponentException("Not allowed");
 			}
-		});
+		}, contentProvider);
 		server.bind(2777);
 
 		final URI uriClient = new URI("http://localhost:2777/helloworld");
@@ -115,7 +118,8 @@ public class WebServerTest {
 			}
 		};
 
-		final WebServer server = WebServer.create(serverSourceManager).bind(2777);
+		final WebContentProvider contentProvider = new ResourceWebContentProvider();
+		final WebServer server = WebServer.create(serverSourceManager, contentProvider).bind(2777);
 
 		final Promise<String, Exception> serverResponse = Promise.create();
 
@@ -171,7 +175,8 @@ public class WebServerTest {
 			}
 		};
 
-		final WebServer server = WebServer.create(serverSourceManager).bind(2778);
+		final WebContentProvider contentProvider = new ResourceWebContentProvider();
+		final WebServer server = WebServer.create(serverSourceManager, contentProvider).bind(2778);
 
 		final TerminalComponent<String, String> clientTerminal = new TerminalComponent<String, String>(new ComponentDataFlowFactory<String, String>() {
 			@Override

@@ -26,10 +26,11 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.wolfgang.contrail.component.SourceComponentNotifier;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 
 /**
- * <code>WebServerPipelineFactory</code> is able to create the right
- * channel pipeline for both web and eb socket management.
+ * <code>WebServerPipelineFactory</code> is able to create the right channel
+ * pipeline for both web and eb socket management.
  * 
  * @author Didier Plaindoux
  * @version 1.0
@@ -37,12 +38,14 @@ import org.wolfgang.contrail.component.SourceComponentNotifier;
 class WebServerPipelineFactory implements ChannelPipelineFactory {
 
 	private final SourceComponentNotifier factory;
+	private final WebContentProvider provider;
 
 	/**
 	 * Constructor
 	 */
-	public WebServerPipelineFactory(SourceComponentNotifier factory) {
+	public WebServerPipelineFactory(SourceComponentNotifier factory, WebContentProvider provider) {
 		this.factory = factory;
+		this.provider = provider;
 	}
 
 	@Override
@@ -51,7 +54,7 @@ class WebServerPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("http_decoder", new HttpRequestDecoder());
 		pipeline.addLast("http_aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("http_encoder", new HttpResponseEncoder());
-		pipeline.addLast("webserver_handler", new WebServerHandler(this.factory));
+		pipeline.addLast("webserver_handler", new WebServerHandler(this.factory, this.provider));
 		return pipeline;
 	}
 }

@@ -35,15 +35,17 @@ import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.Component;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.BytesStringifierTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
 import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
+import org.wolfgang.contrail.network.connection.web.content.ResourceWebContentProvider;
+import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
 import org.wolfgang.network.component.DomainComponent;
 import org.wolfgang.network.packet.Packet;
@@ -120,7 +122,8 @@ public class NetworkActorTest {
 				}
 			}
 		};
-		final WebServer server = WebServer.create(serverSourceManager).bind(8090);
+		final WebContentProvider contentProvider = new ResourceWebContentProvider();
+		final WebServer server = WebServer.create(serverSourceManager, contentProvider).bind(8090);
 
 		// Prepare client connection manager
 
@@ -196,7 +199,8 @@ public class NetworkActorTest {
 				}
 			}
 		};
-		final WebServer server = WebServer.create(serverSourceManager).bind(8091);
+		final WebContentProvider contentProvider = new ResourceWebContentProvider();
+		final WebServer server = WebServer.create(serverSourceManager,contentProvider).bind(8091);
 
 		// Prepare client connection manager
 
