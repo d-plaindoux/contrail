@@ -34,7 +34,7 @@ import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
-import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
+import org.wolfgang.contrail.network.connection.web.client.WebClient.Connection;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -84,9 +84,9 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 */
 	private SourceComponent<String, String> newClientInstance() throws WebClientConnectionException, Exception, URISyntaxException {
 		final Promise<SourceComponent<String, String>, Exception> promise;
-		final Instance instance;
+		final Connection instance;
 		synchronized (waitingSources) {
-			instance = this.webClient.instance(new URI(this.getEndPoint())).awaitEstablishment();
+			instance = this.webClient.connect(new URI(this.getEndPoint())).awaitEstablishment();
 			promise = Promise.<SourceComponent<String, String>, Exception> create();
 			this.waitingSources.put(instance.getId(), promise);
 		}
@@ -107,7 +107,7 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 * @throws WebClientConnectionException
 	 * @throws IOException
 	 */
-	private void abortClientInstance(final Instance instance) throws WebClientConnectionException, IOException {
+	private void abortClientInstance(final Connection instance) throws WebClientConnectionException, IOException {
 		synchronized (waitingSources) {
 			this.waitingSources.remove(instance.getId());
 			instance.close();

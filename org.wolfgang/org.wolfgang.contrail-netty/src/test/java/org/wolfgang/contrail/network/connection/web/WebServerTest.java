@@ -39,7 +39,7 @@ import org.wolfgang.contrail.flow.DataFlowAdapter;
 import org.wolfgang.contrail.flow.exception.CannotCreateDataFlowException;
 import org.wolfgang.contrail.flow.exception.DataFlowException;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
-import org.wolfgang.contrail.network.connection.web.client.WebClient.Instance;
+import org.wolfgang.contrail.network.connection.web.client.WebClient.Connection;
 import org.wolfgang.contrail.network.connection.web.content.ResourceWebContentProvider;
 import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
@@ -142,7 +142,7 @@ public class WebServerTest {
 		};
 
 		final WebClient client = WebClient.create(clientSourceManager);
-		final Instance connect = client.instance(new URI("ws://localhost:2777/websocket")).connect().awaitEstablishment();
+		final Connection connect = client.connect(new URI("ws://localhost:2777/websocket")).connect().awaitEstablishment();
 
 		clientTerminal.getDownStreamDataFlow().handleData("helloworld");
 
@@ -204,7 +204,7 @@ public class WebServerTest {
 		};
 
 		final WebClient client = WebClient.create(clientSourceManager);
-		final Instance connect = client.instance(new URI("ws://localhost:2778/websocket")).connect().awaitEstablishment();
+		final Connection connect = client.connect(new URI("ws://localhost:2778/websocket")).connect().awaitEstablishment();
 
 		serverTerminal.getDownStreamDataFlow().handleData("helloworld");
 

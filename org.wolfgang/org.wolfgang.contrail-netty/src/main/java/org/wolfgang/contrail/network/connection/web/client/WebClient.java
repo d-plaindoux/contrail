@@ -58,28 +58,28 @@ public final class WebClient extends NIOClient {
 		this.wsRequestHandler = new WebClientSocketHandlerImpl(factory);
 	}
 
-	public Instance instance(URI uri) throws Exception {
+	public Connection connect(URI uri) throws Exception {
 		if (!"ws".equals(uri.getScheme())) {
 			throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme());
 		}
 
-		return new Instance(uri);
+		return new Connection(uri);
 	}
 
-	public class Instance implements Callable<ChannelFuture>, Closeable {
+	public class Connection implements Callable<ChannelFuture>, Closeable {
 
 		private final URI uri;
 		private final AtomicReference<ChannelFuture> reference;
 		private final Promise<Integer, Exception> connectionEstablished;
 
-		Instance(URI uri) {
+		Connection(URI uri) {
 			super();
 			this.uri = uri;
 			this.reference = new AtomicReference<ChannelFuture>();
 			this.connectionEstablished = Promise.create();
 		}
 
-		public Instance awaitEstablishment() throws WebClientConnectionException {
+		public Connection awaitEstablishment() throws WebClientConnectionException {
 			try {
 				this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
 				return this;
@@ -92,7 +92,7 @@ public final class WebClient extends NIOClient {
 			}
 		}
 
-		public Instance connect() throws Exception {
+		public Connection connect() throws Exception {
 			this.call();
 			return this;
 		}
