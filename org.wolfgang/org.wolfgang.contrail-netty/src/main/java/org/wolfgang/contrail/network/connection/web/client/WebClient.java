@@ -35,106 +35,74 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
 import org.wolfgang.common.concurrent.Promise;
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
-import org.wolfgang.contrail.network.connection.nio.NIOClient;
-import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
-import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandlerImpl;
 
-/**
- * <code>WebServer</code> is A HTTP server which serves HTTP requests and Web
- * Socket.
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public final class WebClient extends NIOClient {
+public class WebClient implements Callable<ChannelFuture>, Closeable {
 
-	private final WebClientSocketHandler wsRequestHandler;
+	private final URI uri;
+	private final AtomicReference<ChannelFuture> reference;
+	private final Promise<Integer, Exception> connectionEstablished;
+	private final WebClientFactory webClientFactory;
 
-	private WebClient(SourceComponentNotifier factory) {
+	WebClient(URI uri, WebClientFactory webClientFactory) {
 		super();
-
-		this.wsRequestHandler = new WebClientSocketHandlerImpl(factory);
+		this.uri = uri;
+		this.webClientFactory = webClientFactory;
+		this.reference = new AtomicReference<ChannelFuture>();
+		this.connectionEstablished = Promise.create();
 	}
 
-	public Connection connect(URI uri) throws Exception {
-		if (!"ws".equals(uri.getScheme())) {
-			throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme());
-		}
-
-		return new Connection(uri);
-	}
-
-	public class Connection implements Callable<ChannelFuture>, Closeable {
-
-		private final URI uri;
-		private final AtomicReference<ChannelFuture> reference;
-		private final Promise<Integer, Exception> connectionEstablished;
-
-		Connection(URI uri) {
-			super();
-			this.uri = uri;
-			this.reference = new AtomicReference<ChannelFuture>();
-			this.connectionEstablished = Promise.create();
-		}
-
-		public Connection awaitEstablishment() throws WebClientConnectionException {
-			try {
-				this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
-				return this;
-			} catch (InterruptedException e) {
-				throw new WebClientConnectionException(e);
-			} catch (ExecutionException e) {
-				throw new WebClientConnectionException(e.getCause());
-			} catch (TimeoutException e) {
-				throw new WebClientConnectionException(e);
-			}
-		}
-
-		public Connection connect() throws Exception {
-			this.call();
+	public WebClient awaitEstablishment() throws WebClientConnectionException {
+		try {
+			this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
 			return this;
-		}
-
-		public int getId() throws WebClientConnectionException {
-			try {
-				return this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				throw new WebClientConnectionException(e);
-			} catch (ExecutionException e) {
-				throw new WebClientConnectionException(e.getCause());
-			} catch (TimeoutException e) {
-				throw new WebClientConnectionException(e);
-			}
-		}
-
-		@Override
-		public ChannelFuture call() throws Exception {
-			final Map<String, String> customHeaders = new HashMap<String, String>();
-			final WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(uri, WebSocketVersion.V13, null, false, customHeaders);
-			final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, wsRequestHandler, connectionEstablished);
-
-			final ChannelFuture channelFuture = WebClient.this.connect(uri.getHost(), uri.getPort(), channelPipelineFactory);
-			channelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
-
-			final ChannelFuture handshakedChannelFuture = handshaker.handshake(channelFuture.getChannel());
-			handshakedChannelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
-
-			this.reference.set(handshakedChannelFuture);
-
-			return this.reference.get();
-		}
-
-		@Override
-		public void close() throws IOException {
-			if (this.reference.get() != null) {
-				this.reference.get().getChannel().close();
-			}
+		} catch (InterruptedException e) {
+			throw new WebClientConnectionException(e);
+		} catch (ExecutionException e) {
+			throw new WebClientConnectionException(e.getCause());
+		} catch (TimeoutException e) {
+			throw new WebClientConnectionException(e);
 		}
 	}
 
-	public static WebClient create(SourceComponentNotifier componentSourceManager) {
-		return new WebClient(componentSourceManager);
+	public WebClient connect() throws Exception {
+		this.call();
+		return this;
+	}
+
+	public int getId() throws WebClientConnectionException {
+		try {
+			return this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			throw new WebClientConnectionException(e);
+		} catch (ExecutionException e) {
+			throw new WebClientConnectionException(e.getCause());
+		} catch (TimeoutException e) {
+			throw new WebClientConnectionException(e);
+		}
+	}
+
+	@Override
+	public ChannelFuture call() throws Exception {
+		final Map<String, String> customHeaders = new HashMap<String, String>();
+		final WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(uri, WebSocketVersion.V13, null, false, customHeaders);
+		final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, webClientFactory.getWsRequestHandler(), connectionEstablished);
+
+		final ChannelFuture channelFuture = webClientFactory.connect(uri.getHost(), uri.getPort(), channelPipelineFactory);
+		channelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
+
+		final ChannelFuture handshakedChannelFuture = handshaker.handshake(channelFuture.getChannel());
+		handshakedChannelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
+
+		this.reference.set(handshakedChannelFuture);
+
+		return this.reference.get();
+	}
+
+	@Override
+	public void close() throws IOException {
+		if (this.reference.get() != null) {
+			this.reference.get().getChannel().close();
+		}
 	}
 }

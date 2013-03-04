@@ -43,7 +43,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransdu
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
 import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
-import org.wolfgang.contrail.network.connection.web.client.WebClient.Connection;
+import org.wolfgang.contrail.network.connection.web.client.WebClientFactory;
 import org.wolfgang.contrail.network.connection.web.content.ResourceWebContentProvider;
 import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 import org.wolfgang.contrail.network.connection.web.server.WebServer;
@@ -138,8 +138,8 @@ public class NetworkActorTest {
 			}
 		};
 
-		final WebClient client = WebClient.create(clientSourceManager);
-		final Connection connect = client.connect(new URI("ws://localhost:8090/websocket")).connect().awaitEstablishment();
+		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
+		final WebClient connect = client.connect(new URI("ws://localhost:8090/websocket")).connect().awaitEstablishment();
 
 		// Actor performance
 
@@ -215,8 +215,8 @@ public class NetworkActorTest {
 			}
 		};
 
-		final WebClient client = WebClient.create(clientSourceManager);
-		final Connection connect = client.connect(new URI("ws://localhost:8091/websocket")).connect().awaitEstablishment();
+		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
+		final WebClient connect = client.connect(new URI("ws://localhost:8091/websocket")).connect().awaitEstablishment();
 
 		// Actor performance
 

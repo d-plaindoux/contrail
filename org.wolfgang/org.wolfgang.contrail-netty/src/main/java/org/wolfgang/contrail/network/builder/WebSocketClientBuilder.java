@@ -29,12 +29,12 @@ import java.util.concurrent.TimeUnit;
 import org.wolfgang.common.concurrent.Promise;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
-import org.wolfgang.contrail.network.connection.web.client.WebClient.Connection;
+import org.wolfgang.contrail.network.connection.web.client.WebClientFactory;
 import org.wolfgang.network.packet.Packet;
 
 /**
@@ -45,13 +45,13 @@ import org.wolfgang.network.packet.Packet;
  */
 public class WebSocketClientBuilder extends StandardClientBuilder {
 
-	private final WebClient webClient;
+	private final WebClientFactory webClient;
 	private final Map<Integer, Promise<SourceComponent<String, String>, Exception>> waitingSources;
 
 	public WebSocketClientBuilder(String endPoint) {
 		super(endPoint);
 		this.waitingSources = new HashMap<Integer, Promise<SourceComponent<String, String>, Exception>>();
-		this.webClient = WebClient.create(new SourceComponentNotifier() {
+		this.webClient = WebClientFactory.create(new SourceComponentNotifier() {
 			@Override
 			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
 				synchronized (waitingSources) {
@@ -84,7 +84,7 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 */
 	private SourceComponent<String, String> newClientInstance() throws WebClientConnectionException, Exception, URISyntaxException {
 		final Promise<SourceComponent<String, String>, Exception> promise;
-		final Connection instance;
+		final WebClient instance;
 		synchronized (waitingSources) {
 			instance = this.webClient.connect(new URI(this.getEndPoint())).awaitEstablishment();
 			promise = Promise.<SourceComponent<String, String>, Exception> create();
@@ -107,7 +107,7 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 * @throws WebClientConnectionException
 	 * @throws IOException
 	 */
-	private void abortClientInstance(final Connection instance) throws WebClientConnectionException, IOException {
+	private void abortClientInstance(final WebClient instance) throws WebClientConnectionException, IOException {
 		synchronized (waitingSources) {
 			this.waitingSources.remove(instance.getId());
 			instance.close();

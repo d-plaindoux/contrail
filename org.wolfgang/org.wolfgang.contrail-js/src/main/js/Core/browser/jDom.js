@@ -22,13 +22,13 @@ define("Core/browser/jDom", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function JDOm(tag, attributes, content) {
+        function JDom(tag, attributes, content) {
             this.qname = tag;
             this.attributes = attributes;
             this.content = content;
         }
 
-        JDOm.prototype.toString = function () {
+        JDom.prototype.toString = function () {
             var key, result;
 
             result = "<" + this.qname;
@@ -51,6 +51,6 @@ define("Core/browser/jDom", [ "Core/object/jObj" ],
         // Public package definition
 
         return function (tag, attributes, content) {
-            return new JDOm(tag, attributes, content).toString();
+            return new JDom(tag, attributes, content).toString();
         };
     });

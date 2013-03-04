@@ -26,7 +26,6 @@ import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.PipelineComponent;
-import org.wolfgang.contrail.component.pipeline.transducer.TransducerComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;

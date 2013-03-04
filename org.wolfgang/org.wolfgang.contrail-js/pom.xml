@@ -65,7 +65,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <org.codehaus.jstestrunner.commandPattern>
-                         ${phantom.js} '%1$s' %2$s
+                            ${phantom.js} '%1$s' %2$s
                         </org.codehaus.jstestrunner.commandPattern>
                     </systemPropertyVariables>
                 </configuration>
@@ -77,6 +77,20 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>webminifier-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>minify-js</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -91,23 +105,16 @@
                 </executions>
                 <configuration>
                     <nosuffix>true</nosuffix>
+                    <nomunge>false</nomunge>
                     <aggregations>
                         <aggregation>
                             <removeIncluded>true</removeIncluded>
                             <insertNewLine>false</insertNewLine>
-                            <output>${project.build.directory}/min/classes/wolfgang/core.js</output>
+                            <output>${project.build.directory}/min/classes/1-min.js</output>
                             <inputDir>target/classes/js</inputDir>
                             <includes>
                                 <include>Core/**/*.js</include>
                                 <include>External/**/*.js</include>
-                            </includes>
-                        </aggregation>
-                        <aggregation>
-                            <removeIncluded>true</removeIncluded>
-                            <insertNewLine>false</insertNewLine>
-                            <output>${project.build.directory}/min/classes/wolfgang/contrail.js</output>
-                            <inputDir>target/classes/js</inputDir>
-                            <includes>
                                 <include>Actor/**/*.js</include>
                                 <include>Contrail/**/*.js</include>
                                 <include>Network/**/*.js</include>

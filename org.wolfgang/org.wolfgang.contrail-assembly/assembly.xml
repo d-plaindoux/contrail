@@ -9,7 +9,7 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>dist</outputDirectory>
+			<outputDirectory>jar</outputDirectory>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 			<useTransitiveDependencies>false</useTransitiveDependencies>
 			<useProjectArtifact>false</useProjectArtifact>

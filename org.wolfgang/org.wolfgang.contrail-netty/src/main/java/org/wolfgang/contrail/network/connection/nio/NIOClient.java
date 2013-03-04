@@ -40,7 +40,7 @@ public abstract class NIOClient {
 		this.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 	}
 
-	protected ChannelFuture connect(String host, int port, ChannelPipelineFactory pipelineFactory) throws Exception {
+	public ChannelFuture connect(String host, int port, ChannelPipelineFactory pipelineFactory) throws Exception {
 		final ClientBootstrap clientBootstrap = new ClientBootstrap(channelFactory);
 		clientBootstrap.setPipelineFactory(pipelineFactory);
 		return clientBootstrap.connect(new InetSocketAddress(host, port));
