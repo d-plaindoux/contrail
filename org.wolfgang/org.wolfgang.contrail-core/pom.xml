@@ -8,10 +8,9 @@
 	  <version>1.0-SNAPSHOT</version>
 	</parent>
 
-    <name>Contrail Java Library</name>
+	<name>Contrail Java Library</name>
 	<artifactId>org.wolfgang.contrail-core</artifactId>
 	<packaging>jar</packaging>
-	<url>http://maven.apache.org</url>
 
 	<developers>
 		<developer>
