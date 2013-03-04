@@ -16,9 +16,8 @@
     <description>A JavaScript library dedicated to Contrail network management.</description>
 
     <properties>
+        <phantom.js>/Users/didierplaindoux/OpenProjects/phantomjs-1.7.0-macosx/bin/phantomjs</phantom.js>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.dynamicanalysis>reuseReports</sonar.dynamicanalysis>
-        <sonar.language>js</sonar.language>
     </properties>
 
     <dependencies>
@@ -28,25 +27,7 @@
             <version>1.7.1-alpha-1</version>
             <type>js</type>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jquery-ui-amd</artifactId>
-            <version>1.8.16-alpha-1</version>
-            <type>js</type>
-        </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>sonarjs</id>
-            <properties>
-                <sonar.branch>js</sonar.branch>
-                <sonar.language>js</sonar.language>
-                <sourcedir>src/main/js</sourcedir>
-                <testsourcedir>src/test/js</testsourcedir>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <extensions>
@@ -84,7 +65,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <org.codehaus.jstestrunner.commandPattern>
-                            /Users/didierplaindoux/OpenProjects/phantomjs-1.7.0-macosx/bin/phantomjs '%1$s' %2$s
+                         ${phantom.js} '%1$s' %2$s
                         </org.codehaus.jstestrunner.commandPattern>
                     </systemPropertyVariables>
                 </configuration>
