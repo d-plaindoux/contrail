@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.wolfgang.actor.annotation.ActorCoordinator;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.concurrent.Promise;
@@ -41,6 +42,9 @@ public class LocalActorTest {
 	}
 
 	public static class CA {
+		@ActorCoordinator
+		public Coordinator coordinator;
+		
 		private int value;
 
 		private CA(int value) {
@@ -55,6 +59,20 @@ public class LocalActorTest {
 		public void setValue(int value) {
 			this.value = value;
 		}
+	}
+
+	// --------------------------------------------------------------------------------
+	
+	@Test
+	public void shouldInjectCoordinatorWhenRegisteringActor() throws Exception {
+		final CA model = new CA(42);
+		
+		TestCase.assertNull(model.coordinator);
+				
+		final Coordinator coordinator = new Coordinator();
+		coordinator.actor("A").bindToObject(model);
+
+		TestCase.assertEquals(coordinator, model.coordinator);		
 	}
 
 	@Test

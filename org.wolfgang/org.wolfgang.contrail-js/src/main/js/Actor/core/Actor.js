@@ -80,13 +80,12 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                     withModule:jObj.procedure([jObj.types.String, jObj.types.Array],
                         function (module, parameters) {
                             jLoader.load(source, function () {
-                                    var anActor, callback;
+                                    var callback;
 
                                     callback = require(module);
 
                                     if (callback) {
-                                        anActor = localActor(self, callback.apply({}, parameters));
-                                        self.coordinator.registerActor(anActor);
+                                        self.bindToObject(callback.apply({}, parameters));
                                     } else {
                                         jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
                                     }
@@ -96,10 +95,7 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                     withCallback:jObj.procedure([jObj.types.Function],
                         function (callback) {
                             jLoader.load(source, function () {
-                                    var anActor;
-
-                                    anActor = localActor(self, callback());
-                                    self.coordinator.registerActor(anActor);
+                                    self.bindToObject(callback());
                                 }
                             );
                         })
@@ -108,7 +104,7 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
 
         Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
             function (model) {
-                var anActor = localActor(this, model);
+                var anActor = jObj.bless({ coordinator:this.coordinator}, localActor(this, model));
                 this.coordinator.registerActor(anActor);
                 return anActor;
             });

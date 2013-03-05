@@ -21,6 +21,7 @@ package org.wolfgang.actor.core;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.wolfgang.actor.annotation.AnnotationSolver;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.utils.Pair;
@@ -61,11 +62,10 @@ public class AbstractActor implements Actor {
 		return name;
 	}
 
-	public Actor bindToSource(String model) throws ActorException {		
-		final LocalActor actor;
-		
+	public Actor bindToSource(String model) throws ActorException {
 		try {
-			actor = new LocalActor(Class.forName(model).newInstance(), this); // TODO class loader ?
+			// TODO -- class loader to be determined?
+			return this.bindToObject(Class.forName(model).newInstance());
 		} catch (InstantiationException e) {
 			throw new ActorException(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
@@ -73,15 +73,18 @@ public class AbstractActor implements Actor {
 		} catch (ClassNotFoundException e) {
 			throw new ActorException(e.getMessage(), e);
 		}
-		
-		this.coordinator.registerActor(actor);
-		return actor;
 	}
 
-	public Actor bindToObject(Object model) {
-		final LocalActor actor = new LocalActor(model, this);
-		this.coordinator.registerActor(actor);
-		return actor;
+	public Actor bindToObject(Object model) throws ActorException {
+		try {
+			final LocalActor actor = new LocalActor(AnnotationSolver.solve(model, this.coordinator), this);
+			this.coordinator.registerActor(actor);
+			return actor;
+		} catch (IllegalArgumentException e) {
+			throw new ActorException(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			throw new ActorException(e.getMessage(), e);
+		}
 	}
 
 	public Actor bindToRemote(String location) {
