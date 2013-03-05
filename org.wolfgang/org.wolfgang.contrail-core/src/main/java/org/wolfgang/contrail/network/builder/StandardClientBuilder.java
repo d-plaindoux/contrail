@@ -21,6 +21,7 @@ package org.wolfgang.contrail.network.builder;
 import java.util.Arrays;
 import java.util.List;
 
+import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
@@ -40,7 +41,7 @@ public abstract class StandardClientBuilder extends ClientBuilder {
 	public StandardClientBuilder(String endPoint) {
 		super(endPoint);
 
-		this.jSonifiers = Arrays.asList(Packet.jSonifable(), Request.jSonifable());
+		this.jSonifiers = Arrays.asList(Packet.jSonifable(), Request.jSonifable(), ActorException.jSonifable());
 	}
 
 	@SuppressWarnings("unchecked")
