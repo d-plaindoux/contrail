@@ -61,14 +61,16 @@ public class AbstractActor implements Actor {
 		return name;
 	}
 
-	public Actor bindToSource(Class<?> model) throws ActorException {		
+	public Actor bindToSource(String model) throws ActorException {		
 		final LocalActor actor;
 		
 		try {
-			actor = new LocalActor(model.newInstance(), this);
+			actor = new LocalActor(Class.forName(model).newInstance(), this); // TODO class loader ?
 		} catch (InstantiationException e) {
 			throw new ActorException(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
+			throw new ActorException(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
 			throw new ActorException(e.getMessage(), e);
 		}
 		
