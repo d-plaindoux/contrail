@@ -27,6 +27,7 @@ import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.PipelineComponent;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.CoercionTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.ObjectTransducerFactory;
 import org.wolfgang.contrail.component.pipeline.transducer.factory.SerializationTransducerFactory;
@@ -34,7 +35,7 @@ import org.wolfgang.contrail.component.pipeline.transducer.factory.StringifyTran
 import org.wolfgang.contrail.data.JSonifier;
 import org.wolfgang.network.packet.Packet;
 
-public abstract class StandardClientBuilder extends ClientBuilder {
+public class StandardClientBuilder extends ClientBuilder {
 
 	private final List<JSonifier> jSonifiers;
 
@@ -53,5 +54,10 @@ public abstract class StandardClientBuilder extends ClientBuilder {
 		final PipelineComponent<Object, Object, Packet, Packet> coercion = new CoercionTransducerFactory<Packet>(Packet.class).createComponent();
 
 		return (PipelineComponent<String, String, Packet, Packet>) Components.compose(stringify, serialize, objectify, coercion);
+	}
+
+	@Override
+	public SourceComponent<Packet, Packet> activate() throws ComponentConnectionRejectedException {
+		return getIntermediateComponent();
 	}
 }
