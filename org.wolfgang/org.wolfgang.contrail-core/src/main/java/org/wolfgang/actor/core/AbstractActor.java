@@ -87,8 +87,8 @@ public class AbstractActor implements Actor {
 		}
 	}
 
-	public Actor bindToRemote(String location) {
-		final RemoteActor actor = new RemoteActor(location, this);
+	public Actor bindToRemote(String remoteName, String location) {
+		final RemoteActor actor = new RemoteActor(remoteName, location, this);
 		this.coordinator.registerActor(actor);
 		return actor;
 	}

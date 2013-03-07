@@ -67,7 +67,9 @@ public class RouterComponent extends MultiSourceComponent<Packet, Packet> {
 
 	public ClientComponent addActiveRoute(SourceComponent<Packet, Packet> sourceComponent, String endPoint) throws ComponentConnectionRejectedException {
 		final ClientComponent clientComponent = new ClientComponent(endPoint);
+		
 		Components.compose(sourceComponent, clientComponent, this);
+		
 		this.activeRoutes.add(clientComponent);
 		return clientComponent;
 	}

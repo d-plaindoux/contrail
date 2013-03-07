@@ -158,7 +158,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.start();
                 }).
                 And(function () {
-                    coordinatorA.actor("A").bindToRemote("b");
+                    coordinatorA.actor("A").bindToRemote("A", "b");
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
@@ -221,7 +221,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.start();
                 }).
                 And(function () {
-                    coordinatorA.actor("A").bindToRemote("b");
+                    coordinatorA.actor("A").bindToRemote("A", "b");
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
@@ -287,7 +287,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.start();
                 }).
                 And(function () {
-                    coordinatorA.actor("A").bindToRemote("b");
+                    coordinatorA.actor("A.dist").bindToRemote("A", "b");
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
@@ -299,9 +299,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
-                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
+                    coordinatorA.send("A.dist", jActor.event.request("getA", []), response1);
+                    coordinatorA.send("A.dist", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.send("A.dist", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response1.value(), "a");

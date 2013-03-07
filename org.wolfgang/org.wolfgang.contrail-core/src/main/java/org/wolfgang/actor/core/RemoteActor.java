@@ -30,15 +30,17 @@ import org.wolfgang.actor.event.Response;
  */
 public class RemoteActor extends BindActor implements Actor {
 
+	private final String remoteName;
 	private final String location;
 
-	public RemoteActor(String location, AbstractActor actor) {
+	public RemoteActor(String remoteName, String location, AbstractActor actor) {
 		super(actor);
+		this.remoteName = remoteName;
 		this.location = location;
 	}
 
 	@Override
 	public void invoke(Request request, Response response) {
-		this.getCoordinator().getRemoteActorHandler().handle(location, this.getActorId(), request, response);
+		this.getCoordinator().getRemoteActorHandler().handle(location, this.remoteName, request, response);
 	}
 }

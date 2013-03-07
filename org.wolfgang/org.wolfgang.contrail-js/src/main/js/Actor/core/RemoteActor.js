@@ -22,20 +22,21 @@ define([ "Core/object/jObj", "./BindActor" ],
     function (jObj, bindActor) {
         "use strict";
 
-        function RemoteActor(actor, location) {
+        function RemoteActor(actor, remoteName, location) {
             jObj.bless(this, actor, bindActor());
 
             this.location = location;
+            this.remoteName = remoteName;
         }
 
-        RemoteActor.init = jObj.constructor([ jObj.types.Named("Actor"), jObj.types.String ],
-            function (actor, location) {
-                return new RemoteActor(actor, location);
+        RemoteActor.init = jObj.constructor([ jObj.types.Named("Actor"), jObj.types.String , jObj.types.String ],
+            function (actor, remoteName, location) {
+                return new RemoteActor(actor, remoteName, location);
             });
 
         RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
-                this.coordinator.getRemoteActorHandler().handle(this.location, this.identifier, request, response);
+                this.coordinator.getRemoteActorHandler().handle(this.location, this.remoteName, request, response);
             });
 
         return RemoteActor.init;

@@ -57,11 +57,11 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	/**
 	 * The upstream data flow
 	 */
-	private Map<Integer, DataFlow<String>> receivers;
+	private Map<Integer, InitialComponent<String, String>> receivers;
 	private Map<Integer, WebSocketServerHandshaker> handShakers;
 
 	{
-		this.receivers = new HashMap<Integer, DataFlow<String>>();
+		this.receivers = new HashMap<Integer, InitialComponent<String, String>>();
 		this.handShakers = new HashMap<Integer, WebSocketServerHandshaker>();
 	}
 
@@ -78,19 +78,19 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	}
 
 	@Override
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws DataFlowException, DataFlowCloseException {
+	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception {
 		final int identifier = context.getChannel().getId();
 
 		if (!this.receivers.containsKey(identifier)) {
 			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
 		} else if (frame instanceof CloseWebSocketFrame) {
 			this.handShakers.remove(identifier).close(context.getChannel(), (CloseWebSocketFrame) frame);
-			this.receivers.remove(identifier).handleClose();
+			this.receivers.remove(identifier).getUpStreamDataFlow().handleClose();
 		} else if (frame instanceof PingWebSocketFrame) {
 			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
 		} else if (frame instanceof TextWebSocketFrame) {
 			final String request = ((TextWebSocketFrame) frame).getText();
-			this.receivers.get(identifier).handleData(request);
+			this.receivers.get(identifier).getUpStreamDataFlow().handleData(request);
 		} else {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
@@ -146,7 +146,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	private void registerIncomingConnection(int identifier, DataFlow<String> emitter) throws CannotCreateComponentException, ComponentNotConnectedException {
 		final InitialComponent<String, String> initialComponent = Components.initial(emitter);
 		componentSourceManager.accept(initialComponent);
-		receivers.put(identifier, initialComponent.getUpStreamDataFlow());
+		receivers.put(identifier, initialComponent);
 	}
 
 	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {

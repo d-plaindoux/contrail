@@ -61,15 +61,15 @@ public class RouterDownStreamComponentDataFlow implements DataFlow<Packet> {
 				}
 			}
 
-			SourceComponent<Packet, Packet> activetRoute = this.component.getActiveRoute(destinationId, endPoint);
+			SourceComponent<Packet, Packet> activeRoute = this.component.getActiveRoute(destinationId, endPoint);
 
-			if (activetRoute == null) {
+			if (activeRoute == null) {
 				if (builder != null) {
-					activetRoute = this.component.addActiveRoute(builder.activate(), endPoint);
+					activeRoute = this.component.addActiveRoute(builder.activate(), endPoint);
 				}
 			}
 
-			activetRoute.getDownStreamDataFlow().handleData(data);
+			activeRoute.getDownStreamDataFlow().handleData(data);
 		} catch (ComponentConnectionRejectedException e) {
 			throw new DataFlowException(e);
 		} catch (ComponentNotConnectedException e) {

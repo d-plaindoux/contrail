@@ -50,7 +50,7 @@ define([ "Core/object/jObj" ],
                 jObj.throwError(jObj.exception("L.actor.already.bind"));
             });
 
-        BindActor.prototype.bindToRemote = jObj.procedure([jObj.types.String],
+        BindActor.prototype.bindToRemote = jObj.procedure([jObj.types.String,jObj.types.String],
             function (location) {
                 jObj.throwError(jObj.exception("L.actor.already.bind"));
             });

@@ -109,9 +109,9 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 return anActor;
             });
 
-        Actor.prototype.bindToRemote = jObj.method([jObj.types.String], jObj.types.Named("Actor"),
-            function (location) {
-                var anActor = remoteActor(this, location);
+        Actor.prototype.bindToRemote = jObj.method([jObj.types.String,jObj.types.String], jObj.types.Named("Actor"),
+            function (remoteName, location) {
+                var anActor = remoteActor(this, remoteName, location);
                 this.coordinator.registerActor(anActor);
                 return anActor;
             });

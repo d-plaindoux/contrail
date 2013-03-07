@@ -26,9 +26,9 @@ import org.wolfgang.actor.core.ActorException;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public interface Response<T> {
+public interface Response {
 
-	void success(T value);
+	void success(Object value);
 
 	void failure(ActorException error);
 
