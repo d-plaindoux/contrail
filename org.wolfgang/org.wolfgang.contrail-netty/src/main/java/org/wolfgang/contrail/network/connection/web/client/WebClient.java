@@ -35,6 +35,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
 import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 
 public class WebClient implements Callable<ChannelFuture>, Closeable {
@@ -43,6 +44,8 @@ public class WebClient implements Callable<ChannelFuture>, Closeable {
 	private final AtomicReference<ChannelFuture> reference;
 	private final Promise<Integer, Exception> connectionEstablished;
 	private final WebClientFactory webClientFactory;
+	
+	private Promise<SourceComponent<String, String>, Exception> sourceComponentPromise;
 
 	WebClient(URI uri, WebClientFactory webClientFactory) {
 		super();
@@ -53,8 +56,12 @@ public class WebClient implements Callable<ChannelFuture>, Closeable {
 	}
 
 	public WebClient awaitEstablishment() throws WebClientConnectionException {
+		return this.awaitEstablishment(10, TimeUnit.SECONDS);
+	}
+
+	public WebClient awaitEstablishment(int time, TimeUnit unit) throws WebClientConnectionException {
 		try {
-			this.connectionEstablished.getFuture().get(10, TimeUnit.SECONDS);
+			this.connectionEstablished.getFuture().get(time, unit);
 			return this;
 		} catch (InterruptedException e) {
 			throw new WebClientConnectionException(e);
@@ -65,7 +72,8 @@ public class WebClient implements Callable<ChannelFuture>, Closeable {
 		}
 	}
 
-	public WebClient connect() throws Exception {
+	public WebClient connect(Promise<SourceComponent<String, String>, Exception> sourceComponentPromise) throws Exception {
+		this.sourceComponentPromise = sourceComponentPromise;
 		this.call();
 		return this;
 	}
@@ -86,7 +94,7 @@ public class WebClient implements Callable<ChannelFuture>, Closeable {
 	public ChannelFuture call() throws Exception {
 		final Map<String, String> customHeaders = new HashMap<String, String>();
 		final WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(uri, WebSocketVersion.V13, null, false, customHeaders);
-		final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, webClientFactory.getWsRequestHandler(), connectionEstablished);
+		final ChannelPipelineFactory channelPipelineFactory = new WebClientPipelineFactory(handshaker, webClientFactory.getWsRequestHandler(), connectionEstablished ,sourceComponentPromise);
 
 		final ChannelFuture channelFuture = webClientFactory.connect(uri.getHost(), uri.getPort(), channelPipelineFactory);
 		channelFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);

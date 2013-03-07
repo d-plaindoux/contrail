@@ -20,7 +20,6 @@ package org.wolfgang.contrail.network.connection.web.client;
 
 import java.net.URI;
 
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.nio.NIOClient;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandlerImpl;
@@ -36,17 +35,17 @@ public final class WebClientFactory extends NIOClient {
 
 	private final WebClientSocketHandler wsRequestHandler;
 
-	private WebClientFactory(SourceComponentNotifier factory) {
+	private WebClientFactory() {
 		super();
 
-		this.wsRequestHandler = new WebClientSocketHandlerImpl(factory);
+		this.wsRequestHandler = new WebClientSocketHandlerImpl();
 	}
 
 	WebClientSocketHandler getWsRequestHandler() {
 		return wsRequestHandler;
 	}
 
-	public WebClient connect(URI uri) throws Exception {
+	public WebClient client(URI uri) throws Exception {
 		if (!"ws".equals(uri.getScheme())) {
 			throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme());
 		}
@@ -54,7 +53,7 @@ public final class WebClientFactory extends NIOClient {
 		return new WebClient(uri, this);
 	}
 
-	public static WebClientFactory create(SourceComponentNotifier componentSourceManager) {
-		return new WebClientFactory(componentSourceManager);
+	public static WebClientFactory create() {
+		return new WebClientFactory();
 	}
 }

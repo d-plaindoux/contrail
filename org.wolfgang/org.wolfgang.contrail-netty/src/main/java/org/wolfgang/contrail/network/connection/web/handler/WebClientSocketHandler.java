@@ -20,6 +20,8 @@ package org.wolfgang.contrail.network.connection.web.handler;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
+import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 
 /**
@@ -41,9 +43,10 @@ public interface WebClientSocketHandler {
 	/**
 	 * 
 	 * @param context
+	 * @param sourceComponentPromise 
 	 * @return
 	 * @throws WebClientConnectionException 
 	 */
-	void notifyHandShake(ChannelHandlerContext context) throws WebClientConnectionException;
+	void notifyHandShake(ChannelHandlerContext context, Promise<SourceComponent<String,String>,Exception> sourceComponentPromise) throws WebClientConnectionException;
 
 }

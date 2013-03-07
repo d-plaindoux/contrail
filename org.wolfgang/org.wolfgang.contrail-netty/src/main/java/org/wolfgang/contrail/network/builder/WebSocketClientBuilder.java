@@ -21,17 +21,13 @@ package org.wolfgang.contrail.network.builder;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.wolfgang.common.concurrent.Promise;
-import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.exception.WebClientConnectionException;
 import org.wolfgang.contrail.network.connection.web.client.WebClient;
 import org.wolfgang.contrail.network.connection.web.client.WebClientFactory;
@@ -45,25 +41,11 @@ import org.wolfgang.network.packet.Packet;
  */
 public class WebSocketClientBuilder extends StandardClientBuilder {
 
-	private final WebClientFactory webClient;
-	private final Map<Integer, Promise<SourceComponent<String, String>, Exception>> waitingSources;
+	private final WebClientFactory webClientFactory;
 
 	public WebSocketClientBuilder(String endPoint) {
 		super(endPoint);
-		this.waitingSources = new HashMap<Integer, Promise<SourceComponent<String, String>, Exception>>();
-		this.webClient = WebClientFactory.create(new SourceComponentNotifier() {
-			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
-				synchronized (waitingSources) {
-					final Promise<SourceComponent<String, String>, Exception> promise = waitingSources.remove(identifier);
-					if (promise != null) {
-						promise.success(source);
-					} else {
-						throw new CannotCreateComponentException("TODO");
-					}
-				}
-			}
-		});
+		this.webClientFactory = WebClientFactory.create();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -83,13 +65,8 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 * @throws URISyntaxException
 	 */
 	private SourceComponent<String, String> newClientInstance() throws WebClientConnectionException, Exception, URISyntaxException {
-		final Promise<SourceComponent<String, String>, Exception> promise;
-		final WebClient instance;
-		synchronized (waitingSources) {
-			instance = this.webClient.connect(new URI(this.getEndPoint())).awaitEstablishment();
-			promise = Promise.<SourceComponent<String, String>, Exception> create();
-			this.waitingSources.put(instance.getId(), promise);
-		}
+		final Promise<SourceComponent<String, String>, Exception> promise = Promise.<SourceComponent<String, String>, Exception> create();
+		final WebClient instance = this.webClientFactory.client(new URI(this.getEndPoint())).connect(promise).awaitEstablishment();
 
 		try {
 			return promise.getFuture().get(10, TimeUnit.SECONDS);
@@ -108,9 +85,6 @@ public class WebSocketClientBuilder extends StandardClientBuilder {
 	 * @throws IOException
 	 */
 	private void abortClientInstance(final WebClient instance) throws WebClientConnectionException, IOException {
-		synchronized (waitingSources) {
-			this.waitingSources.remove(instance.getId());
-			instance.close();
-		}
+		instance.close();
 	}
 }

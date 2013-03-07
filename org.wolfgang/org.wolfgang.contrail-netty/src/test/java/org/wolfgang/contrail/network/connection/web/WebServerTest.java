@@ -58,7 +58,7 @@ public class WebServerTest {
 		final WebContentProvider contentProvider = new ResourceWebContentProvider();
 		final WebServer server = WebServer.create(new SourceComponentNotifier() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				throw new CannotCreateComponentException("Not allowed");
 			}
 		}, contentProvider);
@@ -109,7 +109,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -130,19 +130,20 @@ public class WebServerTest {
 			}
 		});
 
-		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
+		final Promise<SourceComponent<String, String>, Exception> clientSource = new Promise<SourceComponent<String, String>, Exception>() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void success(SourceComponent<String, String> source) {
 				try {
+					super.success(source);
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateComponentException(e);
+					this.failure(e);
 				}
 			}
 		};
 
-		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
-		final WebClient connect = client.connect(new URI("ws://localhost:2777/websocket")).connect().awaitEstablishment();
+		final WebClientFactory clientFactory = WebClientFactory.create();
+		final WebClient connect = clientFactory.client(new URI("ws://localhost:2777/websocket")).connect(clientSource).awaitEstablishment();
 
 		clientTerminal.getDownStreamDataFlow().handleData("helloworld");
 
@@ -166,7 +167,7 @@ public class WebServerTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, serverTerminal);
 				} catch (ComponentConnectionRejectedException e) {
@@ -192,19 +193,20 @@ public class WebServerTest {
 			}
 		});
 
-		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
+		final Promise<SourceComponent<String, String>, Exception> clientSource = new Promise<SourceComponent<String, String>, Exception>() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void success(SourceComponent<String, String> source) {
 				try {
+					super.success(source);
 					Components.compose(source, clientTerminal);
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateComponentException(e);
+					this.failure(e);
 				}
 			}
 		};
 
-		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
-		final WebClient connect = client.connect(new URI("ws://localhost:2778/websocket")).connect().awaitEstablishment();
+		final WebClientFactory clientFactory = WebClientFactory.create();
+		final WebClient connect = clientFactory.client(new URI("ws://localhost:2778/websocket")).connect(clientSource).awaitEstablishment();
 
 		serverTerminal.getDownStreamDataFlow().handleData("helloworld");
 

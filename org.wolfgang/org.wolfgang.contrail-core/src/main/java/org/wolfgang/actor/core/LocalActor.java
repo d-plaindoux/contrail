@@ -55,11 +55,11 @@ public class LocalActor extends BindActor implements Actor {
 			try {
 				response.success(method.invoke(model, request.getParameters()));
 			} catch (IllegalArgumentException e) {
-				failure(response, new ActorException(e.getMessage(), e));
+				failure(response, new ActorException("Cannot execute " + request.getName(), e));
 			} catch (IllegalAccessException e) {
-				failure(response, new ActorException(e.getMessage(), e));
+				failure(response, new ActorException("Cannot execute " + request.getName(), e));
 			} catch (InvocationTargetException e) {
-				failure(response, new ActorException(e.getCause().getMessage(), e.getCause()));
+				failure(response, new ActorException("Cannot execute " + request.getName(), e.getCause()));
 			}
 		} else {
 			failure(response, new ActorException("Actor method does not exist"));

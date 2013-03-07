@@ -68,7 +68,7 @@ public class MultiSourceComponent<U, D> extends SourceComponentWithSingleDestina
 	@Override
 	public DisposableLink connectSource(SourceComponentLink<U, D> handler) throws ComponentConnectionRejectedException {
 		final ComponentId componentId = handler.getSourceComponent().getComponentId();
-		if (this.acceptDestination(componentId)) {
+		if (this.acceptSource(componentId)) {
 			this.sources.put(componentId, handler);
 			return new DisposableLink() {
 				@Override

@@ -29,7 +29,7 @@ import org.wolfgang.contrail.component.SourceComponent;
  */
 public interface SourceComponentNotifier {
 
-	void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException;
+	void accept(SourceComponent<String, String> source) throws CannotCreateComponentException;
 
 	// TODO -- void reject(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException;
 

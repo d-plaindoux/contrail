@@ -21,6 +21,7 @@ package org.wolfgang.contrail.network.actor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -114,7 +115,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -127,19 +128,23 @@ public class NetworkActorTest {
 
 		// Prepare client connection manager
 
-		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
+		final Promise<SourceComponent<String, String>, Exception> clientSource = new Promise<SourceComponent<String, String>, Exception>() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void success(SourceComponent<String, String> source) {
 				try {
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateComponentException(e);
+					this.failure(e);
 				}
+			}
+
+			public void failure(Exception e) {
+				// TODO
 			}
 		};
 
-		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
-		final WebClient connect = client.connect(new URI("ws://localhost:8090/websocket")).connect().awaitEstablishment();
+		final WebClientFactory clientFactory = WebClientFactory.create();
+		final WebClient connect = clientFactory.client(new URI("ws://localhost:8090/websocket")).connect(clientSource).awaitEstablishment();
 
 		// Actor performance
 
@@ -191,7 +196,7 @@ public class NetworkActorTest {
 
 		final SourceComponentNotifier serverSourceManager = new SourceComponentNotifier() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void accept(SourceComponent<String, String> source) throws CannotCreateComponentException {
 				try {
 					Components.compose(source, compose1); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
@@ -200,23 +205,24 @@ public class NetworkActorTest {
 			}
 		};
 		final WebContentProvider contentProvider = new ResourceWebContentProvider();
-		final WebServer server = WebServer.create(serverSourceManager,contentProvider).bind(8091);
+		final WebServer server = WebServer.create(serverSourceManager, contentProvider).bind(8091);
 
 		// Prepare client connection manager
 
-		final SourceComponentNotifier clientSourceManager = new SourceComponentNotifier() {
+		final Promise<SourceComponent<String, String>, Exception> clientSource = new Promise<SourceComponent<String, String>, Exception>() {
 			@Override
-			public void accept(int identifier, SourceComponent<String, String> source) throws CannotCreateComponentException {
+			public void success(SourceComponent<String, String> source) {
 				try {
+					super.success(source);
 					Components.compose(source, compose2); // Filter ?
 				} catch (ComponentConnectionRejectedException e) {
-					throw new CannotCreateComponentException(e);
+					this.failure(e);
 				}
 			}
 		};
 
-		final WebClientFactory client = WebClientFactory.create(clientSourceManager);
-		final WebClient connect = client.connect(new URI("ws://localhost:8091/websocket")).connect().awaitEstablishment();
+		final WebClientFactory clientFactory = WebClientFactory.create();
+		final WebClient connect = clientFactory.client(new URI("ws://localhost:8091/websocket")).connect(clientSource).awaitEstablishment();
 
 		// Actor performance
 

@@ -27,6 +27,7 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.util.CharsetUtil;
 import org.wolfgang.common.concurrent.Promise;
+import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.network.connection.web.handler.WebClientSocketHandler;
 
 /**
@@ -37,11 +38,14 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 	private final Promise<Integer, Exception> connectionEstablished;
 	private final WebSocketClientHandshaker handshaker;
 	private final WebClientSocketHandler wsRequestHandler;
+	private final Promise<SourceComponent<String, String>, Exception> sourceComponentPromise;
 
-	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Integer, Exception> connectionEstablished) {
+	public WebClientHandler(WebSocketClientHandshaker handshaker, WebClientSocketHandler wsRequestHandler, Promise<Integer, Exception> connectionEstablished,
+			Promise<SourceComponent<String, String>, Exception> sourceComponentPromise) {
 		this.handshaker = handshaker;
 		this.wsRequestHandler = wsRequestHandler;
 		this.connectionEstablished = connectionEstablished;
+		this.sourceComponentPromise = sourceComponentPromise;
 	}
 
 	@Override
@@ -52,7 +56,7 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 			if (!handshaker.isHandshakeComplete()) {
 				try {
 					handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
-					wsRequestHandler.notifyHandShake(context);
+					wsRequestHandler.notifyHandShake(context, sourceComponentPromise);
 					connectionEstablished.success(context.getChannel().getId());
 				} catch (Exception e) {
 					connectionEstablished.failure(e);
