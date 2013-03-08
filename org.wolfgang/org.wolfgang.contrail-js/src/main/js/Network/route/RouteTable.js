@@ -22,24 +22,23 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function RouteTable(builder) {
+        function RouteTable() {
             jObj.bless(this);
 
-            this.builder = builder;
             this.routes = {};
         }
 
-        RouteTable.init = jObj.constructor([ jObj.types.Function ],
-            function (builder) {
-                return new RouteTable(builder);
+        RouteTable.init = jObj.constructor([ ],
+            function () {
+                return new RouteTable();
             });
 
-        RouteTable.prototype.addEntry = jObj.procedure([ jObj.types.String, jObj.types.String ],
-            function (name, endpoint) {
+        RouteTable.prototype.addEntry = jObj.procedure([ jObj.types.String, jObj.types.Named("ClientBuilder") ],
+            function (name, builder) {
                 if (this.hasEntry(name)) {
                     jObj.throwError(jObj.exception("L.route.entry.already.defined"));
                 } else {
-                    this.routes[name] = this.builder(endpoint);
+                    this.routes[name] = builder;
                 }
             });
 
@@ -51,17 +50,6 @@ define([ "Core/object/jObj" ],
         RouteTable.prototype.getEntry = jObj.method([ jObj.types.String ], jObj.types.Named("ClientBuilder"),
             function (name) {
                 return this.routes[name] || jObj.throwError(jObj.exception("L.route.entry.not.defined"));
-            });
-
-        RouteTable.prototype.populate = jObj.procedure([jObj.types.Object],
-            function (data) {
-                var name;
-
-                for (name in data) {
-                    if (data.hasOwnProperty(name)) {
-                        this.addEntry(name, data[name]);
-                    }
-                }
             });
 
         return RouteTable.init;

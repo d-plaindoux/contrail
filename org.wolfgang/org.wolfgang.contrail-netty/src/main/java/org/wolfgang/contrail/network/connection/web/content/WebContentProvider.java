@@ -29,6 +29,15 @@ import java.io.IOException;
 public interface WebContentProvider {
 
 	/**
+	 * Predicate checking the availability of a given resource
+	 * 
+	 * @param resourceName
+	 *            The resource name
+	 * @return true if it can be provided; false otherwise
+	 */
+	boolean canProvideContent(String resourceName);
+
+	/**
 	 * Method called whether a page must be retrieved (experimental)
 	 * 
 	 * @param resourceName

@@ -26,11 +26,11 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
             jObj.bless(this, jNetwork.builder.core(endPoint));
         }
 
-        MyBuilder.init = function(endPoint) {
+        MyBuilder.init = function (endPoint) {
             return new MyBuilder(endPoint);
         };
 
-        MyBuilder.prototype.activate = function() {
+        MyBuilder.prototype.activate = function () {
             return jContrail.component.initial(jFlow.buffered());
         };
 
@@ -39,20 +39,20 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(MyBuilder.init);
-                    table.addEntry("b","Route.To.B");
+                    table = jNetwork.table();
+                    table.addEntry("b", MyBuilder.init("Route.To.B"));
                 }).
                 And(function () {
                     routerComponent = jNetwork.component.router(table);
                 }).
                 When(function () {
-                   routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b" , {}));
+                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b", {}));
                 }).
                 Then(function () {
-                    jCC.equal(routerComponent.hasActiveRoute("b",null), true, "Active route must be created for destination 'b'");
+                    jCC.equal(routerComponent.hasActiveRoute("b", null), true, "Active route must be created for destination 'b'");
                 }).
                 And(function () {
-                    jCC.equal(routerComponent.getActiveRoute("b",null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'b' with the given endPoint");
+                    jCC.equal(routerComponent.getActiveRoute("b", null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'b' with the given endPoint");
                 });
         });
 
@@ -61,13 +61,13 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(MyBuilder.init);
+                    table = jNetwork.table();
                 }).
                 And(function () {
                     routerComponent = jNetwork.component.router(table);
                 }).
                 When(function () {
-                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b" , {}));
+                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b", {}));
                 }).
                 ThenError(function (e) {
                     jCC.equal(true, true, "Active route cannot be created for destination 'b'");
@@ -80,30 +80,30 @@ require([ "Core/test/jCC", "Core/object/jObj", "Network/jNetwork", "Contrail/jCo
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(MyBuilder.init);
-                    table.addEntry("b","Route.To.B");
-                    table.addEntry("c","Route.To.B");
+                    table = jNetwork.table();
+                    table.addEntry("b", MyBuilder.init("Route.To.B"));
+                    table.addEntry("c", MyBuilder.init("Route.To.B"));
                 }).
                 And(function () {
                     routerComponent = jNetwork.component.router(table);
                 }).
                 When(function () {
-                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b" , {}));
+                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "b", {}));
                 }).
                 Then(function () {
-                    jCC.equal(routerComponent.hasActiveRoute("b",null), true, "Active route must be created for destination 'b'");
+                    jCC.equal(routerComponent.hasActiveRoute("b", null), true, "Active route must be created for destination 'b'");
                 }).
                 And(function () {
-                    jCC.equal(routerComponent.getActiveRoute("b",null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'b' with the given endPoint");
+                    jCC.equal(routerComponent.getActiveRoute("b", null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'b' with the given endPoint");
                 }).
                 When(function () {
-                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "c" , {}));
+                    routerComponent.getDownStreamDataFlow().handleData(jNetwork.packet("a", "c", {}));
                 }).
                 Then(function () {
-                    jCC.equal(routerComponent.hasActiveRoute("c",null), true, "Active route must be created for destination 'c'");
+                    jCC.equal(routerComponent.hasActiveRoute("c", null), true, "Active route must be created for destination 'c'");
                 }).
                 And(function () {
-                    jCC.equal(routerComponent.getActiveRoute("c",null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'c' with the given endPoint");
+                    jCC.equal(routerComponent.getActiveRoute("c", null).getEndPoint(), "Route.To.B", "Active route must be created for destination 'c' with the given endPoint");
                 });
         });
     });

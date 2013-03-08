@@ -110,13 +110,13 @@
                         <aggregation>
                             <removeIncluded>true</removeIncluded>
                             <insertNewLine>false</insertNewLine>
-                            <output>${project.build.directory}/min/classes/1-min.js</output>
+                            <output>${project.build.directory}/min/classes/wolfgang/contrail.js</output>
                             <inputDir>target/classes/js</inputDir>
                             <includes>
                                 <include>Core/**/*.js</include>
                                 <include>External/**/*.js</include>
-                                <include>Actor/**/*.js</include>
                                 <include>Contrail/**/*.js</include>
+                                <include>Actor/**/*.js</include>
                                 <include>Network/**/*.js</include>
                             </includes>
                         </aggregation>

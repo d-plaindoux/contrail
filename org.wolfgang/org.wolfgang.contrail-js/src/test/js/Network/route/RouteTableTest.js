@@ -19,7 +19,7 @@
 /*global require */
 
 require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
-    function (jCC, jNetwork, JSON) {
+    function (jCC, jNetwork, jSon) {
         "use strict";
 
         jCC.scenario("Checking route table add/retrieve capabilities", function () {
@@ -27,10 +27,10 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(jNetwork.builder.standard);
+                    table = jNetwork.table();
                 }).
                 When(function () {
-                    table.addEntry("a", "ws://localhost/a");
+                    table.addEntry("a", jNetwork.builder.webSocket("ws://localhost/a"));
                 }).
                 Then(function () {
                     jCC.equal(table.getEntry("a").getEndPoint(), "ws://localhost/a");
@@ -42,7 +42,7 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(jNetwork.builder.standard);
+                    table = jNetwork.table();
                 }).
                 When(function () {
                     table.getEntry("a");
@@ -57,13 +57,13 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(jNetwork.builder.standard);
+                    table = jNetwork.table();
                 }).
                 When(function () {
-                    table.addEntry("a", "ws://localhost/a");
+                    table.addEntry("a", jNetwork.builder.webSocket("ws://localhost/a"));
                 }).
                 And(function () {
-                    table.addEntry("a", "ws://localhost/a");
+                    table.addEntry("a", jNetwork.builder.webSocket("ws://localhost/a"));
                 }).
                 ThenError(function (e) {
                     jCC.ok("Exception catch");
@@ -75,13 +75,20 @@ require([ "Core/test/jCC", "Network/jNetwork", "External/jSonLib" ],
 
             jCC.
                 Given(function () {
-                    table = jNetwork.table(jNetwork.builder.standard);
+                    table = jNetwork.table();
                 }).
                 And(function () {
-                    configuration = '{"a":"ws://localhost/a", "b":"ws://localhost/b"}';
+                    configuration = jSon.parse('{"a":"ws://localhost/a", "b":"ws://localhost/b"}');
                 }).
                 When(function () {
-                    table.populate(JSON.parse(configuration));
+                    var key;
+
+                    for(key in configuration) {
+                        if (configuration.hasOwnProperty(key)) {
+                            table.addEntry(key, jNetwork.builder.webSocket(configuration[key]));
+
+                        }
+                    }
                 }).
                 Then(function () {
                     jCC.equal(table.getEntry("a").getEndPoint(), "ws://localhost/a");

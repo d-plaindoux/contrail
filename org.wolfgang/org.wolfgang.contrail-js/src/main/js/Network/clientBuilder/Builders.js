@@ -22,11 +22,11 @@ define([ "./ClientBuilder", "./StandardClientBuilder", "./WebSocketClientBuilder
     function (clientBuilder, standardBuilder, webSocketBuilder) {
         "use strict";
 
-        var jBuilders = {};
+        var Builders = {};
 
-        jBuilders.core = clientBuilder;
-        jBuilders.standard = standardBuilder;
-        jBuilders.webSocker = webSocketBuilder;
+        Builders.core = clientBuilder;
+        Builders.standard = standardBuilder;
+        Builders.webSocket = webSocketBuilder;
 
-        return jBuilders;
+        return Builders;
     });

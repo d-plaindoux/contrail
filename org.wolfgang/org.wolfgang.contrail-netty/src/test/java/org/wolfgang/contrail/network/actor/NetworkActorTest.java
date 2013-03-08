@@ -21,7 +21,6 @@ package org.wolfgang.contrail.network.actor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;

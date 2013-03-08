@@ -175,6 +175,10 @@ public class Coordinator implements Runnable {
 		}
 	}
 
+	public void send(String actorId, Request request) {
+		this.send(actorId, request, null);
+	}
+
 	public void invoke(String actorId, Request request, Response response) {
 		if (this.universe.containsKey(actorId)) {
 			this.universe.get(actorId).invoke(request, response);

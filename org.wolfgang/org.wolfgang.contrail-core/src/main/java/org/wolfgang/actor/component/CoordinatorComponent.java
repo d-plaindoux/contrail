@@ -62,8 +62,6 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
 	}
 
-	
-	
 	@Override
 	public DataFlow<Packet> getUpStreamDataFlow() throws ComponentNotConnectedException {
 		return this.upStreamDataFlow;
@@ -76,12 +74,15 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 
 	public String createResponseId(Response response) {
 		final String identifier = UUID.randomUUID().toString();
-		this.pendingResponses.put(identifier, response);
+		synchronized (this.pendingResponses) {
+			this.pendingResponses.put(identifier, response);
+		}
 		return identifier;
 	}
 
 	public Response retrieveResponseById(String identifier) {
-		// TODO - check null response
-		return this.pendingResponses.remove(identifier);
+		synchronized (this.pendingResponses) {
+			return this.pendingResponses.remove(identifier);
+		}
 	}
 }
