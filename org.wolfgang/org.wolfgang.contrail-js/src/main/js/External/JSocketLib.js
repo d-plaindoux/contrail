@@ -32,12 +32,12 @@ define("External/jSocketLib", [ "require", "Core/object/jObj" ],
 
                 client = new WebSocket(endpoint);
 
-                client.onopen = function () {
+                client.onopen = callbacks.onopen || function () {
                     // Nothing for the moment
                 };
 
-                client.onerror = function () {
-                    // Nothing for the moment
+                client.onerror = callbacks.onerror || function() {
+                    // Nothing
                 };
 
                 client.onmessage = callbacks.onmessage;

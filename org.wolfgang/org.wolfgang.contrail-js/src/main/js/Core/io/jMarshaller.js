@@ -174,6 +174,38 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 return jMarshaller.bytesToStringWithOffset(bytes, 0, bytes.length / 2);
             });
 
+        /**
+         * Convert a byte array to string with a given offset
+         *
+         * @param bytes
+         * @return {String}
+         */
+        jMarshaller.charsToStringWithOffset = jObj.method([jObj.types.Array, jObj.types.Number, jObj.types.Number], jObj.types.String,
+            function (chars, offset, length) {
+                var str = "", i;
+
+                if (chars.length < offset + length) {
+                    jObj.throwError(jObj.exception("L.array.out.of.bound"));
+                }
+
+                for (i = 0; i < length; i += 1) {
+                    str += String.fromCharCode(chars[i + offset]);
+                }
+
+                return str;
+            });
+
+        /**
+         * Convert a char like array to string
+         *
+         * @param bytes
+         * @return {String}
+         */
+        jMarshaller.charsToString = jObj.method([jObj.types.Array], jObj.types.String,
+            function (chars) {
+                return jMarshaller.charsToStringWithOffset(chars, 0, chars.length);
+            });
+
         // -------------------------------------------------------------------------------------------------------------
         // Encoding ...
         // -------------------------------------------------------------------------------------------------------------
@@ -226,6 +258,23 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 }
 
                 return bytes;
+            });
+
+        /**
+         * Convert a string to a byte array
+         *
+         * @param str
+         * @return {Array}
+         */
+        jMarshaller.stringToChars = jObj.method([jObj.types.String], jObj.types.Array,
+            function (value) {
+                var chars = [], i;
+
+                for (i = 0; i < value.length; i += 1) {
+                    chars = chars.concat(value);
+                }
+
+                return chars;
             });
 
         return jMarshaller;

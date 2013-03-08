@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.web.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -58,6 +61,8 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 					handshaker.finishHandshake(context.getChannel(), (HttpResponse) message);
 					wsRequestHandler.notifyHandShake(context, sourceComponentPromise);
 					connectionEstablished.success(context.getChannel().getId());
+
+					Logger.getAnonymousLogger().log(Level.INFO, "Accept client web socket [" + context.toString() + "]");
 				} catch (Exception e) {
 					connectionEstablished.failure(e);
 				}

@@ -24,7 +24,8 @@ define(["require", "Core/object/jObj", "../core/SourceComponent" ],
 
         var SourceCompositionComponent = function (components) {
             jObj.bless(this, source());
-            this.components = components;
+            this.initialComponent = components[0];
+            this.terminalComponent = components[components.length - 1];
         };
 
         SourceCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
@@ -34,17 +35,27 @@ define(["require", "Core/object/jObj", "../core/SourceComponent" ],
 
         SourceCompositionComponent.prototype.acceptDestination = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
-                return this.components[0].acceptDestination(componentId);
+                return this.terminalComponent.acceptDestination(componentId);
             });
 
         SourceCompositionComponent.prototype.connectDestination = jObj.method([jObj.types.Named("DestinationLink")], jObj.types.Named("ComponentLink"),
             function (destinationLink) {
-                return this.components[0].connectDestination(destinationLink);
+                return this.terminalComponent.connectDestination(destinationLink);
             });
 
         SourceCompositionComponent.prototype.getDestination = jObj.method([], jObj.types.Named("DestinationComponent"),
             function () {
-                return this.components[0].getDestination();
+                return this.terminalComponent.getDestination();
+            });
+
+        SourceCompositionComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function(){
+                return this.terminalComponent.getDownStreamDataFlow();
+            });
+
+        SourceCompositionComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function(){
+                return this.initialComponent.getUpStreamDataFlow();
             });
 
         SourceCompositionComponent.prototype.closeUpStream = jObj.procedure([],

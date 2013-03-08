@@ -24,7 +24,6 @@ define(["require", "Core/object/jObj", "./SourceCompositionComponent", "./Destin
 
         var PipelineCompositionComponent = function (components) {
             jObj.bless(this, source(components), destination(components));
-            this.components = components;
         };
 
         PipelineCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],

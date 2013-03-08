@@ -29,20 +29,22 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
             this.client = null;
         }
 
-        Socket.init = jObj.constructor([ jObj.types.String, jObj.types.Named("DataFlow") ],
-            function (endPoint, dataFlow) {
-                return new Socket(endPoint, dataFlow);
+        Socket.init = jObj.constructor([ jObj.types.String ],
+            function (endPoint) {
+                return new Socket(endPoint);
             });
 
-        Socket.prototype.connect = jObj.procedure([ jObj.types.Named("DataFlow") ],
-            function (dataFlow) {
+        Socket.prototype.connect = jObj.procedure([ jObj.types.Named("DataFlow"), jObj.types.Nullable(jObj.types.Function) ],
+            function (dataFlow, callback) {
                 if (this.client) {
                     jObj.throwError(jObj.exception("L.web.socket.already.opened"));
                 } else {
-                    this.client = SocketLib.client(this.endpoint, {
+                    this.client = SocketLib.client(this.endPoint, {
                         onopen:jObj.procedure([],
                             function () {
-                                // Nothing
+                                if (callback) {
+                                    callback();
+                                }
                             }),
 
                         onerror:jObj.procedure([ jObj.types.Object ],

@@ -18,10 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.web.content;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
@@ -30,46 +29,38 @@ import java.net.URL;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ResourceWebContentProvider implements WebContentProvider {
+public final class SetOfWebContentProvider implements WebContentProvider {
 
-	private static final String HTDOCS = "/htdocs/";
+	private final List<WebContentProvider> providers;
 
-	public ResourceWebContentProvider() {
-		// TODO
+	public SetOfWebContentProvider(WebContentProvider... providers) {
+		this.providers = new ArrayList<WebContentProvider>();
+	}
+
+	public SetOfWebContentProvider add(WebContentProvider provider) {
+		this.providers.add(provider);
+		return this;
 	}
 
 	@Override
 	public boolean canProvideContent(String resourceName) {
-		return ResourceWebContentProvider.class.getResource(HTDOCS + resourceName) != null;
+		for (WebContentProvider provider : providers) {
+			if (provider.canProvideContent(resourceName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public byte[] getContent(String resourceName) throws IOException {
-		final URL resource = ResourceWebContentProvider.class.getResource(HTDOCS + resourceName);
-
-		if (resource == null) {
-			throw new IOException();
-		}
-
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		try {
-			final InputStream inputStream = resource.openStream();
-			try {
-				final byte[] bytes = new byte[1024];
-				int len;
-				while ((len = inputStream.read(bytes)) != -1) {
-					outputStream.write(bytes, 0, len);
-					outputStream.flush();
-				}
-			} finally {
-				inputStream.close();
+		for (WebContentProvider provider : providers) {
+			if (provider.canProvideContent(resourceName)) {
+				return provider.getContent(resourceName);
 			}
-		} finally {
-			outputStream.close();
 		}
 
-		// Unfold HTML document
-
-		return outputStream.toByteArray();
+		throw new IOException("Resource [" + resourceName + "] not found");
 	}
+
 }

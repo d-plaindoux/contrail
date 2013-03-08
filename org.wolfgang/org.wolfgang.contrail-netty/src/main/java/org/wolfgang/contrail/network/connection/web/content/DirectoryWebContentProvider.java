@@ -19,9 +19,10 @@
 package org.wolfgang.contrail.network.connection.web.content;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * <code>ServerPage</code> provides html pages on demand based on simple
@@ -30,30 +31,26 @@ import java.net.URL;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public final class ResourceWebContentProvider implements WebContentProvider {
+public final class DirectoryWebContentProvider implements WebContentProvider {
 
-	private static final String HTDOCS = "/htdocs/";
+	private final File rootDirector;
 
-	public ResourceWebContentProvider() {
-		// TODO
+	public DirectoryWebContentProvider(File rootDirector) {
+		this.rootDirector = rootDirector;
 	}
 
 	@Override
 	public boolean canProvideContent(String resourceName) {
-		return ResourceWebContentProvider.class.getResource(HTDOCS + resourceName) != null;
+		return new File(rootDirector, resourceName).exists();
 	}
 
 	@Override
 	public byte[] getContent(String resourceName) throws IOException {
-		final URL resource = ResourceWebContentProvider.class.getResource(HTDOCS + resourceName);
-
-		if (resource == null) {
-			throw new IOException();
-		}
+		final File resource = new File(rootDirector, resourceName);
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
-			final InputStream inputStream = resource.openStream();
+			final InputStream inputStream = new FileInputStream(resource);
 			try {
 				final byte[] bytes = new byte[1024];
 				int len;

@@ -24,7 +24,8 @@ define([ "require", "Core/object/jObj", "../core/DestinationComponent" ],
 
         var DestinationCompositionComponent = function (components) {
             jObj.bless(this, destination());
-            this.component = components[0];
+            this.initialComponent = components[0];
+            this.terminalComponent = components[components.length - 1];
         };
 
         DestinationCompositionComponent.init = jObj.constructor([ jObj.types.ArrayOf(jObj.types.Named("Component")) ],
@@ -34,17 +35,27 @@ define([ "require", "Core/object/jObj", "../core/DestinationComponent" ],
 
         DestinationCompositionComponent.prototype.acceptSource = jObj.method([jObj.types.String], jObj.types.Boolean,
             function (componentId) {
-                return this.components[this.components.length - 1].acceptSource(componentId);
+                return this.initialComponent.acceptSource(componentId);
             });
 
         DestinationCompositionComponent.prototype.connectSource = jObj.method([jObj.types.Named("SourceLink")], jObj.types.Named("ComponentLink"),
             function (sourceLink) {
-                return this.components[this.components.length - 1].connectSource(sourceLink);
+                return this.initialComponent.connectSource(sourceLink);
             });
 
         DestinationCompositionComponent.prototype.getSource = jObj.method([], jObj.types.Named("SourceComponent"),
             function () {
-                return this.components[this.components.length - 1].getSource();
+                return this.initialComponent.getSource();
+            });
+
+        DestinationCompositionComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function(){
+                return this.initialComponent.getUpStreamDataFlow();
+            });
+
+        DestinationCompositionComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function(){
+                return this.terminalComponent.getDownStreamDataFlow();
             });
 
         DestinationCompositionComponent.prototype.closeDownStream = jObj.procedure([],

@@ -57,7 +57,7 @@ define([ "Core/object/jObj", "./Actor" ],
          * Coordinator management
          */
 
-        Coordinator.prototype.start = jObj.procedure([],
+        Coordinator.prototype.start = jObj.method([], jObj.types.Named("Coordinator"),
             function () {
                 var self = this;
 
@@ -71,6 +71,8 @@ define([ "Core/object/jObj", "./Actor" ],
                         self.actorRunner();
                     }, this.interval);
                 }
+
+                return this;
             });
 
         Coordinator.prototype.stop = jObj.procedure([],

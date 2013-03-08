@@ -24,7 +24,7 @@ define([ "Core/utils/jUUID", "Core/object/jObj" ],
 
         function Component() {
             jObj.bless(this);
-            this.destinationId = jUUID.generate();
+            this.componentId = jUUID.generate();
         }
 
         Component.init = jObj.constructor([],
@@ -34,7 +34,7 @@ define([ "Core/utils/jUUID", "Core/object/jObj" ],
 
         Component.prototype.getComponentId = jObj.method([], jObj.types.String,
             function () {
-                return this.destinationId;
+                return this.componentId;
             });
 
         Component.prototype.closeDownStream = jObj.procedure([]);

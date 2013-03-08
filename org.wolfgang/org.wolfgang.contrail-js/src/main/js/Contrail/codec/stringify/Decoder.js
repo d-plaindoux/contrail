@@ -34,7 +34,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         StringifyDecoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array,
             function (value) {
-                return [ jMarshaller.stringToBytes(value) ];
+                return [ jMarshaller.stringToChars(value) ];
             });
 
         StringifyDecoder.prototype.finish = jObj.method([], jObj.types.Array,

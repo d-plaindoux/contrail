@@ -28,6 +28,8 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.OK;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -82,16 +84,16 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 */
 	@Override
 	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest request) throws Exception {
-		// Allow only GET methods ?
+
+		Logger.getAnonymousLogger().log(Level.INFO, "Handling request [" + request.getHeader(HttpHeaders.Names.ORIGIN) +  request.getUri() + "]");
+
 		if (request.getMethod() != GET) {
 			this.sendHttpResponse(context, request, FORBIDDEN_HTTP_RESPONSE);
-		}
-
-		// Prepare the URI ?
-		final String resourceURI;
-		if (request.getUri().startsWith(WEBSOCKET)) {
+		} else if (request.getUri().startsWith(WEBSOCKET)) {
 			this.initiateWebSocket(context, request);
 		} else {
+			final String resourceURI;
+
 			if (request.getUri().equals("/")) {
 				resourceURI = "/index.html";
 			} else {
@@ -105,10 +107,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource);
 				res.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
 				setContentLength(res, content.readableBytes());
-
 				res.setContent(content);
 				this.sendHttpResponse(context, request, res);
-
 			} catch (IOException e) {
 				this.sendHttpResponse(context, request, NOT_FOUND_HTTP_RESPONSE);
 			}
@@ -119,8 +119,8 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	// Basic and internal construction mechanisms
 	//
 
-	private String getWebSocketLocation(HttpRequest req) {
-		return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + WEBSOCKET;
+	private String getWebSocketLocation(HttpRequest request) {
+		return "ws://" + request.getHeader(HttpHeaders.Names.HOST) + request.getUri();
 	}
 
 	//
@@ -131,6 +131,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 		final String location = this.getWebSocketLocation(req);
 		final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(location, null, false);
 		final WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
+
 		if (handshaker == null) {
 			wsFactory.sendUnsupportedWebSocketVersionResponse(context.getChannel());
 		} else {
