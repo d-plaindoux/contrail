@@ -28,19 +28,19 @@
     modules:[
         {
             name:"Contrail/jContrail",
-            exclude:["Network/jNetwork", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+            exclude:["Network/jNetwork", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUtils"]
         },
         {
             name:"Network/jNetwork",
-            exclude:["Contrail/jContrail", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+            exclude:["Contrail/jContrail", "Actor/jActor", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUtils"]
         },
         {
             name:"Actor/jActor",
-            exclude:["Contrail/jContrail", "Network/jNetwork", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+            exclude:["Contrail/jContrail", "Network/jNetwork", "Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUtils"]
         },
         {
             name:"Core/jCore",
-            include:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUUID"]
+            include:["Core/object/jObj", "Core/flow/jFlow", "Core/io/jMarshaller", "Core/utils/jUtils"]
         }
     ]
 })

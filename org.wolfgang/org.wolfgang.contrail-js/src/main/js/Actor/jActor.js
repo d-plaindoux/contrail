@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "Core/object/jObj", "./event/Event", "./core/Coordinator", "./component/CoordinatorComponent", "./component/handler/RemoteActorHandler" ],
+define([ "Core/object/jObj", "Actor/jEvent", "./core/Coordinator", "./component/CoordinatorComponent", "./component/handler/RemoteActorHandler" ],
     function (jObj, event, coordinator, component) {
         "use strict";
 

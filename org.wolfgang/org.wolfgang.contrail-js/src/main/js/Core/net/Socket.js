@@ -27,6 +27,7 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
 
             this.endPoint = endpoint;
             this.client = null;
+            this.pendingMessages = null;
         }
 
         Socket.init = jObj.constructor([ jObj.types.String ],
@@ -36,33 +37,36 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
 
         Socket.prototype.connect = jObj.procedure([ jObj.types.Named("DataFlow"), jObj.types.Nullable(jObj.types.Function) ],
             function (dataFlow, callback) {
+                this.pendingMessages = [];
+
                 if (this.client) {
                     jObj.throwError(jObj.exception("L.web.socket.already.opened"));
                 } else {
+                    var self = this;
+
                     this.client = SocketLib.client(this.endPoint, {
-                        onopen:jObj.procedure([],
-                            function () {
-                                if (callback) {
-                                    callback();
-                                }
-                            }),
+                        onopen:function () {
+                            if (callback) {
+                                callback();
+                            }
 
-                        onerror:jObj.procedure([ jObj.types.Object ],
-                            function (error) {
-                                dataFlow.handleClose();
-                            }),
+                            self.pendingMessages.forEach(function(message) {
+                                self.client.send(message);
+                            });
 
-                        onclose:jObj.procedure([],
-                            function () {
-                                dataFlow.handleClose();
-                            }),
-
-                        onmessage:jObj.procedure([ jObj.types.ObjectOf({data:jObj.types.Any}) ],
-                            function (message) {
-                                if (message.data) {
-                                    dataFlow.handleData(message.data);
-                                }
-                            })
+                            self.pendingMessages = null;
+                        },
+                        onerror:function (error) {
+                            dataFlow.handleClose();
+                        },
+                        onclose:function () {
+                            dataFlow.handleClose();
+                        },
+                        onmessage:function (message) {
+                            if (message.data) {
+                                dataFlow.handleData(message.data);
+                            }
+                        }
                     });
                 }
             });
@@ -80,13 +84,16 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
 
         Socket.prototype.isOpen = jObj.method([], jObj.types.Boolean,
             function () {
-                return this.client.isOpen();
+                return this.client && this.client.isOpen();
             });
 
         Socket.prototype.send = jObj.procedure([ jObj.types.String ],
             function (message) {
-                this.ensureOpen();
-                this.client.send(message);
+                if (this.isOpen()) {
+                    this.client.send(message);
+                } else if (this.pendingMessages) {
+                    this.pendingMessages.push(message);
+                }
             });
 
         Socket.prototype.close = jObj.procedure([],

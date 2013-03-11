@@ -84,9 +84,6 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	 */
 	@Override
 	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest request) throws Exception {
-
-		Logger.getAnonymousLogger().log(Level.INFO, "Handling request [" + request.getHeader(HttpHeaders.Names.ORIGIN) +  request.getUri() + "]");
-
 		if (request.getMethod() != GET) {
 			this.sendHttpResponse(context, request, FORBIDDEN_HTTP_RESPONSE);
 		} else if (request.getUri().startsWith(WEBSOCKET)) {

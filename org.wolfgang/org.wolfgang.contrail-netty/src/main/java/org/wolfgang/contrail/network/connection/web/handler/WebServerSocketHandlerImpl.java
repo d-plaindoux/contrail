@@ -33,8 +33,8 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.wolfgang.contrail.component.CannotCreateComponentException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.Components;
+import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.component.bound.InitialComponent;
 import org.wolfgang.contrail.flow.DataFlow;
 import org.wolfgang.contrail.flow.DataFlowFactory;
@@ -79,18 +79,19 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
 	@Override
 	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception {
+
 		final int identifier = context.getChannel().getId();
 
 		if (!this.receivers.containsKey(identifier)) {
 			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
 		} else if (frame instanceof CloseWebSocketFrame) {
 			this.handShakers.remove(identifier).close(context.getChannel(), (CloseWebSocketFrame) frame);
-			this.receivers.remove(identifier).getUpStreamDataFlow().handleClose();
+			this.receivers.remove(identifier).closeUpStream();
 		} else if (frame instanceof PingWebSocketFrame) {
 			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
 		} else if (frame instanceof TextWebSocketFrame) {
-			final String request = ((TextWebSocketFrame) frame).getText();
-			this.receivers.get(identifier).getUpStreamDataFlow().handleData(request);
+			final String data = ((TextWebSocketFrame) frame).getText();
+			this.receivers.get(identifier).getUpStreamDataFlow().handleData(data);
 		} else {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}

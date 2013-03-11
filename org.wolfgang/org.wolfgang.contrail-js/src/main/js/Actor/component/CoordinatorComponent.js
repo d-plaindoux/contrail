@@ -19,7 +19,7 @@
 /*global define*/
 
 define([
-    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUUID", "Contrail/component/jComponent",
+    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUtils", "Contrail/component/jComponent",
     "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
 ],
     function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorInteractionFilter, removeActorHandler) {
@@ -41,7 +41,7 @@ define([
 
         CoordinatorComponent.prototype.createResponseId = jObj.method([jObj.types.Named("Response")], jObj.types.String,
             function (response) {
-                var identifier = jUUID.generate();
+                var identifier = jUUID.uuid();
                 this.responses[identifier] = response;
                 return identifier;
             });

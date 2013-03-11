@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define, document*/
+/*global define, require, document*/
 
 define("Core/browser/jLoader", [ "Core/object/jObj" ],
     function (jObj) {

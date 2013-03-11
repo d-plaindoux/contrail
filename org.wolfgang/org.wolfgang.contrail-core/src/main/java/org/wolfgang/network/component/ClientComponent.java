@@ -21,9 +21,12 @@ package org.wolfgang.network.component;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
+import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.network.component.flow.client.ClientDownStreamDataFlow;
 import org.wolfgang.network.component.flow.client.ClientUpStreamDataFlow;
 import org.wolfgang.network.packet.Packet;
@@ -74,4 +77,20 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 		return this.downStreamDataFlow;
 	}
 
+	@Override
+	public void closeUpStream() throws DataFlowCloseException {
+		try {
+			super.closeUpStream();
+			this.getDestinationComponentLink().dispose();
+		} catch (ComponentDisconnectionRejectedException e) {
+			throw new DataFlowCloseException(e);
+		}
+	}
+
+	@Override
+	public void closeDownStream() throws DataFlowCloseException {
+		super.closeDownStream();
+	}
+	
+	
 }

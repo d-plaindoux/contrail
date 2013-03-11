@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([ "./Request", "./Response" ],
+define("Actor/jEvent", [ "./Request", "./Response" ],
     function (request, response) {
         "use strict";
 

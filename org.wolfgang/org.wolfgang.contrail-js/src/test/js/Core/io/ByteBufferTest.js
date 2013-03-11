@@ -18,7 +18,7 @@
 
 /*global require */
 
-require([ "Core/test/jCC", "Core/utils/jUUID", "Core/io/jMarshaller", "Core/io/ByteBuffer" ],
+require([ "Core/test/jCC", "Core/utils/jUtils", "Core/io/jMarshaller", "Core/io/ByteBuffer" ],
     function (jCC, jUUID, jMarshaller, byteBuffer) {
         "use strict";
 

@@ -18,29 +18,25 @@
 
 /*global define*/
 
-define("Core/browser/jDom", [ "Core/object/jObj" ],
-    function (jObj) {
+define("Core/browser/jDom", [ ],
+    function () {
         "use strict";
 
-        function JDom(tag, attributes, content) {
-            this.qname = tag;
-            this.attributes = attributes;
-            this.content = content;
-        }
+        var JDom = {};
 
-        JDom.prototype.toString = function () {
+        JDom.tag = function (qname, attributes, content) {
             var key, result;
 
-            result = "<" + this.qname;
+            result = "<" + qname;
 
-            for (key in this.attributes) {
-                if (this.attributes.hasOwnProperty(key)) {
-                    result += " " + key + "='" + this.attributes[key] + "'";
+            for (key in attributes) {
+                if (attributes.hasOwnProperty(key)) {
+                    result += " " + key + "='" + attributes[key] + "'";
                 }
             }
 
-            if (this.content) {
-                result += ">" + this.content.toString() + "</" + this.qname + ">";
+            if (content) {
+                result += ">" + content.toString() + "</" + qname + ">";
             } else {
                 result += "/>";
             }
@@ -48,9 +44,5 @@ define("Core/browser/jDom", [ "Core/object/jObj" ],
             return result;
         };
 
-        // Public package definition
-
-        return function (tag, attributes, content) {
-            return new JDom(tag, attributes, content).toString();
-        };
+        return JDom;
     });

@@ -98,5 +98,4 @@ public class ComponentLink<U, D> implements SourceComponentLink<U, D>, Destinati
 			throw new ComponentNotConnectedException();
 		}
 	}
-
 }

@@ -164,7 +164,7 @@
                                 <include>Contrail/component/core/DestinationComponent.js</include>
                                 <include>Contrail/component/core/SourceComponentWithSingleDestination.js</include>
                                 <include>Contrail/component/core/SourceComponent.js</include>
-                                <include>Core/utils/jUUID.js</include>
+                                <include>Core/utils/jUtils.js</include>
                                 <include>Contrail/component/core/Component.js</include>
                                 <include>Contrail/component/core/CoreComponentLibrary.js</include>
                                 <include>Contrail/component/pipeline/PipelineComponent.js</include>
@@ -208,6 +208,7 @@
                                 <include>Actor/core/BindActor.js</include>
                                 <include>Actor/core/LocalActor.js</include>
                                 <include>Core/browser/jLoader.js</include>
+                                <include>Core/browser/jDom.js</include>
                                 <include>Actor/core/RemoteActor.js</include>
                                 <include>Actor/core/Actor.js</include>
                                 <include>Actor/core/Coordinator.js</include>

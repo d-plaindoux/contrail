@@ -18,6 +18,9 @@
 
 package org.wolfgang.contrail.network.connection.web.server;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -63,7 +66,7 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 			}
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Logger.getAnonymousLogger().log(Level.SEVERE, t.getMessage(), t);
 		}
 	}
 

@@ -271,7 +271,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 var chars = [], i;
 
                 for (i = 0; i < value.length; i += 1) {
-                    chars = chars.concat(value);
+                    chars.push(value.charCodeAt(i));
                 }
 
                 return chars;

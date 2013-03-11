@@ -16,28 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require */
+package org.wolfgang.actor.annotation;
 
-require([ "Core/utils/jUtils", "Core/test/jCC" ],
-    function (jUUID, jCC) {
-        "use strict";
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-        /**
-         * Test UUID generation
-         */
-        jCC.scenario("Check UUID generation", function () {
-            var uuid1, uuid2;
+/**
+ * <code>ActorCoordinator</code>
+ *
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ActorBehavior {
 
-            jCC.
-                Given(function () {
-                    uuid1 = jUUID.uuid();
-                }).
-                And(function () {
-                    uuid2 = jUUID.uuid();
-                }).
-                When(jCC.Nothing).
-                Then(function () {
-                    jCC.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
-                });
-        });
-    });
+}

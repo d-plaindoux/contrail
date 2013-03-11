@@ -16,28 +16,31 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global require */
+/*global define*/
 
-require([ "Core/utils/jUtils", "Core/test/jCC" ],
-    function (jUUID, jCC) {
+define("Core/utils/jUtils", [  ],
+    function () {
         "use strict";
 
-        /**
-         * Test UUID generation
-         */
-        jCC.scenario("Check UUID generation", function () {
-            var uuid1, uuid2;
+        var jUtils = {};
 
-            jCC.
-                Given(function () {
-                    uuid1 = jUUID.uuid();
-                }).
-                And(function () {
-                    uuid2 = jUUID.uuid();
-                }).
-                When(jCC.Nothing).
-                Then(function () {
-                    jCC.notEqual(uuid1, uuid2, "Two fresh UUID must be different");
-                });
-        });
+        jUtils.uuid = function () {
+            var S4 = function () {
+                return Math.floor(Math.random() * 0x10000).toString(16);
+            };
+
+            return S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4();
+        };
+
+        jUtils.array = function (len) {
+            var array = [], i;
+
+            for (i = 0; i < len; i += 1) {
+                array.push(undefined);
+            }
+
+            return array;
+        };
+
+        return jUtils;
     });

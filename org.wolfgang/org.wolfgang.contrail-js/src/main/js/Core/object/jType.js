@@ -121,14 +121,14 @@ define([],
             },
             // Object type only - An array is not an object in this type system
             Object:typeRule(Primitives.Object, function (object) {
-                return typeof object === "object" && !jType.ofType(object, jType.types.Array);
+                return object && typeof object === "object" && !jType.ofType(object, jType.types.Array);
             }),
 
             // Complex object type (Structural sub-typing)
             ObjectOf:function (objectType) {
                 return typeRule(Primitives.Object,
                     function (object) {
-                        var entry, result;
+                        var entry, result = false;
 
                         if (jType.ofType(object, jType.types.Object)) {
                             result = true;
@@ -138,8 +138,6 @@ define([],
                                     result = result && jType.ofType(object[entry], objectType[entry]);
                                 }
                             }
-                        } else {
-                            result = false;
                         }
 
                         return result;

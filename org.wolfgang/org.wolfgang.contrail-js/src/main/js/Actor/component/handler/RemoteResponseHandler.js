@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define(["Core/object/jObj", "../../event/Event", "Network/jNetwork"],
+define(["Core/object/jObj", "Actor/jEvent", "Network/jNetwork"],
     function (jObj, event, jNetwork) {
         "use strict";
 

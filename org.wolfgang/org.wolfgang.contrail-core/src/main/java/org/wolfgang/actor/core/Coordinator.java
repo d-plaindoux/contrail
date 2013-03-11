@@ -38,6 +38,42 @@ import org.wolfgang.actor.event.Response;
  */
 public class Coordinator implements Runnable {
 
+	public class Remote {
+
+		public class Actor {
+
+			private final String actorId;
+
+			private Actor(String actorId) {
+				super();
+				this.actorId = actorId;
+			}
+
+			public void send(Request request) {
+				this.send(request, null);
+			}
+
+			public void send(Request request, Response response) {
+				remoteActorHandler.handle(location, actorId, request, response);
+			}
+
+			@Override
+			public String toString() {
+				return location + "@" + actorId;
+			}
+		}
+
+		private final String location;
+
+		public Remote(String location) {
+			this.location = location;
+		}
+
+		public Actor actor(String name) {
+			return new Actor(name);
+		}
+	}
+
 	private final Map<String, Actor> universe;
 
 	private final List<String> pendingActivedActors;
@@ -61,6 +97,10 @@ public class Coordinator implements Runnable {
 	}
 
 	public Coordinator() {
+	}
+
+	public Remote remote(String location) {
+		return new Remote(location);
 	}
 
 	public void setRemoteActorHandler(RemoteActorHandler remoteActorHandler) {
