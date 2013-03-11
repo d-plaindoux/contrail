@@ -19,7 +19,7 @@
 /*global require */
 
 require([ "Core/utils/jUtils", "Core/test/jCC" ],
-    function (jUUID, jCC) {
+    function (jUtils, jCC) {
         "use strict";
 
         /**
@@ -30,10 +30,10 @@ require([ "Core/utils/jUtils", "Core/test/jCC" ],
 
             jCC.
                 Given(function () {
-                    uuid1 = jUUID.uuid();
+                    uuid1 = jUtils.uuid();
                 }).
                 And(function () {
-                    uuid2 = jUUID.uuid();
+                    uuid2 = jUtils.uuid();
                 }).
                 When(jCC.Nothing).
                 Then(function () {
