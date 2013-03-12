@@ -64,14 +64,29 @@ public class LocalActorTest {
 	// --------------------------------------------------------------------------------
 	
 	@Test
+	public void shouldHaveNotBindActorWhenPerformingSimpleCoordinatorBehavior() throws Exception {
+		final CA model = new CA(42);
+		
+		TestCase.assertNull(model.coordinator);
+				
+		final Coordinator coordinator = new Coordinator();
+		final Actor actor = coordinator.actor("A");
+
+		TestCase.assertEquals(actor.isBound(), false);
+		TestCase.assertEquals(coordinator.hasActor("A"), true);
+	}
+	
+	@Test
 	public void shouldInjectCoordinatorWhenRegisteringActor() throws Exception {
 		final CA model = new CA(42);
 		
 		TestCase.assertNull(model.coordinator);
 				
 		final Coordinator coordinator = new Coordinator();
-		coordinator.actor("A").bindToObject(model);
+		final Actor actor = coordinator.actor("A").bindToObject(model);
 
+		TestCase.assertEquals(actor.isBound(), true);
+		TestCase.assertEquals(coordinator.hasActor("A"), true);
 		TestCase.assertEquals(coordinator, model.coordinator);		
 	}
 

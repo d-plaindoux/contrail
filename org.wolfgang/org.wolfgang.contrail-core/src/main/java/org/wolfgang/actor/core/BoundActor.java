@@ -30,16 +30,21 @@ import org.wolfgang.common.utils.Pair;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class BindActor implements Actor {
+public class BoundActor implements Actor {
 
 	private final Coordinator coordinator;
 	private final String name;
 	private final List<Pair<Request, Response>> actorActions;
 
-	protected BindActor(AbstractActor actor) {
+	protected BoundActor(NotBoundActor actor) {
 		this.name = actor.getActorId();
 		this.coordinator = actor.getCoordinator();
 		this.actorActions = actor.getActorActions();
+	}
+
+	@Override
+	public boolean isBound() {
+		return true;
 	}
 
 	public Coordinator getCoordinator() {
@@ -50,12 +55,16 @@ public class BindActor implements Actor {
 		return name;
 	}
 
-	public Actor bindToObject(Object model) {
-		return null; // TODO
+	public BoundActor bindToObject(Object model) throws ActorException {
+		throw new ActorException("Already bound");
 	}
 
-	public Actor bindToRemote(String location) {
-		return null; // TODO
+	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
+		throw new ActorException("Already bound");
+	}
+
+	public BoundActor bindToSource(String model) throws ActorException {
+		throw new ActorException("Already bound");
 	}
 
 	@Override

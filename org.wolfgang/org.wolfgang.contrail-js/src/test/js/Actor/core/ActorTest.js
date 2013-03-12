@@ -29,6 +29,8 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
             this.a = "a";
         }
 
+        A.prototype.coordinator = undefined;
+
         A.prototype.n = function () {
             return "A.n()";
         };
@@ -52,6 +54,53 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 When(jCC.Nothing).
                 Then(function () {
                     jCC.equal(jObj.ofType(actor, jObj.types.Named("Actor")), true, "Checking a:A instance of Actor");
+                });
+        });
+
+        jCC.scenario("Check actor creation not bind", function () {
+            var coordinator, actor;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                }).
+                And(function () {
+                    actor = coordinator.actor("A").bindToObject(new A());
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(actor.isBound(), false, "Checking a:A unbound instance of Actor");
+                });
+        });
+
+        jCC.scenario("Check actor creation define entry in the coordinator", function () {
+            var coordinator, actor;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                }).
+                And(function () {
+                    actor = coordinator.actor("A").bindToObject(new A());
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(coordinator.hasActor("A"), true, "Checking a:A is defined in the coordinator");
+                });
+        });
+
+        jCC.scenario("Bound actor has a coordinator property defined", function () {
+            var coordinator, actor, response;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                }).
+                When(function () {
+                    actor = coordinator.actor("A").bindToObject(new A());
+                }).
+                Then(function () {
+                    jCC.equal(actor.coordinator, coordinator, "Checking coordinator aliasing");
                 });
         });
 

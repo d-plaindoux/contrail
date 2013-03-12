@@ -205,7 +205,7 @@
                                 <include>Actor/event/Request.js</include>
                                 <include>Actor/event/Response.js</include>
                                 <include>Actor/event/Event.js</include>
-                                <include>Actor/core/BindActor.js</include>
+                                <include>Actor/core/BoundActor.js</include>
                                 <include>Actor/core/LocalActor.js</include>
                                 <include>Core/browser/jLoader.js</include>
                                 <include>Core/browser/jDom.js</include>

@@ -53,8 +53,14 @@ public class Coordinator implements Runnable {
 				this.send(request, null);
 			}
 
-			public void send(Request request, Response response) {
-				remoteActorHandler.handle(location, actorId, request, response);
+			public void send(final Request request, final Response response) {
+				actorActionsExecutor.submit(new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						remoteActorHandler.handle(location, actorId, request, response);
+						return null;
+					}
+				});
 			}
 
 			@Override
@@ -190,10 +196,18 @@ public class Coordinator implements Runnable {
 		}
 	}
 
-	public AbstractActor actor(String name) {
-		final AbstractActor abstractActor = new AbstractActor(name, this);
-		this.universe.put(abstractActor.getActorId(), abstractActor);
-		return abstractActor;
+	public boolean hasActor(String name) {
+		return this.universe.containsKey(name);
+	}
+	
+	public Actor actor(String name) {
+		if (hasActor(name)) {
+			return this.universe.get(name);
+		} else {
+			final NotBoundActor abstractActor = new NotBoundActor(name, this);
+			this.universe.put(abstractActor.getActorId(), abstractActor);
+			return abstractActor;
+		}		
 	}
 
 	public void registerActor(Actor actor) {

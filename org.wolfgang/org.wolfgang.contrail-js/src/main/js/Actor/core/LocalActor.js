@@ -18,7 +18,7 @@
 
 /*global define, setInterval*/
 
-define([ "Core/object/jObj", "./BindActor" ],
+define([ "Core/object/jObj", "./BoundActor" ],
     function (jObj, bindActor) {
         "use strict";
 

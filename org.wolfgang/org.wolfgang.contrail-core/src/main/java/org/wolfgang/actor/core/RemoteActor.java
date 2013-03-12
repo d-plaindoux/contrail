@@ -28,12 +28,12 @@ import org.wolfgang.actor.event.Response;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RemoteActor extends BindActor implements Actor {
+public class RemoteActor extends BoundActor implements Actor {
 
 	private final String remoteName;
 	private final String location;
 
-	public RemoteActor(String remoteName, String location, AbstractActor actor) {
+	public RemoteActor(String remoteName, String location, NotBoundActor actor) {
 		super(actor);
 		this.remoteName = remoteName;
 		this.location = location;

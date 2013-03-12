@@ -30,10 +30,19 @@ import org.wolfgang.actor.event.Response;
 public interface Actor {
 
 	String getActorId();
+	
+	boolean isBound();
 
+	BoundActor bindToObject(Object model) throws ActorException;
+	
+	BoundActor bindToRemote(String remoteName, String location) throws ActorException;
+	
+	BoundActor bindToSource(String model) throws ActorException;
+	
 	void send(Request request, Response response);
 
 	void invoke(Request request, Response response);
 
 	boolean performPendingAction();
+	
 }

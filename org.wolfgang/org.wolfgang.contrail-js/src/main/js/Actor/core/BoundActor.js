@@ -23,16 +23,20 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        var BindActor = function () {
+        var BoundActor = function () {
             jObj.bless(this);
         };
 
-        BindActor.init = jObj.constructor([ ],
+        BoundActor.init = jObj.constructor([ ],
             function () {
-                return new BindActor();
+                return new BoundActor();
             });
 
-        BindActor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        BoundActor.prototype.isBound = function () {
+            return true;
+        };
+
+        BoundActor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 var self = this;
                 this.pendingJobs.push(function () {
@@ -40,20 +44,20 @@ define([ "Core/object/jObj" ],
                 });
             });
 
-        BindActor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
+        BoundActor.prototype.bindToSource = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Array],
             function (source, module, parameters) {
                 jObj.throwError(jObj.exception("L.actor.already.bind"));
             });
 
-        BindActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
+        BoundActor.prototype.bindToObject = jObj.procedure([jObj.types.Object],
             function (model) {
                 jObj.throwError(jObj.exception("L.actor.already.bind"));
             });
 
-        BindActor.prototype.bindToRemote = jObj.procedure([jObj.types.String,jObj.types.String],
+        BoundActor.prototype.bindToRemote = jObj.procedure([jObj.types.String, jObj.types.String],
             function (location) {
                 jObj.throwError(jObj.exception("L.actor.already.bind"));
             });
 
-        return BindActor.init;
+        return BoundActor.init;
     });

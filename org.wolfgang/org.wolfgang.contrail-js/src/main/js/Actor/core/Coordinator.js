@@ -58,7 +58,9 @@ define([ "Core/object/jObj", "./Actor" ],
                             return {
                                 send:jObj.procedure([jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
                                     function (request, response) {
-                                        self.getRemoteActorHandler().handle(location, identifier, request, response);
+                                        self.pendingJobs.push(function () {
+                                            self.getRemoteActorHandler().handle(location, identifier, request, response);
+                                        });
                                     })
                             };
                         })
@@ -143,10 +145,20 @@ define([ "Core/object/jObj", "./Actor" ],
          * Actor creation and deletion
          */
 
+        Coordinator.prototype.hasActor = jObj.method([jObj.types.String], jObj.types.Boolean,
+            function (identifier) {
+                return this.universe[identifier] !== null;
+            });
+
         Coordinator.prototype.actor = jObj.method([jObj.types.String], jObj.types.Named("Actor"),
             function (identifier) {
-                var anActor = actor(this, identifier);
-                this.universe[anActor.getIdentifier()] = anActor;
+                var anActor = this.universe[identifier];
+
+                if (!anActor) {
+                    anActor = actor(this, identifier);
+                    this.universe[anActor.getIdentifier()] = anActor;
+                }
+
                 return anActor;
             });
 

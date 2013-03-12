@@ -32,22 +32,27 @@ import org.wolfgang.common.utils.Pair;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class AbstractActor implements Actor {
+public class NotBoundActor implements Actor {
 
 	private final Coordinator coordinator;
 	private final String name;
 	private final List<Pair<Request, Response>> actorActions;
 
-	public AbstractActor(String name, Coordinator coordinator) {
+	public NotBoundActor(String name, Coordinator coordinator) {
 		this.name = name;
 		this.coordinator = coordinator;
 		this.actorActions = new LinkedList<Pair<Request, Response>>();
 	}
 
-	protected AbstractActor(AbstractActor actor) {
+	protected NotBoundActor(NotBoundActor actor) {
 		this.name = actor.name;
 		this.coordinator = actor.coordinator;
 		this.actorActions = actor.actorActions;
+	}
+	
+	@Override
+	public boolean isBound() {
+		return false;
 	}
 
 	public List<Pair<Request, Response>> getActorActions() {
@@ -62,7 +67,7 @@ public class AbstractActor implements Actor {
 		return name;
 	}
 
-	public Actor bindToSource(String model) throws ActorException {
+	public BoundActor bindToSource(String model) throws ActorException {
 		try {
 			// TODO -- class loader to be determined?
 			return this.bindToObject(Class.forName(model).newInstance());
@@ -75,7 +80,7 @@ public class AbstractActor implements Actor {
 		}
 	}
 
-	public Actor bindToObject(Object model) throws ActorException {
+	public BoundActor bindToObject(Object model) throws ActorException {
 		try {
 			final LocalActor actor = new LocalActor(AnnotationSolver.solve(model, this.coordinator), this);
 			this.coordinator.registerActor(actor);
@@ -87,7 +92,7 @@ public class AbstractActor implements Actor {
 		}
 	}
 
-	public Actor bindToRemote(String remoteName, String location) {
+	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
 		final RemoteActor actor = new RemoteActor(remoteName, location, this);
 		this.coordinator.registerActor(actor);
 		return actor;

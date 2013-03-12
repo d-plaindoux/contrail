@@ -35,6 +35,10 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 return new Actor(coordinator, identifier);
             });
 
+        Actor.prototype.isBound = function () {
+            return false;
+        };
+
         Actor.prototype.getIdentifier = jObj.method([], jObj.types.String,
             function () {
                 return this.identifier;
@@ -104,12 +108,12 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
 
         Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
             function (model) {
-                var anActor = jObj.bless({ coordinator:this.coordinator}, localActor(this, model));
+                var anActor = jObj.bless({ coordinator:this.coordinator }, localActor(this, model));
                 this.coordinator.registerActor(anActor);
                 return anActor;
             });
 
-        Actor.prototype.bindToRemote = jObj.method([jObj.types.String,jObj.types.String], jObj.types.Named("Actor"),
+        Actor.prototype.bindToRemote = jObj.method([jObj.types.String, jObj.types.String], jObj.types.Named("Actor"),
             function (remoteName, location) {
                 var anActor = remoteActor(this, remoteName, location);
                 this.coordinator.registerActor(anActor);

@@ -33,7 +33,7 @@ import org.wolfgang.actor.event.Response;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class LocalActor extends BindActor implements Actor {
+public class LocalActor extends BoundActor implements Actor {
 
 	final private Object model;
 	final private Map<String, Method> methodsCache;
@@ -42,7 +42,7 @@ public class LocalActor extends BindActor implements Actor {
 		this.methodsCache = new HashMap<String, Method>();
 	}
 
-	public LocalActor(Object model, AbstractActor actor) {
+	public LocalActor(Object model, NotBoundActor actor) {
 		super(actor);
 		this.model = model;
 	}

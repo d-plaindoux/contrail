@@ -165,7 +165,7 @@ public class CoordinatorTest {
 		coordinator.start();
 
 		final A model = new A(42);
-		final AbstractActor actor = coordinator.actor("A");
+		final Actor actor = coordinator.actor("A");
 
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
