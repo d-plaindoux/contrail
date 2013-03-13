@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
+import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.Components;
 import org.wolfgang.contrail.component.SourceComponent;
 import org.wolfgang.contrail.component.multi.MultiSourceComponent;
@@ -61,42 +62,63 @@ public class RouterComponent extends MultiSourceComponent<Packet, Packet> {
 	}
 
 	@Override
-	public void closeDownStream() throws DataFlowCloseException {
-		// TODO
+	public void closeUpStream() throws DataFlowCloseException {
+		// Do nothing
 	}
 
 	public ClientComponent addActiveRoute(SourceComponent<Packet, Packet> sourceComponent, String endPoint) throws ComponentConnectionRejectedException {
-		final ClientComponent clientComponent = new ClientComponent(endPoint);
+		final ClientComponent clientComponent = new ClientComponent(endPoint) {
+			@Override
+			public void closeUpStream() throws DataFlowCloseException {
+				removeActiveRoute(this);
+				try {
+					super.closeUpStream();
+				} finally {
+					try {
+						this.getDestinationComponentLink().dispose();
+					} catch (ComponentDisconnectionRejectedException e) {
+						throw new DataFlowCloseException(e);
+					}
+				}
+			}
+		};
 		
-		Components.compose(sourceComponent, clientComponent, this);
-		
+		Components.compose(sourceComponent, clientComponent, this);		
 		this.activeRoutes.add(clientComponent);
+		
 		return clientComponent;
 	}
 
-	public boolean hasActiveRoute(String destinationId, String endPoint) {
-
-		for (ClientComponent route : activeRoutes) {
-			if (route.acceptDestinationId(destinationId)) {
-				return true;
-			} else if (endPoint != null && endPoint.equals(route.getEndPoint())) {
-				return true;
-			}
+	private void removeActiveRoute(ClientComponent clientComponent) {
+		synchronized (this.activeRoutes) {
+			this.activeRoutes.remove(clientComponent);
 		}
-
-		return false;
 	}
 
-	public ClientComponent getActiveRoute(String destinationId, String endPoint) {
-
-		for (ClientComponent route : activeRoutes) {
-			if (route.acceptDestinationId(destinationId)) {
-				return route;
-			} else if (endPoint != null && endPoint.equals(route.getEndPoint())) {
-				return route;
+	public boolean hasActiveRoute(String destinationId, String endPoint) {
+		synchronized (this.activeRoutes) {
+			for (ClientComponent route : activeRoutes) {
+				if (route.acceptDestinationId(destinationId)) {
+					return true;
+				} else if (endPoint != null && endPoint.equals(route.getEndPoint())) {
+					return true;
+				}
 			}
+			return false;
 		}
 
-		return null;
+	}
+
+	public synchronized ClientComponent getActiveRoute(String destinationId, String endPoint) {
+		synchronized (this.activeRoutes) {
+			for (ClientComponent route : activeRoutes) {
+				if (route.acceptDestinationId(destinationId)) {
+					return route;
+				} else if (endPoint != null && endPoint.equals(route.getEndPoint())) {
+					return route;
+				}
+			}
+			return null;
+		}
 	}
 }

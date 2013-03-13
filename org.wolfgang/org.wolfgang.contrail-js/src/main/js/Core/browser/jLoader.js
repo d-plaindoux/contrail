@@ -25,22 +25,20 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
         var jLoader = {};
 
         jLoader.load = jObj.procedure([ jObj.types.String, jObj.types.Function ],
-            function (source, helper) {
+            function (source, callback) {
                 var script;
 
                 script = document.createElement("script");
                 script.type = "text/javascript";
                 script.src = source;
+                script.onload = callback;
 
                 //for IE only:
                 script.onreadystatechange = function () {
                     if (this.readyState === "complete") {
-                        helper();
+                        script.onload();
                     }
                 };
-
-                //other browsers:
-                script.onload = helper;
 
                 document.getElementsByTagName("head")[0].appendChild(script);
             });

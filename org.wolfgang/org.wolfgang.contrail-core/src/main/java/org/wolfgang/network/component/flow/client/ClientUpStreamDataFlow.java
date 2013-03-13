@@ -47,6 +47,7 @@ public class ClientUpStreamDataFlow implements DataFlow<Packet> {
 	public void handleData(Packet data) throws DataFlowException {
 		try {
 			component.addDestinationId(data.getSourceId());
+			component.addSourceId(data.getDestinationId());
 			component.getDestinationComponentLink().getDestinationComponent().getUpStreamDataFlow().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowException(e);

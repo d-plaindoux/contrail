@@ -47,6 +47,7 @@ public class ClientDownStreamDataFlow implements DataFlow<Packet> {
 	public void handleData(Packet data) throws DataFlowException {
 		try {
 			component.addDestinationId(data.getDestinationId());
+			component.addSourceId(data.getSourceId());
 			component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowException(e);

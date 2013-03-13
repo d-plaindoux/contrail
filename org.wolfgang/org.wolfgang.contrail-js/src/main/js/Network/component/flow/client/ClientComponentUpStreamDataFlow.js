@@ -36,6 +36,7 @@ define([ "Core/object/jObj", "Contrail/jContrail" ],
         ClientComponentUpStreamDataFlow.prototype.handleData = jObj.procedure([jObj.types.Named("Packet")],
             function (packet) {
                 this.component.addDestinationId(packet.getSourceId());
+                this.component.addSourceId(packet.getDestinationId());
                 this.component.getDestination().getUpStreamDataFlow().handleData(packet);
             });
 

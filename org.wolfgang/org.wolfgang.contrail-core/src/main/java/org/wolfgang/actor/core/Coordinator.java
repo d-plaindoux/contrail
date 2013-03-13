@@ -61,6 +61,8 @@ public class Coordinator implements Runnable {
 						return null;
 					}
 				});
+				
+				activateCoordinatorIfNecessary();
 			}
 
 			@Override
@@ -221,7 +223,7 @@ public class Coordinator implements Runnable {
 	}
 
 	public void send(String actorId, Request request, Response response) {
-		if (this.universe.containsKey(actorId)) {
+		if (this.hasActor(actorId)) {
 			this.universe.get(actorId).send(request, response);
 			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
@@ -234,7 +236,7 @@ public class Coordinator implements Runnable {
 	}
 
 	public void invoke(String actorId, Request request, Response response) {
-		if (this.universe.containsKey(actorId)) {
+		if (this.hasActor(actorId)) {
 			this.universe.get(actorId).invoke(request, response);
 		} else if (response != null) {
 			response.failure(new ActorException("Actor does not exists"));

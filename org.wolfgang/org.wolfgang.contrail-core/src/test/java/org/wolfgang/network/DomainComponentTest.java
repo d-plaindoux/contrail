@@ -42,9 +42,9 @@ public class DomainComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenADomainComponent();
+		final DomainComponent domainComponent = givenADomainComponent();
 
-		Components.compose(initial, routeComponent);
+		Components.compose(initial, domainComponent);
 
 		initial.getUpStreamDataFlow().handleData(new Packet("b", "Hello, World!"));
 
@@ -60,11 +60,11 @@ public class DomainComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenADomainComponent();
+		final DomainComponent domainComponent = givenADomainComponent();
 
-		Components.compose(initial, routeComponent);
+		Components.compose(initial, domainComponent);
 
-		routeComponent.getDownStreamDataFlow().handleData(new Packet("b", "Hello, World!"));
+		domainComponent.getDownStreamDataFlow().handleData(new Packet("b", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -78,11 +78,11 @@ public class DomainComponentTest {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
 
-		final DomainComponent routeComponent = givenADomainComponent();
+		final DomainComponent domainComponent = givenADomainComponent();
 
-		Components.compose(routeComponent, terminal);
+		Components.compose(domainComponent, terminal);
 
-		routeComponent.getUpStreamDataFlow().handleData(new Packet("a", "Hello, World!"));
+		domainComponent.getUpStreamDataFlow().handleData(new Packet("a", "Hello, World!"));
 
 		TestCase.assertEquals(true, bufferedDataFlow.hasNextData());
 
@@ -95,9 +95,9 @@ public class DomainComponentTest {
 	public void shouldRetreivePacketAlreadyInDestination() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final TerminalComponent<Packet, Packet> terminal = Components.terminal(bufferedDataFlow);
-		final DomainComponent routeComponent = givenADomainComponent();
+		final DomainComponent domainComponent = givenADomainComponent();
 
-		Components.compose(routeComponent, terminal);
+		Components.compose(domainComponent, terminal);
 
 		terminal.getDownStreamDataFlow().handleData(new Packet("a", "Hello, World!"));
 
@@ -113,9 +113,9 @@ public class DomainComponentTest {
 	public void shouldFailWhenDestinationisUndefined() throws Exception {
 		final BufferedDataFlow<Packet> bufferedDataFlow = new BufferedDataFlow<Packet>();
 		final InitialComponent<Packet, Packet> initial = Components.initial(bufferedDataFlow);
-		final DomainComponent routeComponent = givenADomainComponent();
+		final DomainComponent domainComponent = givenADomainComponent();
 
-		Components.compose(initial, routeComponent);
+		Components.compose(initial, domainComponent);
 
 		initial.getUpStreamDataFlow().handleData(new Packet("b", "c", "Hello, World!"));
 
@@ -128,8 +128,7 @@ public class DomainComponentTest {
 	// ---------------------------------------------------------------------------------------
 
 	private DomainComponent givenADomainComponent() throws RouteAlreadyExistException {
-		final DomainComponent routeComponent = new DomainComponent("a");
-		return routeComponent;
+		return new DomainComponent("a");
 	}
 
 }

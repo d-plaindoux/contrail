@@ -21,12 +21,9 @@ package org.wolfgang.network.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentNotConnectedException;
-import org.wolfgang.contrail.component.DestinationComponent;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.flow.DataFlow;
-import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 import org.wolfgang.network.component.flow.client.ClientDownStreamDataFlow;
 import org.wolfgang.network.component.flow.client.ClientUpStreamDataFlow;
 import org.wolfgang.network.packet.Packet;
@@ -43,6 +40,7 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
 	private final List<String> destinations;
+	private final ArrayList<String> sources;
 
 	public ClientComponent(String endPoint) {
 		this.endPoint = endPoint;
@@ -51,13 +49,24 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 		this.downStreamDataFlow = new ClientDownStreamDataFlow(this);
 
 		this.destinations = new ArrayList<String>();
+		this.sources = new ArrayList<String>();
 	}
 
 	public String getEndPoint() {
 		return endPoint;
 	}
 
-	public void addDestinationId(String identifier) {
+	public synchronized void addSourceId(String sourceId) {
+		if (!this.acceptSourceId(sourceId)) {
+			this.sources.add(sourceId);
+		}
+	}
+
+	public synchronized boolean acceptSourceId(String identifier) {
+		return this.sources.contains(identifier);
+	}
+
+	public synchronized void addDestinationId(String identifier) {
 		if (!this.acceptDestinationId(identifier)) {
 			this.destinations.add(identifier);
 		}
@@ -76,21 +85,4 @@ public class ClientComponent extends AbstractPipelineComponent<Packet, Packet, P
 	public DataFlow<Packet> getDownStreamDataFlow() throws ComponentNotConnectedException {
 		return this.downStreamDataFlow;
 	}
-
-	@Override
-	public void closeUpStream() throws DataFlowCloseException {
-		try {
-			super.closeUpStream();
-			this.getDestinationComponentLink().dispose();
-		} catch (ComponentDisconnectionRejectedException e) {
-			throw new DataFlowCloseException(e);
-		}
-	}
-
-	@Override
-	public void closeDownStream() throws DataFlowCloseException {
-		super.closeDownStream();
-	}
-	
-	
 }

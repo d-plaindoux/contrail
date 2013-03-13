@@ -29,7 +29,8 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
             this.upStreamDataFlow = clientUpStream(this);
             this.downStreamDataFlow = clientDownStream(this);
 
-            this.identifiers = [];
+            this.destinations = [];
+            this.sources = [];
         }
 
         ClientComponent.init = jObj.constructor([ jObj.types.Nullable(jObj.types.String) ],
@@ -37,21 +38,35 @@ define([ "Core/object/jObj", "Contrail/jContrail", "./flow/client/ClientComponen
                 return new ClientComponent(identifier);
             });
 
-        ClientComponent.prototype.addDestinationId = jObj.procedure([ jObj.types.String ],
-            function (identifier) {
-                if (!this.acceptDestinationId(identifier)) {
-                    this.identifiers.push(identifier);
-                }
-            });
-
         ClientComponent.prototype.getEndPoint = jObj.method([], jObj.types.Nullable(jObj.types.String),
             function () {
                 return this.endPoint;
             });
 
+        ClientComponent.prototype.addDestinationId = jObj.procedure([ jObj.types.String ],
+            function (identifier) {
+                if (!this.acceptDestinationId(identifier)) {
+                    this.destinations.push(identifier);
+                }
+            });
+
         ClientComponent.prototype.acceptDestinationId = jObj.method([ jObj.types.String ], jObj.types.Boolean,
             function (identifier) {
-                return this.identifiers.some(function(id) {
+                return this.destinations.some(function (id) {
+                    return identifier === id;
+                });
+            });
+
+        ClientComponent.prototype.addSourceId = jObj.procedure([ jObj.types.String ],
+            function (identifier) {
+                if (!this.acceptSourceId(identifier)) {
+                    this.sources.push(identifier);
+                }
+            });
+
+        ClientComponent.prototype.acceptSourceId = jObj.method([ jObj.types.String ], jObj.types.Boolean,
+            function (identifier) {
+                return this.sources.some(function (id) {
                     return identifier === id;
                 });
             });
