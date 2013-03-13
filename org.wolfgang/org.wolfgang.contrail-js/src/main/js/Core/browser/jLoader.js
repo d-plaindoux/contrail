@@ -22,9 +22,19 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        var jLoader = {};
+        function Loader() {
+            jObj.bless(this);
 
-        jLoader.load = jObj.procedure([ jObj.types.String, jObj.types.Function ],
+            this.onLoad = function (callback) {
+                callback();
+            };
+        }
+
+        Loader.init = function () {
+            return new Loader();
+        };
+
+        Loader.init.load = jObj.procedure([ jObj.types.String, jObj.types.Function ],
             function (source, callback) {
                 var script;
 
@@ -43,5 +53,23 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
                 document.getElementsByTagName("head")[0].appendChild(script);
             });
 
-        return jLoader;
+        Loader.prototype.source = jObj.method([ jObj.types.String ], jObj.types.Named("Loader"),
+            function (source) {
+                var onLoad = this.onLoad;
+
+                this.onLoad = function (callback) {
+                    onLoad(function () {
+                        Loader.init.load(source, callback);
+                    });
+                };
+
+                return this;
+            });
+
+        Loader.prototype.loadWith = jObj.procedure([ jObj.types.Function ],
+            function (callback) {
+                this.onLoad(callback);
+            });
+
+        return Loader.init;
     });

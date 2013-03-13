@@ -37,4 +37,24 @@ require([ "Core/object/jObj", "Core/browser/jLoader", "Core/test/jCC" ],
                     jCC.equal(response, "Hello, World!");
                 });
         });
+
+
+        jCC.scenario("Checking jLoader with multiple script name only", function () {
+            var response;
+
+            jCC.
+                Given(jCC.Nothing).
+                When(function () {
+                    jLoader().
+                        source("./SimpleTest.js").
+                        source("./SimpleTest2.js").
+                        onLoad(function () {
+                            response = require("test.loader2");
+                        }
+                    );
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response, "Hello, World!");
+                });
+        });
     });
