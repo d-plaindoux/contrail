@@ -22,7 +22,7 @@ define([ "Core/object/jObj", "./Actor" ],
     function (jObj, actor) {
         "use strict";
 
-        function Coordinator() {
+        function Coordinator(logger) {
             jObj.bless(this);
 
             this.universe = {};
@@ -33,11 +33,13 @@ define([ "Core/object/jObj", "./Actor" ],
 
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
+            this.logger = logger || function () {};
         }
 
-        Coordinator.init = jObj.constructor([], function () {
-            return new Coordinator();
-        });
+        Coordinator.init = jObj.constructor([ jObj.types.Nullable(jObj.types.Function) ],
+            function (logger) {
+                return new Coordinator(logger);
+            });
 
         /*
          * Remote actor handler
@@ -112,7 +114,13 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.jobRunner = function () {
             if (this.pendingJobs.length !== 0) {
-                this.pendingJobs.shift()();
+                try {
+                    this.pendingJobs.shift()();
+                } catch (e) {
+                    if (this.logger) {
+                        this.logger(e);
+                    }
+                }
             }
         };
 
@@ -196,6 +204,8 @@ define([ "Core/object/jObj", "./Actor" ],
                 } else {
                     if (response) {
                         response.failure(jObj.exception("L.actor.not.found"));
+                    } else {
+                        jObj.throwException(jObj.exception("L.actor.not.found"));
                     }
                 }
             });

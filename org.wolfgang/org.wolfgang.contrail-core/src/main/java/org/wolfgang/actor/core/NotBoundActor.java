@@ -21,7 +21,7 @@ package org.wolfgang.actor.core;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.wolfgang.actor.annotation.AnnotationSolver;
+import org.wolfgang.actor.annotation.ActorAnnotationSolver;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.utils.Pair;
@@ -82,7 +82,7 @@ public class NotBoundActor implements Actor {
 
 	public BoundActor bindToObject(Object model) throws ActorException {
 		try {
-			final LocalActor actor = new LocalActor(AnnotationSolver.solve(model, this.coordinator), this);
+			final LocalActor actor = new LocalActor(ActorAnnotationSolver.solve(this, model), this);
 			this.coordinator.registerActor(actor);
 			return actor;
 		} catch (IllegalArgumentException e) {

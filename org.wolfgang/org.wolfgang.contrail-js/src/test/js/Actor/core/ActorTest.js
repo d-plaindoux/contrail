@@ -90,17 +90,23 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Bound actor has a coordinator property defined", function () {
-            var coordinator, actor, response;
+            var coordinator, actor, model;
 
             jCC.
                 Given(function () {
                     coordinator = jActor.coordinator();
                 }).
+                And(function () {
+                    model = new A();
+                }).
                 When(function () {
-                    actor = coordinator.actor("A").bindToObject(new A());
+                    actor = coordinator.actor("A").bindToObject(model);
                 }).
                 Then(function () {
-                    jCC.equal(actor.coordinator, coordinator, "Checking coordinator aliasing");
+                    jCC.equal(model.coordinator, coordinator, "Checking coordinator aliasing");
+                }).
+                And(function () {
+                    jCC.equal(model.actorId, "A", "Checking actor identifier aliasing");
                 });
         });
 

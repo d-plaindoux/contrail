@@ -38,7 +38,6 @@ require([ "Core/object/jObj", "Core/browser/jLoader", "Core/test/jCC" ],
                 });
         });
 
-
         jCC.scenario("Checking jLoader with multiple script name only", function () {
             var response;
 

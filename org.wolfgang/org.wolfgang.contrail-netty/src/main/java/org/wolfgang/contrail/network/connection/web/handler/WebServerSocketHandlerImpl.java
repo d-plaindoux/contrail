@@ -85,10 +85,13 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 		if (!this.receivers.containsKey(identifier)) {
 			throw new UnsupportedOperationException(String.format("Receiver not found for channel %d", identifier));
 		} else if (frame instanceof CloseWebSocketFrame) {
-			this.handShakers.remove(identifier).close(context.getChannel(), (CloseWebSocketFrame) frame);
 			this.receivers.remove(identifier).closeUpStream();
 		} else if (frame instanceof PingWebSocketFrame) {
-			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
+			try {
+				this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
+			} catch (Throwable e) {
+				// TODO
+			}
 		} else if (frame instanceof TextWebSocketFrame) {
 			final String data = ((TextWebSocketFrame) frame).getText();
 			this.receivers.get(identifier).getUpStreamDataFlow().handleData(data);
@@ -117,7 +120,11 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
 			@Override
 			public void handleData(String data) throws DataFlowException {
-				sendWebSocketFrame(context, new TextWebSocketFrame(data));
+				try {
+					sendWebSocketFrame(context, new TextWebSocketFrame(data));
+				} catch (Throwable e) {
+					throw new DataFlowException(e);
+				}
 			}
 		});
 	}
@@ -130,6 +137,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
 		return new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
+				handShakers.remove(identifier);
 				if (!future.isSuccess()) {
 					Channels.fireExceptionCaught(future.getChannel(), future.getCause());
 				} else {
@@ -150,8 +158,13 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 		receivers.put(identifier, initialComponent);
 	}
 
-	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {
-		// Send the response and close the connection if necessary.
-		ctx.getChannel().write(res);
+	private void sendWebSocketFrame(ChannelHandlerContext context, WebSocketFrame res) throws Throwable {
+		final int identifier = context.getChannel().getId();
+		try {
+			context.getChannel().write(res);
+		} catch (Throwable e) {			
+			this.receivers.remove(identifier).closeUpStream();
+			throw e;
+		}
 	}
 }

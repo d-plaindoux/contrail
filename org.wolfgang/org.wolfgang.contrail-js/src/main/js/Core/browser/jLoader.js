@@ -25,9 +25,10 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
         function Loader() {
             jObj.bless(this);
 
-            this.onLoad = function (callback) {
-                callback();
-            };
+            this.onLoad = jObj.procedure([ jObj.types.Function ],
+                function (callback) {
+                    callback();
+                });
         }
 
         Loader.init = function () {
@@ -57,11 +58,12 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
             function (source) {
                 var onLoad = this.onLoad;
 
-                this.onLoad = function (callback) {
-                    onLoad(function () {
-                        Loader.init.load(source, callback);
+                this.onLoad = jObj.procedure([ jObj.types.Function ],
+                    function (callback) {
+                        onLoad(function () {
+                            Loader.init.load(source, callback);
+                        });
                     });
-                };
 
                 return this;
             });

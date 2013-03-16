@@ -33,9 +33,7 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
 
         StandardClientBuilder.prototype.getIntermediateComponent = jObj.method([ ], jObj.types.Named("SourceComponent"),
             function () {
-                var socket, component, jSonifiers;
-
-                jSonifiers = [ require("Network/jNetwork").packet, require("Actor/jActor").event.request ];
+                var jSonifiers = [ require("Network/jNetwork").packet, require("Actor/jActor").event.request ];
 
                 return jContrail.component.compose([
                     jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),

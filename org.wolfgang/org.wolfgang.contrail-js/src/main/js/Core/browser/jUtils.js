@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,34 +16,23 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+/*global define, window*/
 
-define("Core/browser/jDom", [ "Core/object/jObj" ],
+define("Core/browser/jUtils", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        var JDom = {};
+        var jUtils = {};
 
-        JDom.tag = jObj.method([ jObj.types.String, jObj.types.Object, jObj.types.Nullable(jObj.types.Any) ], jObj.types.String,
-            function (qname, attributes, content) {
-                var key, result;
-
-                result = "<" + qname;
-
-                for (key in attributes) {
-                    if (attributes.hasOwnProperty(key)) {
-                        result += " " + key + "='" + attributes[key] + "'";
-                    }
-                }
-
-                if (content) {
-                    result += ">" + content.toString() + "</" + qname + ">";
-                } else {
-                    result += ">" + "</" + qname + ">";
-                }
-
-                return result;
+        jUtils.getURLFromLocation = jObj.method([ jObj.types.String, jObj.types.String ], jObj.types.String,
+            function (scheme, path) {
+                return scheme + "://" + window.location.host + "/" + path;
             });
 
-        return JDom;
+        jUtils.getWebSocketURL = jObj.method([ ], jObj.types.String,
+            function () {
+                return jUtils.getURLFromLocation("ws", "websocket");
+            });
+
+        return jUtils;
     });

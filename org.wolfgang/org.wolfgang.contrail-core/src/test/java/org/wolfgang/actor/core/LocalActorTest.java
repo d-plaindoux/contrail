@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.actor.annotation.ActorCoordinator;
+import org.wolfgang.actor.annotation.ActorName;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.concurrent.Promise;
@@ -42,6 +43,10 @@ public class LocalActorTest {
 	}
 
 	public static class CA {
+		
+		@ActorName
+		public String actorId;
+		
 		@ActorCoordinator
 		public Coordinator coordinator;
 		
@@ -87,6 +92,8 @@ public class LocalActorTest {
 
 		TestCase.assertEquals(actor.isBound(), true);
 		TestCase.assertEquals(coordinator.hasActor("A"), true);
+		
+		TestCase.assertEquals("A", model.actorId);
 		TestCase.assertEquals(coordinator, model.coordinator);		
 	}
 
