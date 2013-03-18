@@ -49,8 +49,7 @@ require([ "Core/object/jObj", "Core/browser/jLoader", "Core/test/jCC" ],
                         source("./SimpleTest2.js").
                         onLoad(function () {
                             response = require("test.loader2");
-                        }
-                    );
+                        });
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response, "Hello, World!");

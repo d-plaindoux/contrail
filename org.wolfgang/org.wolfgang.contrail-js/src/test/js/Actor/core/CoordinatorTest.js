@@ -18,8 +18,8 @@
 
 /*global require, setTimeout*/
 
-require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/StoredResponse" ],
-    function (jObj, jCC, jActor, storedResponse) {
+require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jActor", "../common/StoredResponse" ],
+    function (jObj, jCC, jLoader, jActor, storedResponse) {
         "use strict";
 
         // ---------------------------------------------------------
@@ -308,7 +308,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("AtomicString").bindToSource("./AtomicString.js").withModule("Atomic.String", ["Hello!"]);
+                    coordinator.actor("SimpleString").bindToSource("./SimpleString.js").onLoad(function () {
+                        return require("Atomic.String")("Hello!");
+                    });
                 }).
                 And(function () {
                     response = storedResponse();
@@ -322,7 +324,6 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 });
         });
 
-
         jCC.scenario("Check sourced simple actor indirect using manager failed message sent", function () {
             var coordinator, response;
 
@@ -332,7 +333,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("SimpleString").bindToSource("./SimpleString.js").withCallback(function () {
+                    coordinator.actor("SimpleString").bindToSource("./SimpleString.js").onLoad(function () {
                         return SimpleObject;
                     });
                 }).
@@ -348,5 +349,29 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 });
         });
 
+        jCC.scenario("Check sourced module actor indirect using manager failed message sent [New formulation]", function () {
+            var coordinator, response;
+
+            jCC.
+                Given(function () {
+                    coordinator = jActor.coordinator();
+                    coordinator.start();
+                }).
+                And(function () {
+                    response = storedResponse();
+                }).
+                When(function () {
+                    jLoader().
+                        source("./AtomicString.js").
+                        loadAndExecute(function () {
+                            coordinator.actor("AtomicString").bindToModule("Atomic.String", [ "Hello!" ]);
+                            coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
+                        });
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response.value(), "Hello!", "Actor must respond 'Hello!'");
+                    coordinator.stop();
+                });
+        });
     });
 

@@ -25,7 +25,7 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
         function Loader() {
             jObj.bless(this);
 
-            this.onLoad = jObj.procedure([ jObj.types.Function ],
+            this.loadCallback = jObj.procedure([ jObj.types.Function ],
                 function (callback) {
                     callback();
                 });
@@ -56,9 +56,9 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
 
         Loader.prototype.source = jObj.method([ jObj.types.String ], jObj.types.Named("Loader"),
             function (source) {
-                var onLoad = this.onLoad;
+                var onLoad = this.loadCallback;
 
-                this.onLoad = jObj.procedure([ jObj.types.Function ],
+                this.loadCallback = jObj.procedure([ jObj.types.Function ],
                     function (callback) {
                         onLoad(function () {
                             Loader.init.load(source, callback);
@@ -68,9 +68,9 @@ define("Core/browser/jLoader", [ "Core/object/jObj" ],
                 return this;
             });
 
-        Loader.prototype.loadWith = jObj.procedure([ jObj.types.Function ],
+        Loader.prototype.onLoad = jObj.procedure([ jObj.types.Function ],
             function (callback) {
-                this.onLoad(callback);
+                this.loadCallback(callback);
             });
 
         return Loader.init;

@@ -76,63 +76,12 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 this.coordinator.disposeActor(this.identifier);
             });
 
-        Actor.prototype.source = jObj.method([jObj.types.String], jObj.types.ObjectOf({withModule:jObj.types.Function, withCallback:jObj.types.Function}),
-            function (source) {
-                var self = this;
-
-                return {
-                    require:jObj.procedure([jObj.types.String],
-                        function (module) {
-                            var callback = require(module);
-
-                            if (!module) {
-                                jObj.throwError(jObj.exception(("L.module.not.found")));
-                            }
-
-                            return {
-                                bindWith:function (parameters) {
-                                    jLoader.load(source, function () {
-                                        var parameters = Array.prototype.slice.call(arguments, 1); // TODO -- check me
-                                        if (callback) {
-                                            self.bindToObject(callback.apply({}, parameters));
-                                        } else {
-                                            jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
-                                        }
-                                    });
-                                }
-                            };
-                        }),
-                    withCallback:jObj.procedure([jObj.types.Function],
-                        function (callback) {
-                            jLoader.load(source, function () {
-                                    self.bindToObject(callback());
-                                }
-                            );
-                        })
-                };
-            });
-
         Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({withModule:jObj.types.Function, withCallback:jObj.types.Function}),
             function (source) {
                 var self = this;
 
                 return {
-                    withModule:jObj.procedure([jObj.types.String, jObj.types.Array],
-                        function (module, parameters) {
-                            jLoader.load(source, function () {
-                                    var callback;
-
-                                    callback = require(module);
-
-                                    if (callback) {
-                                        self.bindToObject(callback.apply({}, parameters));
-                                    } else {
-                                        jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
-                                    }
-                                }
-                            );
-                        }),
-                    withCallback:jObj.procedure([jObj.types.Function],
+                    onLoad:jObj.procedure([jObj.types.Function],
                         function (callback) {
                             jLoader.load(source, function () {
                                     self.bindToObject(callback());
@@ -142,6 +91,18 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 };
             });
 
+        Actor.prototype.bindToModule = jObj.procedure([jObj.types.String, jObj.types.Array],
+            function (module, parameters) {
+                var callback;
+
+                callback = require(module);
+
+                if (callback) {
+                    this.bindToObject(callback.apply({}, parameters));
+                } else {
+                    jObj.throwError(jObj.exception(("L.actor.to.source.undefined")));
+                }
+            });
 
         Actor.prototype.bindToObject = jObj.method([jObj.types.Object], jObj.types.Named("Actor"),
             function (model) {

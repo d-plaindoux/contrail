@@ -163,7 +163,9 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 		try {
 			context.getChannel().write(res);
 		} catch (Throwable e) {			
-			this.receivers.remove(identifier).closeUpStream();
+			if (this.receivers.containsKey(identifier)) {
+				this.receivers.remove(identifier).closeUpStream();
+			}
 			throw e;
 		}
 	}
