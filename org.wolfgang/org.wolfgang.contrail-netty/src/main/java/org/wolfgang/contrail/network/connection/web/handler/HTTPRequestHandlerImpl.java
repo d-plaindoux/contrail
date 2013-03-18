@@ -91,6 +91,9 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 
 			if (request.getUri().equals("/")) {
 				resourceURI = "/index.html";
+			} else if (request.getUri().contains("?")) {
+				// Do not use the search in this case (not directly used)
+				resourceURI = request.getUri().substring(0, request.getUri().indexOf('?'));
 			} else {
 				resourceURI = request.getUri();
 			}

@@ -29,6 +29,24 @@ define("Core/browser/jUtils", [ "Core/object/jObj" ],
                 return scheme + "://" + window.location.host + "/" + path;
             });
 
+        jUtils.getURLPathName = jObj.method([ ], jObj.types.String,
+            function () {
+                return window.location.pathname;
+            });
+
+        jUtils.getURLSearch = jObj.method([ ], jObj.types.String,
+            function () {
+                var search;
+
+                if (window.location.search && window.location.search.length > 0) {
+                    search = window.location.search.substring(1);
+                } else {
+                    search = "";
+                }
+
+                return search;
+            });
+
         jUtils.getWebSocketURL = jObj.method([ ], jObj.types.String,
             function () {
                 return jUtils.getURLFromLocation("ws", "websocket");
