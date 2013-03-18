@@ -201,6 +201,66 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                 });
         });
 
+        jCC.scenario("Checking remote actor message passing", function () {
+            var coordinatorA, initialA, coordinatorB, initialB, response1, response2, jSonifiers;
+
+            jCC.
+                Given(function () {
+                    initialA = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialB.getUpStreamDataFlow().handleData(data);
+                    }));
+                    initialB = jContrail.component.initial(jContrail.flow.core(function (data) {
+                        initialA.getUpStreamDataFlow().handleData(data);
+                    }));
+                }).
+                And(function () {
+                    coordinatorA = jActor.coordinator();
+                    coordinatorA.start();
+                    coordinatorB = jActor.coordinator();
+                    coordinatorB.start();
+                }).
+                And(function () {
+                    coordinatorB.actor("A").bindToObject(new A());
+                }).
+                And(function () {
+                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
+                }).
+                And(function () {
+                    jContrail.component.compose([
+                        initialA,
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
+                        jNetwork.component.domain("a"),
+                        jActor.component(coordinatorA) ]);
+                }).
+                And(function () {
+                    jContrail.component.compose([
+                        initialB,
+                        jContrail.component.transducer(jContrail.codec.payload.encoder(), jContrail.codec.payload.decoder()),
+                        jContrail.component.transducer(jContrail.codec.serialize.encoder(), jContrail.codec.serialize.decoder()),
+                        jContrail.component.transducer(jContrail.codec.json.encoder(), jContrail.codec.json.decoder()),
+                        jContrail.component.transducer(jContrail.codec.object.encoder(jSonifiers), jContrail.codec.object.decoder(jSonifiers)),
+                        jNetwork.component.domain("b"),
+                        jActor.component(coordinatorB) ]);
+                }).
+                And(function () {
+                    response1 = storedResponse();
+                    response2 = storedResponse();
+                }).
+                When(function () {
+                    coordinatorA.domain("b").actor("A").send(jActor.event.request("getA", []), response1);
+                    coordinatorA.domain("b").actor("A").send(jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.domain("b").actor("A").send(jActor.event.request("getA", []), response2);
+                }).
+                ThenAfter(500, function () {
+                    jCC.equal(response1.value(), "a");
+                    jCC.equal(response2.value(), "Hello, World!");
+                    coordinatorA.stop();
+                    coordinatorB.stop();
+                });
+        });
 
         jCC.scenario("Checking remotely routed actor message passing using remote actor and native serialization without json", function () {
             var coordinatorA, initialA, coordinatorB, initialB, response1, response2, jSonifiers;

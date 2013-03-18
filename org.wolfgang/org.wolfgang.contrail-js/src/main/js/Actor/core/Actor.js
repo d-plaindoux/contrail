@@ -76,7 +76,7 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 this.coordinator.disposeActor(this.identifier);
             });
 
-        Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({withModule:jObj.types.Function, withCallback:jObj.types.Function}),
+        Actor.prototype.bindToSource = jObj.method([jObj.types.String], jObj.types.ObjectOf({onLoad:jObj.types.Function}),
             function (source) {
                 var self = this;
 

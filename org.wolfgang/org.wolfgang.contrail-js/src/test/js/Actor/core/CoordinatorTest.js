@@ -299,7 +299,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jA
                 });
         });
 
-        jCC.scenario("Check sourced module actor indirect using manager failed message sent", function () {
+        jCC.scenario("Check sourced module actor indirect using manager", function () {
             var coordinator, response;
 
             jCC.
@@ -308,7 +308,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jA
                     coordinator.start();
                 }).
                 And(function () {
-                    coordinator.actor("SimpleString").bindToSource("./SimpleString.js").onLoad(function () {
+                    coordinator.actor("AtomicString").bindToSource("./AtomicString.js").onLoad(function () {
                         return require("Atomic.String")("Hello!");
                     });
                 }).
@@ -324,7 +324,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jA
                 });
         });
 
-        jCC.scenario("Check sourced simple actor indirect using manager failed message sent", function () {
+        jCC.scenario("Check sourced simple actor indirect using manager", function () {
             var coordinator, response;
 
             jCC.
@@ -363,7 +363,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jA
                 When(function () {
                     jLoader().
                         source("./AtomicString.js").
-                        loadAndExecute(function () {
+                        onLoad(function () {
                             coordinator.actor("AtomicString").bindToModule("Atomic.String", [ "Hello!" ]);
                             coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
                         });

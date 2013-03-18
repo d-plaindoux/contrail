@@ -62,7 +62,7 @@ public class LocalActor extends BoundActor implements Actor {
 				failure(response, new ActorException("Cannot execute " + request.getName(), e.getCause()));
 			}
 		} else {
-			failure(response, new ActorException("Actor method does not exist"));
+			failure(response, new ActorException("Actor method [" + request.getName() + "] does not exist in " + model.getClass().getName()));
 		}
 	}
 

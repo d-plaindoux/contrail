@@ -49,30 +49,15 @@ import org.wolfgang.contrail.flow.exception.DataFlowException;
  */
 public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 
-	/**
-	 * The upstream handler
-	 */
 	private final SourceComponentNotifier componentSourceManager;
-
-	/**
-	 * The upstream data flow
-	 */
-	private Map<Integer, InitialComponent<String, String>> receivers;
-	private Map<Integer, WebSocketServerHandshaker> handShakers;
+	private final Map<Integer, InitialComponent<String, String>> receivers;
+	private final Map<Integer, WebSocketServerHandshaker> handShakers;
 
 	{
 		this.receivers = new HashMap<Integer, InitialComponent<String, String>>();
 		this.handShakers = new HashMap<Integer, WebSocketServerHandshaker>();
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param factory2
-	 *            The factory
-	 * @param serverPage
-	 *            The server page
-	 */
 	public WebServerSocketHandlerImpl(SourceComponentNotifier componentSourceManager) {
 		this.componentSourceManager = componentSourceManager;
 	}
@@ -122,6 +107,8 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 			public void handleData(String data) throws DataFlowException {
 				try {
 					sendWebSocketFrame(context, new TextWebSocketFrame(data));
+				} catch (DataFlowException e) {
+					throw e;
 				} catch (Throwable e) {
 					throw new DataFlowException(e);
 				}
@@ -162,7 +149,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 		final int identifier = context.getChannel().getId();
 		try {
 			context.getChannel().write(res);
-		} catch (Throwable e) {			
+		} catch (Throwable e) {
 			if (this.receivers.containsKey(identifier)) {
 				this.receivers.remove(identifier).closeUpStream();
 			}

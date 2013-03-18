@@ -50,7 +50,12 @@ define([ "Core/object/jObj", "./Actor" ],
                 this.remoteActorHandler = remoteActorHandler;
             });
 
-        Coordinator.prototype.remote = jObj.method([ jObj.types.String ], jObj.types.Object,
+        Coordinator.prototype.getRemoteActorHandler = jObj.method([], jObj.types.Named("RemoteActorHandler"),
+            function () {
+                return this.remoteActorHandler;
+            });
+
+        Coordinator.prototype.domain = jObj.method([ jObj.types.String ], jObj.types.Object,
             function (location) {
                 var self = this;
 
@@ -67,11 +72,6 @@ define([ "Core/object/jObj", "./Actor" ],
                             };
                         })
                 };
-            });
-
-        Coordinator.prototype.getRemoteActorHandler = jObj.method([], jObj.types.Named("RemoteActorHandler"),
-            function () {
-                return this.remoteActorHandler;
             });
 
         /*
