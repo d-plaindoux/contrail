@@ -50,7 +50,7 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
                                 callback();
                             }
 
-                            self.pendingMessages.forEach(function(message) {
+                            self.pendingMessages.forEach(function (message) {
                                 self.client.send(message);
                             });
 
@@ -71,20 +71,14 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
                 }
             });
 
-        Socket.prototype.ensureOpen = jObj.procedure([ ],
-            function () {
-                if (this.client && !this.client.isOpen()) {
-                    if (this.client.isClosed()) {
-                        jObj.throwError(jObj.exception("L.web.socket.closed"));
-                    } else {
-                        jObj.throwError(jObj.exception("L.web.socket.not.established"));
-                    }
-                }
-            });
-
         Socket.prototype.isOpen = jObj.method([], jObj.types.Boolean,
             function () {
                 return this.client && this.client.isOpen();
+            });
+
+        Socket.prototype.isClosed = jObj.method([], jObj.types.Boolean,
+            function () {
+                return this.client && this.client.isClosed();
             });
 
         Socket.prototype.send = jObj.procedure([ jObj.types.String ],
@@ -93,6 +87,10 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
                     this.client.send(message);
                 } else if (this.pendingMessages) {
                     this.pendingMessages.push(message);
+                } else if (this.isClosed()) {
+                    jObj.throwError(jObj.exception("L.web.socket.closed"));
+                } else {
+                    jObj.throwError(jObj.exception("L.web.socket.not.established"));
                 }
             });
 
@@ -100,7 +98,7 @@ define(["External/jSocketLib", "require", "Core/object/jObj"],
             function () {
                 if (this.client) {
                     this.client.close();
-                    this.client = null;
+                    this.pendingMessages = null;
                 }
             });
 

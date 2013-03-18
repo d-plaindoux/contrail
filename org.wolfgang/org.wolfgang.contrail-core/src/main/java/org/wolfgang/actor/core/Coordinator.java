@@ -107,7 +107,7 @@ public class Coordinator implements Runnable {
 	public Coordinator() {
 	}
 
-	public Remote remote(String location) {
+	public Remote domain(String location) {
 		return new Remote(location);
 	}
 
