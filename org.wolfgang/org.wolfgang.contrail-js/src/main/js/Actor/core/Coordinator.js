@@ -29,11 +29,13 @@ define([ "Core/object/jObj", "./Actor" ],
             this.activeActors = [];
             this.pendingJobs = [];
 
-            this.interval = 100 /*ms*/;
+            this.intervalJobs = 100 /*ms*/;
+            this.intervalActors = 100 /*ms*/;
 
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
-            this.logger = logger || function () {};
+            this.logger = logger || function () {
+            };
         }
 
         Coordinator.init = jObj.constructor([ jObj.types.Nullable(jObj.types.Function) ],
@@ -68,6 +70,7 @@ define([ "Core/object/jObj", "./Actor" ],
                                         self.pendingJobs.push(function () {
                                             self.getRemoteActorHandler().handle(location, identifier, request, response);
                                         });
+                                        self.startActorRunner();
                                     })
                             };
                         })
@@ -78,42 +81,59 @@ define([ "Core/object/jObj", "./Actor" ],
          * Coordinator management
          */
 
-        Coordinator.prototype.start = jObj.method([], jObj.types.Named("Coordinator"),
+        Coordinator.prototype.startJobRunner = jObj.procedure([],
             function () {
                 var self = this;
 
                 if (this.jobRunnerInterval === undefined) {
                     this.jobRunnerInterval = setInterval(function () {
                         self.jobRunner();
-                    }, this.interval);
+                    }, this.intervalJobs);
                 }
+            });
+
+        Coordinator.prototype.startActorRunner = jObj.procedure([],
+            function () {
+                var self = this;
                 if (this.actorRunnerInterval === undefined) {
                     this.actorRunnerInterval = setInterval(function () {
                         self.actorRunner();
-                    }, this.interval);
+                    }, this.intervalActors);
                 }
+            });
 
+        Coordinator.prototype.start = jObj.method([], jObj.types.Named("Coordinator"),
+            function () {
                 return this;
             });
 
-        Coordinator.prototype.stop = jObj.procedure([],
+        Coordinator.prototype.stopJobRunner = jObj.procedure([],
             function () {
                 if (this.jobRunnerInterval !== undefined) {
                     clearInterval(this.jobRunnerInterval);
                     this.jobRunnerInterval = undefined;
                 }
+            });
+
+        Coordinator.prototype.stopActorRunner = jObj.procedure([],
+            function () {
                 if (this.actorRunnerInterval !== undefined) {
                     clearInterval(this.actorRunnerInterval);
                     this.actorRunnerInterval = undefined;
                 }
             });
 
+        Coordinator.prototype.stop = jObj.procedure([],
+            function () {
+                this.stopJobRunner();
+                this.stopActorRunner();
+            });
         /*
          * Privates method
          */
 
         Coordinator.prototype.jobRunner = function () {
-            if (this.pendingJobs.length !== 0) {
+            if (this.pendingJobs.length > 0) {
                 try {
                     this.pendingJobs.shift()();
                 } catch (e) {
@@ -121,16 +141,25 @@ define([ "Core/object/jObj", "./Actor" ],
                         this.logger(e);
                     }
                 }
+            } else {
+                this.stopJobRunner();
             }
         };
 
         Coordinator.prototype.actorRunner = function () {
             var self = this;
+
             this.activeActors.forEach(function (actor) {
                 if (actor.pendingJobs.length !== 0) {
                     self.pendingJobs.push(actor.pendingJobs.shift());
                 }
             });
+
+            if (this.pendingJobs.length > 0) {
+                this.startJobRunner();
+            } else {
+                this.stopActorRunner();
+            }
         };
 
         /*
@@ -190,6 +219,7 @@ define([ "Core/object/jObj", "./Actor" ],
             function (identifier, request, response) {
                 if (this.universe.hasOwnProperty(identifier)) {
                     this.universe[identifier].send(request, response);
+                    this.startActorRunner();
                 } else {
                     if (response) {
                         response.failure(jObj.exception("L.actor.not.found"));
