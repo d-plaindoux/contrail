@@ -207,9 +207,9 @@
                                 <include>Actor/event/Event.js</include>
                                 <include>Actor/core/BoundActor.js</include>
                                 <include>Actor/core/LocalActor.js</include>
-                                <include>Core/browser/jLoader.js</include>
-                                <include>Core/browser/jDom.js</include>
-                                <include>Core/browser/jUtils.js</include>
+                                <include>Core/client/jLoader.js</include>
+                                <include>Core/client/jDom.js</include>
+                                <include>Core/client/jUtils.js</include>
                                 <include>Actor/core/RemoteActor.js</include>
                                 <include>Actor/core/Actor.js</include>
                                 <include>Actor/core/Coordinator.js</include>
