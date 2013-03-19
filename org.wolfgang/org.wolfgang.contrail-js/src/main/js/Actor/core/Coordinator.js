@@ -104,6 +104,9 @@ define([ "Core/object/jObj", "./Actor" ],
 
         Coordinator.prototype.start = jObj.method([], jObj.types.Named("Coordinator"),
             function () {
+                if (this.pendingJobs.length > 0) {
+                    this.startActorRunner();
+                }
                 return this;
             });
 

@@ -18,7 +18,7 @@
 
 /*global define, require, setInterval*/
 
-define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteActor" ],
+define([ "Core/object/jObj", "Core/client/jLoader", "./LocalActor", "./RemoteActor" ],
     function (jObj, jLoader, localActor, remoteActor) {
         "use strict";
 
@@ -50,6 +50,7 @@ define([ "Core/object/jObj", "Core/browser/jLoader", "./LocalActor", "./RemoteAc
                 this.pendingJobs.push(function () {
                     self.coordinator.invoke(self.getIdentifier(), request, response);
                 });
+                this.coordinator.startActorRunner(); // TODO -- Hide this call ASAP
             });
 
         Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],

@@ -18,7 +18,7 @@
 
 /*global require, setTimeout*/
 
-require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jActor", "../common/StoredResponse" ],
+require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jActor", "../common/StoredResponse" ],
     function (jObj, jCC, jLoader, jActor, storedResponse) {
         "use strict";
 
@@ -138,7 +138,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/browser/jLoader", "Actor/jA
                 When(function () {
                     actor.send(jActor.event.request("n", []), response);
                 }).
-                ThenAfter(500, function () {
+                ThenAfter(1000, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
                     coordinator.stop();
                 });

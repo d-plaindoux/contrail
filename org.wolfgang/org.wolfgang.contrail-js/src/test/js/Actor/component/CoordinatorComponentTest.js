@@ -193,7 +193,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
                     coordinatorA.send("A", jActor.event.request("getA", []), response2);
                 }).
-                ThenAfter(500, function () {
+                ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
                     jCC.equal(response2.value(), "Hello, World!");
                     coordinatorA.stop();
@@ -254,7 +254,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorA.domain("b").actor("A").send(jActor.event.request("setA", [ "Hello, World!" ]));
                     coordinatorA.domain("b").actor("A").send(jActor.event.request("getA", []), response2);
                 }).
-                ThenAfter(500, function () {
+                ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
                     jCC.equal(response2.value(), "Hello, World!");
                     coordinatorA.stop();
@@ -314,7 +314,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
                     coordinatorA.send("A", jActor.event.request("getA", []), response2);
                 }).
-                ThenAfter(500, function () {
+                ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
                     jCC.equal(response2.value(), "Hello, World!");
                     coordinatorA.stop();
@@ -363,7 +363,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorA.send("A.dist", jActor.event.request("setA", [ "Hello, World!" ]));
                     coordinatorA.send("A.dist", jActor.event.request("getA", []), response2);
                 }).
-                ThenAfter(500, function () {
+                ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
                     jCC.equal(response2.value(), "Hello, World!");
                     coordinatorA.stop();
