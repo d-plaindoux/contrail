@@ -74,13 +74,13 @@ class WebClientHandler extends SimpleChannelUpstreamHandler {
 				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 			}
 		} catch (Throwable t) {
-			t.printStackTrace(); // TODO
+			Logger.getAnonymousLogger().log(Level.SEVERE, t.getMessage(), t);			
 		}
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		e.getCause().printStackTrace();
+		Logger.getAnonymousLogger().log(Level.SEVERE, e.getCause().getMessage(), e.getCause());
 		e.getChannel().close();
 	}
 }

@@ -72,7 +72,7 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		e.getCause().printStackTrace();
+		Logger.getAnonymousLogger().log(Level.SEVERE, e.getCause().getMessage(), e.getCause());
 		e.getChannel().close();
 	}
 }

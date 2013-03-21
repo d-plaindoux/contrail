@@ -22,9 +22,23 @@ define("Core/client/jDom", [ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        var JDom = {};
+        var jDom = {};
 
-        JDom.tag = jObj.method([ jObj.types.String, jObj.types.Object, jObj.types.Nullable(jObj.types.Any) ], jObj.types.String,
+        // Atomic values
+
+        jDom.text = jObj.method([ jObj.types.String ], jObj.types.String,
+            function (text) {
+                return text;
+            });
+
+        jDom.empty = jObj.method([], jObj.types.String,
+            function () {
+                return jDom.text("");
+            });
+
+        // Tags
+
+        jDom.tag = jObj.method([ jObj.types.String, jObj.types.Object, jObj.types.Nullable(jObj.types.Any) ], jObj.types.String,
             function (qname, attributes, content) {
                 var key, result;
 
@@ -45,5 +59,10 @@ define("Core/client/jDom", [ "Core/object/jObj" ],
                 return result;
             });
 
-        return JDom;
+        jDom.div = jObj.method([ jObj.types.Object, jObj.types.Nullable(jObj.types.Any) ], jObj.types.String,
+            function (attributes, content) {
+                return jDom.tag("div", attributes, content);
+            });
+
+        return jDom;
     });
