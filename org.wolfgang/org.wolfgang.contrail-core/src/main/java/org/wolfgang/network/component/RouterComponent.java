@@ -20,8 +20,6 @@ package org.wolfgang.network.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.wolfgang.contrail.component.ComponentConnectionRejectedException;
 import org.wolfgang.contrail.component.ComponentDisconnectionRejectedException;
@@ -72,7 +70,6 @@ public class RouterComponent extends MultiSourceComponent<Packet, Packet> {
 		final ClientComponent clientComponent = new ClientComponent(endPoint) {
 			@Override
 			public void closeUpStream() throws DataFlowCloseException {
-				Logger.getAnonymousLogger().log(Level.INFO,"Closing client at [" + endPoint + "]");
 				removeActiveRoute(this);
 				try {
 					super.closeUpStream();

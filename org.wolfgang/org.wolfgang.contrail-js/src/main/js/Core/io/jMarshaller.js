@@ -70,7 +70,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                     jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
-                return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | bytes[offset + 3];
+                return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | (bytes[offset + 3] & 0xFF);
             });
 
         /**
@@ -99,7 +99,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                     jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
-                return bytes[offset] << 8 | bytes[offset + 1];
+                return bytes[offset] << 8 | (bytes[offset + 1] & 0xFF);
             });
 
         /**
@@ -127,7 +127,7 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                     jObj.throwError(jObj.exception("L.array.out.of.bound"));
                 }
 
-                return bytes[offset] << 8 | bytes[offset + 1];
+                return bytes[offset] << 8 | (bytes[offset + 1] & 0xFF);
             });
 
         /**

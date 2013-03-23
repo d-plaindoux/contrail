@@ -75,7 +75,7 @@ public final class Marshall {
 			throw new IOException();
 		}
 
-		return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | bytes[offset + 3];
+		return bytes[offset] << 24 | bytes[offset + 1] << 16 | bytes[offset + 2] << 8 | (bytes[offset + 3] & 0xFF);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public final class Marshall {
 			throw new IOException();
 		}
 
-		return bytes[offset] << 8 | bytes[offset + 1];
+		return bytes[offset] << 8 | (bytes[offset + 1] & 0xFF);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public final class Marshall {
 			throw new IOException();
 		}
 
-		return (char) (bytes[offset] << 8 | bytes[offset + 1]);
+		return (char) (bytes[offset] << 8 | (bytes[offset + 1] & 0xFF));
 	}
 
 	/**
@@ -171,7 +171,7 @@ public final class Marshall {
 			throw new IOException();
 		}
 
-		char[] chars = new char[length];
+		final char[] chars = new char[length];
 
 		for (int i = 0; i < length; i += 1) {
 			chars[i] = bytesToCharWithOffset(bytes, i * SIZE_Character + offset);
@@ -194,6 +194,26 @@ public final class Marshall {
 		return bytesToStringWithOffset(bytes, 0, length);
 	}
 
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static String charsToString(byte[] bytes) {
+		final char[] chars = new char[bytes.length];
+
+		for (int i = 0; i < bytes.length; i += 1) {
+			chars[i] = (char)(bytes[i] & 0xFF);
+		}
+
+		return String.valueOf(chars);
+	}
+	
 	// Encoding
 
 	/**
@@ -250,5 +270,13 @@ public final class Marshall {
 		}
 
 		return bytes;
+	}
+
+	/**
+	 * @param source
+	 * @return
+	 */
+	public static byte[] stringToChars(String source) {
+		return source.getBytes();
 	}
 }

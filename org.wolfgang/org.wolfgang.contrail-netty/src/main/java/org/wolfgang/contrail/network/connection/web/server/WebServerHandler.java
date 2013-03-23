@@ -55,24 +55,22 @@ class WebServerHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext context, MessageEvent event) throws Exception {
-		try {
-			final Object message = event.getMessage();
+		final Object message = event.getMessage();
 
-			if (message instanceof HttpRequest) {
-				final HttpRequest httpRequest = (HttpRequest) message;
-				this.httpRequestHandler.handleHttpRequest(context, httpRequest);
-			} else if (message instanceof WebSocketFrame) {
-				final WebSocketFrame webSocketFrame = (WebSocketFrame) message;
-				this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
-			}
-		} catch (Throwable t) {
-			Logger.getAnonymousLogger().log(Level.SEVERE, t.getMessage(), t);
+		if (message instanceof HttpRequest) {
+			final HttpRequest httpRequest = (HttpRequest) message;
+			this.httpRequestHandler.handleHttpRequest(context, httpRequest);
+		} else if (message instanceof WebSocketFrame) {
+			final WebSocketFrame webSocketFrame = (WebSocketFrame) message;
+			this.wsRequestHandler.handleWebSocketFrame(context, webSocketFrame);
 		}
 	}
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Logger.getAnonymousLogger().log(Level.SEVERE, e.getCause().getMessage(), e.getCause());
-		e.getChannel().close();
+	public void exceptionCaught(ChannelHandlerContext context, ExceptionEvent e) throws Exception {
+		if (!this.wsRequestHandler.handleWebSocketError(context)) {
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getCause().getMessage(), e);
+		}
+		context.getChannel().close();
 	}
 }

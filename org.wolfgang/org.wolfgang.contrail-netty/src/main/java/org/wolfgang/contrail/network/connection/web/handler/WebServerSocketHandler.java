@@ -22,6 +22,7 @@ import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
+import org.wolfgang.contrail.flow.exception.DataFlowCloseException;
 
 /**
  * <code>WSRequestHander</code> defines handler for web socket requests
@@ -37,7 +38,14 @@ public interface WebServerSocketHandler {
 	 * @param frame
 	 * @throws Exception
 	 */
-	public void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
+	void handleWebSocketFrame(ChannelHandlerContext context, WebSocketFrame frame) throws Exception;
+	
+	/**
+	 * @param ctx
+	 * @param e
+	 * @throws DataFlowCloseException 
+	 */
+	boolean handleWebSocketError(ChannelHandlerContext context) throws DataFlowCloseException;
 
 	/**
 	 * 
@@ -45,5 +53,4 @@ public interface WebServerSocketHandler {
 	 * @return
 	 */
 	ChannelFutureListener createHandShakeListener(WebSocketServerHandshaker handshaker, ChannelHandlerContext context);
-
 }

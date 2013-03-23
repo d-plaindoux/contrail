@@ -34,6 +34,7 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
 
         StringifyDecoder.prototype.transform = jObj.method([jObj.types.String], jObj.types.Array,
             function (value) {
+                var len = value.length;
                 return [ jMarshaller.stringToChars(value) ];
             });
 

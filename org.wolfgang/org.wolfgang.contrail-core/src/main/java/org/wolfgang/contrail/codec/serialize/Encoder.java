@@ -108,7 +108,8 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 	@Override
 	public List<Bytes> transform(Object source) throws DataTransducerException {
 		try {
-			return Arrays.asList(new Bytes(encode(source)));
+			final byte[] encoded = encode(source);
+			return Arrays.asList(new Bytes(encoded));
 		} catch (IllegalArgumentException e) {
 			throw new DataTransducerException(e);
 		} catch (IllegalAccessException e) {

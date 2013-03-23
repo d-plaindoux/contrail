@@ -21,6 +21,7 @@ package org.wolfgang.contrail.codec.stringify;
 import java.util.Arrays;
 import java.util.List;
 
+import org.wolfgang.common.utils.Marshall;
 import org.wolfgang.contrail.codec.payload.Bytes;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducer;
 import org.wolfgang.contrail.component.pipeline.transducer.DataTransducerException;
@@ -44,7 +45,7 @@ public class Encoder implements DataTransducer<Bytes, String> {
 	@Override
 	public List<String> transform(Bytes source) throws DataTransducerException {
 		try {
-			return Arrays.asList(new String(source.getContent()));
+			return Arrays.asList(Marshall.charsToString(source.getContent()));
 		} catch (IllegalArgumentException e) {
 			throw new DataTransducerException(e);
 		}

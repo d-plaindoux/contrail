@@ -84,6 +84,8 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
 	}
+	
+	
 
 	/**
 	 * @param context
@@ -116,6 +118,17 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 		});
 	}
 
+	public boolean handleWebSocketError(ChannelHandlerContext context) throws DataFlowCloseException {
+		final int identifier = context.getChannel().getId();
+
+		if (this.receivers.containsKey(identifier)) {			
+			this.receivers.remove(identifier).closeUpStream();
+			return true;
+		} else {
+			return false;
+		}
+ 	}
+	
 	public ChannelFutureListener createHandShakeListener(WebSocketServerHandshaker handshaker, ChannelHandlerContext context) {
 		final int identifier = context.getChannel().getId();
 		final DataFlow<String> emitter = createReceiver(handshaker, context);
@@ -146,13 +159,10 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	}
 
 	private void sendWebSocketFrame(ChannelHandlerContext context, WebSocketFrame res) throws Throwable {
-		final int identifier = context.getChannel().getId();
 		try {
 			context.getChannel().write(res);
 		} catch (Throwable e) {
-			if (this.receivers.containsKey(identifier)) {
-				this.receivers.remove(identifier).closeUpStream();
-			}
+			this.handleWebSocketError(context);
 			throw e;
 		}
 	}

@@ -76,7 +76,11 @@ public class WebClientSocketHandlerImpl implements WebClientSocketHandler {
 		} else if (frame instanceof CloseWebSocketFrame) {
 			this.receivers.remove(identifier).getUpStreamDataFlow().handleClose();
 		} else if (frame instanceof PingWebSocketFrame) {
-			this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
+			try {
+				this.sendWebSocketFrame(context, new PongWebSocketFrame(frame.getBinaryData()));
+			} catch (Throwable e) {
+				throw new WebClientConnectionException(e);
+			}
 		} else if (frame instanceof TextWebSocketFrame) {
 			final String request = ((TextWebSocketFrame) frame).getText();
 			this.receivers.get(identifier).getUpStreamDataFlow().handleData(request);
@@ -110,7 +114,13 @@ public class WebClientSocketHandlerImpl implements WebClientSocketHandler {
 
 			@Override
 			public void handleData(String data) throws DataFlowException {
-				sendWebSocketFrame(context, new TextWebSocketFrame(data));
+				try {
+					sendWebSocketFrame(context, new TextWebSocketFrame(data));
+				} catch (DataFlowException e) {
+					throw e;
+				} catch (Throwable e) {
+					throw new DataFlowException(e);
+				}
 			}
 		});
 	}
@@ -122,8 +132,15 @@ public class WebClientSocketHandlerImpl implements WebClientSocketHandler {
 		receivers.put(identifier, initialComponent);
 	}
 
-	private void sendWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame res) {
-		// Send the response and close the connection if necessary.
-		ctx.getChannel().write(res);
+	private void sendWebSocketFrame(ChannelHandlerContext context, WebSocketFrame res) throws Throwable {
+		final int identifier = context.getChannel().getId();
+		try {
+			context.getChannel().write(res);
+		} catch (Throwable e) {
+			if (this.receivers.containsKey(identifier)) {
+				this.receivers.remove(identifier).closeUpStream();
+			}
+			throw e;
+		}
 	}
 }
