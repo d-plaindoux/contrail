@@ -52,11 +52,7 @@ import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 
 	private static final String WEBSOCKET = "/websocket";
-
-	private static final DefaultHttpResponse DEFAULT_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, OK);
-	private static final DefaultHttpResponse NOT_FOUND_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, NOT_FOUND);
-	private static final DefaultHttpResponse FORBIDDEN_HTTP_RESPONSE = new DefaultHttpResponse(HTTP_1_1, FORBIDDEN);
-
+	
 	private final WebServerSocketHandler wsRequestHandler;
 	private final WebContentProvider serverPage;
 
@@ -83,7 +79,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 	@Override
 	public void handleHttpRequest(ChannelHandlerContext context, HttpRequest request) throws Exception {
 		if (request.getMethod() != GET) {
-			this.sendHttpResponse(context, request, FORBIDDEN_HTTP_RESPONSE);
+			this.sendHttpResponse(context, request, new DefaultHttpResponse(HTTP_1_1, FORBIDDEN));
 		} else if (request.getUri().startsWith(WEBSOCKET)) {
 			this.initiateWebSocket(context, request);
 		} else {
@@ -98,17 +94,19 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				resourceURI = request.getUri();
 			}
 
-			final HttpResponse res = DEFAULT_HTTP_RESPONSE;
+			final HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
 
 			try {
 				final byte[] resource = serverPage.getContent(resourceURI);
 				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource);
-				res.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
-				setContentLength(res, content.readableBytes());
-				res.setContent(content);
-				this.sendHttpResponse(context, request, res);
+
+				response.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
+				setContentLength(response, resource.length);
+				response.setContent(content);
+
+				this.sendHttpResponse(context, request, response);
 			} catch (IOException e) {
-				this.sendHttpResponse(context, request, NOT_FOUND_HTTP_RESPONSE);
+				this.sendHttpResponse(context, request, new DefaultHttpResponse(HTTP_1_1, NOT_FOUND));
 			}
 		}
 	}
@@ -137,16 +135,17 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 		}
 	}
 
-	private void sendHttpResponse(ChannelHandlerContext ctx, HttpRequest req, HttpResponse res) {
+	private void sendHttpResponse(ChannelHandlerContext context, HttpRequest req, HttpResponse response) {
 		// Generate an error page if response status code is not OK (200).
-		if (res.getStatus().getCode() != 200) {
-			res.setContent(ChannelBuffers.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
-			setContentLength(res, res.getContent().readableBytes());
+		if (response.getStatus().getCode() != 200) {
+			response.setContent(ChannelBuffers.copiedBuffer(response.getStatus().toString(), CharsetUtil.UTF_8));
+			setContentLength(response, response.getContent().readableBytes());
 		}
 
 		// Send the response and close the connection if necessary.
-		final ChannelFuture f = ctx.getChannel().write(res);
-		if (!isKeepAlive(req) || res.getStatus().getCode() != 200) {
+		final ChannelFuture f = context.getChannel().write(response);
+		
+		if (!isKeepAlive(req) || response.getStatus().getCode() != 200) {
 			f.addListener(ChannelFutureListener.CLOSE);
 		}
 	}

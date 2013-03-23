@@ -25,6 +25,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.jboss.netty.handler.stream.ChunkedWriteHandler;
 import org.wolfgang.contrail.component.SourceComponentNotifier;
 import org.wolfgang.contrail.network.connection.web.content.WebContentProvider;
 
@@ -54,6 +55,7 @@ class WebServerPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("http_decoder", new HttpRequestDecoder());
 		pipeline.addLast("http_aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("http_encoder", new HttpResponseEncoder());
+		pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());
 		pipeline.addLast("webserver_handler", new WebServerHandler(this.factory, this.provider));
 		return pipeline;
 	}
