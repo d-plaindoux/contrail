@@ -32,7 +32,7 @@ public interface HTTPRequestHandler {
 	/**
 	 * Main method called whether an HTTP request is received
 	 * 
-	 * @param contex
+	 * @param context
 	 * @param req
 	 * @return
 	 * @throws Exception

@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.wolfgang.actor.annotation.ActorCoordinator;
-import org.wolfgang.actor.annotation.ActorName;
+import org.wolfgang.actor.annotation.ActorId;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
 import org.wolfgang.common.concurrent.Promise;
@@ -44,7 +44,7 @@ public class LocalActorTest {
 
 	public static class CA {
 		
-		@ActorName
+		@ActorId
 		public String actorId;
 		
 		@ActorCoordinator

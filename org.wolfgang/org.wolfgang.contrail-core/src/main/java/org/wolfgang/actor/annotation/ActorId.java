@@ -18,30 +18,16 @@
 
 package org.wolfgang.actor.annotation;
 
-import java.lang.reflect.Field;
-
-import org.wolfgang.actor.core.Coordinator;
-import org.wolfgang.actor.core.NotBoundActor;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * <code>AnnotationSolver</code>
+ * <code>ActorCoordinator</code>
  *
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class ActorAnnotationSolver {
-	
-	public static Object solve(NotBoundActor actor, Object model) throws IllegalArgumentException, IllegalAccessException {
-		final Field[] fields = model.getClass().getFields();
-		
-		for (Field field : fields) {
-			if (field.isAnnotationPresent(ActorId.class) && String.class.isAssignableFrom(field.getType())) {
-				field.set(model, actor.getActorId());
-			} else if (field.isAnnotationPresent(ActorCoordinator.class) && Coordinator.class.isAssignableFrom(field.getType())) {
-				field.set(model, actor.getCoordinator());
-			}
-		}
-		
-		return model;
-	}
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ActorId {
+
 }

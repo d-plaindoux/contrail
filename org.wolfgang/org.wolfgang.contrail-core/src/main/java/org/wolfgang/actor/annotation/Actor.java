@@ -28,6 +28,6 @@ import java.lang.annotation.RetentionPolicy;
  * @version 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ActorName {
+public @interface Actor {
 
 }

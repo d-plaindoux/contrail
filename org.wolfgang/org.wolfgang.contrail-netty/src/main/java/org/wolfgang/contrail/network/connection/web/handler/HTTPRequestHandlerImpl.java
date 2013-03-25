@@ -20,7 +20,6 @@ package org.wolfgang.contrail.network.connection.web.handler;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
-import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static org.jboss.netty.handler.codec.http.HttpMethod.GET;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
@@ -100,7 +99,7 @@ public class HTTPRequestHandlerImpl implements HTTPRequestHandler {
 				final byte[] resource = serverPage.getContent(resourceURI);
 				final ChannelBuffer content = ChannelBuffers.copiedBuffer(resource);
 
-				response.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
+				// TODO -- later ... response.setHeader(CONTENT_TYPE, "text/html; charset=UTF-8");
 				setContentLength(response, resource.length);
 				response.setContent(content);
 

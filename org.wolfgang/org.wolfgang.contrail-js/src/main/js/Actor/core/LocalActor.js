@@ -47,6 +47,8 @@ define([ "Core/object/jObj", "./BoundActor" ],
                 } catch (error) {
                     if (response) {
                         response.failure(error);
+                    } else {
+                        jObj.throwError(error);
                     }
                 }
             });
