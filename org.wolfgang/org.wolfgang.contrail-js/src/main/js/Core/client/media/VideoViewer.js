@@ -23,29 +23,21 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function ImageDisplay(canvas, width, height) {
+        function VideoViewer(audioVideo) {
             jObj.bless(this);
 
-            this.canvas = canvas;
-            this.width = width;
-            this.height = height;
+            this.audioVideo = audioVideo;
         }
 
-        ImageDisplay.init = jObj.constructor([ jObj.types.Object, jObj.types.Number, jObj.types.Number ], // TODO -- check types
-            function (canvas, width, height) {
-                return new ImageDisplay(canvas, width, height);
+        VideoViewer.init = jObj.constructor([ jObj.types.Named("AudioVideo") ],
+            function (audioVideo) {
+                return new VideoViewer(audioVideo);
             });
 
-        ImageDisplay.prototype.displayImage = jObj.procedure([ jObj.types.Object ], // TODO -- check types
-            function (image) {
-                var context = this.canvas.getContext("2d");
-                context.drawImage(image, 0, 0, this.width, this.height);
+        VideoViewer.prototype.attachToStream = jObj.procedure([ jObj.types.Named("AudioVideo") ],
+            function (device) {
+                this.audioVideo.src = device.getStream();
             });
 
-        ImageDisplay.prototype.getURL = jObj.method([], jObj.types.Any, // TODO -- check types
-            function () {
-                return this.canvas.toDataURL();
-            });
-
-        return ImageDisplay.init;
+        return VideoViewer.init;
     });

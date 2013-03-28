@@ -49,6 +49,10 @@ public class Coordinator implements Runnable {
 				this.actorId = actorId;
 			}
 
+			public String getActorId() {
+				return actorId;
+			}
+
 			public void send(Request request) {
 				this.send(request, null);
 			}
@@ -61,7 +65,7 @@ public class Coordinator implements Runnable {
 						return null;
 					}
 				});
-				
+
 				activateCoordinatorIfNecessary();
 			}
 
@@ -201,7 +205,7 @@ public class Coordinator implements Runnable {
 	public boolean hasActor(String name) {
 		return this.universe.containsKey(name);
 	}
-	
+
 	public Actor actor(String name) {
 		if (hasActor(name)) {
 			return this.universe.get(name);
@@ -209,7 +213,7 @@ public class Coordinator implements Runnable {
 			final NotBoundActor abstractActor = new NotBoundActor(name, this);
 			this.universe.put(abstractActor.getActorId(), abstractActor);
 			return abstractActor;
-		}		
+		}
 	}
 
 	public void registerActor(Actor actor) {

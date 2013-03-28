@@ -210,6 +210,9 @@
                                 <include>Core/client/jLoader.js</include>
                                 <include>Core/client/jDom.js</include>
                                 <include>Core/client/jUtils.js</include>
+                                <include>Core/client/media/AudioVideo.js</include>
+                                <include>Core/client/media/VideoSampler.js</include>
+                                <include>Core/client/jMedia.js</include>
                                 <include>Actor/core/RemoteActor.js</include>
                                 <include>Actor/core/Actor.js</include>
                                 <include>Actor/core/Coordinator.js</include>
