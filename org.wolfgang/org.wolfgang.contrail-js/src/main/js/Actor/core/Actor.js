@@ -109,6 +109,11 @@ define([ "Core/object/jObj", "Core/client/jLoader", "./LocalActor", "./RemoteAct
             function (model) {
                 var anActor = localActor(this, jObj.bless(model, { actorId:this.identifier, coordinator:this.coordinator }));
                 this.coordinator.registerActor(anActor);
+
+                if (model.boundAsActor) {
+                    model.boundAsActor();
+                }
+
                 return anActor;
             });
 

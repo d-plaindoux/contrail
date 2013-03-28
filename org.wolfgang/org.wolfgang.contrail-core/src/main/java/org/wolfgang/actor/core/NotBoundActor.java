@@ -18,6 +18,7 @@
 
 package org.wolfgang.actor.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class NotBoundActor implements Actor {
 		this.coordinator = actor.coordinator;
 		this.actorActions = actor.actorActions;
 	}
-	
+
 	@Override
 	public boolean isBound() {
 		return false;
@@ -89,6 +90,8 @@ public class NotBoundActor implements Actor {
 			throw new ActorException(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
 			throw new ActorException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new ActorException(e.getCause().getMessage(), e.getCause());
 		}
 	}
 

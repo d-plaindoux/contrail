@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,28 +16,18 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+package org.wolfgang.actor.annotation;
 
-/*global define, navigator*/
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
-        "use strict";
+/**
+ * <code>ActorCoordinator</code>
+ *
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ActorBoundNotifier {
 
-        function VideoViewer(audioVideo) {
-            jObj.bless(this);
-
-            this.audioVideo = audioVideo;
-        }
-
-        VideoViewer.init = jObj.constructor([ jObj.types.Object ],
-            function (audioVideo) {
-                return new VideoViewer(audioVideo);
-            });
-
-        VideoViewer.prototype.attachToStream = jObj.procedure([ jObj.types.Named("AudioVideo") ],
-            function (device) {
-                this.audioVideo.src = device.getStream();
-            });
-
-        return VideoViewer.init;
-    });
+}

@@ -16,28 +16,32 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+/*global define*/
 
-/*global define, navigator*/
+/*global define*/
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+define("Actor/foundation/Session", [ "Core/object/jObj", "Actor/jActor" ],
+    function (jObj, jActor, jLoader, jUtils) {
         "use strict";
 
-        function VideoViewer(audioVideo) {
+        function Session(identifier) {
             jObj.bless(this);
 
-            this.audioVideo = audioVideo;
+            this.identifier = identifier;
         }
 
-        VideoViewer.init = jObj.constructor([ jObj.types.Object ],
-            function (audioVideo) {
-                return new VideoViewer(audioVideo);
+        Session.init = jObj.constructor([ jObj.types.String ],
+            function (identifier) {
+                return new Session(identifier);
             });
 
-        VideoViewer.prototype.attachToStream = jObj.procedure([ jObj.types.Named("AudioVideo") ],
-            function (device) {
-                this.audioVideo.src = device.getStream();
+        Session.prototype.actorId = undefined;
+        Session.prototype.coordinator = undefined;
+
+        Session.prototype.boundAsActor = jObj.types.procedure([],
+            function () {
+                // Nothing to do for the moment
             });
 
-        return VideoViewer.init;
+        return Session.init;
     });

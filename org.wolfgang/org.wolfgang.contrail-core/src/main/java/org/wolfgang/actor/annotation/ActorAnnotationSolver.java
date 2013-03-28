@@ -19,6 +19,8 @@
 package org.wolfgang.actor.annotation;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.wolfgang.actor.core.Coordinator;
 import org.wolfgang.actor.core.NotBoundActor;
@@ -31,7 +33,7 @@ import org.wolfgang.actor.core.NotBoundActor;
  */
 public class ActorAnnotationSolver {
 	
-	public static Object solve(NotBoundActor actor, Object model) throws IllegalArgumentException, IllegalAccessException {
+	private static <T> T solveFields(NotBoundActor actor, T model) throws IllegalArgumentException, IllegalAccessException {
 		final Field[] fields = model.getClass().getFields();
 		
 		for (Field field : fields) {
@@ -43,5 +45,21 @@ public class ActorAnnotationSolver {
 		}
 		
 		return model;
+	}
+
+	private static <T> T solveNotifier(NotBoundActor actor, T model) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		final Method[] methods = model.getClass().getMethods();
+		
+		for (Method method : methods) {
+			if (method.isAnnotationPresent(ActorBoundNotifier.class) && method.getParameterTypes().length == 0) {
+				method.invoke(model);
+			}
+		}
+		
+		return model;
+	}
+	
+	public static <T> T solve(NotBoundActor actor, T model) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		return solveNotifier(actor, solveFields(actor, model));
 	}
 }
