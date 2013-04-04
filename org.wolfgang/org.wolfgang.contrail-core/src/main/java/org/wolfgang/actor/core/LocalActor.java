@@ -26,6 +26,8 @@ import java.util.Map;
 
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 
 /**
  * <code>LocalActor</code>
@@ -35,8 +37,16 @@ import org.wolfgang.actor.event.Response;
  */
 public class LocalActor extends BoundActor implements Actor {
 
+	private static final Message SERVICE_NOT_FOUND;
+	private static final Message MESSAGE_FAILURE;
+
 	final private Object model;
 	final private Map<String, Method> methodsCache;
+
+	static {
+		SERVICE_NOT_FOUND = MessagesProvider.message("org/wolgang/actor/message", "service.not.found");
+		MESSAGE_FAILURE = MessagesProvider.message("org/wolgang/actor/message", "execution.failure");
+	}
 
 	{
 		this.methodsCache = new HashMap<String, Method>();
@@ -47,6 +57,14 @@ public class LocalActor extends BoundActor implements Actor {
 		this.model = model;
 	}
 
+	private String getMessage(String message, String alternative) {
+		if (message == null) {
+			return alternative;
+		} else {
+			return message;
+		}
+	}
+
 	@Override
 	public void invoke(Request request, Response response) {
 		final Method method = getMethodByName(request.getName());
@@ -55,14 +73,15 @@ public class LocalActor extends BoundActor implements Actor {
 			try {
 				response.success(method.invoke(model, request.getParameters()));
 			} catch (IllegalArgumentException e) {
-				failure(response, new ActorException("Cannot execute " + request.getName(), e));
+				failure(response, new ActorException(getMessage(e.getMessage(), MESSAGE_FAILURE.format(request.getName(), this.getActorId())), e));
 			} catch (IllegalAccessException e) {
-				failure(response, new ActorException("Cannot execute " + request.getName(), e));
+				failure(response, new ActorException(getMessage(e.getMessage(), MESSAGE_FAILURE.format(request.getName(), this.getActorId())), e));
 			} catch (InvocationTargetException e) {
-				failure(response, new ActorException("Cannot execute " + request.getName(), e.getCause()));
+				failure(response, new ActorException(getMessage(e.getCause().getMessage(), MESSAGE_FAILURE.format(request.getName(), this.getActorId())), e.getCause()));
 			}
 		} else {
-			failure(response, new ActorException("Actor method [" + request.getName() + "] does not exist in " + model.getClass().getName()));
+			final String message = SERVICE_NOT_FOUND.format(request.getName(), this.getActorId());
+			failure(response, new ActorException(message));
 		}
 	}
 

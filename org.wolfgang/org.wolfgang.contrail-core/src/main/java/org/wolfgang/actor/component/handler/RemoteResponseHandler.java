@@ -18,6 +18,8 @@
 
 package org.wolfgang.actor.component.handler;
 
+import static org.wolfgang.actor.common.Keywords.*;
+
 import org.wolfgang.actor.component.CoordinatorComponent;
 import org.wolfgang.actor.core.ActorException;
 import org.wolfgang.actor.event.Response;
@@ -56,7 +58,7 @@ public class RemoteResponseHandler implements Response {
 
 	private void sendPacket(int type, Object object) {
 		try {
-			final ObjectRecord data = new ObjectRecord().set("identifier", identifier).set("type", type).set("value", object);
+			final ObjectRecord data = new ObjectRecord().set(IDENTIFIER, identifier).set(TYPE, type).set(VALUE, object);
 			final Packet packet = new Packet(location, data);
 
 			component.getDownStreamDataFlow().handleData(packet);

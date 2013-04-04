@@ -18,7 +18,7 @@
 
 /*global define*/
 
-define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "./ClientBuilder" ],
+define([ "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail", "./ClientBuilder" ],
     function (require, jObj, jSocket, jContrail, clientBuilder) {
         "use strict";
 
@@ -33,7 +33,11 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
 
         StandardClientBuilder.prototype.getIntermediateComponent = jObj.method([ ], jObj.types.Named("SourceComponent"),
             function () {
-                var jSonifiers = [ require("Network/jNetwork").packet, require("Actor/jActor").event.request ];
+                var jSonifiers = [
+                    require("Network/jNetwork").packet,
+                    require("Actor/jEvent").request,
+                    require("Actor/jActor").exception
+                ];
 
                 return jContrail.component.compose([
                     jContrail.component.transducer(jContrail.codec.stringify.encoder(), jContrail.codec.stringify.decoder()),

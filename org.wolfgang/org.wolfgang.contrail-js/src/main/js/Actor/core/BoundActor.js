@@ -19,8 +19,8 @@
 
 /*global define*/
 
-define([ "Core/object/jObj" ],
-    function (jObj) {
+define([ "require", "Core/object/jObj" ],
+    function (require, jObj) {
         "use strict";
 
         var BoundActor = function () {

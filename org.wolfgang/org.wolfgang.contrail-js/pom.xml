@@ -220,6 +220,7 @@
                                 <include>Actor/core/LocalActor.js</include>
                                 <include>Actor/core/RemoteActor.js</include>
                                 <include>Actor/core/Actor.js</include>
+                                <include>Actor/core/ActorException.js</include>
                                 <include>Actor/core/Coordinator.js</include>
                                 <include>Actor/component/flow/ActorInteractionFilter.js</include>
                                 <include>Actor/component/handler/RemoteResponseHandler.js</include>

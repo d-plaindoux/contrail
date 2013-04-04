@@ -18,6 +18,8 @@
 
 package org.wolfgang.actor.component.flow;
 
+import static org.wolfgang.actor.common.Keywords.*;
+
 import org.wolfgang.actor.component.CoordinatorComponent;
 import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.component.handler.RemoteResponseHandler;
@@ -41,6 +43,8 @@ import org.wolfgang.network.packet.Packet;
  */
 public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> implements DataFlow<Packet> {
 
+	private static final String RESPONSE = "response";
+	
 	private final Coordinator coordinator;
 	private final CoordinatorComponent component;
 
@@ -57,27 +61,26 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 		if (ActorInteractionFilter.isAnActorRequest(data.getData())) {
 			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
 			final RemoteResponseHandler response;
-			if (record.get("response") != null) {
-				response = new RemoteResponseHandler(component, data.getSourceId(), record.get("response", String.class));
+			if (record.get(RESPONSE) != null) {
+				response = new RemoteResponseHandler(component, data.getSourceId(), record.get(RESPONSE, String.class));
 			} else {
 				response = null;
 			}
-			this.coordinator.send(record.get("identifier", String.class), record.get("request", Request.class), response);
+			this.coordinator.send(record.get(IDENTIFIER, String.class), record.get(REQUEST, Request.class), response);
 		} else if (ActorInteractionFilter.isAnActorResponse(data.getData())) {
 			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
-			final Response response = this.component.retrieveResponseById(record.get("identifier", String.class));
-			if (record.get("type", Integer.class) == 0x01) {
-				response.success(record.get("value", Object.class));
+			final Response response = this.component.retrieveResponseById(record.get(IDENTIFIER, String.class));
+			if (record.get(TYPE, Integer.class) == 0x01) {
+				response.success(record.get(VALUE, Object.class));
 			} else {
-				response.failure(record.get("value", ActorException.class));
+				response.failure(record.get(VALUE, ActorException.class));
 			}
 		}
 	}
 
 	@Override
 	public void handleClose() throws DataFlowCloseException {
-		// TODO Auto-generated method stub
-
+		// Nothing to do for the moment
 	}
 
 }

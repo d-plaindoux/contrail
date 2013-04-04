@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Pair;
 
 /**
@@ -56,15 +57,15 @@ public class BoundActor implements Actor {
 	}
 
 	public BoundActor bindToObject(Object model) throws ActorException {
-		throw new ActorException("Already bound");
+		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
-		throw new ActorException("Already bound");
+		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	public BoundActor bindToSource(String model) throws ActorException {
-		throw new ActorException("Already bound");
+		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class BoundActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		response.failure(new ActorException("Not yet binded")); // TODO
+		response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "not.yet.bound").format()));
 	}
 
 	public synchronized boolean performPendingAction() {

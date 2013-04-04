@@ -22,33 +22,26 @@ define([ "Core/object/jObj" ],
     function (jObj) {
         "use strict";
 
-        function Request(name, parameters) {
+        function ActorException(message) {
             jObj.bless(this);
 
-            this.name = name;
-            this.parameters = parameters;
+            this.message = message;
         }
 
-        Request.init = jObj.constructor([jObj.types.String, jObj.types.Array],
-            function (name, parameters) {
-                return new Request(name, parameters);
+        ActorException.init = jObj.constructor([ jObj.types.String ],
+            function (message) {
+                return new ActorException(message);
             });
 
-        Request.prototype.getName = jObj.method([], jObj.types.String,
+        ActorException.prototype.getMessage = jObj.method([], jObj.types.String,
             function () {
-                return this.name;
+                return this.message;
             });
 
-        Request.prototype.getParameters = jObj.method([], jObj.types.Array,
+        ActorException.prototype.toString = jObj.method([], jObj.types.String,
             function () {
-                return this.parameters;
+                return this.getMessage();
             });
 
-        Request.prototype.toActor = jObj.method([ jObj.types.String, jObj.types.Nullable(jObj.types.String)], jObj.types.Object,
-            function (id, response) {
-                return { identifier:id, request:this, response:response };
-            }
-        );
-
-        return jObj.jSonifable(Request.init).nameAndType("Request","Request").withKeys("name", "parameters");
+        return jObj.jSonifable(ActorException.init).nameAndType("ActorException", "ActorException").withKeys("message");
     });

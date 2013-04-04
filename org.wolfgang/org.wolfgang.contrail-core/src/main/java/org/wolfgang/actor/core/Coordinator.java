@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.message.MessagesProvider;
 
 /**
  * <code>Coordinator</code>
@@ -231,7 +232,7 @@ public class Coordinator implements Runnable {
 			this.universe.get(actorId).send(request, response);
 			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
-			response.failure(new ActorException("Actor does not exists"));
+			response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
 		}
 	}
 
@@ -243,7 +244,7 @@ public class Coordinator implements Runnable {
 		if (this.hasActor(actorId)) {
 			this.universe.get(actorId).invoke(request, response);
 		} else if (response != null) {
-			response.failure(new ActorException("Actor does not exists"));
+			response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
 		}
 	}
 

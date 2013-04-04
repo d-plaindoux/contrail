@@ -25,6 +25,7 @@ import java.util.List;
 import org.wolfgang.actor.annotation.ActorAnnotationSolver;
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.actor.event.Response;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.common.utils.Pair;
 
 /**
@@ -108,7 +109,7 @@ public class NotBoundActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		response.failure(new ActorException("Not yet binded")); // TODO
+		response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.yet.bound").format(this.getActorId())));
 	}
 
 	@Override

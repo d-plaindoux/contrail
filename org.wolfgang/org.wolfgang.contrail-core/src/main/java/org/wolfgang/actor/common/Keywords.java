@@ -5,7 +5,7 @@
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2, or (at your option) any
  * later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,19 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define*/
+package org.wolfgang.actor.common;
 
-define("Actor/jActor", [ "Core/object/jObj", "Actor/jEvent", "./core/Coordinator", "./component/CoordinatorComponent", "./core/ActorException" ],
-    function (jObj, event, coordinator, component, exception) {
-        "use strict";
+/**
+ * <code>Keywords</code>
+ *
+ * @author Didier Plaindoux
+ * @version 1.0
+ */
+public interface Keywords {
+	
+	static final String VALUE = "value";
+	static final String TYPE = "type";
+	static final String RESPONSE = "response";
+	static final String REQUEST = "request";
+	static final String IDENTIFIER = "identifier";
 
-        var Actor = {};
-
-        Actor.component = component;
-        Actor.coordinator = coordinator;
-        Actor.event = event;
-        Actor.exception = exception;
-
-        return Actor;
-    })
-;
+}

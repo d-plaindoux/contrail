@@ -18,6 +18,8 @@
 
 package org.wolfgang.actor.component.flow;
 
+import static org.wolfgang.actor.common.Keywords.*;
+
 import org.wolfgang.actor.event.Request;
 import org.wolfgang.common.utils.Coercion;
 import org.wolfgang.contrail.data.ObjectRecord;
@@ -33,7 +35,7 @@ public final class ActorInteractionFilter {
 	public static boolean isAnActorRequest(Object object) {
 		if (Coercion.canCoerce(object, ObjectRecord.class)) {
 			final ObjectRecord record = Coercion.coerce(object, ObjectRecord.class);
-			return record.has("identifier", String.class) && record.has("request", Request.class) && record.hasOrNull("response", String.class);
+			return record.has(IDENTIFIER, String.class) && record.has(REQUEST, Request.class) && record.hasOrNull(RESPONSE, String.class);
 		} else {
 			return false;
 		}
@@ -42,7 +44,7 @@ public final class ActorInteractionFilter {
 	public static boolean isAnActorResponse(Object object) {
 		if (Coercion.canCoerce(object, ObjectRecord.class)) {
 			final ObjectRecord record = Coercion.coerce(object, ObjectRecord.class);
-			return record.has("identifier", String.class) && record.has("type", Integer.class) && record.hasOrNull("value", Object.class);
+			return record.has(IDENTIFIER, String.class) && record.has(TYPE, Integer.class) && record.hasOrNull(VALUE, Object.class);
 		} else {
 			return false;
 		}
