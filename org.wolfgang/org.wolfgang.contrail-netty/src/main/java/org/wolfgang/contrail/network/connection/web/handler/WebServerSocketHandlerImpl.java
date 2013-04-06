@@ -19,6 +19,7 @@
 package org.wolfgang.contrail.network.connection.web.handler;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.jboss.netty.channel.ChannelFuture;
@@ -54,6 +55,7 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	private final Map<Integer, WebSocketServerHandshaker> handShakers;
 
 	{
+		this.remainingFrames = new LinkedList<TextWebSocketFrame>();
 		this.receivers = new HashMap<Integer, InitialComponent<String, String>>();
 		this.handShakers = new HashMap<Integer, WebSocketServerHandshaker>();
 	}
@@ -78,15 +80,14 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 				// TODO
 			}
 		} else if (frame instanceof TextWebSocketFrame) {
-			final String data = ((TextWebSocketFrame) frame).getText();
+			final TextWebSocketFrame testFrame = (TextWebSocketFrame) frame;
+			final String data = testFrame.getText();
 			this.receivers.get(identifier).getUpStreamDataFlow().handleData(data);
 		} else {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
 		}
 	}
 	
-	
-
 	/**
 	 * @param context
 	 * @return

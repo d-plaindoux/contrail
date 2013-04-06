@@ -53,7 +53,7 @@ public class Decoder<T> implements DataTransducer<Object, T> {
 		if (source == null || coercionType.isAssignableFrom(source.getClass())) {
 			return Arrays.asList(coercionType.cast(source));
 		} else {
-			final Message message = MessagesProvider.message("org/wolfgang/contrail/message", "transducer.coercion.error");
+			final Message message = MessagesProvider.from(this).get("org/wolfgang/contrail/message", "transducer.coercion.error");
 			throw new DataTransducerException(message.format(source.getClass(), coercionType));
 		}
 	}

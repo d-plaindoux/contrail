@@ -46,11 +46,11 @@ public class ComponentManager {
 		if (source instanceof SourceComponent && destination instanceof DestinationComponent) {
 			return safe_connect((SourceComponent) source, (DestinationComponent) destination);
 		} else if (destination instanceof DestinationComponent) {
-			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source").format());
+			throw new ComponentConnectionRejectedException(MessagesProvider.from(ComponentManager.class).get("org/wolfgang/contrail/message", "not.a.source").format());
 		} else if (source instanceof SourceComponent) {
-			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.destination").format());
+			throw new ComponentConnectionRejectedException(MessagesProvider.from(ComponentManager.class).get("org/wolfgang/contrail/message", "not.a.destination").format());
 		} else {
-			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
+			throw new ComponentConnectionRejectedException(MessagesProvider.from(ComponentManager.class).get("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
 

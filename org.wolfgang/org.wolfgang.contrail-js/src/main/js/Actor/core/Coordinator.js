@@ -35,6 +35,7 @@ define([ "Core/object/jObj", "./Actor" ],
             this.jobRunnerInterval = undefined;
             this.actorRunnerInterval = undefined;
             this.logger = logger || function () {
+                // Do nothing
             };
         }
 

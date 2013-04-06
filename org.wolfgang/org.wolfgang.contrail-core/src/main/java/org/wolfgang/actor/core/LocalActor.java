@@ -44,8 +44,8 @@ public class LocalActor extends BoundActor implements Actor {
 	final private Map<String, Method> methodsCache;
 
 	static {
-		SERVICE_NOT_FOUND = MessagesProvider.message("org/wolgang/actor/message", "service.not.found");
-		MESSAGE_FAILURE = MessagesProvider.message("org/wolgang/actor/message", "execution.failure");
+		SERVICE_NOT_FOUND = MessagesProvider.from(LocalActor.class).get("org/wolfgang/actor/message", "service.not.found");
+		MESSAGE_FAILURE = MessagesProvider.from(LocalActor.class).get("org/wolfgang/actor/message", "execution.failure");
 	}
 
 	{

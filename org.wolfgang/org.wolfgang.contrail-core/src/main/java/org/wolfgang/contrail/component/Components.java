@@ -75,7 +75,7 @@ public final class Components {
 		} else if (Coercion.canCoerce(components[0], SourceComponent.class) && Coercion.canCoerce(components[components.length - 1], DestinationComponent.class)) {
 			return new CompositionComponent(components);
 		} else {
-			throw new ComponentConnectionRejectedException(MessagesProvider.message("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
+			throw new ComponentConnectionRejectedException(MessagesProvider.from(Components.class).get("org/wolfgang/contrail/message", "not.a.source.and.destination").format());
 		}
 	}
 }

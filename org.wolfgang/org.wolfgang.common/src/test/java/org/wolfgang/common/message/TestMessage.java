@@ -34,7 +34,7 @@ public class TestMessage {
 	@Test
 	public void GivenAValidMessageEntryReturnTheCorrectMessage() throws Exception {
 		try {
-			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message");
+			final Message message = MessagesProvider.from(this).get("org/wolfgang/common/message", "message");
 			final String text = message.format();
 			assertEquals("This is a test message", text);
 		} catch (Exception e) {
@@ -45,7 +45,7 @@ public class TestMessage {
 	@Test
 	public void GivenAValidMessageEntryWithArgumentsReturnTheCorrectMessage() throws Exception {
 		try {
-			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.with.args");
+			final Message message = MessagesProvider.from(this).get("org/wolfgang/common/message", "message.with.args");
 			final String text = message.format("'Hello, World!'");
 			assertEquals("This is a 'Hello, World!'", text);
 		} catch (Exception e) {
@@ -56,7 +56,7 @@ public class TestMessage {
 	@Test
 	public void GivenAMessageEntryInAnInvalidMessageProviderReturnTheDefaultErrorMessage() throws Exception {
 		try {
-			final Message message = MessagesProvider.message("org/wolfgang/common/undef", "message.undefined");
+			final Message message = MessagesProvider.from(this).get("org/wolfgang/common/undef", "message.undefined");
 			final String text = message.format("'Hello, World!'");
 			assertEquals("message bundle not found for [org/wolfgang/common/undef]", text);
 		} catch (Exception e) {
@@ -67,7 +67,7 @@ public class TestMessage {
 	@Test
 	public void GivenAnInvalidMessageEntryInAValidMessageProviderReturnTheDefaultErrorMessage() throws Exception {
 		try {
-			final Message message = MessagesProvider.message("org/wolfgang/common/message", "message.undefined");
+			final Message message = MessagesProvider.from(this).get("org/wolfgang/common/message", "message.undefined");
 			final String text = message.format("'Hello, World!'");
 			assertEquals("message not found in [org/wolfgang/common/message] for [message.undefined]", text);
 		} catch (Exception e) {

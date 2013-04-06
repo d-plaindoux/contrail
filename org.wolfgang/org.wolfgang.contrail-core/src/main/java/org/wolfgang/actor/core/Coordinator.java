@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.wolfgang.actor.component.handler.RemoteActorHandler;
 import org.wolfgang.actor.event.Request;
@@ -126,7 +128,14 @@ public class Coordinator implements Runnable {
 
 	public Coordinator start() {
 		if (this.coordinatorExecutor == null) {
-			actorActionsExecutor = Executors.newFixedThreadPool(1);
+			final AtomicInteger index = new AtomicInteger(0);
+			actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory()  {				
+				@Override
+				public Thread newThread(Runnable arg0) {
+					return new Thread(arg0, "Actor Executor #" + index.incrementAndGet());
+				}
+			});
+			
 			coordinatorExecutor = Executors.newSingleThreadExecutor();
 			this.activateCoordinatorIfNecessary();
 		}
@@ -232,7 +241,7 @@ public class Coordinator implements Runnable {
 			this.universe.get(actorId).send(request, response);
 			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
-			response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
+			response.failure(new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
 		}
 	}
 
@@ -244,7 +253,7 @@ public class Coordinator implements Runnable {
 		if (this.hasActor(actorId)) {
 			this.universe.get(actorId).invoke(request, response);
 		} else if (response != null) {
-			response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
+			response.failure(new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "actor.not.found").format(actorId)));
 		}
 	}
 

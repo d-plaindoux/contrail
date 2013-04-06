@@ -40,7 +40,7 @@ public class RouteTable {
 
 	public void addEntry(String name, ClientBuilder endpoint) throws RouteAlreadyExistException {
 		if (this.hasEntry(name)) {
-			throw new RouteAlreadyExistException(MessagesProvider.message("org/wolfgang/contrail/message", "route.already.exist").format(name, endpoint));
+			throw new RouteAlreadyExistException(MessagesProvider.from(this).get("org/wolfgang/contrail/message", "route.already.exist").format(name, endpoint));
 		} else {
 			this.routes.put(name, endpoint);
 		}
@@ -54,7 +54,7 @@ public class RouteTable {
 		if (this.hasEntry(name)) {
 			return this.routes.get(name);
 		} else {
-			throw new RouteNotFoundException(MessagesProvider.message("org/wolfgang/contrail/message", "route.not.found").format(name));
+			throw new RouteNotFoundException(MessagesProvider.from(this).get("org/wolfgang/contrail/message", "route.not.found").format(name));
 		}
 	}
 

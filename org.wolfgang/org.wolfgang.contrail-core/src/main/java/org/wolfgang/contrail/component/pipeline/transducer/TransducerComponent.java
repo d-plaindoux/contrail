@@ -18,9 +18,8 @@
 
 package org.wolfgang.contrail.component.pipeline.transducer;
 
-import static org.wolfgang.common.message.MessagesProvider.message;
-
 import org.wolfgang.common.message.Message;
+import org.wolfgang.common.message.MessagesProvider;
 import org.wolfgang.contrail.component.pipeline.AbstractPipelineComponent;
 import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerDownStreamDataFlow;
 import org.wolfgang.contrail.component.pipeline.transducer.flow.TransducerUpStreamDataFlow;
@@ -50,8 +49,8 @@ public final class TransducerComponent<U1, D1, U2, D2> extends AbstractPipelineC
 	static {
 		final String category = "org.wolfgang.contrail.message";
 
-		XDUCER_UNKNOWN = message(category, "transducer.upstream.unknown");
-		XDUCER_ERROR = message(category, "transducer.transformation.error");
+		XDUCER_UNKNOWN = MessagesProvider.from(TransducerComponent.class).get(category, "transducer.upstream.unknown");
+		XDUCER_ERROR = MessagesProvider.from(TransducerComponent.class).get(category, "transducer.transformation.error");
 	}
 
 	/**

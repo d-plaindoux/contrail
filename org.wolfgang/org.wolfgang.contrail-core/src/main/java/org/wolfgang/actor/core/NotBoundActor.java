@@ -109,7 +109,7 @@ public class NotBoundActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "actor.not.yet.bound").format(this.getActorId())));
+		response.failure(new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "actor.not.yet.bound").format(this.getActorId())));
 	}
 
 	@Override

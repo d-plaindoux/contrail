@@ -57,15 +57,15 @@ public class BoundActor implements Actor {
 	}
 
 	public BoundActor bindToObject(Object model) throws ActorException {
-		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
+		throw new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
-		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
+		throw new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	public BoundActor bindToSource(String model) throws ActorException {
-		throw new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "already.bound").format());
+		throw new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "already.bound").format());
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class BoundActor implements Actor {
 
 	@Override
 	public void invoke(Request request, Response response) {
-		response.failure(new ActorException(MessagesProvider.message("org/wolfgang/actor/message", "not.yet.bound").format()));
+		response.failure(new ActorException(MessagesProvider.from(this).get("org/wolfgang/actor/message", "not.yet.bound").format()));
 	}
 
 	public synchronized boolean performPendingAction() {

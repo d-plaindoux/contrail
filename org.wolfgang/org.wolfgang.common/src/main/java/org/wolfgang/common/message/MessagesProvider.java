@@ -38,11 +38,34 @@ import java.util.logging.Logger;
  */
 public final class MessagesProvider extends SecurityManager {
 
+	public interface MessagesProviderWithClassLoader {
+		public Message get(String category, String key);
+	}
+
 	/**
 	 * Class attributes referencing the internal message provider instance. It's
 	 * a singleton
 	 */
 	private static MessagesProvider sharedInstance;
+
+	public static MessagesProviderWithClassLoader from(final Object data) {
+		final ClassLoader loader;
+		
+		if (data instanceof ClassLoader) {
+			loader = (ClassLoader) data;
+		} else if (data instanceof Class) {
+			loader = ((Class<?>) data).getClassLoader();
+		} else {
+			loader = data.getClass().getClassLoader();
+		}
+
+		return new MessagesProviderWithClassLoader() {
+			@Override
+			public Message get(String category, String key) {
+				return MessagesProvider.message(loader, category, key);
+			}
+		};
+	}
 
 	/**
 	 * Static method providing a message
@@ -61,10 +84,34 @@ public final class MessagesProvider extends SecurityManager {
 		}
 
 		try {
-			final ClassLoader classLoader = sharedInstance.getClassContext()[1].getClassLoader();
-			sharedInstance.loadMessages(classLoader, category);
+			sharedInstance.loadMessages(sharedInstance.getClass().getClassLoader(), category);
 		} catch (MissingResourceException e) {
-			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage());
+			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage() + " [key=" + key + "]");
+		}
+
+		return sharedInstance.getMessage(category, key);
+	}
+
+	/**
+	 * Static method providing a message
+	 * 
+	 * @param category
+	 *            The message type
+	 * @param key
+	 *            The message identifier
+	 * @param parameters
+	 *            Parameters used to format the message
+	 * @return a message formatter
+	 */
+	private static synchronized Message message(ClassLoader loader, String category, String key) {
+		if (sharedInstance == null) {
+			sharedInstance = new MessagesProvider();
+		}
+
+		try {
+			sharedInstance.loadMessages(loader, category);
+		} catch (MissingResourceException e) {
+			Logger.getAnonymousLogger().log(Level.SEVERE, "[Cannot load resource bundle] " + e.getMessage() + " [key=" + key + "]");
 		}
 
 		return sharedInstance.getMessage(category, key);
@@ -91,7 +138,12 @@ public final class MessagesProvider extends SecurityManager {
 	 */
 	private void loadMessages(ClassLoader classLoader, String category) {
 		if (!this.resourceBundles.containsKey(category)) {
-			this.resourceBundles.put(category, ResourceBundle.getBundle(category, Locale.getDefault(), classLoader));
+			try {
+				this.resourceBundles.put(category, ResourceBundle.getBundle(category, Locale.getDefault(), classLoader));
+			} catch (MissingResourceException e) {
+				Logger.getAnonymousLogger().log(Level.WARNING, "[Cannot load resource bundle] " + e.getMessage() + " switching to " + Locale.ENGLISH);
+				this.resourceBundles.put(category, ResourceBundle.getBundle(category, Locale.ENGLISH, classLoader));
+			}
 		}
 	}
 
