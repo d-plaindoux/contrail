@@ -4,5 +4,8 @@
 .classpath
 target
 *~
+*.iws
+*.iml
+*.ipr
 .idea
 .buildpath
