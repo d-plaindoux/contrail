@@ -55,7 +55,6 @@ public class WebServerSocketHandlerImpl implements WebServerSocketHandler {
 	private final Map<Integer, WebSocketServerHandshaker> handShakers;
 
 	{
-		this.remainingFrames = new LinkedList<TextWebSocketFrame>();
 		this.receivers = new HashMap<Integer, InitialComponent<String, String>>();
 		this.handShakers = new HashMap<Integer, WebSocketServerHandshaker>();
 	}

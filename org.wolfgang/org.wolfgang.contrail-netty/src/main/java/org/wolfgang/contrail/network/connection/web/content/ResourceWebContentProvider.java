@@ -18,19 +18,11 @@
 
 package org.wolfgang.contrail.network.connection.web.content;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/**
- * <code>ServerPage</code> provides html pages on demand based on simple
- * resourceName TODO improve this code ASAP
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public final class ResourceWebContentProvider implements WebContentProvider {
+public final class ResourceWebContentProvider extends AbstractContentProvider implements WebContentProvider {
 
 	private static final String HTDOCS = "/htdocs/";
 
@@ -48,28 +40,14 @@ public final class ResourceWebContentProvider implements WebContentProvider {
 		final URL resource = ResourceWebContentProvider.class.getResource(HTDOCS + resourceName);
 
 		if (resource == null) {
-			throw new IOException();
-		}
-
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		try {
+			throw new IOException("Resource [" + resourceName + "] not found");
+		} else {
 			final InputStream inputStream = resource.openStream();
 			try {
-				final byte[] bytes = new byte[1024];
-				int len;
-				while ((len = inputStream.read(bytes)) != -1) {
-					outputStream.write(bytes, 0, len);
-					outputStream.flush();
-				}
+				return this.getContent(inputStream);
 			} finally {
 				inputStream.close();
 			}
-		} finally {
-			outputStream.close();
 		}
-
-		// Unfold HTML document
-
-		return outputStream.toByteArray();
 	}
 }

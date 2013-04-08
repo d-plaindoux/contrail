@@ -19,40 +19,27 @@
 package org.wolfgang.contrail.network.connection.web.content;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
-/**
- * <code>ServerPage</code> provides html pages on demand based on simple
- * resourceName TODO improve this code ASAP
- * 
- * @author Didier Plaindoux
- * @version 1.0
- */
-public final class DirectoryWebContentProvider extends AbstractContentProvider implements WebContentProvider {
+class AbstractContentProvider {
+	
+	protected byte[] getContent(InputStream inputStream) throws IOException {
 
-	private final File rootDirector;
-
-	public DirectoryWebContentProvider(File rootDirector) {
-		this.rootDirector = rootDirector;
-	}
-
-	@Override
-	public boolean canProvideContent(String resourceName) {
-		return new File(rootDirector, resourceName).exists();
-	}
-
-	@Override
-	public byte[] getContent(String resourceName) throws IOException {
-		final File resource = new File(rootDirector, resourceName);
-
-		final InputStream inputStream = new FileInputStream(resource);
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
-			return this.getContent(inputStream);
+			final byte[] bytes = new byte[1024];
+			int len;
+			while ((len = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, len);
+				outputStream.flush();
+			}
 		} finally {
-			inputStream.close();
+			outputStream.close();
 		}
+
+		return outputStream.toByteArray();
 	}
+	
 }
