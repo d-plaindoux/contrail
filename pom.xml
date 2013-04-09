@@ -60,7 +60,6 @@
 	  <module>contrail-core</module>
 	  <module>contrail-netty</module>
 	  <module>contrail-web-client</module>
-	  <module>contrail-assembly</module>
 	</modules>
 
 </project>
