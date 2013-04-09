@@ -4,32 +4,125 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Contrail Demonstration Home Page</title>
-    <script type="text/javascript" src="js/org/codehaus/mojo/almond/0.0.2-alpha-1/almond-0.0.2-alpha-1.js"></script>
-    <script type="text/javascript"
-            src="js/org/codehaus/mojo/jquery-amd/1.7.1-alpha-1/jquery-amd-1.7.1-alpha-1.js"></script>
-    <script type="text/javascript"
-            src="js/org/codehaus/mojo/jquery-ui-amd/1.8.16-alpha-1/jquery-ui-amd-1.8.16-alpha-1.js"></script>
-    <script type="text/javascript" src="${App/client.js}"></script>
+    <title>Contrail Main Home Page Used For Minifier construction only</title>
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
-    <style>
-        .boxedArea {
-            color: #123456;
-            background-color: #EEEEEE;
-            width: 600px;
-            border-radius: 5px 15px 15px 5px;
-            Box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.4);
-        }
-    </style>
-    <script>
-        // TODO
-    </script>
+    <!-- Core -->
+    <script src="Core/object/jSonifier.js"></script>
+    <script src="Core/object/jType.js"></script>
+    <script src="Core/object/jModel.js"></script>
+    <script src="Core/object/jObj.js"></script>
+    <script src="External/JSonLib.js"></script>
+    <script src="External/JSocketLib.js"></script>
+    <script src="Core/client/jLoader.js"></script>
+    <script src="Core/client/jDom.js"></script>
+    <script src="Core/client/jUtils.js"></script>
+    <script src="Core/client/media/AudioVideo.js"></script>
+    <script src="Core/client/media/VideoSampler.js"></script>
+    <script src="Core/client/media/VideoViewer.js"></script>
+    <script src="Core/client/jMedia.js"></script>
+    <script src="Core/flow/DataFlow.js"></script>
+    <script src="Core/flow/CloseableDataFlow.js"></script>
+    <script src="Core/flow/FilteredDataFlow.js"></script>
+    <script src="Core/flow/BufferedDataFlow.js"></script>
+    <script src="Core/flow/jFlow.js"></script>
+    <script src="Core/io/jMarshaller.js"></script>
+    <script src="Core/net/ServerSocket.js"></script>
+    <script src="Core/net/Socket.js"></script>
+    <script src="Core/net/jSocket.js"></script>
+    <script src="Core/utils/jUtils.js"></script>
+    <!-- Contrail -->
+    <script src="Contrail/codec/identity/EncoderDecoder.js"></script>
+    <script src="Contrail/codec/identity/CoDecIdentityLibrary.js"></script>
+    <script src="Contrail/codec/object/Decoder.js"></script>
+    <script src="Contrail/codec/object/Encoder.js"></script>
+    <script src="Contrail/codec/object/CoDecObjectLibrary.js"></script>
+    <script src="Contrail/codec/serialize/Decoder.js"></script>
+    <script src="Contrail/codec/serialize/Encoder.js"></script>
+    <script src="Contrail/codec/serialize/CoDecSerializeLibrary.js"></script>
+    <script src="Contrail/codec/stringify/Encoder.js"></script>
+    <script src="Contrail/codec/stringify/Decoder.js"></script>
+    <script src="Contrail/codec/stringify/CoDecStringifyLibrary.js"></script>
+    <script src="Contrail/codec/payload/Encoder.js"></script>
+    <script src="Contrail/codec/payload/Decoder.js"></script>
+    <script src="Contrail/codec/payload/CoDecPayloadLibrary.js"></script>
+    <script src="Contrail/codec/basic/Transducer.js"></script>
+    <script src="Contrail/codec/basic/Decoder.js"></script>
+    <script src="Contrail/codec/basic/Encoder.js"></script>
+    <script src="Contrail/codec/basic/CoDecBasicLibrary.js"></script>
+    <script src="Contrail/codec/json/Encoder.js"></script>
+    <script src="Contrail/codec/json/Decoder.js"></script>
+    <script src="Contrail/codec/json/CoDecJSonLibrary.js"></script>
+    <script src="Contrail/codec/jCodec.js"></script>
+    <script src="Contrail/link/DisposableLink.js"></script>
+    <script src="Contrail/link/SourceLink.js"></script>
+    <script src="Contrail/link/DestinationLink.js"></script>
+    <script src="Contrail/link/ComponentLink.js"></script>
+    <script src="Contrail/link/ComponentManager.js"></script>
+    <script src="Contrail/link/jLink.js"></script>
+    <script src="Contrail/component/transducer/flow/TransducerDataFlow.js"></script>
+    <script src="Contrail/component/transducer/flow/TransducerUpStreamDataFlow.js"></script>
+    <script src="Contrail/component/transducer/flow/TransducerDownStreamDataFlow.js"></script>
+    <script src="Contrail/component/transducer/TransducerComponent.js"></script>
+    <script src="Contrail/component/transducer/TransducerComponentLibrary.js"></script>
+    <script src="Contrail/component/bound/TerminalComponent.js"></script>
+    <script src="Contrail/component/bound/InitialComponent.js"></script>
+    <script src="Contrail/component/bound/BoundComponentLibrary.js"></script>
+    <script src="Contrail/component/core/DestinationComponentWithSingleSource.js"></script>
+    <script src="Contrail/component/core/DestinationComponent.js"></script>
+    <script src="Contrail/component/core/SourceComponentWithSingleDestination.js"></script>
+    <script src="Contrail/component/core/SourceComponent.js"></script>
+    <script src="Contrail/component/core/Component.js"></script>
+    <script src="Contrail/component/core/CoreComponentLibrary.js"></script>
+    <script src="Contrail/component/pipeline/PipelineComponent.js"></script>
+    <script src="Contrail/component/pipeline/PipelineComponentLibrary.js"></script>
+    <script src="Contrail/component/multi/flow/MultiUpStreamDataFlow.js"></script>
+    <script src="Contrail/component/multi/MultiDestinationComponent.js"></script>
+    <script src="Contrail/component/multi/flow/MultiDownStreamDataFlow.js"></script>
+    <script src="Contrail/component/multi/MultiSourceComponent.js"></script>
+    <script src="Contrail/component/multi/MultiComponentLibrary.js"></script>
+    <script src="Contrail/component/composition/CompositionComponent.js"></script>
+    <script src="Contrail/component/composition/SourceCompositionComponent.js"></script>
+    <script src="Contrail/component/composition/DestinationCompositionComponent.js"></script>
+    <script src="Contrail/component/composition/PipelineCompositionComponent.js"></script>
+    <script src="Contrail/component/composition/CompositionComponentLibrary.js"></script>
+    <script src="Contrail/component/jComponent.js"></script>
+    <script src="Contrail/jContrail.js"></script>
+    <!-- Network -->
+    <script src="Network/route/RouteTable.js"></script>
+    <script src="Network/packet/Packet.js"></script>
+    <script src="Network/clientBuilder/ClientBuilder.js"></script>
+    <script src="Network/clientBuilder/StandardClientBuilder.js"></script>
+    <script src="Network/clientBuilder/WebSocketClientBuilder.js"></script>
+    <script src="Network/clientBuilder/Builders.js"></script>
+    <script src="Network/component/flow/client/ClientComponentUpStreamDataFlow.js"></script>
+    <script src="Network/component/flow/client/ClientComponentDownStreamDataFlow.js"></script>
+    <script src="Network/component/ClientComponent.js"></script>
+    <script src="Network/component/flow/domain/DomainComponentDataFlow.js"></script>
+    <script src="Network/component/flow/domain/DomainComponentDownStreamDataFlow.js"></script>
+    <script src="Network/component/flow/domain/DomainComponentUpStreamDataFlow.js"></script>
+    <script src="Network/component/DomainComponent.js"></script>
+    <script src="Network/component/flow/router/RouterComponentDownStreamDataFlow.js"></script>
+    <script src="Network/component/RouterComponent.js"></script>
+    <script src="Network/jNetwork.js"></script>
+    <!-- Actors -->
+    <script src="Actor/component/handler/RemoteActorHandler.js"></script>
+    <script src="Actor/event/Request.js"></script>
+    <script src="Actor/event/Response.js"></script>
+    <script src="Actor/event/Event.js"></script>
+    <script src="Actor/core/BoundActor.js"></script>
+    <script src="Actor/core/LocalActor.js"></script>
+    <script src="Actor/core/RemoteActor.js"></script>
+    <script src="Actor/core/Actor.js"></script>
+    <script src="Actor/core/ActorException.js"></script>
+    <script src="Actor/core/Coordinator.js"></script>
+    <script src="Actor/component/flow/ActorInteractionFilter.js"></script>
+    <script src="Actor/component/handler/RemoteResponseHandler.js"></script>
+    <script src="Actor/component/flow/CoordinatorUpStreamDataFlow.js"></script>
+    <script src="Actor/component/CoordinatorComponent.js"></script>
+    <script src="Actor/jActor.js"></script>
 </head>
 
 <body>
-<div id="main" class="height:800px"></div>
-<hr/>
-<div id="error"></div>
 </body>
 
 </html>

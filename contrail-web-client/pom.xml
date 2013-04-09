@@ -58,6 +58,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -111,7 +112,7 @@
                             <removeIncluded>true</removeIncluded>
                             <insertNewLine>false</insertNewLine>
                             <inputDir>target/classes/js</inputDir>
-                            <output>${project.build.directory}/min/classes/contrail.js</output>
+                            <output>${project.build.directory}/min/classes/1-min.js</output>
                             <includes>
                                 <!-- Core -->
                                 <include>Core/object/jSonifier.js</include>
