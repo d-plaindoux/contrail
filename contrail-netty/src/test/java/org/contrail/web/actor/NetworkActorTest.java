@@ -30,7 +30,6 @@ import org.contrail.actor.component.CoordinatorComponent;
 import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
 import org.contrail.actor.event.Request;
-import org.contrail.actor.event.Response;
 import org.contrail.common.concurrent.Promise;
 import org.contrail.stream.component.CannotCreateComponentException;
 import org.contrail.stream.component.Component;
@@ -58,10 +57,6 @@ import org.contrail.stream.network.packet.Packet;
  */
 public class NetworkActorTest {
 
-	public class PromiseResponse extends Promise<Object, ActorException> implements Response {
-		// Nothing to be done
-	}
-
 	public static class A {
 		private int value;
 
@@ -82,33 +77,19 @@ public class NetworkActorTest {
 	@Test
 	public void shouldReceiveResponseWithRemoteActorAndCorrectMessage() throws Exception {
 
-		// Factories
-		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
-		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
-		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new ArrayList<JSonifier>() {
-			private static final long serialVersionUID = 2065999814340836186L;
-			{
-				this.add(Packet.jSonifable());
-				this.add(Request.jSonifable());
-				this.add(ActorException.jSonifable());
-			}
-		});
-
 		// Prepare domain "1"
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
 		final DomainComponent routeComponent1 = new DomainComponent("1");
-		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
-				coordinatorComponent1);
+		final Component compose1 = givenComposedComponent(coordinatorComponent1, routeComponent1);
 
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
 		final DomainComponent routeComponent2 = new DomainComponent("2");
-		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
-				coordinatorComponent2);
+		final Component compose2 = givenComposedComponent(coordinatorComponent2, routeComponent2);
 
 		// Prepare server connection manager
 
@@ -163,33 +144,21 @@ public class NetworkActorTest {
 	@Test(expected = ActorException.class)
 	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Throwable {
 
-		// Factories
-		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
-		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
-		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new ArrayList<JSonifier>() {
-			private static final long serialVersionUID = 2065999814340836186L;
-			{
-				this.add(Packet.jSonifable());
-				this.add(Request.jSonifable());
-				this.add(ActorException.jSonifable());
-			}
-		});
-
 		// Prepare domain "1"
 
 		final Coordinator coordinator1 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
 		final DomainComponent routeComponent1 = new DomainComponent("1");
-		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
-				coordinatorComponent1);
+
+		final Component compose1 = givenComposedComponent(coordinatorComponent1, routeComponent1);
 
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
 		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
 		final DomainComponent routeComponent2 = new DomainComponent("2");
-		final Component compose2 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent2,
-				coordinatorComponent2);
+
+		final Component compose2 = givenComposedComponent(coordinatorComponent2, routeComponent2);
 
 		// Prepare server connection manager
 
@@ -240,6 +209,29 @@ public class NetworkActorTest {
 			connect.close();
 			server.close();
 		}
+	}
+
+	// Private corner
+	
+	private Component givenComposedComponent(
+			final CoordinatorComponent coordinatorComponent1,
+			final DomainComponent routeComponent1)
+			throws ComponentConnectionRejectedException {
+		// Factories
+		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
+		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
+		final ObjectTransducerFactory objectFactory = new ObjectTransducerFactory(new ArrayList<JSonifier>() {
+			private static final long serialVersionUID = 2065999814340836186L;
+			{
+				this.add(Packet.jSonifable());
+				this.add(Request.jSonifable());
+				this.add(ActorException.jSonifable());
+			}
+		});
+
+		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
+				coordinatorComponent1);
+		return compose1;
 	}
 
 }

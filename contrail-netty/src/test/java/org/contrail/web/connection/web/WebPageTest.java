@@ -19,13 +19,12 @@
 package org.contrail.web.connection.web;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
-import org.junit.Test;
 import org.contrail.web.connection.web.content.ResourceWebContentProvider;
 import org.contrail.web.connection.web.content.WebContentProvider;
+import org.junit.Test;
 
 /**
  * <code>TestWebPage</code>
@@ -45,15 +44,9 @@ public class WebPageTest {
 		assertEquals(new String(resource01), new String(resource02));
 	}
 
-	@Test
-	public void testWebPage02() {
+	@Test(expected=IOException.class)
+	public void testWebPage02() throws IOException {
 		final WebContentProvider serverPage = new ResourceWebContentProvider();
-
-		try {
-			serverPage.getContent("undefined");
-			fail();
-		} catch (IOException e) {
-			// OK
-		}
+		serverPage.getContent("undefined");		
 	}
 }

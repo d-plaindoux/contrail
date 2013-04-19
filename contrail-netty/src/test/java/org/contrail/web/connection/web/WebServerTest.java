@@ -89,7 +89,7 @@ public class WebServerTest {
 	}
 
 	@Test
-	public void shouldHaveServerResponseWhenClientSendUsingWS() throws Exception {
+	public void shouldHaveServerResponseWhenClientSendMessageUsingWebSocket() throws Exception {
 
 		final ComponentDataFlowFactory<String, String> receiverFactory = new ComponentDataFlowFactory<String, String>() {
 			@Override
@@ -154,7 +154,7 @@ public class WebServerTest {
 	}
 
 	@Test
-	public void shouldHaveClientResponseWhenServerSendUsingWS() throws Exception {
+	public void shouldHaveClientResponseWhenServerSendMessageUsingWebSocket() throws Exception {
 
 		final Promise<String, Exception> clientResponse = Promise.create();
 
