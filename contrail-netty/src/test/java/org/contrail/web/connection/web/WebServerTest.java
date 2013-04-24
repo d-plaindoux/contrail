@@ -62,6 +62,7 @@ public class WebServerTest {
 				throw new CannotCreateComponentException("Not allowed");
 			}
 		}, contentProvider);
+		
 		server.bind(2777);
 
 		final URI uriClient = new URI("http://localhost:2777/helloworld");

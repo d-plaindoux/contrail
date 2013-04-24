@@ -35,12 +35,12 @@ import org.contrail.common.message.MessagesProvider;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class LocalActor extends BoundActor implements Actor {
+public class LocalActor<T> extends BoundActor implements Actor {
 
 	private static final Message SERVICE_NOT_FOUND;
 	private static final Message MESSAGE_FAILURE;
 
-	final private Object model;
+	final private T model;
 	final private Map<String, Method> methodsCache;
 
 	static {
@@ -52,9 +52,13 @@ public class LocalActor extends BoundActor implements Actor {
 		this.methodsCache = new HashMap<String, Method>();
 	}
 
-	public LocalActor(Object model, NotBoundActor actor) {
+	public LocalActor(T model, NotBoundActor actor) {
 		super(actor);
 		this.model = model;
+	}
+
+	public T getModel() {
+		return model;
 	}
 
 	private String getMessage(String message, String alternative) {

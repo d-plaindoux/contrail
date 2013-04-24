@@ -22,18 +22,18 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
     function (require, jObj, jSocket, jContrail, clientBuilder) {
         "use strict";
 
-        function WebSocketClientBuilder(endPoint, callback) {
+        function WebHTTPClientBuilder(endPoint, callback) {
             jObj.bless(this, clientBuilder(endPoint));
 
             this.callback = callback;
         }
 
-        WebSocketClientBuilder.init = jObj.constructor([ jObj.types.String, jObj.types.Nullable(jObj.types.Function)  ],
+        WebHTTPClientBuilder.init = jObj.constructor([ jObj.types.String, jObj.types.Nullable(jObj.types.Function)  ],
             function (endPoint, callback) {
-                return new WebSocketClientBuilder(endPoint, callback);
+                return new WebHTTPClientBuilder(endPoint, callback);
             });
 
-        WebSocketClientBuilder.prototype.activate = jObj.method([], jObj.types.Named("SourceComponent"),
+        WebHTTPClientBuilder.prototype.activate = jObj.method([], jObj.types.Named("SourceComponent"),
             function () {
                 var socket, component, initial;
 
@@ -50,5 +50,5 @@ define([  "require", "Core/object/jObj", "Core/net/jSocket", "Contrail/jContrail
                 return component;
             });
 
-        return WebSocketClientBuilder.init;
+        return WebHTTPClientBuilder.init;
     });
