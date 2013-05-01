@@ -67,6 +67,8 @@ public class Encoder implements DataTransducer<Object, Object> {
 			return result;
 		} else if (Coercion.canCoerce(source, Integer.class)) {
 			return source;
+		} else if (Coercion.canCoerce(source, Float.class)) {
+			return source;
 		} else if (Coercion.canCoerce(source, Boolean.class)) {
 			return source;
 		} else if (Coercion.canCoerce(source, String.class)) {
