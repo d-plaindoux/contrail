@@ -70,6 +70,31 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io/
                 });
         });
 
+
+        jCC.scenario("Float decoding", function () {
+            var object, decoder, result;
+
+            jCC.
+                Given(function () {
+                    object = [jMarshaller.types.Float].concat(jMarshaller.floatToBytes(-256.23));
+                }).
+                And(function () {
+                    decoder = Factory.serialize.decoder();
+                }).
+                When(function () {
+                    result = decoder.transform(object);
+                }).
+                Then(function () {
+                    jCC.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Float), true, "Checking result type");
+                }).
+                And(function () {
+                    jCC.equal(result[0], -256.23, "Checking encoded value");
+                });
+        });
+
         jCC.scenario("Undefined decoding", function () {
             var object, decoder, result;
 

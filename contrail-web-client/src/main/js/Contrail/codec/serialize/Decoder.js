@@ -44,6 +44,11 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
                         size += length * jMarshaller.sizeOf.Character;
                         break;
 
+                    case jMarshaller.types.Float:
+                        result = jMarshaller.bytesToFloatWithOffset(array, offset + 1);
+                        size = 1 + jMarshaller.sizeOf.Number;
+                        break;
+
                     case jMarshaller.types.Number:
                         result = jMarshaller.bytesToNumberWithOffset(array, offset + 1);
                         size = 1 + jMarshaller.sizeOf.Number;

@@ -98,6 +98,15 @@ define([],
                 return object === null;
             }),
 
+            Float:typeRule(Primitives.Number,
+                function (object) {
+                    var result = false;
+
+                    // parameter type checking TODO in this section
+
+                    return result;
+                }),
+
             Named:ofPrimitiveType,
 
             // Root type
@@ -114,7 +123,7 @@ define([],
                     function (object) {
                         var result = true;
 
-                        // parameter type checking TODO
+                        // parameter type checking TODO in this section
 
                         return result;
                     });

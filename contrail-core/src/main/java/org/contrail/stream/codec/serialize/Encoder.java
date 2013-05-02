@@ -68,6 +68,10 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 			final Integer intValue = Coercion.coerce(source, Integer.class);
 			type = Marshall.TYPE_Number;
 			result = Marshall.numberToBytes(intValue);
+		} else if (Coercion.canCoerce(source, Float.class)) {
+			final Float floatValue = Coercion.coerce(source, Float.class);
+			type = Marshall.TYPE_Float;
+			result = Marshall.floatToBytes(floatValue); 
 		} else if (Coercion.canCoerce(source, String.class)) {
 			type = Marshall.TYPE_String;
 			final String stringValue = Coercion.coerce(source, String.class);

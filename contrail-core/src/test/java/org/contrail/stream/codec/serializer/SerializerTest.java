@@ -36,7 +36,7 @@ import org.contrail.stream.data.ObjectRecord;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class TestSerializer {
+public class SerializerTest {
 
 	@Test
 	public void shouldRetrieveAStringWithEncodeAndDecode() throws DataTransducerException {
@@ -58,6 +58,23 @@ public class TestSerializer {
 	@Test
 	public void shouldRetrieveAnIntegerWithEncodeAndDecode() throws DataTransducerException {
 		final int source = 42;
+
+		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
+
+		final DataTransducer<Object, Bytes> encoder = serializationTransducerFactory.getEncoder();
+		final List<Bytes> bytes = encoder.transform(source);
+		assertEquals(1, bytes.size());
+
+		final DataTransducer<Bytes, Object> decoder = serializationTransducerFactory.getDecoder();
+		final List<Object> result = decoder.transform(bytes.get(0));
+		assertEquals(1, result.size());
+
+		assertEquals(source, result.get(0));
+	}
+
+	@Test
+	public void shouldRetrieveAFloatWithEncodeAndDecode() throws DataTransducerException {
+		final float source = 42.3f;
 
 		final SerializationTransducerFactory serializationTransducerFactory = new SerializationTransducerFactory();
 

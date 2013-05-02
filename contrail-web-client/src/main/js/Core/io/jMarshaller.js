@@ -33,13 +33,15 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
             Array:0x1,
             Object:0x2,
             Character:0x3,
-            Number:0x4,
-            ShortNumber:0x5,
-            String:0x6,
-            BooleanTrue:0x7,
-            BooleanFalse:0x8,
-            Undefined:0x9,
-            Null:0x10
+            String:0x4,
+            BooleanTrue:0x5,
+            BooleanFalse:0x6,
+            Undefined:0x7,
+            Null:0x8,
+
+            ShortNumber:0x9,
+            Number:0x10,
+            Float:0x11      // TODO
         };
 
         /**
@@ -85,6 +87,35 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
                 return jMarshaller.bytesToNumberWithOffset(bytes, 0);
             });
 
+
+        /**
+         * Convert an array of bytes to a float
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToFloatWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
+            function (bytes, offset) {
+                var intValue = jMarshaller.bytesToNumberWithOffset(bytes,offset);
+
+                // Compute float number here
+
+                return intValue;
+
+            });
+
+        /**
+         * Convert an array of bytes to an integer
+         *
+         * @param bytes The source
+         * @param offset The initial position
+         * @return {*}
+         */
+        jMarshaller.bytesToFloat = jObj.method([jObj.types.Array], jObj.types.Number,
+            function (bytes) {
+                return jMarshaller.bytesToFloatWithOffset(bytes, 0);
+            });
 
         /**
          * Convert an array of bytes to an integer
@@ -219,6 +250,17 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
         jMarshaller.numberToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
             function (value) {
                 return [value >>> 24 & 0xFF, value >>> 16 & 0xFF, value >>> 8 & 0xFF, value & 0xFF];
+            });
+
+        /**
+         * Concert a float to a byte array
+         *
+         * @param i
+         * @return {Array}
+         */
+        jMarshaller.floatToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
+            function (value) {
+                return jMarshaller.numberToBytes(value);
             });
 
         /**

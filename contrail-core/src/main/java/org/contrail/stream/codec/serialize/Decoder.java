@@ -63,6 +63,11 @@ public class Decoder implements DataTransducer<Bytes, Object> {
 			size = 1 + Marshall.SIZE_Number;
 			break;
 
+		case Marshall.TYPE_Float:
+			result = Marshall.bytesToFloatWithOffset(array, offset + 1);
+			size = 1 + Marshall.SIZE_Number;
+			break;
+
 		case Marshall.TYPE_Undefined:
 			result = null;
 			size = 1;

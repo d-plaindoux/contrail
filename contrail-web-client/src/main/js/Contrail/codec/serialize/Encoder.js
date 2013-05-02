@@ -35,7 +35,10 @@ define([ "require", "Core/object/jObj", "Core/io/jMarshaller" ],
             function (value) {
                 var type, i, result = [], keys;
 
-                if (jObj.ofType(value, jObj.types.Number)) {
+                if (jObj.ofType(value, jObj.types.Float)) {
+                    type = jMarshaller.types.Float;
+                    result = jMarshaller.floatToBytes(value);
+                } else if (jObj.ofType(value, jObj.types.Number)) { // Float is in Number
                     type = jMarshaller.types.Number;
                     result = jMarshaller.numberToBytes(value);
                 } else if (jObj.ofType(value, jObj.types.String)) {

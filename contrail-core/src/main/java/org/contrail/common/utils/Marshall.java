@@ -34,13 +34,15 @@ public final class Marshall {
 	public static final byte TYPE_Array = 0x1;
 	public static final byte TYPE_Object = 0x2;
 	public static final byte TYPE_Character = 0x3;
-	public static final byte TYPE_Number = 0x4;
-	public static final byte TYPE_ShortNumber = 0x5;
-	public static final byte TYPE_String = 0x6;
-	public static final byte TYPE_BooleanTrue = 0x7;
-	public static final byte TYPE_BooleanFalse = 0x8;
-	public static final byte TYPE_Undefined = 0x9;
-	public static final byte TYPE_Null = 0x10;
+	public static final byte TYPE_String = 0x4;
+	public static final byte TYPE_BooleanTrue = 0x5;
+	public static final byte TYPE_BooleanFalse = 0x6;
+	public static final byte TYPE_Undefined = 0x7;
+	public static final byte TYPE_Null = 0x8;
+	
+	public static final byte TYPE_ShortNumber = 0x9;
+	public static final byte TYPE_Number = 0x10;
+	public static final byte TYPE_Float = 0x11;
 
 	// Sizes
 
@@ -90,6 +92,34 @@ public final class Marshall {
 	 */
 	public static int bytesToNumber(byte[] bytes) throws IOException {
 		return bytesToNumberWithOffset(bytes, 0);
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static float bytesToFloatWithOffset(byte[] bytes, int offset) throws IOException {
+		return Float.intBitsToFloat(bytesToNumberWithOffset(bytes, offset));
+	}
+
+	/**
+	 * Convert an array of bytes to an integer
+	 * 
+	 * @param bytes
+	 *            The source
+	 * @param offset
+	 *            The initial position
+	 * @return {*}
+	 * @throws IOException
+	 */
+	public static float bytesToFloat(byte[] bytes) throws IOException {
+		return bytesToFloatWithOffset(bytes, 0);
 	}
 
 	/**
@@ -220,12 +250,24 @@ public final class Marshall {
 	 * Method called to encode an integer
 	 * 
 	 * @param i
-	 *            The int to encode
+	 *            The integer to encode
 	 * @return the encoding result
 	 * @throws IOException
 	 */
 	public static byte[] numberToBytes(int i) {
 		return new byte[] { (byte) (i >>> 24), (byte) (i >>> 16), (byte) (i >>> 8), (byte) i };
+	}
+
+	/**
+	 * Method called to encode an integer
+	 * 
+	 * @param i
+	 *            The float to encode
+	 * @return the encoding result
+	 * @throws IOException
+	 */
+	public static byte[] floatToBytes(float i) {
+		return numberToBytes(Float.floatToIntBits(i));
 	}
 
 	/**

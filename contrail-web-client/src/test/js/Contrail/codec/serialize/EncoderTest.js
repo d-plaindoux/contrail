@@ -94,6 +94,39 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io
                 });
         });
 
+        jCC.scenario("Float encoding", function () {
+            var value, encoder, result;
+
+            jCC.
+                Given(function () {
+                    value = -123.23;
+                }).
+                And(function () {
+                    encoder = Factory.serialize.encoder();
+                }).
+                When(function () {
+                    result = encoder.transform(value);
+                }).
+                Then(function () {
+                    jCC.equal(jObj.ofType(result, jObj.types.Array), true, "Checking result type");
+                }).
+                And(function () {
+                    jCC.equal(result.length, 1, "Checking result length");
+                }).
+                And(function () {
+                    jCC.equal(jObj.ofType(result[0], jObj.types.Array), true, "Checking first result type");
+                }).
+                And(function () {
+                    jCC.equal(result[0].length, 4 + 1, "Checking first result length");
+                }).
+                And(function () {
+                    jCC.equal(result[0][0], Marshaller.types.Float, "Checking encoded type");
+                }).
+                And(function () {
+                    jCC.equal(Marshaller.bytesToFloatWithOffset(result[0], 1), value, "Checking first result value");
+                });
+        });
+
         jCC.scenario("Undefined encoding", function () {
             var value, encoder, result;
 
