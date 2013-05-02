@@ -79,6 +79,7 @@ define([],
             Array:"Array",
             Object:"Object",
             Number:"number",
+            Float:"float",
             String:"string",
             Boolean:"boolean",
             Undefined:"undefined",
@@ -98,11 +99,13 @@ define([],
                 return object === null;
             }),
 
-            Float:typeRule(Primitives.Number,
+            Float:typeRule(Primitives.Float,
                 function (object) {
                     var result = false;
 
-                    // parameter type checking TODO in this section
+                    if (jType.ofType(object, jType.types.Number)) {
+                        result = Math.round(object) !== object;
+                    }
 
                     return result;
                 }),
