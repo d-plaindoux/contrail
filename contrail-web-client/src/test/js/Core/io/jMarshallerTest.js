@@ -20,9 +20,9 @@
 
 require([ "Core/io/jMarshaller", "Core/test/jCC" ],
     function (jMarshaller, jCC) {
-        "use strict";
+        // "use strict";
 
-        jCC.scenario("Checking intToBytes length", function () {
+        jCC.scenario("Checking numberToBytes length", function () {
             var i, b;
 
             jCC.
@@ -38,7 +38,7 @@ require([ "Core/io/jMarshaller", "Core/test/jCC" ],
                 });
         });
 
-        jCC.scenario("Checking intToBytes content", function () {
+        jCC.scenario("Checking numberToBytes content", function () {
             var i, b;
 
             jCC.
@@ -60,6 +60,71 @@ require([ "Core/io/jMarshaller", "Core/test/jCC" ],
                 }).
                 And(function () {
                     jCC.equal(b[3], 0xEF, "Content of bytes at index 3");
+                });
+        });
+
+        jCC.scenario("Checking positive bytesToNumber content", function () {
+            var b, i;
+
+            jCC.
+                Given(function () {
+                    b = jMarshaller.numberToBytes(12345678);
+                }).
+                And(function () {
+                    i = jMarshaller.bytesToNumber(b);
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(i, 12345678, "Value of the integer");
+                });
+        });
+
+        jCC.scenario("Checking negative bytesToNumber content", function () {
+            var b, i;
+
+            jCC.
+                Given(function () {
+                    b = jMarshaller.numberToBytes(-12345678);
+                }).
+                And(function () {
+                    i = jMarshaller.bytesToNumber(b);
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(i, -12345678, "Value of the integer");
+                });
+        });
+
+
+        jCC.scenario("Checking positive bytesToFloat content", function () {
+            var b, i;
+
+            jCC.
+                Given(function () {
+                    b = jMarshaller.floatToBytes(1234.5678);
+                }).
+                And(function () {
+                    i = jMarshaller.bytesToFloat(b);
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(true, i - 1234.5678 < 0.0001, "Value of the float");
+                });
+        });
+
+        jCC.scenario("Checking negative bytesToFloat content", function () {
+            var b, i;
+
+            jCC.
+                Given(function () {
+                    b = jMarshaller.floatToBytes(-1234.5678);
+                }).
+                And(function () {
+                    i = jMarshaller.bytesToFloat(b);
+                }).
+                When(jCC.Nothing).
+                Then(function () {
+                    jCC.equal(true, i + 1234.5678 < 0.0001, "Value of the float");
                 });
         });
     });

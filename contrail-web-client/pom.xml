@@ -60,6 +60,24 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>js-import-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>External/JDataView.js</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>import-js</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
@@ -119,6 +137,7 @@
                                 <include>Core/object/jType.js</include>
                                 <include>Core/object/jModel.js</include>
                                 <include>Core/object/jObj.js</include>
+                                <include>External/JDataView.js</include>
                                 <include>External/JSonLib.js</include>
                                 <include>External/JSocketLib.js</include>
                                 <include>Core/client/jLoader.js</include>

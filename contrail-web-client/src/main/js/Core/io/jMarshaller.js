@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/io/jMarshaller", [ "Core/object/jObj" ],
-    function (jObj) {
+define("Core/io/jMarshaller", [ "require", "Core/object/jObj" ],
+    function (require, jObj) {
         "use strict";
 
         var jMarshaller = {};
@@ -97,11 +97,13 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          */
         jMarshaller.bytesToFloatWithOffset = jObj.method([jObj.types.Array, jObj.types.Number], jObj.types.Number,
             function (bytes, offset) {
-                var intValue = jMarshaller.bytesToNumberWithOffset(bytes,offset);
+                var intValue, jDataView;
 
-                // Compute float number here
+                intValue = jMarshaller.bytesToNumberWithOffset(bytes, offset);
+                jDataView = require("External/jDataView")(4);
+                jDataView.setInt32(0, intValue);
 
-                return intValue;
+                return jDataView.getFloat32(0);
 
             });
 
@@ -259,8 +261,14 @@ define("Core/io/jMarshaller", [ "Core/object/jObj" ],
          * @return {Array}
          */
         jMarshaller.floatToBytes = jObj.method([jObj.types.Number], jObj.types.Array,
-            function (value) {
-                return jMarshaller.numberToBytes(value);
+            function (floatValue) {
+                var intValue, jDataView;
+
+                jDataView = require("External/jDataView")(4);
+                jDataView.setFloat32(0, floatValue);
+                intValue = jDataView.getInt32(0);
+
+                return jMarshaller.numberToBytes(intValue);
             });
 
         /**
