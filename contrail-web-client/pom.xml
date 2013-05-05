@@ -63,11 +63,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>js-import-maven-plugin</artifactId>
                 <version>1.0.1</version>
-                <configuration>
-                    <excludes>
-                        <exclude>External/JDataView.js</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>

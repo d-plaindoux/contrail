@@ -20,7 +20,9 @@
 
 require([ "Core/io/jMarshaller", "Core/test/jCC" ],
     function (jMarshaller, jCC) {
-        // "use strict";
+        "use strict";
+
+        var epsilon = 0.0001;
 
         jCC.scenario("Checking numberToBytes length", function () {
             var i, b;
@@ -108,7 +110,7 @@ require([ "Core/io/jMarshaller", "Core/test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    jCC.equal(true, i - 1234.5678 < 0.0001, "Value of the float");
+                    jCC.equal(true, i - 1234.5678 < epsilon, "Value of the float");
                 });
         });
 
@@ -124,7 +126,7 @@ require([ "Core/io/jMarshaller", "Core/test/jCC" ],
                 }).
                 When(jCC.Nothing).
                 Then(function () {
-                    jCC.equal(true, i + 1234.5678 < 0.0001, "Value of the float");
+                    jCC.equal(true, i + 1234.5678 < epsilon, "Value of the float");
                 });
         });
     });

@@ -18,8 +18,8 @@
 
 /*global define*/
 
-define("Core/io/jMarshaller", [ "require", "Core/object/jObj" ],
-    function (require, jObj) {
+define("Core/io/jMarshaller", [ "Core/object/jObj", "External/jDataView" ],
+    function (jObj, jDataViewFactory) {
         "use strict";
 
         var jMarshaller = {};
@@ -100,7 +100,7 @@ define("Core/io/jMarshaller", [ "require", "Core/object/jObj" ],
                 var intValue, jDataView;
 
                 intValue = jMarshaller.bytesToNumberWithOffset(bytes, offset);
-                jDataView = require("External/jDataView")(4);
+                jDataView = jDataViewFactory(4);
                 jDataView.setInt32(0, intValue);
 
                 return jDataView.getFloat32(0);
@@ -264,7 +264,7 @@ define("Core/io/jMarshaller", [ "require", "Core/object/jObj" ],
             function (floatValue) {
                 var intValue, jDataView;
 
-                jDataView = require("External/jDataView")(4);
+                jDataView = jDataViewFactory(4);
                 jDataView.setFloat32(0, floatValue);
                 intValue = jDataView.getInt32(0);
 

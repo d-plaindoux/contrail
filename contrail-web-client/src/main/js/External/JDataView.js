@@ -16,13 +16,17 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*global define, DataView, ArrayBuffer*/
+/*global define, window*/
 
 define("External/jDataView", [ ],
     function () {
         "use strict";
 
-        return function(s) {
-            return new DataView(new ArrayBuffer(s),0);
+        return function (size) {
+            if (window.DataView && window.ArrayBuffer) {
+                return new window.DataView(new window.ArrayBuffer(size), 0);
+            } else {
+                throw new Error("DataView and/or ArrayBuffer are not available");
+            }
         };
     });

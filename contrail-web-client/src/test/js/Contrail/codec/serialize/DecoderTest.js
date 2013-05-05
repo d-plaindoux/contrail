@@ -22,6 +22,8 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io/
     function (jObj, Factory, jCC, jMarshaller) {
         "use strict";
 
+        var epsilon = 0.01;
+
         jCC.scenario("String decoding", function () {
             var object, decoder, result, message = "Hello, World!";
 
@@ -76,7 +78,7 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io/
 
             jCC.
                 Given(function () {
-                    object = [jMarshaller.types.Float].concat(jMarshaller.floatToBytes(-256.23));
+                    object = [jMarshaller.types.Float].concat(jMarshaller.floatToBytes(256.23));
                 }).
                 And(function () {
                     decoder = Factory.serialize.decoder();
@@ -91,7 +93,7 @@ require(["Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io/
                     jCC.equal(jObj.ofType(result[0], jObj.types.Float), true, "Checking result type");
                 }).
                 And(function () {
-                    jCC.equal(result[0], -256.23, "Checking encoded value");
+                    jCC.equal(true, result[0] - 256.23 < epsilon, "Checking encoded value");
                 });
         });
 

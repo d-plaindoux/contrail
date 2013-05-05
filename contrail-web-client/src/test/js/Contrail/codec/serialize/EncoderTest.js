@@ -22,6 +22,8 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io
     function (jObj, Factory, jCC, Marshaller) {
         "use strict";
 
+        var epsilon = 0.01;
+
         jCC.scenario("String encoding", function () {
             var value, encoder, length, result;
 
@@ -99,7 +101,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io
 
             jCC.
                 Given(function () {
-                    value = -123.23;
+                    value = 123.23;
                 }).
                 And(function () {
                     encoder = Factory.serialize.encoder();
@@ -123,7 +125,7 @@ require([ "Core/object/jObj", "Contrail/codec/jCodec", "Core/test/jCC", "Core/io
                     jCC.equal(result[0][0], Marshaller.types.Float, "Checking encoded type");
                 }).
                 And(function () {
-                    jCC.equal(Marshaller.bytesToFloatWithOffset(result[0], 1), value, "Checking first result value");
+                    jCC.equal(true, Marshaller.bytesToFloatWithOffset(result[0], 1) - value < epsilon, "Checking first result value");
                 });
         });
 
