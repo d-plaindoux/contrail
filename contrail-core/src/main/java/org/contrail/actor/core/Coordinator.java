@@ -26,7 +26,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.contrail.actor.component.handler.RemoteActorHandler;
 import org.contrail.actor.event.Request;
@@ -40,6 +42,37 @@ import org.contrail.common.message.MessagesProvider;
  * @version 1.0
  */
 public class Coordinator implements Runnable {
+
+	public static class ActorReference {
+		private final AtomicReference<Actor> actor;
+		private final AtomicBoolean active;
+
+		private ActorReference(Actor actor) {
+			super();
+			this.actor = new AtomicReference<Actor>(actor);
+			this.active = new AtomicBoolean(false);
+		}
+
+		boolean isNotActive() {
+			return !this.active.get();
+		}
+
+		void setActive() {
+			this.active.set(true);
+		}
+
+		void setInactive() {
+			this.active.set(false);
+		}
+
+		Actor getActor() {
+			return this.actor.get();
+		}
+
+		void setActor(Actor actor) {
+			this.actor.set(actor);
+		}
+	}
 
 	public class Remote {
 
@@ -89,7 +122,7 @@ public class Coordinator implements Runnable {
 		}
 	}
 
-	private final Map<String, Actor> universe;
+	private final Map<String, ActorReference> universe;
 
 	private final List<String> pendingActivedActors;
 	private final List<String> pendingDeactivedActors;
@@ -104,7 +137,7 @@ public class Coordinator implements Runnable {
 	private ExecutorService actorActionsExecutor;
 
 	{
-		this.universe = new HashMap<String, Actor>();
+		this.universe = new HashMap<String, ActorReference>();
 		this.activeActors = new ArrayList<String>();
 		this.pendingActivedActors = new ArrayList<String>();
 		this.pendingDeactivedActors = new ArrayList<String>();
@@ -129,13 +162,13 @@ public class Coordinator implements Runnable {
 	public Coordinator start() {
 		if (this.coordinatorExecutor == null) {
 			final AtomicInteger index = new AtomicInteger(0);
-			actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory()  {				
+			actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory() {
 				@Override
 				public Thread newThread(Runnable arg0) {
 					return new Thread(arg0, "Actor Executor #" + index.incrementAndGet());
 				}
 			});
-			
+
 			coordinatorExecutor = Executors.newSingleThreadExecutor();
 			this.activateCoordinatorIfNecessary();
 		}
@@ -173,7 +206,11 @@ public class Coordinator implements Runnable {
 		}
 
 		for (final String actorId : activeActors) {
-			actionPerfomed = this.universe.get(actorId).performPendingAction() || actionPerfomed;
+			final ActorReference actorReference = this.universe.get(actorId);
+			if (actorReference.isNotActive() && actorReference.getActor().performPendingAction()) {
+				actorReference.setActive();
+				actionPerfomed = true;
+			}
 		}
 
 		synchronized (this) {
@@ -218,16 +255,20 @@ public class Coordinator implements Runnable {
 
 	public Actor actor(String name) {
 		if (hasActor(name)) {
-			return this.universe.get(name);
+			return this.universe.get(name).getActor();
 		} else {
 			final NotBoundActor abstractActor = new NotBoundActor(name, this);
-			this.universe.put(abstractActor.getActorId(), abstractActor);
+			this.universe.put(abstractActor.getActorId(), new ActorReference(abstractActor));
 			return abstractActor;
 		}
 	}
 
-	public void registerActor(Actor actor) {
-		this.universe.put(actor.getActorId(), actor);
+	void registerActor(Actor actor) {
+		final ActorReference actorReference = this.universe.get(actor.getActorId());
+		
+		assert actorReference != null;
+		
+		actorReference.setActor(actor);
 		this.activateActor(actor);
 	}
 
@@ -238,7 +279,12 @@ public class Coordinator implements Runnable {
 
 	public void send(String actorId, Request request, Response response) {
 		if (this.hasActor(actorId)) {
-			this.universe.get(actorId).send(request, response);
+			final ActorReference actorReference = this.universe.get(actorId);
+			
+			assert actorReference != null;
+			
+			actorReference.getActor().send(request, response);
+			
 			this.activateCoordinatorIfNecessary();
 		} else if (response != null) {
 			response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "actor.not.found").format(actorId)));
@@ -250,8 +296,14 @@ public class Coordinator implements Runnable {
 	}
 
 	public void invoke(String actorId, Request request, Response response) {
-		if (this.hasActor(actorId)) {
-			this.universe.get(actorId).invoke(request, response);
+		if (this.hasActor(actorId)) {			
+			final ActorReference actorReference = this.universe.get(actorId);
+			try {
+				actorReference.getActor().invoke(request, response);
+			} finally {
+				actorReference.setInactive();
+				this.activateCoordinatorIfNecessary();
+			}
 		} else if (response != null) {
 			response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "actor.not.found").format(actorId)));
 		}

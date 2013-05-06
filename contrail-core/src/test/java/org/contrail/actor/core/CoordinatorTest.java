@@ -37,7 +37,7 @@ import org.contrail.common.concurrent.Promise;
  */
 public class CoordinatorTest {
 
-	public class PromiseResponse extends Promise<Object,ActorException> implements Response {
+	public class PromiseResponse extends Promise<Object, ActorException> implements Response {
 		// Nothing to be done
 	}
 
@@ -46,6 +46,16 @@ public class CoordinatorTest {
 
 		public A(int value) {
 			super();
+			this.value = value;
+		}
+
+		public void setValue(int value, int delay) {
+			try {
+				Thread.sleep(TimeUnit.SECONDS.toMillis(delay));
+			} catch (InterruptedException consume) {
+				// ignore
+			}
+
 			this.value = value;
 		}
 
@@ -158,7 +168,6 @@ public class CoordinatorTest {
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
-
 	@Test
 	public void shouldHaveAResultWithSentMessageToLateBoundLocalActor() throws Exception {
 		final Coordinator coordinator = new Coordinator();
@@ -177,9 +186,27 @@ public class CoordinatorTest {
 		} catch (TimeoutException e) {
 			// continue
 		}
-		
+
 		actor.bindToObject(model);
 
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
+	}
+
+	@Test
+	public void shouldHaveASequentialResultWithTwoSentMessagesToLateBoundLocalActor() throws Exception {
+		final Coordinator coordinator = new Coordinator();
+		coordinator.start();
+
+		final A model = new A(42);
+		coordinator.actor("A").bindToObject(model);
+
+		final PromiseResponse response = new PromiseResponse();
+
+		coordinator.send("A", new Request("setValue", 13, 2));
+		coordinator.send("A", new Request("setValue", 12, 2));
+		coordinator.send("A", new Request("setValue", 11, 2));
+		coordinator.send("A", new Request("getValue"), response);
+
+		TestCase.assertEquals(11, response.getFuture().get());
 	}
 }
