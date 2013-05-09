@@ -22,21 +22,27 @@ define([
     "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUtils", "Contrail/component/jComponent",
     "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
 ],
-    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorInteractionFilter, removeActorHandler) {
+    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorInteractionFilter, remoteActorHandler) {
         "use strict";
 
-        function CoordinatorComponent(coordinator) {
+        function CoordinatorComponent(coordinator, domainId) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
+            this.domainId = domainId;
             this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
             this.responses = {};
 
-            coordinator.setRemoteActorHandler(removeActorHandler(this));
+            coordinator.setRemoteActorHandler(remoteActorHandler(this));
         }
 
-        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator") ],
-            function (coordinator) {
-                return new CoordinatorComponent(coordinator);
+        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
+            function (coordinator, domainId) {
+                return new CoordinatorComponent(coordinator, domainId);
+            });
+
+        CoordinatorComponent.prototype.getDomainId = jObj.method([], jObj.types.String,
+            function() {
+                return this.domainId;
             });
 
         CoordinatorComponent.prototype.createResponseId = jObj.method([jObj.types.Named("Response")], jObj.types.String,
@@ -60,7 +66,7 @@ define([
 
         CoordinatorComponent.prototype.createRemoteActor = jObj.procedure([jObj.types.String, jObj.types.String],
             function (id, name) {
-                this.coordinator.localActor(name, removeActorHandler(id, this));
+                this.coordinator.localActor(name, remoteActorHandler(id, this));
             });
 
         return CoordinatorComponent.init;

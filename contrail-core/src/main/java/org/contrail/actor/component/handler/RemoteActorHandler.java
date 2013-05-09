@@ -41,6 +41,10 @@ public class RemoteActorHandler {
 		this.component = component;
 	}
 
+	public String getDomainId() {
+		return this.component.getDomainId();
+	}
+	
 	public void handle(String location, String actorId, Request request, Response response) {
 		final String responseId;
 

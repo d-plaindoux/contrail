@@ -71,8 +71,8 @@ public class CoordinatorComponentTest {
 		final A model = new A(42);
 		coordinator.actor("A").bindToObject(model);
 
-		final CoordinatorComponent coordinatorComponent = new CoordinatorComponent(coordinator);
-		final DomainComponent routeComponent = new DomainComponent("a");
+		final CoordinatorComponent coordinatorComponent = new CoordinatorComponent(coordinator,"a");
+		final DomainComponent routeComponent = new DomainComponent(coordinatorComponent.getDomainId());
 
 		Components.compose(routeComponent, coordinatorComponent);
 

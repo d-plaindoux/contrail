@@ -106,6 +106,7 @@
                             <inputDir>target/classes/js</inputDir>
                             <output>${project.build.directory}/min/classes/1-min.js</output>
                             <includes>
+                                <include>External/JRequire.js</include>
                                 <!-- Core -->
                                 <include>Core/object/jSonifier.js</include>
                                 <include>Core/object/jType.js</include>

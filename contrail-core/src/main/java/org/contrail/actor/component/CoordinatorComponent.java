@@ -44,12 +44,13 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 
 	private final Map<String, Response> pendingResponses;
 	private final DataFlow<Packet> upStreamDataFlow;
+	private final String domainId;
 
 	{
 		this.pendingResponses = new HashMap<String, Response>();
 	}
 
-	public CoordinatorComponent(Coordinator coordinator) {
+	public CoordinatorComponent(Coordinator coordinator, String domainName) {
 		super();
 
 		final FilteredDataFlow.Filter<Packet> filter = new FilteredDataFlow.Filter<Packet>() {
@@ -59,7 +60,12 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 			}
 		};
 
+		this.domainId = domainName;
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
+	}
+
+	public String getDomainId() {
+		return domainId;
 	}
 
 	@Override

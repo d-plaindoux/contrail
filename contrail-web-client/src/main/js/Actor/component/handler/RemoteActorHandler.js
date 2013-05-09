@@ -33,6 +33,11 @@ define(["Core/object/jObj", "Network/jNetwork" ],
                 return new RemoteActorHandler(coordinatorComponent);
             });
 
+        RemoteActorHandler.prototype.getDomainId = jObj.method([], jObj.types.String,
+            function () {
+                return this.coordinatorComponent.getDomainId();
+            });
+
         RemoteActorHandler.prototype.handle = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (location, identifier, request, response) {
                 var packet, responseId;

@@ -150,6 +150,14 @@ public class Coordinator implements Runnable {
 	public Remote domain(String location) {
 		return new Remote(location);
 	}
+	
+	public String getDomainId() {
+		if (this.remoteActorHandler != null) {
+			return this.remoteActorHandler.getDomainId();
+		} else {
+			return null; // TODO
+		}
+	}
 
 	public void setRemoteActorHandler(RemoteActorHandler remoteActorHandler) {
 		this.remoteActorHandler = remoteActorHandler;

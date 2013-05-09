@@ -63,15 +63,15 @@ public class NetworkActorTest {
 		// Prepare domain "1"
 
 		final Coordinator coordinator1 = new Coordinator().start();
-		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final DomainComponent routeComponent1 = new DomainComponent("1");
+		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1,"1");
+		final DomainComponent routeComponent1 = new DomainComponent(coordinatorComponent1.getDomainId());
 		final Component compose1 = givenComposedComponent(coordinatorComponent1, routeComponent1);
 
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
-		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final DomainComponent routeComponent2 = new DomainComponent("2");
+		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2,"2");
+		final DomainComponent routeComponent2 = new DomainComponent(coordinatorComponent2.getDomainId());
 		final Component compose2 = givenComposedComponent(coordinatorComponent2, routeComponent2);
 
 		// Prepare server connection manager
@@ -130,16 +130,16 @@ public class NetworkActorTest {
 		// Prepare domain "1"
 
 		final Coordinator coordinator1 = new Coordinator().start();
-		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1);
-		final DomainComponent routeComponent1 = new DomainComponent("1");
+		final CoordinatorComponent coordinatorComponent1 = new CoordinatorComponent(coordinator1,"1");
+		final DomainComponent routeComponent1 = new DomainComponent(coordinatorComponent1.getDomainId());
 
 		final Component compose1 = givenComposedComponent(coordinatorComponent1, routeComponent1);
 
 		// Prepare domain "2"
 
 		final Coordinator coordinator2 = new Coordinator().start();
-		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2);
-		final DomainComponent routeComponent2 = new DomainComponent("2");
+		final CoordinatorComponent coordinatorComponent2 = new CoordinatorComponent(coordinator2,"2");
+		final DomainComponent routeComponent2 = new DomainComponent(coordinatorComponent2.getDomainId());
 
 		final Component compose2 = givenComposedComponent(coordinatorComponent2, routeComponent2);
 

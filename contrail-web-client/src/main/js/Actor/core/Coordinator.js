@@ -29,6 +29,8 @@ define([ "Core/object/jObj", "./Actor" ],
             this.activeActors = [];
             this.pendingJobs = [];
 
+            this.remoteActorHandler = null;
+
             this.intervalJobs = 100 /*ms*/;
             this.intervalActors = 100 /*ms*/;
 
@@ -76,6 +78,17 @@ define([ "Core/object/jObj", "./Actor" ],
                             };
                         })
                 };
+            });
+
+        Coordinator.prototype.getDomainId = jObj.method([], jObj.types.String,
+            function () {
+                var result = null;
+
+                if (this.remoteActorHandler) {
+                    result = this.remoteActorHandler.getDomainId();
+                }
+
+                return result;
             });
 
         /*
