@@ -65,10 +65,12 @@ public class NotBoundActor implements Actor {
 		return coordinator;
 	}
 
+	@Override
 	public String getActorId() {
 		return name;
 	}
 
+	@Override
 	public BoundActor bindToSource(String model) throws ActorException {
 		try {
 			// TODO -- class loader to be determined?
@@ -82,6 +84,7 @@ public class NotBoundActor implements Actor {
 		}
 	}
 
+	@Override
 	public BoundActor bindToObject(Object model) throws ActorException {
 		try {
 			final LocalActor<Object> actor = new LocalActor<Object>(ActorAnnotationSolver.solve(this, model), this);
@@ -96,12 +99,18 @@ public class NotBoundActor implements Actor {
 		}
 	}
 
+	@Override
 	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
 		final RemoteActor actor = new RemoteActor(remoteName, location, this);
 		this.coordinator.registerActor(actor);
 		return actor;
 	}
 
+	@Override
+	public void send(Request request) {
+		this.send(request, null);
+	}
+	
 	@Override
 	public void send(Request request, Response response) {
 		this.actorActions.add(new Pair<Request, Response>(request, response));
