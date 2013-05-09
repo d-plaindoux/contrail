@@ -21,15 +21,10 @@ package org.contrail.actor.annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
 import org.contrail.actor.core.LocalActor;
 import org.contrail.actor.core.NotBoundActor;
-import org.contrail.actor.event.Request;
-import org.contrail.actor.event.Response;
 
 /**
  * <code>AnnotationSolver</code>
@@ -79,8 +74,8 @@ public class ActorAnnotationSolver {
 	}
 
 	public static void installActor(final Register register, final Class<?> modelType) {
-		if (modelType.isAnnotationPresent(Actor.class)) {
-			final Actor actor = modelType.getAnnotation(Actor.class);
+		if (modelType.isAnnotationPresent(ActorModel.class)) {
+			final ActorModel actor = modelType.getAnnotation(ActorModel.class);
 			register.register(actor.value(), modelType);
 		}
 	}

@@ -162,14 +162,14 @@ public class Coordinator implements Runnable {
 	public Coordinator start() {
 		if (this.coordinatorExecutor == null) {
 			final AtomicInteger index = new AtomicInteger(0);
-			actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory() {
+			this.actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory() {
 				@Override
 				public Thread newThread(Runnable arg0) {
 					return new Thread(arg0, "Actor Executor #" + index.incrementAndGet());
 				}
 			});
 
-			coordinatorExecutor = Executors.newSingleThreadExecutor();
+			this.coordinatorExecutor = Executors.newSingleThreadExecutor();
 			this.activateCoordinatorIfNecessary();
 		}
 
