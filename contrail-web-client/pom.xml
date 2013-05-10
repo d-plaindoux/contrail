@@ -220,6 +220,7 @@
                                 <include>Actor/component/flow/ActorInteractionFilter.js</include>
                                 <include>Actor/component/handler/RemoteResponseHandler.js</include>
                                 <include>Actor/component/flow/CoordinatorUpStreamDataFlow.js</include>
+                                <include>Actor/component/flow/CoordinatorDownStreamDataFlow.js</include>
                                 <include>Actor/component/CoordinatorComponent.js</include>
                                 <include>Actor/jActor.js</include>
                             </includes>

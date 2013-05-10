@@ -60,7 +60,6 @@ public class RemoteResponseHandler implements Response {
 		try {
 			final ObjectRecord data = new ObjectRecord().set(IDENTIFIER, identifier).set(TYPE, type).set(VALUE, object);
 			final Packet packet = new Packet(location, data);
-
 			component.getDownStreamDataFlow().handleData(packet);
 		} catch (ComponentNotConnectedException e) {
 			// TODO

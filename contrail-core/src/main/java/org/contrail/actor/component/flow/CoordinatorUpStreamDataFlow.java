@@ -58,6 +58,9 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 
 	@Override
 	public void handleData(Packet data) throws DataFlowException {
+		
+		// Decode packet right now
+		
 		if (ActorInteractionFilter.isAnActorRequest(data.getData())) {
 			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
 			final RemoteResponseHandler response;

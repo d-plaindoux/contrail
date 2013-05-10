@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.contrail.actor.component.flow.ActorInteractionFilter;
+import org.contrail.actor.component.flow.CoordinatorDownStreamDataFlow;
 import org.contrail.actor.component.flow.CoordinatorUpStreamDataFlow;
 import org.contrail.actor.core.Coordinator;
 import org.contrail.actor.event.Response;
@@ -43,8 +44,9 @@ import org.contrail.stream.network.packet.Packet;
 public class CoordinatorComponent extends DestinationComponentWithSingleSource<Packet, Packet> {
 
 	private final Map<String, Response> pendingResponses;
-	private final DataFlow<Packet> upStreamDataFlow;
 	private final String domainId;
+	private final DataFlow<Packet> upStreamDataFlow;
+	private final DataFlow<Packet> downStreamDataFlow;
 
 	{
 		this.pendingResponses = new HashMap<String, Response>();
@@ -62,6 +64,7 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 
 		this.domainId = domainName;
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
+		this.downStreamDataFlow = new CoordinatorDownStreamDataFlow(this);
 	}
 
 	public String getDomainId() {
@@ -71,6 +74,11 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 	@Override
 	public DataFlow<Packet> getUpStreamDataFlow() throws ComponentNotConnectedException {
 		return this.upStreamDataFlow;
+	}
+
+	@Override
+	public DataFlow<Packet> getDownStreamDataFlow() throws ComponentNotConnectedException {
+		return this.downStreamDataFlow;
 	}
 
 	@Override

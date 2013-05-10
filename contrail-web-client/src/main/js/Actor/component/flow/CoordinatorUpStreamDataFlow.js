@@ -38,6 +38,8 @@ define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler
             function (packet) {
                 var response, data = packet.getData();
 
+                // Decode right now
+
                 if (actorInteractionFilter.isAnActorRequest(data)) {
                     if (data.response) {
                         response = remoteResponseHandler(this.component, packet.getSourceId(), data.response);

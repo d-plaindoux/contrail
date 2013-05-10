@@ -20,16 +20,18 @@
 
 define([
     "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUtils", "Contrail/component/jComponent",
-    "./flow/CoordinatorUpStreamDataFlow", "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
+    "./flow/CoordinatorUpStreamDataFlow", "./flow/CoordinatorDownStreamDataFlow",
+    "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
 ],
-    function (jObj, jFlow, jUUID, jComponent, coordinatorFlow, actorInteractionFilter, remoteActorHandler) {
+    function (jObj, jFlow, jUUID, jComponent, coordinatorUpStreamFlow, coordinatorDownStreamFlow, actorInteractionFilter, remoteActorHandler) {
         "use strict";
 
         function CoordinatorComponent(coordinator, domainId) {
             jObj.bless(this, jComponent.core.destinationWithSingleSource());
 
             this.domainId = domainId;
-            this.upStreamDataFlow = jFlow.filtered(coordinatorFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
+            this.upStreamDataFlow = jFlow.filtered(coordinatorUpStreamFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
+            this.downStreamDataFlow = coordinatorDownStreamFlow(this);
             this.responses = {};
 
             coordinator.setRemoteActorHandler(remoteActorHandler(this));
@@ -57,6 +59,11 @@ define([
                 var response = this.responses[identifier];
                 delete this.responses[identifier];
                 return response;
+            });
+
+        CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                return this.upStreamDataFlow;
             });
 
         CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
