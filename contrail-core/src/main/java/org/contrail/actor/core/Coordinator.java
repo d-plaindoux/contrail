@@ -34,6 +34,7 @@ import org.contrail.actor.component.handler.RemoteActorHandler;
 import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.common.message.MessagesProvider;
+import org.contrail.stream.data.JSonifier;
 
 /**
  * <code>Coordinator</code>
@@ -159,6 +160,14 @@ public class Coordinator implements Runnable {
 		}
 	}
 
+	public void addJSonifiers(JSonifier... jSonifiers) {
+		if (this.remoteActorHandler != null) {
+			this.getRemoteActorHandler().addJSonifiers(jSonifiers);
+		} else {
+			// TODO
+		}
+	}
+	
 	public void setRemoteActorHandler(RemoteActorHandler remoteActorHandler) {
 		this.remoteActorHandler = remoteActorHandler;
 	}

@@ -23,6 +23,7 @@ import org.contrail.actor.core.ActorException;
 import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.stream.component.ComponentNotConnectedException;
+import org.contrail.stream.data.JSonifier;
 import org.contrail.stream.flow.exception.DataFlowException;
 import org.contrail.stream.network.packet.Packet;
 
@@ -43,6 +44,10 @@ public class RemoteActorHandler {
 
 	public String getDomainId() {
 		return this.component.getDomainId();
+	}
+	
+	public void addJSonifiers(JSonifier... jSonifiers) {
+		this.component.addJSonifiers(jSonifiers);
 	}
 	
 	public void handle(String location, String actorId, Request request, Response response) {
@@ -68,5 +73,4 @@ public class RemoteActorHandler {
 			}
 		}
 	}
-
 }

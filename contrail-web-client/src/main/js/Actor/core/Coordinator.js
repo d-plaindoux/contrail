@@ -91,6 +91,13 @@ define([ "Core/object/jObj", "./Actor" ],
                 return result;
             });
 
+        Coordinator.prototype.addJSonifiers = jObj.procedure([ jObj.types.Array ],
+            function(jSonifiers) {
+                if (this.remoteActorHandler) {
+                    this.remoteActorHandler.addJSonifiers(jSonifiers);
+                }
+            });
+
         /*
          * Coordinator management
          */

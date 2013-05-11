@@ -38,6 +38,11 @@ define(["Core/object/jObj", "Network/jNetwork" ],
                 return this.coordinatorComponent.getDomainId();
             });
 
+        RemoteActorHandler.prototype.addJSonifiers = jObj.procedure([ jObj.types.Array ],
+            function (jSonifiers) {
+                this.coordinatorComponent.addJSonifiers(jSonifiers);
+            });
+
         RemoteActorHandler.prototype.handle = jObj.procedure([jObj.types.String, jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (location, identifier, request, response) {
                 var packet, responseId;

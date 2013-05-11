@@ -87,7 +87,8 @@ public class NotBoundActor implements Actor {
 	@Override
 	public BoundActor bindToObject(Object model) throws ActorException {
 		try {
-			final LocalActor<Object> actor = new LocalActor<Object>(ActorAnnotationSolver.solve(this, model), this);
+			final Object solvedModel = ActorAnnotationSolver.solve(this, model);
+			final LocalActor<Object> actor = new LocalActor<Object>(solvedModel, this);
 			this.coordinator.registerActor(actor);
 			return actor;
 		} catch (IllegalArgumentException e) {

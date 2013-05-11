@@ -18,9 +18,12 @@
 
 package org.contrail.actor.component.flow;
 
-import static org.contrail.actor.common.Keywords.*;
+import static org.contrail.actor.common.Keywords.IDENTIFIER;
+import static org.contrail.actor.common.Keywords.REQUEST;
+import static org.contrail.actor.common.Keywords.RESPONSE;
+import static org.contrail.actor.common.Keywords.TYPE;
+import static org.contrail.actor.common.Keywords.VALUE;
 
-import org.contrail.actor.event.Request;
 import org.contrail.common.utils.Coercion;
 import org.contrail.stream.data.ObjectRecord;
 

@@ -65,7 +65,7 @@ public class ActorAnnotationSolver {
 				method.invoke(model);
 			}
 		}
-
+		
 		return model;
 	}
 

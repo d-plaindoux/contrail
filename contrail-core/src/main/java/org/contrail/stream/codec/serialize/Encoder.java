@@ -72,6 +72,12 @@ public class Encoder implements DataTransducer<Object, Bytes> {
 			final Float floatValue = Coercion.coerce(source, Float.class);
 			type = Marshall.TYPE_Float;
 			result = Marshall.floatToBytes(floatValue); 
+		} else if (Coercion.canCoerce(source, Double.class)) {
+			// TODO check this code ASAP
+			final double doubleValue = Coercion.coerce(source, Double.class);
+			final Float floatValue = Coercion.coerce((float)doubleValue, Float.class);
+			type = Marshall.TYPE_Float;
+			result = Marshall.floatToBytes(floatValue); 
 		} else if (Coercion.canCoerce(source, String.class)) {
 			type = Marshall.TYPE_String;
 			final String stringValue = Coercion.coerce(source, String.class);

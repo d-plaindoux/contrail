@@ -21,6 +21,7 @@ package org.contrail.stream.data;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.contrail.stream.codec.object.Decoder;
 import org.contrail.stream.codec.object.Encoder;
@@ -136,4 +137,28 @@ public class JSonifier {
 			throw new DataTransducerException(e);
 		}
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JSonifier jSonifier = (JSonifier) o;
+
+        if (identifier != null ? !identifier.equals(jSonifier.identifier) : jSonifier.identifier != null) return false;
+        if (!Arrays.equals(names, jSonifier.names)) return false;
+        if (typeName != null ? !typeName.equals(jSonifier.typeName) : jSonifier.typeName != null) return false;
+        if (!Arrays.equals(types, jSonifier.types)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = identifier != null ? identifier.hashCode() : 0;
+        result = 31 * result + (names != null ? names.hashCode() : 0);
+        result = 31 * result + (types != null ? types.hashCode() : 0);
+        result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
+        return result;
+    }
 }

@@ -87,7 +87,12 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 	}
 
 	public synchronized void addJSonifiers(JSonifier...jSonifiers) {
-		this.allJSonifiers.addAll(Arrays.asList(jSonifiers));
+		for(JSonifier jSonifier : jSonifiers) {
+			if (!this.allJSonifiers.contains(jSonifier)) {
+				this.allJSonifiers.add(jSonifier);
+			}
+		}
+		
 		this.encoder = new Encoder(allJSonifiers);
 		this.decoder = new Decoder(allJSonifiers);
 	}
