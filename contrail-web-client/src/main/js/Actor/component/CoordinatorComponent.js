@@ -25,28 +25,29 @@ define([
     function (require, jObj, jFlow, jUUID, jContrail, coordinatorUpStreamFlow, coordinatorDownStreamFlow, actorInteractionFilter, remoteActorHandler) {
         "use strict";
 
-        function CoordinatorComponent(coordinator, domainId) {
+        function CoordinatorComponent(coordinator, domainId, jSonifiers) {
             jObj.bless(this, jContrail.component.core.destinationWithSingleSource());
 
             this.domainId = domainId;
+
             this.upStreamDataFlow = jFlow.filtered(coordinatorUpStreamFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
             this.downStreamDataFlow = coordinatorDownStreamFlow(this);
             this.responses = {};
 
-            var jSonifiers = [
-                require("Actor/jEvent").request,
-                require("Actor/jActor").exception
-            ];
+            var allJSonifiers = jSonifiers || [];
 
-            this.encoder = jContrail.codec.object.encoder(jSonifiers);
-            this.decoder = jContrail.codec.object.decoder(jSonifiers);
+            allJSonifiers.unshift(require("Actor/jEvent").request);
+            allJSonifiers.unshift(require("Actor/jActor").exception);
+
+            this.encoder = jContrail.codec.object.encoder(allJSonifiers);
+            this.decoder = jContrail.codec.object.decoder(allJSonifiers);
 
             coordinator.setRemoteActorHandler(remoteActorHandler(this));
         }
 
-        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
-            function (coordinator, domainId) {
-                return new CoordinatorComponent(coordinator, domainId);
+        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Nullable(jObj.types.Array) ],
+            function (coordinator, domainId, jSonifiers) {
+                return new CoordinatorComponent(coordinator, domainId, jSonifiers);
             });
 
         CoordinatorComponent.prototype.getEncoder = jObj.method([], jObj.types.Named("Encoder"),

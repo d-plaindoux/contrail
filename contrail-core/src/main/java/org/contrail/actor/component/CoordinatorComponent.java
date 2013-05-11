@@ -18,6 +18,7 @@
 
 package org.contrail.actor.component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.pendingResponses = new HashMap<String, Response>();
 	}
 
-	public CoordinatorComponent(Coordinator coordinator, String domainName) {
+	public CoordinatorComponent(Coordinator coordinator, String domainName, JSonifier... jSonifiers) {
 		super();
 
 		final FilteredDataFlow.Filter<Packet> filter = new FilteredDataFlow.Filter<Packet>() {
@@ -75,10 +76,13 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
 		this.downStreamDataFlow = new CoordinatorDownStreamDataFlow(this);
 
-		final List<JSonifier> jSonifiers = Arrays.asList(Request.jSonifable(), ActorException.jSonifable());
+		final List<JSonifier> allJSonifiers = new ArrayList<JSonifier>();
 		
-		this.encoder = new Encoder(jSonifiers);
-		this.decoder = new Decoder(jSonifiers);
+		allJSonifiers.addAll(Arrays.asList(Request.jSonifable(), ActorException.jSonifable()));
+		allJSonifiers.addAll(Arrays.asList(jSonifiers));
+		
+		this.encoder = new Encoder(allJSonifiers);
+		this.decoder = new Decoder(allJSonifiers);
 	}
 
 	public String getDomainId() {
