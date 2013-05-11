@@ -53,6 +53,22 @@ public class Decoder implements DataTransducer<Object, Object> {
 		}
 	}
 
+	private Object[] decodeArray(Object source) throws DataTransducerException {
+		final Object[] result = new Object[Array.getLength(source)];
+		for (int i = 0; i < Array.getLength(source); i++) {
+			result[i] = decode(Array.get(source, i));
+		}
+		return result;
+	}
+
+	private Object decodeObjectRecord(final ObjectRecord sourceRecord) throws DataTransducerException {
+		final ObjectRecord result = new ObjectRecord();
+		for (String name : sourceRecord.getNames()) {
+			result.set(name, decode(sourceRecord.get(name)));
+		}
+		return result;
+	}
+
 	public Object decode(Object source) throws DataTransducerException {
 		if (source == null) {
 			return source;
@@ -85,22 +101,6 @@ public class Decoder implements DataTransducer<Object, Object> {
 		} else {
 			throw new DataTransducerException("Object decoding for " + source.getClass() + " is not supported");
 		}
-	}
-
-	private Object[] decodeArray(Object source) throws DataTransducerException {
-		final Object[] result = new Object[Array.getLength(source)];
-		for (int i = 0; i < Array.getLength(source); i++) {
-			result[i] = decode(Array.get(source, i));
-		}
-		return result;
-	}
-
-	private Object decodeObjectRecord(final ObjectRecord sourceRecord) throws DataTransducerException {
-		final ObjectRecord result = new ObjectRecord();
-		for (String name : sourceRecord.getNames()) {
-			result.set(name, decode(sourceRecord.get(name)));
-		}
-		return result;
 	}
 
 	@Override
