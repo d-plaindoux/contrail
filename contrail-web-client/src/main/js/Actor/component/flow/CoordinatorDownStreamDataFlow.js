@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C)2012 D. Plaindoux.
  *
@@ -36,8 +35,7 @@ define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler
 
         CoordinatorDownStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
             function (packet) {
-                // Encode right now
-
+                packet.setData(this.component.getEncoder().encode(packet.getData()));
                 this.component.getSource().getDownStreamDataFlow().handleData(packet);
             });
 

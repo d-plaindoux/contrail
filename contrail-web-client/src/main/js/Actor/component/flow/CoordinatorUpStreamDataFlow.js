@@ -20,7 +20,7 @@
 
 define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler", "./ActorInteractionFilter" ],
     function (jObj, jFlow, remoteResponseHandler, actorInteractionFilter) {
-        "use strict";
+        // "use strict";
 
         function CoordinatorUpStreamDataFlow(coordinator, component) {
             jObj.bless(this, jFlow.core());
@@ -36,9 +36,9 @@ define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler
 
         CoordinatorUpStreamDataFlow.prototype.handleData = jObj.procedure([ jObj.types.Named("Packet")],
             function (packet) {
-                var response, data = packet.getData();
+                var response, data;
 
-                // Decode right now
+                data = this.component.getDecoder().decode(packet.getData());
 
                 if (actorInteractionFilter.isAnActorRequest(data)) {
                     if (data.response) {

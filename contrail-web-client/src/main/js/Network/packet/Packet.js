@@ -55,5 +55,10 @@ define([ "Core/object/jObj" ],
                 return this.data;
             });
 
+        Packet.prototype.setData = jObj.procedure([jObj.types.Any],
+            function (data) {
+                this.data = data;
+            });
+
         return jObj.jSonifable(Packet.init).nameAndType("Packet", "Packet").withKeys("sourceId", "destinationId", "data");
     });

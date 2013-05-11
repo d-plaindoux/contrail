@@ -44,7 +44,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         // ---------------------------------------------------------
 
         jCC.scenario("Check locally routed actor message passing", function () {
-            var router, terminal, coordinator, object, packet;
+            var router, terminal, coordinator, object, packet, encoded;
 
             jCC.
                 Given(function () {
@@ -67,7 +67,10 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     jContrail.component.compose([ router, terminal ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("b", "a", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
+                    encoded = terminal.getEncoder().encode(jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
+                }).
+                And(function () {
+                    packet = jNetwork.packet("b", "a", encoded);
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -83,7 +86,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
         });
 
         jCC.scenario("Checking remotely routed actor message passing", function () {
-            var routerA, initialA, routerB, initialB, terminalB, packet, dataFlowRouter, coordinator, object;
+            var routerA, initialA, routerB, initialB, terminalB, packet, encoded, dataFlowRouter, coordinator, object;
 
             jCC.
                 Given(function () {
@@ -124,7 +127,10 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     jContrail.component.compose([ initialB, routerB, terminalB ]);
                 }).
                 And(function () {
-                    packet = jNetwork.packet("a", "b", jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
+                    encoded = terminalB.getEncoder().encode(jActor.event.request("setA", [ "Hello, World!" ]).toActor("A"));
+                }).
+                And(function () {
+                    packet = jNetwork.packet("a", "b", encoded);
                 }).
                 When(jCC.Nothing).
                 Then(function () {
@@ -162,7 +168,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
+                    jSonifiers = [ jNetwork.packet ];
                 }).
                 And(function () {
                     jContrail.component.compose([
@@ -223,7 +229,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
+                    jSonifiers = [ jNetwork.packet ];
                 }).
                 And(function () {
                     jContrail.component.compose([
@@ -285,7 +291,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     coordinatorB.actor("A").bindToObject(new A());
                 }).
                 And(function () {
-                    jSonifiers = [ jNetwork.packet, jActor.event.request ];
+                    jSonifiers = [ jNetwork.packet ];
                 }).
                 And(function () {
                     jContrail.component.compose([

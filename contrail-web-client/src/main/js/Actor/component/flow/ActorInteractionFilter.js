@@ -28,7 +28,7 @@ define(["Core/object/jObj" ],
             function (data) {
                 var result;
 
-                if (jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Named("Request"), response:jObj.types.Nullable(jObj.types.String)}))) {
+                if (jObj.ofType(data, jObj.types.ObjectOf({identifier:jObj.types.String, request:jObj.types.Object, response:jObj.types.Nullable(jObj.types.String)}))) {
                     result = true;
                 } else {
                     result = false;

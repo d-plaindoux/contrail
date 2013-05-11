@@ -31,7 +31,7 @@ define([ "require", "Core/object/jObj" ],
             function (jSonifiers) {
                 var drivers = {};
 
-                jSonifiers.forEach(function(jSonifier) {
+                jSonifiers.forEach(function (jSonifier) {
                     if (jSonifier.hasOwnProperty("jSonifable")) {
                         drivers[jSonifier.jSonifable.name] = jSonifier.jSonifable;
                     } else {
@@ -40,6 +40,26 @@ define([ "require", "Core/object/jObj" ],
                 });
 
                 return new ObjectDecoder(drivers);
+            });
+
+        ObjectDecoder.prototype.decodeObjectRecord = jObj.method([jObj.types.Object], jObj.types.Object,
+            function (data) {
+                var key, self = this, result = {};
+                for (key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        result[key] = self.toObject(data[key]);
+                    }
+                }
+                return result;
+            });
+
+        ObjectDecoder.prototype.decodeArray = jObj.method([jObj.types.Array], jObj.types.Array,
+            function (data) {
+                var self = this, result = [];
+                data.forEach(function (value) {
+                    result.push(self.toObject(value));
+                });
+                return result;
             });
 
         ObjectDecoder.prototype.toObject = jObj.method([jObj.types.Any], jObj.types.Any,
@@ -52,25 +72,22 @@ define([ "require", "Core/object/jObj" ],
                             return self.toObject(value);
                         });
                     } else {
-                        jObj.throwError(jObj.exception("L.deserialization.driver.not.found"));
+                        result = this.decodeObjectRecord(data);
                     }
                 } else if (jObj.ofType(data, jObj.types.Object)) {
-                    result = {};
-                    for (key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            result[key] = self.toObject(data[key]);
-                        }
-                    }
+                    result = this.decodeObjectRecord(data);
                 } else if (jObj.ofType(data, jObj.types.Array)) {
-                    result = [];
-                    data.forEach(function (value) {
-                        result.push(self.toObject(value));
-                    });
+                    result = this.decodeArray(data);
                 } else {
                     result = data;
                 }
 
                 return result;
+            });
+
+        ObjectDecoder.prototype.decode = jObj.method([jObj.types.Any], jObj.types.Any,
+            function(data) {
+                return this.toObject(data);
             });
 
         ObjectDecoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,

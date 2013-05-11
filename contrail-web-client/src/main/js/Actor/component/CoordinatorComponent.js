@@ -19,20 +19,27 @@
 /*global define*/
 
 define([
-    "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUtils", "Contrail/component/jComponent",
-    "./flow/CoordinatorUpStreamDataFlow", "./flow/CoordinatorDownStreamDataFlow",
-    "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
+    "require", "Core/object/jObj", "Core/flow/jFlow", "Core/utils/jUtils", "Contrail/jContrail",
+    "./flow/CoordinatorUpStreamDataFlow", "./flow/CoordinatorDownStreamDataFlow", "./flow/ActorInteractionFilter", "./handler/RemoteActorHandler"
 ],
-    function (jObj, jFlow, jUUID, jComponent, coordinatorUpStreamFlow, coordinatorDownStreamFlow, actorInteractionFilter, remoteActorHandler) {
+    function (require, jObj, jFlow, jUUID, jContrail, coordinatorUpStreamFlow, coordinatorDownStreamFlow, actorInteractionFilter, remoteActorHandler) {
         "use strict";
 
         function CoordinatorComponent(coordinator, domainId) {
-            jObj.bless(this, jComponent.core.destinationWithSingleSource());
+            jObj.bless(this, jContrail.component.core.destinationWithSingleSource());
 
             this.domainId = domainId;
             this.upStreamDataFlow = jFlow.filtered(coordinatorUpStreamFlow(coordinator, this), actorInteractionFilter.isAnActorInteraction);
             this.downStreamDataFlow = coordinatorDownStreamFlow(this);
             this.responses = {};
+
+            var jSonifiers = [
+                require("Actor/jEvent").request,
+                require("Actor/jActor").exception
+            ];
+
+            this.encoder = jContrail.codec.object.encoder(jSonifiers);
+            this.decoder = jContrail.codec.object.decoder(jSonifiers);
 
             coordinator.setRemoteActorHandler(remoteActorHandler(this));
         }
@@ -42,8 +49,18 @@ define([
                 return new CoordinatorComponent(coordinator, domainId);
             });
 
+        CoordinatorComponent.prototype.getEncoder = jObj.method([], jObj.types.Named("Encoder"),
+            function () {
+                return this.encoder;
+            });
+
+        CoordinatorComponent.prototype.getDecoder = jObj.method([], jObj.types.Named("Decoder"),
+            function () {
+                return this.decoder;
+            });
+
         CoordinatorComponent.prototype.getDomainId = jObj.method([], jObj.types.String,
-            function() {
+            function () {
                 return this.domainId;
             });
 
@@ -69,6 +86,11 @@ define([
         CoordinatorComponent.prototype.getUpStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
             function () {
                 return this.upStreamDataFlow;
+            });
+
+        CoordinatorComponent.prototype.getDownStreamDataFlow = jObj.method([], jObj.types.Named("DataFlow"),
+            function () {
+                return this.downStreamDataFlow;
             });
 
         CoordinatorComponent.prototype.createRemoteActor = jObj.procedure([jObj.types.String, jObj.types.String],

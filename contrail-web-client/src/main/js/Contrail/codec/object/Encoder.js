@@ -29,18 +29,18 @@ define([ "require", "Core/object/jObj" ],
         }
 
         ObjectEncoder.init = jObj.constructor([jObj.types.Array],
-                function (jSonifiers) {
-                    var drivers = {};
+            function (jSonifiers) {
+                var drivers = {};
 
-                    jSonifiers.forEach(function(jSonifier) {
-                        if (jSonifier.hasOwnProperty("jSonifable")) {
-                            drivers[jSonifier.jSonifable.type] = jSonifier.jSonifable;
-                        } else {
-                            jObj.throwError(jObj.exception("L.encoding.to.object.undefined"));
-                        }
-                    });
+                jSonifiers.forEach(function (jSonifier) {
+                    if (jSonifier.hasOwnProperty("jSonifable")) {
+                        drivers[jSonifier.jSonifable.type] = jSonifier.jSonifable;
+                    } else {
+                        jObj.throwError(jObj.exception("L.encoding.to.object.undefined"));
+                    }
+                });
 
-                    return new ObjectEncoder(drivers);
+                return new ObjectEncoder(drivers);
             });
 
         ObjectEncoder.prototype.toStructure = jObj.method([jObj.types.Any], jObj.types.Any,
@@ -74,6 +74,11 @@ define([ "require", "Core/object/jObj" ],
                 }
 
                 return result;
+            });
+
+        ObjectEncoder.prototype.encode = jObj.method([jObj.types.Any], jObj.types.Any,
+            function (data) {
+                return this.toStructure(data);
             });
 
         ObjectEncoder.prototype.transform = jObj.method([jObj.types.Any], jObj.types.Array,
