@@ -25,7 +25,7 @@ define([
     function (require, jObj, jFlow, jUUID, jContrail, coordinatorUpStreamFlow, coordinatorDownStreamFlow, actorInteractionFilter, remoteActorHandler) {
         "use strict";
 
-        function CoordinatorComponent(coordinator, domainId, jSonifiers) {
+        function CoordinatorComponent(coordinator, domainId) {
             jObj.bless(this, jContrail.component.core.destinationWithSingleSource());
 
             this.domainId = domainId;
@@ -34,20 +34,25 @@ define([
             this.downStreamDataFlow = coordinatorDownStreamFlow(this);
             this.responses = {};
 
-            var allJSonifiers = jSonifiers || [];
-
-            allJSonifiers.unshift(require("Actor/jEvent").request);
-            allJSonifiers.unshift(require("Actor/jActor").exception);
-
-            this.encoder = jContrail.codec.object.encoder(allJSonifiers);
-            this.decoder = jContrail.codec.object.decoder(allJSonifiers);
+            this.allJSonifiers = [];
+            this.addJSonifiers([ require("Actor/jEvent").request, require("Actor/jActor").exception]);
 
             coordinator.setRemoteActorHandler(remoteActorHandler(this));
         }
 
-        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String, jObj.types.Nullable(jObj.types.Array) ],
-            function (coordinator, domainId, jSonifiers) {
-                return new CoordinatorComponent(coordinator, domainId, jSonifiers);
+        CoordinatorComponent.init = jObj.constructor([ jObj.types.Named("Coordinator"), jObj.types.String ],
+            function (coordinator, domainId) {
+                return new CoordinatorComponent(coordinator, domainId);
+            });
+
+        CoordinatorComponent.prototype.addJSonifiers = jObj.procedure([ jObj.types.Array ],
+            function (jSonifiers) {
+                var self = this;
+                jSonifiers.forEach(function (jSonifier) {
+                    self.allJSonifiers.push(jSonifier);
+                });
+                this.encoder = jContrail.codec.object.encoder(this.allJSonifiers);
+                this.decoder = jContrail.codec.object.decoder(this.allJSonifiers);
             });
 
         CoordinatorComponent.prototype.getEncoder = jObj.method([], jObj.types.Named("Encoder"),

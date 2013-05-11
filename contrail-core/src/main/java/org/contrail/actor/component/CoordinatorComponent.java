@@ -55,14 +55,17 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 	private final String domainId;
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
-	private final Encoder encoder;
-	private final Decoder decoder;
+	private final List<JSonifier> allJSonifiers;
+	
+	private Encoder encoder;
+	private Decoder decoder;
 
 	{
 		this.pendingResponses = new HashMap<String, Response>();
+		this.allJSonifiers = new ArrayList<JSonifier>();
 	}
 
-	public CoordinatorComponent(Coordinator coordinator, String domainName, JSonifier... jSonifiers) {
+	public CoordinatorComponent(Coordinator coordinator, String domainName) {
 		super();
 
 		final FilteredDataFlow.Filter<Packet> filter = new FilteredDataFlow.Filter<Packet>() {
@@ -75,25 +78,25 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.domainId = domainName;
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
 		this.downStreamDataFlow = new CoordinatorDownStreamDataFlow(this);
-
-		final List<JSonifier> allJSonifiers = new ArrayList<JSonifier>();
 		
-		allJSonifiers.addAll(Arrays.asList(Request.jSonifable(), ActorException.jSonifable()));
-		allJSonifiers.addAll(Arrays.asList(jSonifiers));
-		
-		this.encoder = new Encoder(allJSonifiers);
-		this.decoder = new Decoder(allJSonifiers);
+		this.addJSonifiers(Request.jSonifable(), ActorException.jSonifable());
 	}
 
 	public String getDomainId() {
 		return domainId;
 	}
 
-	public Encoder getEncoder() {
+	public synchronized void addJSonifiers(JSonifier...jSonifiers) {
+		this.allJSonifiers.addAll(Arrays.asList(jSonifiers));
+		this.encoder = new Encoder(allJSonifiers);
+		this.decoder = new Decoder(allJSonifiers);
+	}
+	
+	public synchronized Encoder getEncoder() {
 		return encoder;
 	}
 
-	public Decoder getDecoder() {
+	public synchronized Decoder getDecoder() {
 		return decoder;
 	}
 
