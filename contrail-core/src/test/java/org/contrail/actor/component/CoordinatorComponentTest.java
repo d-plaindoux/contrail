@@ -79,7 +79,11 @@ public class CoordinatorComponentTest {
 		final PromiseResponse response = new PromiseResponse();
 		final String responseId = coordinatorComponent.createResponseId(response);
 
-		final ObjectRecord data = new ObjectRecord().set("identifier", "A").set("request", new Request("getValue")).set("response", responseId);
+		final ObjectRecord data = new ObjectRecord().
+				set("identifier", "A").
+				set("request", coordinatorComponent.getEncoder().encode(new Request("getValue"))).
+				set("response", responseId);
+		
 		final Packet packet = new Packet("a", "a", data);
 
 		routeComponent.getUpStreamDataFlow().handleData(packet);

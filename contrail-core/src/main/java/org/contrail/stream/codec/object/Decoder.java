@@ -63,20 +63,14 @@ public class Decoder implements DataTransducer<Object, Object> {
 				if (drivers.containsKey(driverName)) {
 					return drivers.get(driverName).toObject(sourceRecord, this);
 				} else {
-					throw new DataTransducerException("Object encoding for " + driverName + " is not available");
+					// Late binding
+					return decodeObjectRecord(sourceRecord);
 				}
 			} else {
-				final ObjectRecord result = new ObjectRecord();
-				for (String name : sourceRecord.getNames()) {
-					result.set(name, decode(sourceRecord.get(name)));
-				}
-				return result;
+				return decodeObjectRecord(sourceRecord);
 			}
 		} else if (source.getClass().isArray()) {
-			final Object[] result = new Object[Array.getLength(source)];
-			for (int i = 0; i < Array.getLength(source); i++) {
-				result[i] = decode(Array.get(source, i));
-			}
+			final Object[] result = decodeArray(source);
 			return result;
 		} else if (Coercion.canCoerce(source, Integer.class)) {
 			return source;
@@ -91,6 +85,22 @@ public class Decoder implements DataTransducer<Object, Object> {
 		} else {
 			throw new DataTransducerException("Object decoding for " + source.getClass() + " is not supported");
 		}
+	}
+
+	private Object[] decodeArray(Object source) throws DataTransducerException {
+		final Object[] result = new Object[Array.getLength(source)];
+		for (int i = 0; i < Array.getLength(source); i++) {
+			result[i] = decode(Array.get(source, i));
+		}
+		return result;
+	}
+
+	private Object decodeObjectRecord(final ObjectRecord sourceRecord) throws DataTransducerException {
+		final ObjectRecord result = new ObjectRecord();
+		for (String name : sourceRecord.getNames()) {
+			result.set(name, decode(sourceRecord.get(name)));
+		}
+		return result;
 	}
 
 	@Override

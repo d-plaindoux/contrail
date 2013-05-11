@@ -28,6 +28,7 @@ import org.contrail.actor.core.Coordinator;
 import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.common.utils.Coercion;
+import org.contrail.stream.component.pipeline.transducer.DataTransducerException;
 import org.contrail.stream.data.ObjectRecord;
 import org.contrail.stream.flow.DataFlow;
 import org.contrail.stream.flow.DataFlowAdapter;
@@ -57,21 +58,27 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 	}
 
 	@Override
-	public void handleData(Packet data) throws DataFlowException {
+	public void handleData(Packet packet) throws DataFlowException {
 		
-		// Decode packet right now
+		final Object data;
 		
-		if (ActorInteractionFilter.isAnActorRequest(data.getData())) {
-			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
+		try {
+			data = this.component.getDecoder().decode(packet.getData());
+		} catch (DataTransducerException e) {
+			throw new DataFlowException(e);
+		}
+		
+		if (ActorInteractionFilter.isAnActorRequest(data)) {
+			final ObjectRecord record = Coercion.coerce(data, ObjectRecord.class);
 			final RemoteResponseHandler response;
 			if (record.get(RESPONSE) != null) {
-				response = new RemoteResponseHandler(component, data.getSourceId(), record.get(RESPONSE, String.class));
+				response = new RemoteResponseHandler(component, packet.getSourceId(), record.get(RESPONSE, String.class));
 			} else {
 				response = null;
 			}
 			this.coordinator.send(record.get(IDENTIFIER, String.class), record.get(REQUEST, Request.class), response);
-		} else if (ActorInteractionFilter.isAnActorResponse(data.getData())) {
-			final ObjectRecord record = Coercion.coerce(data.getData(), ObjectRecord.class);
+		} else if (ActorInteractionFilter.isAnActorResponse(data)) {
+			final ObjectRecord record = Coercion.coerce(data, ObjectRecord.class);
 			final Response response = this.component.retrieveResponseById(record.get(IDENTIFIER, String.class));
 			if (record.get(TYPE, Integer.class) == 0x01) {
 				response.success(record.get(VALUE, Object.class));

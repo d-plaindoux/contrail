@@ -125,7 +125,7 @@ public class NetworkActorTest {
 	}
 
 	@Test(expected = ActorException.class)
-	public void shouldReceiveErrorWithRemoteActorAndWrongMesage() throws Throwable {
+	public void shouldReceiveErrorWithRemoteActorAndWrongMessage() throws Throwable {
 
 		// Prepare domain "1"
 
@@ -196,10 +196,7 @@ public class NetworkActorTest {
 
 	// Private corner
 	
-	private Component givenComposedComponent(
-			final CoordinatorComponent coordinatorComponent1,
-			final DomainComponent routeComponent1)
-			throws ComponentConnectionRejectedException {
+	private Component givenComposedComponent(final CoordinatorComponent coordinatorComponent1,final DomainComponent routeComponent1) throws ComponentConnectionRejectedException {
 		// Factories
 		final BytesStringifierTransducerFactory stringifyFactory = new BytesStringifierTransducerFactory();
 		final SerializationTransducerFactory serializationFactory = new SerializationTransducerFactory();
@@ -207,14 +204,10 @@ public class NetworkActorTest {
 			private static final long serialVersionUID = 2065999814340836186L;
 			{
 				this.add(Packet.jSonifable());
-				this.add(Request.jSonifable());
-				this.add(ActorException.jSonifable());
 			}
 		});
 
-		final Component compose1 = Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1,
-				coordinatorComponent1);
-		return compose1;
+		return Components.compose(stringifyFactory.createComponent(), serializationFactory.createComponent(), objectFactory.createComponent(), routeComponent1, coordinatorComponent1);
 	}
 
 }

@@ -18,17 +18,24 @@
 
 package org.contrail.actor.component;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.contrail.actor.component.flow.ActorInteractionFilter;
 import org.contrail.actor.component.flow.CoordinatorDownStreamDataFlow;
 import org.contrail.actor.component.flow.CoordinatorUpStreamDataFlow;
+import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
+import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
+import org.contrail.stream.codec.object.Decoder;
+import org.contrail.stream.codec.object.Encoder;
 import org.contrail.stream.component.ComponentNotConnectedException;
 import org.contrail.stream.component.core.DestinationComponentWithSingleSource;
+import org.contrail.stream.data.JSonifier;
 import org.contrail.stream.flow.DataFlow;
 import org.contrail.stream.flow.DataFlowFactory;
 import org.contrail.stream.flow.FilteredDataFlow;
@@ -47,6 +54,8 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 	private final String domainId;
 	private final DataFlow<Packet> upStreamDataFlow;
 	private final DataFlow<Packet> downStreamDataFlow;
+	private final Encoder encoder;
+	private final Decoder decoder;
 
 	{
 		this.pendingResponses = new HashMap<String, Response>();
@@ -65,10 +74,23 @@ public class CoordinatorComponent extends DestinationComponentWithSingleSource<P
 		this.domainId = domainName;
 		this.upStreamDataFlow = DataFlowFactory.filtered(filter, new CoordinatorUpStreamDataFlow(coordinator, this));
 		this.downStreamDataFlow = new CoordinatorDownStreamDataFlow(this);
+
+		final List<JSonifier> jSonifiers = Arrays.asList(Request.jSonifable(), ActorException.jSonifable());
+		
+		this.encoder = new Encoder(jSonifiers);
+		this.decoder = new Decoder(jSonifiers);
 	}
 
 	public String getDomainId() {
 		return domainId;
+	}
+
+	public Encoder getEncoder() {
+		return encoder;
+	}
+
+	public Decoder getDecoder() {
+		return decoder;
 	}
 
 	@Override

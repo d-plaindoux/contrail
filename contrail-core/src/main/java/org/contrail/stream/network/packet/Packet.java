@@ -28,10 +28,9 @@ import org.contrail.stream.data.JSonifier;
  */
 public class Packet {
 
-	private String sourceId;
 	private final String destinationId;
-	private final Object data;
-	private String endPoint;
+	private String sourceId;
+	private Object data;
 
 	public static JSonifier jSonifable() {
 		return JSonifier.nameAndType("Packet", Packet.class.getName()).withKeys("sourceId", "destinationId", "data").withTypes(String.class, String.class, Object.class);
@@ -56,15 +55,15 @@ public class Packet {
 		this.sourceId = sourceId;
 	}
 
-	public String getEndPoint() {
-		return endPoint;
-	}
-
 	public String getDestinationId() {
 		return destinationId;
 	}
 
 	public Object getData() {
 		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 }

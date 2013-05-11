@@ -106,7 +106,6 @@ public class DomainComponentTest {
 		final Packet nextData = bufferedDataFlow.getNextData();
 		TestCase.assertEquals("a", nextData.getSourceId());
 		TestCase.assertEquals("Hello, World!", nextData.getData());
-		TestCase.assertNull(nextData.getEndPoint());
 	}
 
 	@Test

@@ -20,6 +20,7 @@ package org.contrail.actor.component.flow;
 
 import org.contrail.actor.component.CoordinatorComponent;
 import org.contrail.stream.component.ComponentNotConnectedException;
+import org.contrail.stream.component.pipeline.transducer.DataTransducerException;
 import org.contrail.stream.flow.DataFlow;
 import org.contrail.stream.flow.DataFlowAdapter;
 import org.contrail.stream.flow.exception.DataFlowCloseException;
@@ -42,12 +43,13 @@ public class CoordinatorDownStreamDataFlow extends DataFlowAdapter<Packet> imple
 	}
 
 	@Override
-	public void handleData(Packet data) throws DataFlowException {
-		
-		// Encode packet right now
+	public void handleData(Packet packet) throws DataFlowException {
 		
 		try {
-			this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(data);
+			packet.setData(this.component.getEncoder().encode(packet.getData()));
+			this.component.getSourceComponentLink().getSourceComponent().getDownStreamDataFlow().handleData(packet);
+		} catch (DataTransducerException e) {
+			throw new DataFlowException(e);
 		} catch (ComponentNotConnectedException e) {
 			throw new DataFlowException(e);
 		}

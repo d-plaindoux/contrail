@@ -42,7 +42,7 @@ public class StandardClientBuilder extends ClientBuilder {
 	public StandardClientBuilder(String endPoint) {
 		super(endPoint);
 
-		this.jSonifiers = Arrays.asList(Packet.jSonifable(), Request.jSonifable(), ActorException.jSonifable());
+		this.jSonifiers = Arrays.asList(Packet.jSonifable());
 	}
 
 	@SuppressWarnings("unchecked")
