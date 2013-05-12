@@ -119,7 +119,7 @@ define([ "./jType" ],
 
             if (!jModel.specificationIsEnable) {
                 result = method || function () {
-                    jModel.throwError(jModel.exception("L.abstract.method", { method:method, arity:arguments.length}));
+                    jModel.abstractDefinition.apply(this, arguments);
                 };
             } else {
                 result = function () {

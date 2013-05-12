@@ -52,9 +52,9 @@ public class Decoder implements DataTransducer<Object, Object> {
 			this.drivers.put(jSonifier.getIdentifier(), jSonifier);
 		}
 	}
-
 	private Object[] decodeArray(Object source) throws DataTransducerException {
 		final Object[] result = new Object[Array.getLength(source)];
+		
 		for (int i = 0; i < Array.getLength(source); i++) {
 			result[i] = decode(Array.get(source, i));
 		}
