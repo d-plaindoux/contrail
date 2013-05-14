@@ -37,12 +37,18 @@ define([ "Core/object/jObj", "./BoundActor" ],
             function (request, response) {
                 try {
                     var result, method = this.model[request.getName()];
-                    jObj.checkType(method, jObj.types.Function);
 
-                    result = method.apply(this.model, request.getParameters());
+                    if (method) {
+                        jObj.checkType(method, jObj.types.Function);
+                        result = method.apply(this.model, request.getParameters());
 
-                    if (response) {
-                        response.success(result);
+                        if (response) {
+                            response.success(result);
+                        }
+                    } else if (this.model.receiveRequest) {
+                        this.model.receiveRequest(request, response);
+                    } else {
+                        jObj.throwError(jObj.exception("L.service?not.found"));
                     }
                 } catch (error) {
                     if (response) {

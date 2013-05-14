@@ -28,6 +28,7 @@ import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.common.message.Message;
 import org.contrail.common.message.MessagesProvider;
+import org.contrail.common.utils.Coercion;
 
 /**
  * <code>LocalActor</code>
@@ -83,6 +84,8 @@ public class LocalActor<T> extends BoundActor implements Actor {
 			} catch (InvocationTargetException e) {
 				failure(response, new ActorException(getMessage(e.getCause().getMessage(), MESSAGE_FAILURE.format(request.getName(), this.getActorId())), e.getCause()));
 			}
+		} else if (Coercion.canCoerce(model, ActorReceiver.class)) {
+			Coercion.coerce(model, ActorReceiver.class).receiveRequest(request, response);
 		} else {
 			final String message = SERVICE_NOT_FOUND.format(request.getName(), this.getActorId());
 			failure(response, new ActorException(message));
