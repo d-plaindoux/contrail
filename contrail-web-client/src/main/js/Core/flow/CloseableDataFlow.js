@@ -44,7 +44,10 @@ define([ "require", "Core/object/jObj", "./DataFlow" ],
 
         CloseableDataFlow.prototype.handleClose = jObj.procedure([],
             function () {
-                this.closed = true;
+                if (!this.closed) {
+                    this.closed = true;
+                    this.dataFlow.handleClose();
+                }
             });
 
         return CloseableDataFlow.init;
