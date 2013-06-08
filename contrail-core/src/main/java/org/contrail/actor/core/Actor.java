@@ -39,11 +39,9 @@ public interface Actor {
 	
 	BoundActor bindToSource(String model) throws ActorException;
 	
-	void send(Request request);
+	void ask(Request request);
 
-	void send(Request request, Response response);
-
-	void invoke(Request request, Response response);
+	void ask(Request request, Response response);
 
 	boolean performPendingAction();
 	

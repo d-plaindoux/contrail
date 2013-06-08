@@ -38,18 +38,18 @@ import org.contrail.common.concurrent.Promise;
  */
 public class LocalActorTest {
 
-	public class PromiseResponse extends Promise<Object,ActorException> implements Response {
+	public class PromiseResponse extends Promise<Object, ActorException> implements Response {
 		// Nothing to be done
 	}
 
 	public static class CA {
-		
+
 		@ActorId
 		public String actorId;
-		
+
 		@ActorCoordinator
 		public Coordinator coordinator;
-		
+
 		private int value;
 
 		private CA(int value) {
@@ -67,67 +67,67 @@ public class LocalActorTest {
 	}
 
 	// --------------------------------------------------------------------------------
-	
+
 	@Test
 	public void shouldHaveNotBindActorWhenPerformingSimpleCoordinatorBehavior() throws Exception {
 		final CA model = new CA(42);
-		
+
 		TestCase.assertNull(model.coordinator);
-				
+
 		final Coordinator coordinator = new Coordinator();
 		final Actor actor = coordinator.actor("A");
 
 		TestCase.assertEquals(actor.isBound(), false);
 		TestCase.assertEquals(coordinator.hasActor("A"), true);
 	}
-	
+
 	@Test
 	public void shouldInjectCoordinatorWhenRegisteringActor() throws Exception {
 		final CA model = new CA(42);
-		
+
 		TestCase.assertNull(model.coordinator);
-				
+
 		final Coordinator coordinator = new Coordinator();
 		final Actor actor = coordinator.actor("A").bindToObject(model);
 
 		TestCase.assertEquals(actor.isBound(), true);
 		TestCase.assertEquals(coordinator.hasActor("A"), true);
-		
+
 		TestCase.assertEquals("A", model.actorId);
-		TestCase.assertEquals(coordinator, model.coordinator);		
+		TestCase.assertEquals(coordinator, model.coordinator);
 	}
 
 	@Test
 	public void shouldRetrieveAValueWhenInvokingActorMethod() throws Exception {
 		final Coordinator coordinator = new Coordinator();
-		final Actor actor = coordinator.actor("A").bindToObject(new CA(42));
+		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(42));
 
 		final PromiseResponse response = new PromiseResponse();
-		actor.invoke(new Request("getValue"), response);
+		actor.askImmediately(new Request("getValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
 	@Test
 	public void shouldRetrieveSetValueAValueWhenInvokingActorMethod() throws Exception {
 		final Coordinator coordinator = new Coordinator();
-		final Actor actor = coordinator.actor("A").bindToObject(new CA(0));
+		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(0));
 
 		final PromiseResponse responseSet = new PromiseResponse();
-		actor.invoke(new Request("setValue", 42), responseSet);
+		actor.askImmediately(new Request("setValue", 42), responseSet);
 		TestCase.assertEquals(null, responseSet.getFuture().get(1, TimeUnit.SECONDS));
 
 		final PromiseResponse responseGet = new PromiseResponse();
-		actor.invoke(new Request("getValue"), responseGet);
+		actor.askImmediately(new Request("getValue"), responseGet);
 		TestCase.assertEquals(42, responseGet.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
 	@Test(expected = ExecutionException.class)
 	public void shouldRetrieveAnErrorWhenInvokingIncorrectActorMethod() throws Exception {
 		final Coordinator coordinator = new Coordinator();
-		final Actor actor = coordinator.actor("A").bindToObject(new CA(42));
+		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(42));
 
 		final PromiseResponse response = new PromiseResponse();
-		actor.invoke(new Request("getWrongValue"), response);
+		actor.askImmediately(new Request("getWrongValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 }

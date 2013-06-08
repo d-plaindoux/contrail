@@ -31,7 +31,7 @@ import org.contrail.common.utils.Pair;
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class BoundActor implements Actor {
+public class BoundActor extends CoordinatedActor implements Actor {
 
 	private final Coordinator coordinator;
 	private final String name;
@@ -73,17 +73,17 @@ public class BoundActor implements Actor {
 	}
 
 	@Override
-	public void send(Request request) {
-		this.send(request,null);
+	public void ask(Request request) {
+		this.ask(request,null);
 	}
 	
 	@Override
-	public synchronized void send(Request request, Response response) {
+	public synchronized void ask(Request request, Response response) {
 		this.actorActions.add(new Pair<Request, Response>(request, response));
 	}
 
 	@Override
-	public void invoke(Request request, Response response) {
+	public void askImmediately(Request request, Response response) {
 		response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "not.yet.bound").format()));
 	}
 

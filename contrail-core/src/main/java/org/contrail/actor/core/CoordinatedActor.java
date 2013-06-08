@@ -1,5 +1,4 @@
 /*
-
  * Copyright (C)2012 D. Plaindoux.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -23,24 +22,13 @@ import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 
 /**
- * <code>RemoteActor</code>
+ * <code>Actor</code>
  * 
  * @author Didier Plaindoux
  * @version 1.0
  */
-public class RemoteActor extends BoundActor implements Actor {
+abstract class CoordinatedActor implements Actor {
 
-	private final String remoteName;
-	private final String location;
-
-	public RemoteActor(String remoteName, String location, NotBoundActor actor) {
-		super(actor);
-		this.remoteName = remoteName;
-		this.location = location;
-	}
-
-	@Override
-	public void askImmediately(Request request, Response response) {
-		this.getCoordinator().getRemoteActorHandler().handle(location, this.remoteName, request, response);
-	}
+	abstract void askImmediately(Request request, Response response);
+	
 }
