@@ -71,7 +71,7 @@ public class LocalActor<T> extends BoundActor implements Actor {
 	}
 
 	@Override
-	public void askImmediately(Request request, Response response) {
+	void askImmediately(Request request, Response response) {
 		final Method method = getMethodByName(request.getName());
 
 		if (method != null) {
