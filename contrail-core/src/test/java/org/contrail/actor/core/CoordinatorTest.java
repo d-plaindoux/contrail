@@ -78,7 +78,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
 
-		coordinator.invoke("A", request, response);
+		coordinator.askNow("A", request, response);
 
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -93,7 +93,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getError");
 
-		coordinator.invoke("A", request, response);
+		coordinator.askNow("A", request, response);
 
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -109,7 +109,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
 
-		coordinator.send("A", request, response);
+		coordinator.ask("A", request, response);
 
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -125,7 +125,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getError");
 
-		coordinator.send("A", request, response);
+		coordinator.ask("A", request, response);
 
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -140,7 +140,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
 
-		coordinator.send("A", request, response);
+		coordinator.ask("A", request, response);
 
 		TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
@@ -155,7 +155,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
 
-		coordinator.send("A", request, response);
+		coordinator.ask("A", request, response);
 
 		try {
 			TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
@@ -179,7 +179,7 @@ public class CoordinatorTest {
 		final PromiseResponse response = new PromiseResponse();
 		final Request request = new Request("getValue");
 
-		coordinator.send("A", request, response);
+		coordinator.ask("A", request, response);
 
 		try {
 			TestCase.assertNotSame(42, response.getFuture().get(1, TimeUnit.SECONDS));
@@ -202,10 +202,10 @@ public class CoordinatorTest {
 
 		final PromiseResponse response = new PromiseResponse();
 
-		coordinator.send("A", new Request("setValue", 13, 2));
-		coordinator.send("A", new Request("setValue", 12, 2));
-		coordinator.send("A", new Request("setValue", 11, 2));
-		coordinator.send("A", new Request("getValue"), response);
+		coordinator.ask("A", new Request("setValue", 13, 2));
+		coordinator.ask("A", new Request("setValue", 12, 2));
+		coordinator.ask("A", new Request("setValue", 11, 2));
+		coordinator.ask("A", new Request("getValue"), response);
 
 		TestCase.assertEquals(11, response.getFuture().get());
 	}

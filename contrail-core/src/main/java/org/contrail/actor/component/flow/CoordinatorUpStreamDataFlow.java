@@ -76,7 +76,7 @@ public class CoordinatorUpStreamDataFlow extends DataFlowAdapter<Packet> impleme
 			} else {
 				response = null;
 			}
-			this.coordinator.send(record.get(IDENTIFIER, String.class), record.get(REQUEST, Request.class), response);
+			this.coordinator.ask(record.get(IDENTIFIER, String.class), record.get(REQUEST, Request.class), response);
 		} else if (ActorInteractionFilter.isAnActorResponse(data)) {
 			final ObjectRecord record = Coercion.coerce(data, ObjectRecord.class);
 			final Response response = this.component.retrieveResponseById(record.get(IDENTIFIER, String.class));
