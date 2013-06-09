@@ -46,7 +46,7 @@ define(["Core/object/jObj", "Core/flow/jFlow", "../handler/RemoteResponseHandler
                     } else {
                         response = undefined;
                     }
-                    this.coordinator.send(data.identifier, data.request, response);
+                    this.coordinator.ask(data.identifier, data.request, response);
                 } else if (actorInteractionFilter.isAnActorResponse(data)) {
                     response = this.component.retrieveResponseById(data.identifier);
                     if (data.type === 0x01) {

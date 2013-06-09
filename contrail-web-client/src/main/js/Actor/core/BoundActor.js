@@ -36,11 +36,11 @@ define([ "require", "Core/object/jObj" ],
             return true;
         };
 
-        BoundActor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        BoundActor.prototype.ask = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 var self = this;
                 this.pendingJobs.push(function () {
-                    self.coordinator.invoke(self.getIdentifier(), request, response);
+                    self.coordinator.askNow(self.getIdentifier(), request, response);
                 });
             });
 

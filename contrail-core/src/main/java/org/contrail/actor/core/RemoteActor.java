@@ -40,7 +40,7 @@ public class RemoteActor extends BoundActor implements Actor {
 	}
 
 	@Override
-	void askImmediately(Request request, Response response) {
+	void askNow(Request request, Response response) {
 		this.getCoordinator().getRemoteActorHandler().handle(location, this.remoteName, request, response);
 	}
 }

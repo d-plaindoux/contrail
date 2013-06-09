@@ -53,7 +53,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jActor.event.request("n", []), response);
+                    actor.ask(jActor.event.request("n", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.pendingJobs.length, 1, "A new job has been created");
@@ -92,7 +92,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jActor.event.request("m", []), response);
+                    actor.ask(jActor.event.request("m", []), response);
                 }).
                 Then(function () {
                     jCC.equal(actor.pendingJobs.length, 1, "A new job has been created");
@@ -136,7 +136,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jActor.event.request("n", []), response);
+                    actor.ask(jActor.event.request("n", []), response);
                 }).
                 ThenAfter(1000, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -159,7 +159,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("A", jActor.event.request("n", []), response);
+                    coordinator.ask("A", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");
@@ -181,7 +181,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("A", jActor.event.request("n", []), response);
+                    coordinator.ask("A", jActor.event.request("n", []), response);
                 }).
                 And(function () {
                     coordinator.start();
@@ -207,7 +207,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("A", jActor.event.request("n", []), response);
+                    coordinator.ask("A", jActor.event.request("n", []), response);
                 }).
                 And(function () {
                     actor.bindToObject(new A());
@@ -233,7 +233,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.send(jActor.event.request("m", []), response);
+                    actor.ask(jActor.event.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -261,7 +261,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    manager.send("A", jActor.event.request("m", []), response);
+                    manager.ask("A", jActor.event.request("m", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -286,7 +286,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("A", jActor.event.request("n", []), response);
+                    coordinator.ask("A", jActor.event.request("n", []), response);
                 }).
                 ThenAfter(500, function () {
                     try {
@@ -316,7 +316,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
+                    coordinator.ask("AtomicString", jActor.event.request("getValue", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "Hello!", "Actor must respond 'Hello!'");
@@ -341,7 +341,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                     response = storedResponse();
                 }).
                 When(function () {
-                    coordinator.send("SimpleString", jActor.event.request("getName", []), response);
+                    coordinator.ask("SimpleString", jActor.event.request("getName", []), response);
                 }).
                 ThenAfter(500, function () {
                     jCC.equal(response.value(), "A simple name", "Actor must respond 'A simple name'");
@@ -365,7 +365,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Core/client/jLoader", "Actor/jAc
                         source("./AtomicString.js").
                         onLoad(function () {
                             coordinator.actor("AtomicString").bindToModule("Atomic.String", [ "Hello!" ]);
-                            coordinator.send("AtomicString", jActor.event.request("getValue", []), response);
+                            coordinator.ask("AtomicString", jActor.event.request("getValue", []), response);
                         });
                 }).
                 ThenAfter(500, function () {

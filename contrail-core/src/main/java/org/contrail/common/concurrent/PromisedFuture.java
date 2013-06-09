@@ -36,7 +36,7 @@ import java.util.concurrent.locks.ReentrantLock;
 final class PromisedFuture<V> implements Future<V> {
 
 	private enum Status {
-		CANCEL, VALUE, ERROR
+		UNBOUND, CANCELLED, BOUND_VALUE, BOUND_ERROR
 	}
 
 	private final Lock barrier;
@@ -50,7 +50,7 @@ final class PromisedFuture<V> implements Future<V> {
 	{
 		this.barrier = new ReentrantLock();
 		this.condition = this.barrier.newCondition();
-		this.status = null;
+		this.status = Status.UNBOUND;
 		this.value = null;
 		this.error = null;
 	}
@@ -63,7 +63,7 @@ final class PromisedFuture<V> implements Future<V> {
 				// Do nothing
 				return false;
 			} else {
-				this.status = Status.CANCEL;
+				this.status = Status.CANCELLED;
 				this.condition.signalAll();
 			}
 		} finally {
@@ -83,7 +83,7 @@ final class PromisedFuture<V> implements Future<V> {
 	 * @return true if the status has been set up; flase otherwise
 	 */
 	private boolean waitIfNecessary(long timeout, TimeUnit unit) {
-		if (this.status == null) {
+		if (this.status == Status.UNBOUND) {
 			try {
 				this.condition.await(timeout, unit);
 			} catch (InterruptedException consume) {
@@ -91,7 +91,7 @@ final class PromisedFuture<V> implements Future<V> {
 			}
 		}
 
-		return this.status != null;
+		return this.status != Status.UNBOUND;
 	}
 
 	@Override
@@ -103,11 +103,11 @@ final class PromisedFuture<V> implements Future<V> {
 			} else {
 				/* Manage the status */
 				switch (status) {
-				case ERROR:
+				case BOUND_ERROR:
 					throw new ExecutionException(this.error);
-				case CANCEL:
+				case CANCELLED:
 					throw new CancellationException();
-				case VALUE:
+				case BOUND_VALUE:
 					return this.value;
 				default:
 					throw new IllegalArgumentException();
@@ -126,11 +126,11 @@ final class PromisedFuture<V> implements Future<V> {
 				throw new TimeoutException();
 			} else {
 				switch (status) {
-				case ERROR:
+				case BOUND_ERROR:
 					throw new ExecutionException(this.error);
-				case CANCEL:
+				case CANCELLED:
 					throw new CancellationException();
-				case VALUE:
+				case BOUND_VALUE:
 					return this.value;
 				default:
 					throw new IllegalArgumentException();
@@ -145,7 +145,7 @@ final class PromisedFuture<V> implements Future<V> {
 	public boolean isCancelled() {
 		barrier.lock();
 		try {
-			return this.status == Status.CANCEL;
+			return this.status == Status.CANCELLED;
 		} finally {
 			barrier.unlock();
 		}
@@ -155,7 +155,7 @@ final class PromisedFuture<V> implements Future<V> {
 	public boolean isDone() {
 		barrier.lock();
 		try {
-			return this.status == Status.VALUE || this.status == Status.ERROR;
+			return this.status == Status.BOUND_VALUE || this.status == Status.BOUND_ERROR;
 		} finally {
 			barrier.unlock();
 		}
@@ -166,7 +166,7 @@ final class PromisedFuture<V> implements Future<V> {
 		try {
 			if (!this.isCancelled() && !this.isDone()) {
 				this.value = value;
-				this.status = Status.VALUE;
+				this.status = Status.BOUND_VALUE;
 				this.condition.signalAll();
 			}
 		} finally {
@@ -179,7 +179,7 @@ final class PromisedFuture<V> implements Future<V> {
 		try {
 			if (!this.isCancelled() && !this.isDone()) {
 				this.error = error;
-				this.status = Status.ERROR;
+				this.status = Status.BOUND_ERROR;
 				this.condition.signalAll();
 			}
 		} finally {

@@ -195,9 +195,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
-                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
+                    coordinatorA.ask("A", jActor.event.request("getA", []), response1);
+                    coordinatorA.ask("A", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.ask("A", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
@@ -256,9 +256,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.domain("b").actor("A").send(jActor.event.request("getA", []), response1);
-                    coordinatorA.domain("b").actor("A").send(jActor.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.domain("b").actor("A").send(jActor.event.request("getA", []), response2);
+                    coordinatorA.domain("b").actor("A").ask(jActor.event.request("getA", []), response1);
+                    coordinatorA.domain("b").actor("A").ask(jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.domain("b").actor("A").ask(jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
@@ -316,9 +316,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A", jActor.event.request("getA", []), response1);
-                    coordinatorA.send("A", jActor.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.send("A", jActor.event.request("getA", []), response2);
+                    coordinatorA.ask("A", jActor.event.request("getA", []), response1);
+                    coordinatorA.ask("A", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.ask("A", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");
@@ -365,9 +365,9 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response2 = storedResponse();
                 }).
                 When(function () {
-                    coordinatorA.send("A.dist", jActor.event.request("getA", []), response1);
-                    coordinatorA.send("A.dist", jActor.event.request("setA", [ "Hello, World!" ]));
-                    coordinatorA.send("A.dist", jActor.event.request("getA", []), response2);
+                    coordinatorA.ask("A.dist", jActor.event.request("getA", []), response1);
+                    coordinatorA.ask("A.dist", jActor.event.request("setA", [ "Hello, World!" ]));
+                    coordinatorA.ask("A.dist", jActor.event.request("getA", []), response2);
                 }).
                 ThenAfter(1000, function () {
                     jCC.equal(response1.value(), "a");

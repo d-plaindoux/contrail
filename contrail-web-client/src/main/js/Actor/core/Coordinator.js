@@ -68,7 +68,7 @@ define([ "Core/object/jObj", "./Actor" ],
                     actor:jObj.method([ jObj.types.String ], jObj.types.Object,
                         function (identifier) {
                             return {
-                                send:jObj.procedure([jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+                                ask:jObj.procedure([jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
                                     function (request, response) {
                                         self.pendingJobs.push(function () {
                                             self.getRemoteActorHandler().handle(location, identifier, request, response);
@@ -236,13 +236,13 @@ define([ "Core/object/jObj", "./Actor" ],
             });
 
         /*
-         * Send and broadcast mechanisms
+         * ask and broadcast mechanisms
          */
 
-        Coordinator.prototype.send = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Coordinator.prototype.ask = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (identifier, request, response) {
                 if (this.universe.hasOwnProperty(identifier)) {
-                    this.universe[identifier].send(request, response);
+                    this.universe[identifier].ask(request, response);
                     this.startActorRunner();
                 } else {
                     if (response) {
@@ -251,10 +251,10 @@ define([ "Core/object/jObj", "./Actor" ],
                 }
             });
 
-        Coordinator.prototype.invoke = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Coordinator.prototype.askNow = jObj.procedure([jObj.types.String, jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (identifier, request, response) {
                 if (this.universe.hasOwnProperty(identifier)) {
-                    this.universe[identifier].invoke(request, response);
+                    this.universe[identifier].askNow(request, response);
                 } else {
                     if (response) {
                         response.failure(jObj.exception("L.actor.not.found"));
@@ -269,7 +269,7 @@ define([ "Core/object/jObj", "./Actor" ],
                 var identifier;
                 for (identifier in this.universe) {
                     if (this.universe.hasOwnProperty(identifier)) {
-                        this.universe[identifier].send(request);
+                        this.universe[identifier].ask(request);
                     }
                 }
             });

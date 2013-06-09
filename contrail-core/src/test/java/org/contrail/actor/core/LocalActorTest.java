@@ -103,7 +103,7 @@ public class LocalActorTest {
 		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(42));
 
 		final PromiseResponse response = new PromiseResponse();
-		actor.askImmediately(new Request("getValue"), response);
+		actor.askNow(new Request("getValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
@@ -113,11 +113,11 @@ public class LocalActorTest {
 		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(0));
 
 		final PromiseResponse responseSet = new PromiseResponse();
-		actor.askImmediately(new Request("setValue", 42), responseSet);
+		actor.askNow(new Request("setValue", 42), responseSet);
 		TestCase.assertEquals(null, responseSet.getFuture().get(1, TimeUnit.SECONDS));
 
 		final PromiseResponse responseGet = new PromiseResponse();
-		actor.askImmediately(new Request("getValue"), responseGet);
+		actor.askNow(new Request("getValue"), responseGet);
 		TestCase.assertEquals(42, responseGet.getFuture().get(1, TimeUnit.SECONDS));
 	}
 
@@ -127,7 +127,7 @@ public class LocalActorTest {
 		final CoordinatedActor actor = coordinator.actor("A").bindToObject(new CA(42));
 
 		final PromiseResponse response = new PromiseResponse();
-		actor.askImmediately(new Request("getWrongValue"), response);
+		actor.askNow(new Request("getWrongValue"), response);
 		TestCase.assertEquals(42, response.getFuture().get(1, TimeUnit.SECONDS));
 	}
 }

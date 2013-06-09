@@ -118,7 +118,7 @@ public class NotBoundActor extends CoordinatedActor implements Actor {
 	}
 
 	@Override
-	public void askImmediately(Request request, Response response) {
+	public void askNow(Request request, Response response) {
 		response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "actor.not.yet.bound").format(this.getActorId())));
 	}
 

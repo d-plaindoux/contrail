@@ -44,16 +44,16 @@ define([ "Core/object/jObj", "Core/client/jLoader", "./LocalActor", "./RemoteAct
                 return this.identifier;
             });
 
-        Actor.prototype.send = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Actor.prototype.ask = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 var self = this;
                 this.pendingJobs.push(function () {
-                    self.coordinator.invoke(self.getIdentifier(), request, response);
+                    self.coordinator.askNow(self.getIdentifier(), request, response);
                 });
                 this.coordinator.startActorRunner(); // TODO -- Hide this call ASAP
             });
 
-        Actor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        Actor.prototype.askNow = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 jObj.throwError(jObj.exception("L.actor.not.yet.bind"));
             });

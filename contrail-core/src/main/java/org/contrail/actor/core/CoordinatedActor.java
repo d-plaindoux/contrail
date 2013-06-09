@@ -28,7 +28,9 @@ import org.contrail.actor.event.Response;
  * @version 1.0
  */
 abstract class CoordinatedActor implements Actor {
+	
+	abstract boolean performPendingAction();
 
-	abstract void askImmediately(Request request, Response response);
+	abstract void askNow(Request request, Response response);
 	
 }

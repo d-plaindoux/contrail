@@ -124,7 +124,7 @@ require([ "Core/object/jObj", "Core/test/jCC", "Actor/jActor", "../common/Stored
                     response = storedResponse();
                 }).
                 When(function () {
-                    actor.invoke(jActor.event.request("n", []), response);
+                    actor.askNow(jActor.event.request("n", []), response);
                 }).
                 Then(function () {
                     jCC.equal(response.value(), "A.n()", "Checking response type");

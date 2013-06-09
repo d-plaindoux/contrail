@@ -42,7 +42,5 @@ public interface Actor {
 	void ask(Request request);
 
 	void ask(Request request, Response response);
-
-	boolean performPendingAction();
 	
 }

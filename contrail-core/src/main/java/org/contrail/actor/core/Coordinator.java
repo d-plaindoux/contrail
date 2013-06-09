@@ -316,7 +316,7 @@ public class Coordinator implements Runnable {
 		if (this.hasActor(actorId)) {
 			final ActorReference actorReference = this.universe.get(actorId);
 			try {
-				actorReference.getActor().askImmediately(request, response);
+				actorReference.getActor().askNow(request, response);
 			} finally {
 				actorReference.setInactive();
 				this.activateCoordinatorIfNecessary();

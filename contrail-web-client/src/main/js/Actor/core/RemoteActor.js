@@ -34,7 +34,7 @@ define([ "Core/object/jObj", "./BoundActor" ],
                 return new RemoteActor(actor, remoteName, location);
             });
 
-        RemoteActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        RemoteActor.prototype.askNow = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 this.coordinator.getRemoteActorHandler().handle(this.location, this.remoteName, request, response);
             });

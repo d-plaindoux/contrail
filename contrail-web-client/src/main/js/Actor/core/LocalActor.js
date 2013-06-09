@@ -33,7 +33,7 @@ define([ "Core/object/jObj", "./BoundActor" ],
                 return new LocalActor(actor, model);
             });
 
-        LocalActor.prototype.invoke = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
+        LocalActor.prototype.askNow = jObj.procedure([ jObj.types.Named("Request"), jObj.types.Nullable(jObj.types.Named("Response"))],
             function (request, response) {
                 try {
                     var result, method = this.model[request.getName()];
