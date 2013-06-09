@@ -116,7 +116,7 @@ public class NetworkActorTest {
 		coordinator2.actor("A.dist").bindToRemote("A", "1");
 
 		final PromiseResponse response = new PromiseResponse();
-		coordinator2.send("A.dist", new Request("getValue"), response);
+		coordinator2.ask("A.dist", new Request("getValue"), response);
 
 		TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
 
@@ -182,7 +182,7 @@ public class NetworkActorTest {
 		coordinator2.actor("A.dist").bindToRemote("A", "1");
 
 		final PromiseResponse response = new PromiseResponse();
-		coordinator2.send("A.dist", new Request("getWrongValue"), response);
+		coordinator2.ask("A.dist", new Request("getWrongValue"), response);
 
 		try {
 			TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
