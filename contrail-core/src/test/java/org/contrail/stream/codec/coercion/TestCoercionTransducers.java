@@ -23,10 +23,10 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.junit.Test;
 import org.contrail.stream.component.pipeline.transducer.DataTransducer;
 import org.contrail.stream.component.pipeline.transducer.DataTransducerException;
 import org.contrail.stream.component.pipeline.transducer.factory.CoercionTransducerFactory;
+import org.junit.Test;
 
 /**
  * <code>TestSerializer</code>

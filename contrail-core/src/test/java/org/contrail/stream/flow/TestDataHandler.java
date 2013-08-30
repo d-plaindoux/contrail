@@ -23,10 +23,10 @@ import static org.junit.Assert.fail;
 
 import java.util.concurrent.ExecutionException;
 
-import org.junit.Test;
 import org.contrail.common.concurrent.Promise;
 import org.contrail.stream.flow.exception.DataFlowCloseException;
 import org.contrail.stream.flow.exception.DataFlowException;
+import org.junit.Test;
 
 /**
  * <code>TestDataHandler</code>

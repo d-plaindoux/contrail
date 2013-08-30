@@ -24,10 +24,10 @@ import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.common.concurrent.Promise;
+import org.junit.Test;
 
 /**
  * <code>CoordinatorTest</code>

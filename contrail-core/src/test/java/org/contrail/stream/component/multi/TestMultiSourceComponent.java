@@ -20,7 +20,6 @@ package org.contrail.stream.component.multi;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
 import org.contrail.stream.component.Components;
 import org.contrail.stream.component.bound.InitialComponent;
@@ -29,6 +28,7 @@ import org.contrail.stream.flow.DataFlowFactory;
 import org.contrail.stream.flow.FilteredDataFlow.Filter;
 import org.contrail.stream.flow.exception.DataFlowException;
 import org.contrail.stream.link.ComponentManager;
+import org.junit.Test;
 
 /**
  * <code>TestMultiDestinationComponent</code>

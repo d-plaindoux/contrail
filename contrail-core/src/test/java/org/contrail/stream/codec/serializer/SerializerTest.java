@@ -23,12 +23,12 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Array;
 import java.util.List;
 
-import org.junit.Test;
 import org.contrail.stream.codec.payload.Bytes;
 import org.contrail.stream.component.pipeline.transducer.DataTransducer;
 import org.contrail.stream.component.pipeline.transducer.DataTransducerException;
 import org.contrail.stream.component.pipeline.transducer.factory.SerializationTransducerFactory;
 import org.contrail.stream.data.ObjectRecord;
+import org.junit.Test;
 
 /**
  * <code>TestSerializer</code>

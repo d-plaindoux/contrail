@@ -18,7 +18,10 @@
 
 package org.contrail.actor.component.flow;
 
-import static org.contrail.actor.common.Keywords.*;
+import static org.contrail.actor.common.Keywords.IDENTIFIER;
+import static org.contrail.actor.common.Keywords.REQUEST;
+import static org.contrail.actor.common.Keywords.TYPE;
+import static org.contrail.actor.common.Keywords.VALUE;
 
 import org.contrail.actor.component.CoordinatorComponent;
 import org.contrail.actor.component.handler.RemoteActorHandler;

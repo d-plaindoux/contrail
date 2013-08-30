@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
 import org.contrail.actor.event.Request;
@@ -33,6 +32,7 @@ import org.contrail.stream.component.Components;
 import org.contrail.stream.data.ObjectRecord;
 import org.contrail.stream.network.component.DomainComponent;
 import org.contrail.stream.network.packet.Packet;
+import org.junit.Test;
 
 /**
  * <code>CoordinatorComponentTest</code>

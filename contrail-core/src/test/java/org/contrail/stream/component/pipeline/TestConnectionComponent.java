@@ -24,7 +24,6 @@ import static org.junit.Assert.fail;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Test;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
 import org.contrail.stream.component.ComponentDisconnectionRejectedException;
 import org.contrail.stream.component.bound.InitialComponent;
@@ -35,6 +34,7 @@ import org.contrail.stream.flow.exception.DataFlowCloseException;
 import org.contrail.stream.flow.exception.DataFlowException;
 import org.contrail.stream.link.ComponentManager;
 import org.contrail.stream.link.DisposableLink;
+import org.junit.Test;
 
 /**
  * <code>TestPipeline</code> is dedicated to transformation based pipeline test

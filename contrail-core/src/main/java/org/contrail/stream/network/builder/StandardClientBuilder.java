@@ -21,8 +21,6 @@ package org.contrail.stream.network.builder;
 import java.util.Arrays;
 import java.util.List;
 
-import org.contrail.actor.core.ActorException;
-import org.contrail.actor.event.Request;
 import org.contrail.stream.codec.payload.Bytes;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
 import org.contrail.stream.component.Components;

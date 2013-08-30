@@ -23,10 +23,10 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.stream.codec.object.Decoder;
 import org.contrail.stream.codec.object.Encoder;
 import org.contrail.stream.component.pipeline.transducer.DataTransducerException;
+import org.junit.Test;
 
 /**
  * <code>JSonifierTest</code>

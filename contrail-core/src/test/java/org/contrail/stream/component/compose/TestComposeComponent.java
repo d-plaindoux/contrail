@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 
 import java.util.concurrent.ExecutionException;
 
-import org.junit.Test;
 import org.contrail.common.concurrent.Promise;
 import org.contrail.stream.component.Component;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
@@ -37,6 +36,7 @@ import org.contrail.stream.component.pipeline.transducer.factory.SerializationTr
 import org.contrail.stream.flow.DataFlowAdapter;
 import org.contrail.stream.flow.exception.DataFlowException;
 import org.contrail.stream.link.ComponentManager;
+import org.junit.Test;
 
 /**
  * <code>TestComposeComponent</code>

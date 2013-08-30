@@ -20,11 +20,11 @@ package org.contrail.stream.link;
 
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
 import org.contrail.stream.component.ComponentDisconnectionRejectedException;
 import org.contrail.stream.component.bound.InitialComponent;
 import org.contrail.stream.flow.exception.CannotCreateDataFlowException;
+import org.junit.Test;
 
 /**
  * <code>TestComponentLink</code>

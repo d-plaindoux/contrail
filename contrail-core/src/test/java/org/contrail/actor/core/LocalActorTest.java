@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.actor.annotation.ActorCoordinator;
 import org.contrail.actor.annotation.ActorId;
 import org.contrail.actor.event.Request;
 import org.contrail.actor.event.Response;
 import org.contrail.common.concurrent.Promise;
+import org.junit.Test;
 
 /**
  * <code>LocalActorTest</code>

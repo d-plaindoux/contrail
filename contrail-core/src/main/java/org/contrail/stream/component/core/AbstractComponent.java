@@ -18,9 +18,8 @@
 
 package org.contrail.stream.component.core;
 
-import org.contrail.common.message.MessagesProvider;
-
 import org.contrail.common.message.Message;
+import org.contrail.common.message.MessagesProvider;
 import org.contrail.stream.component.Component;
 import org.contrail.stream.component.ComponentConnectionRejectedException;
 import org.contrail.stream.component.ComponentId;

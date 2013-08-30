@@ -35,8 +35,6 @@ public interface Actor {
 
 	BoundActor bindToObject(Object model) throws ActorException;
 	
-	BoundActor bindToRemote(String remoteName, String location) throws ActorException;
-	
 	BoundActor bindToSource(String model) throws ActorException;
 	
 	void ask(Request request);

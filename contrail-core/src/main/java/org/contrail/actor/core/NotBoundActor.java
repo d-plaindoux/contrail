@@ -101,13 +101,6 @@ public class NotBoundActor extends CoordinatedActor implements Actor {
 	}
 
 	@Override
-	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
-		final RemoteActor actor = new RemoteActor(remoteName, location, this);
-		this.coordinator.registerActor(actor);
-		return actor;
-	}
-
-	@Override
 	public void ask(Request request) {
 		this.ask(request, null);
 	}

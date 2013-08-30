@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.contrail.actor.component.CoordinatorComponent;
 import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
+import org.contrail.actor.core.Coordinator.Remote.Actor;
 import org.contrail.actor.event.Request;
 import org.contrail.common.concurrent.Promise;
 import org.contrail.stream.component.CannotCreateComponentException;
@@ -113,10 +114,11 @@ public class NetworkActorTest {
 
 		final A model = new A(42);
 		coordinator1.actor("A").bindToObject(model);
-		coordinator2.actor("A.dist").bindToRemote("A", "1");
+		
+		final Actor remoteA = coordinator2.domain("1").actor("A");
 
 		final PromiseResponse response = new PromiseResponse();
-		coordinator2.ask("A.dist", new Request("getValue"), response);
+		remoteA.ask(new Request("getValue"), response);
 
 		TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));
 
@@ -179,10 +181,11 @@ public class NetworkActorTest {
 
 		final A model = new A(42);
 		coordinator1.actor("A").bindToObject(model);
-		coordinator2.actor("A.dist").bindToRemote("A", "1");
+		
+		final Actor remoteA = coordinator2.domain("1").actor("A");
 
 		final PromiseResponse response = new PromiseResponse();
-		coordinator2.ask("A.dist", new Request("getWrongValue"), response);
+		remoteA.ask(new Request("getWrongValue"), response);
 
 		try {
 			TestCase.assertEquals(42, response.getFuture().get(10, TimeUnit.SECONDS));

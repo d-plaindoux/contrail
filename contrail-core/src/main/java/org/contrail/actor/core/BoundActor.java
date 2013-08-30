@@ -62,11 +62,6 @@ public class BoundActor extends CoordinatedActor implements Actor {
 		throw new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "already.bound").format());
 	}
 
-	@Override
-	public BoundActor bindToRemote(String remoteName, String location) throws ActorException {
-		throw new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "already.bound").format());
-	}
-
 	@Override	
 	public BoundActor bindToSource(String model) throws ActorException {
 		throw new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "already.bound").format());
@@ -88,7 +83,7 @@ public class BoundActor extends CoordinatedActor implements Actor {
 	}
 
 	@Override
-	public synchronized boolean performPendingAction() {
+	synchronized boolean performPendingAction() {
 		if (this.actorActions.size() == 0) {
 			return false;
 		} else {

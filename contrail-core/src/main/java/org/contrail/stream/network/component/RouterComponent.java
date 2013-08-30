@@ -28,9 +28,9 @@ import org.contrail.stream.component.SourceComponent;
 import org.contrail.stream.component.multi.MultiSourceComponent;
 import org.contrail.stream.flow.DataFlow;
 import org.contrail.stream.flow.exception.DataFlowCloseException;
-import org.contrail.stream.network.route.RouteTable;
 import org.contrail.stream.network.component.flow.router.RouterDownStreamComponentDataFlow;
 import org.contrail.stream.network.packet.Packet;
+import org.contrail.stream.network.route.RouteTable;
 
 /**
  * <code>RouterComponent</code>

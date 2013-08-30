@@ -20,13 +20,13 @@ package org.contrail.stream.network;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.contrail.stream.component.Components;
 import org.contrail.stream.component.bound.InitialComponent;
 import org.contrail.stream.flow.BufferedDataFlow;
-import org.contrail.stream.network.route.RouteTable;
 import org.contrail.stream.network.component.RouterComponent;
 import org.contrail.stream.network.packet.Packet;
+import org.contrail.stream.network.route.RouteTable;
+import org.junit.Test;
 
 /**
  * <code>RouterComponentTest</code>
