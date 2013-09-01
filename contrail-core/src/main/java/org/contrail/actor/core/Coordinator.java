@@ -55,19 +55,19 @@ public class Coordinator implements Runnable {
 		}
 
 		boolean isNotActive() {
-			return !this.active.get();
+			return !active.get();
 		}
 
 		void setActive() {
-			this.active.set(true);
+			active.set(true);
 		}
 
 		void setInactive() {
-			this.active.set(false);
+			active.set(false);
 		}
 
 		CoordinatedActor getActor() {
-			return this.actor.get();
+			return actor.get();
 		}
 
 		void setActor(CoordinatedActor actor) {
@@ -75,7 +75,7 @@ public class Coordinator implements Runnable {
 		}
 	}
 
-	public class Remote {
+	public class Proxy {
 
 		public class Actor {
 
@@ -91,7 +91,7 @@ public class Coordinator implements Runnable {
 			}
 
 			public void ask(Request request) {
-				this.ask(request, null);
+				ask(request, null);
 			}
 
 			public void ask(final Request request, final Response response) {
@@ -114,7 +114,7 @@ public class Coordinator implements Runnable {
 
 		private final String location;
 
-		public Remote(String location) {
+		public Proxy(String location) {
 			this.location = location;
 		}
 
@@ -130,9 +130,9 @@ public class Coordinator implements Runnable {
 	private final List<String> activeActors;
 
 	private RemoteActorHandler remoteActorHandler;
-	
+
 	private ExecutorService coordinatorExecutor;
-	
+
 	private boolean isInExecutionStage;
 	private ExecutorService actorActionsExecutor;
 
@@ -144,21 +144,21 @@ public class Coordinator implements Runnable {
 		this.isInExecutionStage = false;
 	}
 
-	public Remote domain(String location) {
-		return new Remote(location);
+	public Proxy domain(String location) {
+		return new Proxy(location);
 	}
 
 	public String getDomainId() {
-		if (this.remoteActorHandler != null) {
-			return this.remoteActorHandler.getDomainId();
+		if (remoteActorHandler != null) {
+			return remoteActorHandler.getDomainId();
 		} else {
 			return null; // TODO
 		}
 	}
 
 	public void addJSonifiers(JSonifier... jSonifiers) {
-		if (this.remoteActorHandler != null) {
-			this.getRemoteActorHandler().addJSonifiers(jSonifiers);
+		if (remoteActorHandler != null) {
+			getRemoteActorHandler().addJSonifiers(jSonifiers);
 		} else {
 			// TODO
 		}
@@ -169,22 +169,22 @@ public class Coordinator implements Runnable {
 	}
 
 	public RemoteActorHandler getRemoteActorHandler() {
-		return this.remoteActorHandler;
+		return remoteActorHandler;
 	}
 
 	public Coordinator start() {
 		synchronized (this) {
-			if (this.coordinatorExecutor == null) {
+			if (coordinatorExecutor == null) {
 				final AtomicInteger index = new AtomicInteger(0);
-				this.actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory() {
+				actorActionsExecutor = Executors.newFixedThreadPool(10, new ThreadFactory() {
 					@Override
 					public Thread newThread(Runnable arg0) {
 						return new Thread(arg0, "Actor Executor #" + index.incrementAndGet());
 					}
 				});
-				
+
 				this.coordinatorExecutor = Executors.newSingleThreadExecutor();
-				this.activateCoordinatorIfNecessary();
+				activateCoordinatorIfNecessary();
 			}
 		}
 
@@ -193,37 +193,43 @@ public class Coordinator implements Runnable {
 
 	private void activateCoordinatorIfNecessary() {
 		synchronized (this) {
-			if (!this.isInExecutionStage && coordinatorExecutor != null) {
-				this.isInExecutionStage = true;
-				this.coordinatorExecutor.submit(this);
+			if (!isInExecutionStage && coordinatorExecutor != null) {
+				isInExecutionStage = true;
+				coordinatorExecutor.submit(this);
 			}
 		}
 	}
 
 	void performPendingActorAction(final String actorId, final Request request, final Response response) {
-		this.actorActionsExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				askNow(actorId, request, response);
-				return null;
-			}
-		});
+		final ActorReference actorReference = universe.get(actorId);
+
+		if (actorReference != null) {
+
+			actorReference.setActive();
+
+			actorActionsExecutor.submit(new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					askNow(actorId, request, response);
+					return null;
+				}
+			});
+		}
 	}
 
 	public void run() {
 		boolean actionPerfomed = false;
 
 		synchronized (this) {
-			this.activeActors.addAll(this.pendingActivedActors);
-			this.pendingActivedActors.clear();
-			this.activeActors.removeAll(this.pendingDeactivedActors);
-			this.pendingDeactivedActors.clear();
+			activeActors.addAll(pendingActivedActors);
+			pendingActivedActors.clear();
+			activeActors.removeAll(pendingDeactivedActors);
+			pendingDeactivedActors.clear();
 		}
 
 		for (final String actorId : activeActors) {
-			final ActorReference actorReference = this.universe.get(actorId);
+			final ActorReference actorReference = universe.get(actorId);
 			if (actorReference.isNotActive() && actorReference.getActor().performPendingAction()) {
-				actorReference.setActive();
 				actionPerfomed = true;
 			}
 		}
@@ -231,93 +237,91 @@ public class Coordinator implements Runnable {
 		synchronized (this) {
 			this.isInExecutionStage = false;
 			if (actionPerfomed) {
-				this.activateCoordinatorIfNecessary();
+				activateCoordinatorIfNecessary();
 			}
 		}
 	}
 
 	public void stop() {
-		this.coordinatorExecutor.shutdown();
-		this.actorActionsExecutor.shutdown();
+		coordinatorExecutor.shutdown();
+		actorActionsExecutor.shutdown();
 	}
 
 	private synchronized void activateActor(Actor actor) {
 		final String identifier = actor.getActorId();
-		if (this.pendingDeactivedActors.contains(identifier)) {
-			this.pendingDeactivedActors.remove(identifier);
-		} else if (this.pendingActivedActors.contains(identifier)) {
+		if (pendingDeactivedActors.contains(identifier)) {
+			pendingDeactivedActors.remove(identifier);
+		} else if (pendingActivedActors.contains(identifier)) {
 			// Nothing
-		} else if (!this.activeActors.contains(identifier)) {
-			this.pendingActivedActors.add(identifier);
-			this.activateCoordinatorIfNecessary();
+		} else if (!activeActors.contains(identifier)) {
+			pendingActivedActors.add(identifier);
+			activateCoordinatorIfNecessary();
 		}
 	}
 
 	private synchronized void deactivateActor(String identifier) {
-		if (this.pendingActivedActors.contains(identifier)) {
-			this.pendingActivedActors.remove(identifier);
-		} else if (this.pendingDeactivedActors.contains(identifier)) {
+		if (pendingActivedActors.contains(identifier)) {
+			pendingActivedActors.remove(identifier);
+		} else if (pendingDeactivedActors.contains(identifier)) {
 			// Nothing
-		} else if (this.activeActors.contains(identifier)) {
-			this.pendingDeactivedActors.add(identifier);
-			this.activateCoordinatorIfNecessary();
+		} else if (activeActors.contains(identifier)) {
+			pendingDeactivedActors.add(identifier);
+			activateCoordinatorIfNecessary();
 		}
 	}
 
 	public boolean hasActor(String name) {
-		return this.universe.containsKey(name);
+		return universe.containsKey(name);
 	}
 
 	public Actor actor(String name) {
 		if (hasActor(name)) {
-			return this.universe.get(name).getActor();
+			return universe.get(name).getActor();
 		} else {
 			final NotBoundActor abstractActor = new NotBoundActor(name, this);
-			this.universe.put(abstractActor.getActorId(), new ActorReference(abstractActor));
+			universe.put(abstractActor.getActorId(), new ActorReference(abstractActor));
 			return abstractActor;
 		}
 	}
 
 	void registerActor(CoordinatedActor actor) {
-		final ActorReference actorReference = this.universe.get(actor.getActorId());
+		final ActorReference actorReference = universe.get(actor.getActorId());
 
 		assert actorReference != null;
 
 		actorReference.setActor(actor);
-		this.activateActor(actor);
+		activateActor(actor);
 	}
 
 	public void disposeActor(String identifier) {
-		this.deactivateActor(identifier);
-		this.universe.remove(identifier);
+		deactivateActor(identifier);
+		universe.remove(identifier);
 	}
 
 	public void ask(String actorId, Request request, Response response) {
-		if (this.hasActor(actorId)) {
-			final ActorReference actorReference = this.universe.get(actorId);
-
-			assert actorReference != null;
-
+		final ActorReference actorReference = universe.get(actorId);
+		
+		if (actorReference != null) {
 			actorReference.getActor().ask(request, response);
-
-			this.activateCoordinatorIfNecessary();
+			activateCoordinatorIfNecessary();
 		} else if (response != null) {
 			response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "actor.not.found").format(actorId)));
 		}
 	}
 
 	public void ask(String actorId, Request request) {
-		this.ask(actorId, request, null);
+		ask(actorId, request, null);
 	}
 
 	void askNow(String actorId, Request request, Response response) {
-		if (this.hasActor(actorId)) {
-			final ActorReference actorReference = this.universe.get(actorId);
+		final ActorReference actorReference = universe.get(actorId);
+		
+		if (actorReference != null) {
 			try {
 				actorReference.getActor().askNow(request, response);
 			} finally {
 				actorReference.setInactive();
-				this.activateCoordinatorIfNecessary();
+				activateCoordinatorIfNecessary();
 			}
 		} else if (response != null) {
 			response.failure(new ActorException(MessagesProvider.from(this).get("org/contrail/actor/message", "actor.not.found").format(actorId)));
@@ -325,8 +329,8 @@ public class Coordinator implements Runnable {
 	}
 
 	public void broadcast(Request request) {
-		for (String actorId : this.universe.keySet()) {
-			this.ask(actorId, request, null);
+		for (String actorId : universe.keySet()) {
+			ask(actorId, request, null);
 		}
 	}
 }

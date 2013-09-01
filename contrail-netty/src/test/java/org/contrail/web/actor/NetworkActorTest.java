@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.contrail.actor.component.CoordinatorComponent;
 import org.contrail.actor.core.ActorException;
 import org.contrail.actor.core.Coordinator;
-import org.contrail.actor.core.Coordinator.Remote.Actor;
+import org.contrail.actor.core.Coordinator.Proxy.Actor;
 import org.contrail.actor.event.Request;
 import org.contrail.common.concurrent.Promise;
 import org.contrail.stream.component.CannotCreateComponentException;
