@@ -76,7 +76,7 @@ public class LocalActor<T> extends BoundActor implements Actor {
 
 		if (method != null) {
 			try {
-				response.success(method.invoke(model, request.getParameters()));
+				success(response, method.invoke(model, request.getParameters()));
 			} catch (IllegalArgumentException e) {
 				failure(response, new ActorException(getMessage(e.getMessage(), MESSAGE_FAILURE.format(request.getName(), this.getActorId())), e));
 			} catch (IllegalAccessException e) {
@@ -110,9 +110,15 @@ public class LocalActor<T> extends BoundActor implements Actor {
 		return this.methodsCache.get(name);
 	}
 
-	private void failure(Response response, ActorException e) {
+	private void success(Response response, Object result) {
 		if (response != null) {
-			response.failure(e);
+			response.success(result);
+		}
+	}
+
+	private void failure(Response response, ActorException errot) {
+		if (response != null) {
+			response.failure(errot);
 		}
 	}
 }
